@@ -12,13 +12,17 @@ const OT = {
   bac(id) { return (G.rosterMap && G.rosterMap[id] && G.rosterMap[id].bac) || 'trang'; },
   vien(bac) { return (typeof anhUrl === 'function' ? anhUrl('o_vien_' + bac) : 'assets/' + 'o_vien_' + bac + '.png'); },
   // gắn viền + ngọc vào 1 phần tử (idempotent; đổi bậc khi ô đổi tướng)
-  gan(el, bac, ngoc) {
+  // 07/11 người dùng: "bỏ khung vàng thừa, cả khung đỏ/xanh/tím; giữ khung vuông như giờ" → ô ụ mọi bậc dùng chung khung vuông
+  //  o_vien_trang + viền mảnh 1,5 px màu bậc (CSS outline theo data-otb, css/otoigian.css); bỏ hàng ngọc bậc ở đáy.
+  //  Chỉ huy (mv = true) giữ viền vàng + vương miện để phân biệt.
+  gan(el, bac, ngoc, mv) {
     if (!el) return;
     el.classList.add('ot');
     let v = el.querySelector(':scope > img.ov');
     if (!v) { v = document.createElement('img'); v.className = 'ov'; v.alt = ''; v.draggable = false; el.appendChild(v); }
-    const src = this.vien(bac); if (v.getAttribute('src') !== src) v.setAttribute('src', src);
-    el.dataset.otb = bac;
+    const src = this.vien(mv ? bac : 'trang'); if (v.getAttribute('src') !== src) v.setAttribute('src', src);
+    el.dataset.otb = bac; el.classList.toggle('ot-cmd', !!mv);
+    ngoc = false;
     let p = el.querySelector(':scope > .ot-p');
     if (ngoc) {
       const n = this.BAC.indexOf(bac) + 1;
@@ -43,14 +47,14 @@ const OT = {
       if (o.dataset.id) this.gan(o, this.bac(o.dataset.id), true);
       else { o.classList.remove('ot'); o.querySelectorAll(':scope > img.ov, :scope > .ot-p').forEach(x => x.remove()); }
     });
-    r.querySelectorAll('#chon-bo .o-mv').forEach(o => { this.gan(o, 'vang', false); this.mien(o); });
+    r.querySelectorAll('#chon-bo .o-mv').forEach(o => { this.gan(o, 'vang', false, true); this.mien(o); });
     r.querySelectorAll('#bo-the .the[data-id]').forEach(t => this.gan(t, this.bac(t.dataset.id), false));
-    const mv = document.getElementById('the-mv'); if (mv && mv.querySelector('.mv-anh')) { this.gan(mv, 'vang', false); this.mien(mv); }
-    r.querySelectorAll('.vt-mini').forEach(m => { const po = m.querySelector('img.po'), id = po && MAT.id(po); const b = /^af_/.test(id || '') ? 'vang' : this.bac(id); this.gan(m, b, false); if (/^af_/.test(id || '')) this.mien(m); });
+    const mv = document.getElementById('the-mv'); if (mv && mv.querySelector('.mv-anh')) { this.gan(mv, 'vang', false, true); this.mien(mv); }
+    r.querySelectorAll('.vt-mini').forEach(m => { const po = m.querySelector('img.po'), id = po && MAT.id(po); const b = /^af_/.test(id || '') ? 'vang' : this.bac(id); this.gan(m, b, false, /^af_/.test(id || '')); if (/^af_/.test(id || '')) this.mien(m); });
     r.querySelectorAll('.ot-mini[data-id]').forEach(m => this.gan(m, this.bac(m.dataset.id), false));
-    r.querySelectorAll('.ot-mini.ot-mv').forEach(m => { this.gan(m, 'vang', false); this.mien(m); });
+    r.querySelectorAll('.ot-mini.ot-mv').forEach(m => { this.gan(m, 'vang', false, true); this.mien(m); });
     const tt = document.querySelector('#tt .tt-the'), ta = tt && tt.querySelector('.tt-anh');
-    if (ta && ta.getAttribute('src')) { const id = MAT.id(ta); if (id) { this.gan(tt, /^af_/.test(id) ? 'vang' : this.bac(id), false); } }
+    if (ta && ta.getAttribute('src')) { const id = MAT.id(ta); if (id) { this.gan(tt, /^af_/.test(id) ? 'vang' : this.bac(id), false, /^af_/.test(id)); } }
     r.querySelectorAll('.dp-the[data-id]').forEach(d => this.gan(d, this.bac(d.dataset.id), false));
   },
   // cỡ chữ/khe theo px THẬT: #wrap là khung logic 430 phóng theo màn → --ot-k = 430 / bề rộng thật

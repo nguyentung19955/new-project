@@ -667,10 +667,10 @@ const REN = {
     this.veNhanBan(ctx);
     // vật trên đường (mây độc, vũng độc, mìn, cầu vồng…) vẽ dưới quái
     for (const o of G.hu) if (HU[o.k] && HU[o.k].duoi) { this._T = o.T || o._T || null; HU[o.k].ve(ctx, o, this); }
-    { const da = []; // hố đen DƯỚI quái (chống rối claude/chong-roi: trước đè lên quái/đường); nhiều hố trùng tâm (nhiều ụ cùng nhịp) chỉ vẽ 1 → không chồng đặc
-      for (const o of G.hu) if (o.k === 'hoden') { if (da.some(q => Math.abs(q.x - o.x) < o.r * 0.3 && Math.abs(q.y - o.y) < o.r * 0.3)) continue; da.push(o); this._T = o.T || o._T || null; HU.hoden.ve(ctx, o, this); } }
     this._T = null;
     this.veQuai(ctx);
+    for (const o of G.hu) if (o.k === 'hoden') { this._T = o.T || o._T || null; HU.hoden.ve(ctx, o, this); } // hố đen đè lên quái bị hút
+    this._T = null;
     this._hang = [];
     this.veO(ctx);
     for (const o of G.hu) if (o.k === 'tuong') { this._T = o.T || o._T || null; HU.tuong.ve(ctx, o, this); }
@@ -903,15 +903,18 @@ const REN = {
     if (dau) {
       ctx.save();
       let goc = T.goc;
-      if (T.id === 'mana') { goc = 0; const p = 1 + 0.1 * T.sang; ctx.translate(0, -2); ctx.scale(p, p); } // VFX P3: bỏ nhún + phập phồng ảnh đầu (lúc sinh mana vẫn phồng 1 nhịp theo T.sang)
+      if (T.id === 'mana') { goc = -Math.PI / 2; const p = 1 + 0.1 * T.sang; ctx.translate(0, -2); ctx.scale(p, p); } // VFX P3: bỏ nhún + phập phồng ảnh đầu (lúc sinh mana vẫn phồng 1 nhịp theo T.sang)
       if (T.id === 'mimic') goc = T.goc;
       if (skT.gocDau) { const g2 = skT.gocDau(T, this.t, ctx); if (g2 != null) goc = g2; } // đầu không xoay theo mục tiêu (hộp, cột…)
       // đầu súng + bóng mềm đổ xuống bệ, dựng sẵn chung 1 ảnh → 1 lần vẽ xoay mỗi ụ (thay vì 2)
       if (AU) { if (AU.by) ctx.translate(0, AU.by); AN.veDuoi(ctx, T, C0, al, gd, da, this, goc); }
+      const pg = !o.ghost && this.DE_RIENG[T.id] && window.PHU_GIUA && PHU_GIUA[T.id]; // phần phụ tại trục (Tesla: vòng cuộn · Mạch Máu: tim · Lõi Combo: lõi)
+      if (pg === 'duoi') this.vePhu(ctx, T, C0, al, da);
       ctx.rotate(goc + (AU ? AU.tw : 0)); ctx.translate(AU ? AU.rx : (T.rx || 0), AU ? AU.py : 0);
       if (AU && (AU.sx !== 1 || AU.sy !== 1)) ctx.scale(AU.sx, AU.sy);
       if (!VX.veBien(ctx, T, C0, al, da, this)) this.veDauLop(ctx, T.id, gd, C0, al, 1, da); // đang biến hình: hoà 2 dạng
       if (AU) AN.veTren(ctx, T, C0, al, gd, da, this);
+      if (pg === 'tren') this.vePhu(ctx, T, C0, al, da);
       // ánh sáng phụ: mimic cầu vồng, mana phát sáng, tesla cuộn nạp, laser nóng
       let sang = 0;
       if (T.id === 'mana') sang = 0.2 + T.sang * 0.6; // VFX P3: bỏ đầu sáng phập phồng
@@ -972,6 +975,17 @@ const REN = {
     ctx.globalAlpha = 1;
     if (A) VX.sau(ctx, T, x, y, St, A);
   },
+  // phần phụ <id>_phu (ô 4 của tấm module) vẽ tại trục, ctx ở tâm ụ (chưa xoay đầu): quay chậm ngược chiều;
+  // Tesla: vòng cuộn sáng dần khi sắp phóng (T.cd < 0.18) — dùng lại ảnh, không vẽ hình bằng code
+  vePhu(ctx, T, C0, al, da) {
+    const k = window.PHU_K && PHU_K[T.id]; if (!k) return;
+    const D = C0 * k, a = this.co(T.id + '_phu', D, da ? 'xam' : ''); if (!a) return;
+    ctx.save(); ctx.rotate(T.id === 'set' ? -this.t * 0.8 + (T.pha || 0) : (T.id === 'combo' ? this.t * 0.6 : 0));
+    ctx.globalAlpha = al; ctx.drawImage(a, -D / 2, -D / 2, D, D);
+    const s = T.id === 'set' && !da && T.cd < 0.18 ? (0.18 - T.cd) * 4 : 0;
+    if (s > 0) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * Math.min(0.6, s); ctx.drawImage(a, -D / 2, -D / 2, D, D); ctx.globalCompositeOperation = 'source-over'; }
+    ctx.restore(); ctx.globalAlpha = al;
+  },
   dauBong(ten, D, da) {
     const k = this.s * this.dpr, n = Math.max(2, Math.round(D * k)), key = 'db|' + ten + '|' + n + '|' + (da ? 1 : 0);
     let c = this.cGet(key); if (c) return c;
@@ -987,23 +1001,53 @@ const REN = {
   },
   // thân ụ dựng sẵn: BỆ CHUNG trung tính (de_chung.png, mọi ụ như nhau) + viên ngọc độ hiếm nhỏ ở mép bệ.
   // Không còn vòng bậc / ô xúc xắc sao (tư vấn B.2, G). Bệ = 70% cạnh ngắn ô (~60% cạnh dài), tròn tuyệt đối.
+  // Ụ MODULE (claude/u-module): 7 ụ có BỆ RIÊNG gen ChatGPT (tools/thap-cat-umod.py) — hình bóng khác nhau thay bệ tròn chung.
+  // giá trị = khung ảnh <id>_de / cạnh lớn nhất của bệ (tâm ảnh = điểm gắn đầu) → bệ chiếm cùng chỗ với de_chung (SB)
+  // 93 ụ (tools/thap-cat-umod.py → artscale.js window.DE_RIENG); ?ucu=1 (bộ đầu cũ) → bệ chung
+  DE_RIENG: (!window.UCU && window.DE_RIENG) || {},
   than(T, S, da, bong) {
     const km = 0; // (vòng màu khoá đã bỏ)
-    const k = this.s * this.dpr, n = Math.round(S * 1.5 * k), key = 'than|' + T.bac + '|' + (da ? 1 : 0) + '|' + n + (bong ? '|b' : '') + '|' + km;
-    let c = this.cGet(key); if (c) return c;
-    let de = da ? this.banXam('de_chung') : this.img('de_chung');
-    if (!de && !(this.anh.de_chung && this.anh.de_chung._loi)) return null; // còn đang tải
+    // bệ riêng đã tải xong → dùng; đang tải / lỗi → bệ chung (không chờ)
+    const kR = this.DE_RIENG[T.id], tenR = kR ? T.id + '_de' : null;
+    const rieng = tenR && this.img(tenR) ? tenR : null, ten = rieng || 'de_chung';
+    // VIỀN BẬC (người dùng 07/11 18:25): viền kim loại ôm hình bóng bệ, màu = bậc (Trắng bạc · Xanh · Tím · Vàng · Đỏ); đầu ụ giữ màu riêng
+    const vb = rieng && this.VIEN_ON ? this.vienBac(T.id, T.bac, da) : null, vCho = vb === 0; // 0 = ảnh viền đang tải → vẽ tạm không viền, không giữ cache
+    const k = this.s * this.dpr, n = Math.round(S * 1.5 * k), key = 'than|' + (rieng || '') + '|' + T.bac + '|' + (da ? 1 : 0) + '|' + n + (bong ? '|b' : '') + '|' + km;
+    let c = vCho ? null : this.cGet(key); if (c) return c;
+    let de = da ? this.banXam(ten) : this.img(ten);
+    if (!de && !(this.anh[ten] && this.anh[ten]._loi)) return null; // còn đang tải
     if (!de) return null; // KHÔNG vẽ bệ code (đang tải → vòng xoay PNG)
     c = document.createElement('canvas'); c.width = c.height = n;
     const x = this.c2d(c);
     const q = n / (S * 1.5); x.scale(q, q); x.translate(S * 0.75, S * 0.75);
-    const SB = S * 0.714;
-    de = this.mip(de, SB * q);
+    const SB = S * 0.714, SD = rieng ? SB * kR : SB;
+    const dw = de.naturalWidth || de.width;
+    de = this.mip(de, SD * q);
     if (bong) { x.globalAlpha = 0.7; x.drawImage(this.cham1('#000000'), 2 - SB * 0.62, SB * 0.06 + 3 - SB * 0.62, SB * 1.24, SB * 1.24); x.globalAlpha = 1; } // bóng = PNG tô đen
-    x.drawImage(de, -SB / 2, -SB / 2, SB, SB);
+    if (vb) { const SV = SD * vb.width / (vb.dw || dw); x.drawImage(this.mip(vb, SV * q), -SV / 2, -SV / 2, SV, SV); } // viền cùng tâm bệ, khung = bệ + 12 px mỗi phía
+    x.drawImage(de, -SD / 2, -SD / 2, SD, SD);
     // (bỏ vòng màu khoá vẽ code quanh bệ — QUY-TAC-HINH 1/4; nhận diện = biểu tượng vai trò PNG góc ô)
     // (BỎ vòng bậc tier_ring_<bac> quanh bệ — người dùng 2026-11-06: đầu ụ đã thể hiện bậc; mọi chế độ / bóng kéo / bảng kết quả đều qua hàm này)
-    return this.cSet(key, c);
+    return vCho ? c : this.cSet(key, c);
+  },
+  // VIỀN BẬC: <id>_vien.png (trắng, vát sẵn — tools/thap-cat-umod.py) tô màu bậc 1 lần (multiply giữ vát kim loại) → giữ trong REN.anh như DOTPHA.tenVong.
+  // Vàng/Đỏ: thêm ánh kim nhẹ (cộng sáng chính ảnh viền). Ụ xám (da): viền bạc. Trả: ảnh đã tô · 0 đang tải · null không có viền (bệ chung / lỗi tải).
+  VIEN_ON: !window.KHONG_VIEN,
+  MAU_VIEN: { trang: '#c9d0da', xanh: '#3f95ff', tim: '#ad5cff', vang: '#ffbf2a', do: '#ff4436' },
+  vienBac(id, bac, da) {
+    const b = da || !this.MAU_VIEN[bac] ? 'trang' : bac, k = id + '_vien~' + b;
+    const co = this.anh[k]; if (co) return co._cv;
+    const a = this.img(id + '_vien'); if (!a) return this.anh[id + '_vien'] && this.anh[id + '_vien']._loi ? null : 0;
+    if (typeof document === 'undefined') return null;
+    const c = document.createElement('canvas'); c.width = a.naturalWidth || a.width; c.height = a.naturalHeight || a.height; const x = c.getContext('2d'); if (!x) return null;
+    x.drawImage(a, 0, 0);
+    x.globalCompositeOperation = 'multiply'; x.fillStyle = this.MAU_VIEN[b]; x.fillRect(0, 0, c.width, c.height); // vetay-ok: png (tô màu bậc lên ảnh viền)
+    x.globalCompositeOperation = 'destination-in'; x.drawImage(a, 0, 0); // giữ đúng alpha ảnh viền
+    if (b === 'vang' || b === 'do') { x.globalCompositeOperation = 'lighter'; x.globalAlpha = 0.22; x.drawImage(a, 0, 0); x.globalAlpha = 1; } // ánh kim
+    x.globalCompositeOperation = 'source-over';
+    c.dw = c.width - 24; // cạnh ảnh bệ gốc (viền = bệ + 12 px mỗi phía — VIEN_PAD của tools/thap-cat-umod.py)
+    this.anh[k] = { _cv: c, complete: true, naturalWidth: c.width, naturalHeight: c.height }; if (this.CO_DINH) this.CO_DINH.add(k);
+    return c;
   },
   // HUY HIỆU CẤP SAO (TU-VAN-NHAN-DIEN 7C): 1 lục giác tối cố định, viền vàng nhạt, SỐ to màu ngà (1–7) — cùng cỡ mọi cấp.
   // Không xoay, neo góc trên-phải ô. 7★: nền đỏ thẫm + vương miện nhỏ phía trên (ngoài huy hiệu).
@@ -1239,3 +1283,13 @@ const REN = {
     ctx.globalAlpha = 1;
   },
 };
+
+// claude/u-module: THIẾT BỊ không nòng vai hỗ trợ / đặc biệt (docs/demo-hop-tuong/tuvan/u-moi/PHAN-HO.md, cột Loại = thiết bị)
+// KHÔNG xoay đầu theo quái như súng — quay chậm tại chỗ như GIF họ (gocDau). Logic ngắm/bắn của ụ không đổi (T.goc vẫn tính),
+// đòn phát từ lõi (dauNong: ụ có gocDau). Ụ đã có gocDau riêng (hộp, cột, ăng-ten…) giữ nguyên.
+(function () {
+  if (typeof SKILLS === 'undefined' || window.UCU) return;
+  const TB = ['nhanmana', 'thanhdia', 'cauvong', 'sinhdoi', 'hasao', 'tron', 'nhanban', 'epxung', 'xaotron', 'nangsao', 'vughep', 'saochep', 'pandora', 'mana', 'phagiap', 'bua', 'bomhen', 'mimic', 'dichchuyen', 'kepha', 'taylo', 'khien', 'khoathoigian', 'thaukinh', 'nhieusong', 'santhuong', 'dongbo', 'guongcong', 'marionette', 'xuonganh', 'mauhut', 'nguyenrua', 'lophanung', 'ngaithoigian', 'bang', 'radar', 'doc'];
+  for (const id of TB) if (SKILLS[id] && !SKILLS[id].gocDau) SKILLS[id].gocDau = (T, t) => -Math.PI / 2 + (T.pha || 0) * 0.3 + t * 0.35;
+})();
+

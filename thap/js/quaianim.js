@@ -10,20 +10,18 @@
 // quái có dải 8 khung mới (quai_<id>_8.png / trum_<id>_8.png) — thêm id khi ảnh có trong assets/
 const QUAI8 = new Set(['bo', 'bay', 'bay_bang', 'khong_lo', 'tach', 'que_tach']);
 // hệ số cỡ vẽ để thân bản 8 khung to bằng bản 4 khung cũ (đo: trung bình nhân tỉ lệ lõi thân & khung bao)
+<<<<<<< 7f428b1b03b522f90a37bc3836c3dc57f2b8842f
 // 07/11 ảnh "không tay chân" (tools/thap-cat-trum2.py tính): cạnh lớn thân hiển thị = cỡ cũ ×~1.05 (trùm: 80 đơn vị cho cả 12)
-const K8 = { bo: 0.848, bay: 0.804, bay_bang: 0.86, khong_lo: 1.172, tach: 0.874, que_tach: 1.108,
-  mad_crown: 1.17, freezer: 1.207, janus: 0.99, joker_king: 1.145, nightmare: 1.044, octopus: 1.011,
+const K8 = { bo: 0.708, bay: 0.776, bay_bang: 0.86, khong_lo: 1.175, tach: 0.86, que_tach: 1.108,
+  mad_crown: 1.161, freezer: 1.21, janus: 0.993, joker_king: 1.147, nightmare: 1.038, octopus: 1.018,
   hive: 0.993, jammer: 1.024, prism: 1.035, twin_core: 1.008, patcher: 1.039, leech: 1.115 }; // trùm: id = E.id
+=======
+const K8 = { bo: 0.755, bay: 0.82, bay_bang: 0.92, khong_lo: 1.46, tach: 0.85, que_tach: 1.16,
+  freezer: 1.06, janus: 1.02, joker_king: 1.07, mad_crown: 1.03, nightmare: 1.02, octopus: 1.09 }; // trùm: id = E.id
+>>>>>>> HEAD
 const TRUM8 = new Set(['freezer', 'mad_crown', 'nightmare', 'octopus', 'janus', 'joker_king']);
 // HƯỚNG NHÌN (Pass 5): dải 8 khung NGANG (đi sang phải; trái = lật) / SAU (đi lên) đã có trong assets/ — tools/thap-huong-quai.py tự cập nhật dòng dưới
-const HUONG8 = new Set([]); // vd 'quai_bo_side', 'trum_octopus_back'
-// vật thể KHÔNG tay chân (ảnh 07/11): mọi hướng (ngang/sau/trái) dùng chính dải đi trước — không lật mặt, không xoay
-const HUONG_CHUNG = new Set(['quai_bo', 'quai_bay', 'quai_bay_bang', 'quai_khong_lo', 'quai_tach', 'quai_que_tach',
-  'trum_mad_crown', 'trum_freezer', 'trum_janus', 'trum_joker_king', 'trum_nightmare', 'trum_octopus',
-  'trum_hive', 'trum_jammer', 'trum_prism', 'trum_twin_core', 'trum_patcher', 'trum_leech']);
-// dải TUNG CHIÊU trum_<id>_atk_16.png: 8 khung (1-2 lấy đà, 3-5 tung, 6-7 hồi, 8 trung tính), ô = ô dải đi × ATK_K (hiệu ứng tràn ngoài thân)
-const ATK_K = 1.5;
-const ATK_SEQ = [0, 0, 0, 1, 1, 1, 2, 2, 3, 3, 4, 4, 4, 5, 6, 7]; // tiến độ chiêu (16 nấc) → khung; dải 16 khung cũ: phát thẳng
+const HUONG8 = new Set(['quai_bay_back', 'quai_bay_bang_back', 'quai_bay_bang_side', 'quai_bay_side', 'quai_bo_back', 'quai_bo_side', 'quai_khong_lo_back', 'quai_khong_lo_side', 'quai_que_tach_back', 'quai_que_tach_side', 'quai_tach_back', 'quai_tach_side', 'trum_freezer_back', 'trum_freezer_side', 'trum_hive_back', 'trum_hive_side', 'trum_jammer_back', 'trum_jammer_side', 'trum_janus_back', 'trum_janus_side', 'trum_joker_king_back', 'trum_joker_king_side', 'trum_mad_crown_back', 'trum_mad_crown_side', 'trum_nightmare_back', 'trum_nightmare_side', 'trum_octopus_back', 'trum_octopus_side']); // vd 'quai_bo_side', 'trum_octopus_back'
 const HUONG_NGHIENG = 0.139; // dải chưa có: dùng dải TRƯỚC nghiêng ≤ 8° về phía đi
 const HUONG_HOA = 0.12;      // hoà 120 ms khi đổi hướng nhìn ở khúc rẽ
 
@@ -34,7 +32,7 @@ Object.assign(REN, {
   nutTrum(E) {
     const g = 'trum_' + E.trum + '_atk_16'; if (!this.img(g)) return false;
     E._pop = 1; // thay cho "xác nổ" thường
-    this._nut.push({ x: E.x, y: E.y, co: E.d.co * (K8[E.d.anh || E.trum] || 1) * ATK_K, g, t: 0 });
+    this._nut.push({ x: E.x, y: E.y, co: E.d.co * (K8[E.d.anh || E.trum] || 1), g, t: 0 });
     return true;
   },
   // bóng mềm = ảnh fx_cham_trang tô đen (PNG, không còn gradient vẽ code); chưa nạp → không vẽ bóng
@@ -50,12 +48,10 @@ Object.assign(REN, {
   // ảnh hướng nhìn cần nạp trước (ui.js chuẩn bị trận)
   dsHuong() {
     const ds = []; for (const k of HUONG8) ds.push(k + '_8');
-    // dải đánh trum_<id>_atk_16 KHÔNG nạp hết ở đây (12 dải lớn → tốn bộ nhớ iPhone): nongskill.js làm nóng trùm sắp tới; chưa nạp → vẽ dải đi
+    if (typeof TRUM_ATK !== 'undefined') for (const id of TRUM_ATK) ds.push('trum_' + id + '_atk_16'); // dải đánh của trùm mới
     if (typeof TRUM_FX !== 'undefined') for (const id of TRUM_FX) ds.push('fx_trum_' + id); // hiệu ứng chiêu rời (tải nền cùng ảnh trùm)
     return ds;
   },
-  // khung dải chiêu theo tiến độ u (0..1)
-  khungDanh(u, nf) { const i = Math.min(15, Math.max(0, Math.floor(u * 16))); return nf === 8 ? ATK_SEQ[i] : Math.min(nf - 1, Math.floor(clamp(u, 0, 1) * nf)); },
   // dải ĐÁNH của trùm (thân tung chiêu, nhìn về BÀN ụ) — chỉ phát trong lúc báo chiêu; chưa có → null
   tenDanh(E) {
     if (!E.trum || typeof TRUM_ATK === 'undefined' || !TRUM_ATK.has(E.trum)) return null;
@@ -75,16 +71,13 @@ Object.assign(REN, {
   },
   // dải của hướng v cho quái (ten = dải trước): có ảnh hướng đó → tên dải đó, không → null (dùng dải trước + nghiêng)
   tenHuong(ten, v) {
-    if (v === 'f' || !ten.endsWith('_8')) return null;
-    if (HUONG_CHUNG.has(ten.slice(0, -2))) return ten; // không tay chân: dải trước cho mọi hướng
-    if (!HUONG8.size) return null;
+    if (v === 'f' || !HUONG8.size || !ten.endsWith('_8')) return null;
     const g = ten.slice(0, -2) + (v === 's' ? '_side' : '_back');
     return HUONG8.has(g) && this.img(g + '_8') ? g + '_8' : null;
   },
   // dải NGANG quay TRÁI thật (ChatGPT vẽ riêng, cho quái/trùm không đối xứng) — có thì dùng thay vì lật dải phải
   tenTrai(ten) {
-    if (!ten.endsWith('_8')) return null; if (HUONG_CHUNG.has(ten.slice(0, -2))) return ten; // không lật (mặt/chữ không bị soi gương)
-    const g = ten.slice(0, -2) + '_left';
+    if (!ten.endsWith('_8')) return null; const g = ten.slice(0, -2) + '_left';
     return HUONG8.has(g) && this.img(g + '_8') ? g + '_8' : null;
   },
   // vẽ thân 1 hướng nhìn tại gốc toạ độ hiện tại: cánh mờ (quái bay), khung + hoà khung kế, chớp trắng; al = độ mờ chung
@@ -147,7 +140,7 @@ Object.assign(REN, {
       if (u >= 1) { this._nut.splice(i, 1); continue; }
       const d = this.coDai(N.g, N.co); if (!d) continue;
       ctx.save(); ctx.translate(N.x, N.y); ctx.globalAlpha = u < 0.75 ? 1 : 1 - (u - 0.75) / 0.25;
-      this.khung0(ctx, d, this.khungDanh(u, d.nf), N.co * (1 + 0.08 * u)); ctx.restore();
+      this.khung0(ctx, d, Math.min(d.nf - 1, Math.floor(u * d.nf)), N.co * (1 + 0.08 * u)); ctx.restore();
     }
     ctx.globalAlpha = 1;
     const bong = this.bong1(), dong = G.quai.length > 30, M = ctx.getTransform();
@@ -178,7 +171,7 @@ Object.assign(REN, {
       // ---- hướng & vị trí ----
       // hướng nhìn theo hướng đi trên đường (DCDW): trước/ngang/sau — KHÔNG xoay cả hình nữa; dải hướng chưa có → dải trước nghiêng ≤ 8°
       this.huongQuai(E, t);
-      const ngD = E._hv === 's' ? E._hl * (this.tenHuong(ten, 's') ? 0.035 : HUONG_NGHIENG) : 0;
+      const ngD = E._hv === 's' ? E._hl * (HUONG8.size && this.tenHuong(ten, 's') ? 0.035 : HUONG_NGHIENG) : 0;
       E._ng = E._ng == null ? ngD : E._ng + (ngD - E._ng) * Math.min(1, dt * 12);
       const gv = E._ng;
       // độ rẽ (để lắc lư nhẹ vào khúc cua)
@@ -239,12 +232,12 @@ Object.assign(REN, {
         const bao4 = E.bao && E._daiBao && n !== 4; // trùm tung chiêu: khung 3 dải 4 khung cũ (nhìn ra màn hình), cỡ gốc
         const rot = clamp(gv + lac, -HUONG_NGHIENG, HUONG_NGHIENG);
         // trùm có dải ĐÁNH riêng: trong lúc báo chiêu quay về BÀN ụ (nhìn ra màn hình) và phát dải đánh theo tiến độ chiêu
-        const tD = E.bao ? this.tenDanh(E) : null, dD = tD && this.coDai(tD, co * kc * ATK_K);
+        const tD = E.bao ? this.tenDanh(E) : null, dD = tD && this.coDai(tD, co * kc);
         const lop = (v, l, al) => { // 1 lớp hướng nhìn v (đi sang trái: dải trái thật nếu có, không thì lật dải phải)
           if (dD) {
-            const fD = this.khungDanh(E.bao.t / (E.bao.song || 1.4), dD.nf);
+            const fD = Math.min(dD.nf - 1, Math.floor(clamp(E.bao.t / (E.bao.song || 1.4), 0, 1) * dD.nf));
             ctx.setTransform(M); ctx.translate(x, y); ctx.scale(sx, sy);
-            this.veThan(ctx, dD, { ten: tD, px: co * kc * ATK_K }, fD, -1, 0, C * ATK_K, bay, dong, fl, al, true);
+            this.veThan(ctx, dD, { ten: tD, px: co * kc }, fD, -1, 0, C, bay, dong, fl, al, true);
             E._tHv = tD; E._lat = 1; return;
           }
           const tL = v === 's' && l < 0 ? this.tenTrai(ten) : null;

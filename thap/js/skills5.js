@@ -406,6 +406,23 @@ HU.nonLua = { // nón lửa = dải 16 khung ChatGPT fx_wyrm_lua chạy ĐÚNG T
     const goc = SKILLS.ronglua.goc(T), [x, y] = dauNong(T); let L = SKILLS.ronglua.tam(T);
     // VFX P0 hitbox: phép trúng đo từ TÂM ụ (tamU) tới L — ảnh bắt đầu ở nòng nên rút phần nòng ra khỏi chiều dài → mũi lửa = đúng tầm thật
     const c0 = tamU(T); L = Math.max(20, L - Math.hypot(x - c0.x, y - c0.y));
+    // luồng lửa mới (user 07/11 19:05 "xấu quá"): dải 8 khung ChatGPT fx_wyrm_lua2 — mũi phun hẹp sáng ở nòng → nón lửa sạch toả ra tới tầm
+    //   (bắt lửa 0–2 → chảy lặp 3–5 → tàn 6–7). Chưa tải → dải cũ fx_wyrm_lua bên dưới.
+    const M2 = typeof SIG_META !== 'undefined' && SIG_META.fx_wyrm_lua2, s2 = M2 && typeof SIG !== 'undefined' && REN.img('fx_wyrm_lua2');
+    if (s2) {
+      const e = R.t - LUA_BD.get(T), f = T.phun < 0.1 ? 6 + Math.min(1, Math.floor((0.1 - T.phun) / 0.1 * 2)) : e < 0.12 ? Math.floor(e / 0.12 * 3) : 3 + Math.floor(e * 14) % 3;
+      // mũi lửa (VUNG_ANH.wyrm2X của khung) = tầm thật; bề ngang lửa ở 70% chiều dài lửa (wyrm2Y của khung) = bề ngang nón trúng ở đó
+      const X2 = VUNG_ANH.wyrm2X || 0.98, Wd = L / (X2 - 0.02), lech = Math.hypot(x - c0.x, y - c0.y);
+      const hh = Math.max(L * 0.3, 2 * (lech + 0.7 * L) * Math.tan(goc / 2 + 0.08) / (VUNG_ANH.wyrm2Y || 0.75));
+      // dạng 2/3 = dải đổi kênh sẵn fx_wyrm_lua2_2 / _3 (tools/thap-cat-wyrm2.py); chưa tải → dải cam tô màu
+      const ten = gd > 1 && REN.img('fx_wyrm_lua2_' + gd) ? 'fx_wyrm_lua2_' + gd : 'fx_wyrm_lua2';
+      if (gd === 1 || ten !== 'fx_wyrm_lua2') { SIG.k(ctx, ten, f, x, y, Wd, { g: T.goc, ax: 0.02, h: hh }); return; }
+      const im = PX.mau('fx_wyrm_lua2', RONG_MAU[gd].b) || s2;
+      ctx.save(); ctx.translate(x, y); ctx.rotate(T.goc);
+      ctx.drawImage(im, f * M2[1], 0, M2[1], M2[2], -Wd * 0.02, -hh / 2, Wd, hh);
+      ctx.restore(); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+      return;
+    }
     const M = typeof SIG_META !== 'undefined' && SIG_META.fx_wyrm_lua, st = M && typeof SIG !== 'undefined' && REN.img('fx_wyrm_lua');
     if (st) {
       const e = R.t - LUA_BD.get(T), f = T.phun < 0.1 ? 12 + Math.min(3, Math.floor((0.1 - T.phun) / 0.1 * 4)) : e < 0.12 ? Math.floor(e / 0.12 * 4) : 4 + Math.floor(e * 16) % 8;

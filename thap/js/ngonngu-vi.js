@@ -1,7 +1,7 @@
 // TURRET MERGE — TỪ ĐIỂN TIẾNG VIỆT — TỆP SINH TỰ ĐỘNG, đừng sửa tay.
 // Nguồn: docs/demo-hop-tuong/tuvan/ngonngu/vi.json → python3 tools/thap-vi-dung.py. Dùng bởi js/ngonngu.js (Cài đặt → LANGUAGE).
 'use strict';
-const VI_GIU = [" +#% ST bom, +# bom.", " +#% ST bom.", " +#% mana.", " song sinh #% → #%", " · LV#", " · Tay nhanh.", "# bom", "# · Con non", "# · Nova", "#TC · # HT", "#★ · LV#", "#★ · LV# · ", "#★ · LV# · +# mana / # s", ") · @ + @ → @ +#", "+# ABYSS", "+# mana / # s", "+# mana / #s", "+#% ST", "+#% mana", "ABCDEFGHJKLMNPQRSTUVWXYZ", "ABYSS #", "ABYSS #/#", "Abyss #", "Abyss # (+#% ST)", "Abyss #/#", "Abyss #/# (+#% ST)", "Archive # → +#% ST", "Archive #/# → +#% ST", "Archive #–#", "Archive #–# / #–# / #–#", "Archive #–# / #–# / #–#.", "Archive + Archive: # xung × #%", "Armor Breaker", "Big Splitter", "Black Hole", "Blood Circuit", "Bounty Beacon", "CHUNG", "CMD-#", "CO-OP", "Chain Link", "Chrono Lock", "Chrono Throne", "Co-op", "Combo", "Combo #–#", "Combo +#% → +#%", "Cooldown Horn", "Crit Antenna", "Cryo Reactor", "Dice Gun", "Energy Cannon", "FREEZER", "Fifth Shot", "Focus Lens", "Fusion Archive", "Fusion Mixer", "GOOGLE", "Genesis Core", "Giao diện / triệu hồi / ghép", "HIVE MOTHER", "Hero Foundry", "Hive Queen", "Holy Halo", "INPUT", "Ice Blade", "Iron Fist", "JACKPOT", "JANUS CUBE", "JOKER", "JOKER KING", "LV#", "LV#+#", "Laser tia liên tục (giữ # s)", "Lone Ace", "MAD CROWN", "MANA", "Mana", "Mana #% → #%", "Mana Core", "Mana Leech", "Mine Layer", "Mirror Gate", "Mystery Box", "NIGHTMARE", "NOVA", "OCTOPUS EYES", "OPTION", "Overclock +#% → +#%", "Overlord siêu sấm", "PATCH TITAN", "PRISM WARDEN", "PVP", "Prism Thief", "PvP", "Quantum Choir", "Reaper Pillar", "Resonance Grid", "SCRIPT", "SOLO", "SOLO · CO-OP", "SOLO · PVP", "SPAN", "STAR LEECH", "STATIC JAMMER", "STYLE", "Scrap Forge", "Shield Gen", "Solo", "Spawnling", "Splitter", "Star Breaker", "Star Cannon", "Star Lift", "Storm Gun", "Sync Cannon", "TBUI", "TEXTAREA", "TIENUI", "TITLE", "TM-#", "TURRET MERGE", "TWIN CORE", "Time Bomb", "Toxic Pool", "VS", "Vamp", "Vamp +#% → +#%", "Wave TRÙM", "Wyrm Engine", "af_dahlia", "af_eve", "af_hero", "anhsang", "aten", "ban", "bang", "bao", "baotuyet", "bienmau", "blackhole", "bomhen", "bua", "canon", "cauvong", "chimang", "chuato", "combo", "cuong", "cuongno", "cuuvi", "dichchuyen", "doc", "docton", "dongbo", "drone", "epxung", "fx_cuongno_hieu", "guongcong", "haoquang", "hasao", "hopbi", "hopca", "hutmana", "hydra", "kepha", "khien", "khoathoigian", "khoisinh", "khuech", "kiembang", "lanhgia", "laser", "leviathan", "lien", "lienket", "loa", "lophanung", "loren", "lualien", "luoicheo", "luutru", "mana", "marionette", "mauhut", "maychem", "mimic", "min", "mortar", "nam", "nangYeu", "nangluong", "nangsao", "nayda", "nemesis", "ngaithoigian", "ngoisao", "nguyenrua", "nhanban", "nhanmana", "nhatthuc", "nhieusong", "nho", "no#", "orbital", "overlord", "pandora", "phagiap", "phun", "pierce", "radar", "railgun", "ronglua", "santhuong", "saochep", "set", "shield", "sinhdoi", "soi", "song sinh #% → #%", "sungluc", "sup_khien", "tach", "taylo", "thanhdia", "thaukinh", "tia", "tienhoa", "tron", "tuthan", "ui_thuong", "vughep", "vungdoc", "wallgen", "xaotron", "xucxac", "xuonganh", "≥# → Supernova"];
+const VI_GIU = [" +#% ST bom, +# bom.", " +#% ST bom.", " +#% mana.", " song sinh #% → #%", " · LV#", " · Tay nhanh.", "# bom", "# · Con non", "# · Nova", "#TC · # HT", "#★ · LV#", "#★ · LV# · ", "#★ · LV# · +# mana / # s", ") · @ + @ → @ +#", "+# ABYSS", "+# mana / # s", "+# mana / #s", "+#% ST", "+#% mana", "ABCDEFGHJKLMNPQRSTUVWXYZ", "ABYSS #", "ABYSS #/#", "Abyss #", "Abyss # (+#% ST)", "Abyss #/#", "Abyss #/# (+#% ST)", "Archive # → +#% ST", "Archive #/# → +#% ST", "Archive #–#", "Archive #–# / #–# / #–#", "Archive #–# / #–# / #–#.", "Archive + Archive: # xung × #%", "Armor Breaker", "Big Splitter", "Black Hole", "Blood Circuit", "Bounty Beacon", "CHUNG", "CMD-#", "CO-OP", "Chain Link", "Chrono Lock", "Chrono Throne", "Co-op", "Combo", "Combo #–#", "Combo +#% → +#%", "Cooldown Horn", "Crit Antenna", "Cryo Reactor", "Dice Gun", "Energy Cannon", "FREEZER", "Fifth Shot", "Focus Lens", "Fusion Archive", "Fusion Mixer", "GOOGLE", "Genesis Core", "Giao diện / triệu hồi / ghép", "HIVE MOTHER", "Hero Foundry", "Hive Queen", "Holy Halo", "INPUT", "Ice Blade", "Iron Fist", "JACKPOT", "JANUS CUBE", "JOKER", "JOKER KING", "LV # → LV #", "LV#", "LV#+#", "Laser tia liên tục (giữ # s)", "Lone Ace", "MAD CROWN", "MANA", "MAX.", "Mana", "Mana #% → #%", "Mana Core", "Mana Leech", "Mine Layer", "Mirror Gate", "Mystery Box", "NIGHTMARE", "NOVA", "OCTOPUS EYES", "OPTION", "Overclock +#% → +#%", "Overlord siêu sấm", "PATCH TITAN", "PRISM WARDEN", "PVP", "Prism Thief", "PvP", "Quantum Choir", "Reaper Pillar", "Resonance Grid", "SCRIPT", "SOLO", "SOLO · CO-OP", "SOLO · PVP", "SPAN", "STAR LEECH", "STATIC JAMMER", "STYLE", "Scrap Forge", "Shield Gen", "Solo", "Spawnling", "Splitter", "Star Breaker", "Star Cannon", "Star Lift", "Storm Gun", "Sync Cannon", "TBUI", "TEXTAREA", "TIENUI", "TITLE", "TM-#", "TURRET MERGE", "TWIN CORE", "Time Bomb", "Toxic Pool", "VS", "Vamp", "Vamp +#% → +#%", "Wave TRÙM", "Wyrm Engine", "af_dahlia", "af_eve", "af_hero", "anhsang", "aten", "ban", "bang", "bao", "baotuyet", "bienmau", "blackhole", "bomhen", "bua", "canon", "cauvong", "chimang", "chuato", "combo", "cuong", "cuongno", "cuuvi", "dichchuyen", "doc", "docton", "dongbo", "drone", "epxung", "fx_cuongno_hieu", "guongcong", "haoquang", "hasao", "hopbi", "hopca", "hutmana", "hydra", "kepha", "khien", "khoathoigian", "khoisinh", "khuech", "kiembang", "lanhgia", "laser", "leviathan", "lien", "lienket", "loa", "lophanung", "loren", "lualien", "luoicheo", "luutru", "mana", "marionette", "mauhut", "maychem", "mimic", "min", "mortar", "nam", "nangYeu", "nangluong", "nangsao", "nayda", "nemesis", "ngaithoigian", "ngoisao", "nguyenrua", "nhanban", "nhanmana", "nhatthuc", "nhieusong", "nho", "no#", "orbital", "overlord", "pandora", "phagiap", "phun", "pierce", "radar", "railgun", "ronglua", "santhuong", "saochep", "set", "shield", "sinhdoi", "soi", "song sinh", "song sinh #% → #%", "sungluc", "sup_khien", "tach", "taylo", "thanhdia", "thaukinh", "tia", "tienhoa", "tron", "tuthan", "ui_thuong", "vughep", "vungdoc", "wallgen", "xaotron", "xucxac", "xuonganh", "≥# → Supernova"];
 const VI_DICH = {};
 const VI_MAU = {
 " # pips = +#★ (max #★ per match).": " # điểm = +#★ (tối đa #★/trận).",
@@ -796,6 +796,7 @@ const VI_MAU = {
 "+# charge: +#% damage": "+# nạp: +#% ST",
 "+# mana / hit": "+# mana / đòn",
 "+# mana every #s": "+# mana mỗi #s",
+"+# more": "+# nữa",
 "+#% / hit ×#": "+#% / đòn ×#",
 "+#% / hit ×# (max +#%)": "+#% / đòn ×# (tối đa +#%)",
 "+#% / hit ×# (max +#%) at #★, +#% / hit ×# (max +#%) at #★": "+#% / đòn ×# (tối đa +#%) ở #★, +#% / đòn ×# (tối đa +#%) ở #★",
@@ -876,6 +877,7 @@ const VI_MAU = {
 "+damage for every other turret on your board with the same ★ (no cap); #★ +fire rate": "+ST cho mỗi ụ khác cùng ★ trên bàn (không trần); #★ +tốc bắn",
 ", +#% / hit ×# (max +#%) at #": ", +#% / đòn ×# (tối đa +#%) ở #",
 ", +#% damage · shield at #": ", +#% ST · khiên ở #",
+", before power-ups and buffs.": ", chưa tính nâng cấp trong trận và buff.",
 ". From #★ it also reaches the diagonals": ". Từ #★ còn với tới các ô chéo",
 ". Your wave and best record are saved.": ". Đợt và kỷ lục của bạn đã được lưu.",
 "/# tiers": "/# bậc",
@@ -1030,8 +1032,10 @@ const VI_MAU = {
 "Arrow →": "Mũi tên →",
 "Arrow ↓": "Mũi tên ↓",
 "Arrows at #°: the target keeps its arrow and number, +#★. The dragged number is lost.": "Mũi tên vuông góc (#°): ụ đích giữ mũi tên và số, +#★. Số của ụ kéo mất.",
+"At #": "Ở #",
 "At #★ the bomb fizzles: no": "Ở #★ bom xịt: không",
 "At #★ the bomb fizzles: no skill, just a #★ turret (losing a star restarts it)": "Ở #★ bom xịt: không có kỹ năng, chỉ là ụ #★ (mất sao sẽ đếm lại)",
+"At 1★, before power-ups and buffs.": "Ở 1★, chưa tính nâng cấp trong trận và buff.",
 "At least # Epic or better.": "Ít nhất # Sử thi trở lên.",
 "Attack": "Tấn công",
 "Attack neighbours +#% damage": "Ụ Tấn công kề +#% ST",
@@ -1283,6 +1287,8 @@ const VI_MAU = {
 "Can't go past #★: each cycle": "Không vượt quá #★: mỗi chu kỳ",
 "Can't go past #★: each cycle refunds mana instead": "Không vượt quá #★: mỗi chu kỳ hoàn mana",
 "Cancelled": "Đã huỷ",
+"Cap": "Trần",
+"Card is at max level.": "Thẻ đã đạt cấp tối đa.",
 "Cast it as a boss arrives": "Dùng khi trùm xuất hiện",
 "Chain lightning hits N enemies (N = stars)": "Sét nảy trúng N quái (N = số sao)",
 "Chain lightning hits N enemies (N = stars).": "Sét nảy trúng N quái (N = số sao).",
@@ -2275,7 +2281,9 @@ const VI_MAU = {
 "Never attacks. Boosts the turrets next to it (up, down, left, right unless stated); stronger at #/#/#★. Copies of the same Support don’t stack, and each buff type has a cap.": "Không tấn công. Tăng sức cho các ụ kề bên (trên, dưới, trái, phải nếu không ghi khác); mạnh hơn ở #/#/#★. Bản sao cùng loại Hỗ trợ không cộng dồn, mỗi loại tăng đều có giới hạn.",
 "New": "Mới",
 "Next breakthrough at #": "Đột phá kế ở #",
+"Next card level": "Cấp thẻ kế tiếp",
 "Next freeze picks a new enemy": "Lần đóng băng tới chọn quái khác",
+"Next level": "Cấp sau",
 "Next up: ": "Tiếp theo: ",
 "Nice!": "Hay lắm!",
 "Night: a slowing wave": "Đêm: sóng làm chậm",

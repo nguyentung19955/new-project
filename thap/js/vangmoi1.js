@@ -340,7 +340,7 @@ const DOTPHA = {
     if (REN.anh[k]) return k;
     const a = REN.img('fx_vong_mong'); if (!a || !a.width) return null;
     const c = document.createElement('canvas'); c.width = a.width; c.height = a.height; const x = c.getContext('2d'); if (!x) return null;
-    x.drawImage(a, 0, 0); x.globalCompositeOperation = 'source-atop'; x.globalAlpha = 0.82; x.fillStyle = mau; x.fillRect(0, 0, c.width, c.height); // vetay-ok: png (vòng mảnh lọc màu bậc)
+    x.drawImage(a, 0, 0); x.globalCompositeOperation = 'source-atop'; x.globalAlpha = 0.82; x.fillStyle = mau; x.fillRect(0, 0, c.width, c.height);
     REN.anh[k] = { _cv: c, complete: true, naturalWidth: c.width, naturalHeight: c.height }; if (REN.CO_DINH) REN.CO_DINH.add(k); return k;
   },
   tenT(goc, T) { const b = this.bacVe(T); return this.ten(goc, b, b === 4 ? this.buoc4() : -1); },

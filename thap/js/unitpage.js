@@ -150,6 +150,74 @@ function upKhac(id) {
   if (!tot.length) tot.push('Most waves');
   return { tot, so: so.slice(0, 2) };
 }
+// ===================================================== CẤP THẺ KẾ TIẾP (07/11) =====================================================
+// Chạy ụ ở 1★ với cấp thẻ k (hiện tại) và k+1 bằng CHÍNH hàm trận (dmgU, tocTT, knThe, THATSO.capThe, SUP.chu / sk.mo — đọc B.capThe)
+//  → chỉ giữ con số thay đổi. Không chép công thức: đổi cân bằng ở data.js/skills*.js là trang tự đúng.
+const UP_SO = /[-−+]?\d+(?:\.\d+)?(?:%|s\b)?/g;
+const upSoV = (x) => parseFloat(String(x).replace('−', '-'));
+const upSoGon = (v) => String(+(Math.round(v * 100) / 100));
+const upHieu = (d, dv) => (d < 0 ? '−' : '+') + upSoGon(Math.abs(d)) + (dv || '');
+// bỏ phần tự xem trước cấp sau trong mô tả ('(LV9 → LV10: +10.8%)', ', LV9 → LV10: +2.8%') — hàng cấp sau đã nói việc đó
+function upBoLv(s) {
+  return String(s || '').replace(/,?\s*LV\d+(?:\s*→\s*LV\d+)?(?::\s*[^,)·]*)?/g, '').replace(/\(\s*,\s*/g, '(').replace(/\s*\(\s*\)/g, '');
+}
+function upChup(id, k) {
+  const sk = SKILLS[id], r0 = Math.random; let s = 12345;
+  Math.random = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; // cùng hạt cho k và k+1 → dạng ngẫu nhiên lúc sinh (Sói, Vua Ghép vàng) không lệch
+  try {
+    return upBanTam(id, (B) => {
+      B.capThe = Object.assign({}, B.capThe, { [id]: k });
+      const T = taoU(B, id, 1, 7); B.t.fill(null); B.t[7] = T; T.nguon = [];
+      try { mocBuf(B); } catch (e) { }
+      const o = { dmg: null, toc: '', kn: '', the: null };
+      try { o.the = knThe(B, id); } catch (e) { }
+      try { if (sk.dmg) o.dmg = dmgU(T); } catch (e) { }
+      try { o.toc = tocTT(id, T) || ''; } catch (e) { }
+      try { o.kn = SUP[id] ? SUP[id].chu(T) : sk.mo ? sk.mo(T) : ''; } catch (e) { }
+      return o;
+    });
+  } finally { Math.random = r0; }
+}
+// { max, lv, ds: [{k, ten, a, b, d}] (số có nhãn: sát thương · tốc bắn · chỉ số kỹ năng thẻ · trần), seg: [{chu, so}] (đoạn mô tả kỹ năng có số đổi) }
+function upCapSau(id) {
+  if (typeof THEBAI === 'undefined' || !SKILLS[id] || !G.rosterMap[id]) return null;
+  const t = THEBAI.the(id);
+  if (t.max) return { max: true, lv: t.lv, ds: [], seg: [] };
+  const a = upChup(id, t.k), b = upChup(id, t.k + 1); if (!a || !b) return null;
+  const ds = [], seg = [], e = KY_NANG_CAP[id];
+  if (a.dmg != null && b.dmg != null && b.dmg - a.dmg > 1e-6) {
+    const x = Math.round(a.dmg), y = Math.round(b.dmg), le = x === y; // chênh < 1: hiện 1 số lẻ để thấy tăng
+    const f = (v) => le ? upSoGon(Math.round(v * 10) / 10) : String(Math.round(v));
+    ds.push({ k: 'dmg', ten: 'Damage', a: f(a.dmg), b: f(b.dmg), d: upHieu(le ? Math.round((b.dmg - a.dmg) * 10) / 10 : y - x) });
+  }
+  const ta = a.toc.match(UP_SO), tb = b.toc.match(UP_SO);
+  if (ta && tb && ta[0] !== tb[0]) ds.push({ k: 'toc', ten: 'Fire rate', a: ta[0], b: tb[0], d: upHieu(upSoV(tb[0]) - upSoV(ta[0]), /s$/.test(tb[0]) ? 's' : '') });
+  if (e && a.the != null && b.the != null && Math.abs(b.the - a.the) > 1e-9) {
+    // 1 số lẻ như hàng CARD LV (TBUI.knV); bước nhỏ hơn 0.1 → 2 số lẻ để vẫn thấy tăng
+    const le = Math.round(a.the * 10) === Math.round(b.the * 10) ? 100 : 10, r = (v) => String(Math.round(v * le) / le);
+    const f = (v) => (e.tien || '') + r(v) + (e.dv || '');
+    ds.push({ k: 'the', ten: e.ten, a: f(a.the), b: f(b.the), d: upHieu(+r(b.the) - +r(a.the), e.dv) /* hiệu của 2 số đang hiện → khớp mắt nhìn */, va: a.the, vb: b.the });
+  }
+  try {
+    const c = typeof THATSO !== 'undefined' && THATSO.capThe ? THATSO.capThe(id, t) : '', m = /cap ([\d.]+%) → ([\d.]+%)/.exec(c || '');
+    if (m && m[1] !== m[2]) ds.push({ k: 'tran', ten: 'Cap', a: m[1], b: m[2], d: upHieu(upSoV(m[2]) - upSoV(m[1]), '%') });
+  } catch (er) { }
+  // đoạn mô tả: so từng đoạn ' · ' — cùng khung chữ (số thay bằng #) thì liệt kê số đổi; đoạn chỉ lặp lại chỉ số kỹ năng thẻ thì bỏ (đã có ở trên)
+  const tho = ds.find(x => x.k === 'the');
+  const khop = (tok, v) => { const dp = (String(tok).split('.')[1] || '').replace(/\D/g, '').length; return Math.abs(Math.abs(upSoV(tok)) - Math.abs(v)) <= 0.5 * Math.pow(10, -dp) + 1e-6; };
+  const sa = upBoLv(a.kn).split(' · '), sb = upBoLv(b.kn).split(' · ');
+  if (sa.length === sb.length) for (let i = 0; i < sa.length; i++) {
+    if (sa[i] === sb[i]) continue;
+    const na = sa[i].match(UP_SO) || [], nb = sb[i].match(UP_SO) || [];
+    if (na.length !== nb.length || sa[i].replace(UP_SO, '#') !== sb[i].replace(UP_SO, '#')) continue;
+    const doi = []; for (let j = 0; j < na.length; j++) if (na[j] !== nb[j]) doi.push(j);
+    if (!doi.length) continue;
+    const con = tho ? doi.filter(j => !(khop(na[j], tho.va) && khop(nb[j], tho.vb))) : doi; // số đã có ở dòng chỉ số kỹ năng thẻ thì không nhắc lại
+    if (!con.length) continue;
+    seg.push({ chu: upSC(sb[i]), so: con.map(j => na[j] + ' → ' + nb[j] + ' (' + upHieu(upSoV(nb[j]) - upSoV(na[j]), (/%|s$/.exec(nb[j]) || [''])[0]) + ')').join(' · ') });
+  }
+  return { max: false, lv: t.lv, ds, seg };
+}
 function upSoSeri(id) { const i = G.roster.findIndex(r => r.id === id); return 'TM-' + String(i + 1).padStart(3, '0'); }
 
 // ===================================================== trang =====================================================
@@ -254,6 +322,11 @@ const UP = {
     else if (a === 'truoc') this.buoc(-1);
     else if (a === 'sau') this.buoc(1);
     else if (a === 'more') this.moTam('ct');
+    else if (a === 'capsau') { // hàng "Next level" → bảng chi tiết, cuộn tới mục cấp thẻ kế tiếp
+      this.moTam('ct');
+      const th = this.el.querySelector('.up-ct .up-tam-than'), neo = this.el.querySelector('.up-ct .up-sau-neo'), mc = neo && neo.closest('.up-muc');
+      if (th && mc) th.scrollTop = Math.max(0, mc.offsetTop - th.offsetTop - 8);
+    }
     else if (a === 'test') this.moTam('ts');
     else if (a === 'dongtam') this.dongTam();
     else if (a === 'mo') { this.dongTam(true); this.ve(b.dataset.id, 1); }
@@ -396,9 +469,12 @@ const UP = {
     const s1 = bs[0] || {};
     const tam = sk ? (typeof sk.tam === 'number' ? 'Melee' : 'Whole path') : '—';
     const ht = sk && !sk.dmg && SUP_LOAI[id] && BUFF[SUP_LOAI[id]]; // ụ hỗ trợ: thay sát thương/tốc bắn bằng loại buff + ô được buff
+    // cấp thẻ kế tiếp: hàng "Next level" ngay dưới hàng CARD LV (thebai-ui.js chèn hàng đó trước .up-sau) + số tăng nhỏ trong ô thông số
+    const cs = sk ? upCapSau(id) : null, dd = (k) => { const x = cs && cs.ds.find(y => y.k === k); return x ? x.d : ''; };
+    P.push(this.sauHTML(cs));
     P.push('<div class="up-spec">' + (ht
-      ? this.o('Boosts', upSC(BUFF[SUP_LOAI[id]].ten)) + this.o('Buffs', sk.toanBan ? 'Whole board' : upCheo(id) ? '4 diagonals' : '4 neighbours') + this.o('From 5★', (upDauChan(id) || {}).b ? '+ diagonals' : 'Same cells') + this.o('Target', upNham(id))
-      : this.o('Damage', s1.dmg != null ? s1.dmg : '—') + this.oToc(s1.toc) +
+      ? this.o('Boosts', upSC(BUFF[SUP_LOAI[id]].ten), dd('the')) + this.o('Buffs', sk.toanBan ? 'Whole board' : upCheo(id) ? '4 diagonals' : '4 neighbours') + this.o('From 5★', (upDauChan(id) || {}).b ? '+ diagonals' : 'Same cells') + this.o('Target', upNham(id))
+      : this.o('Damage', s1.dmg != null ? s1.dmg : '—', dd('dmg')) + this.oToc(s1.toc, dd('toc')) +
         this.o('Range', tam) + this.o('Target', sk ? upNham(id) : '—')) + '</div>');
     // kỹ năng 1 dòng + Test range
     P.push(this.theKN(SUP_LOAI[id] ? 'Support skill' : 'Skill', upSC(r.kyNang || '') + '.', grow ? ' · 3 forms' : ''));
@@ -417,6 +493,7 @@ const UP = {
       (s1.kn ? '<div class="up-so1">' + s1.kn.split(/\s·\s/).map(x => '<span>' + upEsc(x) + '</span>').join('') + '</div>' : '') +
       (sk ? '<dl class="up-dl"><dt>Reach</dt><dd>' + upEsc(upTam(id)) + '</dd><dt>Target</dt><dd>' + upEsc(upNham(id)) + '</dd>' +
         (h ? '<dt>Family</dt><dd>' + upEsc(upSC(h.ten)) + ' · tier ' + h.bac + ' of 5</dd>' : '') + '</dl>' : '')));
+    if (sk) { const sm = this.sauMuc(upCapSau(id)); if (sm) P.push(this.muc(n++, 'Next card level', sm)); }
     if (sk) {
       const moc = {}; for (const m of mocCua(id)) moc[m.n] = m;
       P.push(this.muc(n++, UP_TXT.sec.stars,
@@ -446,17 +523,37 @@ const UP = {
       '<div class="up-sao-chon up-sd-sao" role="group" aria-label="Preview star level">' + [1, 4, 7].map(s => '<button data-up="sao" data-s="' + s + '" class="moc">' + s + '★</button>').join('') + '</div>' +
       '<div class="up-sao-chon up-sd-gd" role="group" aria-label="Preview stage" hidden></div>';
   },
-  o(k, v) { return '<div><small>' + k + '</small><b>' + upEsc(v) + '</b></div>'; },
+  o(k, v, d) { return '<div><small>' + k + '</small><b>' + upEsc(v) + '</b>' + (d ? '<i class="up-tang" title="Next card level">' + upEsc(d) + '</i>' : '') + '</div>'; },
+  // hàng "Next level" (dưới nút LEVEL UP): tối đa 2 số có nhãn, còn lại → "+N more" mở bảng chi tiết
+  sauHTML(cs) {
+    if (!cs) return '';
+    if (cs.max) return '<div class="up-sau max"><small>Next level</small><span><b>MAX</b></span></div>';
+    const n = cs.ds.length + cs.seg.length; if (!n) return '';
+    const hien = cs.ds.slice(0, 2), con = n - hien.length;
+    return '<button class="up-sau" data-up="capsau" aria-label="Next card level: details"><small>Next level</small><span>' +
+      hien.map(x => '<span class="m"><i>' + upEsc(x.ten) + '</i> <b>' + upEsc(x.a + ' → ' + x.b) + '</b> <em>(' + upEsc(x.d) + ')</em></span>').join('') +
+      (con ? '<span class="them">+' + con + ' more</span>' : '') + '</span></button>';
+  },
+  // mục "Next card level" trong bảng chi tiết: mọi số đổi
+  sauMuc(cs) {
+    if (!cs) return '';
+    if (cs.max) return '<p class="up-phu"><b>MAX.</b> Card is at max level.</p>';
+    if (!cs.ds.length && !cs.seg.length) return '';
+    return '<p class="up-ghi up-sau-neo">LV ' + cs.lv + ' → LV ' + (cs.lv + 1) + '</p><ul class="up-sau-ds">' +
+      cs.ds.map(x => '<li><span>' + upEsc(x.ten) + '</span><b>' + upEsc(x.a + ' → ' + x.b) + '</b> <em>(' + upEsc(x.d) + ')</em></li>').join('') +
+      cs.seg.map(x => '<li class="seg"><b>' + upEsc(x.so) + '</b><span>' + upEsc(x.chu) + '</span></li>').join('') +
+      '</ul><p class="up-ghi">At 1★, before power-ups and buffs.</p>';
+  },
   // tư vấn C §B14: nhịp bắn dài ("Hole every 9.5s") có nhãn riêng — ô số chỉ giữ con số, không nhét câu vào ô "Fire rate"
-  oToc(toc) {
-    if (!toc) return this.o('Fire rate', '—');
+  oToc(toc, d) {
+    if (!toc) return this.o('Fire rate', '—', d);
     const t = upSC(toc).replace(' shots/s', '/s'); let m;
-    if ((m = t.match(/^(\w+) every ([\d.]+s)$/i))) return this.o(upSC(m[1]) + ' interval', m[2]);
-    if ((m = t.match(/^Charges ([\d.]+s)$/i))) return this.o('Charge time', m[1]);
-    if ((m = t.match(/^([\d.]+) volleys\/s/i))) return this.o('Volleys', (+m[1]) + '/s');
-    if ((m = t.match(/^(\w+) ([\d.]+) ticks\/s$/i))) return this.o(upSC(m[1]) + ' ticks', m[2] + '/s');
-    if (/^continuous/i.test(t)) return this.o('Fire rate', 'Continuous');
-    return this.o('Fire rate', t);
+    if ((m = t.match(/^(\w+) every ([\d.]+s)$/i))) return this.o(upSC(m[1]) + ' interval', m[2], d);
+    if ((m = t.match(/^Charges ([\d.]+s)$/i))) return this.o('Charge time', m[1], d);
+    if ((m = t.match(/^([\d.]+) volleys\/s/i))) return this.o('Volleys', (+m[1]) + '/s', d);
+    if ((m = t.match(/^(\w+) ([\d.]+) ticks\/s$/i))) return this.o(upSC(m[1]) + ' ticks', m[2] + '/s', d);
+    if (/^continuous/i.test(t)) return this.o('Fire rate', 'Continuous', d);
+    return this.o('Fire rate', t, d);
   },
   muc(n, ten, noi) { return '<section class="up-muc"><h3>' + ten + '</h3>' + noi + '</section>'; },
   theNho(id, ly) {
@@ -464,6 +561,10 @@ const UP = {
     return '<button class="up-the" data-up="mo" data-id="' + id + '" style="--c:' + m + '"><img src="' + portraitOf(id) + '" alt=""><b>' + upEsc(upTen(id)) + '</b><span>' + upEsc(ly) + '</span></button>';
   },
   growHTML(id) {
+    // ụ module (claude/u-module): bệ riêng + đầu mới = icon nho/<id> dựng sẵn (không ghép đầu mới lên bệ chung); ảnh dạng _s riêng thì giữ như cũ
+    const upGdAnh = (id, k, anh) => !anh && window.DE_RIENG && DE_RIENG[id] && !window.UCU
+      ? '<img class="dau nho s' + (k + 1) + ' loc" src="' + iconOf(id) + '" alt="">'
+      : '<img class="de" src="assets/de_chung.webp?v=5b0cfbfb" alt=""><img class="dau s' + (k + 1) + (anh ? '' : ' loc') + '" src="assets/' + anhTen(id + '_nong' + (anh ? '_s' + (k + 1) : '')) + '.png" alt="" onerror="this.onerror=null;this.src=\'' + iconOf(id) + '\'">';
     const g = GROW[id], anh = !!(window.STAGE_K && STAGE_K[id]);
     // điều kiện chia theo dạng nếu chuỗi tách được thành 3 phần
     let ph = String(g.dk).split(/\s+\/\s+|\s+·\s+/);
@@ -471,12 +572,12 @@ const UP = {
     if (ph.length !== 3) ph = null;
     if (g.dang) { // dạng cố định (không lớn dần): chỉ hiện các dạng có thật, nối bằng "or"
       return '<div class="up-gd">' + g.dang.map((k1) => { const k = k1 - 1, t = g.ten[k];
-        return '<div class="up-gd1" style="--g:' + g.mau + '"><div class="anh"><img class="de" src="assets/de_chung.webp?v=5b0cfbfb" alt=""><img class="dau s' + (k + 1) + (anh ? '' : ' loc') + '" src="assets/' + anhTen(id + '_nong' + (anh ? '_s' + (k + 1) : '')) + '.png" alt=""></div>' +
+        return '<div class="up-gd1" style="--g:' + g.mau + '"><div class="anh">' + upGdAnh(id, k, anh) + '</div>' +
           '<b>' + upEsc(upSC(t)) + '</b>' + (g.dangMo && g.dangMo[k] ? '<span>' + upEsc(upSC(g.dangMo[k])) + '</span>' : '') + '</div>'; }).join('<b class="up-hoac">or</b>') + '</div>' +
         '<p class="up-phu">' + upEsc(upSC(g.dk)) + '.</p>';
     }
     return '<div class="up-gd">' + g.ten.map((t, k) =>
-      '<div class="up-gd1" style="--g:' + g.mau + '"><div class="anh"><img class="de" src="assets/de_chung.webp?v=5b0cfbfb" alt=""><img class="dau s' + (k + 1) + (anh ? '' : ' loc') + '" src="assets/' + anhTen(id + '_nong' + (anh ? '_s' + (k + 1) : '')) + '.png" alt="" onerror="this.onerror=null;this.src=\'' + iconOf(id) + '\'"></div>' +
+      '<div class="up-gd1" style="--g:' + g.mau + '"><div class="anh">' + upGdAnh(id, k, anh) + '</div>' +
       '<b>' + (k + 1) + ' · ' + upEsc(upSC(t)) + '</b>' + (ph && ph[k] ? '<span>' + upEsc(upSC(ph[k])) + '</span>' : '') + '</div>').join('<img class="up-mt" src="assets/mui_tiep.png" alt="›">') + '</div>' +
       '<p class="up-phu">' + upEsc(upSC(g.dk)) + '.</p>' + (g.lap ? '<p class="up-ghi">Cycles back to stage 1 after it fires.</p>' : '');
   },
