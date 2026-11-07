@@ -18,10 +18,10 @@ const TRUM_MOI = {
 // trùm mới ĐÃ có ảnh ChatGPT riêng (trum_<id>_8.png…) — thêm id khi ảnh ráp xong
 // ↓ 5 dòng dưới do tools/thap-cat-p6-trum.py tự ghi theo ảnh có trong assets/ (đừng sửa tay)
 const TRUM_ANH = new Set(['hive', 'jammer', 'prism', 'twin_core', 'patcher', 'leech']); // trum_<id>_8.png (đi trước) — bỏ ảnh mượn
-const TRUM_HUONG = new Set(['hive_side', 'hive_back', 'jammer_side', 'jammer_back', 'prism_side', 'prism_back', 'twin_core_side', 'twin_core_back', 'patcher_side', 'patcher_back', 'leech_side', 'leech_back']); // 'id_side' / 'id_back' — dải hướng nhìn ngang/sau
+const TRUM_HUONG = new Set([]); // 'id_side' / 'id_back' — dải hướng nhìn ngang/sau
 const TRUM_FX = new Set(['jammer', 'prism', 'patcher', 'leech']); // fx_trum_<id>.png — dải hiệu ứng chiêu 16 khung
-const TRUM_ATK = new Set(['hive', 'twin_core']); // trum_<id>_atk_16.png — dải ĐÁNH 16 khung (thân trùm tung chiêu, nhìn về bàn) — quaianim.js phát lúc báo chiêu
-const TRUM_CHANDUNG = new Set(['hive', 'jammer', 'prism', 'twin_core', 'patcher', 'leech']); // trum_<id>_portrait.png — băng giới thiệu / màn mở trận dùng chân dung
+const TRUM_ATK = new Set(['mad_crown', 'freezer', 'janus', 'joker_king', 'nightmare', 'octopus', 'hive', 'jammer', 'prism', 'twin_core', 'patcher', 'leech']); // trum_<id>_atk_16.png — dải ĐÁNH 8 khung, ô ×ATK_K (thân trùm tung chiêu, nhìn về bàn; ảnh 07/11 tools/thap-cat-trum2.py) — quaianim.js phát lúc báo chiêu
+const TRUM_CHANDUNG = new Set(['mad_crown', 'freezer', 'janus', 'joker_king', 'nightmare', 'octopus', 'hive', 'jammer', 'prism', 'twin_core', 'patcher', 'leech']); // trum_<id>_portrait.png — băng giới thiệu / màn mở trận dùng chân dung
 const TRUM_CU_WAVE = 10; // 6 trùm cũ: có từ wave 10
 for (const id in TRUM_MOI) { const M = TRUM_MOI[id]; TRUM[id] = { ten: M.ten, kn: M.kn, mo: M.mo, mau: M.mau, moi: true }; }
 // bể trùm cho lịch ngẫu nhiên (game.js lichTrum): 6 cũ + 6 mới; TRUM_THU_TU (thứ tự CO-OP cố định) giữ nguyên
