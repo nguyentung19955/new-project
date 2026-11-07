@@ -104,3 +104,16 @@ Rồng băng/lửa trồi lên từ ụ (16 khung) · một vòng xanh quanh ụ
 **Việc chờ (chưa mở):** cơ chế mới đợt 2 theo `tuvan/co-che-moi/DE-XUAT.md` §6 (Bàn Poker, Ổ Mẹ, 2048, Hộp Láng Giềng, Nỏ Nhịp Chung, ụ mới).
 
 **Khi tiếp tục:** xoá `ban-giao/DUNG-LAI.md`; xem git log từ `d301d0f`; xuất bản phần đã xong (kiểm hồi quy); vẽ CAN-VE cơ chế mới; mở lại phiên nào chưa xong.
+
+### 07/11 07:20 (giờ VN) — TRẠNG THÁI CUỐI SAU KHI DỪNG
+**Không còn phiên nào chạy** (mọi phiên SUCCEEDED, lịch kiểm tra đã tắt).
+
+**LIVE (nhánh live, mới nhất `7725640`):** mục IX · icon app · mục IX 'Đã quyết' (power-up nâng số kỹ năng thật cho 10 ụ không sát thương, cấp thẻ nới trần hỗ trợ, Evolver mất sao đếm lại) — phiên này đã xuất bản ngay trước khi đọc lệnh dừng.
+
+**XONG trên nhánh làm việc, CHƯA LIVE (chỉ cần 1 phiên: chạy `node tools/thap-kt-hoiquy.js` rồi xuất bản):**
+- VFX P3 đợt 2 — 20 tờ (`38e6925`, `0480705`, trạng thái `1e20a55`).
+- Chuyển động ụ anim.js (`b1803e6`) — còn phải kiểm: ụ hỗ trợ không bắn; 4 hình `raw_anim_*` (`d1d298c`) có thể chưa gắn.
+- Cân bằng giới hạn sức mạnh mục 2–9 (`fe3cfa4`, `24220c4`, `a014426`) — xem §7 trong `tuvan/gioi-han/BAO-CAO.md`.
+- Cơ chế mới đợt 1: Pháo La Bàn (thay Cannon), Lửa Thập Tự (Ember cả hàng + cột), Drone Kéo Xa (`2850979`, `a30abf8`) — đang dùng hình tạm; **CHƯA vẽ** hình ở `tuvan/co-che-moi/CAN-VE.json` (huy hiệu mũi tên 4 hướng, đầu Pháo La Bàn, 3 dải VFX).
+
+**Khi tiếp tục:** xoá `ban-giao/DUNG-LAI.md` → vẽ CAN-VE cơ chế mới bằng ChatGPT → 1 phiên gắn hình anim + cơ chế mới, kiểm luật "ụ hỗ trợ không bắn", chạy hồi quy + QA ngâm ngắn (SO=60), xuất bản tất cả → mở đợt 2 cơ chế mới (`DE-XUAT.md` §6).
