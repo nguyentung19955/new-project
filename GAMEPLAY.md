@@ -3294,3 +3294,9 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - Code: `thap/js/otoigian.js` (OT.gan tham số mv; ụ → o_vien_trang, không ngọc), `thap/css/otoigian.css` (--otc theo data-otb), `thap/js/dkkeo.js` (bóng kéo ô vuông 76×76, thôi dùng khung Pass 9).
 - Ảnh trước/sau: `docs/demo-hop-tuong/tuvan/khung-the/` (deck, bộ sưu tập, khay trận 390×844; deck, bộ sưu tập 844×390; bóng kéo).
 - Test: thap-kt-vuot-deck 24/24, thap-kt-bo2hang, thap-kt-chon, thap-kt-bopopup không lỗi.
+
+## claude/demo-hop-tuong — chi tiết ụ hiện cấp sau tăng gì (07/11)
+- Trang ụ (TURRET FILE): hàng **Next level** ngay dưới hàng CARD LV / nút LEVEL UP — tối đa 2 số có nhãn dạng `Damage 49 → 53 (+4)` (xanh lục), còn lại `+N more` → chạm mở bảng chi tiết, cuộn tới mục **Next card level** (đủ mọi số đổi + đoạn kỹ năng có số đổi). Thẻ MAX: `Next level · MAX`.
+- Ô thông số: số tăng nhỏ màu xanh ở góc dưới phải (Damage `+4`, Fire rate nếu đổi; ụ hỗ trợ: ô Boosts = bước buff thẻ).
+- Cách tính (unitpage.js `upCapSau`): dựng bàn tạm, đặt `B.capThe[id] = k` và `k+1`, chạy CHÍNH hàm trận ở 1★ — `dmgU`, `tocTT`, `knThe` (KY_NANG_CAP), `THATSO.capThe`, `SUP.chu` / `sk.mo` (gồm số VM1/SK7 theo cấp, Copycat %, Orbital bom…) — so từng đoạn ` · ` chỉ giữ số đổi; đoạn trùng chỉ số kỹ năng thẻ thì bỏ; phần tự xem trước `(LV9 → LV10: …)` bỏ khỏi so sánh. Ngẫu nhiên lúc sinh cố định hạt cho 2 lần chạy. Không chép công thức.
+- thebai-ui.js: hàng CARD LV chèn trước `.up-sau` (để hàng Next level nằm dưới). Tiếng Việt: vi.json (Cấp sau, Cấp thẻ kế tiếp, +# nữa, Trần…). Ảnh: docs/demo-hop-tuong/tuvan/chi-tiet-cap/.

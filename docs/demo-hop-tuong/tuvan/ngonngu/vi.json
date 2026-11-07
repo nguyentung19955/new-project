@@ -3766,5 +3766,16 @@
 "bosses only #% slow #s) + #% chill (bosses max #%)": "trùm chỉ bị chậm #% trong #s) + #% làm lạnh (trùm tối đa #%)",
 "Every #s freezes the lead enemy #s (big ×#; bosses only #% slow #s) + #% chill · #s freeze immunity · Frost Flyers immune": "Mỗi #s đóng băng quái đầu #s (quái to ×#; trùm chỉ bị chậm #% trong #s) + #% làm lạnh · miễn đóng băng #s · Quái bay băng miễn nhiễm",
 "Every #s freezes # lead enemies #s (big ×#; bosses only #% slow #s) + #% chill · #s freeze immunity · Frost Flyers immune": "Mỗi #s đóng băng # quái đầu #s (quái to ×#; trùm chỉ bị chậm #% trong #s) + #% làm lạnh · miễn đóng băng #s · Quái bay băng miễn nhiễm",
-"bosses only #% slow #s) + #% chill": "trùm chỉ bị chậm #% trong #s) + #% làm lạnh"
+"bosses only #% slow #s) + #% chill": "trùm chỉ bị chậm #% trong #s) + #% làm lạnh",
+"Next level": "Cấp sau",
+"Next card level": "Cấp thẻ kế tiếp",
+"LV # → LV #": "LV # → LV #",
+"At 1★, before power-ups and buffs.": "Ở 1★, chưa tính nâng cấp trong trận và buff.",
+"At #": "Ở #",
+", before power-ups and buffs.": ", chưa tính nâng cấp trong trận và buff.",
+"Cap": "Trần",
+"+# more": "+# nữa",
+"Card is at max level.": "Thẻ đã đạt cấp tối đa.",
+"MAX.": "MAX.",
+"song sinh": "song sinh"
 }

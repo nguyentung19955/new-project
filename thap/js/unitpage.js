@@ -196,7 +196,7 @@ function upCapSau(id) {
     // 1 số lẻ như hàng CARD LV (TBUI.knV); bước nhỏ hơn 0.1 → 2 số lẻ để vẫn thấy tăng
     const le = Math.round(a.the * 10) === Math.round(b.the * 10) ? 100 : 10, r = (v) => String(Math.round(v * le) / le);
     const f = (v) => (e.tien || '') + r(v) + (e.dv || '');
-    ds.push({ k: 'the', ten: e.ten, a: f(a.the), b: f(b.the), d: (b.the < a.the ? '−' : '+') + r(Math.abs(b.the - a.the)) + (e.dv || ''), va: a.the, vb: b.the });
+    ds.push({ k: 'the', ten: e.ten, a: f(a.the), b: f(b.the), d: upHieu(+r(b.the) - +r(a.the), e.dv) /* hiệu của 2 số đang hiện → khớp mắt nhìn */, va: a.the, vb: b.the });
   }
   try {
     const c = typeof THATSO !== 'undefined' && THATSO.capThe ? THATSO.capThe(id, t) : '', m = /cap ([\d.]+%) → ([\d.]+%)/.exec(c || '');
@@ -212,8 +212,9 @@ function upCapSau(id) {
     if (na.length !== nb.length || sa[i].replace(UP_SO, '#') !== sb[i].replace(UP_SO, '#')) continue;
     const doi = []; for (let j = 0; j < na.length; j++) if (na[j] !== nb[j]) doi.push(j);
     if (!doi.length) continue;
-    if (tho && doi.every(j => khop(na[j], tho.va) && khop(nb[j], tho.vb))) continue;
-    seg.push({ chu: upSC(sb[i]), so: doi.map(j => na[j] + ' → ' + nb[j] + ' (' + upHieu(upSoV(nb[j]) - upSoV(na[j]), (/%|s$/.exec(nb[j]) || [''])[0]) + ')').join(' · ') });
+    const con = tho ? doi.filter(j => !(khop(na[j], tho.va) && khop(nb[j], tho.vb))) : doi; // số đã có ở dòng chỉ số kỹ năng thẻ thì không nhắc lại
+    if (!con.length) continue;
+    seg.push({ chu: upSC(sb[i]), so: con.map(j => na[j] + ' → ' + nb[j] + ' (' + upHieu(upSoV(nb[j]) - upSoV(na[j]), (/%|s$/.exec(nb[j]) || [''])[0]) + ')').join(' · ') });
   }
   return { max: false, lv: t.lv, ds, seg };
 }
@@ -321,7 +322,7 @@ const UP = {
     else if (a === 'truoc') this.buoc(-1);
     else if (a === 'sau') this.buoc(1);
     else if (a === 'more') this.moTam('ct');
-    else if (a === 'sau') { // hàng "Next level" → bảng chi tiết, cuộn tới mục cấp thẻ kế tiếp
+    else if (a === 'capsau') { // hàng "Next level" → bảng chi tiết, cuộn tới mục cấp thẻ kế tiếp
       this.moTam('ct');
       const th = this.el.querySelector('.up-ct .up-tam-than'), neo = this.el.querySelector('.up-ct .up-sau-neo'), mc = neo && neo.closest('.up-muc');
       if (th && mc) th.scrollTop = Math.max(0, mc.offsetTop - th.offsetTop - 8);
@@ -529,7 +530,7 @@ const UP = {
     if (cs.max) return '<div class="up-sau max"><small>Next level</small><span><b>MAX</b></span></div>';
     const n = cs.ds.length + cs.seg.length; if (!n) return '';
     const hien = cs.ds.slice(0, 2), con = n - hien.length;
-    return '<button class="up-sau" data-up="sau" aria-label="Next card level: details"><small>Next level</small><span>' +
+    return '<button class="up-sau" data-up="capsau" aria-label="Next card level: details"><small>Next level</small><span>' +
       hien.map(x => '<span class="m"><i>' + upEsc(x.ten) + '</i> <b>' + upEsc(x.a + ' → ' + x.b) + '</b> <em>(' + upEsc(x.d) + ')</em></span>').join('') +
       (con ? '<span class="them">+' + con + ' more</span>' : '') + '</span></button>';
   },

@@ -209,7 +209,7 @@
 #up.up7 .up-sau .them { color: var(--c-lam, #6fd6ff); }
 #up.up7 .up-sau:active { transform: translateY(1px); }
 #up.up7 .up-spec div { position: relative; }
-#up.up7 .up-spec div .up-tang { position: absolute; right: 0; bottom: 3px; max-width: 46%; font-style: normal; font-size: 11px; line-height: 12px; font-weight: 800; color: #7dff8a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#up.up7 .up-spec div .up-tang { position: absolute; right: 8px; bottom: 5px; max-width: 46%; font-style: normal; font-size: 11px; line-height: 12px; font-weight: 800; color: #7dff8a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 #up .up-sau-ds { margin: 4px 0 0; padding: 0; list-style: none; }
 #up .up-sau-ds li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; padding: 6px 0; font-size: 13px; line-height: 1.35; }
 #up .up-sau-ds li > span { color: #c9ced5; }
