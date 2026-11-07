@@ -12,7 +12,7 @@ const chay = async (W) => {
   const dev = { ...devices['iPhone 13'], viewport: { width: W, height: Math.round(W * 2.16) } };
   const ctx = await b.newContext({ ...dev, ignoreHTTPSErrors: true }); const p = await ctx.newPage();
   const errs = []; p.on('pageerror', e => errs.push(e.message));
-  await p.goto(URL + '?notut=1', { waitUntil: 'load' }); await p.waitForTimeout(2500);
+  await p.goto(URL + '?notut=1', { waitUntil: 'load' }); await p.waitForFunction(() => { const e = document.getElementById('tai'); return !e || e.hidden; }, null, { timeout: 90000 }).catch(() => {}); await p.waitForTimeout(2500); // chờ màn tải xong (không chờ cố định)
   await p.tap('[data-act="hm-deck"]'); await p.waitForTimeout(800);
   const sk = await p.$('[data-act="hd-boqua"]'); if (sk) { await sk.tap(); await p.waitForTimeout(800); }
   const cdp = await ctx.newCDPSession(p);

@@ -10,8 +10,15 @@
 // quái có dải 8 khung mới (quai_<id>_8.png / trum_<id>_8.png) — thêm id khi ảnh có trong assets/
 const QUAI8 = new Set(['bo', 'bay', 'bay_bang', 'khong_lo', 'tach', 'que_tach']);
 // hệ số cỡ vẽ để thân bản 8 khung to bằng bản 4 khung cũ (đo: trung bình nhân tỉ lệ lõi thân & khung bao)
+<<<<<<< 7f428b1b03b522f90a37bc3836c3dc57f2b8842f
+// 07/11 ảnh "không tay chân" (tools/thap-cat-trum2.py tính): cạnh lớn thân hiển thị = cỡ cũ ×~1.05 (trùm: 80 đơn vị cho cả 12)
+const K8 = { bo: 0.708, bay: 0.776, bay_bang: 0.86, khong_lo: 1.175, tach: 0.86, que_tach: 1.108,
+  mad_crown: 1.161, freezer: 1.21, janus: 0.993, joker_king: 1.147, nightmare: 1.038, octopus: 1.018,
+  hive: 0.993, jammer: 1.024, prism: 1.035, twin_core: 1.008, patcher: 1.039, leech: 1.115 }; // trùm: id = E.id
+=======
 const K8 = { bo: 0.755, bay: 0.82, bay_bang: 0.92, khong_lo: 1.46, tach: 0.85, que_tach: 1.16,
   freezer: 1.06, janus: 1.02, joker_king: 1.07, mad_crown: 1.03, nightmare: 1.02, octopus: 1.09 }; // trùm: id = E.id
+>>>>>>> HEAD
 const TRUM8 = new Set(['freezer', 'mad_crown', 'nightmare', 'octopus', 'janus', 'joker_king']);
 // HƯỚNG NHÌN (Pass 5): dải 8 khung NGANG (đi sang phải; trái = lật) / SAU (đi lên) đã có trong assets/ — tools/thap-huong-quai.py tự cập nhật dòng dưới
 const HUONG8 = new Set(['quai_bay_back', 'quai_bay_bang_back', 'quai_bay_bang_side', 'quai_bay_side', 'quai_bo_back', 'quai_bo_side', 'quai_khong_lo_back', 'quai_khong_lo_side', 'quai_que_tach_back', 'quai_que_tach_side', 'quai_tach_back', 'quai_tach_side', 'trum_freezer_back', 'trum_freezer_side', 'trum_hive_back', 'trum_hive_side', 'trum_jammer_back', 'trum_jammer_side', 'trum_janus_back', 'trum_janus_side', 'trum_joker_king_back', 'trum_joker_king_side', 'trum_mad_crown_back', 'trum_mad_crown_side', 'trum_nightmare_back', 'trum_nightmare_side', 'trum_octopus_back', 'trum_octopus_side']); // vd 'quai_bo_side', 'trum_octopus_back'

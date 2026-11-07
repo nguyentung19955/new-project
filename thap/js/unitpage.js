@@ -561,6 +561,10 @@ const UP = {
     return '<button class="up-the" data-up="mo" data-id="' + id + '" style="--c:' + m + '"><img src="' + portraitOf(id) + '" alt=""><b>' + upEsc(upTen(id)) + '</b><span>' + upEsc(ly) + '</span></button>';
   },
   growHTML(id) {
+    // ụ module (claude/u-module): bệ riêng + đầu mới = icon nho/<id> dựng sẵn (không ghép đầu mới lên bệ chung); ảnh dạng _s riêng thì giữ như cũ
+    const upGdAnh = (id, k, anh) => !anh && window.DE_RIENG && DE_RIENG[id] && !window.UCU
+      ? '<img class="dau nho s' + (k + 1) + ' loc" src="' + iconOf(id) + '" alt="">'
+      : '<img class="de" src="assets/de_chung.png" alt=""><img class="dau s' + (k + 1) + (anh ? '' : ' loc') + '" src="assets/' + anhTen(id + '_nong' + (anh ? '_s' + (k + 1) : '')) + '.png" alt="" onerror="this.onerror=null;this.src=\'' + iconOf(id) + '\'">';
     const g = GROW[id], anh = !!(window.STAGE_K && STAGE_K[id]);
     // điều kiện chia theo dạng nếu chuỗi tách được thành 3 phần
     let ph = String(g.dk).split(/\s+\/\s+|\s+·\s+/);
@@ -568,12 +572,12 @@ const UP = {
     if (ph.length !== 3) ph = null;
     if (g.dang) { // dạng cố định (không lớn dần): chỉ hiện các dạng có thật, nối bằng "or"
       return '<div class="up-gd">' + g.dang.map((k1) => { const k = k1 - 1, t = g.ten[k];
-        return '<div class="up-gd1" style="--g:' + g.mau + '"><div class="anh"><img class="de" src="assets/de_chung.png" alt=""><img class="dau s' + (k + 1) + (anh ? '' : ' loc') + '" src="assets/' + anhTen(id + '_nong' + (anh ? '_s' + (k + 1) : '')) + '.png" alt=""></div>' +
+        return '<div class="up-gd1" style="--g:' + g.mau + '"><div class="anh">' + upGdAnh(id, k, anh) + '</div>' +
           '<b>' + upEsc(upSC(t)) + '</b>' + (g.dangMo && g.dangMo[k] ? '<span>' + upEsc(upSC(g.dangMo[k])) + '</span>' : '') + '</div>'; }).join('<b class="up-hoac">or</b>') + '</div>' +
         '<p class="up-phu">' + upEsc(upSC(g.dk)) + '.</p>';
     }
     return '<div class="up-gd">' + g.ten.map((t, k) =>
-      '<div class="up-gd1" style="--g:' + g.mau + '"><div class="anh"><img class="de" src="assets/de_chung.png" alt=""><img class="dau s' + (k + 1) + (anh ? '' : ' loc') + '" src="assets/' + anhTen(id + '_nong' + (anh ? '_s' + (k + 1) : '')) + '.png" alt="" onerror="this.onerror=null;this.src=\'' + iconOf(id) + '\'"></div>' +
+      '<div class="up-gd1" style="--g:' + g.mau + '"><div class="anh">' + upGdAnh(id, k, anh) + '</div>' +
       '<b>' + (k + 1) + ' · ' + upEsc(upSC(t)) + '</b>' + (ph && ph[k] ? '<span>' + upEsc(upSC(ph[k])) + '</span>' : '') + '</div>').join('<img class="up-mt" src="assets/mui_tiep.png" alt="›">') + '</div>' +
       '<p class="up-phu">' + upEsc(upSC(g.dk)) + '.</p>' + (g.lap ? '<p class="up-ghi">Cycles back to stage 1 after it fires.</p>' : '');
   },
