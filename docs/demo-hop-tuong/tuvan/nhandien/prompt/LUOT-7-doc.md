@@ -2,9 +2,12 @@
 
 Họ hình dáng · chuyển động: **Organic · A08 FILL_BURST** · hình bóng mục tiêu: **bình hoá chất**
 
+> Mặt chất lỏng sủi bọt **đã vẽ**: `thap-art/raw_anim_doc_gon.png` (CAN-VE anim, chưa gắn). Ô 4 để trống.
+
 ## 1. Đính kèm vào ChatGPT (2 ảnh, để giữ phong cách)
 - `thap/assets/doc_nong.png` (đầu ụ hiện tại)
 - `thap/assets/doc_de.png` (bệ riêng hiện tại)
+- `raw_anim_doc_gon.png` (mặt chất lỏng đã có, để khớp màu)
 
 ## 2. Dán prompt
 
@@ -20,7 +23,7 @@ No text, no letters, no grid lines, no glow spilling onto the magenta, no drop s
 
 UNIT: venom sprayer, no normal gun barrel. BASE: OVAL tank cradle with pipes.
 HEAD: glass chemical flask with green liquid and a short spray nozzle pointing up.
-PART_B: green liquid level plate / bubble cluster that fits inside the flask (it rises and bubbles in code).
+PART_B: leave cell 4 EMPTY magenta (the bubbling liquid surface already exists).
 Overall silhouette reads as a chemical flask.
 ```
 

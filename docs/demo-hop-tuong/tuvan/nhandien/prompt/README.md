@@ -9,7 +9,7 @@ Các ụ này **đã có sẵn ảnh đạn / nổ trúng** (`fx_<id>_dan`, `fx_
 
 | Lượt | Ụ | Họ · chuyển động | Hình bóng mục tiêu | File |
 |---|---|---|---|---|
-| 1 | Cannon (Pháo La Bàn) | Ballistic · A01 TRACK_RECOIL | chữ T | [LUOT-1-canon.md](LUOT-1-canon.md) |
+| 1 | Pháo La Bàn (thay Cannon) | Ballistic · A01 TRACK_RECOIL | chữ T | [LUOT-1-canon.md](LUOT-1-canon.md) |
 | 2 | Gatling (Liên Thanh) | Ballistic · A02 SPIN_FIRE | dài và hẹp | [LUOT-2-lien.md](LUOT-2-lien.md) |
 | 3 | Tesla | Energy · A03 CHARGE_RELEASE | chữ Y | [LUOT-3-set.md](LUOT-3-set.md) |
 | 4 | Frost (Băng) | Energy · A04 OPEN_BLOOM | bông hoa | [LUOT-4-bang.md](LUOT-4-bang.md) |
@@ -18,3 +18,5 @@ Các ụ này **đã có sẵn ảnh đạn / nổ trúng** (`fx_<id>_dan`, `fx_
 | 7 | Venom (Độc) | Organic · A08 FILL_BURST | bình hoá chất | [LUOT-7-doc.md](LUOT-7-doc.md) |
 
 **Lượt phụ (tuỳ chọn):** ảnh nào hỏng thì mở cửa sổ mới và gen lại riêng lượt đó, không cần chạy lại các lượt khác.
+
+**Đã đối chiếu `ban-giao/BAN-GIAO.md` (07/11):** lượt 1 thay cho `raw_cm_canon_dau` (CAN-VE cơ chế mới); lượt 2 và 7 dùng lại `raw_anim_lien_nong` / `raw_anim_doc_gon` đã vẽ; `raw_anim_bang_tinhthe` là dải VFX (không phải bộ phận ụ) nên lượt 4 vẫn gen.

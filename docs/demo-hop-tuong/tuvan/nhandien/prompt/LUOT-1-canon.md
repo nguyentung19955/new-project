@@ -1,4 +1,6 @@
-# Lượt 1 — Cannon (Pháo La Bàn) (`canon`)
+# Lượt 1 — Pháo La Bàn / Compass Cannon (`canon`)
+
+> Gộp với `raw_cm_canon_dau.png` trong `tuvan/co-che-moi/CAN-VE.json` (chưa vẽ). Gen lượt này thì **bỏ** ảnh đó. Khác bản CAN-VE cũ: nhìn thẳng từ trên, nòng chĩa LÊN (không chĩa phải).
 
 Họ hình dáng · chuyển động: **Ballistic · A01 TRACK_RECOIL** · hình bóng mục tiêu: **chữ T**
 
@@ -18,10 +20,10 @@ Cell 3 (bottom-left): HEAD only (main moving module, pointing straight UP in the
 Cell 4 (bottom-right): PART_B only (secondary moving part).
 No text, no letters, no grid lines, no glow spilling onto the magenta, no drop shadow on the background, no human limbs, no characters.
 
-UNIT: heavy cannon. BASE: low SQUARE bunker with chamfered corners and 4 stubby stabilizer feet (NOT round).
-HEAD: one thick short barrel on a boxy housing, big muzzle ring, pointing straight up.
-PART_B: recoil sleeve / spring cylinder that slides along the barrel.
-Overall silhouette reads as a fat letter T. Steel and brass.
+UNIT: compass cannon. BASE: low SQUARE bunker with chamfered corners; a brass COMPASS RING engraved on the deck with 4 arrow notches (N/E/S/W).
+HEAD: one thick short white steel barrel on a boxy housing, big muzzle ring, pointing straight up.
+PART_B: small brass compass needle / arrow pointer (it will rotate to the turret's arrow direction in code).
+Overall silhouette reads as a fat letter T on a square. Steel, white paint and brass.
 ```
 
 ## 3. Kiểm trước khi gửi lại

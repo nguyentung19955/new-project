@@ -2,9 +2,12 @@
 
 Họ hình dáng · chuyển động: **Ballistic · A02 SPIN_FIRE** · hình bóng mục tiêu: **dài và hẹp**
 
+> Rotor 6 nòng **đã vẽ**: `thap-art/raw_anim_lien_nong.png` (CAN-VE anim, chưa gắn vào game). Lượt này chỉ gen bệ + thân; ô 4 để trống.
+
 ## 1. Đính kèm vào ChatGPT (2 ảnh, để giữ phong cách)
 - `thap/assets/lien_nong.png` (đầu ụ hiện tại)
 - `thap/assets/lien_de.png` (bệ riêng hiện tại)
+- `raw_anim_lien_nong.png` (rotor đã có, để khớp tỉ lệ)
 
 ## 2. Dán prompt
 
@@ -20,7 +23,7 @@ No text, no letters, no grid lines, no glow spilling onto the magenta, no drop s
 
 UNIT: gatling gun. BASE: HEXAGONAL plate with an orange ammo-belt drum on one side.
 HEAD: housing with a 6-barrel cluster seen from above as a long narrow rectangle pointing up.
-PART_B: the 6-barrel rotor seen END-ON as a perfect circle of 6 holes (rotationally symmetric, it will spin in code).
+PART_B: leave cell 4 EMPTY magenta (the spinning rotor already exists).
 Overall silhouette long and narrow.
 ```
 
