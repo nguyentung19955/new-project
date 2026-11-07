@@ -758,14 +758,15 @@ SKILLS.vughep = { // Vua Ghép (Aurora King): kéo lên ụ CÙNG SAO → ụ đ
     cungLoai: true, // Merge King + Merge King (cùng sao) → 1 Merge King sao kế tiếp (không ra ụ ngẫu nhiên)
     quaKhoa: true, // DCDW: Aurora King vẫn nâng sao ô ĐÁ (đá giữ nguyên, +★) → 2 ô đá cùng sao ghép được với nhau; ô băng cũng nhận +★
     hopLe: (a, b) => a.sao === b.sao && b.sao < LUAT.saoMax && b.ban === a.ban,
-    xemSao: (a, b) => Math.min(LUAT.saoMax, b.sao + (b.id === 'vughep' ? 1 : a.vang ? 2 : 1)), // huy hiệu sao xem trước khi rê
+    xemSao: (a, b) => Math.min(LUAT.saoMax, b.sao + (a.vang ? 2 : 1)), // vàng kéo lên bất kỳ ụ (kể cả Merge King) → +2★ // huy hiệu sao xem trước khi rê
     lam(G, B, a, b) {
-      if (b.id === 'vughep') { // MK + MK: giữ ụ đích (Merge King), +1★ đúng 1 lần (không cộng +1★/+2★ đặc biệt chồng lên);
+      if (b.id === 'vughep') { // MK + MK: giữ ụ đích (Merge King); ụ KÉO là vàng → +2★ (như kéo lên ụ khác), thường → +1★ (người dùng 07/11);
         // bản vàng: giữ vàng nếu 1 trong 2 là vàng (không quay lại 10% → tất định, 2 máy online ra cùng kết quả)
         B.t[a.o] = null;
         G.bay.push({ id: a.id, sao: a.sao, x0: B.o[a.o].x, y0: B.o[a.o].y, x1: B.o[b.o].x, y1: B.o[b.o].y, t: 0, bac: a.bac });
         b.vang = !!(a.vang || b.vang);
-        nangSao(B, b, 1, b.vang ? 'GOLD KING +1★' : 'MERGE KING +1★');
+        const n = a.vang ? 2 : 1;
+        nangSao(B, b, n, a.vang ? 'GOLD KING +2★' : b.vang ? 'GOLD KING +1★' : 'MERGE KING +1★');
         return b;
       }
       B.t[a.o] = null;
