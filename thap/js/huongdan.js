@@ -7,7 +7,7 @@
 
 const HD = {
   KEY: 'turret_hd',
-  DECK: ['canon', 'lien', 'bang', 'set', 'sungluc'], MV: 'hero',
+  DECK: ['tia', 'lien', 'bang', 'set', 'sungluc'], // 07/11: Pháo La Bàn lên Vàng → bộ hướng dẫn dùng Sniper (Trắng) MV: 'hero',
   WAVE_TRUM: 10,
   st: { xong: false, boQua: false, buoc: {} },
   dang: false, i: -1, t0: 0, dem: 0, el: null, ketTut: false,

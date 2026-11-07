@@ -48,9 +48,9 @@ R(`var q = dat(7, 'hopca', 3); dat(0, 'lien', 3); dat(1, 'canon', 3); dat(2, 'ba
 ok(R('SKILLS.hopca.dem(B, q)') === 3, 'đếm 3 ụ cùng 3★ (bỏ ụ khác sao, bỏ ô đá)');
 ok(Math.abs(R('q.buf.dmg') - 0.54) < 1e-6, 'LV9: +18% × 3 = +54%');
 R(`for (let o = 8; o < 15; o++) dat(o, 'lien', 3); capNhatBan(B, 1/30);`);
-ok(R('SKILLS.hopca.dem(B, q)') === 10 && Math.abs(R('q.buf.dmg') - 2.05) < 1e-6 && R('DOTPHA.bacU(q)') === 3, 'KHÔNG trần: 10 ụ cùng sao → +180% (LV9) + ĐỘT PHÁ III +25% (dem=' + R('SKILLS.hopca.dem(B, q)') + ', dmg ' + R('q.buf.dmg').toFixed(3) + ')');
+ok(R('SKILLS.hopca.dem(B, q)') === 10 && Math.abs(R('q.buf.dmg') - 2.0) < 1e-6 && R('DOTPHA.bacU(q)') === 3, 'KHÔNG trần: 10 ụ cùng sao → +180% (LV9) + ĐỘT PHÁ III +20% (Choir khó 2) (dem=' + R('SKILLS.hopca.dem(B, q)') + ', dmg ' + R('q.buf.dmg').toFixed(3) + ')');
 R(`B.capThe.hopca = 6; capNhatBan(B, 1/30);`);
-ok(Math.abs(R('q.buf.dmg') - 3.25) < 1e-6, 'LV15: 30% × 10 = +300% (+25% đột phá III)');
+ok(Math.abs(R('q.buf.dmg') - 3.2) < 1e-6, 'LV15: 30% × 10 = +300% (+20% đột phá III, khó 2)');
 R(`B.capThe.hopca = 0; B.t.fill(null); var q7 = dat(7, 'hopca', 7); capNhatBan(B, 1/30);`);
 ok(Math.abs(R('q7.buf.toc') - R('(function(){ const T = q7; const t = T.buf.toc; return t; })()')) < 1e-9 && R('q7.buf.toc') >= 0.12 - 1e-9, '7★: +12% tốc bắn');
 tran(['hopca', 'lien', 'canon', 'bang', 'tia'], 'coop');
@@ -66,9 +66,9 @@ ok(R('k2.kho') === 3, 'Archive mới nhận 50% số lần ghép (3)');
 R('capNhatBan(B, 1/30)');
 ok(Math.abs(R('k1.buf.dmg') - 0.15) < 1e-6, 'LV9: 6 × 2.5% = +15%');
 R('k1.kho = 60; capNhatBan(B, 1/30)');
-ok(Math.abs(R('k1.buf.dmg') - 1.75) < 1e-6, 'KHÔNG trần: 60 điểm → +150% (LV9) + đột phá III +25%');
+ok(Math.abs(R('k1.buf.dmg') - 1.7) < 1e-6, 'KHÔNG trần: 60 điểm → +150% (LV9) + đột phá III +20% (Archive khó 2) (' + R('k1.buf.dmg') + ')');
 R('B.capThe.luutru = 6; capNhatBan(B, 1/30)');
-ok(Math.abs(R('k1.buf.dmg') - 2.65) < 1e-6, 'LV15: 4%/điểm × 60 → +240% (+25% đột phá III)');
+ok(Math.abs(R('k1.buf.dmg') - 2.6) < 1e-6, 'LV15: 4%/điểm × 60 → +240% (+20% đột phá III, khó 2)');
 R(`B.capThe.luutru = 0; k1.kho = 45; { const a = dat(0, 'lien', 1), b = dat(1, 'lien', 1); ghep(B, a, b); B.t[1] = null; }`);
 ok(R('k1.kho') === 46, 'ghép khi đã quá 40 điểm vẫn +1 (45 → ' + R('k1.kho') + ')');
 R(`B.capThe.luutru = 0; G.quai.length = 0; for (let i = 0; i < 4; i++) { sinhQuai('bo', 0, 100 + i * 2, 50); G.quai[G.quai.length - 1].vao = 1; } var h0 = G.quai.reduce((s, E) => s + E.hp, 0); var A = dat(5, 'luutru', 3), C = dat(6, 'luutru', 3); ghep(B, A, C);`);
@@ -86,7 +86,7 @@ ok(/BREAKTHROUGH IV/.test(R('SKILLS.lualien.mo(e)')) && /Breakthroughs at 5\/10\
 ok(R('critU(Object.assign(e, { lc: 400 })) <= 1') && (R('capNhatBan(B, 1/30)'), R('critU(e)')) === 1, 'tỉ lệ chí mạng vẫn ≤ 100% (400 lửa)');
 tran(['loren', 'aten', 'canon', 'bang', 'tia']);
 R(`var F = dat(7, 'loren', 3); F.lo = 30; var A = dat(0, 'aten', 4); capNhatBan(B, 1/30);`);
-ok(Math.abs(R('A.buf.toc') - 0.15) < 1e-6 && Math.abs(R('A.buf.cdmg') - 0.3) < 1e-6 && R('DOTPHA.bacU(F)') === 3, 'Scrap Forge 30 cộng dồn: đột phá III vào ụ nhận (toc ' + R('A.buf.toc').toFixed(2) + ')');
+ok(Math.abs(R('A.buf.toc') - 0.2) < 1e-6 && Math.abs(R('A.buf.cdmg') - 0.4) < 1e-6 && R('DOTPHA.bacU(F)') === 3, 'Scrap Forge 30 cộng dồn: đột phá III (khó 4: +20% tốc, +40 STCM) vào ụ nhận (toc ' + R('A.buf.toc').toFixed(2) + ')');
 
 console.log('Hero Foundry (xuonganh)');
 tran(['xuonganh', 'lien', 'canon', 'bang', 'tia']);

@@ -3368,3 +3368,28 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - Chữ kỹ năng: bỏ "ice dragon / rồng băng" → "water orbs shoot up from the turret and rain down along the whole path" / "cầu nước bắn vọt lên trời từ ụ rồi đổ mưa xuống khắp đường đi" (text.js, skills5.js `mo`, skilldemo.js, vi.json → ngonngu-vi.js).
 - Wyrm Engine: nguyên nhân cụt = ảnh ChatGPT `raw_fx_wyrm_lua2.png` khung 3–5 chạm mép phải ô → lửa bị chặt thẳng đứng (không phải vùng cắt VXD; HU.nonLua không bị cắt). `tools/thap-cat-wyrm2.py` nay làm mờ dần ~34% cuối mỗi khung theo mép răng cưa cố định → mũi lửa mềm; đo lại mũi / bề ngang cùng ngưỡng thap-kt-vfx-p0 → VUNG_ANH.wyrm2X 0,801 / wyrm2Y 0,645 (mũi lửa vẫn = tầm). Cả 3 dạng (cam / xanh / trắng) sinh lại.
 - GIF: `docs/demo-hop-tuong/tuvan/vfx-ra-soat/TRUOC-SAU-abyss2.gif`, `TRUOC-SAU-wyrm2.gif`; ảnh trận `tran-390x844-abyss2.jpg`, `tran-844x390-abyss2.jpg`.
+
+## claude/demo-hop-tuong — 10 cơ chế đặc biệt theo tư vấn ChatGPT + cộng gộp thưởng (07/11)
+Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duyệt 18:44). Code: `thap/js/jackpot.js` (khung JP chung) + móc nhỏ ở game.js / skills*.js / vangmoi1.js.
+- **Cộng gộp:** mọi +% cùng loại (ST / tốc / ST chí mạng) từ hỗ trợ, cộng dồn, đột phá, jackpot, Mimic, số Pháo La Bàn, ST có điều kiện của hỗ trợ → cộng trong nhóm rồi nhân nhóm (ST × tốc × chí mạng). Không trần (tỉ lệ chí mạng ≤ 100%). Nhân riêng có chủ ý: RAGE ×2, suy yếu quái, bản sao −%, mốc sao 5/7★. Đo ca xấu nhất (`node tools/thap-sim-jackpot.js boi`, Ember 7★ 40 lửa + Mimic + 4 hỗ trợ 7★ + Forge 60 + ô anh hùng + Masterwork + Overclock + RAGE): **×3287 kiểu nhân → ×436 cộng gộp** (không RAGE ≈ ×218).
+- **Khung jackpot:** điều kiện chỉ đọc trạng thái bàn + G.t (tất định, không Math.random); thưởng vào T.buf (cùng nhóm cộng); hồi chiêu riêng từng jackpot; ụ đá/băng không góp, không nhận; bản sao Copycat không chép tiến độ/thưởng; PVP/CO-OP chỉ bàn mình; nhật ký `G.jpLog`. Hình: nổ fx_awaken tô màu ≤ 0,42 s trên ụ nhận + 1 lấp lánh fx_tia_sao góc trên-trái khi đang chạy + tiến độ n/N trong tấm đếm (≤ 3 dấu hiệu/ụ); thưởng jackpot không bật hào quang buff. Tên jackpot chỉ hiện khi bật gợi ý trận.
+
+| Jackpot (ụ) | Khó | Điều kiện (số cuối) | +ST / +tốc / +STCM | Giây | Hồi | Thêm |
+|---|---|---|---|---|---|---|
+| MASTERWORK (Scrap Forge) | 5 | cho Lò ăn 1★+2★+3★ trong 75 s | +240 / +85 / +150 | 15 | 90 s/Lò từ lúc kích | ụ Tấn công sao cao nhất (hoà: ô nhỏ); đòn đầu mỗi trùm +800% D9 |
+| ORBITAL CASCADE (Orbital) | 3 | 2 lần ghép Vệ Tinh+Vệ Tinh **≥ 2★** trong 1 lần thức tỉnh 23 s | +100 / +45 / +60 | 10 | 45 s | mỗi Vệ Tinh 4 bom ×180% vào quái nhiều máu nhất |
+| CHROMATIC HEIST (Prism Thief) | 4 | ghép cùng màu ĐỎ→VÀNG→XANH trong 60 s | +160 / +65 / +120 | 10 | 30 s sau khi hết | mỗi phát thứ 3 xuyên (không thêm hệ số) |
+| CHAIN REACTOR (Chain Link) | 4 | nhóm ≥ 4, ≥ 3 ụ mỗi ụ 3 đòn trực tiếp trong 5 s | +150 / +60 / +90 | 12 | 40 s/nhóm | mỗi 6 đòn: tia sét 250% D9 sang quái khác |
+| BLOOD ECLIPSE (Blood Circuit) | 4 | ≥ 6 VAMP, 2 lần hiến khác sao trong 25 s → tiêu 2 VAMP cuối | +180 / +70 / +110 | 11 | 30 s | 3 xung xuyên làn × 300% D9 |
+| TRUE NORTH (Compass Cannon) | 3 | 3 ghép cùng mũi tên trong 45 s, không ghép ngược xen giữa, số ≥ 6 | +110 / +45 / +70 | 12 | 30 s | 1 phát xuyên ×600% D9 |
+| GRAND CHORUS (Quantum Choir) | 4 | ≥ 6 ụ cùng sao **≥ 3★** (có Choir, ≥ 3 loại Tấn công) giữ 10 s | +160 / +60 / +110 | 12 | 50 s | vỡ đội hình mất tiến độ; phải vỡ rồi dựng lại |
+| SIX SEALS → ROYAL VAULT (Pandora) | 5 | túi xáo 6 phép (hạt giống), lần mở thứ 6 | +220 / +85 / +150 | 15 | — | ụ Tấn công sao cao nhất + 100 mana; online gửi dấu 6 trong gói ghép |
+| LOADED DICE (Dice Gun) | 3 | Pháo **≥ 3★**, 12 phát có đủ 3 dải (chí mạng không tính) | 6 phát đúng 300% / +70 / +80 | ≤ 8 | 30 s | |
+| PERFECT FREQUENCY (Radar) | 4 | Radar **≥ 3★**, 4 ô thẳng là ụ Tấn công ≥ 3 loại, giữ 8 s | +85 / +50 / +90 | 10 | 50 s | Radar bị khoá/câm → tắt sớm |
+
+- **ĐỘT PHÁ theo độ khó** (`DOTPHA.KHO/BANG`): khó 2 (Choir, Archive) I +12% tốc · II +25 STCM · III +20% ST · IV +8% CM / +40 · khó 3 (Ember, Leviathan, Compass) = mốc cũ · khó 4 (Forge, Chain Link, Combo, Nine-Tail) +20% · +40 · +35% · +12% / +65. Choir 1★ không đột phá; Leviathan mốc 5/10/20/40; Compass mốc số 4/8/16/32.
+- **Cộng dồn do HÀNH ĐỘNG = riêng từng ụ (người dùng 18:57):** ABYSS Leviathan chỉ ụ nuốt mới tăng, ụ mới = 0, ghép 2 Leviathan ra Leviathan giữ số lớn hơn (GIU_CONG_DON). Nine-Tail / Scrap Forge vốn đã riêng ụ. Cộng dồn theo điều kiện bàn (Choir, Railgun, Chain Link, Star Cannon, Combo, VAMP, Prism COMBO) giữ nguyên.
+- **Pháo La Bàn lên bậc VÀNG (người dùng 20:10):** roster `bac: vang` (cấp thẻ bắt đầu LV9, hệ số bậc ×2.6), sát thương gốc 26.5 → 20; bộ hướng dẫn thay Pháo bằng Sniper; họ EXPLOSIVE: Pháo sang hàng Vàng; đột phá khó 3 theo số.
+- **Nhịp đo** (`node tools/thap-sim-jackpot.js nhip 4`, bot sim-vaitro + cho Lò ăn): JACKPOT đầu Solo: Pandora W13, Choir W15, Dice W9.5, Chain W16, Orbital W17 · PvP: Dice W7, Orbital W8, Pandora W13.5; ĐỘT PHÁ đầu: Forge W6–6.5, Choir W6–9.5, Chain W7.5–10, Leviathan W12–15.5. Prism / Blood / Masterwork cần chơi có chủ đích (bot không căn màu / không giữ VAMP) → chỉ kiểm bằng test luật.
+- Test: `tools/thap-kt-cong-huong-luat.js` nhóm 10 (53 ca jackpot: kích / không kích / đá-băng / Copycat / PVP / online Pandora / ABYSS riêng / cộng gộp) — 414+ cặp đạt.
+- Ảnh: `docs/demo-hop-tuong/tuvan/tu-van-game/anh/`.

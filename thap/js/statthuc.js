@@ -35,12 +35,15 @@ function statThuc(T) {
   if (T.tocT > 0) { tuToc -= T.tocV; ds.push({ k: 'toc', ic: 'tam', txt: pc(T.tocV) + ' rate · speed boost ' + Math.ceil(T.tocT) + 's' }); }
   if (typeof mocChung === 'function' && mocChung(T, 3) && loaiMoc(T.id) !== 'ht') { tuToc -= 0.2; ds.push({ k: 'toc', ic: 'toc', txt: '+20% rate · 3★ milestone' }); }
   if (T.epxung > 0) ds.push({ k: 'toc', ic: 'toc', txt: pc(T.epxung) + ' rate · Overclock' });
-  const tuDmg = T.buf.dmg - tong.dmg, tuCrit = T.buf.crit - tong.crit;
+  // jackpot đang chạy (jackpot.js): cùng nhóm cộng — tách khỏi phần 'tự có'
+  let jpD = 0;
+  if (T.jp && typeof JP !== 'undefined') for (const id in T.jp) { const e = T.jp[id]; if (e.het <= G.t) continue; jpD += e.dmg; tuToc -= e.toc; ds.push({ k: 'dmg', ic: 'dmg', txt: '+' + Math.round(e.dmg * 100) + '% · +' + Math.round(e.toc * 100) + '% rate · ' + JP.DS[id].ten + ' ' + Math.ceil(e.het - G.t) + 's' }); }
+  const tuDmg = T.buf.dmg - tong.dmg - jpD, tuCrit = T.buf.crit - tong.crit;
   if (Math.abs(tuDmg) > 0.0005) ds.push({ k: 'dmg', ic: 'dmg', txt: pc(tuDmg) + ' · ' + tuTen });
   if (Math.abs(tuToc) > 0.0005) ds.push({ k: 'toc', ic: 'toc', txt: pc(tuToc) + ' rate · ' + tuTen });
   if (Math.abs(tuCrit) > 0.0005) ds.push({ k: 'crit', ic: 'crit', txt: pc(tuCrit) + ' crit · ' + tuTen });
   // hệ số nhân (đúng thứ tự trong dmgU)
-  if (T.aurora > 0) ds.push({ k: 'dmg', ic: 'dmg', txt: '×' + +(1 + knThe(B, 'mimic') / 100).toFixed(2) + ' · Mimic merge ' + Math.ceil(T.aurora) + 's' });
+  if (T.aurora > 0) ds.push({ k: 'dmg', ic: 'dmg', txt: (CONG_GOP ? '+' + Math.round(knThe(B, 'mimic')) + '%' : '×' + +(1 + knThe(B, 'mimic') / 100).toFixed(2)) + ' · Mimic merge ' + Math.ceil(T.aurora) + 's' });
   if (T.banSao) ds.push({ k: 'dmg', ic: 'dmg', xau: true, txt: '×' + +heSaoChep(B).toFixed(2) + ' · copy (' + Math.round(heSaoChep(B) * 100) + '% power)' });
   if (B && B.cuong > 0) ds.push({ k: 'dmg', ic: 'dmg', txt: '×2 · Rage ' + Math.ceil(B.cuong) + 's' });
   const moc = typeof heSoMocDmg === 'function' ? heSoMocDmg(T) : 1;

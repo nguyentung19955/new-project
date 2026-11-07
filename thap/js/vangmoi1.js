@@ -305,9 +305,9 @@ if (typeof addEventListener === 'function') addEventListener('DOMContentLoaded',
 //   Hình: icon tấm đếm + lửa Ember đổi màu theo bậc = bản sao PNG lọc màu (ctx.filter) DỰNG 1 LẦN rồi giữ (DOTPHA.ten) · lên bậc: nổ PNG + chữ.
 // =====================================================================================================
 const DOTPHA = {
-  NGUONG: { lualien: [5, 10, 20, 40], hopca: [3, 5, 8, 12], luutru: [10, 25, 50, 100], loren: [6, 15, 30, 60], leviathan: [25, 50, 100, 200],
+  NGUONG: { lualien: [5, 10, 20, 40], hopca: [3, 5, 8, 12], luutru: [10, 25, 50, 100], loren: [6, 15, 30, 60], leviathan: [5, 10, 20, 40], canon: [4, 8, 16, 32],
     lienket: [3, 5, 8, 12], combo: [5, 10, 20, 40], cuuvi: [1, 3, 6, 10] },
-  SO: { lualien: (T) => T.lc || 0, hopca: (T) => T.hop || 0, luutru: (T) => T.kho || 0, loren: (T) => T.lo || 0, leviathan: (T) => T.vuc || 0,
+  SO: { lualien: (T) => T.lc || 0, hopca: (T) => (T.sao >= 2 ? T.hop || 0 : 0) /* Choir 1★ không đột phá: bàn đầu trận toàn 1★ — mô phỏng: bậc I ngay wave 1 */, luutru: (T) => T.kho || 0, loren: (T) => T.lo || 0, leviathan: (T) => T.vuc || 0, canon: (T) => T.so || 1,
     lienket: (T) => T.chuoi || 1, combo: (T) => { const B = G.ban && G.ban[T.ban]; return (B && B.combo) || 0; }, cuuvi: (T) => T.xaN || 0 },
   LA: ['', 'I', 'II', 'III', 'IV'],
   MAU: ['', '#ffd84a', '#7fc8ff', '#d9a0ff', '#ffffff'],
@@ -315,9 +315,14 @@ const DOTPHA = {
   LOC: ['', 'sepia(1) saturate(4) hue-rotate(5deg) brightness(1.25)', 'sepia(1) saturate(4) hue-rotate(170deg) brightness(1.15)', 'sepia(1) saturate(4) hue-rotate(230deg) brightness(1.15)', 'sepia(1) saturate(0.3) brightness(1.9)'],
   bac(n, nguong) { let b = 0; if (nguong) for (const x of nguong) if (n >= x) b++; return b; },
   bacU(T) { const f = T && this.SO[T.id]; return f ? this.bac(f(T), this.NGUONG[T.id]) : 0; },
-  thuong(b) { return { toc: b >= 1 ? 0.15 : 0, cdmg: (b >= 2 ? 0.3 : 0) + (b >= 4 ? 0.5 : 0), dmg: b >= 3 ? 0.25 : 0, crit: b >= 4 ? 0.1 : 0 }; },
+  // ĐỘT PHÁ THEO ĐỘ KHÓ (07/11, tư vấn ChatGPT duyệt): khó 3 = mốc cũ · khó 2 −20% · khó 4 / 5 cao hơn — độ khó theo công sức THẬT để tới bậc IV
+  //   (Choir 12 ụ cùng sao dễ với 1★ → khó 2; Archive ghép tự nhiên → 2; Ember / Leviathan 3; Forge / Chain Link / Combo / Nine-Tail 4)
+  KHO: { canon: 3, lualien: 3, hopca: 2, luutru: 2, loren: 4, leviathan: 3, lienket: 4, combo: 4, cuuvi: 4 },
+  // [I tốc, II STCM, III ST, IV tỉ lệ CM, IV STCM] theo độ khó
+  BANG: { 2: [0.12, 0.25, 0.20, 0.08, 0.40], 3: [0.15, 0.30, 0.25, 0.10, 0.50], 4: [0.20, 0.40, 0.35, 0.12, 0.65], 5: [0.25, 0.50, 0.45, 0.15, 0.85] },
+  thuong(b, id) { const v = this.BANG[this.KHO[id] || 3]; return { toc: b >= 1 ? v[0] : 0, cdmg: (b >= 2 ? v[1] : 0) + (b >= 4 ? v[4] : 0), dmg: b >= 3 ? v[2] : 0, crit: b >= 4 ? v[3] : 0 }; },
   chu(id, T) {
-    const ng = this.NGUONG[id], n = this.SO[id](T), b = this.bac(n, ng), t = this.thuong(b), ds = [];
+    const ng = this.NGUONG[id], n = this.SO[id](T), b = this.bac(n, ng), t = this.thuong(b, id), ds = [];
     if (t.toc) ds.push('+' + Math.round(t.toc * 100) + '% fire rate'); if (t.cdmg) ds.push('+' + Math.round(t.cdmg * 100) + '% crit dmg');
     if (t.dmg) ds.push('+' + Math.round(t.dmg * 100) + '% damage'); if (t.crit) ds.push('+' + Math.round(t.crit * 100) + '% crit');
     return (b ? 'BREAKTHROUGH ' + this.LA[b] + ': ' + ds.join(', ') : 'Breakthroughs at ' + ng.join('/')) + (b > 0 && b < 4 ? ' · next breakthrough at ' + ng[b] : '');
@@ -364,7 +369,7 @@ for (const id in DOTPHA.NGUONG) {
     const r = cn.apply(this, arguments);
     const b = DOTPHA.bacU(T), X = id === 'loren' ? T.forgeX : T;
     if (b && X && X !== T) { X.dpNhan = X.dpNhanT === G.t ? Math.max(X.dpNhan || 0, b) : b; X.dpNhanT = G.t; }
-    if (b && X) { const t = DOTPHA.thuong(b); X.buf.toc += t.toc; X.buf.cdmg = (X.buf.cdmg || 0) + t.cdmg; X.buf.dmg += t.dmg; X.buf.crit += t.crit; }
+    if (b && X) { const t = DOTPHA.thuong(b, id); X.buf.toc += t.toc; X.buf.cdmg = (X.buf.cdmg || 0) + t.cdmg; X.buf.dmg += t.dmg; X.buf.crit += t.crit; }
     if (b > (T.dpB || 0) && T.tuoi > 0.3 && B && B.o && B.o[T.o]) { // lên bậc: nổ PNG + chữ (chỉ trình bày)
       const c = B.o[T.o]; try { FX.no('no_phao', c.x, c.y, 50 + 12 * b, 0.4); nhanU(T, 'BREAKTHROUGH ' + DOTPHA.LA[b], DOTPHA.MAU[b], b >= 3); } catch (e) { }
     }

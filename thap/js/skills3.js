@@ -316,17 +316,19 @@ const PANDORA = [
 const PANDORA_TOT = ['sao', 'cuong', 'bom', 'mana', 'dong', 'khien']; // 6★: quay 2 lần → giữ cái đứng trước trong danh sách này
 SKILLS.pandora = {
   vai: 'db', dmg: 10, toc: 0.9, nham: 'dau',
-  mo: (T) => 'On merge: opens the vault — 1 of 6 (mana rain · freeze all · +1★ gift · 5 bombs · 5 shields · frenzy)' + (T.sao >= 7 ? ' · OPEN: its 7★ merge fired 2 effects' : T.sao >= 5 ? ' · merging into 6★ rolls twice (keeps the better), into 7★ fires 2 effects' : ''),
+  mo: (T) => 'On merge: opens the vault — 1 of 6 (mana rain · freeze all · +1★ gift · 5 bombs · 5 shields · frenzy)' + ' · SIX SEALS: every 6 openings give all 6 once; the 6th adds ROYAL VAULT: best Attack turret +220% damage, +85% fire rate, +150% crit dmg 15s + 100 mana' + (T.sao >= 7 ? ' · OPEN: its 7★ merge fired 2 effects' : T.sao >= 5 ? ' · merging into 6★ rolls twice (keeps the better), into 7★ fires 2 effects' : ''),
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'tia_lua', co: 15, mau: '#ffd86a', sp: 480 }); },
   ghep(G, B, a, b, ra) {
-    const sao = Math.min(7, a.sao + 1), lay = () => rint(6);
+    // SIX SEALS (jackpot.js, 07/11): rút từ TÚI XÁO 6 phép (mỗi chu kỳ đủ 6, không lặp, hạt giống trận) — lần mở thứ 6 thêm ROYAL VAULT
+    let royal = false;
+    const sao = Math.min(7, a.sao + 1), lay = typeof JP !== 'undefined' ? () => { const r = JP.layTui(B); if (r.het) royal = true; return r.i; } : () => rint(6);
     let ds;
-    if (G._pdEp) ds = G._pdEp.slice(); // online: bàn con rối mở ĐÚNG phép máy bạn đã quay (gói 'gh' d.pd)
+    if (G._pdEp) { ds = G._pdEp.filter(i => i < 6); royal = G._pdEp.includes(6); } // online: bàn con rối mở ĐÚNG phép máy bạn đã quay (gói 'gh' d.pd; 6 = ROYAL VAULT)
     else if (sao >= 7) { const x = lay(); let y = lay(); while (y === x) y = lay(); ds = [x, y]; }
     else if (sao >= 6) { const x = lay(), y = lay(); ds = [PANDORA_TOT.indexOf(PANDORA[x].k) <= PANDORA_TOT.indexOf(PANDORA[y].k) ? x : y]; }
     else ds = [lay()];
-    B._pd = ds.slice();
-    G.hu.push({ k: 'pandora', t: 0, song: 1.5, B, o: b.o, T: ra, chon: ds, sao, da: false });
+    B._pd = ds.slice(); if (royal) B._pd.push(6);
+    G.hu.push({ k: 'pandora', t: 0, song: 1.5, B, o: b.o, T: ra, chon: ds, sao, da: false, royal });
     if (!B.ai || G.che !== 'coop') SND.quay();
   },
   lam(G, B, k, sao, c) {
@@ -366,6 +368,7 @@ HU.pandora = { // vòng quay 6 biểu tượng trên ô ụ vừa ghép (0.8 s, 
     if (!o.da && o.t >= 0.8) {
       o.da = true; const c = o.B.o[o.o];
       for (const i of o.chon) this.lam(o, PANDORA[i], c);
+      if (o.royal && typeof JP !== 'undefined') JP.royal(o.B, c); // SIX SEALS: dấu ấn thứ 6 → ROYAL VAULT
     }
     return false;
   },

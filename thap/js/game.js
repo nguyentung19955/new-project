@@ -183,7 +183,7 @@ function ghepDacBiet(a, b) {
   if (sb && sb.ghepDB && sb.ghepDB.haiChieu && sb.ghepDB.hopLe(b, a)) return { sk: sb, a: b, b: a, dao: true };
   return null;
 }
-const GIU_CONG_DON = { loren: ['lo'], hopbi: ['tuoi'], tienhoa: ['tuoi'] }; // cộng dồn giữ khi ghép cùng loại ra cùng loại
+const GIU_CONG_DON = { loren: ['lo'], hopbi: ['tuoi'], tienhoa: ['tuoi'], leviathan: ['vuc'] }; // cộng dồn giữ khi ghép cùng loại ra cùng loại
 // ghép a (kéo) vào b → ở ô b ra ụ NGẪU NHIÊN trong bộ bài, +1 sao (luật DCDW / Random Dice)
 function ghep(B, a, b, ep) {
   if (!ep && !hopLeGhep(a, b)) return null;
@@ -246,11 +246,17 @@ function dungMV(B) {
 }
 
 // ---------- chỉ số ----------
-function dmgU(T) {
+// CỘNG GỘP (07/11, người dùng duyệt tư vấn ChatGPT): mọi +% CÙNG LOẠI (sát thương / tốc bắn / ST chí mạng) từ hỗ trợ, cộng dồn kỹ năng, đột phá, jackpot (jackpot.js),
+//   Mimic, số Pháo La Bàn, sát thương có điều kiện của hỗ trợ → CỘNG trong nhóm trước, rồi các nhóm mới nhân nhau (ST × tốc × chí mạng). Không trần (tỉ lệ chí mạng ≤ 100%).
+//   Hệ số nhân RIÊNG có chủ ý: RAGE ×2, suy yếu quái, bản sao Copycat −%, mốc sao 5★/7★, Pháo Đồng Bộ PVP. CONG_GOP = false chỉ để ĐO kiểu nhân cũ (tools/thap-sim-jackpot.js).
+var CONG_GOP = true;
+const heJP = (T, k) => (!CONG_GOP && typeof JP !== 'undefined' ? 1 + JP.gt(T, k) : 1); // kiểu cũ (đo): jackpot nhân riêng
+function dmgU(T, them) {
   const sk = SKILLS[T.id], B = G.ban[T.ban];
   let d = (sk.dmg || 0) * TIERS[T.bac].hs * (1 + 0.85 * (T.sao - 1)) * hsLv(B, T.id);
-  d *= 1 + T.buf.dmg;
-  if (T.aurora > 0) d *= 1 + knThe(B, 'mimic') / 100; // Mimic: +50% ở cấp đầu, tăng theo cấp thẻ Mimic
+  const mi = T.aurora > 0 ? knThe(B, 'mimic') / 100 : 0; // Mimic: +50% ở cấp đầu, tăng theo cấp thẻ Mimic
+  d *= 1 + T.buf.dmg + (them || 0) + (CONG_GOP ? mi : 0); // them: +% riêng của đòn (số Pháo La Bàn) — cùng nhóm sát thương
+  if (!CONG_GOP) d *= (1 + mi) * heJP(T, 'dmg');
   if (T.banSao) d *= heSaoChep(B); // bản sao Copycat: chỉ số ụ gốc × % sao chép (70% ở cấp đầu → 94% thẻ max, theo cấp thẻ Copycat)
   if (B.cuong > 0) d *= 2;
   if (G.che === 'pvp') d *= SKILLS.dongbo.heSoDoiThu(B); // Pháo Đồng Bộ (Dana) của đối thủ: −sát thương nhẹ
@@ -262,6 +268,7 @@ function tocU(T) {
   let r = sk.toc || 1;
   if (sk.tocSao) r *= 1 + sk.tocSao * (T.sao - 1);
   r *= Math.max(0.1, 1 + T.buf.toc + T.epxung); // QA Tím: nhiều Súng Bão kề nhau không làm tốc bắn âm
+  r *= heJP(T, 'toc');
   if (T.st.kep > 0) r *= 0.6; // bị Kẹp Phá của đối thủ
   return r;
 }
@@ -318,13 +325,13 @@ function trung(E, dmg, o) {
   let crit = o.crit != null ? o.crit : Math.random() < critU(T);
   if (sk && sk.luonCrit && sk.luonCrit(T)) crit = true;
   if (T && T._critChac && !o.phu && o.crit == null) { crit = true; T._critChac = false; } // Crit Antenna 7★: đòn chắc chắn chí mạng (đòn đã tự quyết chí mạng — Dice Gun / tia Laser / chém — không bị ép)
-  if (crit) { dmg *= 2 + ((T && T.buf && T.buf.cdmg) || 0); if (T && T.buf && T.buf.xuyen > 0 && !o.phu && typeof xuyenCrit === 'function') xuyenCrit(E, dmg, T, o); } // Focus Lens: +sát thương chí mạng, chí mạng xuyên
+  if (crit) { dmg *= (2 + ((T && T.buf && T.buf.cdmg) || 0)) * (T && !CONG_GOP && typeof JP !== 'undefined' ? 1 + JP.gt(T, 'cdmg') / 2 : 1); if (T && T.buf && T.buf.xuyen > 0 && !o.phu && typeof xuyenCrit === 'function') xuyenCrit(E, dmg, T, o); } // Focus Lens: +sát thương chí mạng, chí mạng xuyên
   if (!o.phu && !o.im) { if (crit) SND.crit(); else SND.trung(); }
   const vu = HOTRO.vuln(E); if (vu) dmg *= 1 + vu;     // suy yếu quái: mọi nguồn cộng lại, trần 25% (hotro.js)
   if (E.giapT > 0) dmg *= 0.75;                    // giáp đối thủ (PVP)
   if (E.cvPT > 0) dmg *= 1 - (E.cvPK || 0);         // PVP: cầu vồng (Yuna) của đối thủ — quái trên vệt nhận ít sát thương hơn
   // hỗ trợ kề (hotro.js): sát thương có điều kiện (lộ / chậm / cầu vồng / đòn liên tiếp), chậm khi trúng, giết ngay, choáng khi chí mạng
-  if (T && T.buf && !o.phu) { if (T.ht) dmg *= HOTRO.dkHeSo(T, E); dmg = HOTRO.khiTrung(T, E, dmg, crit, o); }
+  if (T && T.buf && !o.phu) { if (T.ht) { const m = HOTRO.dkHeSo(T, E), bd = Math.max(0, T.buf.dmg + (T.aurora > 0 ? knThe(G.ban[T.ban], 'mimic') / 100 : 0)); dmg *= CONG_GOP ? (1 + bd + m - 1) / (1 + bd) : m; } dmg = HOTRO.khiTrung(T, E, dmg, crit, o); } // có điều kiện (lộ/chậm/vệt/Amplifier): cùng nhóm sát thương (cộng gộp)
   E.hp -= dmg; E.flash = 0.09;
   if (T && T.bac && !o.phu && !o.im) TVX.trung(T, E, crit); // hiệu ứng leo thang theo bậc (tiervfx.js)
   // số sát thương: gộp theo quái mỗi ~0,2 s cho đỡ rối; chí mạng hiện ngay, to hơn

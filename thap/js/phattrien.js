@@ -15,7 +15,7 @@ const ms = (T, n) => !!T && T.sao >= n; // đã đạt mốc n sao chưa
 const HO = {
   frost:     { ten: 'FROST',      mau: '#7fdcff', bac: [['bang'], ['kiembang', 'lanhgia'], ['baotuyet'], [], ['lophanung']], gap: { 3: 'Eclipse (Night: wide slow)' } },
   poison:    { ten: 'POISON',     mau: '#9dff5a', bac: [['doc'], ['vungdoc'], [], ['aten'], []], gap: { 2: 'new idea needed', 4: 'new idea needed' } },
-  blast:     { ten: 'EXPLOSIVE',  mau: '#ff8a3a', bac: [['canon', 'xucxac'], ['mortar'], ['no5'], ['orbital'], []], gap: { 4: 'Wyrm Engine' } },
+  blast:     { ten: 'EXPLOSIVE',  mau: '#ff8a3a', bac: [['xucxac'], ['mortar'], ['no5'], ['orbital', 'canon'], []], gap: { 4: 'Wyrm Engine' } },
   energy:    { ten: 'ENERGY',     mau: '#9ffcff', bac: [['set'], ['laser'], ['bao'], ['railgun'], ['overlord']] },
   heavy:     { ten: 'HEAVY SHOT', mau: '#6fc8ff', bac: [['sungluc', 'tia'], ['nangluong'], [], [], []], gap: { 2: 'Lone Ace', 3: 'Nemesis', 4: 'Leviathan' } },
   rapid:     { ten: 'RAPID FIRE', mau: '#ffb43a', bac: [['lien', 'phun'], ['radar'], ['epxung'], [], []], gap: { 3: 'Hydra', 4: 'new idea needed' } },

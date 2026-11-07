@@ -164,10 +164,10 @@ SKILLS.leviathan = {
   // dòng bảng ụ: 'ABYSS 56 · +224% damage' (VI: '+224% sát thương') = đúng số trên tấm đếm xoáy vực ở đáy ô (demkn.js)
   mo: (T) => 'ABYSS ' + (T.vuc || 0) + ' · +' + 4 * (T.vuc || 0) + '% damage · devours a small enemy every ' + SKILLS.leviathan.e(T) + 's (' + SKILLS.leviathan.TAM + ' px' + (T.sao >= 4 ? ', big ones ×3' : '') + (T.sao >= 7 ? ', flyers too' : '') + ') · bubble splash 30 px · ' + (T.sao >= 3 ? 'TAP when full: TIDAL BREATH ×' + (4 + 0.1 * (T.vuc || 0)).toFixed(1) + ' — water orbs shoot up from the turret and rain down along the whole path' : 'TIDAL BREATH unlocks at 3★'),
   TAM: 160, // tầm nuốt 120 → 160 px: mọi ô hàng giữa với tới đường (BAO-CAO gioi-han §4 mục 7)
-  // VỰC SÂU lưu THEO BÀN (B.vucSau): mọi Leviathan trên bàn cùng hưởng, giữ khi ghép (BAO-CAO §4 mục 6) — T.vuc = bản sao để vẽ/hiển thị
-  sinh(G, T) { const B = G.ban && G.ban[T.ban]; T.vuc = (B && B.vucSau) || 0; T.nuot = 0; },
+  // VỰC SÂU RIÊNG TỪNG Ụ (người dùng 07/11 18:57): chỉ Leviathan NUỐT mới được điểm; ụ mới = 0; ụ bị biến/đổi/thay (ghép ra ụ khác, Mad Crown, Hộp…) mất điểm;
+  //   ghép 2 Leviathan ra Leviathan → giữ số LỚN HƠN (GIU_CONG_DON, game.js) — như Ember Relay
+  sinh(G, T) { T.vuc = T.vuc || 0; T.nuot = 0; },
   capNhat(G, B, T, dt) {
-    if ((T.vuc || 0) > (B.vucSau || 0)) B.vucSau = T.vuc; T.vuc = B.vucSau || 0;
     T.buf.dmg += 0.04 * (T.vuc || 0);
     T.nuot = (T.nuot || 0) + dt * (1 + T.buf.toc);
     if (T.nuot >= this.e(T) && !G.hu.some(o => o.k === 'xoay' && o.T === T)) {
@@ -218,7 +218,7 @@ HU.xoay = { // nuốt: xoáy nước (vòng tròn đồng tâm xoay) hút quái 
     if (o.t >= o.song * 0.85 && !o.da) {
       o.da = true; const T = o.T, B = o.B;
       const lon = E.d.to ? 3 : 1;
-      B.vucSau = Math.max(B.vucSau || 0, T.vuc || 0) + lon; for (const X of B.t) if (X && X.id === 'leviathan') X.vuc = B.vucSau; // theo bàn
+      T.vuc = (T.vuc || 0) + lon; // riêng ụ đã nuốt
       E.hp = 0; chet(E, B);
       if (conTren(T)) { const c = tamU(T); G.hu.push({ k: 'tiaPhep', t: 0, song: 0.4, x0: o.x, y0: o.y, x1: c.x, y1: c.y, mau: '#7fdcff' }); nhanU(T, '+' + lon + ' ABYSS', '#7fdcff'); }
       FX.tiaLua(o.x, o.y, 6, '#bff4ff', 140, 7);
