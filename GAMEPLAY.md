@@ -3196,3 +3196,10 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - Bài kiểm cập nhật theo luật mới: Lửa Thập Tự cả hàng + cột, tối đa 8 lửa (`thap-kt-vang-moi.js`); kiểm online bỏ trường mũi tên+số của Pháo La Bàn khi so cờ đá/bản sao (`thap-kt-conghuong2.js`, `thap-kt-copycat-da.js`).
 - Luật hình (`thap/QUY-TAC-HINH.md` mục 2): gen ảnh xong là đóng tab Chrome ngay.
 - Ảnh mới tải lên `thap-art/`: `raw_mod_*` (7 ụ mẫu kiểu module, nhánh claude/kiem-nhan-dien đo nhận diện).
+
+## claude/u-module — 7 ụ module: bệ riêng + đầu mới (Pháo La Bàn, Liên Thanh, Tesla, Băng, Radar, Hố Đen, Độc)
+- Ảnh ChatGPT `thap-art/raw_mod_<id>.png` (lưới 2×2) cắt bằng `tools/thap-cat-umod.py`: ô 2 → `<id>_de.png` (bệ, tâm ảnh = điểm gắn đầu), ô 3 → `<id>_nong.png` (đầu, xoay 90° cho nòng hướng phải như mọi đầu cũ, tâm ảnh = trục xoay lấy từ ô 1 lắp sẵn), ô 4 → `<id>_phu.png` (canon/set/bang/radar/blackhole; chưa dùng, để dành cho anim PART_B). Đầu cũ vẫn còn ở `<id>_nong_v1`.
+- Khoá magenta: lõi đặc giữ nguyên, viền ~1 px alpha mềm + tách trộn nền; thu Lanczos nhân-trước-alpha; đo `thap-kt-min3x` (430×932): bệ r ≤ 0,87, đầu r ≤ 0,72.
+- `render.js than()`: ụ trong `REN.DE_RIENG` vẽ bệ riêng (cỡ = bệ chung × hệ số khung) khi ảnh đã tải; đang tải/lỗi → `de_chung`. Khoá bộ đệm thân theo id cho các ụ này. `ui.js dsTran` nạp trước `<id>_de`. `artscale.js` HEAD_K canon/lien/doc nâng (trục lệch tâm hình). Không đổi luật chơi.
+- Nhận diện (`tools/thap-kt-nhandien.js`, ô thật iPhone 46,5 px), điểm giống nhất trước → sau: Pháo La Bàn 0,86→0,74 · Liên Thanh 0,88→0,76 · Tesla 0,84→0,65 · Băng 0,91→0,84 · Radar 0,89→0,84 · Hố Đen 0,88→0,46 · Độc 0,91→0,83; cặp ≥ 0,80 cả bảng 1.553→1.430. Kết quả + ảnh trong `docs/demo-hop-tuong/tuvan/nhandien/game/`.
+- Còn nợ: đầu Độc (bình), Radar (đĩa), Pháo (nòng) vẽ nghiêng 3/4 chứ chưa top-down thật; Tesla thiếu vòng cuộn xanh (là PART_B, chưa gắn); thẻ/biểu tượng `nho/<id>` và trang ụ vẫn hình cũ.

@@ -987,20 +987,26 @@ const REN = {
   },
   // thân ụ dựng sẵn: BỆ CHUNG trung tính (de_chung.png, mọi ụ như nhau) + viên ngọc độ hiếm nhỏ ở mép bệ.
   // Không còn vòng bậc / ô xúc xắc sao (tư vấn B.2, G). Bệ = 70% cạnh ngắn ô (~60% cạnh dài), tròn tuyệt đối.
+  // Ụ MODULE (claude/u-module): 7 ụ có BỆ RIÊNG gen ChatGPT (tools/thap-cat-umod.py) — hình bóng khác nhau thay bệ tròn chung.
+  // giá trị = khung ảnh <id>_de / cạnh lớn nhất của bệ (tâm ảnh = điểm gắn đầu) → bệ chiếm cùng chỗ với de_chung (SB)
+  DE_RIENG: { canon: 1.017, lien: 1.025, set: 1.261, bang: 1.062, radar: 1.014, blackhole: 1.101, doc: 1.013 },
   than(T, S, da, bong) {
     const km = 0; // (vòng màu khoá đã bỏ)
-    const k = this.s * this.dpr, n = Math.round(S * 1.5 * k), key = 'than|' + T.bac + '|' + (da ? 1 : 0) + '|' + n + (bong ? '|b' : '') + '|' + km;
+    // bệ riêng đã tải xong → dùng; đang tải / lỗi → bệ chung (không chờ)
+    const kR = this.DE_RIENG[T.id], tenR = kR ? T.id + '_de' : null;
+    const rieng = tenR && this.img(tenR) ? tenR : null, ten = rieng || 'de_chung';
+    const k = this.s * this.dpr, n = Math.round(S * 1.5 * k), key = 'than|' + (rieng || T.bac) + '|' + (da ? 1 : 0) + '|' + n + (bong ? '|b' : '') + '|' + km;
     let c = this.cGet(key); if (c) return c;
-    let de = da ? this.banXam('de_chung') : this.img('de_chung');
-    if (!de && !(this.anh.de_chung && this.anh.de_chung._loi)) return null; // còn đang tải
+    let de = da ? this.banXam(ten) : this.img(ten);
+    if (!de && !(this.anh[ten] && this.anh[ten]._loi)) return null; // còn đang tải
     if (!de) return null; // KHÔNG vẽ bệ code (đang tải → vòng xoay PNG)
     c = document.createElement('canvas'); c.width = c.height = n;
     const x = this.c2d(c);
     const q = n / (S * 1.5); x.scale(q, q); x.translate(S * 0.75, S * 0.75);
-    const SB = S * 0.714;
-    de = this.mip(de, SB * q);
+    const SB = S * 0.714, SD = rieng ? SB * kR : SB;
+    de = this.mip(de, SD * q);
     if (bong) { x.globalAlpha = 0.7; x.drawImage(this.cham1('#000000'), 2 - SB * 0.62, SB * 0.06 + 3 - SB * 0.62, SB * 1.24, SB * 1.24); x.globalAlpha = 1; } // bóng = PNG tô đen
-    x.drawImage(de, -SB / 2, -SB / 2, SB, SB);
+    x.drawImage(de, -SD / 2, -SD / 2, SD, SD);
     // (bỏ vòng màu khoá vẽ code quanh bệ — QUY-TAC-HINH 1/4; nhận diện = biểu tượng vai trò PNG góc ô)
     // (BỎ vòng bậc tier_ring_<bac> quanh bệ — người dùng 2026-11-06: đầu ụ đã thể hiện bậc; mọi chế độ / bóng kéo / bảng kết quả đều qua hàm này)
     return this.cSet(key, c);
