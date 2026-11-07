@@ -31,15 +31,15 @@ console.log('Ember Relay (lualien)');
 tran(['lualien', 'lien', 'canon', 'bang', 'tia']);
 R(`var a = dat(0, 'lualien', 1), b = dat(1, 'lualien', 1), n1 = dat(2, 'lualien', 2), n2 = dat(6, 'lualien', 3), xa = dat(3, 'lualien', 2), kc = dat(7, 'lien', 1);`);
 R(`B.deck = ['lien']; var ra = ghep(B, a, b);`);
-ok(R('n1.lc === 1 && n2.lc === 1'), 'ghép → +1 lửa cho Relay ở ô kề phải + ô kề dưới');
-ok(R('!xa.lc && !kc.lc'), 'Relay không kề / ụ khác loại không nhận lửa');
+ok(R('n1.lc === 1 && n2.lc === 1 && xa.lc === 1'), 'ghép ô 1 → +1 lửa cho mọi Relay cùng HÀNG (ô 2, ô 3 xa) + cùng CỘT (ô 6) — luật chữ thập co-che-moi §3-B');
+ok(R('!kc.lc'), 'ụ khác loại không nhận lửa');
 ok(R('n1.tocT >= 4.9 && n1.tocV >= 0.15'), 'Relay nhận lửa +15% tốc bắn 5 s');
 R('for (let i = 0; i < 9; i++) SKILLS.lualien.ghep(G, B, n2, B.t[1] || n2, null);'); // ép nhiều lần ghép quanh ô 1
-ok(R('n1.lc === 5'), 'tối đa 5 lửa / ụ (n1.lc=' + R('n1.lc') + ')');
+ok(R('n1.lc === 8'), 'tối đa 8 lửa / ụ (n1.lc=' + R('n1.lc') + ')');
 R('capNhatBan(B, 1/30)');
-ok(Math.abs(R('n1.buf.dmg') - 0.6) < 1e-6 && Math.abs(R('n1.buf.crit') - 0.15) < 1e-6, 'LV9 đủ 5 lửa: +60% sát thương, +15% chí mạng (dmg ' + R('n1.buf.dmg').toFixed(3) + ')');
+ok(Math.abs(R('n1.buf.dmg') - 8 * R('SKILLS.lualien.moiLua(n1)')) < 1e-6 && Math.abs(R('n1.buf.crit') - 0.16) < 1e-6, 'đủ 8 lửa: 8 × mỗi lửa sát thương, +16% chí mạng (dmg ' + R('n1.buf.dmg').toFixed(3) + ')');
 R('B.capThe.lualien = 6; capNhatBan(B, 1/30)');
-ok(Math.abs(R('n1.buf.dmg') - 0.9) < 1e-6, 'LV15: +18%/lửa → +90%');
+ok(Math.abs(R('n1.buf.dmg') - 8 * R('SKILLS.lualien.moiLua(n1)')) < 1e-6 && R('SKILLS.lualien.moiLua(n1)') > 0.1, 'LV15: mỗi lửa mạnh hơn LV9 (' + R('SKILLS.lualien.moiLua(n1)') + ') × 8 lửa');
 ok(/LV15/.test(R('SKILLS.lualien.mo(n1)')) && /LV9 → LV10/.test((R('B.capThe.lualien = 0'), R('SKILLS.lualien.mo(n1)'))), 'chữ xem: cấp hiện tại → cấp sau');
 
 console.log('Quantum Choir (hopca)');

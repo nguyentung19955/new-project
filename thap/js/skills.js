@@ -24,7 +24,7 @@ function danThang(B, T, E, img, sp, co, trungFn, duoi) {
 //      cùng hướng → số CỘNG (2+1=3) · vuông góc → giữ số của đích · NGƯỢC hướng → số TRỪ (tối thiểu 1) + SÓNG NỔ bù dọc làn:
 //      mọi quái trên làn của mình nhận (số của ụ kéo × 6) lần sát thương 1 phát (không nhân số). Kết quả luôn là ụ THẬT (không phải bản sao).
 //  · Mimic + Pháo / ghép thường khác → ụ ngẫu nhiên như luật thường, số mất. Merge King nâng sao: giữ mũi tên + số. Copycat chép: giữ mũi tên + số (× % sao chép).
-//  · Sức mạnh: mỗi số +15% sát thương (cấp thẻ +1%/cấp → 21%); số trên 20 chỉ tính 1/3. Ngắm theo mũi tên (↑ quái cao nhất màn hình, → phải nhất,
+//  · Sức mạnh: mỗi số +15% sát thương (cấp thẻ +0,43%/cấp → 21% ở LV15); số trên 20 chỉ tính 1/3. Ngắm theo mũi tên (↑ quái cao nhất màn hình, → phải nhất,
 //    ↓ thấp nhất, ← trái nhất); đạn XUYÊN: mọi quái trên đường thẳng từ ụ tới mục tiêu nhận 60%, nổ lan ở mục tiêu.
 //  · Mốc: 3★ chung (+20% tốc) · 5★ TRUE NORTH: mỗi số tính ×1.5 · 7★ FOUR WINDS: +30% sát thương, mỗi 8 s bắn 1 phát theo CẢ 4 hướng.
 SKILLS.canon = {

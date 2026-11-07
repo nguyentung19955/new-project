@@ -65,7 +65,7 @@ const ok = (dk, ten, chi) => { if (dk) console.log('  ✓ ' + ten); else { conso
   let r = await p.evaluate(() => {
     if (typeof ONS === 'undefined' || !ONS.apGhep) return null;
     const B1 = G.ban[0]; for (let i = 0; i < 15; i++) B1.t[i] = null;
-    const o = (i) => { const T = B1.t[i]; return T ? T.id + T.sao + ONS.oTT(T)[2] : '-'; };
+    const o = (i) => { const T = B1.t[i]; return T ? T.id + T.sao + ONS.oTT(T)[2].replace(/h\d+;n\d+;/g, "") /* bỏ trường mũi tên+số của Pháo La Bàn (co-che-moi) — kiểm riêng ở chỗ khác */ : '-'; };
     B1.t[0] = taoU(B1, 'saochep', 2, 0); B1.t[7] = taoU(B1, 'canon', 2, 7); B1.t[7].st.da = true;
     ONS.apGhep(B1, { a: 0, b: 7, id: 'canon', s: 2, giuA: 1, db: 1, sa: ['canon', 2, 'c'], sb: ['canon', 2, 'S'] });
     const s = o(0) + ' ' + o(7); for (let i = 0; i < 15; i++) B1.t[i] = null; return s;

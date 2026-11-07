@@ -85,7 +85,7 @@ const ok = (dk, ten, chi) => { if (dk) console.log('  ✓ ' + ten); else { conso
   // 6 online
   r = await ev(() => {
     if (typeof ONS === 'undefined' || !ONS.apGhep) return null;
-    const B1 = G.ban[0], R = {}, clr = () => { for (let i = 0; i < 15; i++) B1.t[i] = null; }, o = (i) => { const T = B1.t[i]; return T ? T.id + T.sao + ONS.oTT(T)[2] : '-'; };
+    const B1 = G.ban[0], R = {}, clr = () => { for (let i = 0; i < 15; i++) B1.t[i] = null; }, o = (i) => { const T = B1.t[i]; return T ? T.id + T.sao + ONS.oTT(T)[2].replace(/h\d+;n\d+;/g, "") /* bỏ trường mũi tên+số của Pháo La Bàn (co-che-moi) — kiểm riêng ở chỗ khác */ : '-'; };
     const pd = () => G.hu.filter(h => h.k === 'pandora').length;
     clr(); B1.t[0] = taoU(B1, 'dichchuyen', 2, 0); B1.t[7] = taoU(B1, 'canon', 2, 7); B1.t[7].st.da = true;
     ONS.apGhep(B1, { a: 0, b: 7, id: 'dichchuyen', s: 2, giuA: 1, db: 1, sa: ['canon', 2, 'S'], sb: ['dichchuyen', 2, ''] }); R.tp = o(0) + ' ' + o(7);

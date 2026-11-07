@@ -3188,3 +3188,11 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - Fusion Archive (luutru): mỗi lần ghép +1 điểm lưu (tối đa 40, +2.5%/điểm, LV15 4%); Archive mới nhận 50% số lần ghép; Archive+Archive = 3 xung 160%.
 - Hero Foundry (xuonganh): ghép 2 Foundry → ô ANH HÙNG 12 s, +20% tốc (+2%/cấp, +4%/★; tối đa 2 ô).
 - Code thap/js/vangmoi1.js, kiểm tools/thap-kt-vang-moi.js (trong hồi quy), ảnh kiểm docs/demo-hop-tuong/tuvan/tuong_vang/dot1/.
+
+## claude/demo-hop-tuong — tiếp tục sau DỪNG (07/11 sáng): sửa hồi quy cơ chế mới đợt 1
+- Bỏ `ban-giao/DUNG-LAI.md` (người dùng cho tiếp tục + xuất bản).
+- Tiếng Việt: thêm 7 chuỗi Pháo La Bàn / Lửa Thập Tự vào `vi.json` → dựng lại `ngonngu-vi.js`.
+- Pháo La Bàn: cấp thẻ "mỗi số" 15% → 21% rải đều 14 cấp (bước 0,43; trước +1/cấp chạm trần ở LV8, phí 7 cấp) — `data.js`.
+- Bài kiểm cập nhật theo luật mới: Lửa Thập Tự cả hàng + cột, tối đa 8 lửa (`thap-kt-vang-moi.js`); kiểm online bỏ trường mũi tên+số của Pháo La Bàn khi so cờ đá/bản sao (`thap-kt-conghuong2.js`, `thap-kt-copycat-da.js`).
+- Luật hình (`thap/QUY-TAC-HINH.md` mục 2): gen ảnh xong là đóng tab Chrome ngay.
+- Ảnh mới tải lên `thap-art/`: `raw_mod_*` (7 ụ mẫu kiểu module, nhánh claude/kiem-nhan-dien đo nhận diện).

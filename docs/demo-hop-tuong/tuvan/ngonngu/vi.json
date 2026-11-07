@@ -3625,5 +3625,12 @@
 "— you win by forfeit.": "— bạn thắng do đối thủ bỏ cuộc.",
 "−#% damage until hit by # different turret types (# from wave #)": "−#% ST cho đến khi trúng # loại ụ khác nhau (# từ đợt #)",
 "≥# IN CHEST": "≥# TRONG RƯƠNG",
-"≥# → Supernova": "≥# → Supernova"
+"≥# → Supernova": "≥# → Supernova",
+" Arrow + number: same-arrow merges add up.": " Mũi tên + số: ghép cùng hướng thì cộng số.",
+"#★ unlock · True north.": "Mở khoá #★ · Chính bắc.",
+"#★ unlock · Four winds.": "Mở khoá #★ · Tứ phương.",
+" unlock · True north.": " mở khoá · Chính bắc.",
+" unlock · Four winds.": " mở khoá · Tứ phương.",
+"merging a Relay gives +# flame to every Relay in the same row and column": "ghép Lửa Thập Tự cho +# lửa mọi Lửa Thập Tự cùng hàng và cùng cột",
+"Flames #/# → +#% damage, +#% crit · each flame +#% (LV# → LV#: +#%) · merging a Relay gives +# flame to every Relay in the same row and column · a Relay result keeps the higher flames": "Lửa #/# → +#% sát thương, +#% chí mạng · mỗi lửa +#% (LV# → LV#: +#%) · ghép Lửa Thập Tự cho +# lửa mọi Lửa Thập Tự cùng hàng và cùng cột · ra Lửa Thập Tự thì giữ số lửa cao hơn"
 }
