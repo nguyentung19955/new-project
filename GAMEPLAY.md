@@ -3307,3 +3307,12 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 
 ## claude/demo-hop-tuong — sửa drone SWARM nổ sớm, nổ chùm cối bị cắt mép (07/11)
 - SWARM: cả bầy cất cánh cùng lúc, chia mục tiêu lúc cất cánh (dự tính quái đã đủ chết) và cùng tới sau 0,5 s (trước lệch −0,05 s/con + chuỗi đổi mục tiêu kéo tới 1,3 s); ngòi chích thường (đạn cùng ảnh drone) không nổ "WOW" bậc đỏ trong lúc bầy bay — đây là "drone nổ sớm khúc dưới"; nổ chùm Mortar / nổ Orbital / Rồng bổ nhào sát mép canvas dời tâm vào trong (tối đa 40% bề rộng), không còn bị cắt. GIF `TRUOC-SAU-swarm2.gif`, `TRUOC-SAU-mortar-mep.gif`.
+
+## claude/demo-hop-tuong — BÀN GỌN cho mọi ụ (người dùng 07/11 15:48)
+- Mở rộng cách làm của ụ cộng dồn (99cf82e8) ra TOÀN BỘ 93 ụ: hào quang lửa/chớp to (fxb_max / fxb_dmg / fxb_toc / fxb_crit) KHÔNG còn đọng trên ụ.
+  - Tăng 1 lần (cộng dồn, thưởng vĩnh viễn, Ép Xung…) → loé hào quang ~0,35 s rồi tắt hẳn ~0,9 s (luật 84243b79).
+  - Buff bền có hạn / điều kiện (RAGE, hỗ trợ kề, có điều kiện, tăng tốc tạm thời, cuồng nộ) → 1 VÒNG MẢNH dưới ụ (`fx_vong_mong` tô màu 1 lần, giữ trong REN.anh): RAGE vàng cam · sát thương đỏ cam · tốc vàng · chí mạng tím; 1,5 s đầu rõ rồi dịu ~40% (chạm xem ụ → rõ). Ụ đã có vòng bậc ĐỘT PHÁ thì không thêm vòng.
+  - Khiên / chậm chạm / hành quyết giữ hào quang nhưng dịu (×0,6) và vẫn dịu về ~20% sau 1,5 s.
+- Bỏ hàng 3 viên ngọc dạng (motvong.js `MV.veNgoc`) cho MỌI ụ (`MV.GON = true`; false = hình cũ). Dạng đã thấy ở hình ụ; chỉ còn 1 hạt ngọc nhỏ ở góc dưới-phải huy hiệu sao khi đã lên dạng (lam = dạng giữa, vàng = dạng cuối), nảy nhẹ lúc vừa lên dạng.
+- Ảnh trước/sau 93 ụ (7 trang × 15 ô, 3,5 s sau khi đặt): `docs/demo-hop-tuong/tuvan/ban-gon/{truoc,sau}-390x844.jpg`, `{truoc,sau}-844x390.jpg`; ụ có dạng: `dang-truoc-sau-390.jpg`.
+- Test: thap-kt-vfx-p0, thap-kt-khong-ban, thap-kt-vang-moi, thap-kt-mau, thap-kt-vetay XANH.

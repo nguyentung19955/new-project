@@ -19,6 +19,18 @@ const BVX = {
     mana:  { anh: 'fxb_mana',  day: 1,    uu: 2 }, // MANA GAIN tinh thể tím (chỉ bùng khi sinh mana)
   },
   ANH: ['fxb_max', 'fxb_dmg', 'fxb_toc', 'fxb_crit', 'fxb_khien', 'fxb_chet', 'fxb_cham', 'fxb_mana'],
+  // BÀN GỌN (người dùng 07/11 15:48, mọi ụ): hào quang lửa/chớp to (max/dmg/toc/crit) KHÔNG còn đọng — buff bền có hạn/điều kiện = 1 vòng mảnh màu dưới ụ;
+  // tăng 1 lần vẫn loé hào quang rồi tắt hẳn · khiên / chậm / hành quyết giữ hào quang nhưng dịu (CALM)
+  LUA: { max: 1, dmg: 1, toc: 1, crit: 1 }, MAU_VONG: { max: '#ffb000', dmg: '#ff6a3a', toc: '#ffd23f', crit: '#c77dff' }, CALM: 0.6,
+  // vòng mảnh fx_vong_mong tô màu 1 lần (source-atop, như DOTPHA.tenVong) → giữ trong REN.anh
+  tenVong(k) {
+    const mau = this.MAU_VONG[k], key = 'fx_vong_mong~b' + k; if (!mau || typeof REN === 'undefined' || !REN.anh) return null;
+    if (REN.anh[key]) return key;
+    const a = REN.img('fx_vong_mong'); if (!a || !a.width || typeof document === 'undefined') return null;
+    const c = document.createElement('canvas'); c.width = a.width; c.height = a.height; const x = c.getContext('2d'); if (!x) return null;
+    x.drawImage(a, 0, 0); x.globalCompositeOperation = 'source-atop'; x.globalAlpha = 0.82; x.fillStyle = mau; x.fillRect(0, 0, c.width, c.height); // vetay-ok: png (vòng mảnh lọc màu buff)
+    REN.anh[key] = { _cv: c, complete: true, naturalWidth: c.width, naturalHeight: c.height }; if (REN.CO_DINH) REN.CO_DINH.add(key); return key;
+  },
   TANG: { dmg: 1, toc: 1, crit: 1 }, LOE: 0.9, // dmg/toc/crit: phân biệt bền / tăng 1 lần · LOE: thời gian loé của "tăng 1 lần" (s)
   NGUONG: 0.05, CHU_KY: 0.2, // lấy mẫu buff 5 lần/giây (không tính mỗi khung)
 
@@ -79,19 +91,22 @@ const BVX = {
     if (VX.t !== this._tf) { this._tf = VX.t; this._nTruoc = this._n; this._n = 0; } // đếm ụ có hào quang ở khung trước
     this._n++;
     const lim = this._nTruoc > 8 ? 1 : 2; // bàn đông (>8 ụ có buff): mỗi ụ chỉ 1 hào quang mạnh nhất → gọn mắt + giữ fps
-    const px = S * 1.4, xem = uDangXem(T);
+    const px = S * 1.4, xem = uDangXem(T); let vk = null;
     ctx.save(); ctx.globalCompositeOperation = 'source-over';
     for (let i = Math.min(lim, dsV.length) - 1; i >= 0; i--) { // hào quang thứ 2 to hơn, mờ hơn (vòng ngoài); mạnh nhất ở trong, rõ màu
-      const k = dsV[i], co = px * (i ? 1.12 : 1), dai = R.coDai(typeof DOTPHA !== 'undefined' ? DOTPHA.tenT(this.LOAI[k].anh, T) : this.LOAI[k].anh, co); if (!dai) continue; // ĐỘT PHÁ: hào quang lọc màu theo bậc (vàng/lam/tím/cầu vồng) // dải đã thu đúng cỡ vẽ → vẽ 1:1
+      const k = dsV[i];
+      if (this.LUA[k] && v.ben[k]) { if (!dp) vk = k; continue; } // buff bền loại lửa → vòng mảnh (vẽ sau vòng lặp); ụ có vòng bậc ĐỘT PHÁ thì thôi
+      const co = px * (i ? 1.12 : 1), dai = R.coDai(typeof DOTPHA !== 'undefined' ? DOTPHA.tenT(this.LOAI[k].anh, T) : this.LOAI[k].anh, co); if (!dai) continue; // ĐỘT PHÁ: hào quang lọc màu theo bậc (vàng/lam/tím/cầu vồng) // dải đã thu đúng cỡ vẽ → vẽ 1:1
       const n = v.s[k] || 0.5, vao = Math.min(1, (VX.t - v.on[k]) / 0.25);
       const f = ((VX.t * 8 + (T.pha || 0) * 3) | 0) % 3, fm = dai.fm, sx = f * (fm + dai.gap);
       const r = co / 2 * (vao < 1 ? 0.7 + 0.3 * vao : 1);
       let diu;
       if (v.ben[k]) { const lu = VX.t - v.on[k]; diu = xem ? 1 : lu < 1.5 ? 1 : Math.max(0.2, 1 - (lu - 1.5) / 0.5 * 0.8); } // buff bền: chống rối (claude/chong-roi) — sau ~1,5 s dịu về ~20% (đang chạm xem ụ → đủ sáng)
       else { const lu = VX.t - v.tang[k]; diu = lu < 0.35 ? 1 : Math.max(0, 1 - (lu - 0.35) / (this.LOE - 0.35)); } // tăng 1 lần: loé ~0,35 s rồi tắt hẳn ở ~0,9 s (kể cả lúc chạm xem — số liệu ở bảng chạm)
-      ctx.globalAlpha = al * vao * diu * (0.62 + 0.38 * n) * (i ? 0.7 : 1); // độ mạnh buff → độ đậm; màu thật của ảnh (không cộng sáng → không bạc trắng)
+      ctx.globalAlpha = al * vao * diu * (0.62 + 0.38 * n) * (i ? 0.7 : 1) * (this.LUA[k] ? 1 : this.CALM); // độ mạnh buff → độ đậm; màu thật của ảnh (không cộng sáng → không bạc trắng)
       ctx.drawImage(dai, sx, 0, fm, fm, -r, -r, r * 2, r * 2);
     }
+    if (vk) { const tv = this.tenVong(vk), im = tv && REN.img(tv); if (im) { const lu = VX.t - v.on[vk], vao = Math.min(1, lu / 0.25), r = S * 0.5; ctx.globalAlpha = al * vao * (xem || lu < 1.5 ? 0.85 : 0.4); ctx.drawImage(REN.mip ? REN.mip(im, r * 2 * REN.s * REN.dpr) : im, -r, -r, r * 2, r * 2); } }
     ctx.restore(); ctx.globalAlpha = al;
   },
   // bùng 1 lần (khung 4) trên ụ — proc / vừa nhận buff
