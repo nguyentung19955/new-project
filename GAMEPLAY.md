@@ -3415,3 +3415,11 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - Vòng hồng = vòng dư âm `FX.vong1` do `CG.veMot` (camgiac.js) sinh ra LÚC VẼ nổ trúng `fx_overlord_trung` (r1 = 0,62 × 110 ≈ 68 px) → lọt ra ngoài VXD (cũ: to ~157 px, tâm lệch theo quái). Nay bọc lời gọi veMot trong VXD.dang → vòng vào VXD.vong: cỡ ≤ 1,1 × DMAX, tâm ghim trên tim đường. Vùng trúng / sát thương không đổi.
 - `tools/thap-kt-vfx-p0.js`: đo mép xoáy Black Hole tính cả hệ thu nhỏ của ctx (trước đo cỡ trước khi thu nên không bắt được lỗi; bản cũ nay báo 50,6/80 → đỏ, bản mới 80/80).
 - Test: thap-kt-vfx-p0 xanh, thap-kt-khong-ban đạt. Ảnh: `docs/demo-hop-tuong/tuvan/vfx-ra-soat/TRUOC-SAU-hoden-overlord.jpg` (390×844 + 844×390).
+
+## claude/demo-hop-tuong — vệt lửa Dragon Dive mới (07/11)
+- User 23:31 "rồng lửa chạy để lại vệt lửa hơi xấu": vệt cháy sau Rồng Máy DRAGON DIVE trước là chuỗi chấm quầng cam rời (HU.vetChay, 1 chấm/0,08 s).
+  Nay = dải ChatGPT `fx_ronglua_vet` (raw `docs/demo-hop-tuong/thap-art/raw_fx_ronglua_vet.png`, cắt bằng `tools/thap-cat-vet-lua.py`; 8 khung: 0–5 lửa cháy lặp, 6–7 tàn than)
+  LÁT NỐI dọc TIM ĐƯỜNG sau lưng rồng: đoạn đặt đều theo lưới trên đường, xoay theo hướng đường, tâm dải trên tim đường (mép tràn, không cắt), 2 đầu khung làm mềm sẵn nên gối nhau không lộ nối;
+  mỗi đoạn bắt lửa → cháy lặp → chuyển tàn than → tắt hết trong đúng thời gian cháy 3 s (`thap/js/vfxmoi.js`, khối cuối).
+- Luật giữ nguyên (vùng cháy/sát thương/thời gian của HU.vetChay). Vệt dưới nón phun thường giữ hình cũ; chưa tải ảnh → hình cũ.
+- GIF trước/sau `docs/demo-hop-tuong/tuvan/vfx-ra-soat/TRUOC-SAU-vet-lua.gif`, ảnh `tran-390x844-vetlua.jpg`, `tran-844x390-vetlua.jpg`. Test: thap-kt-vfx-p0, thap-kt-khong-ban, thap-kt-vetay đạt.

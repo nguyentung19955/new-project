@@ -281,3 +281,46 @@ const VXD = {
     };
   }
 })();
+
+// =====================================================================================================
+// VỆT LỬA DRAGON DIVE (user 07/11 23:31 "vệt lửa hơi xấu" — thay chuỗi chấm quầng cam rời của HU.vetChay):
+//   dải ChatGPT fx_ronglua_vet (8 khung: 0–5 lửa cháy lặp, 6–7 tàn than) LÁT NỐI DỌC TIM ĐƯỜNG sau lưng rồng.
+//   Đoạn lửa đặt đều theo lưới trên đường (bước DOAN), xoay theo hướng đường, tâm dải = tim đường (mép được tràn, không cắt);
+//   2 đầu mỗi khung đã làm mềm sẵn (tools/thap-cat-vet-lua.py) → các đoạn gối lên nhau không lộ đường nối.
+//   Mỗi vệt cháy (HU.vetChay do HU.rongBo rải 0,08 s/lần) vẽ các đoạn lưới nằm trong quãng đường rồng vừa bay qua từ vệt trước
+//   → mỗi đoạn vẽ đúng 1 lần, mờ dần theo tuổi của vệt đó (bắt lửa → cháy → tàn than → tắt) trong suốt thời gian cháy.
+//   Chỉ TRÌNH BÀY: vùng cháy / sát thương / thời gian (cap() gốc) giữ nguyên. Chưa tải ảnh / vệt của nón phun → hình cũ.
+// =====================================================================================================
+(function () {
+  if (typeof HU === 'undefined' || !HU.vetChay || !HU.rongBo || typeof SIG_META === 'undefined') return;
+  SIG_META.fx_ronglua_vet = [8, 200, 159];
+  if (VXM.U.ronglua) VXM.U.ronglua.push('fx_ronglua_vet');
+  const AY = 0.557, CAO = 81, RONG = CAO * 200 / 159, DOAN = RONG * 0.68; // tim dải ở 55,7% chiều cao khung; lõi sáng ≈ 0,4·CAO ≈ 0,7 bề rộng đường
+  const VET = new WeakMap(), TRUOC = new WeakMap(); // vệt → { p, s0, s1 } (quãng đường nó phụ trách); rồng → s lúc rải vệt trước
+  const cap0 = HU.rongBo.cap;
+  HU.rongBo.cap = function (G, o, dt) {
+    const L0 = G.hu.length, s = o.p.len * (1 - Math.min(1, o.t / o.song));
+    const r = cap0.apply(this, arguments);
+    for (let i = L0; i < G.hu.length; i++) {
+      const v = G.hu[i];
+      if (v && v.k === 'vetChay' && v.T === o.T) { const s1 = TRUOC.has(o) ? TRUOC.get(o) : o.p.len; VET.set(v, { p: o.p, s0: s, s1 }); TRUOC.set(o, s); }
+    }
+    return r;
+  };
+  const ve0 = HU.vetChay.ve;
+  HU.vetChay.ve = function (ctx, o, R) {
+    const d = VET.get(o);
+    if (!d || !VXM.co('fx_ronglua_vet')) return ve0.call(this, ctx, o, R);
+    const u = o.t / o.song, P = d.p, lo = RONG * 0.3, hi = P.len - RONG * 0.3;
+    const aIn = Math.min(1, u / 0.03), tan = Math.max(0, Math.min(1, (u - 0.62) / 0.2)), aOut = 1 - Math.max(0, Math.min(1, (u - 0.84) / 0.16));
+    if (aIn * aOut <= 0.01) return;
+    const n = Math.floor((R.t || 0) * 12);
+    for (let k = Math.ceil(d.s0 / DOAN - 0.5); (k + 0.5) * DOAN <= d.s1; k++) {
+      const c = (k + 0.5) * DOAN; if (c <= d.s0 || c < lo || c > hi) continue;
+      const [x, y, g] = viTri(P, c), f = (k * 5 + n) % 6, a = aIn * aOut;
+      if (tan < 1) VXM.k(ctx, 'fx_ronglua_vet', f, x, y, RONG, { g, ay: AY, h: CAO, a: a * (1 - tan) });
+      if (tan > 0) VXM.k(ctx, 'fx_ronglua_vet', u > 0.8 ? 7 : 6, x, y, RONG, { g, ay: AY, h: CAO, a: a * tan });
+    }
+    ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+  };
+})();
