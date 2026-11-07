@@ -3237,3 +3237,10 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - Vòng nạp chiêu < 70% mờ 25% (trừ ụ đang chạm xem) — `fxu.js PX.vongHoi`; hào quang buff dịu về 20% sau 1,5 s (`buffvfx.js`).
 - Hố Đen vẽ dưới quái, đĩa/mở màn ≤ 50% đục, hố trùng tâm chỉ vẽ 1 lần (`render.js`, `vfxp2.js`, `sigfx.js`).
 - Chỉ đổi hình (không đổi luật, không thêm Math.random). Số đo trước/sau: `docs/demo-hop-tuong/tuvan/vfx15/sau/SAU.md`; công cụ `tools/thap-kt-15u.js` (thêm biến OUT).
+
+## claude/gop-0711 — gộp chong-roi + trum-quai-moi; hào quang "tăng 1 lần" chỉ loé rồi tắt (07/11 13:15)
+- Luật người dùng: TĂNG sát thương / tốc / chí mạng kiểu 1 lần (thêm cộng dồn, thưởng vĩnh viễn như Ép Xung, tăng 1 lần) → hào quang chỉ LOÉ ~0,35 s rồi mờ hẳn về 0 ở ~0,9 s (không đọng, không giữ 20%); mỗi lần tăng thêm thì loé lại. Ụ vừa đặt / vào trận đã có sẵn cộng dồn: không loé.
+- BUFF THẬT có thời hạn / điều kiện (RAGE ×2, khiên, chậm chạm, hành quyết, buff từ ụ hỗ trợ KỀ, sát thương có điều kiện, Aurora, tăng tốc tạm thời, Berserker cuồng nộ) → vẫn hiện suốt thời gian còn hiệu lực, dịu về ~20% sau 1,5 s như chong-roi (chạm xem ụ → đủ sáng).
+- Cách phân: `BVX.doManh` tính thêm phần "bền" `out.p` (nguồn từ ụ khác trong `T.nguon` + dkHien/aurora + tocT/cuongT/rage); `capNhat` đánh dấu `ben/tang` từng loại; `ve` bỏ loại "tăng 1 lần" đã hết loé. Vòng màu bậc ĐỘT PHÁ ở ụ cộng dồn giữ nguyên.
+- Ảnh trước/sau 844×390 (0,3 s và 3 s sau khi Ép Xung 10 ụ, Radar ở giữa buff 4 ụ kề): `docs/demo-hop-tuong/tuvan/loe-0711/truoc-sau-844x390.jpg`.
+- Kèm: đánh dấu `vetay-ok` dòng lọc màu vòng mảnh (vangmoi1.js DOTPHA.tenVong) — thap-kt-vetay báo trượt từ 99cf82e8.
