@@ -98,20 +98,22 @@ const TAI = {
   // tải cả danh sách (so luồng song song, mặc định 6); dot() → đợt TDO đang hiện (hoặc null) để báo % theo byte
   async nap(ds, dot, so, nen) { // nen: việc nền — nhường hết băng thông khi đang tải trận (TAI.cho)
     const lay = typeof dot === 'function' ? dot : () => dot;
+    // trọng số thanh %: mỗi tệp tính tối đa 350 KB — dải trùm ~8 MB tải sau cùng từng làm thanh đứng ở 20 % rồi nhảy vọt (07/11)
+    const bw = (u) => Math.min(this.byte(u), 350000);
     let i = 0;
     const lam = async (it) => {
       const d = lay();
       if (it.tho) { // chỉ TẢI về máy (bộ đệm), chưa giải mã — giải mã nền sau khi HOME hiện (napNen)
-        if (!this.daXL.has(it.url) && !this.sanSang(it)) { if (d) d.them(it.url, this.byte(it.url)); await this.layTho(it.url); }
+        if (!this.daXL.has(it.url) && !this.sanSang(it)) { if (d) d.them(it.url, bw(it.url)); await this.layTho(it.url); }
       } else if (!this.sanSang(it)) {
-        if (d) d.them(it.url, this.byte(it.url));
+        if (d) d.them(it.url, bw(it.url));
         const im = await this.mot(it);
         if (im) { this.daTai.add(it.url); if (it.ten) this.giao(it.ten, im); }
       }
       this.daXL.add(it.url); // đã xử lý (tải được HOẶC thiếu/lỗi) → choNen tính là xong, % và số tệp khớp nhau
-      const d2 = lay(); if (d2) { d2.them(it.url, this.byte(it.url)); d2.xong(it.url); }
+      const d2 = lay(); if (d2) { d2.them(it.url, bw(it.url)); d2.xong(it.url); }
     };
-    const d0 = lay(); if (d0) for (const it of ds) d0.them(it.url, this.byte(it.url), true);
+    const d0 = lay(); if (d0) for (const it of ds) d0.them(it.url, bw(it.url), true);
     // nen: nhường khi đang tải trận (TAI.cho), khi người chơi đang cuộn lưới (giải mã ảnh nền giữa lúc cuộn = khung hình rớt trên iPhone)
     // VÀ khi đang đánh (dangDanh — chống nóng máy, tuvan/nong)
     const nhuong = () => this.cho || performance.now() - TAI_CUON < 450 || this.dangDanh();
@@ -270,7 +272,7 @@ const TAI = {
     this.nhanh = dauTien && !this.xem && !this.cho && this.daDu();
     const home = this.cho && dauTien ? [] : this.nhanh ? (this.dsHome() || boot) : boot;
     const dot = dauTien && !this.cho ? TDO.dot(Math.max(TDO.p || 0, 20), 100, true) : null;
-    try { await this.nap(home, () => (this.cho ? null : dot), 8); }
+    try { await this.nap(home, () => dot, 8); } // (trước: cho=true → null → thanh khởi động ngừng cập nhật, đứng 20 % tới khi xong — 07/11; thanh trận dựng sau bootP nên không tranh)
     catch (e) { if (e === TAI_MAT) return; throw e; }
     if (this.mat) return;
     if (dot) dot.ket();
@@ -383,9 +385,14 @@ const TAI = {
     // ảnh TRÙM (~5 MB): màn tải trận KHÔNG đợi — tải nền 3 luồng ngay khi trận chạy (trùm đầu tiên ở wave 10)
     const sau = this.xem ? [] : ds.filter(t => /^(fx_)?trum_/.test(t));
     let ls = d.ket(); if (sau.length) ls = ls.filter(it => !/\/(fx_)?trum_/.test(it.url));
-    const dot = TDO.dot(this.xem ? 0 : Math.max(TDO.p || 0, 20), 100, !this.xem);
+    // thanh % của trận chỉ dựng SAU khi nạp khởi động xong: dựng sớm (rỗng, chờ bootP) từng chiếm thanh → đứng 20 % suốt lúc ảnh menu đang tải (07/11)
+    let dot = null;
     (async () => {
-      try { await this.bootP; if (phien !== this._phien) return; await this.nap(ls, () => (phien === this._phien ? dot : null), 8); }
+      try {
+        await this.bootP; if (phien !== this._phien) return;
+        dot = TDO.dot(this.xem ? 0 : Math.max(20, Math.min(TDO.p || 0, 85)), 100, false);
+        await this.nap(ls, () => (phien === this._phien ? dot : null), 8);
+      }
       catch (e) { if (e === TAI_MAT) return; throw e; }
       if (phien !== this._phien || this.mat) return;
       dot.ket(); this.cho = false; this.an();
