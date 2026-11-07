@@ -27,14 +27,32 @@ fw, fh = int(cw), y1 - y0
 k = min(1.0, 2 * DAI / fw); nw, nh = round(fw * k), round(fh * k)
 strip = np.zeros((nh, nw * N, 4), np.uint8)
 for i, o in enumerate(os_): strip[:, i * nw:(i + 1) * nw] = thu(o[y0:y1, :fw], nw, nh)
+# 07/11 20:12 "cụt lửa": ảnh ChatGPT khung 3–5 chạm MÉP PHẢI ô → lửa bị chặt thẳng đứng. Mờ dần phần mũi (≈ 34% cuối) theo mép
+# răng cưa cố định (nhiễu mượt theo hàng, hàng xa trục tắt sớm hơn) → mũi lửa mềm tự nhiên, không còn mép cứng. Không random mỗi lần chạy.
+rng = np.random.default_rng(7); yc2 = (yc - y0) * nh / fh
+for i in range(N):
+    f = strip[:, i * nw:(i + 1) * nw].astype(np.float32); al = f[..., 3]
+    cc = np.where((al > 10).sum(0) > 2)[0]
+    if not len(cc): continue
+    xe = cc.max() + 1
+    nz = np.convolve(rng.random(nh + 60), np.ones(23) / 23, 'same')[30:30 + nh]; nz = (nz - nz.min()) / (np.ptp(nz) + 1e-6)
+    lech = np.abs(np.arange(nh) - yc2) / (nh / 2)
+    e = xe * (1 - 0.16 * nz - 0.06 * lech)  # mép tắt hẳn của từng hàng
+    F = 0.34 * xe
+    u = np.clip((e[:, None] - np.arange(nw)[None, :]) / F, 0, 1); m = u * u * (3 - 2 * u)
+    f[..., 3] = al * m
+    strip[:, i * nw:(i + 1) * nw] = np.clip(f, 0, 255).astype(np.uint8)
 Image.fromarray(strip, 'RGBA').save(os.path.join(ROOT, 'thap/assets/fx_wyrm_lua2.png'), optimize=True)
 # mũi lửa (cột xa nhất có lửa, khung đầy 3–5) = wyrm2X · bề cao phần có lửa ở 70% chiều dài lửa = wyrm2Y
 xs, hs = [], []
 for i in (3, 4, 5):
-    f = strip[:, i * nw:(i + 1) * nw, 3]; cc = np.where((f > 40).sum(0) > 2)[0]; xs.append((cc.max() + 1) / nw)
+    q = strip[:, i * nw:(i + 1) * nw].astype(np.float32); f = q[..., :3].max(-1) * q[..., 3] / 255 > 60  # cùng ngưỡng thap-kt-vfx-p0 (sáng × alpha)
+    xx = np.sort(np.where(f)[1]); xs.append(xx[int(len(xx) * 0.99)] / nw)
 X2 = float(np.mean(xs))
 for i in (3, 4, 5):
-    c = strip[:, i * nw + int(nw * 0.7 * X2), 3]; yy = np.where(c > 40)[0]; hs.append((yy.max() - yy.min() + 1) / nh if len(yy) else 0)
+    q = strip[:, i * nw:(i + 1) * nw].astype(np.float32); f = q[..., :3].max(-1) * q[..., 3] / 255 > 60
+    yy = np.sort(np.where(f[:, max(0, int(nw * (0.7 * X2 - 0.04))):int(nw * (0.7 * X2 + 0.04))])[0])
+    hs.append((yy[int(len(yy) * 0.98)] - yy[int(len(yy) * 0.02)]) / nh if len(yy) > 5 else 0)
 print('fx_wyrm_lua2', [N, nw, nh], 'trục y', yc - y0, '/', fh, 'wyrm2X', round(X2, 3), 'wyrm2Y', round(float(np.mean(hs)), 3))
 
 # dạng 2 (lửa XANH) / dạng 3 (lửa TRẮNG viền xanh) theo luật: đổi kênh đỏ ↔ lam của chính ảnh ChatGPT (cam → lam, vàng → lam-trắng,
