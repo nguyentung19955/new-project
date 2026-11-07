@@ -9,7 +9,7 @@ Ra thap/assets/:
 Tách nền: LOANG từ viền ô (không khoá magenta toàn cục → trùm hồng/tím không thủng), túi nền kín (đúng màu nền) cũng bỏ;
   alpha mềm + khử ánh hồng chỉ trong vùng loang; bỏ đốm lẻ nhỏ; thu Lanczos nhân-trước-alpha.
 Cỡ: K8 (quaianim.js) tính sao cho cạnh lớn thân hiển thị = MUC (đơn vị game) → in ra để dán vào quaianim.js.
-Chạy: python3 tools/thap-cat-trum2.py [id ...]"""
+Chạy: python3 tools/thap-cat-trum2.py [id ...] [--chi-atk]"""
 import os, sys, json
 import numpy as np
 from PIL import Image
@@ -27,6 +27,7 @@ CHAN_VIEN = [False]
 CHAN_ID = {'mad_crown'}
 KHU_TIM = {'freezer'}  # ảnh không mắt 07/11: khói băng pha nền tím trong vòng (túi kín) → bỏ điểm tím/hồng (thân băng không có tím)
 KHU_TIM_ON = [False]  # ảnh không mắt 07/11: thân hồng, viền trái có khe → loang lọt
+CHI_ATK = '--chi-atk' in sys.argv  # chỉ ghi lại dải chiêu trum_<id>_atk_16.png (không đụng dải đi / chân dung / dải 4 khung)
 ATK_K = 1.5  # ô dải chiêu / ô dải đi (quaianim.js ATK_K)
 DAI4 = {'quai': 192, 'trum': 260}  # trùm: nongskill làm nóng ở 86 px × 3  # dải 4 khung dự phòng
 
@@ -117,6 +118,26 @@ def loi(a):
     return xs.mean(), ys.mean(), core.sum()
 
 
+def khop(dis, a, th=128):
+    """khớp ô chiêu a vào ô đi (khung đi khớp nhất trong dis): trả (sc, ox, oy, iou) — ô chiêu phóng sc rồi dời (ox,oy) thì trùng ô đi."""
+    from scipy.signal import fftconvolve
+    def mn(x, s):
+        im = Image.fromarray((x[..., 3] > th).astype(np.uint8) * 255)
+        return np.asarray(im.resize((max(1, round(im.width * s)), max(1, round(im.height * s))), Image.BILINEAR), np.float32) / 255
+    def thu(mw, st, sc):
+        ms = mn(a, st * sc)
+        c = fftconvolve(mw, ms[::-1, ::-1], mode='full'); iy, ix = np.unravel_index(int(np.argmax(c)), c.shape)
+        return (float(sc), (ix - (ms.shape[1] - 1)) / st, (iy - (ms.shape[0] - 1)) / st, float(c[iy, ix] / (mw.sum() + ms.sum() - c[iy, ix])))
+    best = None
+    for w in dis:
+        mw = mn(w, 0.25)  # dò thô trên ảnh 1/4
+        o = max((thu(mw, 0.25, sc) for sc in np.arange(0.70, 1.41, 0.02)), key=lambda r: r[3])
+        mw = mn(w, 1.0)   # tinh chỉnh cỡ thật quanh tỉ lệ thô
+        o = max((thu(mw, 1.0, sc) for sc in np.arange(o[0] - 0.02, o[0] + 0.021, 0.005)), key=lambda r: r[3])
+        if best is None or o[3] > best[3]: best = o
+    return best
+
+
 def dat(a, cx, cy, s, ra, sc=1.0):
     """cắt ô vuông cạnh s (nguồn) tâm (cx,cy) → ra×ra px, Lanczos nhân-trước-alpha; sc: phóng nguồn trước."""
     im = Image.fromarray(a.astype(np.uint8), 'RGBA').convert('RGBa')
@@ -130,6 +151,23 @@ def dat(a, cx, cy, s, ra, sc=1.0):
     fx, fy = x0 - ix + 2, y0 - iy + 2
     q = pad.resize((ra, ra), Image.LANCZOS, box=(fx, fy, fx + s, fy + s))
     return q.convert('RGBA')
+
+
+def bo_le_vien(im, trung_tinh=False):
+    """bỏ mảnh nhỏ lọt từ ô lưới bên cạnh của ảnh raw: chạm mép ô; khung trung tính (1, 8 — không có hiệu ứng) thì
+    bỏ cả mảnh nhỏ nằm xa thân > 12% ô (vd chấm đen trên đầu khung 8 janus)."""
+    a = np.array(im); m = a[..., 3] > 8
+    lab, n = ndimage.label(m, structure=np.ones((3, 3)))
+    if not n: return im
+    vien = set(np.unique(np.concatenate([lab[0], lab[-1], lab[:, 0], lab[:, -1]])).tolist()) - {0}
+    sz = ndimage.sum(m, lab, range(1, n + 1))
+    if trung_tinh:
+        kc = ndimage.distance_transform_edt(lab != (int(np.argmax(sz)) + 1))
+        for k in range(1, n + 1):
+            if sz[k - 1] < m.size * 0.01 and kc[lab == k].min() > m.shape[0] * 0.12: vien.add(k)
+    for k in vien:
+        if sz[k - 1] < m.size * 0.01: a[lab == k] = 0
+    return Image.fromarray(a, 'RGBA')
 
 
 def dai(fr):
@@ -152,7 +190,7 @@ def lam(id, trum):
     F = int(min(round(3.0 * co * k8 * 1.33), S))  # 3× cỡ hiển thị LỚN NHẤT (R.s ≤ 1; nổ lúc chết phóng ×1.32 — đo thap-kt-min3x), không vượt độ nét raw
     F -= F % 2
     fr = [dat(a, cx, cy, S, F) for a in di]
-    dai(fr).save(os.path.join(ASS, pre + id + '_8.png'), optimize=True)
+    if not CHI_ATK: dai(fr).save(os.path.join(ASS, pre + id + '_8.png'), optimize=True)
     # dải 4 khung dự phòng (cũ): khung 0,2,4 đi + khung 3 = chiêu (trùm) / 6 (quái)
     o4 = DAI4['trum' if trum else 'quai']
     ds4 = [di[0], di[2], di[4]]
@@ -162,32 +200,31 @@ def lam(id, trum):
         if not os.path.exists(cp): cp = os.path.join(ART, 'raw_trum2_%s_chieu.png' % id)
         if CHAN_VIEN[0]: CHAN_VIEN[0] = 1  # dải chiêu: còn túi nền thật giữa vòng xoáy
         ch = o_luoi(cp)
-        # khớp thân: khung chiêu 8 (trung tính) ↔ trung vị khung đi
-        L = [loi(a) for a in di]; L = [l for l in L if l]
-        tx, ty, ar = float(np.mean([l[0] for l in L])), float(np.mean([l[1] for l in L])), float(np.median([l[2] for l in L]))
-        l8 = loi(ch[7]) or (ch[7].shape[1] / 2, ch[7].shape[0] / 2, ar)
-        sc = float(np.clip(np.sqrt(ar / l8[2]), 0.75, 1.35))
-        # cùng tâm thân: điểm (tx,ty) của ô đi ↔ (l8x,l8y) của ô chiêu; ô chiêu = ô đi × ATK_K
-        dx, dy = cx - tx, cy - ty  # tâm ô so với tâm thân (nguồn đi)
+        # khớp thân (08/11 sửa lệch): khung chiêu 8 (trung tính) ↔ khung đi trung tính (1 hoặc 8) bằng KHỚP MẶT NẠ alpha
+        #  (dò tỉ lệ + tịnh tiến cho IoU lớn nhất). Cách cũ (tâm lõi ăn mòn + diện tích) lệch tới 15% ô ở janus/prism/jammer/patcher
+        #  → thân "nhảy" sang trái/lên khi chuyển dải đi ↔ dải chiêu.
+        sc, ox, oy, iou = khop([di[0], di[7]], ch[7])
         FA = int(round(F * ATK_K / 1.33 * 1.08)); FA -= FA % 2  # dải chiêu không có nổ ×1.32 (chỉ lõi nứt ×1.08)
-        fa = [dat(a, l8[0] * sc + dx, l8[1] * sc + dy, S * ATK_K, FA, sc) for a in ch]
+        # tâm ô đi (cx,cy) ↔ điểm (cx-ox, cy-oy) của ô chiêu ĐÃ phóng sc; dat() nhận toạ độ nguồn CHƯA phóng (tự nhân sc) → chia sc
+        #  (cách cũ truyền toạ độ đã phóng → bị nhân sc hai lần: lỗi lệch chính)
+        fa = [bo_le_vien(dat(a, (cx - ox) / sc, (cy - oy) / sc, S * ATK_K, FA, sc), i in (0, 7)) for i, a in enumerate(ch)]
         dai(fa).save(os.path.join(ASS, 'trum_%s_atk_16.png' % id), optimize=True)
-        ra.update(atk_sc=round(sc, 3), FA=FA)
+        ra.update(atk_sc=round(sc, 3), FA=FA, iou=round(iou, 3))
         ds4.append(ch[3])
         # chân dung: khung đi 1, cắt sát, vuông, không phóng quá raw
         a = di[0]; b = bbox(a, 8); c = max(b[2] - b[0], b[3] - b[1]) * 1.04
         P = int(min(600, c))
-        dat(a, (b[0] + b[2]) / 2, (b[1] + b[3]) / 2, c, P).save(os.path.join(ASS, 'trum_%s_portrait.png' % id), optimize=True)
+        if not CHI_ATK: dat(a, (b[0] + b[2]) / 2, (b[1] + b[3]) / 2, c, P).save(os.path.join(ASS, 'trum_%s_portrait.png' % id), optimize=True)
         ra['portrait'] = P
     else:
         ds4.append(di[6])
-    if not trum or id in TRUM[:6]:  # trùm mới không có dải 4 khung cũ (đừng tạo file thừa)
+    if not CHI_ATK and (not trum or id in TRUM[:6]):  # trùm mới không có dải 4 khung cũ (đừng tạo file thừa)
         dai([dat(a, cx, cy, S, o4) for a in ds4]).save(os.path.join(ASS, pre + id + '.png'), optimize=True)
     print(json.dumps(ra, ensure_ascii=False))
     return ra
 
 
 if __name__ == '__main__':
-    ids = sys.argv[1:] or TRUM + list(QUAI)
+    ids = [a for a in sys.argv[1:] if not a.startswith('--')] or TRUM + list(QUAI)
     kq = [lam(i, i in TRUM) for i in ids]
     print('K8 = {' + ', '.join("%s: %s" % (r['id'], r['K8']) for r in kq) + '}')

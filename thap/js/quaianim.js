@@ -159,8 +159,9 @@ Object.assign(REN, {
       if (E.chet) {
         if (!E._pop && E.tChet < 0.25 && dai) {
           E._pop = 1;
-          const tX = E._tHv || ten, dX = this.coDai(tX, co * kc) || dai; // nổ đúng hướng nhìn đang vẽ
-          this._xac.push({ x: E.x, y: E.y + (E._oy || 0), goc: E._gv || 0, lat: E._lat || 1, co: co * kc * (E._sc || 1), f: E._f || 0, t: 0, dai: dX, w: this.coDai(tX, co * kc, 'trang') });
+          // nổ đúng hướng nhìn + đúng dải đang vẽ: chết giữa lúc tung chiêu → dải chiêu ở cỡ ×ATK_K (trước đây vẽ dải chiêu ở cỡ dải đi → trùm co lại 1/1.5 khi chết)
+          const kX = E._kHv || 1, tX = E._tHv || ten, dX = this.coDai(tX, co * kc * kX) || dai;
+          this._xac.push({ x: E.x, y: E.y + (E._oy || 0), goc: E._gv || 0, lat: E._lat || 1, co: co * kc * kX * (E._sc || 1), f: E._f || 0, t: 0, dai: dX, w: this.coDai(tX, co * kc * kX, 'trang') });
         }
         continue;
       }
@@ -223,11 +224,13 @@ Object.assign(REN, {
         }
       } else {
         const p = E._ph * n, i = Math.floor(p); f0 = i % n; f1 = (i + 1) % n; fr = p - i;
-        if (E.trum && E.bao && n !== 4) { const t4 = this.tenQuai(E).replace(/_8$/, ''), a4 = TRUM_THU_TU.includes(t4.slice(5)) && this.coDai(t4, co); /* chỉ 6 trùm cũ có dải 4 khung trum_<id>.png (hive/jammer… chỉ có _8 → không xin ảnh 404) */ /* trùm mới chưa có ảnh riêng: dải 4 khung của trùm MƯỢN (trum.js) — 'trum_<id>' không tồn tại → 404 */ if (a4) { E._daiBao = a4; } }
+        // 08/11: bỏ dự phòng "khung 3 dải 4 khung cũ" lúc tung chiêu (cắt theo tâm dải đi, cỡ không K8 → thân nhảy lệch + phình/co khi
+        //  dải chiêu chưa nạp); nay dải chiêu chưa nạp thì cứ phát dải đi
       }
       // hoà: 4 khung hoà ở 55% cuối, 8 khung hoà ở 45% cuối (đỡ bóng ma), smoothstep
       const nguong = dong ? 0.65 : n >= 8 ? 0.55 : 0.45;
       fr = fr <= nguong ? 0 : (fr - nguong) / (1 - nguong); fr = fr * fr * (3 - 2 * fr);
+      if (E.trum) fr = 0; // 08/11: trùm KHÔNG hoà khung — dải trùm đổi hình lớn giữa 2 khung (nảy dẹt mad_crown, xoay janus/twin_core) → hoà ra 2 vương miện/2 thân chồng nhau
       E._f = fr > 0.5 && f1 >= 0 ? f1 : f0; E._gv = gv; E._oy = hover; E._sc = sc;
       if (!dai) { /* ảnh quái chưa nạp: không vẽ chấm thay thế */ }
       else {
@@ -236,28 +239,26 @@ Object.assign(REN, {
         const sy = 1 + am * buoc, sx = 1 - am * 0.6 * buoc;
         const lac = E.trum ? Math.sin(E._ph * Math.PI * 2) * 0.025 : r * 0.12 + buoc * 0.015; // lắc lư nhẹ
         const C = co * sc * kc, fl = he * he * (E.trum ? 0.4 : 0.7); // chớp trắng ngắn — trùm bị bắn liên tục không trắng xoá
-        const bao4 = E.bao && E._daiBao && n !== 4; // trùm tung chiêu: khung 3 dải 4 khung cũ (nhìn ra màn hình), cỡ gốc
         const rot = clamp(gv + lac, -HUONG_NGHIENG, HUONG_NGHIENG);
         // trùm có dải ĐÁNH riêng: trong lúc báo chiêu quay về BÀN ụ (nhìn ra màn hình) và phát dải đánh theo tiến độ chiêu
         const tD = E.bao ? this.tenDanh(E) : null, dD = tD && this.coDai(tD, co * kc * ATK_K);
         const lop = (v, l, al) => { // 1 lớp hướng nhìn v (đi sang trái: dải trái thật nếu có, không thì lật dải phải)
           if (dD) {
             const fD = this.khungDanh(E.bao.t / (E.bao.song || 1.4), dD.nf);
-            ctx.setTransform(M); ctx.translate(x, y); ctx.scale(sx, sy);
+            ctx.setTransform(M); ctx.translate(x, y); ctx.rotate(rot); ctx.scale(sx, sy); // cùng góc lắc với dải đi → không giật góc khi đổi dải
             this.veThan(ctx, dD, { ten: tD, px: co * kc * ATK_K }, fD, -1, 0, C * ATK_K, bay, dong, fl, al, true);
-            E._tHv = tD; E._lat = 1; return;
+            E._tHv = tD; E._lat = 1; E._kHv = ATK_K; E._f = fD; return;
           }
           const tL = v === 's' && l < 0 ? this.tenTrai(ten) : null;
           const tS = tL || this.tenHuong(ten, v), d = tS ? this.coDai(tS, co * kc) : dai; if (!d) return;
           const lat = tS && !tL && v === 's' && l < 0 ? -1 : 1;
           ctx.setTransform(M); ctx.translate(x, y); ctx.rotate(rot); ctx.scale(lat * sx, sy);
-          if (bao4) this.veThan(ctx, E._daiBao, null, 3, -1, 0, C / kc, bay, dong, 0, al, false);
-          else this.veThan(ctx, d, { ten: tS || ten, px: co * kc }, f0, f1, fr, C, bay, dong, fl, al, true);
-          E._tHv = tS || ten; E._lat = lat;
+          this.veThan(ctx, d, { ten: tS || ten, px: co * kc }, f0, f1, fr, C, bay, dong, fl, al, true);
+          E._tHv = tS || ten; E._lat = lat; E._kHv = 1;
         };
         const u = (t - E._hvT) / HUONG_HOA;
         lop(E._hv, E._hl, 1);
-        if (u < 1 && E._hvCu && !bao4 && !dD) { const tN = E._tHv, lN = E._lat; lop(E._hvCu, E._hlCu, 1 - u * u * (3 - 2 * u)); E._tHv = tN; E._lat = lN; } // hướng cũ mờ dần 120 ms
+        if (u < 1 && E._hvCu && !dD && !HUONG_CHUNG.has(ten.replace(/_8$/, ''))) { const tN = E._tHv, lN = E._lat; lop(E._hvCu, E._hlCu, 1 - u * u * (3 - 2 * u)); E._tHv = tN; E._lat = lN; } // hướng cũ mờ dần 120 ms
         E._gv = rot;
         ctx.setTransform(M); ctx.globalAlpha = 1;
       }
@@ -271,7 +272,7 @@ Object.assign(REN, {
       }
       if (lanh) { ctx.globalAlpha = 0.85; const kh = this.kyHieu('cham', 8); ctx.drawImage(kh, E.x - Math.max(18, co * 0.55) / 2 - 10, yb - co * 0.42 - 3, 8, 8); ctx.globalAlpha = 1; }
       if (E.trum) {
-        const w = 70, yy = yb - co * 0.55;
+        const w = 70, yy = yb - co * 0.6; // 0.55 → 0.6: đỉnh nảy của mad_crown/freezer/joker_king chạm thanh máu
         PX.thanh(ctx, E.x - w / 2, yy, w, 4, E.hp / E.max, TRUM[E.trum].mau);
         if (E.bao) { // dây báo chiêu tới ụ bị nhắm: tia PNG tô màu trùm, lặp + trượt (thay nét đứt vẽ code)
           const B = G.ban[E.ban];
