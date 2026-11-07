@@ -3198,7 +3198,7 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - Ảnh mới tải lên `thap-art/`: `raw_mod_*` (7 ụ mẫu kiểu module, nhánh claude/kiem-nhan-dien đo nhận diện).
 
 ## claude/chong-roi — Chống rối hiệu ứng khi 15 ụ cùng bắn
-- Gộp nổ trúng trùng tâm (`fx.js FX.no`): cùng loại, < 0,3 ô, < 80 ms → phóng vụ cũ (≤ +25%) thay vì đẻ dải mới; chớp nòng / nổ lớn / trùm giữ nguyên.
+- Gộp nổ trúng trùng tâm (`fx.js FX.no`): cùng loại, < 0,3 ô, < 80 ms → phóng vụ cũ 1 bậc +25% thay vì đẻ dải mới; chớp nòng / nổ lớn / trùm giữ nguyên.
 - Gộp số sát thương trùng chỗ trong 150 ms thành 1 số cộng dồn (`FX.chu1`).
 - Vòng nạp chiêu < 70% mờ 25% (trừ ụ đang chạm xem) — `fxu.js PX.vongHoi`; hào quang buff dịu về 20% sau 1,5 s (`buffvfx.js`).
 - Hố Đen vẽ dưới quái, đĩa/mở màn ≤ 50% đục, hố trùng tâm chỉ vẽ 1 lần (`render.js`, `vfxp2.js`, `sigfx.js`).

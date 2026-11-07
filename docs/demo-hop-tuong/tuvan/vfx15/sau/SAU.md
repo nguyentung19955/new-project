@@ -11,7 +11,7 @@
 | B sau | **14→35** | 320 | **6–7** |
 
 ## Đã sửa
-- b) `fx.js FX.no()`: nổ trúng cùng loại, cách < 0,3 ô, vụ cũ mới bắt đầu < 80 ms → không đẻ dải mới; vụ cũ phóng +6%/lần (tổng ≤ +25%) và sống thêm 0,03 s (≤ ×1,35). Chớp nòng, co ≥ 70 và `trum_*` không gộp.
+- b) `fx.js FX.no()`: nổ trúng cùng loại, cách < 0,3 ô, vụ cũ mới bắt đầu < 80 ms → không đẻ dải mới; vụ cũ phóng 1 bậc +25% (bậc cố định, tránh dựng lại ảnh thu nhỏ) và sống thêm 0,03 s (≤ ×1,35). Chớp nòng, co ≥ 70 và `trum_*` không gộp.
 - b2) `fx.js FX.chu1()`: số sát thương (chỉ chữ số, kiểu thường/chí mạng, cùng màu) trùng chỗ (±24 × ±18 px) trong 150 ms → cộng dồn vào 1 số.
 - c) `fxu.js PX.vongHoi()` (mọi vòng nạp: render.js + growfx.js): nạp < 70% và không đang chạm xem ụ → mờ ×0,25; loé khi đầy/nhả giữ đủ sáng. Hàm chung `uDangXem(T)` (fx.js) = dải #tt đang mở cho ụ hoặc đang soi vùng ụ hỗ trợ.
 - c2) `buffvfx.js`: bùng khi nhận buff giữ nguyên; hào quang lặp sau 1,5 s dịu dần (0,5 s) về 20%; đang chạm xem ụ → đủ sáng.
