@@ -22,6 +22,15 @@ const VXM = {
     if (!ep && t - this._tNap < 1 && t >= this._tNap) return; this._tNap = t;
     try { for (const B of G.ban) for (const id of (B.deck || []).concat(B.t.filter(Boolean).map(T => T.id))) { const ds = this.U[id]; if (!ds || this.daNap.has(id)) continue; this.daNap.add(id); for (const k of ds) REN.img(k); } } catch (e) { }
   },
+  // nổ to sát mép canvas (quái ở khúc đường sát mép bàn): không vẽ được ra ngoài canvas → dời tâm vào trong vừa đủ để phần ảnh có hình
+  //   (≈ 84% khung, rìa ảnh trong suốt) nằm trong màn; dời tối đa 40% bề rộng để nổ vẫn bám điểm trúng. Chỉ trình bày (rà VFX 07/11).
+  vao(x, y, w, h) {
+    if (typeof REN === 'undefined' || !REN.cv) return [x, y];
+    const k = (REN.s || 1) * (REN.dpr || 1), W = REN.cv.width / k, H = REN.cv.height / k, hx = w * 0.42, hy = (h == null ? w : h) * 0.42, m = w * 0.4;
+    const kep = (v, a, b) => (a > b ? (a + b) / 2 : Math.max(a, Math.min(b, v)));
+    const nx = kep(x, hx, W - hx), ny = kep(y, hy, H - hy);
+    return [x + Math.max(-m, Math.min(m, nx - x)), y + Math.max(-m, Math.min(m, ny - y))];
+  },
   // lệch pha khung theo đối tượng (đánh số lần đầu gặp — không ngẫu nhiên)
   pha(o) { let v = this._id.get(o); if (v == null) { v = (this._n++ * 7) % 13; this._id.set(o, v); } return v; },
 };
@@ -30,8 +39,8 @@ if (typeof SIG_META !== 'undefined') Object.assign(SIG_META, VXM.META);
 // hiệu ứng 1 lần: chạy n khung trong song giây tại (x, y)
 HU.vxmPhat = {
   ve(ctx, o) {
-    const m = SIG_META[o.ten]; if (!m) return; const u = o.t / o.song;
-    VXM.k(ctx, o.ten, Math.min(m[0] - 1, u * m[0]), o.x, o.y, o.w, { a: u > 0.85 ? (1 - u) / 0.15 : 1, g: o.g || 0 });
+    const m = SIG_META[o.ten]; if (!m) return; const u = o.t / o.song, [x, y] = VXM.vao(o.x, o.y, o.w, o.w * m[2] / m[1]);
+    VXM.k(ctx, o.ten, Math.min(m[0] - 1, u * m[0]), x, y, o.w, { a: u > 0.85 ? (1 - u) / 0.15 : 1, g: o.g || 0 });
   },
 };
 
@@ -65,7 +74,8 @@ HU.vxmPhat = {
       const y0 = -20; R.tia(ctx, 'dan_tia', o.x, y0, o.x, o.y, 22, 0, true);
       ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
       const u = Math.min(1, (o.t - 0.16) / 0.34); // 6 khung trong phần đời còn lại (0.16 → 0.5 s)
-      VXM.k(ctx, 'fx_orbital_bomno', Math.min(5, 0.6 + u * 5.4), o.x, o.y - 4, (o.r || 30) * 2.7, { a: u > 0.8 ? (1 - u) / 0.2 : 1 });
+      const w = (o.r || 30) * 2.7, [x, y] = VXM.vao(o.x, o.y - 4, w, w * 228 / 288);
+      VXM.k(ctx, 'fx_orbital_bomno', Math.min(5, 0.6 + u * 5.4), x, y, w, { a: u > 0.8 ? (1 - u) / 0.2 : 1 });
     };
   }
 
@@ -103,8 +113,9 @@ HU.vxmPhat = {
   VXM.rong = function (ctx, o) {
     if (o.x == null) return;
     const u = o.t / o.song, a = u < 0.06 ? u / 0.06 : u > 0.92 ? (1 - u) / 0.08 : 1;
-    PX.bong(ctx, o.x + 6, o.y + 12, 56, 42, 0.3 * a);
-    VXM.k(ctx, 'fx_ronglua_dive', (o.t * 14) % 8, o.x, o.y, 68, { g: o.g, a }); // ảnh: đầu rồng hướng phải → xoay theo hướng bay
+    const [x, y] = VXM.vao(o.x, o.y, 68 * 0.8, 68 * 0.8); // xoay theo hướng bay → lấy hộp gần vuông; sải cánh có rìa trong suốt
+    PX.bong(ctx, x + 6, y + 12, 56, 42, 0.3 * a);
+    VXM.k(ctx, 'fx_ronglua_dive', (o.t * 14) % 8, x, y, 68, { g: o.g, a }); // ảnh: đầu rồng hướng phải → xoay theo hướng bay
   };
   // khoảnh khắc đặc biệt (sigfx M09): có rồng bổ nhào → bỏ đầu rồng to trên ụ + luồng lửa kẻ từ ụ (chỉ giữ dấu khởi động + huy hiệu kết)
   if (typeof SIG !== 'undefined' && SIG.K && SIG.K.rong) {
