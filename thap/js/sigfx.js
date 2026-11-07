@@ -382,7 +382,7 @@ SIG.K = {
       if (!m.giot) { // giọt đều dọc đường, toạ độ = điểm trên đường; tl = lúc chạm đất = nhịp trừ máu của quái đứng ở đó
         const N = Math.max(8, Math.round(P.len / 24)), st = P.len / N; m.giot = [];
         for (let k = 0; k < N; k++) {
-          const s = P.len - (k + 0.5) * st, [x, y, g] = viTri(P, s), l = ((k * 7) % 5 - 2) * 1.6; // lệch ngang ≤ 3 px (cố định, không random)
+          const s = Math.max(20, Math.min(P.len - 20, P.len - (k + 0.5) * st)), [x, y, g] = viTri(P, s), l = 0; // giọt chạm đúng TIM đường; vương miện toé (~40 px) không lố qua 2 đầu đường (user 07/11 23:09)
           // nhịp k ở o.t ≈ 1/60 + 0.1k; quái trúng khi đầu sóng ≤ s + 70 + 0.3×cỡ quái (≈ 85 px với quái thường)
           const tl = 1 / 60 + 0.1 * Math.max(0, Math.ceil((song * (1 - (s + 85) / P.len) - 1 / 60) / 0.1 - 1e-6));
           const r = (k * 37 % 11) / 10; // 0..1 cố định theo giọt: thời gian rơi / độ cao / cỡ khác nhau → đọc thành mưa
