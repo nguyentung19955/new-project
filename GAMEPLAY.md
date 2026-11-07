@@ -3244,3 +3244,7 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - Cách phân: `BVX.doManh` tính thêm phần "bền" `out.p` (nguồn từ ụ khác trong `T.nguon` + dkHien/aurora + tocT/cuongT/rage); `capNhat` đánh dấu `ben/tang` từng loại; `ve` bỏ loại "tăng 1 lần" đã hết loé. Vòng màu bậc ĐỘT PHÁ ở ụ cộng dồn giữ nguyên.
 - Ảnh trước/sau 844×390 (0,3 s và 3 s sau khi Ép Xung 10 ụ, Radar ở giữa buff 4 ụ kề): `docs/demo-hop-tuong/tuvan/loe-0711/truoc-sau-844x390.jpg`.
 - Kèm: đánh dấu `vetay-ok` dòng lọc màu vòng mảnh (vangmoi1.js DOTPHA.tenVong) — thap-kt-vetay báo trượt từ 99cf82e8.
+## claude/demo-hop-tuong — rà lỗi cộng hưởng luật (07/11)
+- Test mới `tools/thap-kt-cong-huong-luat.js` (339 cặp, trong thap-kt-hoiquy.js): ghép đặc biệt × đá/băng/vàng/thức tỉnh/7★/bản sao × mọi ụ; kỹ năng khi ghép chạy đúng 1 lần (0 lần khi đá+đá / ghép đặc biệt) ở SOLO/PVP/CO-OP; RAGE ×2 và bản sao −% trên đòn của mọi ụ; bộ đếm × ghép / mất sao; chiêu trùm × khiên / Mirror / Holy Shield / Halo; PVP Holy Shield × hiệu ứng ghép đối thủ; 26 ca từ ChatGPT.
+- Sửa 4 lỗi: RAGE ×2 nay áp lên bom Drone và nổ Blood Circuit; Fusion Archive chỉ đếm ghép thật (Teleporter đổi chỗ qua lại từng nuôi vô hạn; Copycat/Overclock/Forge cũng không tính); Holy Shield chặn cả +mana triệu hồi của Signal Jammer.
+- Tài liệu: docs/demo-hop-tuong/tuvan/cong-huong/ (BAO-CAO, KIEM-KE, CHATGPT, CHATGPT-SPECIAL — đề xuất cân bằng chưa áp dụng, CAN-HOI 10 câu A/B).
