@@ -3197,3 +3197,6 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - Luật hình (`thap/QUY-TAC-HINH.md` mục 2): gen ảnh xong là đóng tab Chrome ngay.
 - Ảnh mới tải lên `thap-art/`: `raw_mod_*` (7 ụ mẫu kiểu module, nhánh claude/kiem-nhan-dien đo nhận diện).
 - (07/11 11:00) Sửa méo tam giác cảnh báo ở 2 đầu băng trùm (`bang_trum_nen`): border-image cắt 40/70 và tỉ lệ đều ngang–dọc ở băng báo trùm trong trận (tvb.css, anhgen.css) và băng "BOSSES THIS MATCH" đầu trận (vaotran.css). Ảnh kiểm 390×844 + 844×390.
+
+## claude/demo-hop-tuong — sửa màn tải đứng ở 20% (07/11)
+- `thap/js/taitai.js`: trọng số mỗi file khi tính % tải bị chặn ở 350 KB (ảnh nền lớn không còn "nuốt" thanh tiến độ); vạch tải trận chỉ tạo sau khi khởi động xong, menu luôn cập nhật vạch. Đo mạng 4G giả lập: % tăng đều 20→60% trong 30 s thay vì đứng yên ở 20%.
