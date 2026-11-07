@@ -152,5 +152,6 @@ html body #wrap #the-mv.ot > .mv-gia img { width: calc(14px * var(--ot-k)) !impo
 html body #wrap #the-mv.ot > .mv-gia b { font-size: calc(15px * var(--ot-k)) !important; }
 /* tối đa: ẩn giá, thẻ chữ MAX góc trên-trái ô (góc trên-phải = số ụ trên bàn) */
 html body #wrap #bo-the .the.ot.max > .gia { visibility: hidden !important; }
-html body #wrap #bo-the .the.ot.max::before { content: 'MAX'; position: absolute; z-index: 6; left: 11%; top: 9%; pointer-events: none;
-  font: 900 calc(11px * var(--ot-k))/1 Oxanium, sans-serif; letter-spacing: .3px; color: #ffd24a; text-shadow: 0 0 2px #000, 0 1px 1px #000, 1px 0 1px #000, -1px 0 1px #000; }
+/* 07/11: bỏ thẻ chữ MAX góc trên-trái — MAX giờ nằm ngay ở nhãn cấp trận (.lv: '' / +1 / +2 / +3 / MAX), chỉ hiện 1 lần */
+html body #wrap #bo-the .the.ot > .lv.lv-max { color: #ffd24a !important; }
+html body #wrap #bo-the .the.ot > .lv:empty, html body #wrap #bo-the .the > .lv:empty { display: none !important; }

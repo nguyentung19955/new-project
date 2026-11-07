@@ -53,6 +53,7 @@ const TRUM_KN = {
   jammer: {
     chon(E, B, ds) {
       const r = rngTrum(E); // tất định (online lockstep) — game.js
+      ds = ds.filter(T => !biKhoa(T)); // ụ khoá (băng) không nhận Câm mới — rà cộng hưởng 07/11, người dùng chốt
       const ht = tronTrum(ds.filter(T => SKILLS[T.id] && SKILLS[T.id].vai === 'ht' && !(T.st.cam > 0)), r);
       const khac = tronTrum(ds.filter(T => !ht.includes(T) && !(T.st.cam > 0)), r).sort((a, b) => b.sao - a.sao);
       return ht.concat(khac).slice(0, TRM.JAM_N);

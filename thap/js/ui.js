@@ -181,7 +181,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       const d = document.createElement('button'); d.className = 'the'; d.dataset.act = 'nang'; d.dataset.id = id;
       d.style.setProperty('--m', TIERS[r.bac].mau);
       d.innerHTML = cardArt(id) +
-        '<span class="lv">LV1</span><span class="gia"><img src="assets/ui_nangcap.png" alt=""><b>100</b></span>';
+        '<span class="lv"></span><span class="gia"><img src="assets/ui_nangcap.png" alt=""><b>100</b></span>';
       bo.appendChild(d);
     }
     // dải đoạn tới trùm: 1 ô / wave trong chu kỳ, ô cuối = trùm
@@ -234,8 +234,8 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     nt.classList.toggle('du', du); nt.classList.toggle('thieu', !du);
     document.querySelectorAll('#bo-the .the').forEach(d => {
       const id = d.dataset.id, lv = B.lv[id];
-      const nlv = typeof THEBAI !== 'undefined' ? THEBAI.nhanTran(B, id) : 'LV' + lv, elv = d._lv || (d._lv = d.querySelector('.lv'));
-      chu(elv, nlv); if (elv && elv._dai !== (nlv.length >= 6)) { elv._dai = nlv.length >= 6; elv.classList.toggle('lv-dai', elv._dai); } // 'LV16+1' dài: canh giữa ô (QA ngâm: lòi ra khung thẻ ở iPhone 13)
+      const nlv = THEBAI.nhanTran(B, id), elv = d._lv || (d._lv = d.querySelector('.lv'));
+      chu(elv, nlv); if (elv && elv._max !== (lv >= 5)) { elv._max = lv >= 5; elv.classList.toggle('lv-max', elv._max); } // '' / +1 / +2 / +3 / MAX (MAX vàng; ô giá ẩn khi tối đa)
       // số ụ loại này trên bàn: tấm đếm .dem-u (icon chồng ụ + số) — js/demkn.js
       const g = d._g || (d._g = d.querySelector('.gia b'));
       if (lv >= 5) { chu(g, TEXT.ui.max); d.classList.add('max'); d.classList.remove('du', 'thieu'); }
@@ -365,7 +365,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     const L = [];
     let so = '';
     if (T) {
-      so = T.sao + '★ · ' + (typeof THEBAI !== 'undefined' ? THEBAI.nhanTran(G.ban[T.ban], id) : 'LV' + (G.ban[T.ban].lv[id] || 1));
+      const nt = THEBAI.nhanTran(G.ban[T.ban], id); so = T.sao + '★' + (nt ? ' · ' + nt : ''); // cùng nhãn thẻ trận: +n / MAX
       if (sk.dmg) so += ' · ' + TEXT.ui.dmg + ' ' + Math.round(dmgU(T));
       const tc = tocTT(id, T); if (tc) so += ' · ' + tc;
       if (sk.mo && !(SUP_GIA[id])) so += ' · ' + sk.mo(T); // ụ hỗ trợ: hiệu lực hiện tại nằm ở dòng ký hiệu bên dưới (đã gồm mốc sao)

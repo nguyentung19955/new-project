@@ -132,7 +132,7 @@ HU.hexBay = { // âm thoa đỏ bay tới đích 1.5 s rồi phán (kiểm khiê
       if (!o.cuoc) { FX.vong1(c.x, c.y, 6, 30, '#ff8080', 0.3, 2); return true; }
       fx7('nguyenrua', c.x, c.y, 64, 0.45);
       if (X.sao > 1) { X.sao--; X.sang = 1; FX.tiaLua(c.x, c.y, 12, '#ff3a3a', 150); }
-      else X.hexT = 2.5;
+      else if (!biKhoa(X)) X.hexT = 2.5; // ụ khoá không nhận tê liệt — rà cộng hưởng 07/11, người dùng chốt
     } else if (o.cuoc && X.sao < LUAT.saoMax) {
       const s0 = X.sao; X.sao++; X.sang = 1; X.anim = { k: 'no', t: 0.25 }; mocMoi(X, s0, 0.1);
       fx7('nguyenrua', c.x, c.y, 64, 0.45); FX.vong1(c.x, c.y, 6, 40, '#ffe46b', 0.4, 3);

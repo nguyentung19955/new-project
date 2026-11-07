@@ -504,7 +504,7 @@ SKILLS.kepha = { // Kẹp Phá (Myrina): khi GHÉP — PVP làm chậm ụ đố
     const n = 1 + Math.floor(a.sao / 2), c0 = B.o[b.o];
     if (G.che === 'pvp') {
       const D = banKhac(B); if (!D) return;
-      const ds = D.t.filter(X => X && SKILLS[X.id].dmg).sort((x, y) => y.sao - x.sao).slice(0, n);
+      const ds = D.t.filter(X => X && SKILLS[X.id].dmg && !biKhoa(X)).sort((x, y) => y.sao - x.sao).slice(0, n); // ụ khoá không nhận Kẹp — rà cộng hưởng 07/11, người dùng chốt
       for (const X of ds) { const c = D.o[X.o]; tiaPhep(c0.x, c0.y, c.x, c.y, '#c77dff'); if (!chanKhien(D, X)) { X.st.kep = 5 + a.sao; FX.chu1(c.x, c.y - 20, 'CLAMPED', '#c77dff', 12, 'to'); } }
       nhanU(ra, 'CLAMP ×' + ds.length, '#c77dff', true);
     } else {
@@ -804,7 +804,7 @@ SKILLS.hasao = { // Súng Hạ Sao (Giltine) — HỖ TRỢ (đợt vai trò): �
       if (G.che === 'pvp' && X0 !== B) {
         T.w5 = G.wave; const c0 = B.o[T.o], c = X0.o[X.o];
         G.hu.push({ k: 'tiaTia', t: 0, song: 0.3, x0: c0.x, y0: c0.y, x1: c.x, y1: c.y, mau: '#ff3b3b' });
-        if (!chanKhien(X0, X)) { X.giamT = 6; X.giamV = 0.08; FX.chu1(c.x, c.y - 20, '−8% FIRE RATE', '#ff4b3e', 11); }
+        if (!biKhoa(X) && !chanKhien(X0, X)) { X.giamT = 6; X.giamV = 0.08; FX.chu1(c.x, c.y - 20, '−8% FIRE RATE', '#ff4b3e', 11); }
         nhanU(T, 'STAR BREAK', '#ff4b3e', true);
       } else if (G.che !== 'pvp') {
         T.w5 = G.wave; const A = G.che === 'coop' && D ? D : B;
