@@ -56,7 +56,21 @@ SKILLS.chuato = {
     for (const E of ds) { const n = ds.reduce((s, Q) => s + (Math.hypot(Q.x - E.x, Q.y - E.y) < 60 ? 1 : 0), 0); if (n > best) { best = n; tam = E; } }
     T.nap = 0; T.napDay = 0; T.sang = 1; giat(T, 1.6);
     const dmg = dmgU(T) * 3;
-    T.bay.forEach((d, i) => G.hu.push({ k: 'ongLao', t: -i * 0.05, song: 1.4, x: d.x, y: d.y, E: tam, ds, B, T, dmg: dmg * (d.vang ? 3 : 1), vang: d.vang, vet: [] }));
+    // cả bầy cất cánh cùng lúc và TỚI CÙNG LÚC (HU.ongLao.TOI) — trước lệch t = −i×0.05 + bay tốc độ cố định → drone gần nổ trước tới ~0.6 s (rà VFX 07/11)
+    //   Chia mục tiêu NGAY lúc cất cánh: drone nhắm chỗ đông (tam); khi các drone trước (dự tính) đã đủ hạ quái đó thì drone sau nhắm quái sống gần
+    //   tam nhất — trước: tới nơi mới đổi mục tiêu → chuỗi đuổi nối tiếp 1 s, nhảy sang khúc đường khác. Sát thương mỗi drone giữ nguyên.
+    const conMau = new Map(), mau = (E) => conMau.has(E) ? conMau.get(E) : E.hp;
+    T.bay.forEach((d, i) => {
+      const dd = dmg * (d.vang ? 3 : 1);
+      let M = tam;
+      if (mau(tam) <= 0) { let bd = Infinity; for (const E of ds) { if (mau(E) <= 0) continue; const q = (E.x - tam.x) * (E.x - tam.x) + (E.y - tam.y) * (E.y - tam.y); if (q < bd) { bd = q; M = E; } } }
+      // dự tính hơi rộng tay (+8 px quái đi tiếp trong 0.5 s, ×1.2 chí mạng / ụ khác) để drone sau ít khi tới nơi gặp quái đã chết
+      for (const E of ds) if (Math.hypot(E.x - M.x, E.y - M.y) <= 43 + E.d.co * 0.25) conMau.set(E, mau(E) - dd * 1.2 * (1 + HOTRO.vuln(E)) * (E.giapT > 0 ? 0.75 : 1));
+      G.hu.push({ k: 'ongLao', t: 0, song: 1.4, x: d.x, y: d.y, E: M, ds, B, T, dmg: dd, vang: d.vang, vet: [], t0: 0, toi: HU.ongLao.TOI });
+    });
+    // ngòi chích thường của Chúa Tổ (đạn = cùng ảnh drone) trúng quái đầu đường trong lúc bầy đang bay → nổ "WOW" bậc đỏ (ảnh tổ ong to) trông như
+    // 1 drone nổ sớm ở khúc dưới. Chỉ trình bày: hoãn nổ bậc (TVX) của tổ tới khi bầy tới; sát thương ngòi chích giữ nguyên.
+    T._tvh = T._tvw = G.t + HU.ongLao.TOI;
     T.bay.length = 0; T.de = 0;
     nhanU(T, 'SWARM!', '#ff6a2a', true); SND.gSwarm();
     const c = tamU(T); FX.vong1(c.x, c.y, 10, 50, '#ff6a2a', 0.35, 3);
@@ -99,25 +113,33 @@ function veDrone(ctx, R, x, y, k, vang, pha, al) { // ong máy = ảnh PNG fx_ch
 }
 HU.chich = { ve(ctx, o, R) { const u = o.t / o.song; ctx.globalCompositeOperation = 'lighter'; PX.tia(ctx, o.x0, o.y0, o.x1, o.y1, o.vang ? 2.4 : 1.6, o.vang ? '#ffe680' : '#ff9a50', 1 - u); ctx.globalAlpha = 1 - u; R.anhGiua(ctx, R.cham1(o.vang ? '#ffd23f' : '#ff6a2a'), o.x1, o.y1, 12 * (1 - u)); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; } };
 HU.ongLao = { // SWARM: từng drone lao thành vệt sáng vào chỗ đông → nổ 35 px
+  TOI: 0.5, // giây: mọi drone của 1 lần SWARM tới mục tiêu cùng bước mô phỏng (xa thì bay nhanh hơn) — tất định, không phụ thuộc khung hình
   cap(G, o, dt) {
     if (o.t < 0) return false;
-    // mục tiêu chết giữa đường (drone trước đã nổ trúng nó): bám quái SỐNG GẦN CHỖ ĐÓ NHẤT — trước bám quái đầu đường (ds[0]) → drone bay
-    // ngang cả bàn ~2 s trong khi chùm nổ đã xong (rà VFX 07/11). Sát thương mỗi drone giữ nguyên; chọn theo khoảng cách, hoà → thứ tự ds (tất định).
+    // mục tiêu chết giữa đường (ụ khác / drone khác nổ trúng nó): bám quái SỐNG GẦN CHỖ ĐÓ NHẤT. Sát thương mỗi drone giữ nguyên;
+    // chọn theo khoảng cách, hoà → thứ tự ds (tất định).
+    let doi = false;
     if (o.E.chet) {
       const ds = dsMucTieu(o.B).filter(E => !E.chet); if (!ds.length) return true;
       const x0 = o.E.x, y0 = o.E.y; let best = ds[0], bd = Infinity;
       for (const E of ds) { const d = (E.x - x0) * (E.x - x0) + (E.y - y0) * (E.y - y0); if (d < bd) { bd = d; best = E; } }
-      o.E = best;
+      o.E = best; doi = true;
     }
-    const dx = o.E.x - o.x, dy = o.E.y - o.y, L = Math.hypot(dx, dy) || 1, v = 380 + o.t * 500;
+    if (o.toi == null) { o.t0 = o.t - dt; o.toi = o.t0 + this.TOI; } // HU cũ (không qua chuDong)
+    const dx = o.E.x - o.x, dy = o.E.y - o.y, L = Math.hypot(dx, dy) || 1;
     o.vet.push(o.x, o.y); if (o.vet.length > 12) o.vet.splice(0, 2);
-    if (L < v * dt + 6) {
+    // tới nơi đúng lúc o.toi; mục tiêu vừa chết ngay lúc tới (drone cùng bầy nổ trước trong cùng bước) mà quái mới ở xa → bay nối 0.15 s
+    if (o.t >= o.toi - 1e-9 && doi && L > 60) { o.t0 = o.t - dt; o.toi = o.t + 0.15; }
+    if (o.t >= o.toi - 1e-9) {
       G.dangBan = o.T; noLan(o.E.x, o.E.y, 35, o.dmg, o.B, { phu: true, mau: o.vang ? '#ffd23f' : '#ff8a4a' });
       FX.no('no_phao', o.E.x, o.E.y, 56, 0.3); FX.vong1(o.E.x, o.E.y, 4, 35, o.vang ? '#ffd23f' : '#ff6a2a', 0.25, 3); FX.tiaLua(o.E.x, o.E.y, 4, '#ffc23a', 160, 7);
       SND.no(0.35); if (TVX.duocLac(0.5)) FX.lac(2);
       return true;
     }
-    o.x += dx / L * v * dt; o.y += dy / L * v * dt;
+    // quãng còn lại theo đường cong tăng tốc s(u) = u(0.4 + 0.6u): còn lại r(u) = 1 − s(u) → tiến L·(1 − r(u1)/r(u0)) mỗi bước, bám mục tiêu đang đi
+    const D = o.toi - o.t0, u0 = Math.max(0, (o.t - dt - o.t0) / D), u1 = Math.min(1, (o.t - o.t0) / D), r = (u) => 1 - u * (0.4 + 0.6 * u);
+    const k = 1 - r(u1) / Math.max(1e-6, r(u0));
+    o.x += dx * k; o.y += dy * k;
     return false;
   },
   ve(ctx, o, R) {
