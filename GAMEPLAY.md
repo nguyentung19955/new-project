@@ -3458,3 +3458,10 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - Ảnh trước/sau (844×390 + 390×844, đi 1×, chiêu, chết giữa chiêu) + bảng khớp dải: `docs/demo-hop-tuong/tuvan/trum-anim/`.
 - Còn cần ảnh mới (không tự gen): dải chiêu **mad_crown** vẽ khác thiết kế dải đi (mũ hề có chuông + đế viền bèo) → đổi dáng khi tung chiêu.
 - Test: thap-kt-trum-don (1320 tình huống), thap-kt-anim, thap-kt-vfx-p0, thap-kt-khong-ban xanh; thap-kt-hoiquy: lỗi còn lại có sẵn trên nhánh trước khi sửa (Copycat/đá, canon cấp 15, màu overlord) — không dính trùm.
+
+## claude/demo-hop-tuong — chân dung mới "Một thiên hà, nhiều chủng tộc" cho 93 ụ (08/11)
+- Sinh 82 ảnh mới bằng ChatGPT (8 tab song song) theo `docs/demo-hop-tuong/tuvan/chan-dung-moi/STYLE.md` + `prompts-93.json`; overlord vẽ lại nền xanh thép tương phản (đọc rõ ở ô 50 px). Gốc 1536×1024: `docs/demo-hop-tuong/tuvan/chan-dung-moi/raw/cd_<id>.png`.
+- Nối vào game: `tools/thap-cat-chandung.py` (+ mốc mặt `tools/thap-cat-chandung.json`) cắt `pilot_<id>.png` 427, `pn/pilot_<id>.png` 256 (ô vuông 46 % chiều cao, mắt ở 40 % ô), `hero/hero_<id>.jpg` 1170×1020 (giữa 1174×1024) và ghi lại `PO_NEO`/`HERO_NEO` (chandung.js), `FACE_BOX` (khung.js) cho 89 ụ.
+- Canon giữ nguyên. 3 ụ chưa có ảnh mới (hết lượt tạo ảnh ChatGPT Plus, không còn tài khoản đã lưu): **kiembang, chimang, dichchuyen** → giữ ảnh + mốc cũ.
+- Bảng tổng: `docs/demo-hop-tuong/tuvan/chan-dung-moi/TONG-93.jpg`. Đã xem: kho, bộ bài, 6 trang ụ, khay trận ở 390×844 và 844×390.
+- Test: thap-kt-khong-ban đạt; thap-kt-vuot-deck 24/24; thap-kt-chandung: không lỗi cắt mặt; còn lỗi có sẵn "chip up-q đè vùng mặt" ở thẻ kho (mọi ụ, kể cả ảnh cũ) và 1 ô bộ bài bienmau "không có mốc" (trước sửa: 8 ụ không có mốc).
