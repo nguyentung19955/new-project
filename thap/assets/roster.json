@@ -832,11 +832,11 @@
   "ten": "Ember Relay",
   "bac": "vang",
   "dcdw": "Kalaratri",
-  "kyNang": "Merging a Relay gives +1 flame to every Relay in the same row and column (max 8); each flame +damage & crit",
+  "kyNang": "Merging a Relay gives +1 flame to every Relay in the same row and column (no cap); each flame +damage & crit",
   "vai": "tc",
   "ho": "blast",
   "ten_vi": "Lửa Thập Tự",
-  "kyNang_vi": "Ghép → +1 lửa cho mọi Ember Relay cùng hàng và cùng cột (tối đa 8); mỗi lửa +sát thương & chí mạng"
+  "kyNang_vi": "Ghép → +1 lửa cho mọi Ember Relay cùng hàng và cùng cột (không trần); mỗi lửa +sát thương & chí mạng"
  },
  {
   "id": "hopca",

@@ -57,24 +57,24 @@ function vm1Fx(id, x, y, w, song, mau) { G.hu.push({ k: 'vm1Fx', t: 0, song: son
 // =====================================================================================================
 // P1 · LỬA THẬP TỰ / CROSS EMBER (lualien, Kalaratri "십자 방향") — Vàng TC (co-che-moi/DE-XUAT.md §3-B, người dùng chốt 07/11):
 //      GHÉP có Ember Relay → +1 LỬA cho MỌI Ember Relay cùng HÀNG + cùng CỘT với ô ghép (xa mấy cũng được; gồm ụ ra nếu là Relay).
-//      Tối đa 8 lửa / ụ. Mỗi lửa +10% sát thương (LV9) → +15% (LV15) và +2% chí mạng. Ụ vừa nhận lửa +15% tốc bắn 5 s.
+//      KHÔNG TRẦN số lửa (như Kalaratri DCDW). Mỗi lửa +10% sát thương (LV9) → +15% (LV15) và +2% chí mạng. Ụ vừa nhận lửa +15% tốc bắn 5 s.
 //      LỬA GIỮ QUA GHÉP: ụ ra là Relay → giữ số lửa LỚN NHẤT của 2 nguyên liệu Relay (rồi +1 như mọi Relay trên chữ thập).
 //      Duyệt bàn theo o tăng dần (online tất định). PVP / CO-OP: chỉ bàn của chính mình. Ô đá không nhận lửa.
 // =====================================================================================================
 SKILLS.lualien = {
   vai: 'tc', dmg: 17, toc: 1.0, nham: 'dau', napMau: null,
-  MAX: 8, CRIT: 0.02,
+  CRIT: 0.02, // không trần lửa (người dùng 07/11: DCDW không áp trần Kalaratri)
   moiLua: (T) => VM1.kn(T, 'lualien'),
   mo(T) {
-    const n = Math.min(this.MAX, T.lc || 0), p = this.moiLua(T);
-    return 'Flames ' + n + '/' + this.MAX + ' → +' + VM1.pct(n * p) + '% damage, +' + n * 2 + '% crit · each flame +' + VM1.pct(p) + '% (' + VM1.chuLv(T, 'lualien', (v) => '+' + VM1.pct(v) + '%') + ') · merging a Relay gives +1 flame to EVERY Relay in the same row and column · a Relay result keeps the higher flames';
+    const n = T.lc || 0, p = this.moiLua(T);
+    return 'Flames ' + n + ' → +' + VM1.pct(n * p) + '% damage, +' + n * 2 + '% crit · each flame +' + VM1.pct(p) + '% (' + VM1.chuLv(T, 'lualien', (v) => '+' + VM1.pct(v) + '%') + ') · merging a Relay gives +1 flame to EVERY Relay in the same row and column · a Relay result keeps the higher flames';
   },
   sinh(G, T) { T.lc = T.lc || 0; },
-  capNhat(G, B, T) { const n = Math.min(this.MAX, T.lc || 0); if (n) { T.buf.dmg += n * this.moiLua(T); T.buf.crit += n * this.CRIT; } return false; },
+  capNhat(G, B, T) { const n = T.lc || 0; if (n) { T.buf.dmg += n * this.moiLua(T); T.buf.crit += n * this.CRIT; } return false; },
   ban(G, B, T, E) {
     giat(T, 0.6); const [x, y] = chopNong(T, 22); SND.lien();
-    const dmg = dmgU(T), n = Math.min(this.MAX, T.lc || 0);
-    banDan({ img: 'tia_lua', x, y, muc: E, px: E.x, py: E.y, sp: 600, co: 13 + n * 0.7, B, T, trung: (G, d, M) => { if (M) trung(M, dmg, { B, mau: '#ff9a3a' }); FX.tiaLua(d.x, d.y, 2 + (n >> 1), '#ff8a2a', 110, 6); } });
+    const dmg = dmgU(T), n = T.lc || 0, nv = Math.min(8, n); // nv: chỉ cỡ hình
+    banDan({ img: 'tia_lua', x, y, muc: E, px: E.x, py: E.y, sp: 600, co: 13 + nv * 0.7, B, T, trung: (G, d, M) => { if (M) trung(M, dmg, { B, mau: '#ff9a3a' }); FX.tiaLua(d.x, d.y, 2 + (nv >> 1), '#ff8a2a', 110, 6); } });
   },
   // ô cùng hàng + cùng cột với ô o (không gồm o), o tăng dần
   chuThap(o) { const c = o % 5, h = (o / 5) | 0, ds = []; for (let i = 0; i < 15; i++) if (i !== o && (i % 5 === c || ((i / 5) | 0) === h)) ds.push(i); return ds; },
@@ -83,7 +83,7 @@ SKILLS.lualien = {
     const o = b.o;
     if (ra && ra.id === 'lualien') { // lửa giữ qua ghép: max của 2 nguyên liệu Relay
       const giu = Math.max(a.id === 'lualien' ? a.lc || 0 : 0, b.id === 'lualien' ? b.lc || 0 : 0);
-      ra.lc = Math.min(this.MAX, Math.max(ra.lc || 0, giu));
+      ra.lc = Math.max(ra.lc || 0, giu);
     }
     const ds = [];
     for (const i of this.chuThap(o)) { const X = B.t[i]; if (X && X.id === 'lualien' && !X.st.da && X !== ra) ds.push(X); }
@@ -91,7 +91,7 @@ SKILLS.lualien = {
     const tam = B.o[o];
     vm1Fx('lualien', tam.x, tam.y, B.cw * 2.6, 0.7, '#ff8a2a');
     for (const X of ds) {
-      X.lc = Math.min(this.MAX, (X.lc || 0) + 1);
+      X.lc = (X.lc || 0) + 1;
       X.tocV = X.tocT > 0 ? Math.max(X.tocV || 0, 0.15) : 0.15; X.tocT = Math.max(X.tocT || 0, 5);
       X.sang = 1; if (typeof buffNo === 'function') buffNo(X, 'dmg', 0.5);
       const q = B.o[X.o]; if (X !== ra) G.hu.push({ k: 'vm1Tia', t: 0, song: 0.22 + 0.07 * (Math.abs(X.o % 5 - o % 5) + Math.abs(((X.o / 5) | 0) - ((o / 5) | 0))), x0: tam.x, y0: tam.y, x1: q.x, y1: q.y });
@@ -99,7 +99,7 @@ SKILLS.lualien = {
     if (!B.ai || G.che === 'pvp') SND.combo(Math.min(20, ds.length * 3 + 2));
   },
   veThem(ctx, T, S, al) { // lửa đang mang: ngọn lửa PNG ở 4 nhánh chữ thập (+ lõi khi ≥ 5)
-    const n = Math.min(this.MAX, T.lc || 0); if (!n) return;
+    const n = Math.min(8, T.lc || 0); if (!n) return; // hình bão hoà ở 8 (chỉ hình, không trần lửa)
     const im = REN.img('fx_cuuvi_dan'); if (!im) return;
     ctx.globalCompositeOperation = 'lighter';
     const pos = [[1, 0], [0, 1], [-1, 0], [0, -1]];
@@ -254,8 +254,8 @@ themHo('star', 3, 'hopca', 'stronger for every same-star turret on board');
 themHo('summon', 3, 'luutru', 'every merge you make adds permanent damage');
 themHo('amp', 3, 'xuonganh', 'merge stamps a HERO tile: big fire-rate boost');
 Object.assign(GROW, {
-  lualien: { mau: '#ff8a2a', khongAnh: true, ten: ['COLD RELAY', 'KINDLED', 'FULL BLAZE'], dk: 'Flames 0 / 1–7 / 8 (full: +80% damage, +16% crit at LV9)',
-    gd: (T) => { const n = T.lc || 0; return { s: n >= 8 ? 3 : n >= 1 ? 2 : 1, p: n / 8, v: [0.125] }; } },
+  lualien: { mau: '#ff8a2a', khongAnh: true, ten: ['COLD RELAY', 'KINDLED', 'FULL BLAZE'], dk: 'Flames 0 / 1–7 / 8+ (no cap: every flame keeps adding damage & crit)',
+    gd: (T) => { const n = T.lc || 0; return { s: n >= 8 ? 3 : n >= 1 ? 2 : 1, p: Math.min(1, n / 8), v: [0.125] }; } },
   luutru: { mau: '#bfe4ff', khongAnh: true, ten: ['EMPTY SHELVES', 'FILING', 'GRAND ARCHIVE'], dk: 'Archive 0–9 / 10–29 / 30–40',
     gd: (T) => { const n = T.kho || 0; return { s: n >= 30 ? 3 : n >= 10 ? 2 : 1, p: n / 40, v: [0.25, 0.75] }; } },
 });

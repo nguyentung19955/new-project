@@ -190,7 +190,7 @@ const SD_K = {
   //   ụ ra (bộ bài chỉ Relay) giữ số lửa lớn nhất của 2 nguyên liệu (3) rồi +1; ô 13 có 7 lửa → đủ 8.
   lualien: { kieu: 'ghep', ke: [[8, 'lualien', 's'], [6, 'lualien', 's'], [3, 'lualien', 's'], [13, 'lualien', 's'], [11, 'lualien', 's']], keo: [2.5, 7, 8], so: { o: 13, k: 'dmg' },
     truoc: (T, B) => { B.deck = ['lualien']; if (T) T.lc = 3; if (B.t[8]) B.t[8].lc = 1; if (B.t[13]) B.t[13].lc = 7; },
-    c: [[0.2, 'Merge two Ember Relays'], [2.5, 'Whole row and column +1 flame', { cham: 0.6 }], [3.9, 'The result keeps its flames'], [5.0, (T) => 'Each flame: +' + VM1.pct(SKILLS.lualien.moiLua(T)) + '% damage, +2% crit'], [6.2, '8 flames: full blaze']] },
+    c: [[0.2, 'Merge two Ember Relays'], [2.5, 'Whole row and column +1 flame', { cham: 0.6 }], [3.9, 'The result keeps its flames'], [5.0, (T) => 'Each flame: +' + VM1.pct(SKILLS.lualien.moiLua(T)) + '% damage, +2% crit'], [6.2, 'No cap: flames keep stacking']] },
   // Quantum Choir: thêm ụ cùng sao (trùng) và khác sao (không tính) — chỉ số sát thương trước → sau
   hopca: { q: Q.hang(4, 180, 40, 8), ke: [[6, 'lien', 's'], [8, 'canon', (s) => s > 1 ? s - 1 : 2]],
     them: [[2.0, (B, D, T) => { if (T) sdThem(B, [[2, 'set', T.sao], [12, 'bang', T.sao]], T, 'dmg'); }], [4.0, (B, D, T) => { if (T) sdThem(B, [[3, 'sungluc', T.sao > 1 ? T.sao - 1 : 2]], T, 'dmg'); }]],
@@ -259,7 +259,7 @@ const SD_GD = {
   guongcong: ['One mirror pane', 'Twin mirror panes', 'Shard halo reflects twice'],
   marionette: ['Strings grab small enemies', 'Golden hand grabs big ones', 'Controls two puppets at once'],
   khoisinh: ['Rings raise your lowest turret', 'Neighbours get +15% damage', 'Each raise seeds a free 1★'],
-  lualien: ['Cold relay: no flames yet', 'Kindled: 1 to 7 flames', 'Full blaze: 8 flames'],
+  lualien: ['Cold relay: no flames yet', 'Kindled: a few flames', 'Blazing: 8+ flames, no cap'],
   luutru: ['Empty shelves: under 10 charges', 'Filing: 10 to 29 charges', 'Grand archive: 30+ charges'],
 };
 // dòng số liệu cuối vòng (khi sk.mo là trạng thái tạm, không phải số liệu theo sao)
@@ -308,7 +308,7 @@ const SD_MO = {
   laser: (T) => 'Beam ramps to ×4 over 3s',
   mortar: (T) => 'Damage ' + Math.round(dmgU(T)) + ', 46 px splash',
   no5: (T) => 'Damage ' + Math.round(dmgU(T)) + ' per shot',
-  lualien: (T) => 'Each flame +' + VM1.pct(SKILLS.lualien.moiLua(T)) + '% damage, max 8',
+  lualien: (T) => 'Each flame +' + VM1.pct(SKILLS.lualien.moiLua(T)) + '% damage, no cap',
   canon: (T) => 'Each number +' + Math.round(SKILLS.canon.moiSo(T) * 100) + '% damage',
   drone: (T) => '1 drone per cell dragged + ' + Math.floor(T.sao / 3),
   hopca: (T) => '+' + VM1.pct(SKILLS.hopca.moi(T)) + '% damage per same-star turret',

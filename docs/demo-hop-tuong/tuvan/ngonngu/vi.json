@@ -3632,5 +3632,15 @@
 " unlock · True north.": " mở khoá · Chính bắc.",
 " unlock · Four winds.": " mở khoá · Tứ phương.",
 "merging a Relay gives +# flame to every Relay in the same row and column": "ghép Lửa Thập Tự cho +# lửa mọi Lửa Thập Tự cùng hàng và cùng cột",
-"Flames #/# → +#% damage, +#% crit · each flame +#% (LV# → LV#: +#%) · merging a Relay gives +# flame to every Relay in the same row and column · a Relay result keeps the higher flames": "Lửa #/# → +#% sát thương, +#% chí mạng · mỗi lửa +#% (LV# → LV#: +#%) · ghép Lửa Thập Tự cho +# lửa mọi Lửa Thập Tự cùng hàng và cùng cột · ra Lửa Thập Tự thì giữ số lửa cao hơn"
+"Flames #/# → +#% damage, +#% crit · each flame +#% (LV# → LV#: +#%) · merging a Relay gives +# flame to every Relay in the same row and column · a Relay result keeps the higher flames": "Lửa #/# → +#% sát thương, +#% chí mạng · mỗi lửa +#% (LV# → LV#: +#%) · ghép Lửa Thập Tự cho +# lửa mọi Lửa Thập Tự cùng hàng và cùng cột · ra Lửa Thập Tự thì giữ số lửa cao hơn",
+"No cap: flames keep stacking": "Không trần: lửa cứ cộng dồn",
+"Kindled: a few flames": "Bén lửa: vài ngọn",
+"Blazing: #+ flames, no cap": "Cháy rực: #+ lửa, không trần",
+"Each flame +#% damage, no cap": "Mỗi lửa +#% ST, không trần",
+"Merging a Relay gives +# flame to every Relay in the same row and column (no cap, kept through merges)": "Ghép Relay → +# lửa cho mọi Relay cùng hàng và cùng cột (không trần, giữ qua ghép)",
+"Flames # / #–# / #+ (no cap: every flame keeps adding damage & crit)": "Lửa # / #–# / #+ (không trần: mỗi lửa đều cộng thêm ST & chí mạng)",
+"flames carried (no cap)": "số lửa mang (không trần)",
+"Flames # → +#% damage, +#% crit · each flame +#% (LV# → LV#: +#%) · merging a Relay gives +# flame to every Relay in the same row and column · a Relay result keeps the higher flames": "Lửa # → +#% sát thương, +#% chí mạng · mỗi lửa +#% (LV# → LV#: +#%) · ghép Lửa Thập Tự cho +# lửa mọi Lửa Thập Tự cùng hàng và cùng cột · ra Lửa Thập Tự thì giữ số lửa cao hơn",
+"#+ (no cap: every flame keeps adding damage & crit)": "#+ (không trần: mỗi lửa đều cộng thêm ST & chí mạng)",
+"Flames # / #–# / #+ (no cap: every flame keeps adding damage & crit).": "Lửa # / #–# / #+ (không trần: mỗi lửa đều cộng thêm ST & chí mạng)."
 }

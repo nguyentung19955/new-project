@@ -143,7 +143,7 @@ const TEXT = {
     leviathan:    { name: 'Leviathan',      skill: 'Devours enemies for ABYSS points (shared by all your Leviathans) — whirlpool tag under the cell, +4% damage each (max 100). Active (3★+): TIDAL BREATH — an ice dragon head drops from the sky and breathes along the path' },
     khoisinh:     { name: 'Genesis Core',   skill: 'Raises your lowest turret +1★ over time. Active (3★+): GENESIS summons turrets; Co-op: may raise your ally’s lowest turret instead' },
     // đợt vàng mới 1 (vangmoi1.js)
-    lualien: { name: 'Ember Relay', skill: 'Merging a Relay gives +1 flame to every Relay in the same row and column (max 8, kept through merges); each flame +damage & crit' },
+    lualien: { name: 'Ember Relay', skill: 'Merging a Relay gives +1 flame to every Relay in the same row and column (no cap, kept through merges); each flame +damage & crit' },
     hopca: { name: 'Quantum Choir', skill: '+damage for every other turret on your board with the same ★ (max 7); 7★ +fire rate' },
     luutru: { name: 'Fusion Archive', skill: 'Every merge you make adds a permanent archive charge (+damage); Archive + Archive fires 3 pulses' },
     xuonganh: { name: 'Hero Foundry', skill: 'Merge 2 Foundries: a random cell becomes a HERO tile for 12s (+fire rate to the turret on it)' },
