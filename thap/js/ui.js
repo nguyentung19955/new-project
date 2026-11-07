@@ -20,7 +20,7 @@ const UI = {
     let r = null;
     try { // tối đa 4 s (Safari đôi khi treo fetch lúc nạp lại trang) → dùng bản nhúng meta.js
       const ac = typeof AbortController !== 'undefined' ? new AbortController() : null, hen = ac && setTimeout(() => ac.abort(), 4000);
-      const res = await fetch('assets/roster.json?v=ba6eaba1', { cache: 'no-cache', signal: ac ? ac.signal : undefined }); if (res.ok) r = await res.json(); clearTimeout(hen);
+      const res = await fetch('assets/roster.json?v=2ef3c16d', { cache: 'no-cache', signal: ac ? ac.signal : undefined }); if (res.ok) r = await res.json(); clearTimeout(hen);
     } catch (e) { }
     G.roster = applyText(r || window.ROSTER_EMBED || []);
     SND.nutNhan(); // nhãn nút NHẠC/SFX theo trạng thái đã lưu

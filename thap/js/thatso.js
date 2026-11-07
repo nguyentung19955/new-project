@@ -15,15 +15,17 @@
   // id → [nhóm trần (HOTRO.tran), hàm giá trị THÔ dùng trong hoTro]
   const TRAN_HT = {
     radar: ['toc', (T) => SKILLS.radar.them(T)], chimang: ['crit', (T) => SKILLS.chimang.them(T)], tron: ['toc', (T) => SKILLS.tron.them(T)],
-    nangsao: ['toc', (T) => SKILLS.nangsao.them(T)], phagiap: ['lo', (T) => SKILLS.phagiap.k(T)], bua: ['cdmg', (T) => SKILLS.bua.cd(T)],
+    nangsao: ['toc', (T) => SKILLS.nangsao.them(T), (T) => SKILLS.nangsao.tran(T)], phagiap: ['lo', (T) => SKILLS.phagiap.k(T)], bua: ['cdmg', (T) => SKILLS.bua.cd(T)],
     hasao: ['dmg', (T) => SKILLS.hasao.k(T)], dongbo: ['dmg', (T) => SKILLS.dongbo.v(T)], cauvong: ['vet', (T) => SKILLS.cauvong.k(T)],
     lophanung: ['lanh', (T) => SKILLS.lophanung.k(T)], tuthan: ['chet', (T) => SKILLS.tuthan.tile(T)], thaukinh: ['cdmg', (T) => SKILLS.thaukinh.k(T)],
-    thanhdia: ['dmg', (T) => SKILLS.thanhdia.k(T)], luoicheo: ['dmg', (T) => SKILLS.luoicheo.them(T)], taylo: ['dmg', (T) => 0.09 * HOTRO.k(T)],
+    thanhdia: ['dmg', (T) => SKILLS.thanhdia.k(T)], luoicheo: ['dmg', (T) => SKILLS.luoicheo.them(T), (T) => SKILLS.luoicheo.tranR(T)], taylo: ['dmg', (T) => 0.09 * HOTRO.k(T)],
     guongcong: ['khang', (T) => SKILLS.guongcong.khang(T)], lanhgia: ['cham', (T) => SKILLS.lanhgia.cham(T)],
   };
+  // phần tử thứ 3 (tuỳ chọn): trần RIÊNG của ụ (Star Lift 50% × thẻ, Resonance Grid +10% khi cộng hưởng) thay cho HOTRO.tran
+  const tranCua = (T, id) => { const e = TRAN_HT[id]; return e[2] ? e[2](T) : HOTRO.tran(T, e[0]); };
   // giá trị hiệu dụng (0..1) — dùng cho chữ và cho kiểm
-  const hieu = (T, id) => { const e = TRAN_HT[id]; if (!e) return null; const v = e[1](T); return { v, h: HOTRO.hd(T, e[0], v), k: e[0] }; };
-  window.THATSO = { TRAN_HT, hieu };
+  const hieu = (T, id) => { const e = TRAN_HT[id]; if (!e) return null; const v = e[1](T); return { v, h: Math.min(v, tranCua(T, id)), k: e[0] }; };
+  window.THATSO = { TRAN_HT, hieu, tranCua };
   // thay số thô đầu tiên ('52%' / '56.4%') bằng số hiệu dụng
   //  ghi = true (mô tả: thanh soi, Turret File): thêm ' (cap · LV raises it)' — trần nới theo cấp thẻ (KIEM.md 'Đã quyết' #2); nhãn SUP trên bàn: chỉ số (QUY-TAC 7)
   const GHI_TRAN = ' (cap · LV raises it)';
@@ -43,12 +45,11 @@
   // Radar 7★ OVERDRIVE: +25% nằm TRONG trần tốc bắn → hiện phần thật được cộng
   if (SKILLS.radar) {
     const mo = SKILLS.radar.mo;
-    SKILLS.radar.odThat = (T) => Math.max(0, HOTRO.hd(T, 'toc', SKILLS.radar.them(T) + 0.25) - HOTRO.hd(T, 'toc', SKILLS.radar.them(T)));
+    SKILLS.radar.odThat = (T) => Math.max(0, Math.min(SKILLS.radar.them(T) + 0.25, HOTRO.tran(T, 'toc') + 0.15) - HOTRO.hd(T, 'toc', SKILLS.radar.them(T))); // OVERDRIVE: trần tốc +15% trong 2 s (hotro.js capOD)
     // thay CẢ cụm 'OVERDRIVE every 8s: +25% for 2s (up to the …)' của skills.js (trước: chỉ thay đầu cụm → 2 câu chồng nhau '+7% … : +25% …')
-    SKILLS.radar.mo = function (T) { const s = mo.apply(this, arguments); return ms(T, 7) ? s.replace(/OVERDRIVE every 8s(: \+\d+% for 2s \([^)]*\))?/, 'OVERDRIVE every 8s: +' + pc(SKILLS.radar.odThat(T)) + '% for 2s (fire-rate cap ' + pc(HOTRO.tran(T, 'toc')) + '%)') : s; };
+    SKILLS.radar.mo = function (T) { const s = mo.apply(this, arguments); return ms(T, 7) ? s.replace(/OVERDRIVE every 8s(: \+\d+% for 2s \([^)]*\))?/, 'OVERDRIVE every 8s: +' + pc(SKILLS.radar.odThat(T)) + '% for 2s (fire-rate cap ' + pc(HOTRO.tran(T, 'toc') + 0.15) + '% during it)') : s; };
   }
-  // Amplifier: tổng cộng dồn chung trần sát thương
-  if (SKILLS.khuech) { const mo = SKILLS.khuech.mo; SKILLS.khuech.mo = function (T) { return mo.apply(this, arguments) + ' · all stacks together max +' + pc(HOTRO.tran(T, 'amp')) + '%'; }; }
+  // Amplifier: trần riêng của cộng dồn đã ghi ngay trong câu kỹ năng (skills2.js 'total up to +X%, its own cap') — 07/11
 
   // ---------- 2. ụ chỉ tác dụng khi GHÉP: 7★ không ghép tiếp ----------
   const GHEP7 = ['nhanmana', 'drone', 'loa', 'nhanban', 'kepha', 'xaotron', 'sinhdoi', 'pandora', 'nhieusong', 'xuonganh', 'nguyenrua'];
@@ -76,12 +77,12 @@
     M('haoquang', 3, 'STEADY HALO', 'Barrier +0.5s');
     M('haoquang', 7, 'BLESSING', 'Barrier +1s more + 30% speed');
     M('chimang', 3, 'SHARP EYE', 'More crit chance (curve ×1.45)');
-    M('chimang', 5, 'DEADLY EYE', 'Crit chance reaches its cap (card LV raises it) + 10% crit damage');
-    M('chimang', 7, 'CERTAIN STRIKE', 'Every 6s a sure crit (crit chance stays at the cap)');
-    M('radar', 7, 'OVERDRIVE', 'Aura ×2.35 + every 8s a 2s fire-rate burst (inside the fire-rate cap)');
-    M('tuthan', 5, 'DEEP REAP', 'Threshold 40% HP (kill chance is at its cap; card LV and power-ups raise it)');
-    M('phagiap', 5, 'DOUBLE EXPOSE', 'Exposes 3 enemies (bonus is at its cap; card LV raises it)');
-    M('cauvong', 5, 'DOUBLE ARC', '2 trails (bonus reaches its cap; card LV raises it)');
+    M('chimang', 5, 'DEADLY EYE', 'More crit chance (curve ×1.9) + 10% crit damage');
+    M('chimang', 7, 'CERTAIN STRIKE', 'More crit chance (curve ×2.35) + every 6s a sure crit');
+    M('radar', 7, 'OVERDRIVE', 'Aura ×2.35 + every 8s a 2s fire-rate burst (cap +15% during it)');
+    M('tuthan', 5, 'DEEP REAP', 'Threshold 40% HP + more kill chance (curve ×1.9)');
+    M('phagiap', 5, 'DOUBLE EXPOSE', 'Exposes 3 enemies + more bonus (curve ×1.9)');
+    M('cauvong', 5, 'DOUBLE ARC', '2 trails + more bonus (curve ×1.9)');
     M('lophanung', 5, 'DEEP COLD', 'Bosses in the aura cast 25% slower; FREEZE lasts 4s (bosses 0.8s)');
     M('laser', 7, 'APEX', '+30% damage (the beam never crits)');
     M('pandora', 5, 'LUCKY SPIN', 'A merge that makes 6★ rolls twice, keeps the better');
@@ -137,7 +138,7 @@
   // ---------- 6. thanh soi ụ / bảng thông tin ụ hỗ trợ (buff.js hoTroTT): số 'hiện tại' = số THẬT sau trần (trước: số thô, vd Crit Antenna 7★ +30% trong khi trần 22%) ----------
   //  + nhãn đúng thứ được buff (Sanctum: sát thương, Mirror Gate: kháng khống chế, Cryo: hào quang làm chậm — trước: 'Shield' / 'Shots slow')
   const NHAN_HT = { thanhdia: 'Damage', guongcong: 'Control resist', lophanung: 'Aura slow' };
-  const TRAN_TT = (T, id) => id === 'khuech' ? HOTRO.tran(T, 'amp') : (TRAN_HT[id] && id !== 'lophanung') ? HOTRO.tran(T, TRAN_HT[id][0]) : Infinity; // Cryo: số ở đây là % làm chậm hào quang (trần làm chậm riêng, đã kẹp trong SKILLS.lophanung.cham)
+  const TRAN_TT = (T, id) => id === 'khuech' ? HOTRO.tran(T, 'amp') : (TRAN_HT[id] && id !== 'lophanung') ? tranCua(T, id) : Infinity; // Cryo: số ở đây là % làm chậm hào quang (trần làm chậm riêng, đã kẹp trong SKILLS.lophanung.cham)
   if (typeof hoTroTT === 'function') {
     const tt0 = hoTroTT;
     hoTroTT = function (T) {
@@ -157,7 +158,7 @@
   // hàng CARD LV (trang ụ): ụ hỗ trợ có trần → 'cap 22% → 22.3%' (cấp thẻ nới trần — KIEM.md 'Đã quyết' #2); thẻ MAX: 'cap 26%'
   window.THATSO.capThe = (id, t) => {
     const e = id === 'khuech' ? ['amp'] : TRAN_HT[id], r = G.rosterMap && G.rosterMap[id]; if (!e || !r || id === 'lophanung' || !t) return '';
-    const f = (k) => HOTRO.tranGoc(r.bac, HOTRO.capLvK(r.bac, k), e[0]), v = (x) => +(x * 100).toFixed(1) + '%';
+    const f = (k) => id === 'nangsao' ? 0.5 * (1 + HOTRO.capLvK(r.bac, k)) : HOTRO.tranGoc(r.bac, HOTRO.capLvK(r.bac, k), e[0]), v = (x) => +(x * 100).toFixed(1) + '%'; // Star Lift: trần riêng 50%
     return 'cap ' + v(f(t.k)) + (t.max ? '' : ' → ' + v(f(t.k + 1)));
   };
 

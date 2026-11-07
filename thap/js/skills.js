@@ -18,15 +18,97 @@ function danThang(B, T, E, img, sp, co, trungFn, duoi) {
 }
 
 // ============ TRẮNG ============
-SKILLS.canon = { // Pháo Nổ (Joan of Arc): bắn chậm, nổ lan; sao tăng vùng nổ
-  vai: 'tc', dmg: 32.73, toc: 0.55, nham: 'dau',
+// PHÁO LA BÀN / COMPASS CANNON (canon, Trắng — co-che-moi/DE-XUAT.md §3-A, người dùng chốt 07/11: THAY Cannon, có sóng nổ bù):
+//  · Gọi ra: 1 MŨI TÊN cố định (T.huong 0 ↑ · 1 → · 2 ↓ · 3 ←, bốc ngẫu nhiên; online = rngHat hạt giống trận + bàn + ô + số lần) và SỐ T.so = 1.
+//  · Ghép Pháo La Bàn vào Pháo La Bàn cùng sao (ghép đặc biệt GIỮ LOẠI như Merge King + Merge King): ụ ĐÍCH +1★, giữ mũi tên của ĐÍCH;
+//      cùng hướng → số CỘNG (2+1=3) · vuông góc → giữ số của đích · NGƯỢC hướng → số TRỪ (tối thiểu 1) + SÓNG NỔ bù dọc làn:
+//      mọi quái trên làn của mình nhận (số của ụ kéo × 6) lần sát thương 1 phát (không nhân số). Kết quả luôn là ụ THẬT (không phải bản sao).
+//  · Mimic + Pháo / ghép thường khác → ụ ngẫu nhiên như luật thường, số mất. Merge King nâng sao: giữ mũi tên + số. Copycat chép: giữ mũi tên + số (× % sao chép).
+//  · Sức mạnh: mỗi số +15% sát thương (cấp thẻ +0,43%/cấp → 21% ở LV15); số trên 20 chỉ tính 1/3. Ngắm theo mũi tên (↑ quái cao nhất màn hình, → phải nhất,
+//    ↓ thấp nhất, ← trái nhất); đạn XUYÊN: mọi quái trên đường thẳng từ ụ tới mục tiêu nhận 60%, nổ lan ở mục tiêu.
+//  · Mốc: 3★ chung (+20% tốc) · 5★ TRUE NORTH: mỗi số tính ×1.5 · 7★ FOUR WINDS: +30% sát thương, mỗi 8 s bắn 1 phát theo CẢ 4 hướng.
+SKILLS.canon = {
+  vai: 'tc', dmg: 26.5, toc: 0.55, nham: 'dau', // 32.73 → 26.5: ghép giữ loại + số làm Pháo mạnh hơn (sim 07/11 bộ 4 ụ trắng + Pháo: wave 13.1 cũ → ~14.0; 32.73 thì 16.2 = áp đảo)
+  MUI: ['↑', '→', '↓', '←'], SONG_K: 6, XUYEN: 0.6,
   banKinh: (T) => 28 + 6 * T.sao,
-  mo: (T) => 'Blast radius ' + SKILLS.canon.banKinh(T) + ' px',
+  huong: (T) => ((T && T.huong) | 0) & 3,
+  so: (T) => Math.max(1, (T && T.so) | 0),
+  // số thực tính sức mạnh: trần mềm 20, 5★ ×1.5
+  soHieu(T) { const n = this.so(T), m = n <= 20 ? n : 20 + (n - 20) / 3; return m * (ms(T, 5) ? 1.5 : 1); },
+  moiSo: (T) => (knThe(T && G.ban[T.ban], 'canon') || 15) / 100,
+  heSo(T) { return (1 + this.moiSo(T) * this.soHieu(T)) * (ms(T, 7) ? 1.3 : 1); },
+  // kết quả ghép a (kéo) vào b (đích): { so, kieu: 'cong' | 'giu' | 'tru', song } — dùng chung cho luật, xem trước khi kéo, AI, bảng chạm
+  ketQua(a, b) {
+    const ha = this.huong(a), hb = this.huong(b), sa = this.so(a), sb = this.so(b);
+    if (ha === hb) return { so: sa + sb, kieu: 'cong', song: 0 };
+    if ((ha + 2) % 4 === hb) return { so: Math.max(1, sb - sa), kieu: 'tru', song: sa };
+    return { so: sb, kieu: 'giu', song: 0 };
+  },
+  rng(B, o) {
+    if (typeof ONS !== 'undefined' && ONS.on) { B._cmN = (B._cmN || 0) + 1; return rngHat((ONS.seed || 1) * 6151 + B.i * 131 + (o | 0) * 977 + B._cmN * 7919); }
+    return Math.random;
+  },
+  sinh(G, T) { if (T.huong == null) { const B = G.ban[T.ban] || G.ban[0]; T.huong = Math.floor(this.rng(B, T.o)() * 4) & 3; } if (!T.so) T.so = 1; },
+  mo(T) {
+    const n = this.so(T);
+    return 'Arrow ' + this.MUI[this.huong(T)] + ' · number ' + n + ' → +' + Math.round((this.heSo(T) / (ms(T, 7) ? 1.3 : 1) - 1) * 100) + '% damage (each number +' + Math.round(this.moiSo(T) * 100) + '%' + (ms(T, 5) ? ', ×1.5 at 5★' : '') + ') · aims toward its arrow, shells pierce the line, blast ' + this.banKinh(T) + ' px · merge onto a Compass Cannon: same arrow = numbers add, side arrow = target keeps its number, opposite = subtract (min 1) + shockwave on your lane';
+  },
+  // mục tiêu theo mũi tên: quái xa nhất về phía mũi tên (hoà: quái gần lối ra hơn)
+  mucTieu(B, T, h) {
+    let m = null, best = -1e9;
+    for (const E of dsMucTieu(B)) { if (E.chet) continue; const v = (h === 0 ? -E.y : h === 1 ? E.x : h === 2 ? E.y : -E.x) + E.s * 1e-4; if (v > best) { best = v; m = E; } }
+    return m;
+  },
+  capNhat(G, B, T, dt) {
+    const E = this.mucTieu(B, T, this.huong(T)); if (E) T.muc = E;
+    if (ms(T, 7) && !biKhoa(T)) { // FOUR WINDS: mỗi 8 s 1 phát theo cả 4 hướng
+      T.gio = (T.gio || 0) + dt;
+      if (T.gio >= 8) { T.gio = 0; const ds = [0, 1, 2, 3].map(h => this.mucTieu(B, T, h)).filter(Boolean); if (ds.length) { giat(T, 1.2); for (const Q of ds) this.banMot(G, B, T, Q, 0.7); } }
+    }
+    return false;
+  },
   ban(G, B, T, E) {
+    const Q = this.mucTieu(B, T, this.huong(T)) || E; if (!Q) return;
     giat(T, 1.4); const [x, y] = chopNong(T, 34); phutKhoi(x, y, 2); SND.phao();
-    const dmg = dmgU(T), r = this.banKinh(T);
-    banDan({ img: 'dan_phao', x, y, muc: E, px: E.x, py: E.y, sp: 280, co: 24, cong: 30, B, T, duoi: true,
-      trung(G, d) { noLan(d.x, d.y, r, dmg, B); FX.no('no_phao', d.x, d.y, r * 2.5, 0.5); FX.vong1(d.x, d.y, 4, r, '#ffb35a', 0.3, 3); FX.tiaLua(d.x, d.y, 8, '#ffb060', 200); FX.lac(2.5); SND.no(0.35); } });
+    this.banMot(G, B, T, Q, 1);
+  },
+  banMot(G, B, T, E, k) {
+    const [x, y] = dauNong(T), dmg = dmgU(T) * this.heSo(T) * (k || 1), r = this.banKinh(T), xu = this.XUYEN;
+    banDan({ img: 'dan_phao', x, y, muc: E, px: E.x, py: E.y, sp: 300, co: 24 + Math.min(10, this.so(T)), cong: 30, B, T, duoi: true,
+      trung(G, d) {
+        // xuyên: mọi quái (trừ tâm nổ) trên đoạn thẳng từ nòng tới điểm nổ, lệch ≤ 16 px — xét theo uid tăng dần (tất định)
+        const vx = d.x - x, vy = d.y - y, L2 = vx * vx + vy * vy || 1, ds = [];
+        for (const M of dsMucTieu(B)) { if (M.chet) continue; const u = ((M.x - x) * vx + (M.y - y) * vy) / L2; if (u < 0 || u > 1) continue; const px = x + vx * u - M.x, py = y + vy * u - M.y; if (px * px + py * py <= (16 + M.d.co * 0.25) ** 2 && Math.hypot(M.x - d.x, M.y - d.y) > r) ds.push(M); }
+        ds.sort((p, q) => p.uid - q.uid); for (const M of ds) trung(M, dmg * xu, { B, T, phu: true });
+        noLan(d.x, d.y, r, dmg, B); FX.no('no_phao', d.x, d.y, r * 2.5, 0.5); FX.vong1(d.x, d.y, 4, r, '#ffb35a', 0.3, 3); FX.tiaLua(d.x, d.y, 8, '#ffb060', 200); FX.lac(2.5); SND.no(0.35);
+        if (ds.length) G.hu.push({ k: 'cmXuyen', t: 0, song: 0.3, x0: x, y0: y, x1: d.x, y1: d.y });
+      } });
+  },
+  ghepDB: {
+    cungLoai: true, // Pháo La Bàn + Pháo La Bàn (cùng sao) → ụ ĐÍCH +1★ (không ra ụ ngẫu nhiên)
+    hopLe: (a, b) => b.id === 'canon' && a.id === 'canon' && a.sao === b.sao && b.sao < LUAT.saoMax && b.ban === a.ban,
+    xemSao: (a, b) => Math.min(LUAT.saoMax, b.sao + 1),
+    lam(G, B, a, b) {
+      const S = SKILLS.canon, kq = S.ketQua(a, b);
+      B.t[a.o] = null;
+      G.bay.push({ id: a.id, sao: a.sao, x0: B.o[a.o].x, y0: B.o[a.o].y, x1: B.o[b.o].x, y1: B.o[b.o].y, t: 0, bac: a.bac });
+      b.so = kq.so; b.banSao = false; // ghép luôn ra ụ thật (như ghép thường)
+      const saoCu = b.sao; b.sao = Math.min(LUAT.saoMax, b.sao + 1); b.sang = 1; b.anim = { k: 'no', t: 0.25 };
+      mocMoi(b, saoCu, 0.1);
+      const c = B.o[b.o]; FX.tiaLua(c.x, c.y, 14, '#ffb35a', 180, 11); FX.vong1(c.x, c.y, 6, 40, '#ffb35a', 0.4, 3);
+      if (typeof buffNo === 'function') buffNo(b, 'dmg', kq.kieu === 'cong' ? 1 : 0.5);
+      b.cmKq = { kieu: kq.kieu, t: G.t };
+      if (kq.song > 0) S.songNo(G, B, b, kq.song);
+      return b;
+    },
+  },
+  // SÓNG NỔ bù (ghép ngược hướng): mọi quái trên làn của mình (uid tăng dần) nhận n × 6 lần sát thương 1 phát (không nhân số)
+  songNo(G, B, T, n) {
+    const dmg = dmgU(T) * this.SONG_K * n;
+    const ds = dsMucTieu(B).filter(E => !E.chet).sort((p, q) => p.uid - q.uid);
+    for (const E of ds) trung(E, dmg, { B, T, phu: true });
+    for (const pi of G.duong.map((p, i) => i).filter(i => G.duong[i].ban === B.i)) G.hu.push({ k: 'cmSong', t: 0, song: 0.9, p: pi, n });
+    FX.lac(5); SND.no(0.8);
   },
 };
 SKILLS.lien = { // Liên Thanh (Esch): bắn rất nhanh; sao tăng tốc bắn
@@ -43,7 +125,7 @@ SKILLS.lien = { // Liên Thanh (Esch): bắn rất nhanh; sao tăng tốc bắn
 SKILLS.bang = { // Băng (Liza) — ĐẶC BIỆT (đợt vai trò): định kỳ ĐÓNG BĂNG quái đầu; không gây sát thương; trùm chỉ 0.6 s; không đóng băng nối tiếp (miễn 3 s)
   vai: 'db', dmg: 0, toc: 0, napMau: '#bff4ff',
   ky: (T) => (ms(T, 5) ? 4.5 : 6),          // 5★ QUICK FROST
-  dai: (T) => Math.round(((ms(T, 3) ? 0.5 : 0) + knThe(G.ban[T.ban], 'bang')) * 10) / 10, // 3★ LONG FREEZE · cấp thẻ: 2 s → 3 s
+  dai: (T) => Math.round(((ms(T, 3) ? 0.5 : 0) + knThe(G.ban[T.ban], 'bang')) * 10) / 10, // 3★ LONG FREEZE · cấp thẻ: 2 s → 3 s (+ power-up KY_NANG_CAP.pu)
   so: (T) => (ms(T, 7) ? 2 : 1),            // 7★ DOUBLE FREEZE
   mo: (T) => 'Every ' + SKILLS.bang.ky(T) + 's freezes ' + (SKILLS.bang.so(T) > 1 ? '2 lead enemies ' : 'the lead enemy ') + SKILLS.bang.dai(T) + 's (big ×0.6; bosses only 50% slow 0.6s) + 30% chill (bosses 15%) · 3s freeze immunity · Frost Flyers immune',
   ung: (G, B) => dsMucTieu(B).filter(E => !E.chet && !E.d.khangCham && !(E.bangMien > G.t)).sort((a, b) => (G.duong[a.p].len - a.s) - (G.duong[b.p].len - b.s)),
@@ -73,7 +155,8 @@ SKILLS.doc = { // Độc (Unknown) — ĐẶC BIỆT (đợt vai trò): ĐÁNH D
   vai: 'db', dmg: 0, toc: 0, napMau: '#9dff5a',
   K: 0.12, ky: 2.5,
   so: (T) => (ms(T, 3) ? 2 : 1), // 3★ TWIN MARK
-  mo: (T) => 'Every 2.5s marks ' + (SKILLS.doc.so(T) > 1 ? '2 lead enemies' : 'the lead enemy') + ' 5s: +' + +knThe(G.ban[T.ban], 'doc').toFixed(1) + '% damage taken from all turrets' + (ms(T, 5) ? ' · mark spreads on death' : '') + (ms(T, 7) ? ' · marked slowed 15%' : ''),
+  k: (T) => knThe(G.ban[T.ban], 'doc') / 100, // cấp thẻ + power-up (KY_NANG_CAP.pu)
+  mo: (T) => 'Every 2.5s marks ' + (SKILLS.doc.so(T) > 1 ? '2 lead enemies' : 'the lead enemy') + ' 5s: +' + +(SKILLS.doc.k(T) * 100).toFixed(1) + '% damage taken from all turrets' + (ms(T, 5) ? ' · mark spreads on death' : '') + (ms(T, 7) ? ' · marked slowed 15%' : ''),
   capNhat(G, B, T, dt) {
     const ds = dsMucTieu(B).filter(E => !E.chet && !(E.vmT > 1.2)).sort((a, b) => (G.duong[a.p].len - a.s) - (G.duong[b.p].len - b.s));
     xoayDau(T, ds[0] || quaiDau(B), dt);
@@ -94,7 +177,7 @@ function biDoc(E) { return !!E && (E.docT > 0 || E.vmT > 0); }
 function danhDauDoc(E, T, B) {
   if (E.chet) return;
   if (!(E.vmT > 1.3)) FX.chu1(E.x, E.y - 24, 'MARKED', '#9dff5a', 10);
-  E.vmT = 5; E.vmK = knThe(B, 'doc') / 100; E.yeu = Math.max(E.yeu, 5);
+  E.vmT = 5; E.vmK = T && T.id === 'doc' ? SKILLS.doc.k(T) : knThe(B, 'doc') / 100; E.yeu = Math.max(E.yeu, 5);
   if (ms(T, 5)) E.vmLay = 1;                                                                          // 5★ CONTAGION
   if (ms(T, 7) && !E.d.khangCham) { E.cham = Math.max(E.cham, 0.15); E.chamT = Math.max(E.chamT, 5); } // 7★ NEUROTOXIN
 }
@@ -147,7 +230,7 @@ SKILLS.radar = { // Radar (Kirinus): HỖ TRỢ — +tốc bắn cho 4 ô thẳn
   vai: 'ht', dmg: 0, toc: 0,
   them: (T) => 0.12 * HOTRO.k(T),
   mo: (T) => '+' + Math.round(Math.min(SKILLS.radar.them(T), HOTRO.tran(T, 'toc')) * 100) + '% fire rate to N/E/S/W neighbours' + (ms(T, 5) ? ' · +4% crit' : '') + (ms(T, 7) ? ' · OVERDRIVE every 8s: +25% for 2s (up to the ' + +(HOTRO.tran(T, 'toc') * 100).toFixed(1) + '% fire-rate cap)' : ''),
-  hoTro(G, T, N, ra) { ra.toc = this.them(T) + (T.odCon > 0 ? 0.25 : 0); if (ms(T, 5)) ra.crit = 0.04; }, // 7★ OVERDRIVE: +25% trong 2 s — tính TRONG trần tốc 45%
+  hoTro(G, T, N, ra) { ra.toc = this.them(T) + (T.odCon > 0 ? 0.25 : 0); if (T.odCon > 0) ra.capOD = 0.15; if (ms(T, 5)) ra.crit = 0.04; }, // 7★ OVERDRIVE: +25% trong 2 s — trần tốc +15% trong lúc OVERDRIVE (BAO-CAO gioi-han Mức 3)
   capNhat(G, B, T, dt) {
     T.goc += dt * 1.3; // chảo radar quay đều
     T.nap += dt / 2.2;

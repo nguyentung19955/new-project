@@ -208,6 +208,7 @@ const ONS = {
     if (!d.f) B1.gia += LUAT.giaTrieuTang;
     if (B1.t[d.o]) { const T = B1.t[d.o]; if (T.id === d.id && T.sao === d.s) return; }
     const T = taoU(B1, d.id, d.s || 1, d.o); B1.t[d.o] = T;
+    if (d.id === 'canon') { T.huong = (d.hu | 0) & 3; T.so = 1; } // Pháo La Bàn: mũi tên bốc trên máy chủ bàn
     if (d.vg) T.vang = true; if (d.th) T.thuc = true; // dạng quay lúc sinh (Merge King vàng / Sói thức tỉnh) theo máy bạn
     VX.trieu(T);
   },
@@ -216,6 +217,7 @@ const ONS = {
     if (!T) return 0;
     let f = (T.vang ? 'g' : '') + (T.thuc ? 'w' : '') + (T.banSao ? 'c' : '') + (T.st && T.st.da ? 'S' : '');
     if (T.epxung) f += 'e' + Math.round(T.epxung * 100) + ';'; if (T.lo) f += 'l' + T.lo + ';';
+    if (T.id === 'canon') f += 'h' + (T.huong | 0) + ';n' + (T.so || 1) + ';'; // Pháo La Bàn: mũi tên + số
     if (T.lc) f += 'r' + T.lc + ';'; if (T.kho) f += 'k' + T.kho + ';'; // Ember Relay: lửa · Fusion Archive: điểm lưu (vangmoi1.js)
     { const B = G.ban[T.ban]; if (B && T.id === 'mauhut' && B.vamp) f += 'v' + B.vamp + ';'; if (B && T.id === 'bienmau' && B.prism) f += 'p' + B.prism + ';'; } // VAMP / COMBO chung bàn (skills7.js)
     return [T.id, T.sao, f];
@@ -233,6 +235,7 @@ const ONS = {
     T.banSao = c.includes('c'); T.st.da = c.includes('S');
     T.epxung = so('e') / 100; if (T.id === 'loren') T.lo = so('l');
     if (T.id === 'lualien') T.lc = so('r'); if (T.id === 'luutru') T.kho = so('k');
+    if (T.id === 'canon' && /h\d+;/.test(c)) { T.huong = so('h') & 3; T.so = Math.max(1, so('n')); }
     if (T.id === 'mauhut') B.vamp = so('v'); if (T.id === 'bienmau') B.prism = so('p'); // skills7.js: trạng thái chung bàn theo máy bạn
   },
   apGhep(B1, d) {
@@ -256,6 +259,7 @@ const ONS = {
     if (B1.t[d.b] && d.vg != null && B1.t[d.b].id === 'vughep') B1.t[d.b].vang = !!d.vg; // cờ vàng Merge King theo đúng máy bạn kia
     if (B1.t[d.b] && d.th != null && B1.t[d.b].id === 'soi') B1.t[d.b].thuc = !!d.th; // Sói THỨC TỈNH / thường (quay lúc ghép) theo đúng máy bạn kia
     if (B1.t[d.b] && d.bs != null) B1.t[d.b].banSao = !!d.bs; // bản sao Copycat: −50% + huy hiệu, như máy bạn kia
+    if (B1.t[d.b] && d.hn && B1.t[d.b].id === 'canon') { B1.t[d.b].huong = d.hn[0] & 3; B1.t[d.b].so = Math.max(1, d.hn[1] | 0); } // Pháo La Bàn: mũi tên + số theo máy bạn kia
     if (B1.t[d.b] && d.da != null) B1.t[d.b].st.da = !!d.da; // ô ĐÁ: Merge King lên đá giữ đá · đá + đá ra đá (theo đúng máy bạn kia)
     if (B1.t[d.a] && d.a !== d.b && !d.giuA) B1.t[d.a] = null;
     // Twin Maker: ụ sinh đôi đúng ô/loại/sao của máy bạn kia (bàn con rối không tự bốc — sinhDoi() trả null cho B.net)
@@ -435,7 +439,7 @@ const ONS = {
     g('trieu', (goc) => function (B, mienPhi, idEp) {
       if (self.on && B && B.net) return null; // bàn con rối chỉ nhận ụ từ hành động 'tr' của bạn kia (kể cả ụ do chỉ huy / kỹ năng gọi)
       const T = goc.apply(this, arguments);
-      if (self.on && T && B === G.ban[0]) { const v = { o: T.o, id: T.id, s: T.sao, f: mienPhi ? 1 : 0 }; if (T.vang) v.vg = 1; if (T.thuc) v.th = 1; self.gui('tr', v); }
+      if (self.on && T && B === G.ban[0]) { const v = { o: T.o, id: T.id, s: T.sao, f: mienPhi ? 1 : 0 }; if (T.vang) v.vg = 1; if (T.thuc) v.th = 1; if (T.id === 'canon') v.hu = T.huong | 0; self.gui('tr', v); }
       return T;
     });
     g('ghep', (goc) => function (B, a, b, ep) {
@@ -446,6 +450,7 @@ const ONS = {
       if (laToi && r) {
         const T = G.ban[0].t[bo] || r, v = { a: ao, b: bo, id: T.id, s: T.sao, giuA: G.ban[0].t[ao] ? 1 : 0, vg: T.vang ? 1 : 0, th: T.thuc ? 1 : 0, bs: T.banSao ? 1 : 0, da: T.st && T.st.da ? 1 : 0 };
         if (db) { v.db = 1; v.sa = self.oTT(G.ban[0].t[ao]); v.sb = self.oTT(G.ban[0].t[bo]); } // trạng thái đúng của CẢ 2 ô sau ghép đặc biệt
+        if (T.id === 'canon') v.hn = [T.huong | 0, T.so || 1]; // Pháo La Bàn
         const pd = G.ban[0]._pd; if (pd) v.pd = pd; // Pandora: phép đã quay
         const hf = G.ban[0]._hf; if (hf != null) v.hf = hf; // Hero Foundry: ô anh hùng
         const tw = G.ban[0]._tw; if (tw) v.tw = tw; // Twin Maker: ụ sinh đôi (ô/loại/sao) — bạn kia tạo y hệt, không bốc lại

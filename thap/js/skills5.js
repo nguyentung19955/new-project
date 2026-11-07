@@ -26,7 +26,7 @@ SKILLS.chuato = {
   cd: 30,
   mo: (T) => (T.bay ? T.bay.length : 0) + '/' + SKILLS.chuato.n(T) + ' drones (1 per ' + SKILLS.chuato.c(T) + 's, 60% dmg each)' + (T.sao >= 4 ? ' · while it has drones: N/E/S/W neighbours +10% fire rate' : '') + (T.sao >= 7 ? ' · every 5th drone ROYAL ×3' : '') + ' · ' + (T.sao >= 3 ? 'TAP when full: SWARM kamikaze ×3 (35 px)' : 'SWARM unlocks at 3★'),
   sinh(G, T) { T.bay = []; T.de = 0; T.deDem = 0; },
-  hoTro(G, T, N) { if (T.sao >= 4 && T.bay && T.bay.length) N.buf.toc += 0.1; },
+  hoTro(G, T, N, ra) { if (T.sao >= 4 && T.bay && T.bay.length) { if (ra) ra.toc = 0.1; else N.buf.toc += 0.1; } }, // ra: vào trần tốc chung (HOTRO.apDung — BAO-CAO §3)
   capNhat(G, B, T, dt) {
     if (!T.bay) this.sinh(G, T);
     const tong = B.t.reduce((s, X) => s + (X && X.id === 'chuato' && X.bay ? X.bay.length : 0), 0);
@@ -133,14 +133,17 @@ SKILLS.leviathan = {
   e: (T) => sao7r(T, [9, 8.5, 8, 7, 6, 5.5, 5]),
   cd: 35,
   // dòng bảng ụ: 'ABYSS 56/100 · +224% damage' (VI: '+224% sát thương') = đúng số trên tấm đếm xoáy vực ở đáy ô (demkn.js)
-  mo: (T) => 'ABYSS ' + Math.min(100, T.vuc || 0) + '/100 · +' + 4 * Math.min(100, T.vuc || 0) + '% damage · devours a small enemy every ' + SKILLS.leviathan.e(T) + 's (120 px' + (T.sao >= 4 ? ', big ones ×3' : '') + (T.sao >= 7 ? ', flyers too' : '') + ') · bubble splash 30 px · ' + (T.sao >= 3 ? 'TAP when full: TIDAL BREATH ×' + (4 + 0.1 * (T.vuc || 0)).toFixed(1) + ' — an ice dragon breathes along the path' : 'TIDAL BREATH unlocks at 3★'),
-  sinh(G, T) { T.vuc = 0; T.nuot = 0; },
+  mo: (T) => 'ABYSS ' + Math.min(100, T.vuc || 0) + '/100 · +' + 4 * Math.min(100, T.vuc || 0) + '% damage · devours a small enemy every ' + SKILLS.leviathan.e(T) + 's (' + SKILLS.leviathan.TAM + ' px' + (T.sao >= 4 ? ', big ones ×3' : '') + (T.sao >= 7 ? ', flyers too' : '') + ') · bubble splash 30 px · ' + (T.sao >= 3 ? 'TAP when full: TIDAL BREATH ×' + (4 + 0.1 * (T.vuc || 0)).toFixed(1) + ' — an ice dragon breathes along the path' : 'TIDAL BREATH unlocks at 3★'),
+  TAM: 160, // tầm nuốt 120 → 160 px: mọi ô hàng giữa với tới đường (BAO-CAO gioi-han §4 mục 7)
+  // VỰC SÂU lưu THEO BÀN (B.vucSau): mọi Leviathan trên bàn cùng hưởng, giữ khi ghép (BAO-CAO §4 mục 6) — T.vuc = bản sao để vẽ/hiển thị
+  sinh(G, T) { const B = G.ban && G.ban[T.ban]; T.vuc = (B && B.vucSau) || 0; T.nuot = 0; },
   capNhat(G, B, T, dt) {
+    if ((T.vuc || 0) > (B.vucSau || 0)) B.vucSau = Math.min(100, T.vuc); T.vuc = B.vucSau || 0;
     T.buf.dmg += 0.04 * (T.vuc || 0);
     T.nuot = (T.nuot || 0) + dt * (1 + T.buf.toc);
     if (T.nuot >= this.e(T) && !G.hu.some(o => o.k === 'xoay' && o.T === T)) {
       const c = tamU(T);
-      const ds = dsMucTieu(B).filter(E => !E.chet && !E.trum && !E.nuotHu && (T.sao >= 4 || !E.d.to) && (T.sao >= 7 || !E.d.bay) && Math.hypot(E.x - c.x, E.y - c.y) < 120 + E.d.co * 0.3);
+      const ds = dsMucTieu(B).filter(E => !E.chet && !E.trum && !E.nuotHu && (T.sao >= 4 || !E.d.to) && (T.sao >= 7 || !E.d.bay) && Math.hypot(E.x - c.x, E.y - c.y) < this.TAM + E.d.co * 0.3);
       if (ds.length) {
         ds.sort((a, b) => b.hp - a.hp);
         const E = ds[0]; T.nuot = 0; E.nuotHu = true; E.chan = Math.max(E.chan || 0, 0.6);
@@ -186,7 +189,7 @@ HU.xoay = { // nuốt: xoáy nước (vòng tròn đồng tâm xoay) hút quái 
     if (o.t >= o.song * 0.85 && !o.da) {
       o.da = true; const T = o.T, B = o.B;
       const lon = E.d.to ? 3 : 1;
-      T.vuc = Math.min(100, (T.vuc || 0) + lon);
+      B.vucSau = Math.min(100, Math.max(B.vucSau || 0, T.vuc || 0) + lon); for (const X of B.t) if (X && X.id === 'leviathan') X.vuc = B.vucSau; // theo bàn
       E.hp = 0; chet(E, B);
       if (conTren(T)) { const c = tamU(T); G.hu.push({ k: 'tiaPhep', t: 0, song: 0.4, x0: o.x, y0: o.y, x1: c.x, y1: c.y, mau: '#7fdcff' }); nhanU(T, '+' + lon + ' ABYSS', '#7fdcff'); }
       FX.tiaLua(o.x, o.y, 6, '#bff4ff', 140, 7);
@@ -240,12 +243,12 @@ HU.thoThuy = { // TIDAL BREATH: điểm cuối tia chạy dọc đường từ l
 // =====================================================================================================
 SKILLS.khoisinh = {
   vai: 'db', dmg: 0, toc: 0, napMau: '#ff3a6a',
-  g: (T) => Math.round(sao7r(T, [30, 28, 26, 24, 22, 20, 16]) * (knThe(G.ban[T.ban], 'khoisinh') || 100)) / 100, // × cấp thẻ (KY_NANG_CAP.khoisinh)
+  g: (T) => Math.round(sao7r(T, [30, 28, 26, 24, 22, 20, 16]) * (knThe(G.ban[T.ban], 'khoisinh') || 100)) / 100, // × cấp thẻ + power-up (KY_NANG_CAP.khoisinh)
   k: (T) => sao7r(T, [1, 1, 2, 2, 2, 3, 3]),
   cd: 45,
   mo: (T) => '+1★ to your lowest turret every ' + SKILLS.khoisinh.g(T) + 's (next in ' + Math.max(0, SKILLS.khoisinh.g(T) - (T.sinhT || 0)).toFixed(0) + 's)' + (T.sao >= 4 ? ' · neighbours +15% damage' : '') + (T.sao >= 7 ? ' · each raise also summons a free 1★' : '') + ' · ' + (T.sao >= 3 ? 'TAP when full: GENESIS summons ' + SKILLS.khoisinh.k(T) + ' at average ★' : 'GENESIS unlocks at 3★'),
   gocDau: (T, t) => t * (0.25 + 0.5 * (T.sinhT || 0) / SKILLS.khoisinh.g(T)),
-  hoTro(G, T, N) { if (T.sao >= 4) N.buf.dmg += 0.15; },
+  hoTro(G, T, N, ra) { if (T.sao >= 4) { if (ra) ra.dmg = 0.15; else N.buf.dmg += 0.15; } }, // ra: vào trần sát thương chung (HOTRO.apDung — BAO-CAO §3)
   thapNhat(B, T) {
     const ds = B.t.filter(N => N && N !== T && N.sao < LUAT.saoMax && !N.st.da && N.id !== 'khoisinh');
     if (!ds.length) return null;
@@ -319,9 +322,9 @@ const RONG_MAU = [null, { a: '#ff3b1a', b: '#ffb43a', c: '#fff0b0' }, { a: '#1a5
 // (06/11 lỗi iPhone: rồng lửa đỏ bổ nhào để lại vệt XANH DA TRỜI vì vetChay/rongBo lấy RONG_MAU[gd] = bảng màu nón xanh)
 const RONG_THAN = [null, { a: '#ff3b1a', b: '#ffb43a' }, { a: '#ff4a12', b: '#ffc040' }, { a: '#ff5a1a', b: '#ffd870' }];
 SKILLS.ronglua = {
-  vai: 'tc', dmg: 10, toc: 5, napMau: '#ff3b1a',
+  vai: 'tc', dmg: 8.5, toc: 5, // 10 → 8.5: tầm dài hơn (130→165) làm nón trúng nhiều quái hơn — sim-tier 07/11 4★ 3.9 → 5.5, bù lại napMau: '#ff3b1a',
   goc: (T) => sao7r(T, [40, 45, 50, 55, 60, 65, 75]) * Math.PI / 180,
-  tam: (T) => sao7r(T, [100, 105, 110, 115, 120, 125, 135]) * (T.sao >= 7 ? 1.15 : 1),
+  tam: (T) => sao7r(T, [130, 135, 140, 145, 150, 155, 165]) * (T.sao >= 7 ? 1.15 : 1), // 100→135 → 130→165 px (BAO-CAO gioi-han §4 mục 7)
   cd: 35,
   mo: (T) => ['Orange', 'BLUE flame (+30% vs big)', 'WHITE flame (+30% vs big, trails 4s)'][gdSao(T) - 1] + ' · cone ' + Math.round(SKILLS.ronglua.goc(T) * 180 / Math.PI) + '° × ' + Math.round(SKILLS.ronglua.tam(T)) + ' px · burns 3s · ' + (T.sao >= 3 ? 'TAP when full: DRAGON DIVE ×25 down the path' : 'DRAGON DIVE unlocks at 3★'),
   capNhat(G, B, T, dt) {

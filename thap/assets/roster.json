@@ -1,12 +1,12 @@
 [
  {
   "id": "canon",
-  "ten": "Cannon",
+  "ten": "Compass Cannon",
   "bac": "trang",
   "dcdw": "Joan of Arc",
-  "kyNang": "Slow explosive shells; stars widen the blast",
-  "ten_vi": "Pháo Nổ",
-  "kyNang_vi": "Bắn chậm, nổ lan; sao tăng vùng nổ"
+  "kyNang": "Arrow + number: same-arrow merges add numbers, opposite merges subtract + shockwave; each number +damage",
+  "ten_vi": "Pháo La Bàn",
+  "kyNang_vi": "Mũi tên + số: ghép cùng hướng cộng số, ngược hướng trừ số + sóng nổ; mỗi số +sát thương"
  },
  {
   "id": "xucxac",
@@ -103,9 +103,9 @@
   "ten": "Armor Breaker",
   "bac": "trang",
   "dcdw": "Freya",
-  "kyNang": "Support: every 3s exposes the lead + toughest enemy; Attack neighbours hit them +22%",
+  "kyNang": "Support: every 3s exposes the lead + toughest enemy; Attack neighbours hit them +13%",
   "ten_vi": "Phá Giáp",
-  "kyNang_vi": "Hỗ trợ: mỗi 3 s làm LỘ quái đầu + quái trâu nhất; ụ Tấn công kề +22% vào quái bị lộ"
+  "kyNang_vi": "Hỗ trợ: mỗi 3 s làm LỘ quái đầu + quái trâu nhất; ụ Tấn công kề +13% vào quái bị lộ"
  },
  {
   "id": "bua",
@@ -166,9 +166,9 @@
   "ten": "Crit Antenna",
   "bac": "xanh",
   "dcdw": "Siren",
-  "kyNang": "Support: +crit chance for N/E/S/W neighbours (9% at 1★ → 30% at 7★)",
+  "kyNang": "Support: +crit chance for N/E/S/W neighbours (6.8% at 1★ → 22.5% at 7★)",
   "ten_vi": "Ăng-ten Chí Mạng",
-  "kyNang_vi": "Hỗ trợ: +tỉ lệ chí mạng cho 4 ô kề (9% ở 1★ → 30% ở 7★)"
+  "kyNang_vi": "Hỗ trợ: +tỉ lệ chí mạng cho 4 ô kề (6,8% ở 1★ → 22,5% ở 7★)"
  },
  {
   "id": "dichchuyen",
@@ -193,18 +193,18 @@
   "ten": "Drone Bay",
   "bac": "xanh",
   "dcdw": "Hermes",
-  "kyNang": "On merge: launches bomb drones up the path",
-  "ten_vi": "Bệ Phóng Drone",
-  "kyNang_vi": "Khi GHÉP: phóng drone bom chạy ngược đường đâm quái"
+  "kyNang": "On merge: 1 bomb drone per cell dragged (drag from far away)",
+  "ten_vi": "Drone Kéo Xa",
+  "kyNang_vi": "Khi GHÉP: mỗi ô kéo xa = 1 drone bom (kéo càng xa càng nhiều)"
  },
  {
   "id": "tron",
   "ten": "Fusion Mixer",
   "bac": "xanh",
   "dcdw": "Zarramim",
-  "kyNang": "Support: +9% fire rate to Attack neighbours, +3% per different type (max 18% at 1★)",
+  "kyNang": "Support: +9% fire rate to Attack neighbours, +3% per extra Attack type in its row + column (max 18% at 1★)",
   "ten_vi": "Bộ Trộn",
-  "kyNang_vi": "Hỗ trợ: ụ Tấn công kề +9% tốc bắn, +3% mỗi loại Tấn công khác nhau (tối đa 18% ở 1★)"
+  "kyNang_vi": "Hỗ trợ: ụ Tấn công kề +9% tốc bắn, +3% mỗi loại Tấn công khác trên cả hàng + cột (tối đa 18% ở 1★)"
  },
  {
   "id": "nangluong",
@@ -364,9 +364,9 @@
   "ten": "Star Lift",
   "bac": "tim",
   "dcdw": "Brownie",
-  "kyNang": "Support: the 2 lowest-star neighbours fire faster (24% per ★); 5★ grants star pips",
+  "kyNang": "Support: all 4 neighbours fire faster (+10% per ★, lowest-star one ×1.5, max +50%); 5★ grants star pips",
   "ten_vi": "Bệ Nâng Sao",
-  "kyNang_vi": "Hỗ trợ: 2 ụ kề sao thấp nhất +6% tốc bắn mỗi sao; 5★ mỗi wave cho nấc sao"
+  "kyNang_vi": "Hỗ trợ: cả 4 ụ kề bắn nhanh hơn (+10% mỗi ★, ụ ít sao nhất ×1,5, tối đa +50%); 5★ cho nấc sao mỗi 2 wave"
  },
  {
   "id": "tuthan",
@@ -652,9 +652,9 @@
   "ten": "Resonance Grid",
   "bac": "vang",
   "dcdw": "(ChatGPT G05)",
-  "kyNang": "Support: buffs the 4 DIAGONAL cells (not N/E/S/W); all 4 filled = RESONANCE",
+  "kyNang": "Support: buffs the DIAGONAL cells (not N/E/S/W); every diagonal filled = RESONANCE",
   "ten_vi": "Lưới Cộng Hưởng",
-  "kyNang_vi": "Hỗ trợ 4 ô CHÉO: +sát thương; đủ 4 ô chéo → cộng hưởng",
+  "kyNang_vi": "Hỗ trợ các ô CHÉO: +sát thương; đủ mọi ô chéo → cộng hưởng (mép ×1,3, đủ 4 ×1,5)",
   "vai": "ht",
   "ho": "amp",
   "moi": "TUONG-MOI-20"
@@ -832,11 +832,11 @@
   "ten": "Ember Relay",
   "bac": "vang",
   "dcdw": "Kalaratri",
-  "kyNang": "Merging a Relay passes flames to Relays in the 4 N/E/S/W cells; each flame +damage & crit",
+  "kyNang": "Merging a Relay gives +1 flame to every Relay in the same row and column (max 8); each flame +damage & crit",
   "vai": "tc",
   "ho": "blast",
-  "ten_vi": "Lửa Tiếp Sức",
-  "kyNang_vi": "Ghép → chia lửa cho Ember Relay ở 4 ô kề; mỗi lửa +sát thương & chí mạng"
+  "ten_vi": "Lửa Thập Tự",
+  "kyNang_vi": "Ghép → +1 lửa cho mọi Ember Relay cùng hàng và cùng cột (tối đa 8); mỗi lửa +sát thương & chí mạng"
  },
  {
   "id": "hopca",
