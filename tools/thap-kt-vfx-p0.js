@@ -70,7 +70,7 @@ const ok = (dk, ten, chi) => { if (dk) console.log('  ✓ ' + ten); else { conso
     }
     return { loi, vuot };
   });
-  ok(!r.loi.length && r.vuot > 0, 'hỗ trợ: số buff hiển thị = số thật sau trần (' + r.vuot + ' ca đã kẹp: Armor Breaker, Crit Antenna, Reaper, Cryo…)', r.loi.slice(0, 12).join(' ; '));
+  ok(!r.loi.length, 'hỗ trợ: số buff hiển thị = số thật (07/11 bỏ trần hỗ trợ: ' + r.vuot + ' ca còn kẹp — chỉ giới hạn tự nhiên xác suất/chậm)', r.loi.slice(0, 12).join(' ; '));
   r = await p.evaluate(() => { const B = G.ban[0]; for (let i = 0; i < 15; i++) B.t[i] = null; const T = sinhU(taoU(B, 'radar', 7, 7)); B.t[7] = T; return { od: SKILLS.radar.odThat(T), them: SKILLS.radar.them(T), tran: HOTRO.tran(T, 'toc'), mo: SKILLS.radar.mo(T) }; });
   ok(r.od <= 0.25 && Math.abs(r.them + r.od - Math.max(r.them, Math.min(r.tran + 0.15, r.them + 0.25))) < 1e-9 && r.mo.includes('+' + Math.round(r.od * 100) + '% for 2s'), 'Radar 7★ OVERDRIVE: hiện +' + Math.round(r.od * 100) + '% thật (trần tốc ' + Math.round(r.tran * 100) + '% +15% lúc OVERDRIVE)', r.mo);
   r = await p.evaluate(() => { // phép thật: Armor Breaker 7★ + ụ kề → N.ht.lo = số hiển thị
@@ -154,12 +154,12 @@ const ok = (dk, ten, chi) => { if (dk) console.log('  ✓ ' + ten); else { conso
   r = await p.evaluate(() => {
     const B = G.ban[0], S = (id, s) => { for (let i = 0; i < 15; i++) B.t[i] = null; const T = sinhU(taoU(B, id, s, 7)); B.t[7] = T; return T; };
     const ra = SKILLS.radar.mo(S('radar', 7)), loi = [];
-    if ((ra.match(/OVERDRIVE/g) || []).length !== 1 || /\+25% for 2s/.test(ra)) loi.push('Radar 7★: ' + ra);
-    if (Math.abs(HOTRO.tran(S('guongcong', 1), 'khang') - 0.35 * HOTRO.CAP_BAC.vang * HOTRO.capThe(S('guongcong', 1))) > 1e-9) loi.push('HOTRO.tran khang ≠ 35% × bậc × thẻ');
+    if ((ra.match(/OVERDRIVE/g) || []).length !== 1 || (ra.match(/for 2s/g) || []).length !== 1) loi.push('Radar 7★: ' + ra);
+    if (HOTRO.tran(S('guongcong', 1), 'khang') !== 1) loi.push('HOTRO.tran khang ≠ 100% (07/11: chỉ giới hạn xác suất)');
     for (let s = 1; s <= 7; s++) { const T = S('guongcong', s), that = Math.round(Math.min(HOTRO.tran(T, 'khang'), SKILLS.guongcong.khang(T)) * 100) + '%'; if (!SKILLS.guongcong.mo(T).includes('control ' + that) || !SUP.guongcong.chu(T).startsWith(that)) loi.push('Mirror Gate ' + s + '★ không ghi ' + that); }
     return loi;
   });
-  ok(!r.length, 'Radar 7★ một câu OVERDRIVE thật · Mirror Gate ghi đúng trần kháng 35% × bậc × thẻ (code HOTRO.khang)', r.join(' ; '));
+  ok(!r.length, 'Radar 7★ một câu OVERDRIVE thật · Mirror Gate kháng = số thật, chỉ kẹp xác suất ≤ 100% (code HOTRO.khang)', r.join(' ; '));
 
   // 9. thanh soi ụ / bảng thông tin (buff.js hoTroTT): số 'hiện tại' ≤ trần thật, nhãn đúng thứ được buff
   r = await p.evaluate(() => {
@@ -176,7 +176,7 @@ const ok = (dk, ten, chi) => { if (dk) console.log('  ✓ ' + ten); else { conso
     for (const [id, ten] of [['thanhdia', 'Damage'], ['guongcong', 'Control resist'], ['lophanung', 'Aura slow']]) { for (let i = 0; i < 15; i++) B.t[i] = null; const T = sinhU(taoU(B, id, 5, 7)); B.t[7] = T; if (!hoTroTT(T).dong.startsWith(ten + ' +')) loi.push(id + ' nhãn: ' + hoTroTT(T).dong); }
     return { loi, kep };
   });
-  ok(!r.loi.length && r.kep > 10, 'thanh soi ụ hỗ trợ: số hiện tại = số thật sau trần (' + r.kep + ' ca kẹp ghi "cap X% (LV raises it)") · nhãn Sanctum/Mirror Gate/Cryo đúng', r.loi.slice(0, 10).join(' ; '));
+  ok(!r.loi.length, 'thanh soi ụ hỗ trợ: số hiện tại = số thật (07/11 không trần; ' + r.kep + ' ca kẹp ghi "cap X% (LV raises it)") · nhãn Sanctum/Mirror Gate/Cryo đúng', r.loi.slice(0, 10).join(' ; '));
 
   // 10. POWER-UP trong trận (KIEM.md 'Đã quyết' #1): KHÔNG còn ụ nào nâng mà không đổi gì (đo thật mọi ụ không sát thương, 4★, LV1 vs MAX);
   //     trang ụ của 10 ụ không sát thương ghi đúng bước power-up (không '+25% base damage')
@@ -214,16 +214,16 @@ const ok = (dk, ten, chi) => { if (dk) console.log('  ✓ ' + ten); else { conso
       B.lv[id] = 1; const a = ham[id](S(id, 2)); B.lv[id] = 5; const c = ham[id](S(id, 2)); B.lv[id] = 1;
       if (Math.abs((c - a) - 4 * CHOT[id]) > 0.11) loi.push(id + ' LV1→MAX đổi ' + (c - a).toFixed(3) + ' ≠ ' + 4 * CHOT[id]);
     }
-    // Reaper Pillar 6★ (đã chạm trần): power-up MAX nới trần giết ngay đúng +2% (điểm), tỉ lệ thật tăng, vẫn ≤ trần mới
-    { B.lv.tuthan = 1; const T1 = S('tuthan', 6), a = SKILLS.tuthan.tile(T1), t1 = HOTRO.tran(T1, 'chet'); B.lv.tuthan = 5; const T5 = S('tuthan', 6), c = SKILLS.tuthan.tile(T5), t5 = HOTRO.tran(T5, 'chet'); B.lv.tuthan = 1;
-      if (Math.abs(t5 - t1 - 0.02) > 1e-9 || !(c > a) || c > t5 + 1e-12) loi.push('Reaper: tỉ lệ ' + a + ' → ' + c + ', trần ' + t1 + ' → ' + t5); }
+    // Reaper Pillar 6★: 07/11 không trần nhóm — power-up MAX: +6% độ mạnh + cộng thẳng +2% (điểm) vào tỉ lệ giết ngay, vẫn ≤ 100%
+    { B.lv.tuthan = 1; const T1 = S('tuthan', 6), a = SKILLS.tuthan.tile(T1); B.lv.tuthan = 5; const T5 = S('tuthan', 6), c = SKILLS.tuthan.tile(T5); B.lv.tuthan = 1;
+      if (!(c >= a + 0.02 - 1e-9) || c > 1) loi.push('Reaper: tỉ lệ ' + a + ' → ' + c); }
     // chữ trong trận: 'power-up +2: Freeze +0.3s'
     B.lv.bang = 3; if (THATSO.puDong(B, 'bang') !== 'power-up +2: Freeze +0.3s') loi.push('puDong: ' + THATSO.puDong(B, 'bang')); B.lv.bang = 1;
     if (THATSO.puDong(B, 'bang') !== '') loi.push('puDong LV1 phải rỗng');
     B.capThe = capC;
     return loi;
   });
-  ok(!r.length, 'POWER-UP từng ụ đúng số chốt (Frost +0.15s, Venom +0.75%, Time Bomb +0.75%, Shield −0.5s, Box −2s, Evolver −3%, Halo +0.15s, Forge +0.3%, Genesis −3%, Reaper trần +0.5%)', r.join(' ; '));
+  ok(!r.length, 'POWER-UP từng ụ đúng số chốt (Frost +0.15s, Venom +0.75%, Time Bomb +0.75%, Shield −0.5s, Box −2s, Evolver −3%, Halo +0.15s, Forge +0.3%, Genesis −3%, Reaper +0.5% giết ngay)', r.join(' ; '));
 
   // 10c. CẤP THẺ NÂNG TRẦN (KIEM.md 'Đã quyết' #2): trần nới đều tới +18% ở LV15, không vượt; số buff thật (apDung) theo trần mới; chữ ghi 'LV raises it'
   r = await p.evaluate(() => {
@@ -232,9 +232,9 @@ const ok = (dk, ten, chi) => { if (dk) console.log('  ✓ ' + ten); else { conso
     for (const [id, nh] of [['phagiap', 'lo'], ['chimang', 'crit'], ['thaukinh', 'cdmg'], ['guongcong', 'khang'], ['cauvong', 'vet'], ['lanhgia', 'cham'], ['tuthan', 'chet']]) {
       const n = THE.lvMax - THE.lvDau[G.rosterMap[id].bac], tr = [];
       for (const k of [0, 1, n, n + 5]) { B.capThe = { [id]: k }; for (let i = 0; i < 15; i++) B.t[i] = null; tr.push(HOTRO.tran(S(id, 7, 7), nh)); }
-      if (!(tr[1] > tr[0])) loi.push(id + ': LV+1 không nới trần');
-      if (Math.abs(tr[2] / tr[0] - 1.18) > 1e-6) loi.push(id + ': LV15 trần ×' + (tr[2] / tr[0]).toFixed(3) + ' ≠ ×1.18');
-      if (Math.abs(tr[3] - tr[2]) > 1e-12) loi.push(id + ': vượt trần cứng');
+      // 07/11 bỏ trần hỗ trợ: nhóm thường = không trần; chậm 90%, giết ngay / kháng ≤ 100% — cố định, không đổi theo cấp thẻ
+      const mong = nh === 'cham' ? 0.9 : (nh === 'chet' || nh === 'khang') ? 1 : Infinity;
+      if (tr.some(x => x !== mong)) loi.push(id + ': trần ' + tr.join('/') + ' ≠ ' + mong);
     }
     // số thật: Crit Antenna 7★ (đã chạm trần) cạnh Cannon — crit nhận được tăng theo cấp thẻ
     const crit = (k) => { B.capThe = { chimang: k }; for (let i = 0; i < 15; i++) B.t[i] = null; S('chimang', 7, 7); const C = S('canon', 1, 8); C.nguon = []; C.buf.crit = 0; HOTRO.apDung(B); return C.buf.crit; };
@@ -242,12 +242,12 @@ const ok = (dk, ten, chi) => { if (dk) console.log('  ✓ ' + ten); else { conso
     if (!(c6 > c0 + 0.01)) loi.push('Crit Antenna 7★: crit thật ' + c0 + ' → ' + c6 + ' (LV không nới)');
     // Mirror Gate 7★ (vượt trần): mô tả ghi 'cap · LV raises it', nhãn SUP trên bàn giữ gọn
     B.capThe = { guongcong: 6 }; for (let i = 0; i < 15; i++) B.t[i] = null; const M = S('guongcong', 7, 7);
-    if (SKILLS.guongcong.khang(M) > HOTRO.tran(M, 'khang') && !/\(cap · LV raises it\)/.test(SKILLS.guongcong.mo(M))) loi.push('Mirror Gate mô tả thiếu "cap · LV raises it": ' + SKILLS.guongcong.mo(M));
+    if (/cap · LV raises it/.test(SKILLS.guongcong.mo(M))) loi.push('Mirror Gate mô tả còn chữ trần: ' + SKILLS.guongcong.mo(M));
     if (/LV raises it/.test(SUP.guongcong.chu(M))) loi.push('nhãn SUP trên bàn không được thêm chữ trần');
     B.capThe = capC; for (let i = 0; i < 15; i++) B.t[i] = null;
     return loi;
   });
-  ok(!r.length, 'cấp thẻ nâng trần ụ hỗ trợ: +18% trần ở LV15 (cứng), crit thật tăng theo, mô tả ghi "cap · LV raises it", nhãn bàn giữ gọn', r.join(' ; '));
+  ok(!r.length, '07/11 bỏ trần hỗ trợ: chỉ còn chậm 90% / xác suất 100% (không theo cấp thẻ), crit thật vẫn tăng theo cấp thẻ, không còn chữ trần', r.join(' ; '));
 
   // 11. skill TỰ PHÁT bật huy hiệu cho cả Holy Halo, Chrono Throne và 4 ụ đỏ nạp chung (Hive Queen, Leviathan, Genesis, Wyrm)
   r = await p.evaluate(() => {

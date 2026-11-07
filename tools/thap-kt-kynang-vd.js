@@ -334,16 +334,16 @@ const K = { 1: 1, 3: 1.45, 5: 1.9, 7: 2.35 };
   const ph = X(`(() => { KT_ban(); const a = KT_dat(2, 'nhatthuc', 1), b = KT_dat(3, 'nhatthuc', 1); return a.dem !== b.dem; })()`);
   kt('Eclipse', 'two Eclipses are always out of phase', String(ph), ph);
 }
-// ---- Scrap Forge: no shots; feed a 1–3★ turret: +f stacks (3★ food ×3), each stack +4% damage to your best Attack turret, max 15 (+60%)
+// ---- Scrap Forge: no shots; feed a 1–3★ turret: +f stacks (3★ food ×3), each stack +4% damage to your best Attack turret, no cap (07/11: no stack cap, no per-receiver cap)
 {
   const r = X(`(() => { KT_ban(); const F = KT_dat(7, 'loren', 3); const A = KT_dat(0, 'aten', 4), A2 = KT_dat(1, 'canon', 2); const f1 = KT_dat(5, 'lien', 1), f3 = KT_dat(6, 'canon', 3), f4 = KT_dat(8, 'set', 4);
     ghep(G.ban[0], f1, F); const a = F.lo; ghep(G.ban[0], F, f3); const b = F.lo; const ok4 = hopLeGhep(F, f4); capNhat(1/30); return [a, b, ok4, A.buf.dmg, A2.buf.dmg, F.banLan]; })()`);
   kt('Scrap Forge', '3★ (f=2): eat a 1★ +2, eat a 3★ +6 stacks; 4★ food refused; best Attack turret +4%/stack', 'stacks ' + r[0] + ' → ' + r[1] + ' · 4★ food ' + r[2] + ' · best +' + Math.round(r[3] * 100) + '% · other ' + Math.round(r[4] * 100) + '%',
     r[0] === 2 && r[1] === 8 && r[2] === false && gan(r[3], 0.32) && r[4] === 0);
-  const m = X(`(() => { KT_ban(); const F = KT_dat(7, 'loren', 7); F.lo = 15; const A = KT_dat(0, 'aten', 4); const F2 = KT_dat(9, 'loren', 7); F2.lo = 15; capNhat(1/30); return [A.buf.dmg, hopLeGhep(F, KT_dat(5, 'lien', 1))]; })()`);
-  kt('Scrap Forge', 'max 15 stacks (+60%), two Forges never exceed +60% on one turret', '+' + Math.round(m[0] * 100) + '% · full feed ' + m[1], gan(m[0], 0.6) && m[1] === false);
-  const g = X(`[0, 4, 5, 14, 15].map(n => GROW.loren.gd({ lo: n }).s)`);
-  kt('Scrap Forge', 'GROW stages reachable with the 15-stack cap (0–4 / 5–14 / 15)', g.join('/'), g.join() === '1,1,2,2,3', 'fixed: stages were 15/40 stacks but the cap is 15 → stage 3 unreachable');
+  const m = X(`(() => { KT_ban(); const F = KT_dat(7, 'loren', 7); F.lo = 20; const A = KT_dat(0, 'aten', 4); const F2 = KT_dat(9, 'loren', 7); F2.lo = 15; capNhat(1/30); return [A.buf.dmg, hopLeGhep(F, KT_dat(5, 'lien', 1))]; })()`);
+  kt('Scrap Forge', 'no cap: 20 stacks + a 2nd Forge with 15 add up (+140%), still feedable past 15', '+' + Math.round(m[0] * 100) + '% · feed ' + m[1], gan(m[0], 1.4) && m[1] === true);
+  const g = X(`[0, 4, 5, 14, 15, 40].map(n => GROW.loren.gd({ lo: n }).s)`);
+  kt('Scrap Forge', 'GROW stages 0–4 / 5–14 / 15+ (no cap)', g.join('/'), g.join() === '1,1,2,2,3,3');
   const t = X(`mocCua('loren').map(m => m.n + ':' + m.mo).join(' | ')`);
   kt('Scrap Forge', 'star milestones describe what stars really change (stacks per feed 2/3/4)', t, /\+2/.test(t) && /\+3/.test(t) && /\+4/.test(t), 'fixed text: common "+20% speed / +25% effect / +30% effect" did nothing on a non-shooting Forge');
 }
@@ -369,12 +369,14 @@ const K = { 1: 1, 3: 1.45, 5: 1.9, 7: 2.35 };
   const w = X(`(() => { KT_ban(); const T = KT_dat(2, 'chuato', 3); T.bay = [0, 1, 2].map(i => ({ x: 0, y: 0, g: 0, r: 0, cd: 1, vang: false, ra: 1 })); const ds = [0, 10, 20, 30].map(i => KT_quai('bo', KT_gan(T) + i, 4000)); T.nap = 1; const h = ds[0].hp; const ok = SKILLS.chuato.chuDong(G, G.ban[0], T); T.cd = 1e9; for (let i = 0; i < 60; i++) { T.cd = 1e9; capNhat(1/30); } return [ok, T.bay.length, (h - ds[0].hp) / dmgU(T)]; })()`);
   kt('Hive Queen', '3★ SWARM: 3 drones kamikaze ×3 each (35 px), swarm resets', w[0] + ' · drones left ' + w[1] + ' · lead ×' + f2(w[2]), w[0] && w[1] <= 1 && w[2] >= 9 * 0.97);
 }
-// ---- Leviathan: devour a normal enemy (120 px) every e s (9→5) → +1 stack (+4% dmg, max 100); 4★+ big ones ×3; 7★ flyers; TIDAL BREATH ×(4+0.1×stacks)
+// ---- Leviathan: devour a normal enemy (120 px) every e s (9→5) → +1 stack (+4% dmg, no cap); 4★+ big ones ×3; 7★ flyers; TIDAL BREATH ×(4+0.1×stacks)
 {
   const r = X(`(() => { KT_ban(); const out = []; for (const [s, q] of [[1, 'bo'], [1, 'khong_lo'], [4, 'khong_lo'], [4, 'bay'], [7, 'bay']]) { const T = KT_dat(2, 'leviathan', s); const E = KT_quai(q, KT_gan(T), 4000); T.nuot = 99; for (let i = 0; i < 30; i++) capNhat(1/30); out.push(T.vuc); G.ban[0].t[2] = null; G.quai.length = 0; } return out; })()`);
   kt('Leviathan', 'devour: normal +1 · big only from 4★ (+3) · flyers only at 7★', r.join(' / '), r.join() === '1,0,3,0,1');
   const st = X(`(() => { KT_ban(); const T = KT_dat(2, 'leviathan', 1); T.vuc = 25; capNhat(1/30); return T.buf.dmg; })()`);
   kt('Leviathan', '25 stacks = +100% damage', '+' + Math.round(st * 100) + '%', gan(st, 1));
+  const sv = X(`(() => { KT_ban(); const T = KT_dat(2, 'leviathan', 1); T.vuc = 150; capNhat(1/30); return [T.buf.dmg, T.vuc]; })()`);
+  kt('Leviathan', 'no cap: 150 stacks = +600% damage', '+' + Math.round(sv[0] * 100) + '% · ' + sv[1], gan(sv[0], 6) && sv[1] === 150);
   const b = moiPhat('leviathan', 1, { truoc: 'T.nuot = -1e9;' });
   kt('Leviathan', 'bubble ×1 + 30 px splash ×0.5 (single target takes 1.5×)', f2(b.k), gan(b.k, 1.5, 0.03));
   const t = X(`(() => { KT_ban(); const T = KT_dat(2, 'leviathan', 3); T.vuc = 10; T.nuot = -1e9; const ds = []; for (let s = 60; s < G.duong[0].len - 40; s += 29) ds.push(KT_quai('bo', s, 4000)); capNhat(1/30); T.nap = 1; const h = ds.map(e => e.hp); SKILLS.leviathan.chuDong(G, G.ban[0], T); const o = G.hu.find(q => q.k === 'thoThuy'); const k = o.dmg / dmgU(T);
@@ -473,9 +475,9 @@ const K = { 1: 1, 3: 1.45, 5: 1.9, 7: 2.35 };
   const ch = X(`(() => { KT_ban(); const T = KT_dat(7, 'nemesis', 3); KT_dat(6, 'lanhgia', 7); KT_dat(8, 'lophanung', 7); KT_dat(2, 'bang', 7); const E = KT_quai('bo', KT_gan(T), 400); const B0 = KT_trum('janus', KT_gan(T) + 40, 1); for (let i = 0; i < 90; i++) capNhat(1/30); return [E.cham, B0.cham]; })()`);
   kt('(Support caps)', 'slow from Chiller + Cryo + hits: ≤35% (bosses ≤15%)', Math.round(ch[0] * 100) + '% / boss ' + Math.round(ch[1] * 100) + '%', ch[0] <= 0.35 + 1e-9 && ch[1] <= 0.15 + 1e-9 + 0.05);
   const vu = X(`(() => { KT_ban(); const E = KT_quai('bo', 300, 400); E.azT = 9; E.cvT = 9; E.cvK = 0.05; E.vmT = 9; E.vmK = 0.12; E.ywT = 9; E.ywK = 0.15; return HOTRO.vuln(E); })()`);
-  kt('(Support caps)', 'enemy weaken (Cryo 7★ + Rainbow + Venom + Time Bomb) capped 25%', Math.round(vu * 100) + '%', gan(vu, 0.25));
+  kt('(Support caps)', 'enemy weaken (Cryo 7★ + Rainbow + Venom + Time Bomb) adds up, no cap (07/11) = 42%', Math.round(vu * 100) + '%', gan(vu, 0.42));
   const lr = X(`(() => { KT_ban(); const F = KT_dat(7, 'loren', 7); F.lo = 15; const T = KT_dat(0, 'ngoisao', 4); KT_dat(1, 'khuech', 7); capNhat(1/30); capNhat(1/30); return T.buf.dmg; })()`);
-  kt('(Support caps)', 'Scrap Forge +60% stacks on top of the 35% support cap (separate, documented)', '+' + Math.round(lr * 100) + '%', lr <= 0.6 + 0.35 + 1e-9);
+  kt('(Support caps)', 'Scrap Forge 15 stacks (+60%, no cap) stack on top of the 35% support cap (separate, documented)', '+' + Math.round(lr * 100) + '%', lr <= 0.6 + 0.35 + 1e-9);
 }
 // ---------------------------------------------------------------- 7) ghép đặc biệt với ụ Vàng-Đỏ
 {

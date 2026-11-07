@@ -21,9 +21,9 @@ const DEMKN = {
       return m.length ? { m, sang: b.ngang >= 5 || b.doc >= 3 } : null;
     },
     cuuvi(T) { const n = T.duoi || 0; return n > 0 ? { m: [{ ic: 'ic_chet', s: n + '/9' }], sang: n >= 8 } : null; },
-    loren(T) { const n = T.lo || 0; return n > 0 ? { m: [{ ic: 'ic_dmg', s: n + '/' + SKILLS.loren.MAX }], sang: n >= SKILLS.loren.MAX } : null; },
-    // VỰC SÂU (ABYSS): icon xoáy vực riêng (không dùng ic_dmg chung) + chữ xanh biển sâu; đủ 100 → 'MAX' (chữ vàng)
-    leviathan(T) { const n = Math.min(100, T.vuc || 0); return n > 0 ? { m: [{ ic: DEMKN.icVuc(), s: n >= 100 ? 'MAX' : '' + n }], mau: n >= 100 ? '#b8f6ff' : '#5fe3ff' } : null; },
+    loren(T) { const n = T.lo || 0; return n > 0 ? { m: [{ ic: 'ic_dmg', s: n + '' }], sang: n >= 15 } : null; }, // không trần: chỉ hiện số
+    // VỰC SÂU (ABYSS): icon xoáy vực riêng (không dùng ic_dmg chung) + chữ xanh biển sâu; không trần → luôn hiện số (≥100 chữ sáng hơn)
+    leviathan(T) { const n = T.vuc || 0; return n > 0 ? { m: [{ ic: DEMKN.icVuc(), s: '' + n }], mau: n >= 100 ? '#b8f6ff' : '#5fe3ff' } : null; },
     nangluong(T, B) { const k = Math.round(SKILLS.nangluong.k(B) * 100); return k > 0 ? { m: [{ ic: 'ic_mana', s: '+' + k + '%' }], sang: k >= 500 } : null; },
     // (Sói: bỏ bộ đếm mạng — Sói không còn lớn dần theo mạng; dạng thường / thức tỉnh quay lúc sinh)
     docton(T, B) { const n = SKILLS.docton.ke(B, T); return n === 0 ? { m: [{ ic: 'ic_toc', s: '+100%' }], sang: true } : n >= 3 ? { m: [{ ic: 'ic_toc', s: '−30%' }] } : null; },
@@ -33,7 +33,8 @@ const DEMKN = {
   IC_VUC: 'lev_abyss',
   icVuc() { return this.IC_VUC || 'fx_leviathan_hieu'; },
 
-  lay(T, B) { const f = this.DS[T.id]; if (!f || !B || T.st.da) return null; try { return f(T, B); } catch (e) { return null; } },
+  // ĐỘT PHÁ (vangmoi1.js DOTPHA): bậc 1–4 → icon PNG lọc màu (vàng / lam / tím / trắng, ảnh dựng 1 lần) + chữ cùng màu
+  lay(T, B) { const f = this.DS[T.id]; if (!f || !B || T.st.da) return null; try { const v = f(T, B); if (v && typeof DOTPHA !== 'undefined') { const b = DOTPHA.bacU(T); if (b) { v.bac = b; v.mau = DOTPHA.MAU[b]; v.sang = false; } } return v; } catch (e) { return null; } },
 
   // khung h2_tag (74×30, mép 14 px) cắt 3 mảnh: 2 đầu giữ tỉ lệ, phần giữa kéo dài
   khung(ctx, x, y, w, h) {
@@ -51,7 +52,7 @@ const DEMKN = {
     const v = this.lay(T, B); if (!v) return;
     const h = Math.max(9, c * 0.2), m = ctx.getTransform(), k = m.a;
     if (!(k > 0) || Math.abs(m.b) > 1e-6 || Math.abs(m.c) > 1e-6 || Math.abs(m.d - k) > 1e-6 || typeof REN === 'undefined' || !REN.cGet) return this.ve0(ctx, v, x, yDay, h, al);
-    const hp = Math.round(h * k * 4) / 4, key = 'dk|' + hp + '|' + (v.sang ? 1 : 0) + '|' + (v.mau || '') + '|' + v.m.map(p => p.ic + ':' + (p.xoay || 0) + ':' + p.s).join(',');
+    const hp = Math.round(h * k * 4) / 4, key = 'dk|' + hp + '|' + (v.sang ? 1 : 0) + '|' + (v.mau || '') + '|' + (v.bac || 0) + '|' + v.m.map(p => p.ic + ':' + (p.xoay || 0) + ':' + p.s).join(',');
     let a = REN.cGet(key);
     if (!a) {
       if (!REN.img('h2_tag')) return;
@@ -82,7 +83,7 @@ const DEMKN = {
     xx += pad;
     for (let i = 0; i < v.m.length; i++) {
       const p = v.m[i]; if (i) xx += h * 0.3;
-      const im = REN.img(p.ic), im2 = im && (REN.mip ? REN.mip(im, ic * REN.s * REN.dpr) : im);
+      const im = REN.img(v.bac && typeof DOTPHA !== 'undefined' ? DOTPHA.ten(p.ic, v.bac) : p.ic), im2 = im && (REN.mip ? REN.mip(im, ic * REN.s * REN.dpr) : im);
       if (im2 && p.xoay) { ctx.save(); ctx.translate(xx + ic / 2, y + h / 2); ctx.rotate(p.xoay); ctx.drawImage(im2, -ic / 2, -ic / 2, ic, ic); ctx.restore(); } // mũi tên Pháo La Bàn: xoay ảnh PNG (QT3)
       else if (im2) ctx.drawImage(im2, xx, y + (h - ic) / 2, ic, ic);
       xx += ic + gap;

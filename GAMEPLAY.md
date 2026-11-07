@@ -3203,3 +3203,29 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - `render.js than()`: ụ trong `REN.DE_RIENG` vẽ bệ riêng (cỡ = bệ chung × hệ số khung) khi ảnh đã tải; đang tải/lỗi → `de_chung`. Khoá bộ đệm thân theo id cho các ụ này. `ui.js dsTran` nạp trước `<id>_de`. `artscale.js` HEAD_K canon/lien/doc nâng (trục lệch tâm hình). Không đổi luật chơi.
 - Nhận diện (`tools/thap-kt-nhandien.js`, ô thật iPhone 46,5 px), điểm giống nhất trước → sau: Pháo La Bàn 0,86→0,74 · Liên Thanh 0,88→0,76 · Tesla 0,84→0,65 · Băng 0,91→0,84 · Radar 0,89→0,84 · Hố Đen 0,88→0,46 · Độc 0,91→0,83; cặp ≥ 0,80 cả bảng 1.553→1.430. Kết quả + ảnh trong `docs/demo-hop-tuong/tuvan/nhandien/game/`.
 - Còn nợ: đầu Độc (bình), Radar (đĩa), Pháo (nòng) vẽ nghiêng 3/4 chứ chưa top-down thật; Tesla thiếu vòng cuộn xanh (là PART_B, chưa gắn); thẻ/biểu tượng `nho/<id>` và trang ụ vẫn hình cũ.
+- (07/11 11:00) Sửa méo tam giác cảnh báo ở 2 đầu băng trùm (`bang_trum_nen`): border-image cắt 40/70 và tỉ lệ đều ngang–dọc ở băng báo trùm trong trận (tvb.css, anhgen.css) và băng "BOSSES THIS MATCH" đầu trận (vaotran.css). Ảnh kiểm 390×844 + 844×390.
+
+## claude/demo-hop-tuong — sửa màn tải đứng ở 20% (07/11)
+- `thap/js/taitai.js`: trọng số mỗi file khi tính % tải bị chặn ở 350 KB (ảnh nền lớn không còn "nuốt" thanh tiến độ); vạch tải trận chỉ tạo sau khi khởi động xong, menu luôn cập nhật vạch. Đo mạng 4G giả lập: % tăng đều 20→60% trong 30 s thay vì đứng yên ở 20%.
+
+## claude/demo-hop-tuong — bỏ trần cộng dồn 4 ụ đặc biệt (07/11)
+- Người dùng chốt: kỹ năng cộng dồn đặc biệt KHÔNG có trần (như Kalaratri DCDW), tiếp nối Ember Relay (f5cbf778).
+- Quantum Choir (`hopca`): đếm MỌI ụ cùng sao trên bàn (bỏ tối đa 7).
+- Fusion Archive (`luutru`): bỏ MAX 40 (sinh / capNhat / hook ghép); GROW 0–9 / 10–29 / 30+, chỉ vòng tiến độ bão hoà ở 40.
+- Scrap Forge (`loren`): bỏ trần 15 cộng dồn (luôn cho ăn được) và trần +60% mỗi ụ nhận — nhiều Forge cộng thẳng; power-up giữ +0.3%/cộng dồn; GROW 15+.
+- Leviathan: bỏ trần 100 ABYSS; tấm đếm luôn hiện số (không còn 'MAX'), ≥100 chữ sáng hơn.
+- Chữ EN/VI (text.js, roster.json, meta.js, skilldemo, hudb, demkn) + vi.json/ngonngu-vi.js; test thap-kt-vang-moi (cân bằng đạt), thap-kt-kynang-vd, thap-kt-leviathan cập nhật.
+
+## claude/demo-hop-tuong — bỏ mọi trần hỗ trợ + ĐỘT PHÁ cho kỹ năng cộng dồn (07/11)
+- Người dùng chốt (12:15): bỏ HẾT trần hỗ trợ (`hotro.js`): tốc / sát thương thường / sát thương có điều kiện (lộ, chậm, cầu vồng) / Amplifier / chí mạng / ST chí mạng / suy yếu quái (25%) — các trần nhân bậc × cấp thẻ không còn. Trần riêng Star Lift 50%, Resonance Grid (+10% trần), Reaper (nhóm giết ngay) cũng bỏ.
+- Giữ giới hạn tự nhiên: tỉ lệ chí mạng ≤ 100% (critU), xác suất giết ngay / kháng khống chế ≤ 100%, làm chậm ≤ 90% (trùm giữ 15%). ST chí mạng không trần. Reaper: power-up +0.5%/bước cộng thẳng vào tỉ lệ giết ngay.
+- Chữ: bỏ "(cap …)", "MAX +x%", "fire-rate cap" (Radar OVERDRIVE nay đúng +25%), hàng CARD LV không còn dòng "cap".
+- ĐỘT PHÁ (`DOTPHA`, cuối vangmoi1.js): cộng dồn vượt ngưỡng → thưởng bậc cộng dồn: I +15% tốc bắn · II +30% ST chí mạng · III +25% sát thương · IV +10% chí mạng & +50% ST chí mạng.
+  Ngưỡng: Ember 5/10/20/40 lửa · Choir 3/5/8/12 ụ · Archive 10/25/50/100 · Forge 6/15/30/60 (thưởng vào ụ nhận) · Leviathan 25/50/100/200 · Chain Link 3/5/8/12 · Combo 5/10/20/40 · Nine-Tail 1/3/6/10 lần xả cầu lửa (giữ qua ghép).
+  Chữ kỹ năng thêm "BREAKTHROUGH II: … · next breakthrough at N" (VI: ĐỘT PHÁ). Lên bậc: nổ PNG no_phao + chữ nổi.
+- Màu bậc: icon tấm đếm (demkn.js) + lửa Ember (vfxp2.js) = bản sao PNG lọc màu (ctx.filter) dựng 1 lần (`DOTPHA.ten`): cam → vàng → lam → tím → trắng; tấm Ember không còn "/8".
+- Test: thap-kt-vang-moi (thêm mục Đột phá, cân bằng đạt), thap-kt-vfx-p0 (cập nhật luật không trần, sửa câu Radar OVERDRIVE bị lặp), thap-kt-kynang-tx (suy yếu không trần), thap-kt-vi, tests/can-bang-vang. Ảnh xem: 844×390 bàn có đủ 5 bậc.
+
+## claude/demo-hop-tuong — sửa 2 lỗi cộng hưởng (07/11)
+- Vua Ghép VÀNG kéo lên Vua Ghép giờ +2★ (trước chỉ +1★ — luật MK+MK đè luật vàng). Vua Ghép thường kéo lên Vua Ghép vẫn +1★.
+- Hộp Bí Ẩn và Hộp Tiến Hoá (thẻ ghi "Does not shoot") không còn "chọc" gây sát thương (growfx chocU). Thêm `tools/thap-kt-khong-ban.js` vào hồi quy: mọi ụ thẻ ghi không bắn phải gây 0 sát thương.

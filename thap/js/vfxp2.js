@@ -206,12 +206,14 @@ P2.evoBom = function (ctx, T, d, cuoi, al) {
   };
   const sk = typeof SKILLS !== 'undefined' && SKILLS.lualien;
   if (sk && sk.veThem) sk.veThem = function (ctx, T, S, al) { // lửa đang mang: có tờ → lửa sống 16 khung; chưa có → cỡ cố định (bỏ phập phồng)
-    const n = Math.min(SKILLS.lualien.MAX || 8, T.lc || 0); if (!n) return; // Lửa Thập Tự: tối đa 8 — 4 nhánh + lõi lớn dần từ 5 lửa
-    const pos = [[1, 0], [0, 1], [-1, 0], [0, -1]], r = S * 0.36, co = !!P2.co('p2_ember'), im = co ? null : REN.img('fx_cuuvi_dan');
+    const n = Math.min(8, T.lc || 0); if (!n) return; // Lửa Thập Tự: hình bão hoà ở 8 (số lửa không trần) — 4 nhánh + lõi lớn dần từ 5 lửa
+    // ĐỘT PHÁ: lửa đổi màu theo bậc (bản sao PNG lọc màu dựng 1 lần — DOTPHA.ten)
+    const bac = typeof DOTPHA !== 'undefined' ? DOTPHA.bacU(T) : 0, toE = bac ? DOTPHA.ten('p2_ember', bac) : 'p2_ember';
+    const pos = [[1, 0], [0, 1], [-1, 0], [0, -1]], r = S * 0.36, co = !!P2.co(toE), im = co ? null : REN.img(bac ? DOTPHA.ten('fx_cuuvi_dan', bac) : 'fx_cuuvi_dan');
     if (!co && !im) return;
     ctx.globalCompositeOperation = 'lighter';
-    for (let i = 0; i < Math.min(4, n); i++) { if (co) P2.k(ctx, 'p2_ember', (G.t * 20 + i * 4) % 16, pos[i][0] * r, pos[i][1] * r, S * 0.26, al * 0.9, -Math.PI / 2, true); else PX.ve(ctx, im, pos[i][0] * r, pos[i][1] * r, S * 0.21, S * 0.21, -Math.PI / 2, al * 0.85); }
-    if (n >= 5) { const k = 1 + 0.08 * (n - 5); if (co) P2.k(ctx, 'p2_ember', (G.t * 20 + 9) % 16, 0, 0, S * 0.36 * k, al * 0.7, -Math.PI / 2, true); else PX.ve(ctx, im, 0, 0, S * 0.29 * k, S * 0.29 * k, -Math.PI / 2, al * 0.6); }
+    for (let i = 0; i < Math.min(4, n); i++) { if (co) P2.k(ctx, toE, (G.t * 20 + i * 4) % 16, pos[i][0] * r, pos[i][1] * r, S * 0.26, al * 0.9, -Math.PI / 2, true); else PX.ve(ctx, im, pos[i][0] * r, pos[i][1] * r, S * 0.21, S * 0.21, -Math.PI / 2, al * 0.85); }
+    if (n >= 5) { const k = 1 + 0.08 * (n - 5); if (co) P2.k(ctx, toE, (G.t * 20 + 9) % 16, 0, 0, S * 0.36 * k, al * 0.7, -Math.PI / 2, true); else PX.ve(ctx, im, 0, 0, S * 0.29 * k, S * 0.29 * k, -Math.PI / 2, al * 0.6); }
     ctx.globalCompositeOperation = 'source-over';
   };
 })();

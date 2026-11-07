@@ -117,3 +117,10 @@ Rồng băng/lửa trồi lên từ ụ (16 khung) · một vòng xanh quanh ụ
 - Cơ chế mới đợt 1: Pháo La Bàn (thay Cannon), Lửa Thập Tự (Ember cả hàng + cột), Drone Kéo Xa (`2850979`, `a30abf8`) — đang dùng hình tạm; **CHƯA vẽ** hình ở `tuvan/co-che-moi/CAN-VE.json` (huy hiệu mũi tên 4 hướng, đầu Pháo La Bàn, 3 dải VFX).
 
 **Khi tiếp tục:** xoá `ban-giao/DUNG-LAI.md` → vẽ CAN-VE cơ chế mới bằng ChatGPT → 1 phiên gắn hình anim + cơ chế mới, kiểm luật "ụ hỗ trợ không bắn", chạy hồi quy + QA ngâm ngắn (SO=60), xuất bản tất cả → mở đợt 2 cơ chế mới (`DE-XUAT.md` §6).
+
+### 07/11 10:30 (giờ VN) — TIẾP TỤC (tài khoản mới, phiên điều phối mới)
+**LIVE `e2ac58d4`** (thap/ = `4052fff5`, ver `74278cbb4a`): VFX P3 đợt 2 · chuyển động ụ anim.js · giới hạn kỹ năng 2–9 · cơ chế mới đợt 1 (Pháo La Bàn, Lửa Thập Tự, Drone Kéo Xa) + sửa hồi quy (VI 7 chuỗi, cấp thẻ Pháo La Bàn rải 14 cấp, bài kiểm theo luật mới). Hồi quy đủ bộ: còn 1 mục mạng chập chờn → chạy riêng XANH; giật ghép, Quantum Choir, chữ tràn 430 chạy riêng XANH. Hướng quái XANH trên bản xuất bản.
+**Xong, chưa gắn game:** 24 sheet trùm không tay chân (`raw_trum2_*`, GIF ở `tuvan/trum-moi/gif/`) · 6 quái thường không tay chân + Janus chiêu v2 (`raw_quai2_*`, `tuvan/quai-moi/`) · đo nhận diện 93 ụ (`tuvan/nhandien/`, nhánh `claude/kiem-nhan-dien`) · độ rối 15 ụ (`tuvan/vfx15/SO-LIEU.md` — 5 đề xuất sửa chưa làm).
+**Nhánh `claude/u-module`** (chưa gộp): 7 ụ module (bệ riêng + đầu mới) trong game, chờ người dùng duyệt.
+**Đang chạy:** phiên phụ thiết kế lại 86 ụ còn lại (chia 6 họ, ≥30% thiết bị không nòng, gen theo đợt ≤10 tab, `tuvan/u-moi/`).
+Người dùng chốt: trùm + quái nhỏ + tinh anh là vật thể KHÔNG tay chân; gen xong đóng tab Chrome; việc ảnh tách phiên song song, không bắt chờ.

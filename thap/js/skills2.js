@@ -336,7 +336,7 @@ SKILLS.khuech = { // Bộ Khuếch Đại (Mars): HỖ TRỢ — ụ Tấn công
   vai: 'ht', dmg: 0, toc: 0, chiTC: true,
   buoc: (T) => 0.045 * HOTRO.k(T), // 0.09 → 0.045 + trần RIÊNG (25% + 4%/★) × bậc × thẻ (BAO-CAO gioi-han §4 mục 3)
   max: (T) => (ms(T, 5) ? 7 : 5),       // 5★ DEEP STACKS
-  mo: (T) => 'Attack neighbours: +' + (SKILLS.khuech.buoc(T) * 100).toFixed(1) + '% damage per hit on the same target (max ' + SKILLS.khuech.max(T) + ' stacks, per enemy; total up to +' + Math.round(HOTRO.tran(T, 'amp') * 100) + '%, its own cap) · fades after ' + (ms(T, 7) ? 3 : 1.5) + 's without a hit (slow guns: one missed shot)',
+  mo: (T) => 'Attack neighbours: +' + (SKILLS.khuech.buoc(T) * 100).toFixed(1) + '% damage per hit on the same target (max ' + SKILLS.khuech.max(T) + ' stacks per enemy, no damage cap) · fades after ' + (ms(T, 7) ? 3 : 1.5) + 's without a hit (slow guns: one missed shot)',
   hoTro(G, T, N, ra) { ra.amp = this.buoc(T); ra.ampMax = this.max(T); if (ms(T, 7)) ra.ampGiu = 1; },
   capNhat(G, B, T, dt) { HOTRO.nhip(G, B, T, dt, '255,120,60', 2.0); return true; },
 };
@@ -575,11 +575,11 @@ SKILLS.hopbi = { // Hộp Bí Ẩn (Daron): sau 47 s biến thành ụ ngẫu nh
 SKILLS.nangsao = { // Bệ Nâng Sao (Brownie) — HỖ TRỢ: CẢ 4 ô kề +tốc bắn (ụ kề SAO THẤP NHẤT ×1.5), trần riêng 50% × thẻ; 5★: mỗi 2 wave +1 nấc sao cho ụ kề thấp nhất (BAO-CAO gioi-han §4 mục 8, 07/11)
   vai: 'ht', dmg: 0, toc: 0, napMau: '#ffe46b',
   them: (T) => 0.05 * T.sao * HOTRO.BAC[T.bac] * HOTRO.kThe(G.ban[T.ban], T) * (1 + 0.06 * (lvU(T) - 1)), // Tím 10%/★ (trước 24%/★ nhưng chỉ 2 ụ, trần 39% chạm từ 2★) — 0.07 đo sim-tier 07/11: 4★ ×2 → hạ 0.05
-  tran: (T) => 0.5 * HOTRO.capThe(T),   // trần riêng 50% (cấp thẻ nâng ~+20%)
+  tran: (T) => Infinity,   // 07/11: bỏ trần riêng 50%
   can: (T) => (ms(T, 7) ? 2 : 3),        // nấc cần cho +1★ (7★ STAR SURGE: 2)
   thap(B, T) { return HOTRO.oDich(T).map(o => B.t[o]).filter(N => HOTRO.nhan(T, N)).sort((a, b) => a.sao - b.sao || a.o - b.o).slice(0, 1); },
   gt(T, thap) { return Math.min(this.tran(T), this.them(T) * (thap ? 1.5 : 1)); },
-  mo: (T) => 'All 4 neighbours: +' + Math.round(SKILLS.nangsao.gt(T) * 100) + '% fire rate, the lowest-star one +' + Math.round(SKILLS.nangsao.gt(T, 1) * 100) + '% (cap ' + Math.round(SKILLS.nangsao.tran(T) * 100) + '%)' + (ms(T, 5) ? ' · every 2 waves the lowest gets a star pip (' + SKILLS.nangsao.can(T) + ' pips = +1★)' : ''),
+  mo: (T) => 'All 4 neighbours: +' + Math.round(SKILLS.nangsao.gt(T) * 100) + '% fire rate, the lowest-star one +' + Math.round(SKILLS.nangsao.gt(T, 1) * 100) + '%' + (ms(T, 5) ? ' · every 2 waves the lowest gets a star pip (' + SKILLS.nangsao.can(T) + ' pips = +1★)' : ''),
   hoTro(G, T, N, ra) { ra.toc = this.gt(T, this.thap(G.ban[T.ban], T).includes(N)); },
   capNhat(G, B, T, dt) {
     HOTRO.nhip(G, B, T, dt, '255,228,107', 2.4, 0.5);
@@ -597,7 +597,7 @@ SKILLS.nangsao = { // Bệ Nâng Sao (Brownie) — HỖ TRỢ: CẢ 4 ô kề +t
 };
 SKILLS.tuthan = { // Cột Tử Thần (Thanatos): HỖ TRỢ — ụ kề có xác suất GIẾT NGAY quái thường dưới ngưỡng máu; trùm: chỉ thêm đòn nhỏ (≤1% máu tối đa)
   vai: 'ht', dmg: 0, toc: 0,
-  tile: (T) => Math.min(HOTRO.tran(T, 'chet'), 0.06 * HOTRO.k(T)), // 0.12 → 0.06 (BAO-CAO gioi-han §4 mục 2: 1★ 12% → chạm trần ≈4★) · kẹp trần nhóm 'chet' (15% × bậc × thẻ) — số hiển thị = số thật
+  tile: (T) => Math.min(1, 0.06 * HOTRO.k(T) + HOTRO.puChet(T)), // 07/11: không trần nhóm — chỉ xác suất ≤ 100%; power-up +0.5%/bước cộng thẳng // 0.12 → 0.06 (BAO-CAO gioi-han §4 mục 2: 1★ 12% → chạm trần ≈4★) · kẹp trần nhóm 'chet' (15% × bậc × thẻ) — số hiển thị = số thật
   nguong: (T) => (ms(T, 5) ? 0.40 : 0.30),   // 5★ DEEP REAP
   mo: (T) => 'Neighbours: ' + (HOTRO.hd(T, 'chet', SKILLS.tuthan.tile(T)) * 100).toFixed(1) + '% per hit to execute normal enemies under ' + Math.round(SKILLS.tuthan.nguong(T) * 100) + '% HP' + (ms(T, 7) ? ' · big enemies under 15%' : '') + ' · bosses: small capped hit',
   hoTro(G, T, N, ra) { ra.chet = this.tile(T); ra.ngNguong = this.nguong(T); if (ms(T, 7)) ra.chetTo = 1; },
@@ -758,14 +758,15 @@ SKILLS.vughep = { // Vua Ghép (Aurora King): kéo lên ụ CÙNG SAO → ụ đ
     cungLoai: true, // Merge King + Merge King (cùng sao) → 1 Merge King sao kế tiếp (không ra ụ ngẫu nhiên)
     quaKhoa: true, // DCDW: Aurora King vẫn nâng sao ô ĐÁ (đá giữ nguyên, +★) → 2 ô đá cùng sao ghép được với nhau; ô băng cũng nhận +★
     hopLe: (a, b) => a.sao === b.sao && b.sao < LUAT.saoMax && b.ban === a.ban,
-    xemSao: (a, b) => Math.min(LUAT.saoMax, b.sao + (b.id === 'vughep' ? 1 : a.vang ? 2 : 1)), // huy hiệu sao xem trước khi rê
+    xemSao: (a, b) => Math.min(LUAT.saoMax, b.sao + (a.vang ? 2 : 1)), // vàng kéo lên bất kỳ ụ (kể cả Merge King) → +2★ // huy hiệu sao xem trước khi rê
     lam(G, B, a, b) {
-      if (b.id === 'vughep') { // MK + MK: giữ ụ đích (Merge King), +1★ đúng 1 lần (không cộng +1★/+2★ đặc biệt chồng lên);
+      if (b.id === 'vughep') { // MK + MK: giữ ụ đích (Merge King); ụ KÉO là vàng → +2★ (như kéo lên ụ khác), thường → +1★ (người dùng 07/11);
         // bản vàng: giữ vàng nếu 1 trong 2 là vàng (không quay lại 10% → tất định, 2 máy online ra cùng kết quả)
         B.t[a.o] = null;
         G.bay.push({ id: a.id, sao: a.sao, x0: B.o[a.o].x, y0: B.o[a.o].y, x1: B.o[b.o].x, y1: B.o[b.o].y, t: 0, bac: a.bac });
         b.vang = !!(a.vang || b.vang);
-        nangSao(B, b, 1, b.vang ? 'GOLD KING +1★' : 'MERGE KING +1★');
+        const n = a.vang ? 2 : 1;
+        nangSao(B, b, n, a.vang ? 'GOLD KING +2★' : b.vang ? 'GOLD KING +1★' : 'MERGE KING +1★');
         return b;
       }
       B.t[a.o] = null;

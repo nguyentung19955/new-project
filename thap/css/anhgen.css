@@ -40,7 +40,7 @@
 
 /* ---------- băng bắt đầu WAVE / cảnh báo TRÙM (H12, H13) ---------- */
 #bang-wave .bw-dai { background: none; box-shadow: none; border: 0; border-image: url(../assets/bang_wave_nen.png) 40 110 fill / 20px 55px stretch; }
-#canh-bao { background: none; box-shadow: none; border: 0; border-image: url(../assets/bang_trum_nen.png) 40 110 fill / 20px 55px stretch; }
+#canh-bao { background: none; box-shadow: none; border: 0; border-image: url(../assets/bang_trum_nen.png) 40 70 fill / 25px 43px stretch; } /* tỉ lệ đều — tam giác cảnh báo không méo */
 #canh-bao b, #canh-bao span { text-shadow: 0 2px 0 #000, 0 0 6px #000; }
 /* cut-in chỉ huy (H14 giữ hoạt ảnh code): vân thép gen phủ nhẹ thay sọc CSS */
 #cutin .ci-nen::after { background: url(../assets/bang_cutin_nen.png) center / 100% 100% no-repeat; opacity: .38; mix-blend-mode: overlay; }
