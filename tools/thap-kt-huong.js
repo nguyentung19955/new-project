@@ -3,7 +3,6 @@
 //   đi ngang → dải NGANG '<ten>_side_8' (sang trái: dải '_left_8' nếu có, không thì lật dải phải) nếu đã có, chưa có → dải trước + nghiêng nhẹ;
 //   đi lên → dải SAU '_back_8' nếu có; đi xuống → dải trước '_8'. Trùm: chỉ nhìn màn hình lúc vừa vào (0,9 s) và lúc tung chiêu;
 //   trùm có dải ĐÁNH (trum_<id>_atk_16) → lúc báo chiêu vẽ dải đánh.
-//   (07/11) vật thể KHÔNG tay chân (quaianim.js HUONG_CHUNG): mọi hướng = chính dải trước, không lật — coi như đủ hướng.
 // (huong4) + BẮT BUỘC đủ ảnh trước/ngang/sau cho tinh anh + 12 trùm (CAN_DU) — thiếu = sai;
 //   MỌI trùm lúc tung chiêu: nhìn về BÀN (dải trước / dải đánh), xong quay lại dải theo hướng làn; chụp dải khung lúc tung chiêu;
 //   hiệu ứng chiêu rời fx_trum_<id> (TRUM_FX) phát được (ảnh nạp, đủ 16 khung) · TWIN CORE chết → dải lõi nứt tại chỗ;
@@ -44,7 +43,7 @@ const MODES = (process.env.MODES || 'solo,coop,pvp').split(',');
     await p.evaluate(async (IDS) => {
       UI.canhBaoTrum = () => {}; G.cho = 1e9; G.hang.length = 0; for (const B of G.ban) { B.tim = 1e9; B.t.fill(null); B.ai = false; } G.quai.length = 0;
       const ds = [];
-      for (const k of IDS) { const t = k.startsWith('T:') ? 'trum_' + k.slice(2) : 'quai_' + k; ds.push(t + '_8', t + '_atk_16'); if (typeof HUONG_CHUNG === 'undefined' || !HUONG_CHUNG.has(t)) ds.push(t + '_side_8', t + '_back_8', t + '_left_8'); } // vật thể không tay chân (HUONG_CHUNG): 1 dải cho mọi hướng — không xin dải hướng (404)
+      for (const k of IDS) { const t = k.startsWith('T:') ? 'trum_' + k.slice(2) : 'quai_' + k; ds.push(t + '_8', t + '_side_8', t + '_back_8', t + '_left_8', t + '_atk_16'); }
       for (const t of TRUM_THU_TU) ds.push('trum_' + t, 'trum_' + t + '_8');
       ds.forEach(n => REN.img(n)); await new Promise(r => setTimeout(r, 2500));
     }, IDS);

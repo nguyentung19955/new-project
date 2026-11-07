@@ -111,7 +111,7 @@ HU.p2fx = {
   if (typeof HU === 'undefined' || !HU.hoden) return;
   const T0 = 'p2_blackhole', ve0 = HU.hoden.ve;
   HU.hoden.ve = function (ctx, o, R) {
-    const u = o.t / o.song, mo = 0.5 * Math.min(1, o.t / 0.3) * (u > 0.9 ? (1 - u) * 10 : 1); // ×0,5 (chống rối): vùng xoáy không che đường
+    const u = o.t / o.song, mo = Math.min(1, o.t / 0.3) * (u > 0.9 ? (1 - u) * 10 : 1);
     if (P2.co(T0)) { P2.k(ctx, T0, (o.t * 14) % 16, o.x, o.y, o.r * 2 / VUNG_ANH.p2_blackhole, mo); return; } // mép xoáy THẤY ĐƯỢC = bán kính hút/nghiền o.r
     const hd = R.co('hu_hoden', o.r * 2); if (!hd) return ve0.call(this, ctx, o, R);
     ctx.save(); ctx.translate(o.x, o.y); ctx.globalAlpha = mo; ctx.rotate(-o.t * 1.6); const rr = o.r * 1.03; ctx.drawImage(hd, -rr, -rr, rr * 2, rr * 2); ctx.restore();
