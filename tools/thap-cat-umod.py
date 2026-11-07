@@ -37,8 +37,8 @@ R_MAX = 0.485             # bán kính xa nhất của đầu (tính từ trục
 BE_MAX = 0.70             # cạnh lớn nhất của bệ / cạnh ô (= bệ chung cũ)
 M = np.array([1.0, 0.0, 1.0])
 # ô 1 vẽ KHÁC các bộ phận (so mẫu sai, đã soát bằng mắt ảnh KT=…): trục = điểm sâu nhất trong đầu (tâm đường tròn nội tiếp lớn nhất),
-# tỉ lệ đầu/bệ = trung vị các ụ khớp tốt. set: ô 1 bệ tam giác ngược; radar: ô 1 đĩa to nghiêng; bua: đầu (mũi đục) khớp nhầm cỡ; thanhdia: tấm 4:3, ô 1 mái chùa cao.
-KHONG_KHOP = {'set', 'radar', 'bua', 'thanhdia'}
+# tỉ lệ đầu/bệ = trung vị các ụ khớp tốt. set: ô 1 có vòng cuộn chồng giữa (khớp bệ sai cỡ); pandora: ô 1 bình đậy nắp, ô 3 miệng mở; bua: đầu (mũi đục) khớp nhầm cỡ; thanhdia: tấm 4:3, ô 1 mái chùa cao.
+KHONG_KHOP = {'set', 'pandora', 'bua', 'thanhdia'}
 REL_TB = 0.90
 # phần phụ vẽ NGAY TẠI TRỤC trong game (ô 1 có nó ở giữa): set = vòng cuộn Tesla, mauhut = trái tim trong vòng, combo = lõi sáng
 PHU_GIUA = {'set': 'duoi', 'mauhut': 'duoi', 'combo': 'tren'}
