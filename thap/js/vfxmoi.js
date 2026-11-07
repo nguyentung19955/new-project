@@ -130,29 +130,20 @@ HU.vxmPhat = {
 })();
 
 // =====================================================================================================
-// HIỆU ỨNG TRÊN SÂN DỪNG TRÊN ĐƯỜNG (user 07/11 19:05): mọi hiệu ứng ĐÁP XUỐNG SÂN (nổ, bổ nhào, vũng, mìn, tường, hố đen, tuyết…)
-//   chỉ hiện TRONG dải đường đi (polyline G.duong, rộng ≈ bề rộng làn), cắt đúng ở 2 đầu đường (không lố qua cổng / lõi), không ra ngoài bàn.
-//   Chỉ TRÌNH BÀY: cắt vùng vẽ (clip) + ghim tâm ảnh lên đường. Không đổi vùng trúng / sát thương / thời điểm (cap() gốc giữ nguyên).
-//   Đường giao (tia từ trời Orbital, sét Overlord từ ụ, tia chiếu Máy Dựng Tường) KHÔNG cắt — chỉ phần đáp xuống sân bị cắt.
+// HIỆU ỨNG TRÊN SÂN ĐẶT TRÊN ĐƯỜNG (user 07/11 23:09 — thay bản CẮT ảnh theo dải đường 19:05):
+//   KHÔNG cắt/che ảnh nữa. Mỗi hiệu ứng ĐÁP XUỐNG SÂN (nổ, bổ nhào, vũng, mìn, tường, hố đen, sét, tuyết…) được
+//   (a) dời TÂM / CHÂN (điểm chạm đất) lên TIM đường (điểm gần nhất trên polyline G.duong),
+//   (b) thu nhỏ quanh tâm để khung ảnh ≤ VXD.DMAX (thân sáng ≈ 1,5 bề rộng đường) — mép ảnh được tràn ra ngoài đường (TRỪ Hố Đen: giữ cỡ thật = bán kính hút, user 07/11 23:26),
+//   (c) không lố qua 2 ĐẦU đường: dời tâm vào trong dọc đường (không cắt ảnh).
+//   Chỉ TRÌNH BÀY: vùng trúng / sát thương / thời điểm (cap() gốc) giữ nguyên.
 // =====================================================================================================
 const VXD = {
-  HW: DUONG_RONG * 0.62, // nửa bề rộng dải (làn 46 px + chút viền ray)
+  HW: DUONG_RONG * 0.62, // nửa bề rộng dải đường (làn 46 px + chút viền ray)
+  DMAX: DUONG_RONG * 2.2, // cỡ khung tối đa của ảnh nổ / vùng trên đường (~101 px; rìa ảnh trong suốt → thân ≈ 1,5 bề rộng đường)
   dang: 0, anim: [], vong: [],
-  // ụ có đạn đáp xuống sân: nổ trúng của đạn này (FX.no / vòng) bị cắt theo dải đường
+  // ụ có đạn đáp xuống sân: nổ trúng của đạn này (FX.no / vòng) được đặt lại lên tim đường
   ID: new Set(['mortar', 'vungdoc', 'min', 'orbital']),
-  clip(ctx) {
-    if (typeof G === 'undefined' || !G.duong || !G.duong.length) return;
-    const hw = this.HW; ctx.beginPath();
-    for (const P of G.duong) {
-      P.segs.forEach((g, i) => { // mỗi đoạn = chữ nhật (cùng chiều quay → hợp, nonzero); 2 đầu đường: cắt đúng đầu (không lố)
-        const nx = -g.dy * hw, ny = g.dx * hw;
-        ctx.moveTo(g.x0 + nx, g.y0 + ny); ctx.lineTo(g.x1 + nx, g.y1 + ny); ctx.lineTo(g.x1 - nx, g.y1 - ny); ctx.lineTo(g.x0 - nx, g.y0 - ny); ctx.closePath(); // vetay-ok: mask — vùng CẮT (clip) theo dải đường, không tô/vẽ nét
-        if (i) { ctx.moveTo(g.x0 + hw, g.y0); ctx.arc(g.x0, g.y0, hw, 0, Math.PI * 2, true); ctx.closePath(); } // vetay-ok: mask — khúc rẽ nối tròn (hố đen / nổ ở góc không thành ô vuông)
-      });
-    }
-    ctx.clip();
-  },
-  // điểm trên đường gần (x, y) nhất; s kẹp trong [pad, len − pad] → ảnh rộng 2·pad không lố qua đầu đường
+  // điểm trên tim đường gần (x, y) nhất; s kẹp trong [pad, len − pad] → ảnh rộng 2·pad không lố qua đầu đường
   ghim(x, y, pad) {
     if (typeof G === 'undefined' || !G.duong || !G.duong.length) return [x, y];
     let best = null, bd = 1e18;
@@ -160,31 +151,42 @@ const VXD = {
       const u = Math.max(0, Math.min(g.len, (x - g.x0) * g.dx + (y - g.y0) * g.dy)), px = g.x0 + g.dx * u, py = g.y0 + g.dy * u, d = (px - x) * (px - x) + (py - y) * (py - y);
       if (d < bd) { bd = d; best = [P, g.s0 + u]; }
     }
+    if (!best) return [x, y];
     const P = best[0], p = Math.min(pad || 0, P.len / 2), [qx, qy] = viTri(P, Math.max(p, Math.min(P.len - p, best[1])));
     return [qx, qy];
   },
-  // gọi f trong vùng cắt
-  trong(ctx, f) { ctx.save(); try { this.clip(ctx); return f(); } finally { ctx.restore(); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; } },
+  he(D, M) { return D > 0 ? Math.min(1, (M || this.DMAX) / D) : 1; }, // hệ số thu nhỏ để cỡ D ≤ M
+  // vẽ f() sau khi dời tâm (x, y) lên tim đường + thu nhỏ quanh tâm (cỡ vẽ gốc D → ≤ DMAX). Không clip.
+  dat(ctx, x, y, D, f, M) {
+    const k = this.he(D, M), [qx, qy] = this.ghim(x, y, D * k * 0.42);
+    if (k === 1 && qx === x && qy === y) return f();
+    ctx.save();
+    try { ctx.translate(qx, qy); if (k < 1) ctx.scale(k, k); ctx.translate(-x, -y); return f(); } finally { ctx.restore(); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; }
+  },
+  // chỉ dời tâm (không thu nhỏ): tạm đặt o.x / o.y lên tim đường trong lúc vẽ
+  doi(o, pad, f) {
+    if (o.x == null) return f();
+    const x = o.x, y = o.y, [qx, qy] = this.ghim(x, y, pad); o.x = qx; o.y = qy;
+    try { return f(); } finally { o.x = x; o.y = y; }
+  },
 };
 
 (function () {
   if (typeof HU === 'undefined' || typeof FX === 'undefined') return;
-  // 1) lớp HU: cắt hình vẽ của các hiệu ứng đáp xuống sân
-  const boc = (k) => { const H = HU[k]; if (!H || !H.ve || H._vxd) return; const v = H.ve; H._vxd = 1; H.ve = function (ctx, o, R) { return VXD.trong(ctx, () => v.call(this, ctx, o, R)); }; };
-  ['may', 'min', 'hoden', 'vetChay', 'rongBo', 'vxmPhat'].forEach(boc);
-  // tường: tấm tường cắt theo dải; tia chiếu từ ụ (đường giao) vẽ ngoài vùng cắt
-  if (HU.tuong && HU.tuong.ve) {
-    const v = HU.tuong.ve;
-    HU.tuong.ve = function (ctx, o, R) {
-      const T = o.T;
-      if (T && !o.vang && G.ban[T.ban] && G.ban[T.ban].t[T.o] === T) {
-        const u = o.t / o.song, a = Math.min(1, o.t / 0.15) * (u > 0.85 ? (1 - u) / 0.15 * 0.6 + 0.4 : 1), [x, y] = dauNong(T);
-        ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = a * 0.5; R.tia(ctx, 'tia_laser', x, y, o.x, o.y, 6, o.t * 200); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
-      }
-      o.T = null; try { VXD.trong(ctx, () => v.call(this, ctx, o, R)); } finally { o.T = T; }
-    };
-  }
-  // 2) lớp FX: nổ / vòng sinh ra trong cap() của hiệu ứng sân hoặc lúc đạn của ụ sân trúng → chuyển sang danh sách riêng, vẽ trong vùng cắt
+  // 1) lớp HU: dời tâm lên tim đường + thu nhỏ (D = cỡ vẽ gốc của từng hiệu ứng)
+  const boc = (k, D, M) => { const H = HU[k]; if (!H || !H.ve || H._vxd) return; const v = H.ve; H._vxd = 1; H.ve = function (ctx, o, R) { if (o.x == null) return v.call(this, ctx, o, R); return VXD.dat(ctx, o.x, o.y, D(o), () => v.call(this, ctx, o, R), M); }; };
+  boc('may', (o) => (o.r || 40) * 2.4); // Toxic Pool / mây độc: vũng ~2.4r
+  boc('min', (o) => (o.sao3 ? 32 : 25)); // mìn chờ: chỉ dời tâm
+  boc('hoden', (o) => (o.r || 64) * 2, 1e9); // Hố Đen: đĩa xoáy đường kính 2r — MIỄN giới hạn DMAX (user 07/11 23:26): mép xoáy = đúng bán kính hút o.r, chỉ dời tâm lên tim đường
+  boc('vetChay', () => 40); // vệt cháy Dragon Dive
+  boc('vxmPhat', (o) => o.w || 0); // nổ chùm Mortar (132 px → DMAX)
+  // rồng bổ nhào (bản cũ + VXM.rong): tâm rồng trên tim đường, không lố qua đầu đường (VXM.rong ghim lại với pad nhỏ hơn → không dời 2 lần)
+  if (HU.rongBo && HU.rongBo.ve) { const v = HU.rongBo.ve; HU.rongBo.ve = function (ctx, o, R) { return VXD.doi(o, 34, () => v.call(this, ctx, o, R)); }; }
+  // tường: tâm tường lên tim đường (tia chiếu từ ụ tới đúng tâm mới) — tấm tường nằm ngang đường, rộng ≈ bề rộng đường, không cắt
+  if (HU.tuong && HU.tuong.ve) { const v = HU.tuong.ve; HU.tuong.ve = function (ctx, o, R) { return VXD.doi(o, 10, () => v.call(this, ctx, o, R)); }; }
+  // Overlord: đầu tia sét chạm đúng tim đường (tâm nổ cùng chỗ, xem lớp FX / p2fx dưới)
+  if (HU.sam && HU.sam.ve) { const v = HU.sam.ve; HU.sam.ve = function (ctx, o, R) { return VXD.doi(o, VXD.DMAX * 0.42, () => v.call(this, ctx, o, R)); }; }
+  // 2) lớp FX: nổ / vòng sinh ra trong cap() của hiệu ứng sân hoặc lúc đạn của ụ sân trúng → danh sách riêng, vẽ lại trên tim đường
   const gan = (k) => { const H = HU[k]; if (!H || !H.cap || H._vxdC) return; const c = H.cap; H._vxdC = 1; H.cap = function () { VXD.dang++; try { return c.apply(this, arguments); } finally { VXD.dang--; } }; };
   ['may', 'min', 'hoden', 'vetChay', 'rongBo', 'thoThuy', 'tuong', 'vetinh', 'sam'].forEach(gan);
   if (typeof capNhatDan === 'function') {
@@ -199,76 +201,82 @@ const VXD = {
     return r;
   };
   const rs = FX.reset; FX.reset = function () { VXD.anim.length = 0; VXD.vong.length = 0; return rs.apply(this, arguments); };
-  // vẽ: cùng cách REN.veFx vẽ dải nổ / vòng mảnh, nhưng trong vùng cắt đường
+  // vẽ: cùng cách REN.veFx vẽ dải nổ / vòng mảnh, nhưng tâm trên tim đường + cỡ ≤ DMAX (không clip)
   if (typeof REN !== 'undefined' && REN.veFx) {
     const vf = REN.veFx;
     REN.veFx = function (ctx) {
       const r = vf.apply(this, arguments);
       if (!VXD.anim.length && !VXD.vong.length) return r;
-      VXD.trong(ctx, () => {
-        ctx.globalCompositeOperation = 'lighter';
-        for (const a of VXD.anim) {
-          const u = Math.min(1, a.t / a.song);
-          if (a.mot) { this.veMot(ctx, a, u); continue; }
-          let x = a.x, y = a.y; if (a.bam && !a.bam.chet) { x = a.bam.x; y = a.bam.y; }
-          const sc = 0.9 + 0.16 * (1 - (1 - u) * (1 - u)); let al = Math.min(1, u / 0.06);
-          if (u > 0.65) { const v = (u - 0.65) / 0.35; al *= 1 - v * v * (3 - 2 * v); }
-          ctx.globalAlpha = 1;
-          const aI = this.img('fx_' + a.ten), nK = aI ? Math.round(aI.width / aI.height) : 6;
-          this.khungMuot(ctx, 'fx_' + a.ten, u * (nK - 0.001), x, y, a.co * sc, a.goc, Math.min(0.82, al) * (window.CG && CG.kA ? CG.kA(a) : 1));
-        }
-        const vm = typeof FXU !== 'undefined' && FXU.co('fx_vong_mong') && this.img('fx_vong_mong');
-        if (vm) for (const v of VXD.vong) {
-          const u = v.t / v.song, e = 1 - (1 - u) * (1 - u), rr = Math.max(1, v.r0 + (v.r1 - v.r0) * e), im = FXU.mau('fx_vong_mong', v.mau);
-          if (im) { ctx.globalAlpha = (1 - u) * 0.85; ctx.drawImage(this.mip(im, rr * 2.3 * this.s * this.dpr), v.x - rr * 1.15, v.y - rr * 1.15, rr * 2.3, rr * 2.3); }
-        }
-      });
+      ctx.save(); ctx.globalCompositeOperation = 'lighter';
+      for (const a of VXD.anim) {
+        const u = Math.min(1, a.t / a.song);
+        let x = a.x, y = a.y; if (a.bam && !a.bam.chet) { x = a.bam.x; y = a.bam.y; }
+        if (a.mot) { VXD.dang++; try { VXD.dat(ctx, x, y, (a.co || 0) * 1.06, () => this.veMot(ctx, a, u)); } finally { VXD.dang--; } ctx.globalCompositeOperation = 'lighter'; continue; } // vòng dư âm veMot sinh lúc VẼ (vd vòng hồng quanh sét Overlord) → vào VXD.vong: thu nhỏ ≤ DMAX + tâm trên tim đường (user 07/11 23:26)
+        const sc = 0.9 + 0.16 * (1 - (1 - u) * (1 - u)); let al = Math.min(1, u / 0.06);
+        if (u > 0.65) { const v = (u - 0.65) / 0.35; al *= 1 - v * v * (3 - 2 * v); }
+        const co = Math.min(a.co * sc, VXD.DMAX), [qx, qy] = VXD.ghim(x, y, co * 0.42);
+        ctx.globalAlpha = 1;
+        const aI = this.img('fx_' + a.ten), nK = aI ? Math.round(aI.width / aI.height) : 6;
+        this.khungMuot(ctx, 'fx_' + a.ten, u * (nK - 0.001), qx, qy, co, a.goc, Math.min(0.82, al) * (window.CG && CG.kA ? CG.kA(a) : 1));
+      }
+      const vm = typeof FXU !== 'undefined' && FXU.co('fx_vong_mong') && this.img('fx_vong_mong');
+      if (vm) for (const v of VXD.vong) {
+        const k = VXD.he(Math.max(v.r0, v.r1) * 2.3, VXD.DMAX * 1.1), u = v.t / v.song, e = 1 - (1 - u) * (1 - u), rr = Math.max(1, (v.r0 + (v.r1 - v.r0) * e) * k), im = FXU.mau('fx_vong_mong', v.mau);
+        const [qx, qy] = VXD.ghim(v.x, v.y, Math.max(v.r0, v.r1) * k);
+        if (im) { ctx.globalAlpha = (1 - u) * 0.85; ctx.drawImage(this.mip(im, rr * 2.3 * this.s * this.dpr), qx - rr * 1.15, qy - rr * 1.15, rr * 2.3, rr * 2.3); }
+      }
+      ctx.restore(); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
       return r;
     };
   }
-  // tờ P2/P3 (nổ mìn p3_min, sét Overlord p2_overlord, tường vàng…) sinh ra trong cap() của hiệu ứng sân → đánh dấu, vẽ trong vùng cắt
+  // tờ P2/P3 (nổ mìn p3_min, sét Overlord p2_overlord, tường vàng…) sinh ra trong cap() của hiệu ứng sân → đánh dấu, vẽ trên tim đường, cỡ ≤ DMAX
   const ph = G.hu.push; G.hu.push = function (...a) { if (VXD.dang > 0) for (const o of a) if (o && o.k === 'p2fx') o._vxd = 1; return ph.apply(this, a); };
-  if (HU.p2fx && HU.p2fx.ve) { const v = HU.p2fx.ve; HU.p2fx.ve = function (ctx, o, R) { return o._vxd ? VXD.trong(ctx, () => v.call(this, ctx, o, R)) : v.call(this, ctx, o, R); }; }
-  // Hố Đen khoảnh khắc đặc biệt (sigfx M01: mảnh đường / thấu kính / xoáy / nghiền) — cũng chỉ trong dải đường
-  if (typeof SIG !== 'undefined' && SIG.K && SIG.K.hoden && SIG.K.hoden.ve) { const v = SIG.K.hoden.ve; SIG.K.hoden.ve = function (ctx, m, R) { return VXD.trong(ctx, () => v.call(this, ctx, m, R)); }; }
-  // 3) Bão Tuyết: bông tuyết rơi xuống DỌC ĐƯỜNG (trước: rải khắp sân, bay chéo ra ngoài bàn) — hạt trình bày, không đổi luật
+  if (HU.p2fx && HU.p2fx.ve) {
+    const v = HU.p2fx.ve;
+    HU.p2fx.ve = function (ctx, o, R) {
+      if (!o._vxd) return v.call(this, ctx, o, R);
+      let x = o.x, y = o.y; if (o.E && !o.E.chet) { x = o.E.x; y = o.E.y; }
+      return VXD.dat(ctx, x, y, o.w || 0, () => v.call(this, ctx, o, R));
+    };
+  }
+  // Hố Đen khoảnh khắc đặc biệt (sigfx M01: mảnh đường / thấu kính / xoáy / nghiền): cùng tâm với đĩa xoáy HU.hoden, KHÔNG thu nhỏ (= bán kính hút thật)
+  if (typeof SIG !== 'undefined' && SIG.K && SIG.K.hoden && SIG.K.hoden.ve) { const v = SIG.K.hoden.ve; SIG.K.hoden.ve = function (ctx, m, R) { if (m.x == null) return v.call(this, ctx, m, R); return VXD.dat(ctx, m.x, m.y, (m.r || 64) * 2, () => v.call(this, ctx, m, R), 1e9); }; } // cùng miễn DMAX với đĩa xoáy
+  // 3) Bão Tuyết: bông tuyết rơi xuống TIM ĐƯỜNG (lệch ngang nhỏ) — hạt trình bày, không đổi luật
   if (HU.tuyet) HU.tuyet.cap = function (G, o) {
     if (o.t < 0.8 && G.duong && G.duong.length) for (let i = 0; i < 4; i++) {
-      const P = G.duong[Math.floor(Math.random() * G.duong.length)], [x, y] = viTri(P, Math.random() * P.len), l = (Math.random() - 0.5) * VXD.HW * 1.4;
+      const P = G.duong[Math.floor(Math.random() * G.duong.length)], [x, y] = viTri(P, 6 + Math.random() * Math.max(0, P.len - 12)), l = (Math.random() - 0.5) * VXD.HW * 0.6;
       FX.hat1('lua', x + l, y - 48, 0, 60, 0.8, 3 + Math.random() * 3, '#e8fbff'); // rơi 48 px trong 0.8 s → chạm đúng mặt đường
     }
     return false;
   };
-  // 4) nổ Orbital / nổ chùm Mortar: tâm ảnh GHIM trên đường (thay VXM.vao dời vào trong canvas) + cắt theo dải
-  VXM.vao = function (x, y, w) { return VXD.ghim(x, y, 0); };
+  // 4) nổ Orbital / nổ chùm Mortar: VXD.dat / doi đã dời tâm lên tim đường → VXM.vao không dời thêm (tránh dời 2 lần trong hệ đã biến đổi)
+  VXM.vao = function (x, y) { return [x, y]; };
   if (HU.vetinh && HU.vetinh.ve) {
     const v = HU.vetinh.ve;
     HU.vetinh.ve = function (ctx, o, R) {
-      if (!o.da || o.t < 0) return v.call(this, ctx, o, R); // vạch rơi từ trời (đường giao) — không cắt
-      const y0 = -20; ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = Math.max(0, 1 - (o.t - 0.16) / 0.12) * 0.7; R.tia(ctx, 'dan_tia', o.x, y0, o.x, o.y, 22, 0, true); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
-      if (!VXM.co('fx_orbital_bomno')) return; // ảnh nổ cũ = FX.no (đã cắt ở lớp FX)
-      const u = Math.min(1, (o.t - 0.16) / 0.34), w = (o.r || 30) * 2.7, [x, y] = VXD.ghim(o.x, o.y, 0);
-      VXD.trong(ctx, () => VXM.k(ctx, 'fx_orbital_bomno', Math.min(5, 0.6 + u * 5.4), x, y - 4, w, { a: u > 0.8 ? (1 - u) / 0.2 : 1 }));
+      const w = Math.min((o.r || 30) * 2.7, VXD.DMAX);
+      return VXD.doi(o, w * 0.42, () => { // vạch rơi từ trời + nổ cùng chạm 1 điểm trên tim đường
+        if (!o.da || o.t < 0 || !VXM.co('fx_orbital_bomno')) return v.call(this, ctx, o, R);
+        const y0 = -20; ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = Math.max(0, 1 - (o.t - 0.16) / 0.12) * 0.7; R.tia(ctx, 'dan_tia', o.x, y0, o.x, o.y, 22, 0, true); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+        const u = Math.min(1, (o.t - 0.16) / 0.34); // chân nổ (đáy ảnh ~ tâm) trên tim đường
+        VXM.k(ctx, 'fx_orbital_bomno', Math.min(5, 0.6 + u * 5.4), o.x, o.y - 4, w, { a: u > 0.8 ? (1 - u) / 0.2 : 1 });
+      });
     };
   }
-  // 5) Rồng bổ nhào: rồng (68 px) + huy hiệu kết (64 px) không lố qua đầu đường; cắt theo dải
+  // 5) Rồng bổ nhào: rồng (68 px) + huy hiệu kết (64 px) trên tim đường, không lố qua đầu đường (không cắt)
   if (VXM.rong) {
     const r0 = VXM.rong;
-    VXM.rong = function (ctx, o) {
-      if (o.x == null) return;
-      const x = o.x, y = o.y, [qx, qy] = VXD.ghim(x, y, 34); o.x = qx; o.y = qy;
-      try { VXD.trong(ctx, () => r0.call(this, ctx, o)); } finally { o.x = x; o.y = y; }
-    };
+    VXM.rong = function (ctx, o) { if (o.x == null) return; return VXD.doi(o, 30, () => r0.call(this, ctx, o)); };
   }
   if (typeof SIG !== 'undefined' && SIG.K && SIG.K.rong && SIG.K.rong.ve) {
     const v = SIG.K.rong.ve;
     SIG.K.rong.ve = function (ctx, m) {
-      if (!VXM.co('fx_ronglua_dive')) return VXD.trong(ctx, () => v.call(this, ctx, m)); // bản cũ (đầu rồng trên ụ + luồng) — cũng chỉ hiện trong dải
+      if (!VXM.co('fx_ronglua_dive')) return v.call(this, ctx, m); // bản cũ (đầu rồng trên ụ + luồng)
       if (!m.ngan) { const fw = this.f(m.t, 0, 0.26, 6); if (fw >= 0) this.k(ctx, 'sig_m09_wake', fw, m.cx, m.cy - 8, 52); } // dấu khởi động trên ô ụ
       if (m.tHet == null && m.o && HU.rongBo) VXM.rong(ctx, m.o);
       if (m.tHet != null && m.x != null) {
-        const fc = this.f(m.t - m.tHet, 0, 0.5, 5), [qx, qy] = VXD.ghim(m.x, m.y, 32);
-        if (fc >= 0) VXD.trong(ctx, () => this.k(ctx, 'sig_m09_crest', fc, qx, qy, 64, { a: this.mo(m.t - m.tHet, 0, 0.5, 0.04, 0.15) }));
+        const fc = this.f(m.t - m.tHet, 0, 0.5, 5), [qx, qy] = VXD.ghim(m.x, m.y, 27);
+        if (fc >= 0) this.k(ctx, 'sig_m09_crest', fc, qx, qy, 64, { a: this.mo(m.t - m.tHet, 0, 0.5, 0.04, 0.15) });
       }
     };
   }

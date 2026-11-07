@@ -13,7 +13,7 @@
 //  Khung độ hiếm (PNG, cửa sổ trong suốt) vẽ SAU ảnh; chip chỉ ở góc dành riêng — xem css/tvA.css.
 'use strict';
 const PO_NEO = {
-  canon: [0, 30.2, 52, 48], xucxac: [30.1, 54.2, 31.9, 78], lien: [0, 30.2, 49.9, 47], phun: [2, 30, 45, 50], sungluc: [0, 28.2, 50.1, 50], bang: [0, 30.3, 55.3, 52],
+  canon: [13.5, 27, 54, 51], xucxac: [30.1, 54.2, 31.9, 78], lien: [0, 30.2, 49.9, 47], phun: [2, 30, 45, 50], sungluc: [0, 28.2, 50.1, 50], bang: [0, 30.3, 55.3, 52],
   doc: [4, 29, 45, 42], mana: [0, 30.2, 39.4, 50], tia: [2.9, 27, 44.7, 52], set: [0.8, 28.1, 44.7, 47], maychem: [0.8, 29.1, 44.7, 52], phagiap: [0, 28.2, 52.2, 47],
   bua: [0, 32.4, 44.8, 55], nam: [0.9, 33.4, 55.2, 52], bomhen: [0, 33.3, 52.2, 52], nhanmana: [0, 32.3, 55.3, 50], kiembang: [0, 35.5, 58.3, 55], mimic: [0, 35.5, 52.2, 55],
   chimang: [2, 33, 45, 47], dichchuyen: [1, 35, 52, 50], radar: [0, 30.3, 60.6, 55], drone: [0.9, 28.2, 62.5, 47], tron: [0, 28.1, 44.7, 48],
@@ -32,7 +32,7 @@ const PO_NEO = {
 };
 // ảnh LỚN trang ụ / chỉ huy (assets/hero/hero_<id>.jpg|webp 1170×1020 — tools/thap-hero.py, hiện 1:1, KHÔNG phóng): mốc riêng vì khung cắt khác pilot_<id>.png
 const HERO_NEO = {
-  canon: [0, 30, 55], xucxac: [0, 45, 55], lien: [0, 22, 55], phun: [0, 28, 60], sungluc: [0, 25, 60], bang: [0, 25, 60], doc: [6, 28, 40],
+  canon: [15.5, 31, 54], xucxac: [0, 45, 55], lien: [0, 22, 55], phun: [0, 28, 60], sungluc: [0, 25, 60], bang: [0, 25, 60], doc: [6, 28, 40],
   mana: [3, 33, 45], tia: [3, 25, 45], set: [0, 22, 40], maychem: [0, 28, 45], phagiap: [0, 28, 45], bua: [0, 32, 45], nam: [3, 30, 48],
   bomhen: [0, 33, 50], nhanmana: [0, 35, 55], kiembang: [0, 40, 55], mimic: [0, 37, 55], chimang: [0, 40, 45], dichchuyen: [0, 40, 50],
   radar: [0, 30, 60], drone: [0, 32, 62], tron: [0, 20, 40], nangluong: [0, 33, 58], laser: [0, 40, 50], lanhgia: [0, 30, 60], mortar: [0, 20, 40],
