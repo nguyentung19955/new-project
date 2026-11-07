@@ -124,7 +124,7 @@ HU.ongLao = { // SWARM: từng drone lao thành vệt sáng vào chỗ đông �
 
 // =====================================================================================================
 // R3 · LEVIATHAN (leviathan) — Đỏ TC: bắn bọt nước nổ 30 px. Mỗi e s NUỐT 1 quái thường (không to, không trùm, GĐ1–2 không nuốt quái bay)
-//      trong 120 px → +1 VỰC SÂU (mỗi cộng dồn +4% sát thương, tối đa 100). 4★+: nuốt được quái to (×3 cộng dồn).
+//      trong 120 px → +1 VỰC SÂU (mỗi cộng dồn +4% sát thương, KHÔNG trần — như Kalaratri DCDW). 4★+: nuốt được quái to (×3 cộng dồn).
 //      CHỦ ĐỘNG "TIDAL BREATH" (3★+, hồi 35 s): tia nước quét DỌC cả đường 1.4 s, mỗi quái trúng 1 lần dmg×(4+0.1×cộng dồn), đẩy lùi 20 px.
 //      PVP: như solo (không còn luật gửi quái).
 // =====================================================================================================
@@ -132,13 +132,13 @@ SKILLS.leviathan = {
   vai: 'tc', dmg: 24, toc: 0.9, nham: 'dau', napMau: '#1fb6d9',
   e: (T) => sao7r(T, [9, 8.5, 8, 7, 6, 5.5, 5]),
   cd: 35,
-  // dòng bảng ụ: 'ABYSS 56/100 · +224% damage' (VI: '+224% sát thương') = đúng số trên tấm đếm xoáy vực ở đáy ô (demkn.js)
-  mo: (T) => 'ABYSS ' + Math.min(100, T.vuc || 0) + '/100 · +' + 4 * Math.min(100, T.vuc || 0) + '% damage · devours a small enemy every ' + SKILLS.leviathan.e(T) + 's (' + SKILLS.leviathan.TAM + ' px' + (T.sao >= 4 ? ', big ones ×3' : '') + (T.sao >= 7 ? ', flyers too' : '') + ') · bubble splash 30 px · ' + (T.sao >= 3 ? 'TAP when full: TIDAL BREATH ×' + (4 + 0.1 * (T.vuc || 0)).toFixed(1) + ' — an ice dragon breathes along the path' : 'TIDAL BREATH unlocks at 3★'),
+  // dòng bảng ụ: 'ABYSS 56 · +224% damage' (VI: '+224% sát thương') = đúng số trên tấm đếm xoáy vực ở đáy ô (demkn.js)
+  mo: (T) => 'ABYSS ' + (T.vuc || 0) + ' · +' + 4 * (T.vuc || 0) + '% damage · devours a small enemy every ' + SKILLS.leviathan.e(T) + 's (' + SKILLS.leviathan.TAM + ' px' + (T.sao >= 4 ? ', big ones ×3' : '') + (T.sao >= 7 ? ', flyers too' : '') + ') · bubble splash 30 px · ' + (T.sao >= 3 ? 'TAP when full: TIDAL BREATH ×' + (4 + 0.1 * (T.vuc || 0)).toFixed(1) + ' — an ice dragon breathes along the path' : 'TIDAL BREATH unlocks at 3★'),
   TAM: 160, // tầm nuốt 120 → 160 px: mọi ô hàng giữa với tới đường (BAO-CAO gioi-han §4 mục 7)
   // VỰC SÂU lưu THEO BÀN (B.vucSau): mọi Leviathan trên bàn cùng hưởng, giữ khi ghép (BAO-CAO §4 mục 6) — T.vuc = bản sao để vẽ/hiển thị
   sinh(G, T) { const B = G.ban && G.ban[T.ban]; T.vuc = (B && B.vucSau) || 0; T.nuot = 0; },
   capNhat(G, B, T, dt) {
-    if ((T.vuc || 0) > (B.vucSau || 0)) B.vucSau = Math.min(100, T.vuc); T.vuc = B.vucSau || 0;
+    if ((T.vuc || 0) > (B.vucSau || 0)) B.vucSau = T.vuc; T.vuc = B.vucSau || 0;
     T.buf.dmg += 0.04 * (T.vuc || 0);
     T.nuot = (T.nuot || 0) + dt * (1 + T.buf.toc);
     if (T.nuot >= this.e(T) && !G.hu.some(o => o.k === 'xoay' && o.T === T)) {
@@ -189,7 +189,7 @@ HU.xoay = { // nuốt: xoáy nước (vòng tròn đồng tâm xoay) hút quái 
     if (o.t >= o.song * 0.85 && !o.da) {
       o.da = true; const T = o.T, B = o.B;
       const lon = E.d.to ? 3 : 1;
-      B.vucSau = Math.min(100, Math.max(B.vucSau || 0, T.vuc || 0) + lon); for (const X of B.t) if (X && X.id === 'leviathan') X.vuc = B.vucSau; // theo bàn
+      B.vucSau = Math.max(B.vucSau || 0, T.vuc || 0) + lon; for (const X of B.t) if (X && X.id === 'leviathan') X.vuc = B.vucSau; // theo bàn
       E.hp = 0; chet(E, B);
       if (conTren(T)) { const c = tamU(T); G.hu.push({ k: 'tiaPhep', t: 0, song: 0.4, x0: o.x, y0: o.y, x1: c.x, y1: c.y, mau: '#7fdcff' }); nhanU(T, '+' + lon + ' ABYSS', '#7fdcff'); }
       FX.tiaLua(o.x, o.y, 6, '#bff4ff', 140, 7);
@@ -451,7 +451,7 @@ HU.rongBo = { // DRAGON DIVE: bóng rồng bay dọc đường (lõi → cổng)
 // đăng ký: họ kỹ năng, mốc sao riêng, grow-up 3 giai đoạn, nhịp hiển thị
 // =====================================================================================================
 themHo('summon', 4, 'chuato', 'a swarm of hunter drones + SWARM kamikaze (active)');
-themHo('heavy', 4, 'leviathan', 'devours enemies for damage stacks (max 100) + TIDAL BREATH (active)');
+themHo('heavy', 4, 'leviathan', 'devours enemies for damage stacks (no cap) + TIDAL BREATH (active)');
 themHo('star', 4, 'khoisinh', 'raises your weakest turret over time + GENESIS (active)');
 themHo('blast', 4, 'ronglua', 'flame cone that burns crowds + DRAGON DIVE (active)');
 

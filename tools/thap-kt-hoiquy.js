@@ -564,6 +564,11 @@ async function online(b, W, H, D, co) {
     try { execFileSync('node', [path.join(__dirname, 'thap-kt-vang-moi.js')], { stdio: 'pipe', timeout: 300000 }); console.log('  ✓ 4 ụ vàng mới đợt 1 (thap-kt-vang-moi.js)'); }
     catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-vang-moi.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'vangmoi1', loai: 'ụ vàng mới đợt 1', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ ụ vàng mới đợt 1: lỗi chạy'); }
   }
+  // Ụ "không bắn" (thẻ Does not shoot) không được gây sát thương bằng đòn bắn/chọc — tools/thap-kt-khong-ban.js (07/11: Mystery Box/Evolver từng chọc quái)
+  if (!process.env.CHI || /khongban|solo|menu/.test(process.env.CHI)) {
+    try { execFileSync('node', [path.join(__dirname, 'thap-kt-khong-ban.js')], { stdio: 'pipe', timeout: 300000 }); console.log('  ✓ ụ không bắn (thap-kt-khong-ban.js)'); }
+    catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-khong-ban.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'khongban', loai: 'ụ không bắn', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ ụ không bắn: lỗi chạy'); }
+  }
   // 4 ụ VÀNG mới đợt 2 (Blood Circuit / Hex Saboteur / Sanctum / Prism Thief: luật, tất định, PVP/CO-OP, cấp thẻ, cờ online) — tools/thap-kt-vang-moi2.js
   if (!process.env.CHI || /vang|solo|pvp|coop/.test(process.env.CHI)) {
     try { execFileSync('node', [path.join(__dirname, 'thap-kt-vang-moi2.js')], { stdio: 'pipe', env: Object.assign({}, process.env, { SHOTS: '0' }), timeout: 300000 }); console.log('  ✓ ụ vàng mới đợt 2 (thap-kt-vang-moi2.js)'); }

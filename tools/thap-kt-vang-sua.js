@@ -157,6 +157,7 @@ async function moTran(b, mode, deck) {
     const B = G.ban[0], out = {}; __seed(4242); B.capThe.vughep = 0; B.capThe.sinhdoi = 0;
     let v = 0; for (let i = 0; i < 6000; i++) if (sinhU(taoU(B, 'vughep', 1, 0)).vang) v++; out.vang = v / 6000;
     __xoa(); __dat(B, 0, 'vughep', 3).vang = false; __dat(B, 1, 'vughep', 3).vang = false; const K = ghep(B, B.t[0], B.t[1]); out.mk = K && [K.id, K.sao, !!B.t[0]];
+    __xoa(); __dat(B, 0, 'vughep', 3).vang = true; __dat(B, 1, 'vughep', 3).vang = false; const K2 = ghep(B, B.t[0], B.t[1]); out.mkv = K2 && [K2.id, K2.sao, !!K2.vang];
     let cao = 0, n = 0, vuot = 0;
     for (let i = 0; i < 1500; i++) {
       const s = 1 + (i % 7 === 6 ? 5 : i % 5); __xoa(); __dat(B, 0, 'sinhdoi', s); __dat(B, 1, 'sinhdoi', s); const cu = new Set(); ghep(B, B.t[0], B.t[1]);
@@ -167,6 +168,7 @@ async function moTran(b, mode, deck) {
   });
   ok(Math.abs(r.vang - 0.10) < 0.02, 'Merge King vàng ~10% (theo xác suất, không phải mọi lần)', String(r.vang));
   ok(r.mk && r.mk[0] === 'vughep' && r.mk[1] === 4 && !r.mk[2], 'Merge King + Merge King → Merge King +1★', JSON.stringify(r.mk));
+  ok(r.mkv && r.mkv[0] === 'vughep' && r.mkv[1] === 5 && r.mkv[2], 'Merge King VÀNG kéo lên Merge King → +2★ (giữ vàng)', JSON.stringify(r.mkv));
   ok(r.twN > 1400 && Math.abs(r.tw - 0.10) < 0.025 && r.vuot === 0, 'Twin Maker: ~10% ụ sinh đôi +1★, không vượt 7★', JSON.stringify(r));
 
   console.log('— 10 Star Cannon · 11 Evolver');

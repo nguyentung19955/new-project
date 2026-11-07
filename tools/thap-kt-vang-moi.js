@@ -35,11 +35,11 @@ ok(R('n1.lc === 1 && n2.lc === 1 && xa.lc === 1'), 'ghép ô 1 → +1 lửa cho 
 ok(R('!kc.lc'), 'ụ khác loại không nhận lửa');
 ok(R('n1.tocT >= 4.9 && n1.tocV >= 0.15'), 'Relay nhận lửa +15% tốc bắn 5 s');
 R('for (let i = 0; i < 9; i++) SKILLS.lualien.ghep(G, B, n2, B.t[1] || n2, null);'); // ép nhiều lần ghép quanh ô 1
-ok(R('n1.lc === 8'), 'tối đa 8 lửa / ụ (n1.lc=' + R('n1.lc') + ')');
+ok(R('n1.lc === 10'), 'KHÔNG trần lửa: 1 + 9 lần ghép = 10 lửa (n1.lc=' + R('n1.lc') + ')');
 R('capNhatBan(B, 1/30)');
-ok(Math.abs(R('n1.buf.dmg') - 8 * R('SKILLS.lualien.moiLua(n1)')) < 1e-6 && Math.abs(R('n1.buf.crit') - 0.16) < 1e-6, 'đủ 8 lửa: 8 × mỗi lửa sát thương, +16% chí mạng (dmg ' + R('n1.buf.dmg').toFixed(3) + ')');
+ok(Math.abs(R('n1.buf.dmg') - 10 * R('SKILLS.lualien.moiLua(n1)')) < 1e-6 && Math.abs(R('n1.buf.crit') - 0.20) < 1e-6, '10 lửa: 10 × mỗi lửa sát thương, +20% chí mạng (dmg ' + R('n1.buf.dmg').toFixed(3) + ')');
 R('B.capThe.lualien = 6; capNhatBan(B, 1/30)');
-ok(Math.abs(R('n1.buf.dmg') - 8 * R('SKILLS.lualien.moiLua(n1)')) < 1e-6 && R('SKILLS.lualien.moiLua(n1)') > 0.1, 'LV15: mỗi lửa mạnh hơn LV9 (' + R('SKILLS.lualien.moiLua(n1)') + ') × 8 lửa');
+ok(Math.abs(R('n1.buf.dmg') - 10 * R('SKILLS.lualien.moiLua(n1)')) < 1e-6 && R('SKILLS.lualien.moiLua(n1)') > 0.1, 'LV15: mỗi lửa mạnh hơn LV9 (' + R('SKILLS.lualien.moiLua(n1)') + ') × 10 lửa');
 ok(/LV15/.test(R('SKILLS.lualien.mo(n1)')) && /LV9 → LV10/.test((R('B.capThe.lualien = 0'), R('SKILLS.lualien.mo(n1)'))), 'chữ xem: cấp hiện tại → cấp sau');
 
 console.log('Quantum Choir (hopca)');
@@ -48,9 +48,9 @@ R(`var q = dat(7, 'hopca', 3); dat(0, 'lien', 3); dat(1, 'canon', 3); dat(2, 'ba
 ok(R('SKILLS.hopca.dem(B, q)') === 3, 'đếm 3 ụ cùng 3★ (bỏ ụ khác sao, bỏ ô đá)');
 ok(Math.abs(R('q.buf.dmg') - 0.54) < 1e-6, 'LV9: +18% × 3 = +54%');
 R(`for (let o = 8; o < 15; o++) dat(o, 'lien', 3); capNhatBan(B, 1/30);`);
-ok(R('SKILLS.hopca.dem(B, q)') === 7 && Math.abs(R('q.buf.dmg') - 1.26) < 1e-6, 'trần 7 ụ → +126% (LV9)');
+ok(R('SKILLS.hopca.dem(B, q)') === 10 && Math.abs(R('q.buf.dmg') - 1.8) < 1e-6, 'KHÔNG trần: 10 ụ cùng sao → +180% (LV9) (dem=' + R('SKILLS.hopca.dem(B, q)') + ')');
 R(`B.capThe.hopca = 6; capNhatBan(B, 1/30);`);
-ok(Math.abs(R('q.buf.dmg') - 2.1) < 1e-6, 'LV15: 30% × 7 = +210%');
+ok(Math.abs(R('q.buf.dmg') - 3.0) < 1e-6, 'LV15: 30% × 10 = +300%');
 R(`B.capThe.hopca = 0; B.t.fill(null); var q7 = dat(7, 'hopca', 7); capNhatBan(B, 1/30);`);
 ok(Math.abs(R('q7.buf.toc') - R('(function(){ const T = q7; const t = T.buf.toc; return t; })()')) < 1e-9 && R('q7.buf.toc') >= 0.12 - 1e-9, '7★: +12% tốc bắn');
 tran(['hopca', 'lien', 'canon', 'bang', 'tia'], 'coop');
@@ -65,10 +65,12 @@ R(`var k2 = dat(13, 'luutru', 1);`);
 ok(R('k2.kho') === 3, 'Archive mới nhận 50% số lần ghép (3)');
 R('capNhatBan(B, 1/30)');
 ok(Math.abs(R('k1.buf.dmg') - 0.15) < 1e-6, 'LV9: 6 × 2.5% = +15%');
-R('k1.kho = 999; capNhatBan(B, 1/30)');
-ok(Math.abs(R('k1.buf.dmg') - 1.0) < 1e-6, 'trần 40 điểm → +100% (LV9)');
+R('k1.kho = 60; capNhatBan(B, 1/30)');
+ok(Math.abs(R('k1.buf.dmg') - 1.5) < 1e-6, 'KHÔNG trần: 60 điểm → +150% (LV9)');
 R('B.capThe.luutru = 6; capNhatBan(B, 1/30)');
-ok(Math.abs(R('k1.buf.dmg') - 1.6) < 1e-6, 'LV15: 4%/điểm → +160%');
+ok(Math.abs(R('k1.buf.dmg') - 2.4) < 1e-6, 'LV15: 4%/điểm × 60 → +240%');
+R(`B.capThe.luutru = 0; k1.kho = 45; { const a = dat(0, 'lien', 1), b = dat(1, 'lien', 1); ghep(B, a, b); B.t[1] = null; }`);
+ok(R('k1.kho') === 46, 'ghép khi đã quá 40 điểm vẫn +1 (45 → ' + R('k1.kho') + ')');
 R(`B.capThe.luutru = 0; G.quai.length = 0; for (let i = 0; i < 4; i++) { sinhQuai('bo', 0, 100 + i * 2, 50); G.quai[G.quai.length - 1].vao = 1; } var h0 = G.quai.reduce((s, E) => s + E.hp, 0); var A = dat(5, 'luutru', 3), C = dat(6, 'luutru', 3); ghep(B, A, C);`);
 ok(R('G.hu.some(h => h.k === "vm1Xung")'), 'Archive + Archive → 3 xung nổ');
 buoc(1.2);

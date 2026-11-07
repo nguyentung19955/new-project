@@ -206,7 +206,7 @@ P2.evoBom = function (ctx, T, d, cuoi, al) {
   };
   const sk = typeof SKILLS !== 'undefined' && SKILLS.lualien;
   if (sk && sk.veThem) sk.veThem = function (ctx, T, S, al) { // lửa đang mang: có tờ → lửa sống 16 khung; chưa có → cỡ cố định (bỏ phập phồng)
-    const n = Math.min(SKILLS.lualien.MAX || 8, T.lc || 0); if (!n) return; // Lửa Thập Tự: tối đa 8 — 4 nhánh + lõi lớn dần từ 5 lửa
+    const n = Math.min(8, T.lc || 0); if (!n) return; // Lửa Thập Tự: hình bão hoà ở 8 (số lửa không trần) — 4 nhánh + lõi lớn dần từ 5 lửa
     const pos = [[1, 0], [0, 1], [-1, 0], [0, -1]], r = S * 0.36, co = !!P2.co('p2_ember'), im = co ? null : REN.img('fx_cuuvi_dan');
     if (!co && !im) return;
     ctx.globalCompositeOperation = 'lighter';

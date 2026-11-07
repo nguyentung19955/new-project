@@ -1,5 +1,5 @@
 // TURRET MERGE — kiểm Leviathan (06/11): dải khung TIDAL BREATH mới (đầu rồng băng rơi từ trời → phun → bay lên) trong TRẬN SOLO
-// + Test range (trang hồ sơ ụ) + cận cảnh tấm ABYSS ở 8 / 56 / 100 + vòng nuốt khi chọn ụ + dòng bảng xem nhanh EN/VI. iPhone 13 (390×844, DPR 3).
+// + Test range (trang hồ sơ ụ) + cận cảnh tấm ABYSS ở 8 / 56 / 150 + vòng nuốt khi chọn ụ + dòng bảng xem nhanh EN/VI. iPhone 13 (390×844, DPR 3).
 // Chạy: python3 -m http.server 8765 (gốc repo) rồi node tools/thap-kt-leviathan.js [ra]  → <ra>/raw_*.png + ket-qua.json (ghép: tools/thap-kt-leviathan-ghep.py)
 const fs = require('fs');
 const { chromium, devices } = require('playwright');
@@ -28,16 +28,16 @@ const BASE = 'http://localhost:8765/thap/';
     G.quai.length = 0; G.hang.length = 0; G.hu = G.hu.filter(o => o.k === 'truyNaVe' || o.k === 'sigDuoi'); FX.reset(); SIG.ds.length = 0; G.cho = 0; G.tWave = 3;
     for (let i = 0; i < B.t.length; i++) B.t[i] = null;
     const dat = (o, id2, s) => { const T = sinhU(taoU(B, id2, s, o)); B.t[o] = T; return T; };
-    const T = dat(7, 'leviathan', 4); T.vuc = 56; dat(3, 'leviathan', 3).vuc = 8; dat(11, 'leviathan', 5).vuc = 100;
+    const T = dat(7, 'leviathan', 4); T.vuc = 56; dat(3, 'leviathan', 3).vuc = 8; dat(11, 'leviathan', 5).vuc = 150; // không trần: tấm hiện số 150 (không còn 'MAX')
     for (const [o, id2] of [[6, 'canon'], [8, 'tia'], [2, 'set'], [12, 'canon']]) dat(o, id2, 3);
     for (let i = 0; i < 9; i++) { const E = sinhQuai(i === 4 ? 'khong_lo' : 'bo', 0, p0.len * (0.28 + i * 0.05), 60); E.vao = 1; [E.x, E.y, E.goc] = viTri(p0, E.s); }
     window._T = T; REN.ve(0.016, 1);
   });
   await p.waitForTimeout(300);
   await p.evaluate(() => REN.ve(0.016, 1));
-  // tấm ABYSS cận cảnh (3 ô: 8 / 56 / 100) — toạ độ CSS của ô
+  // tấm ABYSS cận cảnh (3 ô: 8 / 56 / 150) — toạ độ CSS của ô
   const vungO = await p.evaluate(() => { const r = REN.cv.getBoundingClientRect(), B = G.ban[0], k = r.width / W; return [3, 7, 11].map(o => { const c = B.o[o]; return { x: r.left + (c.x - B.cw * 0.6) * k, y: r.top + (c.y - B.ch * 0.6) * k, width: B.cw * 1.2 * k, height: B.ch * 1.2 * k }; }); }).catch(async () => null);
-  if (vungO) for (let i = 0; i < 3; i++) await cat('abyss_' + [8, 56, 100][i], vungO[i]);
+  if (vungO) for (let i = 0; i < 3; i++) await cat('abyss_' + [8, 56, 150][i], vungO[i]);
   kq.tag = await p.evaluate(() => [3, 7, 11].map(o => JSON.stringify(DEMKN.lay(G.ban[0].t[o], G.ban[0]))));
   // dải khung TIDAL BREATH: 80 ms/khung, 30 khung (≈ 2.4 s: rơi → phun 1.4 s → bay lên)
   await p.evaluate(() => { const T = window._T, B = G.ban[0]; T.nap = 1; T.napDay = 0; for (let i = 0; i < 3; i++) { chupTruoc(); capNhat(BUOC); } window._r = [SKILLS.leviathan.chuDong(G, B, T), G.hu.map(o => o.k).join(',')]; });
