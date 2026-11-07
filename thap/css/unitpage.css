@@ -75,8 +75,8 @@
 
 /* THỬ BẮN — monitor */
 .up-tv { position: relative; padding: 6px; background: #101114; border: 1px solid transparent; }
-.up-tv-khung { --k: .9; position: relative; height: calc(250px * var(--k)); overflow: hidden; background: #1d1f23; }
-.up-ifr { position: absolute; left: 0; top: calc(-196px * var(--k)); width: 430px; height: 860px; border: 0; transform: scale(var(--k)); transform-origin: 0 0; pointer-events: none; }
+.up-tv-khung { --k: .9; position: relative; height: calc(420px * var(--k)); overflow: hidden; background: #1d1f23; }
+.up-ifr { position: absolute; left: 0; top: calc(-112px * var(--k)); width: 430px; height: 860px; border: 0; transform: scale(var(--k)); transform-origin: 0 0; pointer-events: none; }
 .up-tv-khung::after { content: none; }
 .up-tv .g { position: absolute; width: 14px; height: 14px; border: 2px solid transparent; z-index: 2; pointer-events: none; }
 .up-tv .tl { left: 2px; top: 2px; border-right: 0; border-bottom: 0; } .up-tv .tr { right: 2px; top: 2px; border-left: 0; border-bottom: 0; }
