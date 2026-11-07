@@ -59,7 +59,7 @@ const UI = {
         alpha = tichLuy / BUOC;
         FX.giam = (k > 1 ? 1 / Math.sqrt(k) : 1) * (typeof TKP !== 'undefined' && TKP.on() ? 0.5 : 1); // tiết kiệm pin: nửa số hạt
         FX.capNhat(thuc * (k > 1 ? Math.sqrt(k) : 1)); // hiệu ứng theo thời gian thực (nhanh lên êm khi tăng tốc)
-      }
+      } else if (FX.chop > 0) FX.chop = Math.max(0, FX.chop - thuc * 2.6); // rà VFX 07/11: bàn đứng (tạm dừng / TAI.doi giải mã ảnh sau chiêu lớn) → chớp màn vẫn tắt, không đọng lớp phủ màu cả màn
       if (!TAI.cho) REN.ve(G.dung || TAI.doi ? 0 : thuc, alpha); // đang tải: không vẽ (không bao giờ lộ hình thiếu ảnh); TAI.doi: vẽ bàn đứng yên
       if (G.ban.length && (this._hud = !this._hud || khoang > 20)) this.capNhat(); // HUD (DOM) 30 lần/giây là đủ, đỡ dựng lại bố cục
       REN._viec = performance.now() - t0v; // thời gian JS thật của khung (REN.doKhung: phân biệt máy bận với trần 30/60 Hz)

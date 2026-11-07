@@ -279,8 +279,10 @@ SKILLS.mortar = { // Súng Cối (Nade): bắn quái ngẫu nhiên, đạn vòng
     const dmg = dmgU(T), cum = T.banLan % 3 === 0; // mỗi phát thứ 3: đạn CHÙM (cơ chế mới so với Pháo Nổ)
     banDan({ img: 'dan_phao', x, y, muc: E, px: E.x, py: E.y, sp: 190, co: cum ? 26 : 22, cong: 90, B, T, duoi: true, nho: true,
       trung(G, d) {
-        noLan(d.x, d.y, 46, dmg, B); FX.no('no_phao', d.x, d.y, 46 * 2.5, 0.5); FX.bui(d.x, d.y, 6, 10); FX.lac(3); SND.no(0.4);
-        if (cum) for (let i = 0; i < 3; i++) { const a = i * 2.09 + Math.random(), px = d.x + Math.cos(a) * 30, py = d.y + Math.sin(a) * 30; noLan(px, py, 26, dmg * 0.45, B, { phu: true }); FX.no('no_phao', px, py, 60, 0.35); }
+        const chum = cum && typeof VXM !== 'undefined' && VXM.co('fx_mortar_chum'); // rà VFX 07/11: đạn chùm = 1 dải nổ chùm 5 cánh ChatGPT (thay 4 ảnh nổ rời)
+        noLan(d.x, d.y, 46, dmg, B); if (!chum) FX.no('no_phao', d.x, d.y, 46 * 2.5, 0.5); FX.bui(d.x, d.y, 6, 10); FX.lac(3); SND.no(0.4);
+        if (cum) G.hu.push({ k: 'vxmPhat', t: 0, song: 0.6, ten: 'fx_mortar_chum', x: d.x, y: d.y, w: 132 });
+        if (cum) for (let i = 0; i < 3; i++) { const a = i * 2.09 + Math.random(), px = d.x + Math.cos(a) * 30, py = d.y + Math.sin(a) * 30; noLan(px, py, 26, dmg * 0.45, B, { phu: true }); if (!chum) FX.no('no_phao', px, py, 60, 0.35); }
       } });
     if (cum) nhanU(T, 'CLUSTER', '#ffb35a');
   },
@@ -529,7 +531,7 @@ HU.vetinh = { // tia bắn phá từ đỉnh màn hình
     if (!o.E.chet) { o.x = o.E.x; o.y = o.E.y; }
     if (!o.da && o.t > 0.16) {
       o.da = true; noLan(o.x, o.y, o.r || 30, o.dmg, o.B, { mau: '#9fe6ff' });
-      FX.no('dien', o.x, o.y, 70, 0.35); FX.no('no_phao', o.x, o.y, 60, 0.4); if (!o.vang || TVX.duocLac && TVX.duocLac(0.5)) FX.lac(2);
+      if (!(typeof VXM !== 'undefined' && VXM.co('fx_orbital_bomno'))) { FX.no('dien', o.x, o.y, 70, 0.35); FX.no('no_phao', o.x, o.y, 60, 0.4); } if (!o.vang || TVX.duocLac && TVX.duocLac(0.5)) FX.lac(2); // có dải nổ quỹ đạo (vfxmoi.js) → không chồng 2 ảnh nổ cũ
     }
   },
   ve(ctx, o, R) {

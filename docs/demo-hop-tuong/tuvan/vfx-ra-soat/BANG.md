@@ -42,7 +42,7 @@ tải nặng/GC; cần đo lại trên máy rảnh trước khi kết luận gi�
 | Ảnh | Dùng cho | Cách gắn đề xuất |
 |---|---|---|
 | `raw_fx_cuuvi_hoho.png` (6 khung) | Nine-Tail: hoả hồ thay chong chóng nâu | thay sprite `hoHoa`, cỡ 18–24% ô; bỏ vòng vàng kín ô → 9 icon đuôi nhỏ |
-| `raw_fx_orbital_no.png` (6 khung) | Orbital: nổ khi bom rơi | đặt ở điểm rơi đúng lúc trừ máu, 55–65% ô; vòng thức tỉnh to → chỉ chớp 250 ms đầu |
+| `raw_fx_orbital_bomno.png` (6 khung) | Orbital: nổ khi bom rơi | đặt ở điểm rơi đúng lúc trừ máu, 55–65% ô; vòng thức tỉnh to → chỉ chớp 250 ms đầu |
 | `raw_fx_min_mo.png` (6 khung, đèn nháy) | Mine Layer: mìn chờ thay hình "nổ đứng yên" | lặp 600–800 ms dưới chân quái; khi nổ mới dùng ảnh nổ |
 | `raw_fx_mortar_chum.png` (6 khung) | Mortar CLUSTER: nổ chùm 5 tia | phát ở điểm rơi viên đạn thứ 3 |
 | `raw_fx_drone_bom.png` (6 khung) | Drone Bay: drone bom rõ hơn | 25–30% ô, xoay theo hướng bay |
@@ -53,3 +53,17 @@ tải nặng/GC; cần đo lại trên máy rảnh trước khi kết luận gi�
 3. **Wyrm DRAGON DIVE**: muốn rồng thật lao dọc đường → cần dải rồng bổ nhào mới + đổi cách vẽ (hiện là tia).
 4. **Ember Relay / Lighthouse / Leviathan / Wall / Time Bomb**: các đề xuất hình phụ trong `CHATGPT.md` (ngọn lửa nhỏ nhảy tới Relay, cầu sáng to hơn, mặt sóng băng, dải dựng tường, nổ bom to hơn).
 5. **Chỉ huy (Hero/Dahlia/Eve)**: chưa quay được trong cảnh dựng (`CH.dung` từ chối) — làm lượt sau.
+
+## Lượt 2 (07/11, người dùng duyệt 14:24) — đã gắn / đã sửa
+| Mục | Làm gì | GIF trước/sau |
+|---|---|---|
+| Nine-Tail | lửa cáo `fx_cuuvi_hoho` (26 px, mũi lửa kéo sau hướng bay) thay cầu sáng tròn | `TRUOC-SAU-ninetail.gif` |
+| Orbital | nổ `fx_orbital_bomno` (≈ 2,7 × bán kính nổ) đúng lúc bom trừ máu (0,16 s); bỏ 2 ảnh nổ cũ chồng; vạch rơi tắt nhanh | `TRUOC-SAU-orbital.gif` |
+| Mine Layer | mìn chờ đèn nháy `fx_min_mo` lặp 0,75 s (mìn sao: to hơn + quầng vàng) | `TRUOC-SAU-mine.gif` |
+| Mortar CLUSTER | 1 dải nổ chùm 5 cánh `fx_mortar_chum` (132 px) thay 4 ảnh nổ rời | `TRUOC-SAU-mortar-chum.gif` |
+| Drone Bay | drone bom `fx_drone_bom` 34 px quay theo hướng bay | `TRUOC-SAU-drone.gif` |
+| Wyrm DRAGON DIVE | rồng nhìn từ trên `fx_ronglua_dive` (raw gen mới) lao dọc đường đúng toạ độ trúng, vẽ trên lớp nổ; bỏ đầu rồng 1,7 ô + luồng kẻ từ ụ | `TRUOC-SAU-dragondive.gif` |
+| Fusion Archive | 3 xung lúc ụ mới lộ ra 0,47 / 0,72 / 0,97 s (trước 0 / 0,125 / 0,25 s do `o.t` cộng 2 lần); tổng sát thương giữ nguyên | `TRUOC-SAU-archive.gif` |
+| Hive Queen SWARM | mục tiêu chết giữa đường → bám quái gần chỗ đó nhất (trước: quái đầu đường, bay ngang bàn) | `TRUOC-SAU-swarm.gif` |
+| Overlord phủ màu | nguồn: `FX.chop` (chớp màn) chỉ giảm khi mô phỏng chạy → tạm dừng / TAI.doi (giải mã ảnh sau chiêu) đọng lớp phủ cả màn; nay tắt theo thời gian thực (`js/ui.js`). Kiểm: tạm dừng + chớp 0,1 → sau 0,8 s trước 0,1 / nay 0. Cảnh dựng lượt 1 không gọi `FX.capNhat` nên phủ màu + nổ FX đứng yên là do cách quay (lượt 2 đã gọi) | — |
+Ảnh trận: `tran-844x390-*.jpg`, `tran-390x844-*.jpg`.
