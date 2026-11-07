@@ -68,14 +68,15 @@ const BVX = {
     if (VX.t !== this._tf) { this._tf = VX.t; this._nTruoc = this._n; this._n = 0; } // đếm ụ có hào quang ở khung trước
     this._n++;
     const lim = this._nTruoc > 8 ? 1 : 2; // bàn đông (>8 ụ có buff): mỗi ụ chỉ 1 hào quang mạnh nhất → gọn mắt + giữ fps
-    const px = S * 1.4;
+    const px = S * 1.4, xem = uDangXem(T);
     ctx.save(); ctx.globalCompositeOperation = 'source-over';
     for (let i = Math.min(lim, dsV.length) - 1; i >= 0; i--) { // hào quang thứ 2 to hơn, mờ hơn (vòng ngoài); mạnh nhất ở trong, rõ màu
       const k = dsV[i], co = px * (i ? 1.12 : 1), dai = R.coDai(typeof DOTPHA !== 'undefined' ? DOTPHA.tenT(this.LOAI[k].anh, T) : this.LOAI[k].anh, co); if (!dai) continue; // ĐỘT PHÁ: hào quang lọc màu theo bậc (vàng/lam/tím/cầu vồng) // dải đã thu đúng cỡ vẽ → vẽ 1:1
       const n = v.s[k] || 0.5, vao = Math.min(1, (VX.t - v.on[k]) / 0.25);
       const f = ((VX.t * 8 + (T.pha || 0) * 3) | 0) % 3, fm = dai.fm, sx = f * (fm + dai.gap);
       const r = co / 2 * (vao < 1 ? 0.7 + 0.3 * vao : 1);
-      ctx.globalAlpha = al * vao * (0.62 + 0.38 * n) * (i ? 0.7 : 1); // độ mạnh buff → độ đậm; màu thật của ảnh (không cộng sáng → không bạc trắng)
+      const lu = VX.t - v.on[k], diu = xem ? 1 : lu < 1.5 ? 1 : Math.max(0.2, 1 - (lu - 1.5) / 0.5 * 0.8); // chống rối (claude/chong-roi): sau ~1,5 s dịu về ~20% (đang chạm xem ụ → đủ sáng)
+      ctx.globalAlpha = al * vao * diu * (0.62 + 0.38 * n) * (i ? 0.7 : 1); // độ mạnh buff → độ đậm; màu thật của ảnh (không cộng sáng → không bạc trắng)
       ctx.drawImage(dai, sx, 0, fm, fm, -r, -r, r * 2, r * 2);
     }
     ctx.restore(); ctx.globalAlpha = al;

@@ -3224,3 +3224,10 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 ## claude/demo-hop-tuong — sửa 2 lỗi cộng hưởng (07/11)
 - Vua Ghép VÀNG kéo lên Vua Ghép giờ +2★ (trước chỉ +1★ — luật MK+MK đè luật vàng). Vua Ghép thường kéo lên Vua Ghép vẫn +1★.
 - Hộp Bí Ẩn và Hộp Tiến Hoá (thẻ ghi "Does not shoot") không còn "chọc" gây sát thương (growfx chocU). Thêm `tools/thap-kt-khong-ban.js` vào hồi quy: mọi ụ thẻ ghi không bắn phải gây 0 sát thương.
+
+## claude/chong-roi — Chống rối hiệu ứng khi 15 ụ cùng bắn
+- Gộp nổ trúng trùng tâm (`fx.js FX.no`): cùng loại, < 0,3 ô, < 80 ms → phóng vụ cũ 1 bậc +25% thay vì đẻ dải mới; chớp nòng / nổ lớn / trùm giữ nguyên.
+- Gộp số sát thương trùng chỗ trong 150 ms thành 1 số cộng dồn (`FX.chu1`).
+- Vòng nạp chiêu < 70% mờ 25% (trừ ụ đang chạm xem) — `fxu.js PX.vongHoi`; hào quang buff dịu về 20% sau 1,5 s (`buffvfx.js`).
+- Hố Đen vẽ dưới quái, đĩa/mở màn ≤ 50% đục, hố trùng tâm chỉ vẽ 1 lần (`render.js`, `vfxp2.js`, `sigfx.js`).
+- Chỉ đổi hình (không đổi luật, không thêm Math.random). Số đo trước/sau: `docs/demo-hop-tuong/tuvan/vfx15/sau/SAU.md`; công cụ `tools/thap-kt-15u.js` (thêm biến OUT).
