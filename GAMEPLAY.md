@@ -3193,3 +3193,5 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - Tool mới `tools/thap-kt-nhandien.js` + `tools/thap-nhandien-bang.py`: vẽ 93 ụ bằng `REN.veU` ở cỡ ô thật iPhone (46,5 px CSS), xuất bảng màu / xám / xám 1× và chấm cặp dễ nhầm. `BE=rieng` thử thay bệ chung bằng bệ riêng `<id>_de.png` (chỉ trong trang chụp).
 - Kết quả: bệ chung làm cả 93 ụ cùng hình bóng (IoU cả ô 0,98); 1.553 cặp điểm ≥ 0,80. Bệ riêng có sẵn → 865 cặp (−44%).
 - Đề xuất + prompt gen 6 ụ mẫu (Cannon, Gatling, Tesla, Frost, Radar, Black Hole) kiểu module: `docs/demo-hop-tuong/tuvan/nhandien/DE-XUAT.md`. Không sửa code game.
+- (cùng nhánh) Prompt gen 7 ụ mẫu tách thành 7 lượt ChatGPT độc lập: `docs/demo-hop-tuong/tuvan/nhandien/prompt/`.
+- Tool `tools/thap-kt-15u.js` kiểm độ rối "15 ụ cùng bắn" (V3 XXVII A/B): cả 3 trần hiệu ứng (90 dải nổ / 320 hạt / 48 chữ) bị chạm liên tục; nổ và chữ sát thương chồng một chỗ; 8–9 vòng nạp sáng cùng lúc. Đề xuất sửa: `docs/demo-hop-tuong/tuvan/vfx15/SO-LIEU.md` (chưa sửa code game).

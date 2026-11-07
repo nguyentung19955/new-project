@@ -1,0 +1,126 @@
+{
+ "A": {
+  "ten": "15 Liên Thanh bắn nhanh",
+  "khung": [
+   {
+    "ms": 8,
+    "anim": 90,
+    "hat": 320,
+    "chu": 48,
+    "quai": 29
+   },
+   {
+    "ms": 4.4,
+    "anim": 90,
+    "hat": 320,
+    "chu": 48,
+    "quai": 29
+   },
+   {
+    "ms": 4.1,
+    "anim": 90,
+    "hat": 320,
+    "chu": 48,
+    "quai": 30
+   },
+   {
+    "ms": 20.2,
+    "anim": 90,
+    "hat": 320,
+    "chu": 48,
+    "quai": 31
+   },
+   {
+    "ms": 4.3,
+    "anim": 90,
+    "hat": 320,
+    "chu": 48,
+    "quai": 31
+   },
+   {
+    "ms": 5.8,
+    "anim": 90,
+    "hat": 320,
+    "chu": 48,
+    "quai": 32
+   },
+   {
+    "ms": 5.8,
+    "anim": 90,
+    "hat": 320,
+    "chu": 48,
+    "quai": 32
+   },
+   {
+    "ms": 5.5,
+    "anim": 90,
+    "hat": 320,
+    "chu": 48,
+    "quai": 33
+   }
+  ],
+  "loiTrang": []
+ },
+ "B": {
+  "ten": "Tesla + Laser + Hố Đen + Độc + Băng",
+  "khung": [
+   {
+    "ms": 5.3,
+    "anim": 57,
+    "hat": 320,
+    "chu": 34,
+    "quai": 29
+   },
+   {
+    "ms": 4,
+    "anim": 61,
+    "hat": 320,
+    "chu": 38,
+    "quai": 29
+   },
+   {
+    "ms": 7.6,
+    "anim": 71,
+    "hat": 320,
+    "chu": 41,
+    "quai": 30
+   },
+   {
+    "ms": 18.9,
+    "anim": 75,
+    "hat": 320,
+    "chu": 43,
+    "quai": 31
+   },
+   {
+    "ms": 6.2,
+    "anim": 90,
+    "hat": 320,
+    "chu": 47,
+    "quai": 31
+   },
+   {
+    "ms": 3.1,
+    "anim": 90,
+    "hat": 320,
+    "chu": 48,
+    "quai": 32
+   },
+   {
+    "ms": 4.5,
+    "anim": 90,
+    "hat": 320,
+    "chu": 48,
+    "quai": 32
+   },
+   {
+    "ms": 4,
+    "anim": 90,
+    "hat": 320,
+    "chu": 48,
+    "quai": 33
+   }
+  ],
+  "loiTrang": []
+ }
+}
