@@ -114,7 +114,7 @@ SIG.PHAT = {
     this.them('roi', 1e9, { o, E: o.E, ngan: this.ngan(o.T) && !phu, phu });
   },
   rewind(o) { this.them('rewind', 1.25, { o, T: o.T, ngan: this.ngan(o.T), keo: o.keo.slice(0, 6).map(q => ({ E: q.E, s0: q.s0, s1: q.s1, p: q.E.p })) }); },
-  hoden(o) { this.them('hoden', 1e9, { o, x: o.x, y: o.y, r: o.r, ngan: this.ngan(o.T) }); },
+  hoden(o) { if (this.ds.some(m => m.k === 'hoden' && !m.tNo && m.t < 0.3 && Math.abs(m.x - o.x) < o.r * 0.3 && Math.abs(m.y - o.y) < o.r * 0.3)) return; this.them('hoden', 1e9, { o, x: o.x, y: o.y, r: o.r, ngan: this.ngan(o.T) }); }, // chống rối: nhiều hố trùng tâm cùng lúc chỉ 1 bộ hình mở màn
   rongBo(o) { const c = this.o(o.T); this.them('rong', 1e9, { o, T: o.T, cx: c.x, cy: c.y, ngan: this.ngan(o.T) }); },
   thoThuy(o) { this.them('tho', 1e9, { o, T: o.T, p: o.p, ngan: this.ngan(o.T) }); },
   hydraTia(o) {
@@ -253,10 +253,11 @@ SIG.K = {
     ve(ctx, m) {
       const t = m.t, r = m.r, s0 = m.ngan ? 0.3 : 0;
       if (!m.tNo || t - m.tNo < 0) {
-        if (!m.ngan) { const fs = this.f(t, 0, 0.32, 5); if (fs >= 0) this.k(ctx, 'sig_m01_shards', fs, m.x, m.y, r * 2.5 * (1.15 - 0.15 * t / 0.32)); }
-        const fl = this.f(t, 0.26 - s0, 0.66 - s0, 9); if (fl >= 0 || (t >= 0.66 - s0 && t < 0.82 - s0)) this.k(ctx, 'sig_m01_lens', fl < 0 ? 8 : fl, m.x, m.y, r * 2.1, { a: this.mo(t, Math.max(0, 0.26 - s0), 0.82 - s0, 0.05, 0.16) * 0.88 });
+        // chống rối (claude/chong-roi): mảnh/mống mắt/xoáy mở màn ≤ 50% đục → không che đường và quái (nén nổ/nhả giữ nguyên)
+        if (!m.ngan) { const fs = this.f(t, 0, 0.32, 5); if (fs >= 0) this.k(ctx, 'sig_m01_shards', fs, m.x, m.y, r * 2.5 * (1.15 - 0.15 * t / 0.32), { a: 0.5 }); }
+        const fl = this.f(t, 0.26 - s0, 0.66 - s0, 9); if (fl >= 0 || (t >= 0.66 - s0 && t < 0.82 - s0)) this.k(ctx, 'sig_m01_lens', fl < 0 ? 8 : fl, m.x, m.y, r * 2.1, { a: this.mo(t, Math.max(0, 0.26 - s0), 0.82 - s0, 0.05, 0.16) * 0.5 });
         // xoáy chồng nhẹ lên đĩa gốc trong 0.6–1.05 s (quái bị hút)
-        const fw = this.f(t, 0.62 - s0, 1.08 - s0, 8); if (fw >= 0) this.k(ctx, 'sig_m01_swirl', fw, m.x, m.y, r * 2.3, { g: -t * 2, a: this.mo(t, 0.62 - s0, 1.08 - s0, 0.08, 0.2) * 0.9 });
+        const fw = this.f(t, 0.62 - s0, 1.08 - s0, 8); if (fw >= 0) this.k(ctx, 'sig_m01_swirl', fw, m.x, m.y, r * 2.3, { g: -t * 2, a: this.mo(t, 0.62 - s0, 1.08 - s0, 0.08, 0.2) * 0.5 });
       }
       if (m.tNo) {
         const u = m.t - m.tNo;

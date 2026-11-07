@@ -3227,6 +3227,12 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - Cắt lại 9 id (`tools/thap-cat-umod.py`), đo nhận diện → `docs/demo-hop-tuong/tuvan/nhandien/game-93-v3/`: cặp ≥ 0,80: 186 → 155; baotuyet↔taylo 0,92 → 0,81, ngoisao↔nguyenrua 0,90 → 0,82. Cặp sát nhất giờ tron↔santhuong 0,90, tron↔thanhdia 0,89, nangluong↔ngoisao 0,89 (chỉ số bóng mờ; nhìn mắt thường khác hẳn: sao xanh vs viên nang vàng). Ảnh bàn 93 ụ: BAN-390x844.png, BAN-844x390.png (xoá FX giữa các bàn).
 - Test: thap-kt-khong-ban 25/25, thap-kt-mau 116 mục khớp.
 
+## claude/trum-quai-moi — thap: gắn 12 trùm + 6 quái "không tay chân" (07/11)
+- Ảnh mới (người dùng duyệt GIF `tuvan/trum-moi`, `tuvan/quai-moi`): trùm/quái là VẬT THỂ không tay chân (slime vương miện, khối băng, hộp đá Janus, hộp hề, mắt ác mộng, hoa lửa, tổ ong, mìn gai, lăng kính, lõi đôi, bánh răng, ốc sao; quái: slime, mắt dơi, tinh thể bay, đá lăn, chùm slime, bọc trứng).
+- Cắt bằng `tools/thap-cat-trum2.py` (loang nền từ viền ô, không khoá magenta toàn cục; khử ánh hồng; bỏ đốm lẻ; Lanczos nhân-trước-alpha ≤ 3× cỡ hiển thị). Ra: `trum_<id>_8` (đi), `trum_<id>_atk_16` (tung chiêu 8 khung, ô ×1.5 để hiệu ứng không bị cắt, Janus dùng `chieu_v2`), `trum_<id>_portrait` (băng giới thiệu), `quai_<id>_8`; dải 4 khung dự phòng cho 6 trùm cũ + quái.
+- Không còn hướng nhìn: xoá các dải `_side_8` / `_back_8`; `quaianim.js` HUONG_CHUNG = 1 dải cho mọi hướng, không lật (chữ/mặt không bị soi gương); `trum.js` TRUM_ATK + TRUM_CHANDUNG đủ 12 trùm, TRUM_HUONG rỗng; dải chiêu chỉ làm nóng trùm sắp ra (nongskill.js), không nạp cả 12. K8 đo lại để thân to ~như cũ. Gameplay không đổi.
+- `tools/thap-kt-huong.js`: vật thể HUONG_CHUNG không xin dải hướng (tránh 404).
+- Kiểm: thap-kt-huong (solo) XANH — 12 trùm nhìn bàn khi chiêu, 0 404, fps 58; thap-kt-trum-don solo XANH 264 tình huống; chụp 844×390 + 390×844 xem tận mắt.
 ## claude/demo-hop-tuong — sửa màn tải đứng ở 20% (07/11)
 - `thap/js/taitai.js`: trọng số mỗi file khi tính % tải bị chặn ở 350 KB (ảnh nền lớn không còn "nuốt" thanh tiến độ); vạch tải trận chỉ tạo sau khi khởi động xong, menu luôn cập nhật vạch. Đo mạng 4G giả lập: % tăng đều 20→60% trong 30 s thay vì đứng yên ở 20%.
 
@@ -3254,6 +3260,19 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - Vua Ghép VÀNG kéo lên Vua Ghép giờ +2★ (trước chỉ +1★ — luật MK+MK đè luật vàng). Vua Ghép thường kéo lên Vua Ghép vẫn +1★.
 - Hộp Bí Ẩn và Hộp Tiến Hoá (thẻ ghi "Does not shoot") không còn "chọc" gây sát thương (growfx chocU). Thêm `tools/thap-kt-khong-ban.js` vào hồi quy: mọi ụ thẻ ghi không bắn phải gây 0 sát thương.
 
+## claude/chong-roi — Chống rối hiệu ứng khi 15 ụ cùng bắn
+- Gộp nổ trúng trùng tâm (`fx.js FX.no`): cùng loại, < 0,3 ô, < 80 ms → phóng vụ cũ 1 bậc +25% thay vì đẻ dải mới; chớp nòng / nổ lớn / trùm giữ nguyên.
+- Gộp số sát thương trùng chỗ trong 150 ms thành 1 số cộng dồn (`FX.chu1`).
+- Vòng nạp chiêu < 70% mờ 25% (trừ ụ đang chạm xem) — `fxu.js PX.vongHoi`; hào quang buff dịu về 20% sau 1,5 s (`buffvfx.js`).
+- Hố Đen vẽ dưới quái, đĩa/mở màn ≤ 50% đục, hố trùng tâm chỉ vẽ 1 lần (`render.js`, `vfxp2.js`, `sigfx.js`).
+- Chỉ đổi hình (không đổi luật, không thêm Math.random). Số đo trước/sau: `docs/demo-hop-tuong/tuvan/vfx15/sau/SAU.md`; công cụ `tools/thap-kt-15u.js` (thêm biến OUT).
+
+## claude/gop-0711 — gộp chong-roi + trum-quai-moi; hào quang "tăng 1 lần" chỉ loé rồi tắt (07/11 13:15)
+- Luật người dùng: TĂNG sát thương / tốc / chí mạng kiểu 1 lần (thêm cộng dồn, thưởng vĩnh viễn như Ép Xung, tăng 1 lần) → hào quang chỉ LOÉ ~0,35 s rồi mờ hẳn về 0 ở ~0,9 s (không đọng, không giữ 20%); mỗi lần tăng thêm thì loé lại. Ụ vừa đặt / vào trận đã có sẵn cộng dồn: không loé.
+- BUFF THẬT có thời hạn / điều kiện (RAGE ×2, khiên, chậm chạm, hành quyết, buff từ ụ hỗ trợ KỀ, sát thương có điều kiện, Aurora, tăng tốc tạm thời, Berserker cuồng nộ) → vẫn hiện suốt thời gian còn hiệu lực, dịu về ~20% sau 1,5 s như chong-roi (chạm xem ụ → đủ sáng).
+- Cách phân: `BVX.doManh` tính thêm phần "bền" `out.p` (nguồn từ ụ khác trong `T.nguon` + dkHien/aurora + tocT/cuongT/rage); `capNhat` đánh dấu `ben/tang` từng loại; `ve` bỏ loại "tăng 1 lần" đã hết loé. Vòng màu bậc ĐỘT PHÁ ở ụ cộng dồn giữ nguyên.
+- Ảnh trước/sau 844×390 (0,3 s và 3 s sau khi Ép Xung 10 ụ, Radar ở giữa buff 4 ụ kề): `docs/demo-hop-tuong/tuvan/loe-0711/truoc-sau-844x390.jpg`.
+- Kèm: đánh dấu `vetay-ok` dòng lọc màu vòng mảnh (vangmoi1.js DOTPHA.tenVong) — thap-kt-vetay báo trượt từ 99cf82e8.
 ## claude/demo-hop-tuong — rà lỗi cộng hưởng luật (07/11)
 - Test mới `tools/thap-kt-cong-huong-luat.js` (339 cặp, trong thap-kt-hoiquy.js): ghép đặc biệt × đá/băng/vàng/thức tỉnh/7★/bản sao × mọi ụ; kỹ năng khi ghép chạy đúng 1 lần (0 lần khi đá+đá / ghép đặc biệt) ở SOLO/PVP/CO-OP; RAGE ×2 và bản sao −% trên đòn của mọi ụ; bộ đếm × ghép / mất sao; chiêu trùm × khiên / Mirror / Holy Shield / Halo; PVP Holy Shield × hiệu ứng ghép đối thủ; 26 ca từ ChatGPT.
 - Sửa 4 lỗi: RAGE ×2 nay áp lên bom Drone và nổ Blood Circuit; Fusion Archive chỉ đếm ghép thật (Teleporter đổi chỗ qua lại từng nuôi vô hạn; Copycat/Overclock/Forge cũng không tính); Holy Shield chặn cả +mana triệu hồi của Signal Jammer.
