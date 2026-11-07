@@ -189,9 +189,12 @@ SKILLS.hydra = {
       const c = tamU(T); if (Math.abs(gocLech(T.goc, Math.atan2(E.y - c.y, E.x - c.x))) > 0.15) return true;
       T.nap = 0; T.banLan++; giat(T, 2.4); const [x, y] = chopNong(T, 44);
       const x1 = x + Math.cos(T.goc) * 720, y1 = y + Math.sin(T.goc) * 720, dmg = dmgU(T) * 6;
-      for (const Q of quaiTrenDoan(B, x, y, x1, y1, 18)) trung(Q, dmg, { B, mau: '#2ee89a' });
-      G.hu.push({ k: 'hydraTia', t: 0, song: 0.45, x0: x, y0: y, x1, y1 });
-      FX.lac(4); FX.sang(0.15, '#2ee89a'); SND.rail();
+      const dsT = quaiTrenDoan(B, x, y, x1, y1, 18); let xa = 0;
+      for (const Q of dsT) { trung(Q, dmg, { B, mau: '#2ee89a' }); xa = Math.max(xa, (Q.x - x) * Math.cos(T.goc) + (Q.y - y) * Math.sin(T.goc)); }
+      // hình: tia dừng sau quái xa nhất bị xuyên 40 px (luật vẫn xuyên 720 px) — không kẻ tới mép màn; bỏ phủ xanh toàn màn (rà VFX 07/11)
+      const L = dsT.length ? Math.min(720, xa + 40) : 720;
+      G.hu.push({ k: 'hydraTia', t: 0, song: 0.45, x0: x, y0: y, x1: x + Math.cos(T.goc) * L, y1: y + Math.sin(T.goc) * L });
+      FX.lac(4); SND.rail();
       if (T.banLan % 4 === 1) nhanU(T, 'FUSED BEAM', '#2ee89a');
     }
     return true;

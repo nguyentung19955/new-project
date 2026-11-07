@@ -3241,3 +3241,8 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - Màn XÂY BỘ BÀI (js/dkkeo.js): cảm ứng trên thẻ lưới xê dịch > 8 px trước khi giữ đủ = CUỘN (mọi hướng — trước: đi ngang > 8 px hoặc giữ 150 ms = kéo); kéo chỉ khi giữ yên 280 ms hoặc kéo thẳng lên khỏi mép trên lưới; chuột vẫn kéo ngay. Giữ yên để mở trang chi tiết 400 → 550 ms (dkcham.js) để kịp bắt đầu kéo sau 280 ms. Bộ sưu tập (cuộn gốc) không đổi.
 - Test mới `tools/thap-kt-vuot-deck.js` (cảm ứng CDP 390×844 + chuột 1280×800). Ảnh trước/sau: `docs/demo-hop-tuong/tuvan/the-tran/`.
 - 13:30 áp luật người dùng chốt (CAN-HOI 1B 3B 6B 7B 8B 10B): Mimic + Scrap Forge = ghép thường; khiên ụ chặn cả +mana Signal Jammer; Mirror phản bị khiên / Holy Shield đối thủ chặn (không dây chuyền); ụ đá/băng không nhận trạng thái xấu mới nhưng vẫn mất sao khi bị hạ sao; REINFORCE bỏ ụ băng; ô băng không nhận buff hỗ trợ. Test 361 cặp.
+
+## claude/demo-hop-tuong — rà soát VFX triệu hồi/đạn/chủ động (07/11)
+- Quay 16 hiệu ứng trong trận 844×390 + đo ms/khung + độ "bật" ảnh; bảng `docs/demo-hop-tuong/tuvan/vfx-ra-soat/BANG.md`, tư vấn ChatGPT `CHATGPT.md`.
+- Sửa hình (luật giữ nguyên): Overlord bỏ chớp trắng toàn màn + rung vừa; Hydra 7★ tia dừng sau quái xa nhất bị xuyên, bỏ phủ xanh toàn màn; Black Hole bỏ phủ tím toàn màn; đạn Mortar nhỏ lại (trước to hơn ụ).
+- Gen sẵn 5 dải ảnh (hoả hồ Nine-Tail, nổ Orbital, mìn chờ, nổ chùm Mortar, drone bom) — chưa gắn, chờ duyệt cùng danh sách việc đụng nhịp luật.
