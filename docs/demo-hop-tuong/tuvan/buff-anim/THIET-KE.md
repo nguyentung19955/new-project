@@ -6,7 +6,9 @@ Người dùng: *"hiệu ứng tăng dame, tăng tốc đánh và giảm tốc �
 Lượt này CHỈ chuẩn bị (không mở trình duyệt, không sửa code game). Ảnh tham chiếu: `ref/`.
 Tuân `thap/QUY-TAC-HINH.md`: mọi hình từ PNG ChatGPT; code chỉ dời / phóng / xoay / mờ / chọn khung.
 
-> Ghi chú nguồn: `docs/demo-hop-tuong/tuvan/vfx15/SO-LIEU.md` và `docs/demo-hop-tuong/tuvan/nhandien/DE-XUAT.md` **không có** trên nhánh `claude/demo-hop-tuong` (đã fetch origin, 07/11). Quy tắc chống rối dưới đây lấy theo đề bài giao: *không để ~30 hào quang lặp thường trực — bùng khi nhận, sau đó lặp mờ/nhẹ; trạng thái xấu nhẹ, kiểu icon/viền*. Khi 2 file đó về, đối chiếu lại mục 4.
+> Đối chiếu (07/11, nhánh `claude/kiem-nhan-dien`):
+> - `tuvan/vfx15/SO-LIEU.md` — kiểm "15 ụ cùng bắn": trần dải nổ 90/90, hạt 320/320, chữ nổi 48/48 bị chạm liên tục; 8–9 vòng nạp xanh sáng cùng lúc gây rối. Đề xuất **c2: hào quang buff bùng khi nhận rồi mờ về ~20%** → áp vào mục 4 (lặp buff vĩnh viễn alpha 0.2). Hiệu ứng mới **không thêm chữ nổi** (one-shot ±1★ thay chữ, không cộng thêm) và đi qua `VX.ds` riêng, không ăn trần dải nổ `FX.no`.
+> - `tuvan/nhandien/DE-XUAT.md` — ô thật 46,5 px CSS = 140 px điểm ảnh (iPhone 13); màu đang gánh nhận diện ụ, dễ mất khi dồn hiệu ứng / mù màu → hiệu ứng buff phải **phân biệt bằng hình + chuyển động** (đã theo) và **không che phần đầu ụ** (~45% đường kính bệ → tâm trống 45%, đã theo).
 
 ---
 
@@ -63,18 +65,17 @@ Tuân `thap/QUY-TAC-HINH.md`: mọi hình từ PNG ChatGPT; code chỉ dời / p
 | Mã ảnh | Trạng thái | HÌNH | CHUYỂN ĐỘNG bùng (1–4) | CHUYỂN ĐỘNG lặp (5–8) |
 |---|---|---|---|---|
 | `fxa_dmg` | B2 + sát thương | chữ V (chevron) đỏ-cam có lửa | 3 chevron phóng từ chân ụ lên, nở to, loé | chevron nhỏ trôi lên dần 2 bên rồi tan ở đỉnh |
-| `fxa_toc` | B3 + tốc bắn | mũi tên cong vàng quay quanh ụ | 2 mũi tên quay nửa vòng → cả vòng, càng lúc càng nhanh, vệt mờ dài ra | mũi tên quay đều quanh vòng, vệt tốc độ |
+| `fxa_toc` | B3 + tốc bắn (gồm Overclock) | mũi tên cong vàng quay quanh ụ | 2 mũi tên quay nửa vòng → cả vòng, càng lúc càng nhanh, vệt mờ dài ra | mũi tên quay đều quanh vòng, vệt tốc độ |
 | `fxa_crit` | B4 + chí mạng | sao lấp lánh tím 4 cánh | sao từ ngoài bay HỘI TỤ vào vành, loé chéo | 4 sao lấp lánh lần lượt bật/tắt trên vành |
 | `fxa_khien` | B5 khiên | tấm lục giác vàng kim | các tấm lục giác bay vào ghép thành vòng/bán cầu | ánh sáng quét qua các tấm, vòng đứng yên |
 | `fxa_chet` | B6 giết ngay | lưỡi hái + linh hồn lục | lưỡi hái chém 1 vệt cung quanh ụ | 2 đốm linh hồn lục bay vòng chậm |
 | `fxa_cham` | B7 đòn làm chậm | vành băng + bông tuyết | vành băng đóng từ 1 điểm chạy quanh | bông tuyết trôi CHẬM ra ngoài |
 | `fxa_mana` | B8 sinh mana | tinh thể violet | tinh thể bật lên từ chân, vỡ thành hạt bay lên | (dùng ít) tinh thể nhấp nhô lên xuống |
 | `fxa_max` | B1 RAGE ×2 | lửa vàng-đỏ + 2 chevron đôi | cột lửa bùng lên quanh ụ, 2 chevron đôi vút lên | lửa liếm lên đều quanh vành |
-| `fxa_ocl` | Overclock (epxung vĩnh viễn) | bánh răng vàng-trắng + tia điện | bánh răng quay vụt nhanh, toé tia lửa điện | bánh răng quay đều, tia điện nhỏ chớp |
 | `fxa_saolen` | B9 +1★ | ngôi sao vàng | sao bay từ dưới lên, xoay, loé | sao dừng phía trên, toả 4 tia rồi tan (chỉ phát 1 lần, không lặp) |
 | `fxa_sach` | B10 tẩy sạch | vòng nước trắng-xanh lam + mảnh vụn | sóng sạch toả ra, mảnh tối văng ra ngoài | vòng lấp lánh mờ dần (1 lần) |
-| `fxa_tocxuong` | D5/D6 − tốc bắn | bánh răng/đồng hồ vàng + bùn tím đen nhỏ giọt | bùn đổ xuống bám vào bánh răng, kim đồng hồ khựng lại | bánh răng quay CHẬM DẦN, bùn nhỏ giọt rơi xuống |
-| `fxa_dmgxuong` | D7 − sát thương | chevron đỏ NỨT | chevron đỏ nứt vỡ, chĩa xuống | chevron nứt chìm xuống và mờ |
+| `fxa_tocxuong` | D5/D6 − tốc bắn (thay vòng xích) | bánh răng/đồng hồ vàng + bùn tím đen nhỏ giọt | bùn đổ xuống bám vào bánh răng, kim đồng hồ khựng lại | bánh răng quay CHẬM DẦN, bùn nhỏ giọt rơi xuống |
+| `fxa_dmgxuong` | D7 − sát thương (Sync Cannon) | chevron đỏ NỨT chĩa xuống | chevron đỏ hiện trên vành, nứt vỡ | mảnh chevron rơi xuống, mờ hẳn (**1 lần, không lặp**) |
 | `fxa_cam` | D4 câm | răng cưa nhiễu tím + ổ khoá vỡ tín hiệu | tia nhiễu tím đánh xuống, vạch nhiễu bao quanh | răng cưa nhiễu giật chớp quanh vành (như TV mất sóng) |
 | `fxa_da` | D2 hoá đá | lớp đá xám + vết nứt | vết nứt xám bò từ chân lên, đá bao kín vành | bụi đá rơi lả tả, vết nứt sáng mờ |
 | `fxa_lua` | D3 cháy (sắp −1★) | lưỡi lửa cam + than hồng | lửa bắt từ 1 điểm lan quanh vành | lửa liếm lên, than bay lên, vành đen dần (gợi đếm ngược) |
@@ -100,10 +101,10 @@ Make an image. Game VFX sprite sheet: a 4x2 grid of 8 equal square cells, read l
 
 **A2 · fxa_toc — FIRE RATE UP** · Ref: `ref_fxb_toc.png`, `ref_fxb_dmg.png`
 ```
-Make an image. Game VFX sprite sheet: a 4x2 grid of 8 equal square cells, read left to right, top to bottom. Top-down view. Effect: FIRE RATE UP around an empty center. Frames 1-4 (burst): two curved yellow arrows spin around a golden ring, faster in each frame, with speed trails getting longer, ending in a bright flash. Frames 5-8 (seamless subtle loop): the two yellow arrows keep orbiting the ring at steady high speed with motion streaks (rotate 45 degrees per frame). Keep the middle 45% of every cell completely empty. Same style as the attached image. Solid flat magenta #FF00FF background, no glow haze on the background, crisp edges, no text, no turret.
+Make an image. Game VFX sprite sheet: a 4x2 grid of 8 equal square cells, read left to right, top to bottom. Top-down view. Effect: FIRE RATE UP around an empty center. Frames 1-4 (burst): two curved yellow arrows spin around a golden ring, faster in each frame, with speed trails getting longer, ending in a bright flash. Frames 5-8 (seamless subtle loop): the two yellow arrows keep orbiting the ring at steady high speed with motion streaks and small electric sparks (rotate 45 degrees per frame). Keep the middle 45% of every cell completely empty. Same style as the attached image. Solid flat magenta #FF00FF background, no glow haze on the background, crisp edges, no text, no turret.
 ```
 
-**A3 · fxa_tocxuong — FIRE RATE DOWN** · Ref: `ref_fxb_toc.png`, `ref_vong_xich.png`, `ref_fxb_dmg.png`
+**A3 · fxa_tocxuong — FIRE RATE DOWN (thay vòng xích Kẹp Phá)** · Ref: `ref_fxb_toc.png`, `ref_vong_xich.png`, `ref_fxb_dmg.png`
 ```
 Make an image. Game VFX sprite sheet: a 4x2 grid of 8 equal square cells, read left to right, top to bottom. Top-down view. Effect: FIRE RATE DOWN around an empty center. A yellow cogwheel ring with a small clock hand on top. Frames 1-4 (onset): dark purple-black sludge pours down onto the cogwheel ring and sticks to it; the clock hand jerks and stops. Frames 5-8 (seamless subtle loop): the cogwheel turns very slowly, sludge drips fall downward from the bottom of the ring. Dull, heavy, slowing mood. Keep the middle 45% of every cell completely empty. Same style as the attached image. Solid flat magenta #FF00FF background, no glow haze on the background, crisp edges, no text, no turret.
 ```
@@ -143,49 +144,44 @@ Make an image. Game VFX sprite sheet: a 4x2 grid of 8 equal square cells, read l
 Make an image. Game VFX sprite sheet: a 4x2 grid of 8 equal square cells, read left to right, top to bottom. Top-down view. Effect: ONE-HIT SHIELD around an empty center. Frames 1-4 (burst): golden hexagon plates fly in from outside and snap together into a ring of hex tiles, final frame flashes. Frames 5-8 (seamless subtle loop): the hex ring stays still while a soft highlight sweeps around it, one tile at a time. Translucent gold, only the ring of tiles, the middle is open. Keep the middle 45% of every cell completely empty. Same style as the attached image. Solid flat magenta #FF00FF background, no glow haze on the background, crisp edges, no text, no turret.
 ```
 
-### Đợt B — 9 hiệu ứng bổ sung (P1/P2)
+### Đợt B — 8 hiệu ứng bổ sung (P1/P2)
 
 **B1 · fxa_max — RAGE ×2** · Ref: `ref_fxb_max.png`, `ref_fxb_max_bung.png`
 ```
 Make an image. Game VFX sprite sheet: a 4x2 grid of 8 equal square cells, read left to right, top to bottom. Top-down view. Effect: MAX POWER RAGE around an empty center. Frames 1-4 (burst): a golden-red flame ring erupts upward and two double chevrons (pointing up) blast up from the bottom, big flash. Frames 5-8 (seamless loop): gold and red flames lick steadily upward around the ring, small double chevrons rise and fade. Keep the middle 45% of every cell completely empty. Same style as the attached image. Solid flat magenta #FF00FF background, no glow haze on the background, crisp edges, no text, no turret.
 ```
 
-**B2 · fxa_ocl — OVERCLOCK (permanent fire rate)** · Ref: `ref_fxb_toc.png`
+**B2 · fxa_dmgxuong — DAMAGE DOWN (one-shot, Sync Cannon)** · Ref: `ref_fxb_dmg.png`
 ```
-Make an image. Game VFX sprite sheet: a 4x2 grid of 8 equal square cells, read left to right, top to bottom. Top-down view. Effect: OVERCLOCKED around an empty center. Frames 1-4 (burst): a yellow-white gear ring spins up very fast, electric sparks spray outward. Frames 5-8 (seamless subtle loop): the thin gear ring rotates steadily (one tooth per frame), small white electric arcs flicker at two points. Keep the middle 45% of every cell completely empty. Same style as the attached image. Solid flat magenta #FF00FF background, no glow haze on the background, crisp edges, no text, no turret.
-```
-
-**B3 · fxa_dmgxuong — DAMAGE DOWN** · Ref: `ref_fxb_dmg.png`
-```
-Make an image. Game VFX sprite sheet: a 4x2 grid of 8 equal square cells, read left to right, top to bottom. Top-down view. Effect: DAMAGE DOWN around an empty center. Frames 1-4 (onset): three dull red chevrons pointing DOWN appear at the top of a dim red ring, crack and lose their glow. Frames 5-8 (seamless subtle loop): the cracked dark-red chevrons sink slowly downward along both sides of the ring and fade at the bottom. Weak, drained mood, desaturated. Keep the middle 45% of every cell completely empty. Same style as the attached image. Solid flat magenta #FF00FF background, no glow haze on the background, crisp edges, no text, no turret.
+Make an image. Game VFX sprite sheet: a 4x2 grid of 8 equal square cells, read left to right, top to bottom. Top-down view, one-shot animation. Effect: DAMAGE DOWN. Frames 1-4: three dull red chevrons pointing DOWN appear on a dim red ring around the empty center, then crack apart. Frames 5-8: the cracked dark-red chevron pieces fall downward along both sides of the ring, lose their glow and fade out completely by frame 8. Weak, drained mood, desaturated. Keep the middle 45% of every cell empty. Same style as the attached image. Solid flat magenta #FF00FF background, no glow haze on the background, crisp edges, no text, no turret.
 ```
 
-**B4 · fxa_chet — EXECUTE** · Ref: `ref_fxb_chet.png`
+**B3 · fxa_chet — EXECUTE** · Ref: `ref_fxb_chet.png`
 ```
 Make an image. Game VFX sprite sheet: a 4x2 grid of 8 equal square cells, read left to right, top to bottom. Top-down view. Effect: EXECUTE around an empty center. Frames 1-4 (burst): a ghostly green scythe slashes a curved arc all the way around the ring, leaving a green trail. Frames 5-8 (seamless subtle loop): two small green skull-wisps orbit slowly around the ring. Keep the middle 45% of every cell completely empty. Same style as the attached image. Solid flat magenta #FF00FF background, no glow haze on the background, crisp edges, no text, no turret.
 ```
 
-**B5 · fxa_cham — SLOWING SHOTS** · Ref: `ref_fxb_cham.png`
+**B4 · fxa_cham — SLOWING SHOTS** · Ref: `ref_fxb_cham.png`
 ```
 Make an image. Game VFX sprite sheet: a 4x2 grid of 8 equal square cells, read left to right, top to bottom. Top-down view. Effect: FROST TOUCH around an empty center. Frames 1-4 (burst): icy blue frost forms at one point and crystallizes around the ring, snowflakes pop out. Frames 5-8 (seamless subtle loop): a few snowflakes drift slowly outward from the icy ring and fade. Keep the middle 45% of every cell completely empty. Same style as the attached image. Solid flat magenta #FF00FF background, no glow haze on the background, crisp edges, no text, no turret.
 ```
 
-**B6 · fxa_mana — MANA GAIN** · Ref: `ref_fxb_mana.png`
+**B5 · fxa_mana — MANA GAIN** · Ref: `ref_fxb_mana.png`
 ```
 Make an image. Game VFX sprite sheet: a 4x2 grid of 8 equal square cells, read left to right, top to bottom. Top-down view. Effect: MANA GAIN around an empty center. Frames 1-4 (burst): violet crystals pop up from the bottom of a violet ring and shatter into sparkles flying upward. Frames 5-8 (seamless subtle loop): three small violet crystals bob gently up and down on the ring. Keep the middle 45% of every cell completely empty. Same style as the attached image. Solid flat magenta #FF00FF background, no glow haze on the background, crisp edges, no text, no turret.
 ```
 
-**B7 · fxa_saolen — GAIN 1 STAR (one-shot)** · Ref: `ref_fxb_max.png`
+**B6 · fxa_saolen — GAIN 1 STAR (one-shot)** · Ref: `ref_fxb_max.png`
 ```
 Make an image. Game VFX sprite sheet: a 4x2 grid of 8 equal square cells, read left to right, top to bottom. Top-down view, one-shot animation. Effect: GAIN ONE STAR. Frames 1-4: a shining gold star flies up from the bottom edge along the side of the empty center, spinning and growing. Frames 5-8: the star stops at the top of the cell, bursts into four golden rays and fades out with sparkles. Keep the middle 45% of every cell empty. Same style as the attached image. Solid flat magenta #FF00FF background, no glow haze on the background, crisp edges, no text, no turret.
 ```
 
-**B8 · fxa_sach — CLEANSED (one-shot)** · Ref: `ref_fxb_khien.png`, `ref_fxb_cham.png`
+**B7 · fxa_sach — CLEANSED (one-shot)** · Ref: `ref_fxb_khien.png`, `ref_fxb_cham.png`
 ```
 Make an image. Game VFX sprite sheet: a 4x2 grid of 8 equal square cells, read left to right, top to bottom. Top-down view, one-shot animation. Effect: CLEANSE. Frames 1-4: a white and aqua water ring splashes outward from around the empty center, dark purple debris pieces are pushed away to the edges. Frames 5-8: the clean ring sparkles and fades out completely. Keep the middle 45% of every cell empty. Same style as the attached image. Solid flat magenta #FF00FF background, no glow haze on the background, crisp edges, no text, no turret.
 ```
 
-**B9 · fxa_xao — SCRAMBLED / TRANSFORMED (one-shot)** · Ref: `ref_fxb_crit.png`
+**B8 · fxa_xao — SCRAMBLED / TRANSFORMED (one-shot)** · Ref: `ref_fxb_crit.png`
 ```
 Make an image. Game VFX sprite sheet: a 4x2 grid of 8 equal square cells, read left to right, top to bottom. Top-down view, one-shot animation. Effect: SCRAMBLED. Frames 1-4: a pink-magenta-violet swirl vortex spins inward around the empty center, tightening. Frames 5-8: the swirl flings outward into pink sparkles and fades. Use pink and violet, not pure magenta. Keep the middle 45% of every cell empty. Same style as the attached image. Solid flat magenta #FF00FF background, no glow haze on the background, crisp edges, no text, no turret.
 ```
@@ -201,11 +197,11 @@ Make an image. Game VFX sprite sheet: a 4x2 grid of 8 equal square cells, read l
 **buffvfx.js (sửa nhỏ, giữ đường dự phòng `fxb_*`):**
 1. `LOAI[k].anh2 = 'fxa_<k>'`; có ảnh `fxa_` thì dùng, chưa có thì chạy y như cũ (fxb 3 khung lặp + khung 4 bùng).
 2. Khi `false→true` (đã có sẵn ở `capNhat`, `v.on[k]`): phát khung **0–3 một lần ở 10 fps** (0.4 s, alpha 1, cỡ 1.0) — thay `bung()` bằng khung 4 của fxb.
-3. Sau đó lặp khung **4–7 ở 8 fps**, alpha thấp: buff kề vĩnh viễn (dmg/toc/crit/cham/chet/ocl) **0.35–0.5** theo độ mạnh; buff tạm (`tocT`, max, khien) 0.6–0.8.
+3. Sau đó lặp khung **4–7 ở 8 fps**, alpha thấp (SO-LIEU c2): buff kề vĩnh viễn (dmg/toc/crit/cham/chet) **mờ về ~0.2** sau 1 s (mạnh hơn → tới 0.3); buff tạm (`tocT`, max, khien) 0.4–0.6. **Tốc bắn gồm Overclock**: `toc` mạnh hơn (epxung +65–90%) → alpha cao hơn + lặp nhanh hơn (8 → 12 fps) + cỡ ×1.08; không ảnh riêng.
 4. Mất (true→false): mờ 0.2 s, co 1 → 0.9 (không cần ảnh riêng).
-5. Debuff thêm vào `doManh` bằng khoá mới (`da`, `cam`, `lua`, `tocxuong`=`st.kep>0 || giamT>0` (giamT alpha 0.5), `hex`=`hexT>0`, `dmgxuong` chỉ bùng khi đối thủ vừa có Sync Cannon). Debuff **P0** (`da`, `cam`, `lua`, và `bang` của BANGFX) **luôn chiếm suất 1**, alpha 0.9, và **ẩn mọi hào quang buff** trên ụ đó (ụ không bắn thì buff vô nghĩa).
+5. Debuff thêm vào `doManh` bằng khoá mới (`da`, `cam`, `lua`, `tocxuong`=`st.kep>0 && !st.cam || giamT>0` (giamT alpha 0.5), `hex`=`hexT>0`; `dmgxuong` = **one-shot** trên mọi ụ tấn công bàn đối thủ khi Sync Cannon bắt đầu có hiệu lực (heSoDoiThu từ 1 → <1) hoặc lên mức, không lặp). Debuff **P0** (`da`, `cam`, `lua`, và `bang` của BANGFX) **luôn chiếm suất 1**, alpha 0.9, và **ẩn mọi hào quang buff** trên ụ đó (ụ không bắn thì buff vô nghĩa).
 6. Trần: **tối đa 2/ụ** (giữ nguyên); bàn > 8 ụ có hiệu ứng → 1/ụ (giữ nguyên `lim`).
-7. One-shot (`saolen`, `saoxuong`, `sach`, `xao`, `mana`): chỉ phát 8 khung một lần qua `VX.ds` (`k:'bvx'`), gọi từ `nangSao`/`haSao`/`X.sao±`/`VX.donSach`/`VX.manaRa`/xaotron; thay chữ "−1★" bằng `fxa_saoxuong` (chữ giữ ở CHẾ ĐỘ có REDUCE MOTION).
+7. One-shot (`saolen`, `saoxuong`, `sach`, `xao`, `mana`, `dmgxuong`): chỉ phát 8 khung một lần qua `VX.ds` (`k:'bvx'`), gọi từ `nangSao`/`haSao`/`X.sao±`/`VX.donSach`/`VX.manaRa`/xaotron; thay chữ "−1★" bằng `fxa_saoxuong` (chữ giữ ở CHẾ ĐỘ có REDUCE MOTION).
 8. **LOD:** `CG.doc().fx === 'gon'` (EFFECTS Minimal) → TẮT vòng lặp buff và bùng buff; vẫn giữ debuff P0 (lặp 4 fps) và one-shot ±1★. Balanced → lặp buff alpha × 0.7. REDUCE MOTION (`CG.doc().dong`) → lặp 4 fps.
 9. Đồng bộ mọi chế độ (QUY-TAC-HINH §6): buffvfx.js đã chạy chung SOLO/CO-OP/PVP/ONLINE/Test range qua `VX.duoiDau` — chỉ cần kiểm ảnh từng chế độ.
 
@@ -213,10 +209,9 @@ Make an image. Game VFX sprite sheet: a 4x2 grid of 8 equal square cells, read l
 
 | Ảnh mới | Thay | Ghi chú |
 |---|---|---|
-| fxa_max/dmg/toc/crit/khien/chet/cham/mana | fxb_max/dmg/toc/crit/khien/chet/cham/mana | fxb_* giữ làm dự phòng tới khi fxa_ ổn |
-| fxa_ocl | (đang gộp trong fxb_toc) | tách khi `T.epxung > 0` |
-| fxa_tocxuong | `vong_xich` (st.kep) + chữ CLAMPED/−8% | chữ nổi giữ 1 lần lúc trúng; bỏ vòng xích xoay |
-| fxa_cam | `vong_xich` + chữ JAMMED (st.cam) | |
+| fxa_max/dmg/toc/crit/khien/chet/cham/mana | fxb_max/dmg/toc/crit/khien/chet/cham/mana (fxa_toc gồm cả Overclock) | fxb_* giữ làm dự phòng tới khi fxa_ ổn |
+| fxa_tocxuong | `vong_xich` (st.kep) + chữ CLAMPED/−8% | **bỏ hẳn vòng xích** (người dùng chốt); chữ nổi giữ 1 lần lúc trúng |
+| fxa_cam | `vong_xich` + chữ JAMMED (st.cam) | không xích; `cam` ưu tiên hơn `tocxuong` (trùm Jammer đặt cả kep lẫn cam) |
 | fxa_da | `phu_da` | đầu súng xám giữ nguyên |
 | fxa_lua | `phu_lua` + chấm cam `cham1('#ff7a2a')` | |
 | fxa_hex | `phu_ngam` dùng tạm cho hexT | |
@@ -229,10 +224,11 @@ Make an image. Game VFX sprite sheet: a 4x2 grid of 8 equal square cells, read l
 
 ---
 
-## 5. Cần người dùng quyết
+## 5. Quyết định của người dùng (07/11)
 
-1. **Kẹp −40% tốc (st.kep):** bỏ vòng xích `vong_xich` để thay bằng bánh răng chậm dần `fxa_tocxuong`, hay giữ xích chồng thêm? (đề xuất: thay, xích chỉ còn cho "câm" nếu thích).
-2. **Overclock** (vĩnh viễn) có cần hình riêng `fxa_ocl` không, hay cứ gộp vào tốc bắn?
-3. **Sync Cannon −sát thương** là hiệu ứng cả bàn, không có cờ trên ụ → chỉ bùng `fxa_dmgxuong` 1 lần trên mọi ụ đối thủ khi Sync Cannon xuất hiện/lên sao, hay bỏ hẳn?
-4. EFFECTS Minimal: tắt hẳn hào quang buff (đề xuất) hay chỉ giảm?
-5. Không có debuff "độc" trên ụ trong code — bỏ màu lục độc khỏi danh sách.
+1. **Kẹp Phá / Nhiễu Sóng / Mirror Gate −40% (st.kep):** THAY vòng xích bằng bánh răng chậm dần + bùn nhỏ giọt (`fxa_tocxuong`). Không còn xích ở đâu (kể cả trùm Jammer → `fxa_cam`).
+2. **Overclock:** không ảnh riêng — gộp vào `fxa_toc`; mạnh hơn = đậm hơn, quay nhanh hơn, to hơn chút.
+3. **Sync Cannon PVP −sát thương:** bùng 1 lần (chevron đỏ nứt rơi xuống) trên ụ đối thủ khi bắt đầu, không lặp.
+4. **Không làm hiệu ứng độc** (không có debuff độc trên ụ).
+
+**Tổng: 18 hiệu ứng** — đợt A 10 (A1–A10), đợt B 8 (B1–B8). Chưa gen: chờ session điều phối báo "GO" (Chrome đang bận).
