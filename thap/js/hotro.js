@@ -9,7 +9,7 @@
 //  · CẤP THẺ nâng trần: trần = CAP × CAP_BAC × (1 + 0.5 × (hệ số thẻ − 1)) — thẻ max ≈ +20% trần (BAO-CAO §4 mục 2).
 //  · Suy yếu quái (nhận thêm sát thương) từ MỌI nguồn cộng lại, trần 25% (HOTRO.VULN).
 //  · 07/11 (người dùng chốt): BỎ MỌI TRẦN HỖ TRỢ (tốc / sát thương / có điều kiện / Amplifier / chí mạng / sát thương chí mạng / suy yếu quái).
-//    Chỉ giữ giới hạn tự nhiên: xác suất (giết ngay, kháng khống chế) ≤ 100% · làm chậm < 100% (thường 90%, trùm 15%) · tỉ lệ chí mạng ≤ 100% (critU, game.js).
+//    Chỉ giữ giới hạn tự nhiên: xác suất (giết ngay, kháng khống chế) ≤ 100% · làm chậm < 100% (thường 90%, trùm 50%) · tỉ lệ chí mạng ≤ 100% (critU, game.js).
 // game.js gọi HOTRO.apDung(B) mỗi bước (sau mốc sao chung), HOTRO.vuln(E) + HOTRO.dkHeSo(T,E) + HOTRO.khiTrung(...) trong trung().
 'use strict';
 
@@ -17,7 +17,7 @@ const HOTRO = {
   K: [1, 1, 1.2, 1.45, 1.65, 1.9, 2.1, 2.35],
   CAP: { toc: Infinity, dmg: Infinity, crit: Infinity, cdmg: Infinity, cham: 0.9, chet: 1 }, // 07/11: không trần — chỉ chậm < 100% và xác suất ≤ 100% (KHÔNG nhân bậc/thẻ)
   DK: Infinity, KHANG: 1, // sát thương có điều kiện: không trần · kháng khống chế: xác suất ≤ 100%
-  VULN: Infinity, CHAM_TRUM: 0.15, // trùm: chậm tối đa 15% (luật bảo vệ trùm, giữ)
+  VULN: Infinity, CHAM_TRUM: 0.5, // trùm: chậm tối đa 50% (người dùng 07/11: 15% → 50%)
   CO_DINH: { cham: 1, chet: 1, khang: 1 }, // giới hạn tự nhiên: không nhân bậc × thẻ
   // ĐỘ MẠNH THEO BẬC (06/11 đo bậc, tools/thap-sim-tier.js): hỗ trợ bậc cao buff mạnh hơn hẳn + được nới trần (trần nhóm × hệ số của nguồn bậc cao nhất)
   BAC: { trang: 1, xanh: 1.5, tim: 2.0, vang: 2.3, do: 2.8 },
@@ -67,7 +67,7 @@ const HOTRO = {
     return ds;
   },
   nhan(T, N) { // N có nhận buff của T không
-    if (!N || N === T || N.st.da) return false;
+    if (!N || N === T || N.st.da || N.st.bang > 0) return false; // ô băng cũng không nhận buff (rà cộng hưởng 07/11, người dùng chốt)
     const vN = SKILLS[N.id] ? SKILLS[N.id].vai : '';
     if (vN === 'ht') return false;
     if (SKILLS[T.id].chiTC && vN !== 'tc') return false;
@@ -90,7 +90,7 @@ const HOTRO = {
       if (!T || T.st.bang > 0 || T.st.da || T.st.cam > 0) continue; // cam: bị STATIC JAMMER câm (trum.js)
       const sk = SKILLS[T.id]; if (!sk.hoTro) continue;
       // ụ không phải hỗ trợ (Sói 7★…): cộng thẳng như cũ — trừ khi hoTro điền `ra` (Genesis 4★ / Hive Queen 4★: vào trần chung, BAO-CAO §3 lỗi nhỏ)
-      const dsN = sk.vai !== 'ht' ? oHoTro(B, T).filter(N => N && N !== T && !N.st.da) : this.oDich(T).map(o => B.t[o]).filter(N => this.nhan(T, N));
+      const dsN = sk.vai !== 'ht' ? oHoTro(B, T).filter(N => N && N !== T && !N.st.da && !(N.st.bang > 0)) : this.oDich(T).map(o => B.t[o]).filter(N => this.nhan(T, N));
       for (const N of dsN) {
         const ra = {}; sk.hoTro(G, T, N, ra);
         let m = goc.get(N); if (!m) { if (!Object.keys(ra).some(k => ra[k] > 0)) continue; goc.set(N, m = {}); }
@@ -155,7 +155,7 @@ const HOTRO = {
     if (!b && !a) return 1;
     return 1 + Math.min(b, h.capDk || this.DK) + a; // trần riêng nhóm có điều kiện (không chia với buff sát thương thường)
   },
-  // sau khi tính chí mạng: chậm khi trúng (trần thường 35% / trùm 15%), giết ngay (ngưỡng máu), choáng khi chí mạng
+  // sau khi tính chí mạng: chậm khi trúng (trần thường 90% / trùm 50%), giết ngay (ngưỡng máu), choáng khi chí mạng
   khiTrung(T, E, dmg, crit, o) {
     const b = T.buf, h = T.ht || {};
     if (b.cham > 0 && !E.d.khangCham) { E.chamT = Math.max(E.chamT, 2); E.cham = Math.max(E.cham, Math.min(b.cham, E.trum ? this.CHAM_TRUM : (h.capCham || this.CAP.cham))); } // quái kháng chậm: không đồng hồ chậm (Ice Blade không coi là 'đang chậm')

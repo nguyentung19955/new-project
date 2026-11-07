@@ -74,7 +74,7 @@ SKILLS.mauhut = {
       if (cung) B.vamp = Math.min(SKILLS.mauhut.MAX, (B.vamp || 0) + (a.sao >= 7 ? 2 : 1));
       else if ((B.vamp || 0) >= 2) {
         B.vamp -= 2;
-        const dmg = hsU('mauhut', a.sao, B) * (a.sao >= 5 ? 3 : 2.2) * (1 + (B.vamp || 0) * SKILLS.mauhut.pv(a));
+        const dmg = hsU('mauhut', a.sao, B) * (a.sao >= 5 ? 3 : 2.2) * (1 + (B.vamp || 0) * SKILLS.mauhut.pv(a)) * (B.cuong > 0 ? 2 : 1); // RAGE ×2 (rà cộng hưởng 07/11)
         for (const E of dsMucTieu(B)) if (!E.chet && Math.hypot(E.x - c.x, E.y - c.y) < 120) trung(E, dmg, { B, T: a, phu: true, crit: false, mau: '#ff4a6a' });
         fx7('mauhut', c.x, c.y, 120, 0.45); FX.lac(3);
       }
@@ -132,7 +132,7 @@ HU.hexBay = { // âm thoa đỏ bay tới đích 1.5 s rồi phán (kiểm khiê
       if (!o.cuoc) { FX.vong1(c.x, c.y, 6, 30, '#ff8080', 0.3, 2); return true; }
       fx7('nguyenrua', c.x, c.y, 64, 0.45);
       if (X.sao > 1) { X.sao--; X.sang = 1; FX.tiaLua(c.x, c.y, 12, '#ff3a3a', 150); }
-      else X.hexT = 2.5;
+      else if (!biKhoa(X)) X.hexT = 2.5; // ụ khoá không nhận tê liệt — rà cộng hưởng 07/11, người dùng chốt
     } else if (o.cuoc && X.sao < LUAT.saoMax) {
       const s0 = X.sao; X.sao++; X.sang = 1; X.anim = { k: 'no', t: 0.25 }; mocMoi(X, s0, 0.1);
       fx7('nguyenrua', c.x, c.y, 64, 0.45); FX.vong1(c.x, c.y, 6, 40, '#ffe46b', 0.4, 3);

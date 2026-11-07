@@ -174,8 +174,10 @@ HU.vm1Xung = { // 3 xung nổ cách nhau 0.25 s, bán kính 45 px
   const _ghepVM1 = ghep;
   ghep = function (B, a, b, ep) {
     const B2 = b && G.ban[b.ban];
+    // chỉ GHÉP THẬT mới đếm (luật Star Breaker, conghuong2): Teleporter / Copycat / Overclock / Scrap Forge không phải ghép — Teleporter qua lại từng nuôi Archive vô hạn (rà cộng hưởng 07/11)
+    const db = !ep && a && b ? ghepDBHop(a, b) : null, khong = db && [SKILLS.dichchuyen, SKILLS.saochep, SKILLS.epxung, SKILLS.loren].includes(db.sk);
     const r = _ghepVM1.apply(this, arguments);
-    if (r && B2) {
+    if (r && B2 && !khong) {
       B2.ghepN = (B2.ghepN || 0) + 1;
       for (const X of B2.t) if (X && X.id === 'luutru' && X !== r) X.kho = (X.kho || 0) + 1;
     }
@@ -313,14 +315,36 @@ const DOTPHA = {
     if (t.dmg) ds.push('+' + Math.round(t.dmg * 100) + '% damage'); if (t.crit) ds.push('+' + Math.round(t.crit * 100) + '% crit');
     return (b ? 'BREAKTHROUGH ' + this.LA[b] + ': ' + ds.join(', ') : 'Breakthroughs at ' + ng.join('/')) + (b > 0 && b < 4 ? ' · next breakthrough at ' + ng[b] : '');
   },
-  // tên ảnh đã lọc màu bậc b (dựng 1 lần, giữ trong REN.anh như ảnh thường; tờ P2 mượn cỡ khung)
-  ten(goc, b) {
+  // bậc IV: cầu vồng chậm = chọn 1 trong 6 bản sao đã lọc sẵn theo thời gian (không lọc mỗi khung)
+  LOC4: [0, 60, 120, 180, 240, 300].map(h => 'sepia(1) saturate(2.6) hue-rotate(' + h + 'deg) brightness(1.55)'),
+  buoc4() { return ((typeof VX !== 'undefined' ? VX.t : 0) * 1.5 | 0) % 6; },
+  // bậc để VẼ: chính ụ cộng dồn, hoặc ụ NHẬN của Scrap Forge (hào quang buff trên ụ nhận cũng đổi màu)
+  bacVe(T) { if (!T) return 0; const b = this.bacU(T); return b || (T.dpNhanT != null && typeof G !== 'undefined' && G.t - T.dpNhanT < 0.3 ? T.dpNhan || 0 : 0); },
+  // VÒNG BẬC dưới ụ (thay hào quang lửa to — người dùng 07/11 'ưu tiên đơn giản'): fx_vong_mong (vòng sáng mảnh PNG) lọc màu: cam (có cộng dồn, chưa đột phá) → vàng → lam → tím → cầu vồng
+  coVong(T) { return !!T && (!!this.NGUONG[T.id] || this.bacVe(T) > 0); },
+  // vòng PNG trắng → tô màu bậc 1 lần (source-atop, giữ lõi sáng) → giữ trong REN.anh
+  MAU_VONG: ['#ff7a1a', '#ffd23f', '#3f9dff', '#b45cff'],
+  MAU_VONG4: ['#ff5a5a', '#ffffff', '#5cff7a', '#3fe0ff', '#5c7aff', '#ff5ce0'],
+  tenVong(T) {
+    const b = this.bacVe(T), f = this.SO[T.id];
+    if (!b && !(f && f(T) > 0)) return null;
+    if (typeof document === 'undefined' || typeof REN === 'undefined' || !REN.anh) return null;
+    const v = b === 4 ? this.buoc4() : -1, mau = b === 4 ? this.MAU_VONG4[v] : this.MAU_VONG[b], k = 'fx_vong_mong~v' + b + (v >= 0 ? 'h' + v : '');
+    if (REN.anh[k]) return k;
+    const a = REN.img('fx_vong_mong'); if (!a || !a.width) return null;
+    const c = document.createElement('canvas'); c.width = a.width; c.height = a.height; const x = c.getContext('2d'); if (!x) return null;
+    x.drawImage(a, 0, 0); x.globalCompositeOperation = 'source-atop'; x.globalAlpha = 0.82; x.fillStyle = mau; x.fillRect(0, 0, c.width, c.height);
+    REN.anh[k] = { _cv: c, complete: true, naturalWidth: c.width, naturalHeight: c.height }; if (REN.CO_DINH) REN.CO_DINH.add(k); return k;
+  },
+  tenT(goc, T) { const b = this.bacVe(T); return this.ten(goc, b, b === 4 ? this.buoc4() : -1); },
+  // tên ảnh đã lọc màu bậc b (dựng 1 lần, giữ trong REN.anh như ảnh thường; tờ P2 mượn cỡ khung) · v = bước cầu vồng bậc IV (−1: trắng)
+  ten(goc, b, v) {
     if (!b || typeof document === 'undefined' || typeof REN === 'undefined' || !REN.anh) return goc;
-    const k = goc + '~dp' + b; if (REN.anh[k]) return k;
+    const cv = b === 4 && v >= 0, k = goc + '~dp' + b + (cv ? 'h' + v : ''); if (REN.anh[k]) return k;
     const a = REN.img(goc); if (!a || !a.width) return goc;
     const c = document.createElement('canvas'); c.width = a.width; c.height = a.height;
     const x = c.getContext('2d'); if (!x || !('filter' in x)) return goc;
-    x.filter = this.LOC[b]; x.drawImage(a, 0, 0); x.filter = 'none';
+    x.filter = cv ? this.LOC4[v] : this.LOC[b]; x.drawImage(a, 0, 0); x.filter = 'none';
     REN.anh[k] = { _cv: c, complete: true, naturalWidth: c.width, naturalHeight: c.height };
     if (REN.CO_DINH) REN.CO_DINH.add(k);
     if (typeof P2 !== 'undefined' && P2.M && P2.M[goc]) P2.M[k] = P2.M[goc];
@@ -332,6 +356,7 @@ for (const id in DOTPHA.NGUONG) {
   if (sk.capNhat) { const cn = sk.capNhat; sk.capNhat = function (G, B, T) {
     const r = cn.apply(this, arguments);
     const b = DOTPHA.bacU(T), X = id === 'loren' ? T.forgeX : T;
+    if (b && X && X !== T) { X.dpNhan = X.dpNhanT === G.t ? Math.max(X.dpNhan || 0, b) : b; X.dpNhanT = G.t; }
     if (b && X) { const t = DOTPHA.thuong(b); X.buf.toc += t.toc; X.buf.cdmg = (X.buf.cdmg || 0) + t.cdmg; X.buf.dmg += t.dmg; X.buf.crit += t.crit; }
     if (b > (T.dpB || 0) && T.tuoi > 0.3 && B && B.o && B.o[T.o]) { // lên bậc: nổ PNG + chữ (chỉ trình bày)
       const c = B.o[T.o]; try { FX.no('no_phao', c.x, c.y, 50 + 12 * b, 0.4); nhanU(T, 'BREAKTHROUGH ' + DOTPHA.LA[b], DOTPHA.MAU[b], b >= 3); } catch (e) { }

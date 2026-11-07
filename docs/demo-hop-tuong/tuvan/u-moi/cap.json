@@ -1,297 +1,73 @@
 [
  {
-  "a": "vughep",
-  "b": "saochep",
-  "diem": 0.876,
-  "iou": 0.911,
-  "xam": 0.848
- },
- {
-  "a": "saochep",
-  "b": "tienhoa",
-  "diem": 0.872,
-  "iou": 0.938,
-  "xam": 0.818
- },
- {
-  "a": "mana",
-  "b": "vughep",
-  "diem": 0.87,
-  "iou": 0.935,
-  "xam": 0.817
- },
- {
-  "a": "nhanmana",
-  "b": "loa",
-  "diem": 0.867,
-  "iou": 0.933,
-  "xam": 0.813
- },
- {
-  "a": "baotuyet",
-  "b": "saochep",
-  "diem": 0.859,
-  "iou": 0.925,
-  "xam": 0.805
- },
- {
-  "a": "khien",
-  "b": "tienhoa",
-  "diem": 0.856,
-  "iou": 0.867,
-  "xam": 0.846
- },
- {
-  "a": "vughep",
-  "b": "tienhoa",
-  "diem": 0.847,
-  "iou": 0.914,
-  "xam": 0.792
- },
- {
-  "a": "baotuyet",
-  "b": "vughep",
-  "diem": 0.846,
-  "iou": 0.939,
-  "xam": 0.77
- },
- {
-  "a": "doc",
-  "b": "saochep",
-  "diem": 0.844,
-  "iou": 0.896,
-  "xam": 0.802
- },
- {
-  "a": "doc",
-  "b": "tienhoa",
-  "diem": 0.842,
-  "iou": 0.867,
-  "xam": 0.821
- },
- {
-  "a": "saochep",
-  "b": "cauvong",
-  "diem": 0.842,
-  "iou": 0.919,
-  "xam": 0.779
- },
- {
-  "a": "mana",
-  "b": "baotuyet",
-  "diem": 0.841,
-  "iou": 0.915,
-  "xam": 0.781
- },
- {
-  "a": "sinhdoi",
-  "b": "saochep",
-  "diem": 0.841,
-  "iou": 0.88,
-  "xam": 0.81
- },
- {
-  "a": "vughep",
-  "b": "sinhdoi",
-  "diem": 0.84,
-  "iou": 0.908,
-  "xam": 0.784
- },
- {
   "a": "khien",
   "b": "dongbo",
-  "diem": 0.839,
-  "iou": 0.859,
+  "diem": 0.838,
+  "iou": 0.857,
   "xam": 0.823
  },
  {
+  "a": "dongbo",
+  "b": "santhuong",
+  "diem": 0.833,
+  "iou": 0.879,
+  "xam": 0.796
+ },
+ {
+  "a": "hopca",
+  "b": "luutru",
+  "diem": 0.833,
+  "iou": 0.851,
+  "xam": 0.819
+ },
+ {
   "a": "baotuyet",
   "b": "sinhdoi",
-  "diem": 0.836,
-  "iou": 0.91,
+  "diem": 0.831,
+  "iou": 0.899,
   "xam": 0.775
  },
  {
   "a": "sinhdoi",
   "b": "santhuong",
-  "diem": 0.836,
-  "iou": 0.913,
+  "diem": 0.831,
+  "iou": 0.902,
   "xam": 0.774
- },
- {
-  "a": "hopca",
-  "b": "luutru",
-  "diem": 0.836,
-  "iou": 0.856,
-  "xam": 0.819
- },
- {
-  "a": "dongbo",
-  "b": "santhuong",
-  "diem": 0.835,
-  "iou": 0.881,
-  "xam": 0.796
- },
- {
-  "a": "sungluc",
-  "b": "tienhoa",
-  "diem": 0.834,
-  "iou": 0.874,
-  "xam": 0.801
  },
  {
   "a": "sinhdoi",
   "b": "nhatthuc",
-  "diem": 0.834,
-  "iou": 0.892,
+  "diem": 0.831,
+  "iou": 0.885,
   "xam": 0.787
- },
- {
-  "a": "vughep",
-  "b": "santhuong",
-  "diem": 0.832,
-  "iou": 0.881,
-  "xam": 0.792
- },
- {
-  "a": "vughep",
-  "b": "cuuvi",
-  "diem": 0.83,
-  "iou": 0.876,
-  "xam": 0.791
- },
- {
-  "a": "saochep",
-  "b": "thanhdia",
-  "diem": 0.83,
-  "iou": 0.896,
-  "xam": 0.776
  },
  {
   "a": "baotuyet",
   "b": "cauvong",
-  "diem": 0.829,
-  "iou": 0.906,
+  "diem": 0.826,
+  "iou": 0.9,
   "xam": 0.766
  },
  {
   "a": "cuuvi",
   "b": "nemesis",
-  "diem": 0.827,
-  "iou": 0.873,
+  "diem": 0.824,
+  "iou": 0.867,
   "xam": 0.789
- },
- {
-  "a": "khien",
-  "b": "saochep",
-  "diem": 0.826,
-  "iou": 0.881,
-  "xam": 0.781
- },
- {
-  "a": "hasao",
-  "b": "tienhoa",
-  "diem": 0.826,
-  "iou": 0.89,
-  "xam": 0.774
- },
- {
-  "a": "vughep",
-  "b": "xuonganh",
-  "diem": 0.825,
-  "iou": 0.893,
-  "xam": 0.77
- },
- {
-  "a": "saochep",
-  "b": "santhuong",
-  "diem": 0.825,
-  "iou": 0.85,
-  "xam": 0.805
  },
  {
   "a": "bang",
   "b": "khien",
-  "diem": 0.824,
-  "iou": 0.855,
+  "diem": 0.821,
+  "iou": 0.848,
   "xam": 0.799
- },
- {
-  "a": "dongbo",
-  "b": "vughep",
-  "diem": 0.824,
-  "iou": 0.938,
-  "xam": 0.73
- },
- {
-  "a": "tienhoa",
-  "b": "hopca",
-  "diem": 0.822,
-  "iou": 0.83,
-  "xam": 0.815
  },
  {
   "a": "guongcong",
   "b": "hopca",
-  "diem": 0.822,
-  "iou": 0.879,
+  "diem": 0.819,
+  "iou": 0.873,
   "xam": 0.775
- },
- {
-  "a": "xucxac",
-  "b": "sungluc",
-  "diem": 0.821,
-  "iou": 0.875,
-  "xam": 0.778
- },
- {
-  "a": "tienhoa",
-  "b": "thanhdia",
-  "diem": 0.821,
-  "iou": 0.861,
-  "xam": 0.788
- },
- {
-  "a": "nhanban",
-  "b": "saochep",
-  "diem": 0.82,
-  "iou": 0.875,
-  "xam": 0.776
- },
- {
-  "a": "khien",
-  "b": "santhuong",
-  "diem": 0.819,
-  "iou": 0.863,
-  "xam": 0.782
- },
- {
-  "a": "khien",
-  "b": "xuonganh",
-  "diem": 0.819,
-  "iou": 0.839,
-  "xam": 0.802
- },
- {
-  "a": "xucxac",
-  "b": "kiembang",
-  "diem": 0.817,
-  "iou": 0.907,
-  "xam": 0.744
- },
- {
-  "a": "mana",
-  "b": "sinhdoi",
-  "diem": 0.817,
-  "iou": 0.889,
-  "xam": 0.758
- },
- {
-  "a": "loa",
-  "b": "vughep",
-  "diem": 0.817,
-  "iou": 0.9,
-  "xam": 0.748
  },
  {
   "a": "dongbo",
@@ -301,81 +77,11 @@
   "xam": 0.739
  },
  {
-  "a": "tienhoa",
-  "b": "santhuong",
-  "diem": 0.817,
-  "iou": 0.828,
-  "xam": 0.807
- },
- {
-  "a": "guongcong",
-  "b": "luutru",
-  "diem": 0.817,
-  "iou": 0.881,
-  "xam": 0.764
- },
- {
-  "a": "baotuyet",
-  "b": "cuuvi",
-  "diem": 0.816,
-  "iou": 0.882,
-  "xam": 0.762
- },
- {
-  "a": "khien",
-  "b": "luutru",
-  "diem": 0.816,
-  "iou": 0.841,
-  "xam": 0.795
- },
- {
-  "a": "saochep",
-  "b": "xuonganh",
-  "diem": 0.815,
-  "iou": 0.86,
-  "xam": 0.778
- },
- {
-  "a": "tienhoa",
-  "b": "xuonganh",
-  "diem": 0.815,
-  "iou": 0.878,
-  "xam": 0.765
- },
- {
-  "a": "vungdoc",
-  "b": "nangsao",
-  "diem": 0.814,
-  "iou": 0.869,
-  "xam": 0.768
- },
- {
-  "a": "khien",
-  "b": "thanhdia",
-  "diem": 0.814,
-  "iou": 0.832,
-  "xam": 0.799
- },
- {
-  "a": "bao",
-  "b": "tienhoa",
-  "diem": 0.814,
-  "iou": 0.898,
-  "xam": 0.746
- },
- {
-  "a": "hasao",
+  "a": "nhanban",
   "b": "saochep",
-  "diem": 0.814,
-  "iou": 0.867,
-  "xam": 0.771
- },
- {
-  "a": "saochep",
-  "b": "cuuvi",
-  "diem": 0.814,
-  "iou": 0.853,
-  "xam": 0.781
+  "diem": 0.815,
+  "iou": 0.861,
+  "xam": 0.777
  },
  {
   "a": "cauvong",
@@ -385,81 +91,67 @@
   "xam": 0.74
  },
  {
+  "a": "guongcong",
+  "b": "luutru",
+  "diem": 0.814,
+  "iou": 0.874,
+  "xam": 0.764
+ },
+ {
+  "a": "khien",
+  "b": "santhuong",
+  "diem": 0.813,
+  "iou": 0.851,
+  "xam": 0.782
+ },
+ {
+  "a": "khien",
+  "b": "xuonganh",
+  "diem": 0.813,
+  "iou": 0.826,
+  "xam": 0.802
+ },
+ {
   "a": "tron",
   "b": "cuuvi",
-  "diem": 0.813,
-  "iou": 0.892,
+  "diem": 0.811,
+  "iou": 0.886,
   "xam": 0.749
+ },
+ {
+  "a": "baotuyet",
+  "b": "cuuvi",
+  "diem": 0.811,
+  "iou": 0.872,
+  "xam": 0.762
  },
  {
   "a": "dongbo",
   "b": "cuuvi",
-  "diem": 0.813,
-  "iou": 0.869,
+  "diem": 0.811,
+  "iou": 0.865,
   "xam": 0.767
  },
  {
   "a": "doc",
   "b": "sinhdoi",
-  "diem": 0.812,
-  "iou": 0.856,
+  "diem": 0.81,
+  "iou": 0.852,
   "xam": 0.776
  },
  {
-  "a": "dongbo",
-  "b": "tienhoa",
-  "diem": 0.812,
-  "iou": 0.885,
-  "xam": 0.752
- },
- {
-  "a": "vughep",
-  "b": "hasao",
-  "diem": 0.812,
-  "iou": 0.897,
-  "xam": 0.742
- },
- {
-  "a": "radar",
-  "b": "thanhdia",
-  "diem": 0.811,
-  "iou": 0.887,
-  "xam": 0.749
+  "a": "xucxac",
+  "b": "sungluc",
+  "diem": 0.809,
+  "iou": 0.848,
+  "xam": 0.778
  },
  {
   "a": "khien",
-  "b": "hopca",
-  "diem": 0.811,
-  "iou": 0.829,
-  "xam": 0.796
- },
- {
-  "a": "orbital",
-  "b": "khoisinh",
-  "diem": 0.811,
-  "iou": 0.839,
-  "xam": 0.787
- },
- {
-  "a": "chimang",
-  "b": "orbital",
-  "diem": 0.81,
-  "iou": 0.913,
-  "xam": 0.725
- },
- {
-  "a": "mana",
-  "b": "lienket",
-  "diem": 0.808,
-  "iou": 0.877,
-  "xam": 0.753
- },
- {
-  "a": "baotuyet",
-  "b": "khien",
-  "diem": 0.808,
-  "iou": 0.887,
-  "xam": 0.744
+  "b": "luutru",
+  "diem": 0.809,
+  "iou": 0.826,
+  "xam": 0.795
  },
  {
   "a": "khien",
@@ -469,137 +161,95 @@
   "xam": 0.793
  },
  {
-  "a": "xucxac",
-  "b": "tienhoa",
+  "a": "chimang",
+  "b": "orbital",
   "diem": 0.807,
-  "iou": 0.824,
-  "xam": 0.793
+  "iou": 0.908,
+  "xam": 0.725
  },
  {
-  "a": "tron",
-  "b": "sinhdoi",
+  "a": "khien",
+  "b": "thanhdia",
   "diem": 0.807,
-  "iou": 0.881,
-  "xam": 0.746
+  "iou": 0.817,
+  "xam": 0.799
  },
  {
   "a": "sinhdoi",
   "b": "cuuvi",
-  "diem": 0.807,
-  "iou": 0.881,
-  "xam": 0.747
- },
- {
-  "a": "cuuvi",
-  "b": "santhuong",
-  "diem": 0.807,
-  "iou": 0.859,
-  "xam": 0.764
- },
- {
-  "a": "khien",
-  "b": "sinhdoi",
   "diem": 0.806,
-  "iou": 0.852,
-  "xam": 0.768
+  "iou": 0.877,
+  "xam": 0.747
  },
  {
   "a": "khien",
   "b": "cauvong",
-  "diem": 0.806,
-  "iou": 0.886,
+  "diem": 0.805,
+  "iou": 0.884,
   "xam": 0.74
  },
  {
-  "a": "xucxac",
-  "b": "lualien",
+  "a": "nemesis",
+  "b": "chuato",
   "diem": 0.805,
-  "iou": 0.827,
-  "xam": 0.787
- },
- {
-  "a": "nangluong",
-  "b": "tienhoa",
-  "diem": 0.805,
-  "iou": 0.846,
-  "xam": 0.771
- },
- {
-  "a": "anhsang",
-  "b": "vughep",
-  "diem": 0.805,
-  "iou": 0.875,
-  "xam": 0.749
- },
- {
-  "a": "saochep",
-  "b": "hydra",
-  "diem": 0.805,
-  "iou": 0.852,
-  "xam": 0.766
- },
- {
-  "a": "khien",
-  "b": "vughep",
-  "diem": 0.804,
-  "iou": 0.877,
-  "xam": 0.745
- },
- {
-  "a": "dongbo",
-  "b": "saochep",
-  "diem": 0.804,
-  "iou": 0.876,
-  "xam": 0.746
- },
- {
-  "a": "sinhdoi",
-  "b": "tienhoa",
-  "diem": 0.804,
-  "iou": 0.858,
-  "xam": 0.761
- },
- {
-  "a": "tienhoa",
-  "b": "pandora",
-  "diem": 0.804,
-  "iou": 0.815,
-  "xam": 0.795
+  "iou": 0.854,
+  "xam": 0.764
  },
  {
   "a": "tron",
-  "b": "saochep",
+  "b": "sinhdoi",
+  "diem": 0.804,
+  "iou": 0.875,
+  "xam": 0.746
+ },
+ {
+  "a": "khien",
+  "b": "hopca",
+  "diem": 0.804,
+  "iou": 0.813,
+  "xam": 0.796
+ },
+ {
+  "a": "xucxac",
+  "b": "kiembang",
   "diem": 0.803,
-  "iou": 0.851,
-  "xam": 0.764
+  "iou": 0.875,
+  "xam": 0.744
+ },
+ {
+  "a": "vungdoc",
+  "b": "nangsao",
+  "diem": 0.803,
+  "iou": 0.845,
+  "xam": 0.768
+ },
+ {
+  "a": "baotuyet",
+  "b": "khien",
+  "diem": 0.803,
+  "iou": 0.875,
+  "xam": 0.744
  },
  {
   "a": "taylo",
   "b": "aten",
   "diem": 0.803,
-  "iou": 0.847,
+  "iou": 0.849,
   "xam": 0.766
  },
  {
-  "a": "soi",
-  "b": "tienhoa",
+  "a": "khien",
+  "b": "sinhdoi",
   "diem": 0.803,
-  "iou": 0.866,
-  "xam": 0.752
+  "iou": 0.846,
+  "xam": 0.768
  },
  {
-  "a": "doc",
-  "b": "vughep",
-  "diem": 0.802,
-  "iou": 0.87,
-  "xam": 0.747
- },
- {
-  "a": "nam",
-  "b": "santhuong",
-  "diem": 0.802,
-  "iou": 0.86,
-  "xam": 0.755
+  "a": "khien",
+  "b": "saochep",
+  "diem": 0.803,
+  "iou": 0.848,
+  "xam": 0.767
  },
  {
   "a": "lienket",
@@ -609,53 +259,18 @@
   "xam": 0.732
  },
  {
-  "a": "tienhoa",
-  "b": "luutru",
+  "a": "orbital",
+  "b": "khoisinh",
   "diem": 0.802,
-  "iou": 0.824,
-  "xam": 0.784
+  "iou": 0.821,
+  "xam": 0.787
  },
  {
-  "a": "nemesis",
-  "b": "chuato",
-  "diem": 0.802,
-  "iou": 0.849,
-  "xam": 0.764
- },
- {
-  "a": "khien",
-  "b": "cuuvi",
-  "diem": 0.801,
-  "iou": 0.849,
-  "xam": 0.761
- },
- {
-  "a": "vughep",
-  "b": "nhatthuc",
-  "diem": 0.801,
-  "iou": 0.891,
-  "xam": 0.727
- },
- {
-  "a": "saochep",
-  "b": "pandora",
-  "diem": 0.801,
-  "iou": 0.795,
-  "xam": 0.807
- },
- {
-  "a": "doc",
-  "b": "guongcong",
-  "diem": 0.8,
-  "iou": 0.847,
-  "xam": 0.761
- },
- {
-  "a": "baotuyet",
+  "a": "cuuvi",
   "b": "santhuong",
-  "diem": 0.8,
-  "iou": 0.882,
-  "xam": 0.732
+  "diem": 0.801,
+  "iou": 0.845,
+  "xam": 0.764
  },
  {
   "a": "taylo",
@@ -665,536 +280,326 @@
   "xam": 0.797
  },
  {
-  "a": "sungluc",
-  "b": "saochep",
+  "a": "nam",
+  "b": "santhuong",
   "diem": 0.799,
-  "iou": 0.901,
-  "xam": 0.716
+  "iou": 0.853,
+  "xam": 0.755
+ },
+ {
+  "a": "loa",
+  "b": "cuuvi",
+  "diem": 0.799,
+  "iou": 0.847,
+  "xam": 0.76
  },
  {
   "a": "taylo",
   "b": "cuuvi",
-  "diem": 0.799,
-  "iou": 0.836,
+  "diem": 0.798,
+  "iou": 0.833,
   "xam": 0.769
  },
  {
-  "a": "xucxac",
-  "b": "hasao",
-  "diem": 0.798,
-  "iou": 0.883,
-  "xam": 0.729
+  "a": "doc",
+  "b": "guongcong",
+  "diem": 0.796,
+  "iou": 0.839,
+  "xam": 0.761
  },
  {
-  "a": "tron",
-  "b": "baotuyet",
-  "diem": 0.798,
-  "iou": 0.89,
-  "xam": 0.723
+  "a": "khien",
+  "b": "cuuvi",
+  "diem": 0.796,
+  "iou": 0.839,
+  "xam": 0.761
+ },
+ {
+  "a": "epxung",
+  "b": "dongbo",
+  "diem": 0.796,
+  "iou": 0.879,
+  "xam": 0.728
+ },
+ {
+  "a": "radar",
+  "b": "thanhdia",
+  "diem": 0.795,
+  "iou": 0.851,
+  "xam": 0.749
  },
  {
   "a": "baotuyet",
-  "b": "nhanban",
-  "diem": 0.798,
-  "iou": 0.851,
-  "xam": 0.754
- },
- {
-  "a": "vughep",
-  "b": "bienmau",
-  "diem": 0.798,
-  "iou": 0.875,
-  "xam": 0.736
+  "b": "haoquang",
+  "diem": 0.795,
+  "iou": 0.834,
+  "xam": 0.764
  },
  {
   "a": "taylo",
   "b": "luoicheo",
-  "diem": 0.797,
-  "iou": 0.804,
-  "xam": 0.791
- },
- {
-  "a": "hasao",
-  "b": "xuonganh",
-  "diem": 0.797,
-  "iou": 0.907,
-  "xam": 0.707
- },
- {
-  "a": "doc",
-  "b": "khien",
-  "diem": 0.796,
-  "iou": 0.872,
-  "xam": 0.734
- },
- {
-  "a": "mana",
-  "b": "cuuvi",
-  "diem": 0.796,
-  "iou": 0.858,
-  "xam": 0.746
- },
- {
-  "a": "tienhoa",
-  "b": "lualien",
-  "diem": 0.796,
-  "iou": 0.829,
-  "xam": 0.768
- },
- {
-  "a": "baotuyet",
-  "b": "tienhoa",
   "diem": 0.795,
-  "iou": 0.92,
-  "xam": 0.693
+  "iou": 0.8,
+  "xam": 0.791
  },
  {
   "a": "aten",
   "b": "saochep",
   "diem": 0.795,
-  "iou": 0.782,
-  "xam": 0.806
+  "iou": 0.839,
+  "xam": 0.76
+ },
+ {
+  "a": "baotuyet",
+  "b": "santhuong",
+  "diem": 0.794,
+  "iou": 0.87,
+  "xam": 0.732
+ },
+ {
+  "a": "saochep",
+  "b": "luutru",
+  "diem": 0.794,
+  "iou": 0.815,
+  "xam": 0.776
  },
  {
   "a": "soi",
   "b": "santhuong",
-  "diem": 0.795,
+  "diem": 0.794,
   "iou": 0.847,
   "xam": 0.751
  },
  {
   "a": "doc",
-  "b": "hopca",
-  "diem": 0.794,
-  "iou": 0.854,
-  "xam": 0.745
- },
- {
-  "a": "vungdoc",
-  "b": "nhanban",
-  "diem": 0.794,
-  "iou": 0.839,
-  "xam": 0.757
- },
- {
-  "a": "baotuyet",
-  "b": "aten",
-  "diem": 0.794,
-  "iou": 0.787,
-  "xam": 0.799
- },
- {
-  "a": "cauvong",
-  "b": "santhuong",
-  "diem": 0.794,
-  "iou": 0.874,
-  "xam": 0.728
- },
- {
-  "a": "santhuong",
-  "b": "lualien",
-  "diem": 0.794,
-  "iou": 0.815,
-  "xam": 0.777
- },
- {
-  "a": "nangluong",
   "b": "khien",
   "diem": 0.793,
-  "iou": 0.855,
-  "xam": 0.743
- },
- {
-  "a": "baotuyet",
-  "b": "haoquang",
-  "diem": 0.793,
-  "iou": 0.829,
-  "xam": 0.764
- },
- {
-  "a": "vughep",
-  "b": "lualien",
-  "diem": 0.793,
-  "iou": 0.865,
+  "iou": 0.866,
   "xam": 0.734
  },
  {
-  "a": "mana",
-  "b": "dongbo",
-  "diem": 0.792,
-  "iou": 0.897,
-  "xam": 0.705
- },
- {
-  "a": "mana",
-  "b": "saochep",
-  "diem": 0.792,
-  "iou": 0.876,
-  "xam": 0.724
- },
- {
-  "a": "khuech",
-  "b": "railgun",
-  "diem": 0.792,
-  "iou": 0.844,
-  "xam": 0.75
+  "a": "tron",
+  "b": "baotuyet",
+  "diem": 0.793,
+  "iou": 0.878,
+  "xam": 0.723
  },
  {
   "a": "baotuyet",
+  "b": "nhanban",
+  "diem": 0.793,
+  "iou": 0.839,
+  "xam": 0.754
+ },
+ {
+  "a": "saochep",
   "b": "thanhdia",
-  "diem": 0.792,
-  "iou": 0.862,
-  "xam": 0.734
+  "diem": 0.793,
+  "iou": 0.843,
+  "xam": 0.753
  },
  {
-  "a": "aten",
-  "b": "vughep",
+  "a": "xucxac",
+  "b": "tienhoa",
   "diem": 0.792,
   "iou": 0.758,
   "xam": 0.82
  },
  {
-  "a": "bang",
-  "b": "nemesis",
+  "a": "xucxac",
+  "b": "hasao",
   "diem": 0.791,
-  "iou": 0.842,
-  "xam": 0.75
+  "iou": 0.866,
+  "xam": 0.729
  },
  {
-  "a": "tron",
-  "b": "khien",
+  "a": "cauvong",
+  "b": "santhuong",
   "diem": 0.791,
-  "iou": 0.864,
-  "xam": 0.732
+  "iou": 0.868,
+  "xam": 0.728
  },
  {
-  "a": "nangluong",
-  "b": "saochep",
-  "diem": 0.791,
-  "iou": 0.871,
-  "xam": 0.725
+  "a": "xucxac",
+  "b": "lualien",
+  "diem": 0.79,
+  "iou": 0.793,
+  "xam": 0.787
+ },
+ {
+  "a": "doc",
+  "b": "hopca",
+  "diem": 0.79,
+  "iou": 0.844,
+  "xam": 0.745
+ },
+ {
+  "a": "baotuyet",
+  "b": "aten",
+  "diem": 0.79,
+  "iou": 0.78,
+  "xam": 0.799
  },
  {
   "a": "baotuyet",
   "b": "dongbo",
-  "diem": 0.791,
-  "iou": 0.914,
+  "diem": 0.79,
+  "iou": 0.912,
   "xam": 0.69
  },
  {
-  "a": "bao",
-  "b": "cauvong",
-  "diem": 0.791,
-  "iou": 0.851,
-  "xam": 0.742
+  "a": "dongbo",
+  "b": "soi",
+  "diem": 0.79,
+  "iou": 0.871,
+  "xam": 0.723
  },
  {
-  "a": "orbital",
-  "b": "bienmau",
-  "diem": 0.791,
-  "iou": 0.879,
-  "xam": 0.719
+  "a": "nangluong",
+  "b": "khien",
+  "diem": 0.789,
+  "iou": 0.845,
+  "xam": 0.743
+ },
+ {
+  "a": "santhuong",
+  "b": "lualien",
+  "diem": 0.789,
+  "iou": 0.805,
+  "xam": 0.777
  },
  {
   "a": "tron",
-  "b": "luutru",
-  "diem": 0.79,
-  "iou": 0.828,
-  "xam": 0.759
+  "b": "khien",
+  "diem": 0.788,
+  "iou": 0.856,
+  "xam": 0.732
+ },
+ {
+  "a": "hasao",
+  "b": "xuonganh",
+  "diem": 0.788,
+  "iou": 0.887,
+  "xam": 0.707
  },
  {
   "a": "chimang",
   "b": "docton",
-  "diem": 0.789,
-  "iou": 0.836,
+  "diem": 0.787,
+  "iou": 0.831,
   "xam": 0.751
  },
  {
   "a": "tron",
   "b": "taylo",
-  "diem": 0.789,
-  "iou": 0.844,
+  "diem": 0.787,
+  "iou": 0.838,
   "xam": 0.744
  },
  {
-  "a": "nhanban",
-  "b": "khien",
-  "diem": 0.789,
-  "iou": 0.851,
-  "xam": 0.738
- },
- {
-  "a": "dongbo",
-  "b": "thanhdia",
-  "diem": 0.789,
-  "iou": 0.853,
-  "xam": 0.737
- },
- {
-  "a": "khoisinh",
-  "b": "bienmau",
-  "diem": 0.789,
-  "iou": 0.788,
-  "xam": 0.789
- },
- {
-  "a": "doc",
-  "b": "nangluong",
-  "diem": 0.788,
-  "iou": 0.863,
-  "xam": 0.726
- },
- {
-  "a": "bao",
+  "a": "taylo",
   "b": "saochep",
-  "diem": 0.788,
-  "iou": 0.892,
-  "xam": 0.703
- },
- {
-  "a": "vughep",
-  "b": "soi",
-  "diem": 0.788,
-  "iou": 0.888,
-  "xam": 0.705
- },
- {
-  "a": "xucxac",
-  "b": "railgun",
   "diem": 0.787,
-  "iou": 0.845,
-  "xam": 0.74
+  "iou": 0.818,
+  "xam": 0.762
  },
  {
-  "a": "mana",
-  "b": "santhuong",
-  "diem": 0.787,
-  "iou": 0.862,
-  "xam": 0.725
- },
- {
-  "a": "bomhen",
-  "b": "xuonganh",
-  "diem": 0.787,
-  "iou": 0.904,
-  "xam": 0.692
+  "a": "bang",
+  "b": "nemesis",
+  "diem": 0.786,
+  "iou": 0.832,
+  "xam": 0.75
  },
  {
   "a": "tron",
   "b": "dongbo",
-  "diem": 0.787,
-  "iou": 0.866,
-  "xam": 0.723
- },
- {
-  "a": "anhsang",
-  "b": "nemesis",
-  "diem": 0.787,
-  "iou": 0.852,
-  "xam": 0.735
- },
- {
-  "a": "dongbo",
-  "b": "soi",
-  "diem": 0.787,
-  "iou": 0.865,
+  "diem": 0.786,
+  "iou": 0.864,
   "xam": 0.723
  },
  {
   "a": "wallgen",
   "b": "hopca",
-  "diem": 0.787,
-  "iou": 0.78,
+  "diem": 0.786,
+  "iou": 0.778,
   "xam": 0.792
- },
- {
-  "a": "lualien",
-  "b": "xuonganh",
-  "diem": 0.787,
-  "iou": 0.828,
-  "xam": 0.754
- },
- {
-  "a": "doc",
-  "b": "luutru",
-  "diem": 0.786,
-  "iou": 0.845,
-  "xam": 0.737
- },
- {
-  "a": "mana",
-  "b": "cauvong",
-  "diem": 0.786,
-  "iou": 0.866,
-  "xam": 0.72
  },
  {
   "a": "tron",
   "b": "cauvong",
-  "diem": 0.786,
-  "iou": 0.896,
+  "diem": 0.785,
+  "iou": 0.895,
   "xam": 0.696
  },
  {
-  "a": "baotuyet",
-  "b": "taylo",
-  "diem": 0.786,
+  "a": "tron",
+  "b": "luutru",
+  "diem": 0.785,
   "iou": 0.816,
-  "xam": 0.762
+  "xam": 0.759
+ },
+ {
+  "a": "baotuyet",
+  "b": "thanhdia",
+  "diem": 0.785,
+  "iou": 0.847,
+  "xam": 0.734
  },
  {
   "a": "dongbo",
   "b": "xuonganh",
-  "diem": 0.786,
-  "iou": 0.864,
+  "diem": 0.785,
+  "iou": 0.862,
   "xam": 0.723
- },
- {
-  "a": "saochep",
-  "b": "soi",
-  "diem": 0.786,
-  "iou": 0.864,
-  "xam": 0.722
- },
- {
-  "a": "sungluc",
-  "b": "thanhdia",
-  "diem": 0.785,
-  "iou": 0.911,
-  "xam": 0.682
- },
- {
-  "a": "doc",
-  "b": "baotuyet",
-  "diem": 0.785,
-  "iou": 0.872,
-  "xam": 0.714
- },
- {
-  "a": "mana",
-  "b": "nhatthuc",
-  "diem": 0.785,
-  "iou": 0.876,
-  "xam": 0.711
- },
- {
-  "a": "nam",
-  "b": "vughep",
-  "diem": 0.785,
-  "iou": 0.894,
-  "xam": 0.695
- },
- {
-  "a": "nam",
-  "b": "saochep",
-  "diem": 0.785,
-  "iou": 0.866,
-  "xam": 0.719
- },
- {
-  "a": "loa",
-  "b": "tienhoa",
-  "diem": 0.785,
-  "iou": 0.863,
-  "xam": 0.721
  },
  {
   "a": "hasao",
   "b": "pandora",
   "diem": 0.785,
+  "iou": 0.854,
+  "xam": 0.728
+ },
+ {
+  "a": "doc",
+  "b": "nangluong",
+  "diem": 0.784,
   "iou": 0.855,
-  "xam": 0.728
+  "xam": 0.726
  },
  {
-  "a": "bang",
-  "b": "lophanung",
+  "a": "mana",
+  "b": "chimang",
   "diem": 0.784,
-  "iou": 0.866,
-  "xam": 0.718
+  "iou": 0.905,
+  "xam": 0.685
  },
  {
-  "a": "khien",
-  "b": "aten",
+  "a": "tron",
+  "b": "saochep",
   "diem": 0.784,
-  "iou": 0.804,
-  "xam": 0.767
+  "iou": 0.838,
+  "xam": 0.74
  },
  {
-  "a": "epxung",
-  "b": "dongbo",
-  "diem": 0.784,
-  "iou": 0.851,
-  "xam": 0.728
+  "a": "bomhen",
+  "b": "xuonganh",
+  "diem": 0.783,
+  "iou": 0.894,
+  "xam": 0.692
  },
  {
-  "a": "vughep",
-  "b": "cauvong",
-  "diem": 0.784,
-  "iou": 0.888,
-  "xam": 0.698
+  "a": "dongbo",
+  "b": "thanhdia",
+  "diem": 0.783,
+  "iou": 0.84,
+  "xam": 0.737
  },
  {
   "a": "sinhdoi",
   "b": "nemesis",
-  "diem": 0.784,
-  "iou": 0.843,
+  "diem": 0.783,
+  "iou": 0.841,
   "xam": 0.735
- },
- {
-  "a": "hasao",
-  "b": "lualien",
-  "diem": 0.784,
-  "iou": 0.834,
-  "xam": 0.743
- },
- {
-  "a": "cauvong",
-  "b": "thanhdia",
-  "diem": 0.784,
-  "iou": 0.843,
-  "xam": 0.735
- },
- {
-  "a": "orbital",
-  "b": "santhuong",
-  "diem": 0.784,
-  "iou": 0.809,
-  "xam": 0.764
- },
- {
-  "a": "doc",
-  "b": "aten",
-  "diem": 0.783,
-  "iou": 0.814,
-  "xam": 0.757
- },
- {
-  "a": "kiembang",
-  "b": "hasao",
-  "diem": 0.783,
-  "iou": 0.885,
-  "xam": 0.7
- },
- {
-  "a": "nangluong",
-  "b": "vughep",
-  "diem": 0.783,
-  "iou": 0.853,
-  "xam": 0.726
- },
- {
-  "a": "lienket",
-  "b": "hydra",
-  "diem": 0.783,
-  "iou": 0.86,
-  "xam": 0.719
- },
- {
-  "a": "aten",
-  "b": "cuuvi",
-  "diem": 0.783,
-  "iou": 0.814,
-  "xam": 0.758
  },
  {
   "a": "wallgen",
@@ -1204,165 +609,130 @@
   "xam": 0.735
  },
  {
-  "a": "bao",
-  "b": "thanhdia",
-  "diem": 0.782,
-  "iou": 0.841,
-  "xam": 0.733
+  "a": "orbital",
+  "b": "bienmau",
+  "diem": 0.783,
+  "iou": 0.861,
+  "xam": 0.719
  },
  {
-  "a": "saochep",
-  "b": "luutru",
-  "diem": 0.782,
-  "iou": 0.827,
-  "xam": 0.745
- },
- {
-  "a": "santhuong",
-  "b": "thanhdia",
-  "diem": 0.782,
-  "iou": 0.82,
-  "xam": 0.751
- },
- {
-  "a": "xucxac",
-  "b": "tia",
-  "diem": 0.781,
-  "iou": 0.893,
-  "xam": 0.688
- },
- {
-  "a": "nam",
-  "b": "tienhoa",
-  "diem": 0.781,
-  "iou": 0.864,
-  "xam": 0.713
- },
- {
-  "a": "lienket",
-  "b": "vughep",
-  "diem": 0.781,
-  "iou": 0.872,
-  "xam": 0.706
- },
- {
-  "a": "lienket",
-  "b": "saochep",
-  "diem": 0.781,
-  "iou": 0.856,
-  "xam": 0.72
- },
- {
-  "a": "bang",
-  "b": "tron",
-  "diem": 0.78,
-  "iou": 0.826,
-  "xam": 0.742
- },
- {
-  "a": "mana",
+  "a": "doc",
   "b": "aten",
-  "diem": 0.78,
-  "iou": 0.742,
-  "xam": 0.811
+  "diem": 0.782,
+  "iou": 0.813,
+  "xam": 0.757
  },
  {
-  "a": "kiembang",
-  "b": "lualien",
-  "diem": 0.78,
-  "iou": 0.834,
-  "xam": 0.735
- },
- {
-  "a": "loa",
-  "b": "orbital",
-  "diem": 0.78,
-  "iou": 0.901,
-  "xam": 0.68
+  "a": "baotuyet",
+  "b": "taylo",
+  "diem": 0.782,
+  "iou": 0.807,
+  "xam": 0.762
  },
  {
   "a": "khien",
-  "b": "guongcong",
-  "diem": 0.78,
-  "iou": 0.815,
+  "b": "aten",
+  "diem": 0.782,
+  "iou": 0.8,
+  "xam": 0.767
+ },
+ {
+  "a": "epxung",
+  "b": "santhuong",
+  "diem": 0.782,
+  "iou": 0.819,
   "xam": 0.752
  },
  {
-  "a": "xaotron",
-  "b": "luutru",
-  "diem": 0.78,
+  "a": "aten",
+  "b": "cuuvi",
+  "diem": 0.782,
   "iou": 0.812,
-  "xam": 0.753
+  "xam": 0.758
  },
  {
   "a": "dongbo",
   "b": "cauvong",
-  "diem": 0.78,
-  "iou": 0.87,
+  "diem": 0.782,
+  "iou": 0.874,
   "xam": 0.707
  },
  {
-  "a": "tienhoa",
-  "b": "orbital",
-  "diem": 0.78,
-  "iou": 0.815,
-  "xam": 0.752
- },
- {
   "a": "doc",
-  "b": "santhuong",
-  "diem": 0.779,
-  "iou": 0.842,
-  "xam": 0.727
- },
- {
-  "a": "nhanmana",
-  "b": "vughep",
-  "diem": 0.779,
-  "iou": 0.888,
-  "xam": 0.689
- },
- {
-  "a": "vughep",
-  "b": "docton",
-  "diem": 0.779,
-  "iou": 0.876,
-  "xam": 0.699
- },
- {
-  "a": "xucxac",
-  "b": "xuonganh",
-  "diem": 0.778,
-  "iou": 0.861,
-  "xam": 0.709
- },
- {
-  "a": "bang",
-  "b": "cuuvi",
-  "diem": 0.778,
-  "iou": 0.825,
-  "xam": 0.74
- },
- {
-  "a": "tron",
-  "b": "santhuong",
-  "diem": 0.778,
-  "iou": 0.871,
-  "xam": 0.703
+  "b": "baotuyet",
+  "diem": 0.781,
+  "iou": 0.862,
+  "xam": 0.714
  },
  {
   "a": "nhanban",
-  "b": "guongcong",
-  "diem": 0.778,
-  "iou": 0.813,
-  "xam": 0.749
+  "b": "khien",
+  "diem": 0.781,
+  "iou": 0.833,
+  "xam": 0.738
  },
  {
-  "a": "taylo",
-  "b": "khien",
+  "a": "bao",
+  "b": "cauvong",
+  "diem": 0.781,
+  "iou": 0.827,
+  "xam": 0.742
+ },
+ {
+  "a": "anhsang",
+  "b": "nemesis",
+  "diem": 0.781,
+  "iou": 0.837,
+  "xam": 0.735
+ },
+ {
+  "a": "bang",
+  "b": "lophanung",
+  "diem": 0.78,
+  "iou": 0.856,
+  "xam": 0.718
+ },
+ {
+  "a": "bomhen",
+  "b": "tienhoa",
+  "diem": 0.78,
+  "iou": 0.831,
+  "xam": 0.738
+ },
+ {
+  "a": "vungdoc",
+  "b": "saochep",
+  "diem": 0.779,
+  "iou": 0.806,
+  "xam": 0.756
+ },
+ {
+  "a": "xaotron",
+  "b": "luutru",
+  "diem": 0.779,
+  "iou": 0.812,
+  "xam": 0.753
+ },
+ {
+  "a": "khoisinh",
+  "b": "bienmau",
+  "diem": 0.779,
+  "iou": 0.766,
+  "xam": 0.789
+ },
+ {
+  "a": "doc",
+  "b": "luutru",
   "diem": 0.778,
-  "iou": 0.807,
-  "xam": 0.754
+  "iou": 0.828,
+  "xam": 0.737
+ },
+ {
+  "a": "vungdoc",
+  "b": "nhanban",
+  "diem": 0.778,
+  "iou": 0.805,
+  "xam": 0.757
  },
  {
   "a": "taylo",
@@ -1372,31 +742,661 @@
   "xam": 0.744
  },
  {
+  "a": "saochep",
+  "b": "cauvong",
+  "diem": 0.778,
+  "iou": 0.846,
+  "xam": 0.723
+ },
+ {
+  "a": "khuech",
+  "b": "railgun",
+  "diem": 0.777,
+  "iou": 0.811,
+  "xam": 0.75
+ },
+ {
+  "a": "lienket",
+  "b": "hydra",
+  "diem": 0.777,
+  "iou": 0.848,
+  "xam": 0.719
+ },
+ {
   "a": "khien",
   "b": "docton",
-  "diem": 0.778,
-  "iou": 0.823,
+  "diem": 0.777,
+  "iou": 0.822,
   "xam": 0.741
  },
  {
-  "a": "nangsao",
+  "a": "soi",
+  "b": "cuuvi",
+  "diem": 0.777,
+  "iou": 0.864,
+  "xam": 0.707
+ },
+ {
+  "a": "cauvong",
   "b": "thanhdia",
-  "diem": 0.778,
+  "diem": 0.777,
   "iou": 0.827,
-  "xam": 0.739
+  "xam": 0.735
+ },
+ {
+  "a": "taylo",
+  "b": "khien",
+  "diem": 0.776,
+  "iou": 0.801,
+  "xam": 0.754
+ },
+ {
+  "a": "dongbo",
+  "b": "nhatthuc",
+  "diem": 0.776,
+  "iou": 0.897,
+  "xam": 0.676
+ },
+ {
+  "a": "orbital",
+  "b": "santhuong",
+  "diem": 0.776,
+  "iou": 0.79,
+  "xam": 0.764
+ },
+ {
+  "a": "mana",
+  "b": "orbital",
+  "diem": 0.775,
+  "iou": 0.872,
+  "xam": 0.696
+ },
+ {
+  "a": "kiembang",
+  "b": "hasao",
+  "diem": 0.775,
+  "iou": 0.866,
+  "xam": 0.7
+ },
+ {
+  "a": "tron",
+  "b": "santhuong",
+  "diem": 0.775,
+  "iou": 0.862,
+  "xam": 0.703
+ },
+ {
+  "a": "sinhdoi",
+  "b": "cauvong",
+  "diem": 0.775,
+  "iou": 0.897,
+  "xam": 0.676
+ },
+ {
+  "a": "lualien",
+  "b": "xuonganh",
+  "diem": 0.775,
+  "iou": 0.8,
+  "xam": 0.754
+ },
+ {
+  "a": "bang",
+  "b": "tron",
+  "diem": 0.774,
+  "iou": 0.812,
+  "xam": 0.742
+ },
+ {
+  "a": "doc",
+  "b": "santhuong",
+  "diem": 0.774,
+  "iou": 0.832,
+  "xam": 0.727
+ },
+ {
+  "a": "khien",
+  "b": "guongcong",
+  "diem": 0.774,
+  "iou": 0.802,
+  "xam": 0.752
+ },
+ {
+  "a": "bang",
+  "b": "cuuvi",
+  "diem": 0.773,
+  "iou": 0.813,
+  "xam": 0.74
+ },
+ {
+  "a": "lienket",
+  "b": "khien",
+  "diem": 0.773,
+  "iou": 0.853,
+  "xam": 0.707
+ },
+ {
+  "a": "pandora",
+  "b": "thanhdia",
+  "diem": 0.773,
+  "iou": 0.803,
+  "xam": 0.749
+ },
+ {
+  "a": "santhuong",
+  "b": "nhatthuc",
+  "diem": 0.773,
+  "iou": 0.891,
+  "xam": 0.676
+ },
+ {
+  "a": "lienket",
+  "b": "thanhdia",
+  "diem": 0.772,
+  "iou": 0.848,
+  "xam": 0.709
+ },
+ {
+  "a": "bao",
+  "b": "thanhdia",
+  "diem": 0.772,
+  "iou": 0.818,
+  "xam": 0.733
+ },
+ {
+  "a": "saochep",
+  "b": "hopca",
+  "diem": 0.772,
+  "iou": 0.82,
+  "xam": 0.732
+ },
+ {
+  "a": "lophanung",
+  "b": "cuuvi",
+  "diem": 0.772,
+  "iou": 0.868,
+  "xam": 0.693
+ },
+ {
+  "a": "santhuong",
+  "b": "thanhdia",
+  "diem": 0.772,
+  "iou": 0.798,
+  "xam": 0.751
+ },
+ {
+  "a": "nhanban",
+  "b": "guongcong",
+  "diem": 0.771,
+  "iou": 0.797,
+  "xam": 0.749
  },
  {
   "a": "aten",
   "b": "thanhdia",
-  "diem": 0.778,
-  "iou": 0.766,
+  "diem": 0.771,
+  "iou": 0.75,
   "xam": 0.788
  },
  {
+  "a": "santhuong",
+  "b": "marionette",
+  "diem": 0.771,
+  "iou": 0.842,
+  "xam": 0.713
+ },
+ {
+  "a": "xucxac",
+  "b": "railgun",
+  "diem": 0.77,
+  "iou": 0.806,
+  "xam": 0.74
+ },
+ {
+  "a": "tron",
+  "b": "nemesis",
+  "diem": 0.77,
+  "iou": 0.813,
+  "xam": 0.736
+ },
+ {
+  "a": "hasao",
+  "b": "lualien",
+  "diem": 0.77,
+  "iou": 0.804,
+  "xam": 0.743
+ },
+ {
+  "a": "cuuvi",
+  "b": "marionette",
+  "diem": 0.77,
+  "iou": 0.845,
+  "xam": 0.709
+ },
+ {
+  "a": "sungluc",
+  "b": "thanhdia",
+  "diem": 0.769,
+  "iou": 0.875,
+  "xam": 0.682
+ },
+ {
+  "a": "khuech",
+  "b": "thanhdia",
+  "diem": 0.769,
+  "iou": 0.887,
+  "xam": 0.672
+ },
+ {
+  "a": "nangsao",
+  "b": "thanhdia",
+  "diem": 0.769,
+  "iou": 0.805,
+  "xam": 0.739
+ },
+ {
+  "a": "saochep",
+  "b": "guongcong",
+  "diem": 0.769,
+  "iou": 0.786,
+  "xam": 0.755
+ },
+ {
+  "a": "doc",
+  "b": "saochep",
+  "diem": 0.768,
+  "iou": 0.85,
+  "xam": 0.7
+ },
+ {
+  "a": "khien",
+  "b": "nemesis",
+  "diem": 0.768,
+  "iou": 0.833,
+  "xam": 0.715
+ },
+ {
+  "a": "hasao",
+  "b": "khoisinh",
+  "diem": 0.768,
+  "iou": 0.83,
+  "xam": 0.718
+ },
+ {
+  "a": "lophanung",
+  "b": "nemesis",
+  "diem": 0.768,
+  "iou": 0.852,
+  "xam": 0.7
+ },
+ {
+  "a": "tron",
+  "b": "aten",
+  "diem": 0.767,
+  "iou": 0.846,
+  "xam": 0.702
+ },
+ {
+  "a": "nangluong",
+  "b": "santhuong",
+  "diem": 0.767,
+  "iou": 0.837,
+  "xam": 0.71
+ },
+ {
+  "a": "anhsang",
+  "b": "cuuvi",
+  "diem": 0.767,
+  "iou": 0.795,
+  "xam": 0.743
+ },
+ {
+  "a": "aten",
+  "b": "cauvong",
+  "diem": 0.767,
+  "iou": 0.835,
+  "xam": 0.712
+ },
+ {
+  "a": "aten",
+  "b": "marionette",
+  "diem": 0.767,
+  "iou": 0.786,
+  "xam": 0.752
+ },
+ {
   "a": "tienhoa",
-  "b": "docton",
-  "diem": 0.778,
-  "iou": 0.84,
+  "b": "hopca",
+  "diem": 0.767,
+  "iou": 0.846,
+  "xam": 0.702
+ },
+ {
+  "a": "nhanmana",
+  "b": "dichchuyen",
+  "diem": 0.766,
+  "iou": 0.893,
+  "xam": 0.661
+ },
+ {
+  "a": "nhanban",
+  "b": "cauvong",
+  "diem": 0.766,
+  "iou": 0.843,
+  "xam": 0.704
+ },
+ {
+  "a": "lienket",
+  "b": "santhuong",
+  "diem": 0.766,
+  "iou": 0.859,
+  "xam": 0.69
+ },
+ {
+  "a": "taylo",
+  "b": "santhuong",
+  "diem": 0.766,
+  "iou": 0.813,
   "xam": 0.727
+ },
+ {
+  "a": "aten",
+  "b": "sinhdoi",
+  "diem": 0.766,
+  "iou": 0.798,
+  "xam": 0.74
+ },
+ {
+  "a": "kiembang",
+  "b": "lualien",
+  "diem": 0.765,
+  "iou": 0.802,
+  "xam": 0.735
+ },
+ {
+  "a": "lienket",
+  "b": "lualien",
+  "diem": 0.765,
+  "iou": 0.784,
+  "xam": 0.749
+ },
+ {
+  "a": "aten",
+  "b": "ngoisao",
+  "diem": 0.765,
+  "iou": 0.76,
+  "xam": 0.769
+ },
+ {
+  "a": "soi",
+  "b": "cauvong",
+  "diem": 0.765,
+  "iou": 0.861,
+  "xam": 0.687
+ },
+ {
+  "a": "xucxac",
+  "b": "tia",
+  "diem": 0.764,
+  "iou": 0.856,
+  "xam": 0.688
+ },
+ {
+  "a": "tron",
+  "b": "lophanung",
+  "diem": 0.764,
+  "iou": 0.885,
+  "xam": 0.665
+ },
+ {
+  "a": "nangluong",
+  "b": "saochep",
+  "diem": 0.764,
+  "iou": 0.837,
+  "xam": 0.704
+ },
+ {
+  "a": "nhanban",
+  "b": "aten",
+  "diem": 0.764,
+  "iou": 0.78,
+  "xam": 0.752
+ },
+ {
+  "a": "xaotron",
+  "b": "wallgen",
+  "diem": 0.764,
+  "iou": 0.878,
+  "xam": 0.672
+ },
+ {
+  "a": "dongbo",
+  "b": "nemesis",
+  "diem": 0.764,
+  "iou": 0.863,
+  "xam": 0.683
+ },
+ {
+  "a": "doc",
+  "b": "tron",
+  "diem": 0.763,
+  "iou": 0.855,
+  "xam": 0.687
+ },
+ {
+  "a": "doc",
+  "b": "nhanban",
+  "diem": 0.763,
+  "iou": 0.846,
+  "xam": 0.695
+ },
+ {
+  "a": "nam",
+  "b": "cuuvi",
+  "diem": 0.763,
+  "iou": 0.848,
+  "xam": 0.694
+ },
+ {
+  "a": "tron",
+  "b": "loa",
+  "diem": 0.763,
+  "iou": 0.818,
+  "xam": 0.718
+ },
+ {
+  "a": "aten",
+  "b": "santhuong",
+  "diem": 0.763,
+  "iou": 0.805,
+  "xam": 0.729
+ },
+ {
+  "a": "baotuyet",
+  "b": "soi",
+  "diem": 0.762,
+  "iou": 0.886,
+  "xam": 0.661
+ },
+ {
+  "a": "lienket",
+  "b": "aten",
+  "diem": 0.762,
+  "iou": 0.788,
+  "xam": 0.742
+ },
+ {
+  "a": "khien",
+  "b": "orbital",
+  "diem": 0.762,
+  "iou": 0.733,
+  "xam": 0.785
+ },
+ {
+  "a": "dongbo",
+  "b": "orbital",
+  "diem": 0.762,
+  "iou": 0.779,
+  "xam": 0.748
+ },
+ {
+  "a": "hasao",
+  "b": "luutru",
+  "diem": 0.762,
+  "iou": 0.733,
+  "xam": 0.787
+ },
+ {
+  "a": "ngoisao",
+  "b": "hopca",
+  "diem": 0.762,
+  "iou": 0.81,
+  "xam": 0.722
+ },
+ {
+  "a": "docton",
+  "b": "santhuong",
+  "diem": 0.762,
+  "iou": 0.828,
+  "xam": 0.708
+ },
+ {
+  "a": "khoisinh",
+  "b": "lualien",
+  "diem": 0.761,
+  "iou": 0.767,
+  "xam": 0.756
+ },
+ {
+  "a": "khoisinh",
+  "b": "xuonganh",
+  "diem": 0.761,
+  "iou": 0.812,
+  "xam": 0.72
+ },
+ {
+  "a": "xuonganh",
+  "b": "thanhdia",
+  "diem": 0.761,
+  "iou": 0.84,
+  "xam": 0.696
+ },
+ {
+  "a": "canon",
+  "b": "saochep",
+  "diem": 0.76,
+  "iou": 0.859,
+  "xam": 0.679
+ },
+ {
+  "a": "sungluc",
+  "b": "hasao",
+  "diem": 0.76,
+  "iou": 0.854,
+  "xam": 0.683
+ },
+ {
+  "a": "nam",
+  "b": "soi",
+  "diem": 0.76,
+  "iou": 0.846,
+  "xam": 0.689
+ },
+ {
+  "a": "nangluong",
+  "b": "sinhdoi",
+  "diem": 0.76,
+  "iou": 0.846,
+  "xam": 0.69
+ },
+ {
+  "a": "nhanban",
+  "b": "santhuong",
+  "diem": 0.76,
+  "iou": 0.796,
+  "xam": 0.731
+ },
+ {
+  "a": "nhanban",
+  "b": "luutru",
+  "diem": 0.76,
+  "iou": 0.824,
+  "xam": 0.707
+ },
+ {
+  "a": "aten",
+  "b": "thaukinh",
+  "diem": 0.76,
+  "iou": 0.853,
+  "xam": 0.684
+ },
+ {
+  "a": "xucxac",
+  "b": "xuonganh",
+  "diem": 0.759,
+  "iou": 0.819,
+  "xam": 0.709
+ },
+ {
+  "a": "baotuyet",
+  "b": "nemesis",
+  "diem": 0.759,
+  "iou": 0.855,
+  "xam": 0.682
+ },
+ {
+  "a": "aten",
+  "b": "ngaithoigian",
+  "diem": 0.759,
+  "iou": 0.831,
+  "xam": 0.701
+ },
+ {
+  "a": "sinhdoi",
+  "b": "soi",
+  "diem": 0.759,
+  "iou": 0.879,
+  "xam": 0.66
+ },
+ {
+  "a": "sinhdoi",
+  "b": "lualien",
+  "diem": 0.759,
+  "iou": 0.803,
+  "xam": 0.722
+ },
+ {
+  "a": "sinhdoi",
+  "b": "xuonganh",
+  "diem": 0.759,
+  "iou": 0.823,
+  "xam": 0.707
+ },
+ {
+  "a": "hasao",
+  "b": "thanhdia",
+  "diem": 0.759,
+  "iou": 0.854,
+  "xam": 0.681
+ },
+ {
+  "a": "soi",
+  "b": "orbital",
+  "diem": 0.759,
+  "iou": 0.765,
+  "xam": 0.754
+ },
+ {
+  "a": "wallgen",
+  "b": "luutru",
+  "diem": 0.759,
+  "iou": 0.773,
+  "xam": 0.747
+ },
+ {
+  "a": "nemesis",
+  "b": "nhatthuc",
+  "diem": 0.759,
+  "iou": 0.838,
+  "xam": 0.694
  }
 ]

@@ -238,7 +238,7 @@ SKILLS.kiembang = { // Kiếm Băng (Ymir): +400% sát thương vào quái đang
       if (cham) nhanU(T, 'SHATTER ×' + k, '#7fdcff');
       // LAN CHẬM: quái quanh điểm trúng (trừ mục tiêu) bị lạnh 20% · 2 s → lượt chém sau nhắm chúng ×5
       let lan = 0;
-      for (const Q of dsMucTieu(B)) if (Q !== M && !Q.chet && !Q.d.khangCham && Math.hypot(Q.x - d.x, Q.y - d.y) < 44) { Q.cham = Math.max(Q.cham, Q.trum ? 0.15 : 0.2); Q.chamT = Math.max(Q.chamT, 2); lan++; }
+      for (const Q of dsMucTieu(B)) if (Q !== M && !Q.chet && !Q.d.khangCham && Math.hypot(Q.x - d.x, Q.y - d.y) < 44) { Q.cham = Math.max(Q.cham, Q.trum ? Math.min(0.2, HOTRO.CHAM_TRUM) : 0.2); Q.chamT = Math.max(Q.chamT, 2); lan++; }
       if (lan) FX.vong1(d.x, d.y, 8, 44, '#bff4ff', 0.3, 2);
     }, 'bang');
   },
@@ -281,7 +281,7 @@ SKILLS.drone = { // DRONE KÉO XA (Hermes, co-che-moi/DE-XUAT.md §3-N): khi GH�
   mo: (T) => 'On merge: 1 bomb drone per cell dragged + ' + Math.floor(T.sao / 3) + ' (max 8, ×' + SKILLS.drone.NHAN + ' damage, blast 46 px) · drag from far away for more drones (corner to corner = ' + SKILLS.drone.so(T.sao, 6) + ')',
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'dan_lien', co: 14, snd: 'lien' }); },
   ghep(G, B, a, b, ra) {
-    const d = this.quang(a.o, b.o), n = this.so(a.sao, d), dmg = hsU('drone', a.sao + 1, B) * this.NHAN;
+    const d = this.quang(a.o, b.o), n = this.so(a.sao, d), dmg = hsU('drone', a.sao + 1, B) * this.NHAN * (B.cuong > 0 ? 2 : 1); // chỉ huy RAGE ×2 "cả bàn" cũng áp lên bom drone phóng lúc RAGE (rà cộng hưởng 07/11)
     const ds = G.duong.map((p, i) => i).filter(i => G.duong[i].ban === B.i);
     if (!ds.length) return;
     for (let i = 0; i < n; i++) {
@@ -320,10 +320,10 @@ SKILLS.nangluong = { // Pháo Năng Lượng (Jupiter): sát thương tăng theo
     if (k >= 3) nhanU(T, 'OVERLOAD +' + Math.round(k * 100) + '%', '#d9a8ff');
   },
 };
-SKILLS.lanhgia = { // Máy Phát Lạnh (Neptune): HỖ TRỢ — ụ kề bắn kèm làm chậm (không cộng dồn với nguồn chậm khác; trần 35% / trùm 15%)
+SKILLS.lanhgia = { // Máy Phát Lạnh (Neptune): HỖ TRỢ — ụ kề bắn kèm làm chậm (không cộng dồn với nguồn chậm khác; trần 90% / trùm 50%)
   vai: 'ht', dmg: 0, toc: 0,
   cham: (T) => 0.08 * HOTRO.k(T),
-  mo: (T) => 'Neighbours’ hits slow ' + Math.round(HOTRO.hd(T, 'cham', SKILLS.lanhgia.cham(T)) * 100) + '% for 2s (bosses max 15%)' + (ms(T, 5) ? ' · +' + Math.round(0.05 * HOTRO.k(T) * 100) + '% damage vs slowed' : '') + (ms(T, 7) ? ' · every 8s a hit freezes 0.8s' : ''),
+  mo: (T) => 'Neighbours’ hits slow ' + Math.round(HOTRO.hd(T, 'cham', SKILLS.lanhgia.cham(T)) * 100) + '% for 2s (bosses max 50%)' + (ms(T, 5) ? ' · +' + Math.round(0.05 * HOTRO.k(T) * 100) + '% damage vs slowed' : '') + (ms(T, 7) ? ' · every 8s a hit freezes 0.8s' : ''),
   hoTro(G, T, N, ra) { ra.cham = this.cham(T); if (ms(T, 5)) ra.lanh = 0.05 * HOTRO.k(T); },
   capNhat(G, B, T, dt) {
     HOTRO.nhip(G, B, T, dt, '127,220,255', 2.4, 0.6);
@@ -445,7 +445,7 @@ SKILLS.baotuyet = { // Bão Tuyết (Mayauel): định kỳ làm chậm TOÀN B�
   vai: 'tc', dmg: 26, toc: 1, napMau: '#bff4ff', // 9 → 26 (đo bậc 06/11)
   ky: (T) => Math.max(4, 11 - 0.6 * T.sao - (ms(T, 3) ? 1.5 : 0)), // 3★ SQUALL
   cham: (T) => Math.min(0.6, 0.3 + 0.03 * T.sao),
-  mo: (T) => 'Every ' + SKILLS.baotuyet.ky(T).toFixed(1) + 's: slow ALL enemies ' + Math.round(SKILLS.baotuyet.cham(T) * 100) + '% for 3s (bosses 15%) + freeze small ones ' + (ms(T, 7) ? 1 : 0.35) + 's · hits all for ' + (ms(T, 5) ? 450 : 150) + '% damage',
+  mo: (T) => 'Every ' + SKILLS.baotuyet.ky(T).toFixed(1) + 's: slow ALL enemies ' + Math.round(SKILLS.baotuyet.cham(T) * 100) + '% for 3s (bosses max 50%) + freeze small ones ' + (ms(T, 7) ? 1 : 0.35) + 's · hits all for ' + (ms(T, 5) ? 450 : 150) + '% damage',
   capNhat(G, B, T, dt) {
     T.goc += dt * 0.8; // quạt tuyết quay đều
     T.nap = Math.min(1, T.nap + dt * nhipU(T) / this.ky(T));
@@ -504,7 +504,7 @@ SKILLS.kepha = { // Kẹp Phá (Myrina): khi GHÉP — PVP làm chậm ụ đố
     const n = 1 + Math.floor(a.sao / 2), c0 = B.o[b.o];
     if (G.che === 'pvp') {
       const D = banKhac(B); if (!D) return;
-      const ds = D.t.filter(X => X && SKILLS[X.id].dmg).sort((x, y) => y.sao - x.sao).slice(0, n);
+      const ds = D.t.filter(X => X && SKILLS[X.id].dmg && !biKhoa(X)).sort((x, y) => y.sao - x.sao).slice(0, n); // ụ khoá không nhận Kẹp — rà cộng hưởng 07/11, người dùng chốt
       for (const X of ds) { const c = D.o[X.o]; tiaPhep(c0.x, c0.y, c.x, c.y, '#c77dff'); if (!chanKhien(D, X)) { X.st.kep = 5 + a.sao; FX.chu1(c.x, c.y - 20, 'CLAMPED', '#c77dff', 12, 'to'); } }
       nhanU(ra, 'CLAMP ×' + ds.length, '#c77dff', true);
     } else {
@@ -804,7 +804,7 @@ SKILLS.hasao = { // Súng Hạ Sao (Giltine) — HỖ TRỢ (đợt vai trò): �
       if (G.che === 'pvp' && X0 !== B) {
         T.w5 = G.wave; const c0 = B.o[T.o], c = X0.o[X.o];
         G.hu.push({ k: 'tiaTia', t: 0, song: 0.3, x0: c0.x, y0: c0.y, x1: c.x, y1: c.y, mau: '#ff3b3b' });
-        if (!chanKhien(X0, X)) { X.giamT = 6; X.giamV = 0.08; FX.chu1(c.x, c.y - 20, '−8% FIRE RATE', '#ff4b3e', 11); }
+        if (!biKhoa(X) && !chanKhien(X0, X)) { X.giamT = 6; X.giamV = 0.08; FX.chu1(c.x, c.y - 20, '−8% FIRE RATE', '#ff4b3e', 11); }
         nhanU(T, 'STAR BREAK', '#ff4b3e', true);
       } else if (G.che !== 'pvp') {
         T.w5 = G.wave; const A = G.che === 'coop' && D ? D : B;
@@ -961,7 +961,7 @@ SKILLS.lophanung = { // Lò Phản Ứng Băng (Devil Cider Liza) — HỖ TRỢ
   r: (T) => 110 + 5 * T.sao + (ms(T, 3) ? 20 : 0), // 3★ COLD FRONT
   cham: (T) => Math.min(0.4, 0.2 + 0.025 * (T.sao - 1)), // 15%+2%/★ → 20%+2.5%/★ (đo bậc 06/11)
   k: (T) => 0.12 * HOTRO.k(T), // 0.14 → 0.2 → 0.12 (07/11: trần riêng 'có điều kiện' — trước đó chạm trần ngay 1★; BAO-CAO Mức 3)
-  mo: (T) => 'Aura ' + SKILLS.lophanung.r(T) + ' px slows ' + Math.round(SKILLS.lophanung.cham(T) * 100) + '% (bosses 15%) · Attack neighbours +' + Math.round(HOTRO.hd(T, 'lanh', SKILLS.lophanung.k(T)) * 100) + '% vs slowed · charges 24s, TAP when full: FREEZE nearby ' + (ms(T, 5) ? 4 : 2.5) + 's (bosses 0.8s)',
+  mo: (T) => 'Aura ' + SKILLS.lophanung.r(T) + ' px slows ' + Math.round(SKILLS.lophanung.cham(T) * 100) + '% (bosses max 50%) · Attack neighbours +' + Math.round(HOTRO.hd(T, 'lanh', SKILLS.lophanung.k(T)) * 100) + '% vs slowed · charges 24s, TAP when full: FREEZE nearby ' + (ms(T, 5) ? 4 : 2.5) + 's (bosses 0.8s)',
   hoTro(G, T, N, ra) { ra.lanh = this.k(T); },
   capNhat(G, B, T, dt) {
     const r = this.r(T), ds = quaiTrongTam(B, T, r);
@@ -1223,7 +1223,7 @@ HU.cauvong = { // cầu vồng trên đường
       if (!gan) continue;
       if (o.pvp) { if (G.duong[E.p].ban !== o.B.i) { E.cvPK = Math.max(E.cvPT > 0 && E.cvPK || 0, o.kp || 0.1); E.cvPT = 0.6; } } // PVP (Yuna): quái đối thủ trên vệt TRÂU hơn
       else { E.cvK = Math.max(E.cvT > 0 && E.cvK || 0, o.k2); E.cvT = 0.6; }
-      if (o.cham && !E.d.khangCham && !o.pvp) { E.cham = Math.max(E.cham, Math.min(o.cham, E.trum ? 0.15 : 0.35)); E.chamT = Math.max(E.chamT, 0.6); } // Rainbow 7★: vệt làm chậm
+      if (o.cham && !E.d.khangCham && !o.pvp) { E.cham = Math.max(E.cham, Math.min(o.cham, E.trum ? HOTRO.CHAM_TRUM : 0.35)); E.chamT = Math.max(E.chamT, 0.6); } // Rainbow 7★: vệt làm chậm
     }
     return false;
   },

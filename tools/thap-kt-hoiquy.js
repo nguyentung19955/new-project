@@ -569,6 +569,11 @@ async function online(b, W, H, D, co) {
     try { execFileSync('node', [path.join(__dirname, 'thap-kt-khong-ban.js')], { stdio: 'pipe', timeout: 300000 }); console.log('  ✓ ụ không bắn (thap-kt-khong-ban.js)'); }
     catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-khong-ban.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'khongban', loai: 'ụ không bắn', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ ụ không bắn: lỗi chạy'); }
   }
+  // CỘNG HƯỞNG LUẬT: 2 luật gặp nhau thì luật nào thắng (ghép đặc biệt × đá/băng/vàng/7★, kỹ năng khi ghép, RAGE ×2 & bản sao × mọi nguồn sát thương, bộ đếm, trùm × ụ chống, PVP Holy Shield) — tools/thap-kt-cong-huong-luat.js (07/11)
+  if (!process.env.CHI || /conghuong|luat|solo|pvp/.test(process.env.CHI)) {
+    try { execFileSync('node', [path.join(__dirname, 'thap-kt-cong-huong-luat.js')], { stdio: 'pipe', timeout: 300000 }); console.log('  ✓ cộng hưởng luật (thap-kt-cong-huong-luat.js)'); }
+    catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-cong-huong-luat.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'conghuongluat', loai: 'cộng hưởng luật', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ cộng hưởng luật: lỗi chạy'); }
+  }
   // 4 ụ VÀNG mới đợt 2 (Blood Circuit / Hex Saboteur / Sanctum / Prism Thief: luật, tất định, PVP/CO-OP, cấp thẻ, cờ online) — tools/thap-kt-vang-moi2.js
   if (!process.env.CHI || /vang|solo|pvp|coop/.test(process.env.CHI)) {
     try { execFileSync('node', [path.join(__dirname, 'thap-kt-vang-moi2.js')], { stdio: 'pipe', env: Object.assign({}, process.env, { SHOTS: '0' }), timeout: 300000 }); console.log('  ✓ ụ vàng mới đợt 2 (thap-kt-vang-moi2.js)'); }

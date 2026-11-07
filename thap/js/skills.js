@@ -127,7 +127,7 @@ SKILLS.bang = { // Băng (Liza) — ĐẶC BIỆT (đợt vai trò): định k�
   ky: (T) => (ms(T, 5) ? 4.5 : 6),          // 5★ QUICK FROST
   dai: (T) => Math.round(((ms(T, 3) ? 0.5 : 0) + knThe(G.ban[T.ban], 'bang')) * 10) / 10, // 3★ LONG FREEZE · cấp thẻ: 2 s → 3 s (+ power-up KY_NANG_CAP.pu)
   so: (T) => (ms(T, 7) ? 2 : 1),            // 7★ DOUBLE FREEZE
-  mo: (T) => 'Every ' + SKILLS.bang.ky(T) + 's freezes ' + (SKILLS.bang.so(T) > 1 ? '2 lead enemies ' : 'the lead enemy ') + SKILLS.bang.dai(T) + 's (big ×0.6; bosses only 50% slow 0.6s) + 30% chill (bosses 15%) · 3s freeze immunity · Frost Flyers immune',
+  mo: (T) => 'Every ' + SKILLS.bang.ky(T) + 's freezes ' + (SKILLS.bang.so(T) > 1 ? '2 lead enemies ' : 'the lead enemy ') + SKILLS.bang.dai(T) + 's (big ×0.6; bosses only 50% slow 0.6s) + 30% chill · 3s freeze immunity · Frost Flyers immune',
   ung: (G, B) => dsMucTieu(B).filter(E => !E.chet && !E.d.khangCham && !(E.bangMien > G.t)).sort((a, b) => (G.duong[a.p].len - a.s) - (G.duong[b.p].len - b.s)),
   capNhat(G, B, T, dt) {
     const ds = this.ung(G, B);
@@ -143,12 +143,12 @@ SKILLS.bang = { // Băng (Liza) — ĐẶC BIỆT (đợt vai trò): định k�
     return true;
   },
 };
-// đóng băng 1 quái (Frost): thường = dai, quái to ×0.6, trùm 0.6 s; sau đó lạnh 30% thêm 2 s (trùm 15% — trần chậm của trùm); miễn đóng băng 3 s (không khoá nối tiếp)
+// đóng băng 1 quái (Frost): thường = dai, quái to ×0.6, trùm 0.6 s; sau đó lạnh 30% thêm 2 s (trùm: kẹp trần chậm trùm HOTRO.CHAM_TRUM 50%); miễn đóng băng 3 s (không khoá nối tiếp)
 function dongBang(E, dai, T) {
   if (E.chet) return;
   const d = E.trum ? 0.6 : E.d.to ? dai * 0.6 : dai;
   E.chan = Math.max(E.chan, d); E.bangMien = G.t + d + 3;
-  E.chamT = Math.max(E.chamT, d + 2); E.cham = Math.max(E.cham, E.trum ? 0.15 : 0.3);
+  E.chamT = Math.max(E.chamT, d + 2); E.cham = Math.max(E.cham, E.trum ? Math.min(0.3, HOTRO.CHAM_TRUM) : 0.3);
   FX.chu1(E.x, E.y - 22, 'FROZEN', '#bff4ff', 11); FX.no('bang_vo', E.x, E.y, 70, 0.45);
 }
 SKILLS.doc = { // Độc (Unknown) — ĐẶC BIỆT (đợt vai trò): ĐÁNH DẤU quái đầu 5 s → mọi ụ gây thêm 12% (làm mới thời gian, không cộng dồn giá trị); không tự gây sát thương

@@ -78,3 +78,42 @@ Cách làm: ô 1 (ụ lắp sẵn) của 93 tấm, thu về đúng đường kí
 - `CAP-DE-NHAM.png`, `cap.json`: 30/200 cặp giống nhất sau khi đổi
 - `scripts/`: `cat.py` (cắt ô), `xem.py` (bảng, GIF, chuẩn bị đo), `phanho.py` (dữ liệu phân họ)
 - Ảnh tham chiếu: `docs/demo-hop-tuong/tuvan/u-moi/ref/` trên nhánh `claude/kiem-nhan-dien`
+
+## 5. Gen lại 5 ụ còn sát nhau (07/11 chiều)
+
+Người dùng duyệt 12:30. Gen lại bằng ChatGPT (đính kèm tấm cũ làm tham chiếu), mỗi ụ 1 lượt, kiểm bằng mắt đạt cả 5 (đúng 4 ô, nền magenta đặc, từ trên xuống, đầu chĩa lên, không chữ, không chạm mép). Ảnh gốc ghi đè `thap-art/raw_mod_<id>.png`.
+
+| Ụ | Bệ mới (không tròn) | Màu chủ đạo | Vật thể lòi khỏi bệ |
+|---|---|---|---|
+| Máy Sao Chép (`saochep`) | vuông vát góc | xanh ngọc (cyan) | 2 khối lập phương lệch chéo |
+| Vua Ghép (`vughep`) | ngũ giác | đỏ thẫm + sắt đen | vương miện 5 gai xoè rộng |
+| Hộp Tiến Hoá (`tienhoa`) | tam giác rễ cây | xanh lá chanh | trứng cao + ADN + lá 2 bên |
+| Máy Mana (`mana`) | bát giác đá (xin lục giác, ChatGPT vẽ 8 cạnh) | xanh hoàng gia | xà quay ngang thò 2 bên |
+| Loa Hồi Chiêu (`loa`) | chữ thập | cam đồng, không xanh | loa kèn loe to + đồng hồ cát |
+
+Viền vàng giảm hẳn (chỉ 1–2 điểm nhấn). Đo lại đúng cách mục 2 (`scripts/cat.py` → `scripts/xem.py <thư mục đo>` → `tools/thap-nhandien-bang.py` nhánh `claude/kiem-nhan-dien`):
+
+| Đo | Lượt 1 (93 hình mới) | Sau gen lại 5 ụ |
+|---|---|---|
+| Cặp điểm ≥ 0,80 | 95 | **40** |
+| Cặp điểm ≥ 0,85 | 6 | **0** (đạt mục tiêu) |
+| Cặp giống nhất | Vua Ghép ↔ Máy Sao Chép 0.88 | Máy Khiên ↔ Pháo Đồng Bộ 0.84 |
+
+Người giống nhất của 5 ụ vừa đổi: Máy Sao Chép ↔ Máy Nhân Bản 0.82 · Vua Ghép < 0,73 (ngoài top 200) · Hộp Tiến Hoá ↔ Pháo May Rủi 0.79 · Máy Mana ↔ Ăng-ten Chí Mạng 0.78 · Loa Hồi Chiêu ↔ Cửu Vĩ 0.80 (Máy Nhân Mana giờ gần nhất Bệ Dịch Chuyển 0.77, không còn với Loa).
+
+### 10 cặp giống nhất bây giờ
+
+| # | Ụ A | Ụ B | Điểm | Bóng | Xám |
+|---|---|---|---|---|---|
+| 1 | Máy Khiên (`khien`) | Pháo Đồng Bộ (`dongbo`) | 0.84 | 0.86 | 0.82 |
+| 2 | Pháo Đồng Bộ (`dongbo`) | Đèn Săn Thưởng (`santhuong`) | 0.83 | 0.88 | 0.80 |
+| 3 | Hợp Xướng Lượng Tử (`hopca`) | Kho Lưu Hợp Nhất (`luutru`) | 0.83 | 0.85 | 0.82 |
+| 4 | Bão Tuyết (`baotuyet`) | Máy Sinh Đôi (`sinhdoi`) | 0.83 | 0.90 | 0.78 |
+| 5 | Máy Sinh Đôi (`sinhdoi`) | Đèn Săn Thưởng (`santhuong`) | 0.83 | 0.90 | 0.77 |
+| 6 | Máy Sinh Đôi (`sinhdoi`) | Nhật Thực (`nhatthuc`) | 0.83 | 0.89 | 0.79 |
+| 7 | Bão Tuyết (`baotuyet`) | Máy Cầu Vồng (`cauvong`) | 0.83 | 0.90 | 0.77 |
+| 8 | Cửu Vĩ (`cuuvi`) | Nữ Thần Phán Xử (`nemesis`) | 0.82 | 0.87 | 0.79 |
+| 9 | Băng (`bang`) | Máy Khiên (`khien`) | 0.82 | 0.85 | 0.80 |
+| 10 | Cổng Gương (`guongcong`) | Hợp Xướng Lượng Tử (`hopca`) | 0.82 | 0.87 | 0.78 |
+
+Đã cập nhật `BANG-MOI.png`, `BANG-XAM.png`, `CAP-DE-NHAM.png`, `cap.json`, `gif/HO-*.gif`. Nếu muốn hạ tiếp dưới 0,80: nhóm bệ tròn viền vàng còn lại (`sinhdoi`, `dongbo`, `santhuong`, `khien`, `baotuyet`).

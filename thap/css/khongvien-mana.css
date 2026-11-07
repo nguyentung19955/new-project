@@ -30,4 +30,9 @@ html:root body #the-mv.du.tn-day .mv-gia { color: #ff8a7a !important; } /* bàn 
    Sau: nâng 6 px logic (≈5–6 px thật) → nằm gọn trong khay, ngay dưới ô; không đụng LV/MAX/số ụ (ở trên ô). Mọi chế độ chung #bo-the/#the-mv.
    Kiểm: tools/thap-kt-nhangia.js (trong thap-kt-hoiquy.js). */
 html:root body #wrap #bo-the .the > .gia, html:root.co-hud2 body #wrap #bo-the .the > .gia, html:root.co-hud2.co-gia body #wrap #bo-the .the > .gia { bottom: 6px !important; }
+/* 5b) 07/11 người dùng: "cao lên chút gần sát vào viền thẻ" — giá neo theo đáy ô vuông (--ot-sq), đè nhẹ viền dưới khung thẻ.
+   max(): khi --ot-k lớn (màn ngang, chữ LV to) không lên chồng nhãn +n/MAX — giữ dưới đáy nhãn LV (top .66·ô + 12px·k). */
+html:root body #wrap #bo-the .the > .gia, html:root.co-hud2 body #wrap #bo-the .the > .gia, html:root.co-hud2.co-gia body #wrap #bo-the .the > .gia {
+  top: max(calc(var(--ot-sq, 62px) - 5px), calc(var(--ot-sq, 62px) * .66 + 12px * var(--ot-k, 1) + 1px)) !important; bottom: auto !important; }
 html:root body #wrap #the-mv > .mv-gia, html:root.co-hud2 body #wrap #the-mv > .mv-gia, html:root.co-hud2.co-gia body #wrap #the-mv > .mv-gia { top: 80px !important; bottom: auto !important; } /* chỉ huy neo top (chihuy-the.css top:86px) → 80px: tâm số thẳng hàng với giá thẻ */
+html:root body #wrap #the-mv > .mv-gia, html:root.co-hud2 body #wrap #the-mv > .mv-gia, html:root.co-hud2.co-gia body #wrap #the-mv > .mv-gia { top: max(69px, calc(53.9px + 12px * var(--ot-k, 1))) !important; z-index: 7 !important; } /* 5b) 07/11: giá thẻ lên 11 px → chỉ huy theo (80 → 69 px), vẫn thẳng hàng; màn ngang (k lớn) theo cùng max() của thẻ */

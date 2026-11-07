@@ -229,9 +229,9 @@
   "ten": "Chiller",
   "bac": "xanh",
   "dcdw": "Neptune",
-  "kyNang": "Support: neighbours’ hits also slow (max 38%, bosses 15%)",
+  "kyNang": "Support: neighbours’ hits also slow (no cap, bosses max 50%)",
   "ten_vi": "Máy Phát Lạnh",
-  "kyNang_vi": "Hỗ trợ: đòn của ụ kề kèm làm chậm (tối đa 38%, trùm 15%)"
+  "kyNang_vi": "Hỗ trợ: đòn của ụ kề kèm làm chậm (không trần, trùm tối đa 50%)"
  },
  {
   "id": "mortar",

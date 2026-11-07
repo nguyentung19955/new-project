@@ -75,7 +75,7 @@ function luat(s, e, r) {
   // khoá (đá / băng)
   if (KHOA.has(s)) {
     if (['mkLen', 'teleLen', 'nangSao'].includes(e)) return L('giu', 'chỉ đổi sao/chỗ, khoá giữ nguyên');
-    if (['janus', 'freezer', 'nightmare', 'leech'].includes(e)) return s === 'da' ? L('na', 'trùm không nhắm ô đá') : e === 'freezer' ? L('na', 'đã băng') : L('giu', 'thêm/bớt trên ụ đang băng');
+    if (['janus', 'freezer', 'nightmare', 'leech'].includes(e)) return s === 'da' ? L('na', 'trùm không nhắm ô đá') : e === 'freezer' ? L('na', 'đã băng') : e === 'janus' ? L('chan', 'ụ khoá không nhận trạng thái xấu mới (người dùng chốt 07/11)') : L('giu', 'hạ sao vẫn trúng ụ đang băng');
     if (['eve', 'sanctum', 'cleanser'].includes(e)) return L('mat', 'được tẩy');
     if (['onlCung', 'onlKhac'].includes(e)) return s === 'da' ? L('giu', 'cờ S') : L('na', 'băng do trùm chạy y hệt 2 máy');
     if (e === 'copyLen') return L('mat', 'Copycat chép được ô đá/băng → bản sao THƯỜNG đúng loại thật, ô gốc giữ khoá (9d79bd2, copycat-da/DCDW.md)');

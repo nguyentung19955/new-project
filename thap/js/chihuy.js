@@ -17,7 +17,7 @@ const CH = {
   },
   // ụ yếu nhất để nâng khi bàn đầy
   yeuNhat(B, n, e) {
-    const ds = B.t.filter(T => T && T.sao < e.LUAT.saoMax && !(T.st && T.st.da));
+    const ds = B.t.filter(T => T && T.sao < e.LUAT.saoMax && !(T.st && (T.st.da || T.st.bang > 0))); // bỏ ụ đá + ụ BĂNG (rà cộng hưởng 07/11, người dùng chốt)
     ds.sort((a, b) => a.sao - b.sao || ((e.TIERS[a.bac] || {}).thuTu || 0) - ((e.TIERS[b.bac] || {}).thuTu || 0) || a.o - b.o);
     return ds.slice(0, n);
   },

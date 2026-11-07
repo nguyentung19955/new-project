@@ -72,8 +72,8 @@ const NN = (function () {
       const j = so ? r0.indexOf(so[1]) : -1; return j >= 0 ? r0.slice(0, j + so[1].length) + GHI_TRAN_VI + r0.slice(j + so[1].length) : r0 + GHI_TRAN_VI;
     }
     const r = traMot(s); if (r != null) return r;
-    // tiền tố "3★  …" (bảng sao) / "LV9 · …"
-    const tt = /^(\d+★\s+|LV\s?\d+\s·\s)([\s\S]+)$/.exec(s);
+    // tiền tố "3★ · +2 · …" / "3★ · MAX · …" / "3★ · …" (bảng thông tin ụ trong trận — nhãn cấp trận +n/MAX, 07/11) / "3★  …" (bảng sao) / "LV9 · …"
+    const tt = /^(\d+★ · (?:(?:\+\d+|MAX) · )?|\d+★\s+|LV\s?\d+\s·\s)([\s\S]+)$/.exec(s);
     if (tt) { const r3 = tra(tt[2]); if (r3 != null) return tt[1] + r3; }
     // "Nhãn +6% → +6.5%" (dòng cấp thẻ): dịch phần nhãn, giữ phần số
     const nh = /^([A-Za-z][A-Za-z ★+]*?) ([+−]?\d[\s\S]*)$/.exec(s);

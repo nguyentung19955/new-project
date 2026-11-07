@@ -3233,8 +3233,27 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
   Ngưỡng: Ember 5/10/20/40 lửa · Choir 3/5/8/12 ụ · Archive 10/25/50/100 · Forge 6/15/30/60 (thưởng vào ụ nhận) · Leviathan 25/50/100/200 · Chain Link 3/5/8/12 · Combo 5/10/20/40 · Nine-Tail 1/3/6/10 lần xả cầu lửa (giữ qua ghép).
   Chữ kỹ năng thêm "BREAKTHROUGH II: … · next breakthrough at N" (VI: ĐỘT PHÁ). Lên bậc: nổ PNG no_phao + chữ nổi.
 - Màu bậc: icon tấm đếm (demkn.js) + lửa Ember (vfxp2.js) = bản sao PNG lọc màu (ctx.filter) dựng 1 lần (`DOTPHA.ten`): cam → vàng → lam → tím → trắng; tấm Ember không còn "/8".
+- (12:54) Trùm: trần chậm 15% → 50% (HOTRO.CHAM_TRUM + Frost/Jammer/Rainbow/Static… dùng chung; chữ "(bosses max 50%)").
+- (12:54) Bớt rối trên ụ cộng dồn: BỎ hào quang lửa to (buffvfx.js, hào quang "DAMAGE UP" fxb_dmg vì ụ tự buff sát thương) và 3 viên ngọc dạng (motvong.js, ngoc_xanh = dạng grow 1–3) → thay bằng 1 vòng sáng mảnh fx_vong_mong tô màu bậc dưới ụ (cam → vàng → lam → tím → cầu vồng 6 màu), ảnh tô 1 lần rồi giữ. Ụ nhận Scrap Forge cũng dùng vòng này. Ảnh trước/sau: docs/demo-hop-tuong/tuvan/dot-pha/.
 - Test: thap-kt-vang-moi (thêm mục Đột phá, cân bằng đạt), thap-kt-vfx-p0 (cập nhật luật không trần, sửa câu Radar OVERDRIVE bị lặp), thap-kt-kynang-tx (suy yếu không trần), thap-kt-vi, tests/can-bang-vang. Ảnh xem: 844×390 bàn có đủ 5 bậc.
 
 ## claude/demo-hop-tuong — sửa 2 lỗi cộng hưởng (07/11)
 - Vua Ghép VÀNG kéo lên Vua Ghép giờ +2★ (trước chỉ +1★ — luật MK+MK đè luật vàng). Vua Ghép thường kéo lên Vua Ghép vẫn +1★.
 - Hộp Bí Ẩn và Hộp Tiến Hoá (thẻ ghi "Does not shoot") không còn "chọc" gây sát thương (growfx chocU). Thêm `tools/thap-kt-khong-ban.js` vào hồi quy: mọi ụ thẻ ghi không bắn phải gây 0 sát thương.
+
+## claude/demo-hop-tuong — rà lỗi cộng hưởng luật (07/11)
+- Test mới `tools/thap-kt-cong-huong-luat.js` (339 cặp, trong thap-kt-hoiquy.js): ghép đặc biệt × đá/băng/vàng/thức tỉnh/7★/bản sao × mọi ụ; kỹ năng khi ghép chạy đúng 1 lần (0 lần khi đá+đá / ghép đặc biệt) ở SOLO/PVP/CO-OP; RAGE ×2 và bản sao −% trên đòn của mọi ụ; bộ đếm × ghép / mất sao; chiêu trùm × khiên / Mirror / Holy Shield / Halo; PVP Holy Shield × hiệu ứng ghép đối thủ; 26 ca từ ChatGPT.
+- Sửa 4 lỗi: RAGE ×2 nay áp lên bom Drone và nổ Blood Circuit; Fusion Archive chỉ đếm ghép thật (Teleporter đổi chỗ qua lại từng nuôi vô hạn; Copycat/Overclock/Forge cũng không tính); Holy Shield chặn cả +mana triệu hồi của Signal Jammer.
+- Tài liệu: docs/demo-hop-tuong/tuvan/cong-huong/ (BAO-CAO, KIEM-KE, CHATGPT, CHATGPT-SPECIAL — đề xuất cân bằng chưa áp dụng, CAN-HOI 10 câu A/B).
+
+## claude/demo-hop-tuong — làm lại hiệu ứng Rối Máy (07/11)
+- Lỗi cũ: bàn tay tím ma (sig_l22_hand) nhìn NGANG, ngón chĩa sang phải chứ không xuống quái, khung lệch số ngón + phát tới-lui theo sin → ngón giật; dây móc gần như không thấy; 3 dạng sao không khác nhau.
+- Mới (ảnh ChatGPT, `raw_fx_marionette_{tay,thanh,day}.png` → `tools/thap-cat-marionette.py` → `thap/assets/fx_marionette_*.png`): 1–3★ STRINGS = thanh rối gỗ hạ xuống trên đầu quái, 3 dây vàng búng xuống móc vào, thanh lắc khi kéo lùi; 4–6★ GOLDEN HAND = găng cơ khí vàng nhìn từ trên hạ xuống, khép ngón (8 khung mở → nắm) bấu đỉnh quái, thân quái vẫn thấy; 7★ TWIN = 2 găng (con thứ 2 lật gương, nhỏ hơn). Hết giờ: găng mở ngón buông / thanh bay lên rồi nổ rối đồ chơi như cũ.
+- Chỉ đổi hình (js/sigfx.js `SIG.K.roi.moi`), luật không đổi; thiếu ảnh mới → vẽ bản cũ. Xem `docs/demo-hop-tuong/tuvan/marionette/TRUOC-SAU.gif`.
+
+## claude/demo-hop-tuong — thẻ trận +1/+2/MAX, chống vuốt nhầm thành kéo (07/11)
+- Thẻ trong trận (#bo-the, SOLO/CO-OP/PVP/ONLINE): bỏ chữ "LV" — cấp trận 1 không hiện gì, mỗi lần nâng "+1/+2/+3", tối đa (lv ≥ 5) "MAX" vàng ngay ở chỗ nhãn cấp; bỏ thẻ chữ MAX góc trên-trái cũ, ô giá vẫn ẩn khi MAX → MAX chỉ hiện 1 lần (`THEBAI.nhanTran`, `css/otoigian.css`). Bảng thông tin ụ cùng cách ghi: "3★ · +2" / "3★ · MAX" / "3★" (ui.js, ttgon.js; ngonngu.js nhận tiền tố mới để dịch phần sau).
+- Nhãn giá ◆ nâng lên sát/đè nhẹ viền dưới khung thẻ (neo theo đáy ô `--ot-sq`, `css/khongvien-mana.css` 5b); giá chỉ huy theo cùng hàng (80 → 69 px, nổi trên khung). Màn ngang (chữ to `--ot-k`) giữ dưới nhãn +n/MAX.
+- Màn XÂY BỘ BÀI (js/dkkeo.js): cảm ứng trên thẻ lưới xê dịch > 8 px trước khi giữ đủ = CUỘN (mọi hướng — trước: đi ngang > 8 px hoặc giữ 150 ms = kéo); kéo chỉ khi giữ yên 280 ms hoặc kéo thẳng lên khỏi mép trên lưới; chuột vẫn kéo ngay. Giữ yên để mở trang chi tiết 400 → 550 ms (dkcham.js) để kịp bắt đầu kéo sau 280 ms. Bộ sưu tập (cuộn gốc) không đổi.
+- Test mới `tools/thap-kt-vuot-deck.js` (cảm ứng CDP 390×844 + chuột 1280×800). Ảnh trước/sau: `docs/demo-hop-tuong/tuvan/the-tran/`.
+- 13:30 áp luật người dùng chốt (CAN-HOI 1B 3B 6B 7B 8B 10B): Mimic + Scrap Forge = ghép thường; khiên ụ chặn cả +mana Signal Jammer; Mirror phản bị khiên / Holy Shield đối thủ chặn (không dây chuyền); ụ đá/băng không nhận trạng thái xấu mới nhưng vẫn mất sao khi bị hạ sao; REINFORCE bỏ ụ băng; ô băng không nhận buff hỗ trợ. Test 361 cặp.

@@ -34,7 +34,7 @@ const DEMKN = {
   icVuc() { return this.IC_VUC || 'fx_leviathan_hieu'; },
 
   // ĐỘT PHÁ (vangmoi1.js DOTPHA): bậc 1–4 → icon PNG lọc màu (vàng / lam / tím / trắng, ảnh dựng 1 lần) + chữ cùng màu
-  lay(T, B) { const f = this.DS[T.id]; if (!f || !B || T.st.da) return null; try { const v = f(T, B); if (v && typeof DOTPHA !== 'undefined') { const b = DOTPHA.bacU(T); if (b) { v.bac = b; v.mau = DOTPHA.MAU[b]; v.sang = false; } } return v; } catch (e) { return null; } },
+  lay(T, B) { const f = this.DS[T.id]; if (!f || !B || T.st.da) return null; try { const v = f(T, B); if (v && typeof DOTPHA !== 'undefined') { const b = DOTPHA.bacU(T); if (b) { v.bac = b; v.v4 = b === 4 ? DOTPHA.buoc4() : -1; v.mau = b === 4 ? ['#ffb0b0', '#fff0a0', '#b0ffb8', '#a8f4ff', '#b8c4ff', '#ffb8f4'][v.v4] : DOTPHA.MAU[b]; v.sang = false; } } return v; } catch (e) { return null; } },
 
   // khung h2_tag (74×30, mép 14 px) cắt 3 mảnh: 2 đầu giữ tỉ lệ, phần giữa kéo dài
   khung(ctx, x, y, w, h) {
@@ -52,7 +52,7 @@ const DEMKN = {
     const v = this.lay(T, B); if (!v) return;
     const h = Math.max(9, c * 0.2), m = ctx.getTransform(), k = m.a;
     if (!(k > 0) || Math.abs(m.b) > 1e-6 || Math.abs(m.c) > 1e-6 || Math.abs(m.d - k) > 1e-6 || typeof REN === 'undefined' || !REN.cGet) return this.ve0(ctx, v, x, yDay, h, al);
-    const hp = Math.round(h * k * 4) / 4, key = 'dk|' + hp + '|' + (v.sang ? 1 : 0) + '|' + (v.mau || '') + '|' + (v.bac || 0) + '|' + v.m.map(p => p.ic + ':' + (p.xoay || 0) + ':' + p.s).join(',');
+    const hp = Math.round(h * k * 4) / 4, key = 'dk|' + hp + '|' + (v.sang ? 1 : 0) + '|' + (v.mau || '') + '|' + (v.bac || 0) + (v.v4 >= 0 ? 'h' + v.v4 : '') + '|' + v.m.map(p => p.ic + ':' + (p.xoay || 0) + ':' + p.s).join(',');
     let a = REN.cGet(key);
     if (!a) {
       if (!REN.img('h2_tag')) return;
@@ -83,7 +83,7 @@ const DEMKN = {
     xx += pad;
     for (let i = 0; i < v.m.length; i++) {
       const p = v.m[i]; if (i) xx += h * 0.3;
-      const im = REN.img(v.bac && typeof DOTPHA !== 'undefined' ? DOTPHA.ten(p.ic, v.bac) : p.ic), im2 = im && (REN.mip ? REN.mip(im, ic * REN.s * REN.dpr) : im);
+      const im = REN.img(v.bac && typeof DOTPHA !== 'undefined' ? DOTPHA.ten(p.ic, v.bac, v.v4) : p.ic), im2 = im && (REN.mip ? REN.mip(im, ic * REN.s * REN.dpr) : im);
       if (im2 && p.xoay) { ctx.save(); ctx.translate(xx + ic / 2, y + h / 2); ctx.rotate(p.xoay); ctx.drawImage(im2, -ic / 2, -ic / 2, ic, ic); ctx.restore(); } // mũi tên Pháo La Bàn: xoay ảnh PNG (QT3)
       else if (im2) ctx.drawImage(im2, xx, y + (h - ic) / 2, ic, ic);
       xx += ic + gap;

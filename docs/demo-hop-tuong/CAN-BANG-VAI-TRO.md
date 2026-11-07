@@ -1,5 +1,7 @@
 # CÂN BẰNG VAI TRÒ — TURRET MERGE (đợt 5/11/2026)
 
+Nguyên tắc (người dùng 07/11): điều kiện càng khó đạt → thưởng sát thương / tốc đánh / sát thương chí mạng càng cao; tỉ lệ chí mạng tối đa 100%, sát thương chí mạng không trần.
+
 Nguồn thiết kế: `docs/demo-hop-tuong/thap-art/TU-VAN-VAI-TRO.txt` (tư vấn ChatGPT, người dùng đã duyệt).
 Công cụ: `node tools/thap-sim-vaitro.js dem | dps | hotro | deck [n] [solo|coop|pvp] | che` (mô phỏng không giao diện, RNG có hạt giống).
 
