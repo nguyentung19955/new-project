@@ -124,3 +124,7 @@ Rồng băng/lửa trồi lên từ ụ (16 khung) · một vòng xanh quanh ụ
 **Nhánh `claude/u-module`** (chưa gộp): 7 ụ module (bệ riêng + đầu mới) trong game, chờ người dùng duyệt.
 **Đang chạy:** phiên phụ thiết kế lại 86 ụ còn lại (chia 6 họ, ≥30% thiết bị không nòng, gen theo đợt ≤10 tab, `tuvan/u-moi/`).
 Người dùng chốt: trùm + quái nhỏ + tinh anh là vật thể KHÔNG tay chân; gen xong đóng tab Chrome; việc ảnh tách phiên song song, không bắt chờ.
+
+## Việc chờ (người dùng 07/11 20:07) — chân dung tướng đại diện
+- Lỗi hiện tại: có chân dung bị che mặt khi cắt khung thẻ, có chân dung không có nền sau (vd Overlord nền đen trơn), có chân dung hình vô lý (vd Hero Foundry búa trông như gãy).
+- Hướng mới (làm SAU khi 93 ụ mới lên game): vẽ lại chân dung đại diện "free style" dựa trên hình ụ — không nhất thiết là người (có thể là chính cỗ máy/sinh vật/biểu tượng), có nền sau, mặt/chủ thể không bị khung che; gen bằng ChatGPT, kiểm từng tấm.
