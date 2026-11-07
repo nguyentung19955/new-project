@@ -69,3 +69,11 @@ tải nặng/GC; cần đo lại trên máy rảnh trước khi kết luận gi�
 | Hive Queen SWARM (lượt 2b) | nguồn "1 drone nổ sớm ~0,6 s ở khúc dưới": ngòi chích thường của Chúa Tổ (đạn = ảnh drone `fx_chuato_dan`) trúng quái đầu đường → nổ WOW bậc đỏ (ảnh tổ ong) — nay hoãn nổ bậc trong lúc bầy bay; bầy cùng cất cánh, chia mục tiêu lúc cất cánh, cùng tới 0,5 s (trước 0,45 → 1,3 s). Sát thương mỗi drone giữ nguyên (cụm trâu: tổng trừ máu trùng khớp) | `TRUOC-SAU-swarm2.gif` |
 | Nổ to sát mép | nổ chùm Mortar / nổ Orbital / Rồng bổ nhào: tâm ảnh dời vào trong canvas (tối đa 40% bề rộng) khi quái sát mép | `TRUOC-SAU-mortar-mep.gif` |
 Ảnh trận: `tran-844x390-*.jpg`, `tran-390x844-*.jpg`.
+
+## Lượt 3 (07/11, người dùng 19:05) — Abyss mưa từ trời, hiệu ứng dừng trên đường, lửa Wyrm Engine
+| Mục | Làm gì | GIF trước/sau |
+|---|---|---|
+| Leviathan TIDAL BREATH | bỏ đầu rồng `lev_rong`; cột nước + cầu nước bắn thẳng lên trời từ ngọc ụ → mưa giáo nước rơi đều dọc cả đường, mỗi giọt chạm đúng nhịp trừ máu (`fx_leviathan_tia/dan/trung` sẵn có) | `TRUOC-SAU-abyss.gif` |
+| Hiệu ứng sân dừng trên đường | vùng cắt = dải đường (nối tròn khúc rẽ, cắt đúng 2 đầu), tâm ghim lên đường: Toxic Pool, mìn + nổ mìn, tường (thường/vàng), Hố Đen (+ M01), nổ Orbital, nổ chùm + nổ đạn Mortar, nổ đạn Toxic/Mine/Orbital, Rồng bổ nhào (rồng + huy hiệu không lố đầu đường, vệt cháy), sét Overlord (P2), vòng TIDAL BREATH, tuyết Blizzard rơi dọc đường. Đường giao (vạch từ trời, tia chiếu tường) không cắt | `TRUOC-SAU-duong.gif` |
+| Wyrm Engine nón lửa | dải ChatGPT mới `raw_fx_wyrm_lua2.png` 8 khung (mũi phun hẹp ở nòng → nón sạch), dạng 2/3 đổi kênh đỏ↔lam; mũi lửa = tầm, bề ngang ở 70% = nón trúng | `TRUOC-SAU-wyrm.gif` |
+Ảnh trận: `tran-{390x844,844x390}-{abyss,duong,wyrm}.jpg`.
