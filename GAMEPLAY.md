@@ -3229,3 +3229,8 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - Test mới `tools/thap-kt-cong-huong-luat.js` (339 cặp, trong thap-kt-hoiquy.js): ghép đặc biệt × đá/băng/vàng/thức tỉnh/7★/bản sao × mọi ụ; kỹ năng khi ghép chạy đúng 1 lần (0 lần khi đá+đá / ghép đặc biệt) ở SOLO/PVP/CO-OP; RAGE ×2 và bản sao −% trên đòn của mọi ụ; bộ đếm × ghép / mất sao; chiêu trùm × khiên / Mirror / Holy Shield / Halo; PVP Holy Shield × hiệu ứng ghép đối thủ; 26 ca từ ChatGPT.
 - Sửa 4 lỗi: RAGE ×2 nay áp lên bom Drone và nổ Blood Circuit; Fusion Archive chỉ đếm ghép thật (Teleporter đổi chỗ qua lại từng nuôi vô hạn; Copycat/Overclock/Forge cũng không tính); Holy Shield chặn cả +mana triệu hồi của Signal Jammer.
 - Tài liệu: docs/demo-hop-tuong/tuvan/cong-huong/ (BAO-CAO, KIEM-KE, CHATGPT, CHATGPT-SPECIAL — đề xuất cân bằng chưa áp dụng, CAN-HOI 10 câu A/B).
+
+## claude/demo-hop-tuong — làm lại hiệu ứng Rối Máy (07/11)
+- Lỗi cũ: bàn tay tím ma (sig_l22_hand) nhìn NGANG, ngón chĩa sang phải chứ không xuống quái, khung lệch số ngón + phát tới-lui theo sin → ngón giật; dây móc gần như không thấy; 3 dạng sao không khác nhau.
+- Mới (ảnh ChatGPT, `raw_fx_marionette_{tay,thanh,day}.png` → `tools/thap-cat-marionette.py` → `thap/assets/fx_marionette_*.png`): 1–3★ STRINGS = thanh rối gỗ hạ xuống trên đầu quái, 3 dây vàng búng xuống móc vào, thanh lắc khi kéo lùi; 4–6★ GOLDEN HAND = găng cơ khí vàng nhìn từ trên hạ xuống, khép ngón (8 khung mở → nắm) bấu đỉnh quái, thân quái vẫn thấy; 7★ TWIN = 2 găng (con thứ 2 lật gương, nhỏ hơn). Hết giờ: găng mở ngón buông / thanh bay lên rồi nổ rối đồ chơi như cũ.
+- Chỉ đổi hình (js/sigfx.js `SIG.K.roi.moi`), luật không đổi; thiếu ảnh mới → vẽ bản cũ. Xem `docs/demo-hop-tuong/tuvan/marionette/TRUOC-SAU.gif`.
