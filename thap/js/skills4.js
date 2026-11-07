@@ -94,8 +94,7 @@ SKILLS.nhieusong = {
       const D = banKhac(B); if (!D) return;
       const ds = D.t.filter(X => X && SKILLS[X.id].dmg && !(X.mienNhieu > G.t) && !(X.st.kep > 0) && !X.st.bang && !X.st.da && !(X.st.lua > 0)).sort(() => Math.random() - 0.5).slice(0, n);
       for (const X of ds) { X.st.ngam = Math.max(X.st.ngam, 0.65); const c = D.o[X.o]; tiaPhep(c0.x, c0.y, c.x, c.y, '#8a7bff'); }
-      G.hu.push({ k: 'nhieu', t: 0, song: 0.65, D, ds, tg: t, B });
-      if (!(D.khien > 0)) { D.gia += m; D.giaTru = (D.giaTru || 0) + m; } // Holy Shield (khiên toàn bàn) chặn cả phần +mana triệu hồi — thẻ Eve "blocks rival merge effects" (rà cộng hưởng 07/11)
+      G.hu.push({ k: 'nhieu', t: 0, song: 0.65, D, ds, tg: t, B, m }); // +mana triệu hồi áp lúc nhiễu trúng (HU.nhieu): Holy Shield / khiên ụ bị nhắm chặn luôn phần này — rà cộng hưởng 07/11, người dùng chốt
       nhanU(ra, 'JAM ×' + ds.length, '#8a7bff', true); SND.set();
     } else if (G.che === 'coop') {
       const D = banKhac(B); if (!D) return;
@@ -115,10 +114,11 @@ HU.nhieu = { // báo trước 0.65 s (tâm ngắm) → nhiễu: dùng trạng th
     o.da = true;
     for (const X of o.ds) {
       if (o.D.t[X.o] !== X) continue;
-      if (chanKhien(o.D, X)) continue;
+      if (chanKhien(o.D, X)) { o.chan = true; continue; }
       X.st.kep = Math.max(X.st.kep, o.tg); X.mienNhieu = G.t + o.tg + 8;
       const c = o.D.o[X.o]; FX.chu1(c.x, c.y - 20, 'JAMMED', '#8a7bff', 12, 'to');
     }
+    if (o.m && !o.chan && !(o.D.khien > 0)) { o.D.gia += o.m; o.D.giaTru = (o.D.giaTru || 0) + o.m; } // khiên ụ / Holy Shield chặn được 1 lần nhiễu → chặn cả +mana
     return true;
   },
 };
@@ -265,7 +265,7 @@ SKILLS.loren = { // Lò Rèn Phế Liệu — ĐẶC BIỆT (ụ RIÊNG của m�
   },
   ghepDB: {
     haiChieu: true,
-    hopLe: (a, b) => b.id !== 'loren' && b.sao <= 3 && b.ban === a.ban && !b.st.da,
+    hopLe: (a, b) => b.id !== 'loren' && b.id !== 'mimic' && b.sao <= 3 && b.ban === a.ban && !b.st.da, // Mimic + Forge = ghép thường (Mimic 'merges with any same-star turret' thắng) — rà cộng hưởng 07/11, người dùng chốt
     lam(G, B, a, b) { // a = Forge, b = ụ bị ăn
       const n = SKILLS.loren.f(a) * (b.sao >= 3 ? 3 : 1);
       B.t[b.o] = null;
@@ -314,7 +314,8 @@ chanKhien = function (B, T) {
     if (!G._trumDang && T) { const c = B.o[T.o]; VX.chanKhien(B, T); FX.chu1(c.x, c.y - 18, TEXT.fx.blocked, '#bff6ff', 11); }
     if (!G._trumDang) { // phản lại: kẹp ụ mạnh nhất của đối thủ 4 s (7★: 2 ụ)
       const D = banKhac(B);
-      if (D) for (const X of D.t.filter(X => X && SKILLS[X.id].dmg && !(X.st.kep > 0)).sort((x, y) => y.sao - x.sao).slice(0, M.sao >= 7 ? 2 : 1)) {
+      if (D) for (const X of D.t.filter(X => X && SKILLS[X.id].dmg && !(X.st.kep > 0) && !biKhoa(X)).sort((x, y) => y.sao - x.sao).slice(0, M.sao >= 7 ? 2 : 1)) {
+        if (_chanKhienGoc(D, X)) continue; // phản = phá của đối thủ: khiên ụ / Holy Shield bên kia chặn, KHÔNG phản dây chuyền (gọi bản gốc, bỏ qua Mirror bên kia) — rà cộng hưởng 07/11, người dùng chốt
         X.st.kep = 4; const c0 = B.o[M.o], c = D.o[X.o]; tiaPhep(c0.x, c0.y, c.x, c.y, '#bff6ff'); FX.chu1(c.x, c.y - 20, 'REFLECTED', '#bff6ff', 12, 'to');
       }
     }

@@ -67,7 +67,7 @@ const HOTRO = {
     return ds;
   },
   nhan(T, N) { // N có nhận buff của T không
-    if (!N || N === T || N.st.da) return false;
+    if (!N || N === T || N.st.da || N.st.bang > 0) return false; // ô băng cũng không nhận buff (rà cộng hưởng 07/11, người dùng chốt)
     const vN = SKILLS[N.id] ? SKILLS[N.id].vai : '';
     if (vN === 'ht') return false;
     if (SKILLS[T.id].chiTC && vN !== 'tc') return false;
@@ -90,7 +90,7 @@ const HOTRO = {
       if (!T || T.st.bang > 0 || T.st.da || T.st.cam > 0) continue; // cam: bị STATIC JAMMER câm (trum.js)
       const sk = SKILLS[T.id]; if (!sk.hoTro) continue;
       // ụ không phải hỗ trợ (Sói 7★…): cộng thẳng như cũ — trừ khi hoTro điền `ra` (Genesis 4★ / Hive Queen 4★: vào trần chung, BAO-CAO §3 lỗi nhỏ)
-      const dsN = sk.vai !== 'ht' ? oHoTro(B, T).filter(N => N && N !== T && !N.st.da) : this.oDich(T).map(o => B.t[o]).filter(N => this.nhan(T, N));
+      const dsN = sk.vai !== 'ht' ? oHoTro(B, T).filter(N => N && N !== T && !N.st.da && !(N.st.bang > 0)) : this.oDich(T).map(o => B.t[o]).filter(N => this.nhan(T, N));
       for (const N of dsN) {
         const ra = {}; sk.hoTro(G, T, N, ra);
         let m = goc.get(N); if (!m) { if (!Object.keys(ra).some(k => ra[k] > 0)) continue; goc.set(N, m = {}); }

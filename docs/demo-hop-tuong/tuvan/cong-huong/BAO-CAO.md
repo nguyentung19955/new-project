@@ -28,3 +28,6 @@ Vì sao: người dùng nhiều lần gặp lỗi "2 luật gặp nhau, 1 luật
 
 ## Kiểm chạy
 `thap-kt-cong-huong-luat.js` 339/339 · `thap-kt-khong-ban.js` 25/25 · `thap-kt-vang-sua.js` XANH · `thap-kt-vang-moi.js` đạt · `thap-kt-conghuong2.js` XANH.
+
+## Cập nhật 13:30 — áp luật người dùng chốt (CAN-HOI 1B 3B 6B 7B 8B 10B)
+Mimic + Forge = ghép thường · khiên ụ bị nhắm chặn cả +mana Signal Jammer · Mirror phản bị khiên/Holy Shield đối thủ chặn, không dây chuyền · ụ đá/băng không nhận trạng thái xấu mới (cháy, kẹp, câm, tê, −tốc, đá chồng băng) nhưng vẫn mất sao khi bị hạ sao · REINFORCE bỏ ụ băng · ô băng không nhận buff hỗ trợ. Test: **361 cặp** đạt; `thap-kt-trum-don` 1320 tình huống XANH (chạy trên HEAD + thay đổi này; cây làm việc chung đang treo ở CO-OP Mad Crown do thay đổi chưa commit của session khác — HEAD và HEAD+thay đổi này đều đạt).

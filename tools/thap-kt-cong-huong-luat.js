@@ -137,8 +137,8 @@ if (nhom('2 · kỹ năng khi ghép × kiểu ghép')) {
       try { R(js); buoc(2); } catch (e) { loi.push(che + '/' + ten + ': lỗi ' + e.message); traRng(); continue; }
       traRng();
       const d = R(`_dem['${id}'] || 0`), c = R('chk(B)') || (che !== 'solo' ? R('chk(D)') : '');
-      // Scrap Forge ≤3★ + Mimic: kỹ năng Forge (haiChieu) thắng — Forge ĂN Mimic, không ghép thường (CAN-HOI.md #1, đang giữ)
-      const mong = (id === 'loren' && /Mimic/.test(ten)) ? 0 : n;
+      // Scrap Forge ≤3★ + Mimic: GHÉP THƯỜNG (người dùng chốt CAN-HOI #1 = B: Mimic thắng, Forge chỉ ăn ụ khác Mimic)
+      const mong = n;
       if (d !== mong) loi.push(che + '/' + ten + ': chạy ' + d + ' lần (mong ' + mong + ')');
       if (c) loi.push(che + '/' + ten + ': bàn lệch ' + c);
     }
@@ -293,10 +293,10 @@ if (nhom('7 · PVP Holy Shield × hiệu ứng ghép của đối thủ')) {
     R(`D.deck = ['lien', 'canon', 'tia', 'set', 'bao']; for (let o = 0; o < 6; o++) { const T = dat(o, 'lien', 4, '', D); ${che === 'khien' ? 'T.khien = 1;' : ''} } ${che === 'eve' ? 'D.khien = 8;' : ''} D.gia = 10;`);
     const t0 = anhD();
     gieo(5); R(`{ const a = dat(0, '${id}', 5), b = dat(1, '${id}', 5); ghep(B, a, b); }`); buoc(2, () => R('D.khien = ' + (che === 'eve' ? 8 : 0))); traRng();
-    // khiên 1 lần nằm trên ỤỤ: chỉ bảo vệ ụ — phần +mana triệu hồi của Signal Jammer đánh vào BÀN (CAN-HOI.md #3), nên bỏ so giá
-    const bo = (s) => che === 'khien' ? s.replace(/ gia=.*/, '') : s;
+    // khiên 1 lần trên ụ bị nhắm chặn cả phần +mana triệu hồi của Signal Jammer (người dùng chốt CAN-HOI #3 = B)
+    const bo = (s) => s;
     const t1 = bo(anhD().replace(/N/g, ''));
-    ca((che === 'eve' ? 'Holy Shield' : 'khiên 1 lần') + ' × ' + id + ' (PVP)', che === 'eve' ? 'bàn đối thủ + giá triệu hồi không đổi' : 'ụ đối thủ không đổi', t1, t1 === bo(t0.replace(/N/g, '')));
+    ca((che === 'eve' ? 'Holy Shield' : 'khiên 1 lần') + ' × ' + id + ' (PVP)', 'bàn đối thủ + giá triệu hồi không đổi', t1, t1 === bo(t0.replace(/N/g, '')));
   }
 }
 
@@ -320,15 +320,14 @@ if (nhom('8 · ca từ ChatGPT')) {
     ca('[GPT#13] ' + ten, 'không ghép, không tốn gì ("no merge")', 'hopLe=' + h + ' · ' + (anh() === t0 ? 'bàn không đổi' : 'bàn đổi'), !h && anh() === t0);
   }
   // GPT#8: Forge ăn Combo Core → không COMBO; ăn Mimic → không ghép
-  tran(['loren', 'combo', 'mimic', 'luutru', 'lien']); R(`B.combo = 0; var K = dat(14, 'luutru', 3); K.kho = 0; var F = dat(0, 'loren', 3); dat(1, 'combo', 2); ghep(B, F, B.t[1]); dat(2, 'mimic', 3); ghep(B, B.t[2], F);`);
-  ca('[GPT#8] Scrap Forge ăn Combo Core + Mimic', 'lò +, COMBO 0, Archive 0', 'lo=' + R('F.lo') + ' combo=' + R('B.combo') + ' kho=' + R('K.kho'), R('F.lo') > 0 && R('B.combo') === 0 && R('K.kho') === 0);
+  tran(['loren', 'combo', 'mimic', 'luutru', 'lien']); R(`B.combo = 0; var K = dat(14, 'luutru', 3); K.kho = 0; var F = dat(0, 'loren', 3); dat(1, 'combo', 2); ghep(B, F, B.t[1]);`);
+  ca('[GPT#8] Scrap Forge ăn Combo Core', 'lò +, COMBO 0, Archive 0', 'lo=' + R('F.lo') + ' combo=' + R('B.combo') + ' kho=' + R('K.kho'), R('F.lo') > 0 && R('B.combo') === 0 && R('K.kho') === 0);
   // GPT#11: ụ hỗ trợ bị băng → buff ụ kề tắt; tan băng → bật lại
   tran(['radar', 'lien']); R(`var S = dat(7, 'radar', 3), X = dat(8, 'lien', 3); capNhatBan(B, 1/30); var b1 = X.buf.toc; S.st.bang = 0.05; capNhatBan(B, 1/30); var b2 = X.buf.toc; S.st.bang = 0; capNhatBan(B, 1/30); var b3 = X.buf.toc;`);
   ca('[GPT#11] Radar bị băng rồi tan', 'buff tắt khi băng, bật lại đúng 1 lần', [R('b1'), R('b2'), R('b3')].map(x => x.toFixed(2)).join(' → '), R('b1') > 0 && R('b2') < R('b1') && Math.abs(R('b3') - R('b1')) < 1e-9);
-  // GPT#12: ụ băng cạnh hỗ trợ — buff vẫn ghi (HOTRO.nhan chỉ bỏ ô ĐÁ) nhưng ụ băng KHÔNG bắn → buff không có tác dụng thật
-  tran(['radar', 'lien']); R(`G.cho = 0; B.tim = 1e9; var S = dat(7, 'radar', 3), X = dat(8, 'lien', 3, 'bang'); X.st.bang = 999; var _nb = 0; const _b0 = SKILLS.lien.ban; SKILLS.lien.ban = function () { _nb++; return _b0.apply(this, arguments); };`);
-  buoc(6); R('SKILLS.lien.ban = _b0');
-  ca('[GPT#12] ụ BĂNG cạnh Radar (6 s có quái)', 'không bắn phát nào (buff không có tác dụng)', R('_nb') + ' phát', R('_nb') === 0);
+  // GPT#12 / CAN-HOI #10 = B: ô BĂNG không nhận buff hỗ trợ (không icon buff giả)
+  tran(['radar', 'lien']); R(`var S = dat(7, 'radar', 3), X = dat(8, 'lien', 3, 'bang'), X0 = dat(14, 'lien', 3, 'bang'); capNhatBan(B, 1/30);`);
+  ca('[GPT#12] ụ BĂNG cạnh Radar', 'không nhận buff Radar (bằng ụ băng ở xa)', R('X.buf.toc') + ' vs ' + R('X0.buf.toc'), Math.abs(R('X.buf.toc') - R('X0.buf.toc')) < 1e-9 && !R('X.ht'));
   // GPT#14: Eve chặn trước — không tiêu khiên ụ, không tiêu Mirror
   tran(['lien', 'guongcong']); R(`var X = dat(0, 'lien', 3), M = dat(1, 'guongcong', 3); M.nap = 1; X.khien = 1; B.khien = 8;`); chieu('janus', R('[X.uid]'));
   ca('[GPT#14] Eve + Mirror sạc + khiên ụ × Janus', 'Eve chặn; khiên ụ = 1, Mirror còn sạc', 'đá=' + R('X.st.da') + ' khien=' + R('X.khien') + ' nap=' + R('M.nap'), !R('X.st.da') && R('X.khien') === 1 && R('M.nap') === 1);
@@ -365,6 +364,54 @@ if (nhom('8 · ca từ ChatGPT')) {
   // GPT#39: REINFORCE không có đích (bàn đầy, mọi ụ 7★ hoặc đá) → không trừ mana, không hồi chiêu
   tran(['lien']); R(`for (let o = 0; o < 15; o++) dat(o, 'lien', o < 3 ? 2 : 7, o < 3 ? 'da' : ''); B.mana = 999; B.mv.cd = 0; var r = CH.dung(B);`);
   ca('[GPT#39] REINFORCE: bàn đầy, chỉ còn ụ 7★ / đá', 'không dùng được, không trừ mana', 'ok=' + R('r.ok') + ' mana=' + R('B.mana'), !R('r.ok') && R('B.mana') === 999);
+}
+
+// =====================================================================================================
+// 9 · LUẬT NGƯỜI DÙNG CHỐT 07/11 (CAN-HOI.md #1 #3 #6 #7 #8 #10 = B)
+// =====================================================================================================
+if (nhom('9 · luật người dùng chốt')) {
+  // #1 Mimic + Scrap Forge = ghép thường (2 chiều), Forge vẫn ăn ụ khác
+  for (const [ten, js] of [['Mimic kéo lên Forge', `var a = dat(0, 'mimic', 2), b = dat(1, 'loren', 2);`], ['Forge kéo lên Mimic', `var a = dat(0, 'loren', 2), b = dat(1, 'mimic', 2);`]]) {
+    tran(['loren', 'mimic', 'lien', 'canon', 'tia']); R(js + ' var F = [a, b].find(T => T.id === "loren"); F.lo = 4; var r = ghep(B, a, b);');
+    ca('[#1] ' + ten, 'ghép thường: ra ụ mới 3★ ở ô đích, không +lò', R('B.t[1] && B.t[1].id + B.t[1].sao') + ' ô0=' + R('!!B.t[0]') + ' lo=' + R('F.lo'), R('B.t[1] && B.t[1].sao') === 3 && !R('B.t[0]') && R('F.lo') === 4);
+  }
+  tran(['loren', 'lien']); R(`var F = dat(0, 'loren', 3); F.lo = 0; dat(1, 'lien', 2); ghep(B, B.t[1], F);`);
+  ca('[#1] ụ thường kéo lên Forge', 'Forge vẫn ăn (+lò)', R('F.lo'), R('F.lo') > 0);
+  // #6 Mirror phản Kẹp → ụ đối thủ có khiên / Holy Shield bị chặn; không phản dây chuyền
+  for (const [ten, js, mongKep] of [['đối thủ không phòng thủ', '', true], ['ụ đối thủ có khiên', 'R0.khien = 1;', false], ['đối thủ Holy Shield', 'D.khien = 8;', false], ['đối thủ cũng có Mirror sạc', 'const M2 = dat(14, "guongcong", 3, "", D); M2.nap = 1;', true]]) {
+    tran(['kepha', 'guongcong', 'lien', 'canon', 'tia'], 'pvp');
+    R(`var M = dat(14, 'guongcong', 3); M.nap = 1; dat(0, 'lien', 5); var R0 = dat(0, 'lien', 6, '', D); ${js} { const a = dat(5, 'kepha', 3, '', D), b = dat(6, 'kepha', 3, '', D); ghep(D, a, b); }`);
+    const kep = R('R0.st.kep > 0'), m2 = R('(D.t[14] && D.t[14].id === "guongcong") ? D.t[14].nap : -1');
+    ca('[#6] Mirror phản Kẹp × ' + ten, (mongKep ? 'ụ mạnh nhất đối thủ bị Kẹp' : 'phản bị chặn, không Kẹp') + (m2 >= 0 ? ', Mirror bên kia KHÔNG bị dùng (không dây chuyền)' : ''), 'kep=' + kep + ' khien=' + R('R0.khien') + (m2 >= 0 ? ' mirror2=' + m2 : ''), kep === mongKep && (m2 < 0 || m2 === 1));
+  }
+  // #7 ụ khoá không nhận trạng thái xấu mới
+  tran(['lien', 'canon']); R(`var X = dat(0, 'lien', 3, 'bang'), Y = dat(1, 'lien', 3);`); chieu('octopus', R('[X.uid, Y.uid]'));
+  ca('[#7] Octopus × ụ băng', 'ụ băng không cháy, ụ thường cháy', 'băng cháy=' + R('X.st.lua > 0') + ' thường cháy=' + R('Y.st.lua > 0'), !R('X.st.lua > 0') && R('Y.st.lua > 0'));
+  tran(['lien']); R(`var X = dat(0, 'lien', 3, 'bang');`); chieu('janus', R('[X.uid]'));
+  ca('[#7] Janus × ụ băng', 'không hoá đá', R('X.st.da'), !R('X.st.da'));
+  tran(['lien', 'radar']); R(`var X = dat(0, 'radar', 3, 'bang'), Y = dat(1, 'lien', 3);`); const jm = R(`TRUM_KN.jammer.chon({ trum: 'jammer', uid: 7 }, B, B.t.filter(T => T && !T.st.da)).map(T => T.id)`);
+  ca('[#7] Static Jammer × ụ hỗ trợ băng', 'bỏ ụ băng, câm ụ khác', jm.join(','), !jm.includes('radar'));
+  tran(['kepha', 'lien'], 'pvp'); R(`var X = dat(0, 'lien', 6, 'bang', D), Y = dat(1, 'lien', 2, '', D); { const a = dat(5, 'kepha', 3), b = dat(6, 'kepha', 3); ghep(B, a, b); }`);
+  ca('[#7] Clamp PVP × ụ đối thủ đang băng', 'ụ băng không bị Kẹp, Kẹp sang ụ khác', 'băng=' + R('X.st.kep > 0') + ' khác=' + R('Y.st.kep > 0'), !R('X.st.kep > 0') && R('Y.st.kep > 0'));
+  // #7 (làm rõ 13:31): ụ ĐÁ / BĂNG không nhận trạng thái xấu MỚI, nhưng HẠ SAO vẫn trúng
+  for (const k of ['da', 'bang']) {
+    const ten = k === 'da' ? 'đá' : 'băng';
+    tran(['lien']); R(`var X = dat(0, 'lien', 3, '${k}');`); chieu('octopus', R('[X.uid]'));
+    ca('[#7] Octopus cháy × ụ ' + ten, 'bỏ qua (không cháy)', R('X.st.lua'), !(R('X.st.lua') > 0));
+    tran(['lien']); R(`var X = dat(0, 'lien', 3, '${k}');`); chieu('nightmare', R('[X.uid]'));
+    ca('[#7] Nightmare −1★ × ụ ' + ten, 'vẫn mất 1★ (3 → 2), giữ khoá', R('X.sao') + '★ khoá=' + R('biKhoa(X)'), R('X.sao') === 2 && R('biKhoa(X)'));
+    tran(['lien']); R(`var X = dat(0, 'lien', 3, '${k}');`); trumMoi('leech', R('[X.uid]'));
+    ca('[#7] Star Leech lấy 1★ × ụ ' + ten, 'vẫn mất 1★', R('X.sao') + '★', R('X.sao') === 2);
+    tran(['lien']); R(`var X = dat(0, 'lien', 3, '${k}'); haSao(B, X);`);
+    ca('[#7] haSao trực tiếp × ụ ' + ten, 'vẫn mất 1★', R('X.sao') + '★', R('X.sao') === 2);
+  }
+  tran(['nguyenrua', 'lien'], 'pvp'); R(`var X = dat(0, 'lien', 3, 'bang', D); G.hu.push({ k: 'hexBay', t: 0, song: 0.01, B, x0: 0, y0: 0, D, uid: X.uid, o: X.o, cuoc: true, kieu: 'pvp' });`); buoc(0.2);
+  ca('[#7] Hex PVP −1★ × ụ đối thủ băng', 'vẫn mất 1★', R('X.sao') + '★', R('X.sao') === 2);
+  tran(['nguyenrua', 'lien'], 'pvp'); R(`var X = dat(0, 'lien', 1, 'bang', D); G.hu.push({ k: 'hexBay', t: 0, song: 0.01, B, x0: 0, y0: 0, D, uid: X.uid, o: X.o, cuoc: true, kieu: 'pvp' });`); buoc(0.2);
+  ca('[#7] Hex PVP tê liệt (ụ 1★) × ụ băng', 'không tê (trạng thái xấu mới)', R('X.hexT || 0'), !(R('X.hexT') > 0));
+  // #8 REINFORCE bàn đầy bỏ ụ băng
+  tran(['lien']); R(`for (let o = 0; o < 15; o++) dat(o, 'lien', o === 4 ? 1 : 3, o === 4 ? 'bang' : ''); B.t[5].sao = 2; B.mana = 999; B.mv.cd = 0; CH.dung(B);`);
+  ca('[#8] REINFORCE bàn đầy, ụ yếu nhất đang băng', 'bỏ ụ băng (vẫn 1★), nâng ụ thường yếu kế', 'băng=' + R('B.t[4].sao') + '★ ô5=' + R('B.t[5].sao') + '★', R('B.t[4].sao') === 1 && R('B.t[5].sao') === 3);
 }
 
 // ===== KẾT =====
