@@ -238,7 +238,7 @@ SKILLS.kiembang = { // Kiếm Băng (Ymir): +400% sát thương vào quái đang
       if (cham) nhanU(T, 'SHATTER ×' + k, '#7fdcff');
       // LAN CHẬM: quái quanh điểm trúng (trừ mục tiêu) bị lạnh 20% · 2 s → lượt chém sau nhắm chúng ×5
       let lan = 0;
-      for (const Q of dsMucTieu(B)) if (Q !== M && !Q.chet && !Q.d.khangCham && Math.hypot(Q.x - d.x, Q.y - d.y) < 44) { Q.cham = Math.max(Q.cham, Q.trum ? 0.15 : 0.2); Q.chamT = Math.max(Q.chamT, 2); lan++; }
+      for (const Q of dsMucTieu(B)) if (Q !== M && !Q.chet && !Q.d.khangCham && Math.hypot(Q.x - d.x, Q.y - d.y) < 44) { Q.cham = Math.max(Q.cham, Q.trum ? Math.min(0.2, HOTRO.CHAM_TRUM) : 0.2); Q.chamT = Math.max(Q.chamT, 2); lan++; }
       if (lan) FX.vong1(d.x, d.y, 8, 44, '#bff4ff', 0.3, 2);
     }, 'bang');
   },
@@ -320,10 +320,10 @@ SKILLS.nangluong = { // Pháo Năng Lượng (Jupiter): sát thương tăng theo
     if (k >= 3) nhanU(T, 'OVERLOAD +' + Math.round(k * 100) + '%', '#d9a8ff');
   },
 };
-SKILLS.lanhgia = { // Máy Phát Lạnh (Neptune): HỖ TRỢ — ụ kề bắn kèm làm chậm (không cộng dồn với nguồn chậm khác; trần 35% / trùm 15%)
+SKILLS.lanhgia = { // Máy Phát Lạnh (Neptune): HỖ TRỢ — ụ kề bắn kèm làm chậm (không cộng dồn với nguồn chậm khác; trần 90% / trùm 50%)
   vai: 'ht', dmg: 0, toc: 0,
   cham: (T) => 0.08 * HOTRO.k(T),
-  mo: (T) => 'Neighbours’ hits slow ' + Math.round(HOTRO.hd(T, 'cham', SKILLS.lanhgia.cham(T)) * 100) + '% for 2s (bosses max 15%)' + (ms(T, 5) ? ' · +' + Math.round(0.05 * HOTRO.k(T) * 100) + '% damage vs slowed' : '') + (ms(T, 7) ? ' · every 8s a hit freezes 0.8s' : ''),
+  mo: (T) => 'Neighbours’ hits slow ' + Math.round(HOTRO.hd(T, 'cham', SKILLS.lanhgia.cham(T)) * 100) + '% for 2s (bosses max 50%)' + (ms(T, 5) ? ' · +' + Math.round(0.05 * HOTRO.k(T) * 100) + '% damage vs slowed' : '') + (ms(T, 7) ? ' · every 8s a hit freezes 0.8s' : ''),
   hoTro(G, T, N, ra) { ra.cham = this.cham(T); if (ms(T, 5)) ra.lanh = 0.05 * HOTRO.k(T); },
   capNhat(G, B, T, dt) {
     HOTRO.nhip(G, B, T, dt, '127,220,255', 2.4, 0.6);
@@ -445,7 +445,7 @@ SKILLS.baotuyet = { // Bão Tuyết (Mayauel): định kỳ làm chậm TOÀN B�
   vai: 'tc', dmg: 26, toc: 1, napMau: '#bff4ff', // 9 → 26 (đo bậc 06/11)
   ky: (T) => Math.max(4, 11 - 0.6 * T.sao - (ms(T, 3) ? 1.5 : 0)), // 3★ SQUALL
   cham: (T) => Math.min(0.6, 0.3 + 0.03 * T.sao),
-  mo: (T) => 'Every ' + SKILLS.baotuyet.ky(T).toFixed(1) + 's: slow ALL enemies ' + Math.round(SKILLS.baotuyet.cham(T) * 100) + '% for 3s (bosses 15%) + freeze small ones ' + (ms(T, 7) ? 1 : 0.35) + 's · hits all for ' + (ms(T, 5) ? 450 : 150) + '% damage',
+  mo: (T) => 'Every ' + SKILLS.baotuyet.ky(T).toFixed(1) + 's: slow ALL enemies ' + Math.round(SKILLS.baotuyet.cham(T) * 100) + '% for 3s (bosses max 50%) + freeze small ones ' + (ms(T, 7) ? 1 : 0.35) + 's · hits all for ' + (ms(T, 5) ? 450 : 150) + '% damage',
   capNhat(G, B, T, dt) {
     T.goc += dt * 0.8; // quạt tuyết quay đều
     T.nap = Math.min(1, T.nap + dt * nhipU(T) / this.ky(T));
@@ -961,7 +961,7 @@ SKILLS.lophanung = { // Lò Phản Ứng Băng (Devil Cider Liza) — HỖ TRỢ
   r: (T) => 110 + 5 * T.sao + (ms(T, 3) ? 20 : 0), // 3★ COLD FRONT
   cham: (T) => Math.min(0.4, 0.2 + 0.025 * (T.sao - 1)), // 15%+2%/★ → 20%+2.5%/★ (đo bậc 06/11)
   k: (T) => 0.12 * HOTRO.k(T), // 0.14 → 0.2 → 0.12 (07/11: trần riêng 'có điều kiện' — trước đó chạm trần ngay 1★; BAO-CAO Mức 3)
-  mo: (T) => 'Aura ' + SKILLS.lophanung.r(T) + ' px slows ' + Math.round(SKILLS.lophanung.cham(T) * 100) + '% (bosses 15%) · Attack neighbours +' + Math.round(HOTRO.hd(T, 'lanh', SKILLS.lophanung.k(T)) * 100) + '% vs slowed · charges 24s, TAP when full: FREEZE nearby ' + (ms(T, 5) ? 4 : 2.5) + 's (bosses 0.8s)',
+  mo: (T) => 'Aura ' + SKILLS.lophanung.r(T) + ' px slows ' + Math.round(SKILLS.lophanung.cham(T) * 100) + '% (bosses max 50%) · Attack neighbours +' + Math.round(HOTRO.hd(T, 'lanh', SKILLS.lophanung.k(T)) * 100) + '% vs slowed · charges 24s, TAP when full: FREEZE nearby ' + (ms(T, 5) ? 4 : 2.5) + 's (bosses 0.8s)',
   hoTro(G, T, N, ra) { ra.lanh = this.k(T); },
   capNhat(G, B, T, dt) {
     const r = this.r(T), ds = quaiTrongTam(B, T, r);
@@ -1223,7 +1223,7 @@ HU.cauvong = { // cầu vồng trên đường
       if (!gan) continue;
       if (o.pvp) { if (G.duong[E.p].ban !== o.B.i) { E.cvPK = Math.max(E.cvPT > 0 && E.cvPK || 0, o.kp || 0.1); E.cvPT = 0.6; } } // PVP (Yuna): quái đối thủ trên vệt TRÂU hơn
       else { E.cvK = Math.max(E.cvT > 0 && E.cvK || 0, o.k2); E.cvT = 0.6; }
-      if (o.cham && !E.d.khangCham && !o.pvp) { E.cham = Math.max(E.cham, Math.min(o.cham, E.trum ? 0.15 : 0.35)); E.chamT = Math.max(E.chamT, 0.6); } // Rainbow 7★: vệt làm chậm
+      if (o.cham && !E.d.khangCham && !o.pvp) { E.cham = Math.max(E.cham, Math.min(o.cham, E.trum ? HOTRO.CHAM_TRUM : 0.35)); E.chamT = Math.max(E.chamT, 0.6); } // Rainbow 7★: vệt làm chậm
     }
     return false;
   },

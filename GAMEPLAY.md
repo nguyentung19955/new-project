@@ -3217,6 +3217,8 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
   Ngưỡng: Ember 5/10/20/40 lửa · Choir 3/5/8/12 ụ · Archive 10/25/50/100 · Forge 6/15/30/60 (thưởng vào ụ nhận) · Leviathan 25/50/100/200 · Chain Link 3/5/8/12 · Combo 5/10/20/40 · Nine-Tail 1/3/6/10 lần xả cầu lửa (giữ qua ghép).
   Chữ kỹ năng thêm "BREAKTHROUGH II: … · next breakthrough at N" (VI: ĐỘT PHÁ). Lên bậc: nổ PNG no_phao + chữ nổi.
 - Màu bậc: icon tấm đếm (demkn.js) + lửa Ember (vfxp2.js) = bản sao PNG lọc màu (ctx.filter) dựng 1 lần (`DOTPHA.ten`): cam → vàng → lam → tím → trắng; tấm Ember không còn "/8".
+- (12:54) Trùm: trần chậm 15% → 50% (HOTRO.CHAM_TRUM + Frost/Jammer/Rainbow/Static… dùng chung; chữ "(bosses max 50%)").
+- (12:54) Bớt rối trên ụ cộng dồn: BỎ hào quang lửa to (buffvfx.js, hào quang "DAMAGE UP" fxb_dmg vì ụ tự buff sát thương) và 3 viên ngọc dạng (motvong.js, ngoc_xanh = dạng grow 1–3) → thay bằng 1 vòng sáng mảnh fx_vong_mong tô màu bậc dưới ụ (cam → vàng → lam → tím → cầu vồng 6 màu), ảnh tô 1 lần rồi giữ. Ụ nhận Scrap Forge cũng dùng vòng này. Ảnh trước/sau: docs/demo-hop-tuong/tuvan/dot-pha/.
 - Test: thap-kt-vang-moi (thêm mục Đột phá, cân bằng đạt), thap-kt-vfx-p0 (cập nhật luật không trần, sửa câu Radar OVERDRIVE bị lặp), thap-kt-kynang-tx (suy yếu không trần), thap-kt-vi, tests/can-bang-vang. Ảnh xem: 844×390 bàn có đủ 5 bậc.
 
 ## claude/demo-hop-tuong — sửa 2 lỗi cộng hưởng (07/11)

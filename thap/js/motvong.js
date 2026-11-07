@@ -40,7 +40,8 @@ const MV = {
     return REN.cSet(key, c);
   },
   veNgoc(ctx, h) {
-    const T = h.T, d = this.dang(T); if (!d || T.st.da) return;
+    const T = h.T; if (typeof DOTPHA !== 'undefined' && DOTPHA.NGUONG[T.id]) return; // ụ cộng dồn: dạng = mốc của chính bộ đếm → tấm đếm màu bậc đã nói đủ, bỏ 3 viên ngọc (người dùng 07/11)
+    const d = this.dang(T); if (!d || T.st.da) return;
     const px = h.d * 0.42, c = this.hangNgoc(d.n, d.s, px); if (!c) return;
     const B = T.vxB, u = B && B.len ? (VX.t - B.t0) / 0.35 : 9; // vừa lên dạng: hàng ngọc nảy nhẹ
     const sc = u >= 0 && u < 1 ? 1 + 0.35 * Math.sin(u * Math.PI) : 1;

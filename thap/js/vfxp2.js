@@ -208,8 +208,8 @@ P2.evoBom = function (ctx, T, d, cuoi, al) {
   if (sk && sk.veThem) sk.veThem = function (ctx, T, S, al) { // lửa đang mang: có tờ → lửa sống 16 khung; chưa có → cỡ cố định (bỏ phập phồng)
     const n = Math.min(8, T.lc || 0); if (!n) return; // Lửa Thập Tự: hình bão hoà ở 8 (số lửa không trần) — 4 nhánh + lõi lớn dần từ 5 lửa
     // ĐỘT PHÁ: lửa đổi màu theo bậc (bản sao PNG lọc màu dựng 1 lần — DOTPHA.ten)
-    const bac = typeof DOTPHA !== 'undefined' ? DOTPHA.bacU(T) : 0, toE = bac ? DOTPHA.ten('p2_ember', bac) : 'p2_ember';
-    const pos = [[1, 0], [0, 1], [-1, 0], [0, -1]], r = S * 0.36, co = !!P2.co(toE), im = co ? null : REN.img(bac ? DOTPHA.ten('fx_cuuvi_dan', bac) : 'fx_cuuvi_dan');
+    const bac = typeof DOTPHA !== 'undefined' ? DOTPHA.bacU(T) : 0, toE = bac ? DOTPHA.tenT('p2_ember', T) : 'p2_ember';
+    const pos = [[1, 0], [0, 1], [-1, 0], [0, -1]], r = S * 0.36, co = !!P2.co(toE), im = co ? null : REN.img(bac ? DOTPHA.tenT('fx_cuuvi_dan', T) : 'fx_cuuvi_dan');
     if (!co && !im) return;
     ctx.globalCompositeOperation = 'lighter';
     for (let i = 0; i < Math.min(4, n); i++) { if (co) P2.k(ctx, toE, (G.t * 20 + i * 4) % 16, pos[i][0] * r, pos[i][1] * r, S * 0.26, al * 0.9, -Math.PI / 2, true); else PX.ve(ctx, im, pos[i][0] * r, pos[i][1] * r, S * 0.21, S * 0.21, -Math.PI / 2, al * 0.85); }

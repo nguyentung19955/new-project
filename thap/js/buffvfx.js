@@ -60,14 +60,18 @@ const BVX = {
   ve(ctx, T, S, al, R) {
     if (!T || T.st.da || !T.buf) return;
     const B = G.ban[T.ban], v = this.capNhat(T, B);
-    if (!v.ds.length) return;
+    // ĐỘT PHÁ (07/11): ụ cộng dồn / ụ nhận Scrap Forge — bỏ hào quang lửa to (sát thương/tốc/chí mạng tự buff), thay bằng 1 vòng sáng mảnh màu bậc dưới ụ
+    const dp = typeof DOTPHA !== 'undefined' && DOTPHA.coVong(T);
+    if (dp) { const tv = DOTPHA.tenVong(T), im = tv && REN.img(tv); if (im) { ctx.save(); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al * 0.95; const r = S * 0.5; ctx.drawImage(REN.mip ? REN.mip(im, r * 2 * REN.s * REN.dpr) : im, -r, -r, r * 2, r * 2); ctx.restore(); ctx.globalAlpha = al; } }
+    const dsV = dp ? v.ds.filter(k => k !== 'dmg' && k !== 'toc' && k !== 'crit') : v.ds;
+    if (!dsV.length) return;
     if (VX.t !== this._tf) { this._tf = VX.t; this._nTruoc = this._n; this._n = 0; } // đếm ụ có hào quang ở khung trước
     this._n++;
     const lim = this._nTruoc > 8 ? 1 : 2; // bàn đông (>8 ụ có buff): mỗi ụ chỉ 1 hào quang mạnh nhất → gọn mắt + giữ fps
     const px = S * 1.4;
     ctx.save(); ctx.globalCompositeOperation = 'source-over';
-    for (let i = Math.min(lim, v.ds.length) - 1; i >= 0; i--) { // hào quang thứ 2 to hơn, mờ hơn (vòng ngoài); mạnh nhất ở trong, rõ màu
-      const k = v.ds[i], co = px * (i ? 1.12 : 1), dai = R.coDai(this.LOAI[k].anh, co); if (!dai) continue; // dải đã thu đúng cỡ vẽ → vẽ 1:1
+    for (let i = Math.min(lim, dsV.length) - 1; i >= 0; i--) { // hào quang thứ 2 to hơn, mờ hơn (vòng ngoài); mạnh nhất ở trong, rõ màu
+      const k = dsV[i], co = px * (i ? 1.12 : 1), dai = R.coDai(typeof DOTPHA !== 'undefined' ? DOTPHA.tenT(this.LOAI[k].anh, T) : this.LOAI[k].anh, co); if (!dai) continue; // ĐỘT PHÁ: hào quang lọc màu theo bậc (vàng/lam/tím/cầu vồng) // dải đã thu đúng cỡ vẽ → vẽ 1:1
       const n = v.s[k] || 0.5, vao = Math.min(1, (VX.t - v.on[k]) / 0.25);
       const f = ((VX.t * 8 + (T.pha || 0) * 3) | 0) % 3, fm = dai.fm, sx = f * (fm + dai.gap);
       const r = co / 2 * (vao < 1 ? 0.7 + 0.3 * vao : 1);
@@ -79,6 +83,7 @@ const BVX = {
   // bùng 1 lần (khung 4) trên ụ — proc / vừa nhận buff
   bung(T, B, k, n) {
     if (!T || !B || T.o == null) return;
+    if ((k === 'dmg' || k === 'toc' || k === 'crit') && typeof DOTPHA !== 'undefined' && DOTPHA.coVong(T)) return; // ụ cộng dồn: không bùng lửa to (đã có vòng bậc)
     VX.ds.push({ k: 'bvx', B, T, o: T.o, a: k, t0: VX.t, dai: 0.5, n: n == null ? 1 : n });
   },
   bungO(x, y, k, co, B) { VX.ds.push({ k: 'bvx', x, y, a: k, t0: VX.t, dai: 0.45, n: 1, co, B }); }, // trên quái
@@ -87,7 +92,7 @@ const BVX = {
     let x = e.x, y = e.y, S;
     if (e.T) { const B = e.B; if (!B || !B.o[e.o]) return true; const c = B.o[e.o]; x = c.x; y = c.y; S = Math.min(B.cw, B.ch) * 0.98; }
     else S = e.co || 40;
-    const dai = R.coDai(L.anh, S * 1.5); if (!dai) return false;
+    const dai = R.coDai(e.T && typeof DOTPHA !== 'undefined' ? DOTPHA.tenT(L.anh, e.T) : L.anh, S * 1.5); if (!dai) return false;
     const u = Math.min(1, tt / e.dai), fm = dai.fm, sx = 3 * (fm + dai.gap);
     const r = S * 0.75 * (0.75 + 0.55 * VX.eo(u)) * (0.85 + 0.15 * e.n);
     ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = u < 0.2 ? u / 0.2 : 1 - (u - 0.2) / 0.8;

@@ -81,7 +81,7 @@ const TEXT = {
     tron:       { name: 'Fusion Mixer',       skill: 'Support: +9% fire rate to Attack neighbours, +3% per extra Attack type in its row + column (max 18% at 1★)' },
     nangluong:  { name: 'Energy Cannon', skill: 'Damage grows with your current mana' },
     laser:      { name: 'Laser',         skill: 'Continuous beam that grows stronger' },
-    lanhgia:    { name: 'Chiller',       skill: 'Support: neighbours’ hits also slow (12% at 1★ → 28% at 7★; bosses max 15%)' },
+    lanhgia:    { name: 'Chiller',       skill: 'Support: neighbours’ hits also slow (12% at 1★ → 28% at 7★; bosses max 50%)' },
     mortar:     { name: 'Mortar',        skill: 'Shells random enemies; every 3rd shell is a CLUSTER' },
     khuech:     { name: 'Amplifier',     skill: 'Support: Attack neighbours stack damage on repeated hits to one target (per enemy)' },
     vungdoc:    { name: 'Toxic Pool',    skill: 'Throws poison puddles on the path' },

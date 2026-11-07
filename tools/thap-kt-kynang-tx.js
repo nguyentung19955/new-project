@@ -171,7 +171,7 @@ function main() {
     const a = fr('bo', 1), a3 = fr('bo', 3), big = fr('khong_lo', 1), boss = fr('trum', 1);
     ghi('bang', 'freeze 2s (3★ LONG FREEZE 2.5s)', f(a[0]) + 's / ' + f(a3[0]) + 's', gan(a[0], 2) && gan(a3[0], 2.5));
     ghi('bang', 'big enemies ×0.6, bosses 0.6s', 'big ' + f(big[0]) + 's · boss ' + f(boss[0]) + 's', gan(big[0], 1.2) && gan(boss[0], 0.6));
-    ghi('bang', 'after freeze: 30% chill 2s (bosses 15% — boss slow cap)', 'normal ' + p(a[1]) + ' ' + f(a[2] - a[0]) + 's · boss ' + p(boss[1]), gan(a[1], 0.3) && gan(a[2] - a[0], 2) && gan(boss[1], 0.15));
+    ghi('bang', 'after freeze: 30% chill 2s (bosses too — boss slow cap 50%)', 'normal ' + p(a[1]) + ' ' + f(a[2] - a[0]) + 's · boss ' + p(boss[1]), gan(a[1], 0.3) && gan(a[2] - a[0], 2) && gan(boss[1], 0.3));
     ghi('bang', 'no chain-freeze: 3s immunity after the freeze', f(a[3] - a[0], 2) + 's after thaw', gan(a[3] - a[0], 3));
     const k5 = R(ctx, `[SKILLS.bang.ky({ sao: 1 }), SKILLS.bang.ky({ sao: 5 }), SKILLS.bang.so({ sao: 7 })]`);
     ghi('bang', '5★ QUICK FROST every 4.5s · 7★ DOUBLE FREEZE 2 enemies', k5.join(' / '), k5.join() === '6,4.5,2');
@@ -364,7 +364,7 @@ function main() {
     R(ctx, `KT.moi(); KT.dat(7, 'lanhgia', 7); KT.dat(2, 'lien', 1); const E = KT.quai('bo', 200, 3000); KT.buoc(2); G._c = [E.cham, E.chamT];`);
     ghi('lanhgia', 'slow applies on hit for 2s', p(R(ctx, 'G._c[0]')) + ', ' + f(R(ctx, 'G._c[1]'), 1) + 's', gan(R(ctx, 'G._c[0]'), 0.188) && R(ctx, 'G._c[1]') > 1.5);
     R(ctx, `KT.moi(); KT.dat(7, 'lanhgia', 7); G.ban[0].lv.lanhgia = 5; KT.dat(2, 'lien', 1); const Bs = KT.trum(250, 50); KT.buoc(3); G._c = Bs.cham;`);
-    ghi('lanhgia', 'bosses max 15%', p(R(ctx, 'G._c')), gan(R(ctx, 'G._c'), 0.15));
+    ghi('lanhgia', 'bosses: full Chiller slow, max 50% (07/11)', p(R(ctx, 'G._c')), R(ctx, 'G._c') > 0.15 && R(ctx, 'G._c') <= 0.5 + 1e-9);
     R(ctx, `KT.moi(); KT.dat(7, 'lanhgia', 1); KT.dat(2, 'lien', 1); const E = KT.dung(KT.quai('bay_bang', 200, 3000)); KT.buoc(2); G._c = [E.cham, E.chamT];`);
     ghi('lanhgia', 'slow-immune enemies get no slow (and no slow timer)', R(ctx, 'G._c').map(x => f(x)).join(' / '), R(ctx, 'G._c[0]') === 0 && !(R(ctx, 'G._c[1]') > 0));
     const l5 = R(ctx, `(() => { KT.moi(); KT.dat(7, 'lanhgia', 5); KT.dat(2, 'lien', 1); capNhatBan(G.ban[0], 0); return G.ban[0].t[2].ht.lanh; })()`);
