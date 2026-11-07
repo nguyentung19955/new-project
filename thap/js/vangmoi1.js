@@ -174,8 +174,10 @@ HU.vm1Xung = { // 3 xung nổ cách nhau 0.25 s, bán kính 45 px
   const _ghepVM1 = ghep;
   ghep = function (B, a, b, ep) {
     const B2 = b && G.ban[b.ban];
+    // chỉ GHÉP THẬT mới đếm (luật Star Breaker, conghuong2): Teleporter / Copycat / Overclock / Scrap Forge không phải ghép — Teleporter qua lại từng nuôi Archive vô hạn (rà cộng hưởng 07/11)
+    const db = !ep && a && b ? ghepDBHop(a, b) : null, khong = db && [SKILLS.dichchuyen, SKILLS.saochep, SKILLS.epxung, SKILLS.loren].includes(db.sk);
     const r = _ghepVM1.apply(this, arguments);
-    if (r && B2) {
+    if (r && B2 && !khong) {
       B2.ghepN = (B2.ghepN || 0) + 1;
       for (const X of B2.t) if (X && X.id === 'luutru' && X !== r) X.kho = (X.kho || 0) + 1;
     }

@@ -146,3 +146,162 @@ if (nhom('2 · kỹ năng khi ghép × kiểu ghép')) {
   }
   R(`for (const id of ${JSON.stringify(DS_GHEP)}) SKILLS[id].ghep = SKILLS[id]._g0;`);
 }
+
+// =====================================================================================================
+// 3 · CHỈ HUY RAGE "+100% damage to the whole board" × MỌI nguồn sát thương  ·  4 · BẢN SAO Copycat (−% sao chép) × mọi nguồn
+//   Đo: cùng hạt RNG, quái được hồi đầy mỗi bước (không chết → tuyến tính), 1 ụ trên bàn chạy 14 s; tỉ số tổng sát thương RAGE / thường phải ≈ 2,
+//   bản sao / gốc ≈ % sao chép. Kỹ năng khi ghép gây sát thương (drone, nổ Blood Circuit…): ghép 1 cặp rồi đo 10 s.
+// =====================================================================================================
+// đo THAM SỐ sát thương của 4 đòn ĐẦU TIÊN (trước chí mạng / suy yếu) — cùng hạt RNG thì 2 lần chạy giống hệt tới đòn đầu → tỉ số tất định
+R(`var _log = null; const _tr1 = trung; trung = function (E, d, o) { if (_log && _log.length < 4 && !E.chet) _log.push(d); return _tr1(E, d, o); };`);
+const doSat = (id, sao, giay, opt) => {
+  opt = opt || {};
+  gieo(opt.hat || 4242);
+  tran([id, 'lien', 'canon', 'tia', 'set'], opt.che);
+  R(`B.tim = 1e9; G.cho = 0; ${opt.dung || `var T = dat(7, '${id}', ${sao}, '${opt.copy ? 'copy' : ''}');`} B.mana = 0; _log = [];`);
+  if (opt.rage) R('B.cuong = 1e9');
+  let t0 = 0;
+  try {
+    buoc(giay, () => { if (opt.rage) R('B.cuong = 1e9'); R('for (const E of G.quai) if (!E.chet) E.hp = E.max; G.ban.forEach(X => X.tim = 1e9);'); if (opt.ghep && (t0 += 1 / 30) > 1.5 && !opt._da) { opt._da = 1; R('_log = []; ' + opt.ghep); } if (R('_log.length') >= 4) throw 'du'; });
+  } catch (e) { if (e !== 'du') throw e; } finally { traRng(); }
+  return R('_log.slice()');
+};
+const tiSo = (a, b) => { const n = Math.min(1, a.length, b.length); /* chỉ đòn ĐẦU: sau đó 2 lần chạy có thể rẽ nhánh */ if (!n) return null; let mn = 1e9, mx = -1e9; for (let i = 0; i < n; i++) { const k = a[i] > 0 ? b[i] / a[i] : 1; mn = Math.min(mn, k); mx = Math.max(mx, k); } return [mn, mx]; };
+if (process.env.DBG) { for (const id of process.env.DBG.split(',')) { const f = (o) => doSat(id, 4, 14, o).map(x => x.toFixed(1)).join(' '); console.log(id, f(), '| R', f({ rage: 1 }), '| C', f({ copy: 1 })); } process.exit(0); }
+if (nhom('3 · RAGE ×2 × mọi nguồn sát thương')) {
+  const IDS = R(`G.roster.map(r => r.id)`);
+  const lech = [];
+  for (const id of IDS) {
+    let k = null; for (const hat of [4242, 99, 7]) { const x = tiSo(doSat(id, 4, 14, { hat }), doSat(id, 4, 14, { rage: 1, hat })); if (x) k = k ? [Math.min(k[0], x[0]), Math.max(k[1], x[1])] : x; }
+    if (k && (k[0] < 1.95 || k[1] > 2.05)) lech.push(id + ' ×' + k.map(x => x.toFixed(2)).join('–'));
+  }
+  ca('RAGE × đòn của mọi ụ (4★, 4 đòn đầu)', '×2 (thẻ chỉ huy: "+100% damage to the whole board")', lech.join(', '), !lech.length);
+  for (const id of ['drone', 'wallgen', 'pandora', 'mauhut', 'canon', 'khoathoigian', 'luutru', 'xuonganh']) {
+    const js = id === 'mauhut' ? `{ const a = dat(0, 'mauhut', 5), b = dat(14, 'lien', 2); B.vamp = 6; ghep(B, a, b); }` : `{ const a = dat(0, '${id}', 3), b = dat(14, '${id}', 3); ghep(B, a, b); }`;
+    const o = { dung: 'var T = null;', ghep: js };
+    const k = tiSo(doSat(id, 3, 8, Object.assign({}, o)), doSat(id, 3, 8, Object.assign({ rage: 1 }, o)));
+    ca('RAGE × ' + id + ' — sát thương KHI GHÉP', '×2 khi đang RAGE', k ? '×' + k.map(x => x.toFixed(2)).join('–') : 'không gây sát thương', !k || (k[0] >= 1.95 && k[1] <= 2.05));
+  }
+}
+if (nhom('4 · bản sao Copycat −% × mọi nguồn sát thương')) {
+  const IDS = R(`G.roster.map(r => r.id)`);
+  const lech = [];
+  tran(['lien']); const he = R(`heSaoChep(G.ban[0])`);
+  for (const id of IDS) {
+    let k = null; for (const hat of [4242, 99, 7]) { const x = tiSo(doSat(id, 4, 14, { hat }), doSat(id, 4, 14, { copy: 1, hat })); if (x) k = k ? [Math.min(k[0], x[0]), Math.max(k[1], x[1])] : x; }
+    if (k && (k[0] < he - 0.03 || k[1] > he + 0.03)) lech.push(id + ' ×' + k.map(x => x.toFixed(2)).join('–'));
+  }
+  ca('bản sao (banSao) × đòn của mọi ụ (4★, 4 đòn đầu)', '×' + he.toFixed(2) + ' (thẻ Copycat: "becomes a copy at ' + Math.round(he * 100) + '% damage")', lech.join(', '), !lech.length);
+}
+if (nhom('3b · RAGE × sát thương tính sẵn lúc ghép (drone, nổ Blood Circuit)')) {
+  const droneDmg = (rage) => { tran(['drone', 'lien', 'canon', 'tia', 'set']); R(`B.cuong = ${rage ? 10 : 0}; { const a = dat(0, 'drone', 3), b = dat(14, 'drone', 3); ghep(B, a, b); }`); return R(`(G.hu.find(h => h.k === 'drone') || {}).dmg || 0`); };
+  const d0 = droneDmg(0), d1 = droneDmg(1);
+  ca('RAGE × Drone: bom drone phóng khi ghép', '×2 (bom phóng trong lúc RAGE)', '×' + (d1 / d0).toFixed(2), Math.abs(d1 / d0 - 2) < 0.05);
+  const mhDmg = (rage) => { tran(['mauhut', 'lien', 'canon', 'tia', 'set']); R(`B.cuong = ${rage ? 10 : 0}; B.vamp = 6; { const a = dat(0, 'mauhut', 5), b = dat(7, 'lien', 2); const c = B.o[7]; sinhQuai('bo', 0, 100, 50); const E = G.quai[G.quai.length - 1]; E.vao = 1; E.x = c.x; E.y = c.y; E.hp = E.max = 1e9; _log = []; ghep(B, a, b); }`); return R('_log[0] || 0'); };
+  const m0 = mhDmg(0), m1 = mhDmg(1);
+  ca('RAGE × Blood Circuit: nổ khi hiến khác sao', '×2', m0 ? '×' + (m1 / m0).toFixed(2) : 'không nổ', m0 > 0 && Math.abs(m1 / m0 - 2) < 0.05);
+}
+
+// =====================================================================================================
+// 5 · BỘ ĐẾM (stack) × ghép / mất sao / kỹ năng "không phải ghép"
+//   Luật dự án (conghuong2/BANG.md): Teleporter / Copycat / Overclock / Scrap Forge KHÔNG phải ghép (Star Breaker chỉ bùng khi ghép thật) →
+//   Fusion Archive "every merge you make +1" cũng chỉ đếm ghép thật (thường, Mimic, Merge King, Blood Circuit, Pháo La Bàn)
+// =====================================================================================================
+if (nhom('5 · bộ đếm × ghép / mất sao')) {
+  const kieu = [
+    ['ghép thường', `dat(0,'lien',2); dat(1,'lien',2); ghep(B, B.t[0], B.t[1]);`, 1],
+    ['Merge King nâng sao', `dat(0,'vughep',2,'thuong'); dat(1,'lien',2); ghep(B, B.t[0], B.t[1]);`, 1],
+    ['Blood Circuit hiến', `dat(0,'mauhut',2); dat(1,'lien',2); ghep(B, B.t[0], B.t[1]);`, 1],
+    ['Teleporter đổi chỗ', `dat(0,'dichchuyen',2); dat(1,'lien',2); ghep(B, B.t[0], B.t[1]);`, 0],
+    ['Copycat chép', `dat(0,'saochep',2); dat(1,'lien',2); ghep(B, B.t[0], B.t[1]);`, 0],
+    ['Overclock', `dat(0,'epxung',2); dat(1,'lien',2); ghep(B, B.t[0], B.t[1]);`, 0],
+    ['Scrap Forge ăn', `dat(0,'loren',2); dat(1,'lien',2); ghep(B, B.t[0], B.t[1]);`, 0],
+  ];
+  for (const [ten, js, n] of kieu) {
+    tran(['luutru', 'lien', 'vughep', 'dichchuyen', 'saochep']);
+    R(`var K = dat(14, 'luutru', 3); K.kho = 5; var N0 = B.ghepN || 0;`); R(js);
+    const d = R('K.kho - 5');
+    ca('Fusion Archive × ' + ten, n ? '+1 điểm (ghép thật)' : 'không đổi (không phải ghép — luật Star Breaker)', '+' + d, d === n);
+  }
+  // Teleporter qua lại 20 lần không được nuôi Archive vô hạn
+  tran(['luutru', 'dichchuyen', 'lien', 'canon', 'tia']);
+  R(`var K = dat(14, 'luutru', 3); K.kho = 0; var t1 = dat(0, 'dichchuyen', 2), l1 = dat(1, 'lien', 2); for (let i = 0; i < 20; i++) ghep(B, t1, B.t[t1.o === 0 ? 1 : 0]);`);
+  ca('Teleporter đổi chỗ qua lại 20 lần × Fusion Archive', '0 điểm (không có ghép nào)', R('K.kho'), R('K.kho') === 0);
+  // giữ bộ đếm lớn nhất khi ghép cùng loại ra cùng loại (GIU_CONG_DON + hook riêng)
+  for (const [id, k, v] of [['loren', 'lo', 7], ['hopbi', 'tuoi', 20], ['tienhoa', 'tuoi', 9], ['cuuvi', 'duoi', 5], ['lualien', 'lc', 4]]) {
+    tran([id]);
+    R(`B.deck = ['${id}']; var a = dat(0, '${id}', 2), b = dat(1, '${id}', 2); a.${k} = ${v}; b.${k} = 1; var r = ghep(B, a, b); var N = B.t[1];`);
+    const got = R(`N && N.id === '${id}' ? N.${k} || 0 : -1`);
+    ca(id + ' + ' + id + ' → ' + id + ': giữ ' + k, 'giữ max (' + v + ')', got, got >= v);
+  }
+  // Evolver: thẻ "losing a star restarts the countdown" × trùm hạ sao
+  tran(['tienhoa', 'lien']); R(`var T = dat(3, 'tienhoa', 4); T.tuoi = 20; capNhatBan(B, 1/30); haSao(B, T); capNhatBan(B, 1/30);`);
+  ca('Evolver × trùm −1★', 'đếm ngược lại từ đầu (tuoi ≈ 0)', R('T.tuoi.toFixed(2)'), R('T.tuoi') < 0.5);
+  // Merge King nâng sao Evolver: thẻ "higher stars take longer" nhưng tăng sao giữ thời gian đã chờ
+  tran(['tienhoa', 'vughep']); R(`var T = dat(3, 'tienhoa', 3); T.tuoi = 20; capNhatBan(B, 1/30); var t0 = T.tuoi; var M = dat(4, 'vughep', 3, 'thuong'); ghep(B, M, T); capNhatBan(B, 1/30);`);
+  ca('Evolver × Merge King +1★', 'giữ thời gian đã chờ', R('T.tuoi.toFixed(2)'), R('T.tuoi >= t0 - 0.1'));
+}
+
+// =====================================================================================================
+// 6 · CHIÊU TRÙM × ụ / trạng thái chống — thẻ Mirror Gate "blocks a boss skill on 1 turret" · khiên 1 lần (Máy Khiên/Pandora) chặn 1 lần ·
+//     Holy Shield (Eve) "blocks boss skills … for 8s" · Halo: chiêu nhiều mục tiêu còn 1 ụ, Freezer nửa thời gian
+// =====================================================================================================
+const chieu = (trum, uids, ban2) => R(`(() => { const E = { trum: '${trum}', x: 10, y: 10, uid: 99999, bao: { t: 0, song: 1.4, muc: ${JSON.stringify(uids)}, muc2: [], ban2: null } }; E.rng = (() => { let s = 7; return () => { s = (s * 1103515245 + 12345) & 0x7fffffff; return s / 0x7fffffff; }; })(); thucHienChieu(E, B); })()`);
+const anh = () => R(`B.t.map(T => T ? T.id + T.sao + (T.st.da ? 'D' : '') + (T.st.bang > 0 ? 'B' : '') + (T.st.lua > 0 ? 'L' : '') : '-').join(',')`);
+if (nhom('6 · chiêu trùm × ụ chống')) {
+  const TRUM = ['nightmare', 'janus', 'freezer', 'mad_crown', 'octopus', 'joker_king'];
+  for (const tr of TRUM) {
+    // Holy Shield
+    tran(['lien', 'canon', 'tia', 'set', 'bao']); R(`var X = dat(0, 'lien', 3), Y = dat(1, 'lien', 3), Z = dat(2, 'canon', 3); B.khien = 8;`);
+    let t0 = anh(); chieu(tr, R('[X.uid, Y.uid, Z.uid]'));
+    ca('Holy Shield × ' + tr, 'chặn hết (bàn không đổi)', anh(), anh() === t0);
+    // Máy Khiên (khiên 1 lần trên ụ)
+    tran(['lien', 'canon', 'tia', 'set', 'bao']); R(`var X = dat(0, 'lien', 3), Y = dat(1, 'lien', 3); X.khien = 1;`);
+    t0 = anh(); chieu(tr, R('[X.uid]'));
+    ca('khiên 1 lần × ' + tr, 'chặn, khiên tiêu (0)', anh() + ' khien=' + R('B.t[0] && B.t[0].khien'), anh() === t0 && R('B.t[0].khien') === 0);
+    // Mirror Gate sẵn sàng (SOLO)
+    tran(['lien', 'canon', 'tia', 'set', 'guongcong']); R(`var X = dat(0, 'lien', 3), Y = dat(1, 'lien', 3), M = dat(14, 'guongcong', 1); M.nap = 1;`);
+    t0 = anh(); chieu(tr, R('[X.uid]'));
+    ca('Mirror Gate sẵn × ' + tr + ' (1 ụ)', 'chặn, gương về 0%', anh() + ' nap=' + R('M.nap'), anh() === t0 && R('M.nap') === 0);
+  }
+  // Mirror Gate: 3 mục tiêu → chặn 1 ụ ("on 1 turret")
+  tran(['lien', 'canon', 'tia', 'set', 'guongcong']); R(`var X = dat(0, 'lien', 3), Y = dat(1, 'lien', 3), Z = dat(2, 'lien', 3), M = dat(14, 'guongcong', 1); M.nap = 1;`);
+  chieu('janus', R('[X.uid, Y.uid, Z.uid]'));
+  const nDa = R('[X, Y, Z].filter(T => T.st.da).length');
+  ca('Mirror Gate × Janus 3 mục tiêu', 'chặn đúng 1 ụ ("blocks a boss skill on 1 turret") → 2 ụ đá', nDa + ' ụ đá', nDa === 2);
+  // Nightmare −1★ trên ụ 1★: phá ụ; khiên chặn
+  tran(['lien']); R(`var X = dat(0, 'lien', 1);`); chieu('nightmare', R('[X.uid]'));
+  ca('Nightmare × ụ 1★', 'ụ bị phá (ô trống)', anh().split(',')[0], !R('B.t[0]'));
+  // Mad Crown / Joker × ụ đá, băng: bỏ qua (khoá chặn biến hình)
+  for (const tr of ['mad_crown', 'joker_king']) for (const k of ['da', 'bang']) {
+    tran(['lien', 'canon']); R(`var X = dat(0, 'lien', 3, '${k}'), Y = dat(1, 'lien', 3);`); const t1 = anh(); chieu(tr, R('[X.uid]'));
+    ca(tr + ' × ụ ' + (k === 'da' ? 'đá' : 'băng'), 'không biến / không ép ghép', anh(), anh() === t1);
+  }
+  // Halo: chiêu nhiều mục tiêu còn 1 ụ
+  tran(['lien', 'canon']); R(`var X = dat(0, 'lien', 3), Y = dat(1, 'lien', 3), Z = dat(2, 'lien', 3); B.halo = 5; B.khien = 5;`);
+  chieu('janus', R('[X.uid, Y.uid, Z.uid]'));
+  ca('Halo × Janus 3 mục tiêu', 'còn trúng 1 ụ', R('[X, Y, Z].filter(T => T.st.da).length'), R('[X, Y, Z].filter(T => T.st.da).length') === 1);
+}
+
+// =====================================================================================================
+// 7 · PVP: Holy Shield (Eve) "blocks … rival merge effects for 8s" × MỌI hiệu ứng ghép phá đối thủ · khiên 1 lần chặn
+// =====================================================================================================
+const anhD = () => R(`D.t.map(T => T ? T.id + T.sao + (T.st.kep > 0 ? 'K' : '') + (T.st.ngam > 0.3 ? 'N' : '') + (T.giamT > 0 ? 'G' : '') + (T.hexT > 0 ? 'H' : '') : '-').join(',') + ' gia=' + D.gia`);
+if (nhom('7 · PVP Holy Shield × hiệu ứng ghép của đối thủ')) {
+  for (const id of ['kepha', 'xaotron', 'nguyenrua', 'nhieusong']) for (const che of ['eve', 'khien']) {
+    tran([id, 'lien', 'canon', 'tia', 'set'], 'pvp');
+    R(`D.deck = ['lien', 'canon', 'tia', 'set', 'bao']; for (let o = 0; o < 6; o++) { const T = dat(o, 'lien', 4, '', D); ${che === 'khien' ? 'T.khien = 1;' : ''} } ${che === 'eve' ? 'D.khien = 8;' : ''} D.gia = 10;`);
+    const t0 = anhD();
+    gieo(5); R(`{ const a = dat(0, '${id}', 5), b = dat(1, '${id}', 5); ghep(B, a, b); }`); buoc(2, () => R('D.khien = ' + (che === 'eve' ? 8 : 0))); traRng();
+    // khiên 1 lần nằm trên ỤỤ: chỉ bảo vệ ụ — phần +mana triệu hồi của Signal Jammer đánh vào BÀN (CAN-HOI.md #3), nên bỏ so giá
+    const bo = (s) => che === 'khien' ? s.replace(/ gia=.*/, '') : s;
+    const t1 = bo(anhD().replace(/N/g, ''));
+    ca((che === 'eve' ? 'Holy Shield' : 'khiên 1 lần') + ' × ' + id + ' (PVP)', che === 'eve' ? 'bàn đối thủ + giá triệu hồi không đổi' : 'ụ đối thủ không đổi', t1, t1 === bo(t0.replace(/N/g, '')));
+  }
+}
+
+// ===== KẾT =====
+const sai = KQ.filter(k => !k.ok);
+if (process.env.JSON_OUT) fs.writeFileSync(process.env.JSON_OUT, JSON.stringify(KQ, null, 1));
+console.log(sai.length ? '✗ thap-kt-cong-huong-luat: ' + sai.length + '/' + KQ.length + ' cặp lệch luật' : '✓ thap-kt-cong-huong-luat: đạt (' + KQ.length + ' cặp)');
+process.exit(sai.length ? 1 : 0);

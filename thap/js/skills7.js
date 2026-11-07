@@ -74,7 +74,7 @@ SKILLS.mauhut = {
       if (cung) B.vamp = Math.min(SKILLS.mauhut.MAX, (B.vamp || 0) + (a.sao >= 7 ? 2 : 1));
       else if ((B.vamp || 0) >= 2) {
         B.vamp -= 2;
-        const dmg = hsU('mauhut', a.sao, B) * (a.sao >= 5 ? 3 : 2.2) * (1 + (B.vamp || 0) * SKILLS.mauhut.pv(a));
+        const dmg = hsU('mauhut', a.sao, B) * (a.sao >= 5 ? 3 : 2.2) * (1 + (B.vamp || 0) * SKILLS.mauhut.pv(a)) * (B.cuong > 0 ? 2 : 1); // RAGE ×2 (rà cộng hưởng 07/11)
         for (const E of dsMucTieu(B)) if (!E.chet && Math.hypot(E.x - c.x, E.y - c.y) < 120) trung(E, dmg, { B, T: a, phu: true, crit: false, mau: '#ff4a6a' });
         fx7('mauhut', c.x, c.y, 120, 0.45); FX.lac(3);
       }

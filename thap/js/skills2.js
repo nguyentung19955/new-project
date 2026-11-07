@@ -281,7 +281,7 @@ SKILLS.drone = { // DRONE KÉO XA (Hermes, co-che-moi/DE-XUAT.md §3-N): khi GH�
   mo: (T) => 'On merge: 1 bomb drone per cell dragged + ' + Math.floor(T.sao / 3) + ' (max 8, ×' + SKILLS.drone.NHAN + ' damage, blast 46 px) · drag from far away for more drones (corner to corner = ' + SKILLS.drone.so(T.sao, 6) + ')',
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'dan_lien', co: 14, snd: 'lien' }); },
   ghep(G, B, a, b, ra) {
-    const d = this.quang(a.o, b.o), n = this.so(a.sao, d), dmg = hsU('drone', a.sao + 1, B) * this.NHAN;
+    const d = this.quang(a.o, b.o), n = this.so(a.sao, d), dmg = hsU('drone', a.sao + 1, B) * this.NHAN * (B.cuong > 0 ? 2 : 1); // chỉ huy RAGE ×2 "cả bàn" cũng áp lên bom drone phóng lúc RAGE (rà cộng hưởng 07/11)
     const ds = G.duong.map((p, i) => i).filter(i => G.duong[i].ban === B.i);
     if (!ds.length) return;
     for (let i = 0; i < n; i++) {

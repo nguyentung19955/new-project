@@ -95,7 +95,7 @@ SKILLS.nhieusong = {
       const ds = D.t.filter(X => X && SKILLS[X.id].dmg && !(X.mienNhieu > G.t) && !(X.st.kep > 0) && !X.st.bang && !X.st.da && !(X.st.lua > 0)).sort(() => Math.random() - 0.5).slice(0, n);
       for (const X of ds) { X.st.ngam = Math.max(X.st.ngam, 0.65); const c = D.o[X.o]; tiaPhep(c0.x, c0.y, c.x, c.y, '#8a7bff'); }
       G.hu.push({ k: 'nhieu', t: 0, song: 0.65, D, ds, tg: t, B });
-      D.gia += m; D.giaTru = (D.giaTru || 0) + m;
+      if (!(D.khien > 0)) { D.gia += m; D.giaTru = (D.giaTru || 0) + m; } // Holy Shield (khiên toàn bàn) chặn cả phần +mana triệu hồi — thẻ Eve "blocks rival merge effects" (rà cộng hưởng 07/11)
       nhanU(ra, 'JAM ×' + ds.length, '#8a7bff', true); SND.set();
     } else if (G.che === 'coop') {
       const D = banKhac(B); if (!D) return;
