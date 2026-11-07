@@ -105,3 +105,20 @@ Sau khi gen: đưa ảnh vào `thap/assets/` (tên `<id>_de.png` / `<id>_nong.pn
 - `be-rieng/…`: cùng bộ ảnh nhưng thay bằng bệ riêng (thử nghiệm A)
 - `CAP-DE-NHAM.png`: 30 cặp giống nhất · `KET-QUA.md`: bảng số · `cap.json`: 200 cặp đầu
 - Chạy lại: `python3 -m http.server 8765 &` rồi `NODE_PATH=/opt/npm-tools/node_modules node tools/thap-kt-nhandien.js` (thêm `BE=rieng` để chạy bản bệ riêng). Mỗi lần mất khoảng 1 phút.
+
+## 6. Kết quả gen 7 ụ mẫu (07/11, ChatGPT)
+
+Ảnh gốc: `docs/demo-hop-tuong/thap-art/raw_mod_<id>.png` (nhánh `claude/demo-hop-tuong`). So sánh trước/sau ở cỡ thật: `TRUOC-SAU-7-U.png`.
+Đo bằng ô 1 (ụ lắp sẵn) thay vào bảng 93 ụ. Mỗi ô dưới đây là điểm giống của ụ đó với ụ giống nó nhất:
+
+| Ụ | Cũ | Mới |
+|---|---|---|
+| Pháo La Bàn | 0,86 (Súng Lục) | **0,70** |
+| Liên Thanh | 0,88 (Súng Lục) | **0,65** |
+| Tesla | 0,84 (Phá Giáp) | **0,58** |
+| Băng | 0,91 (Kiếm Băng) | **0,68** |
+| Radar | 0,89 (Mimic) | **0,68** |
+| Hố Đen | 0,88 (Rồng Máy) | **0,47** |
+| Độc | 0,91 (Súng Lục) | **0,70** |
+
+→ Cả 7 ụ đều dưới mục tiêu 0,85. Bước tiếp theo: cắt ô 2/3/4 thành `<id>_de` / `<id>_nong` / phần động, sửa `than()` dùng bệ riêng cho các ụ có bệ mới, rồi gắn PART_B vào `anim.js`. Việc này là sửa code game (mức Vừa).
