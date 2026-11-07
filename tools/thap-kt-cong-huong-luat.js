@@ -9,7 +9,7 @@
 'use strict';
 const fs = require('fs'), vm = require('vm'), path = require('path');
 const goc = path.join(__dirname, '..', 'thap');
-const FILES = ['meta', 'text', 'data', 'thebai', 'fx', 'tiervfx', 'game', 'chihuy', 'skills', 'skills2', 'phattrien', 'artscale', 'skills3', 'skills4', 'skills5', 'vangmoi1', 'hotro', 'support', 'buff', 'skills7', 'growfx'];
+const FILES = ['meta', 'text', 'data', 'thebai', 'fx', 'tiervfx', 'game', 'chihuy', 'skills', 'skills2', 'phattrien', 'artscale', 'skills3', 'skills4', 'skills5', 'vangmoi1', 'hotro', 'support', 'buff', 'skills7', 'growfx', 'trum'];
 function moiTruong() {
   const noop = () => {};
   const ctx = { console, Math, JSON, Set, Map, WeakMap, WeakSet, Promise, Object, Array, Error, setTimeout: (f) => { ctx._cho.push(f); }, clearTimeout: noop, _cho: [], performance: { now: () => 0 }, localStorage: { getItem: () => null, setItem: noop } };
@@ -298,6 +298,73 @@ if (nhom('7 · PVP Holy Shield × hiệu ứng ghép của đối thủ')) {
     const t1 = bo(anhD().replace(/N/g, ''));
     ca((che === 'eve' ? 'Holy Shield' : 'khiên 1 lần') + ' × ' + id + ' (PVP)', che === 'eve' ? 'bàn đối thủ + giá triệu hồi không đổi' : 'ụ đối thủ không đổi', t1, t1 === bo(t0.replace(/N/g, '')));
   }
+}
+
+// =====================================================================================================
+// 8 · CA TỪ ChatGPT (docs/demo-hop-tuong/tuvan/cong-huong/CHATGPT.md) — số [GPT#n] = số ca trong file đó
+// =====================================================================================================
+const trumMoi = (id, uids) => R(`(() => { const E = { trum: '${id}', ban: B.i, x: 10, y: 10, uid: 88888, kho: 0, knT: 99, d: { co: 40 } }; E.rng = (() => { let s = 3; return () => { s = (s * 1103515245 + 12345) & 0x7fffffff; return s / 0x7fffffff; }; })(); E.bao0 = ${JSON.stringify(uids)}.length > 0; E.bao = { t: 1.39, song: 1.4, muc: ${JSON.stringify(uids)} }; capNhatTrum(E, 0.05); return E; })()`);
+if (nhom('8 · ca từ ChatGPT')) {
+  // GPT#2: 2 Twin Maker ghép → đúng 1 ụ thêm
+  tran(['sinhdoi', 'lien', 'canon', 'tia', 'set']); R(`dat(0, 'sinhdoi', 3); dat(1, 'sinhdoi', 3); ghep(B, B.t[0], B.t[1]);`);
+  ca('[GPT#2] Twin Maker + Twin Maker', 'đúng 1 ụ thêm (bàn còn 2 ụ)', R('B.t.filter(Boolean).length'), R('B.t.filter(Boolean).length') === 2);
+  // GPT#4: MK → 7★ bị từ chối, MK còn; MK vàng → 6★ = 7★
+  tran(['vughep', 'lien']); R(`var M = dat(0, 'vughep', 7, 'thuong'), X = dat(1, 'lien', 7);`);
+  ca('[GPT#4] Merge King → ụ 7★', 'từ chối, MK còn nguyên', 'hopLe=' + R('hl(M, X)') + ' ghep=' + R('!!ghep(B, M, X)') + ' MK=' + R('!!B.t[0]'), !R('hl(M, X)') && R('B.t[0] === M'));
+  tran(['vughep', 'lien']); R(`var M = dat(0, 'vughep', 6, 'vang'), X = dat(1, 'lien', 6); ghep(B, M, X);`);
+  ca('[GPT#4] Merge King VÀNG → ụ 6★', '7★ (không 8★)', R('X.sao'), R('X.sao') === 7);
+  // GPT#5 / #13: ụ CÂM (Static Jammer) không ghép — kể cả Teleporter / Merge King kéo lên nó, và nó kéo đi
+  for (const [ten, js] of [['Teleporter → ụ câm', `var a = dat(0, 'dichchuyen', 3), b = dat(1, 'lien', 3); b.st.kep = 6; b.st.cam = 6;`], ['Merge King → ụ câm', `var a = dat(0, 'vughep', 3, 'thuong'), b = dat(1, 'lien', 3); b.st.kep = 6; b.st.cam = 6;`],
+    ['Merge King câm kéo đi', `var a = dat(0, 'vughep', 3, 'thuong'), b = dat(1, 'lien', 3); a.st.kep = 6; a.st.cam = 6;`], ['Scrap Forge câm ăn', `var a = dat(0, 'loren', 3), b = dat(1, 'lien', 2); b.sao = 3; a.st.kep = 6; a.st.cam = 6;`], ['ghép thường với ụ câm', `var a = dat(0, 'lien', 3), b = dat(1, 'lien', 3); b.st.kep = 6; b.st.cam = 6;`]]) {
+    tran(['vughep', 'dichchuyen', 'loren', 'lien', 'canon']); R(js); const t0 = anh(); const h = R('hl(a, b)'); R('ghep(B, a, b)');
+    ca('[GPT#13] ' + ten, 'không ghép, không tốn gì ("no merge")', 'hopLe=' + h + ' · ' + (anh() === t0 ? 'bàn không đổi' : 'bàn đổi'), !h && anh() === t0);
+  }
+  // GPT#8: Forge ăn Combo Core → không COMBO; ăn Mimic → không ghép
+  tran(['loren', 'combo', 'mimic', 'luutru', 'lien']); R(`B.combo = 0; var K = dat(14, 'luutru', 3); K.kho = 0; var F = dat(0, 'loren', 3); dat(1, 'combo', 2); ghep(B, F, B.t[1]); dat(2, 'mimic', 3); ghep(B, B.t[2], F);`);
+  ca('[GPT#8] Scrap Forge ăn Combo Core + Mimic', 'lò +, COMBO 0, Archive 0', 'lo=' + R('F.lo') + ' combo=' + R('B.combo') + ' kho=' + R('K.kho'), R('F.lo') > 0 && R('B.combo') === 0 && R('K.kho') === 0);
+  // GPT#11: ụ hỗ trợ bị băng → buff ụ kề tắt; tan băng → bật lại
+  tran(['radar', 'lien']); R(`var S = dat(7, 'radar', 3), X = dat(8, 'lien', 3); capNhatBan(B, 1/30); var b1 = X.buf.toc; S.st.bang = 0.05; capNhatBan(B, 1/30); var b2 = X.buf.toc; S.st.bang = 0; capNhatBan(B, 1/30); var b3 = X.buf.toc;`);
+  ca('[GPT#11] Radar bị băng rồi tan', 'buff tắt khi băng, bật lại đúng 1 lần', [R('b1'), R('b2'), R('b3')].map(x => x.toFixed(2)).join(' → '), R('b1') > 0 && R('b2') < R('b1') && Math.abs(R('b3') - R('b1')) < 1e-9);
+  // GPT#12: ụ băng cạnh hỗ trợ — buff vẫn ghi (HOTRO.nhan chỉ bỏ ô ĐÁ) nhưng ụ băng KHÔNG bắn → buff không có tác dụng thật
+  tran(['radar', 'lien']); R(`G.cho = 0; B.tim = 1e9; var S = dat(7, 'radar', 3), X = dat(8, 'lien', 3, 'bang'); X.st.bang = 999; var _nb = 0; const _b0 = SKILLS.lien.ban; SKILLS.lien.ban = function () { _nb++; return _b0.apply(this, arguments); };`);
+  buoc(6); R('SKILLS.lien.ban = _b0');
+  ca('[GPT#12] ụ BĂNG cạnh Radar (6 s có quái)', 'không bắn phát nào (buff không có tác dụng)', R('_nb') + ' phát', R('_nb') === 0);
+  // GPT#14: Eve chặn trước — không tiêu khiên ụ, không tiêu Mirror
+  tran(['lien', 'guongcong']); R(`var X = dat(0, 'lien', 3), M = dat(1, 'guongcong', 3); M.nap = 1; X.khien = 1; B.khien = 8;`); chieu('janus', R('[X.uid]'));
+  ca('[GPT#14] Eve + Mirror sạc + khiên ụ × Janus', 'Eve chặn; khiên ụ = 1, Mirror còn sạc', 'đá=' + R('X.st.da') + ' khien=' + R('X.khien') + ' nap=' + R('M.nap'), !R('X.st.da') && R('X.khien') === 1 && R('M.nap') === 1);
+  // GPT#24: Combo + Mimic → COMBO +1 đúng 1 lần; Combo + Combo +1
+  for (const [ten, js] of [['Combo + Mimic', `dat(0, 'combo', 3); dat(1, 'mimic', 3);`], ['Mimic + Combo', `dat(0, 'mimic', 3); dat(1, 'combo', 3);`], ['Combo + Combo', `dat(0, 'combo', 3); dat(1, 'combo', 3);`]]) {
+    tran(['combo', 'mimic', 'lien']); R(`B.combo = 0; ${js} ghep(B, B.t[0], B.t[1]);`);
+    ca('[GPT#24] ' + ten, 'COMBO +1', R('B.combo'), R('B.combo') === 1);
+  }
+  // GPT#26: Star Cannon — mốc động tắt khi mất sao
+  tran(['ngoisao', 'lien']); R(`var S = dat(0, 'ngoisao', 4); dat(1, 'lien', 3); dat(2, 'lien', 3); capNhatBan(B, 1/30); var t1 = S.buf.toc; haSao(B, B.t[1]); capNhatBan(B, 1/30); var t2 = S.buf.toc;`);
+  ca('[GPT#26] Star Cannon đúng mốc 10★ rồi −1★', 'mốc tốc tắt (buff giảm)', R('t1.toFixed(2)') + ' → ' + R('t2.toFixed(2)'), R('t2') < R('t1'));
+  // GPT#29: trùm nhắm ụ (uid), ụ bị Teleporter dời trong lúc báo → đá vào đúng ụ ở ô mới
+  tran(['dichchuyen', 'lien']); R(`var X = dat(0, 'lien', 3), T = dat(5, 'dichchuyen', 3); var uid = X.uid; ghep(B, T, X);`); chieu('janus', R('[uid]'));
+  ca('[GPT#29] Janus nhắm ụ, ụ bị Teleporter dời', 'ụ (ô mới) hoá đá, Teleporter không', 'ụ@' + R('X.o') + ' đá=' + R('X.st.da') + ' tele đá=' + R('T.st.da'), R('X.st.da') && !R('T.st.da'));
+  // GPT#30: Joker — bạn cùng sao duy nhất đang khoá → hụt, ụ giữ nguyên
+  tran(['lien', 'canon']); R(`var X = dat(0, 'lien', 3), Y = dat(1, 'canon', 3, 'bang');`); const j0 = anh(); chieu('joker_king', R('[X.uid]'));
+  ca('[GPT#30] Joker King, bạn cùng sao duy nhất đang băng', 'hụt, không mất ụ', anh(), anh() === j0);
+  // GPT#31: Star Leech — khiên chặn; Leech chỉ lấy từ 2★; Eve chặn
+  for (const [ten, js, mong] of [['khiên 1 lần', 'X.khien = 1;', 3], ['Holy Shield', 'B.khien = 8;', 3], ['không phòng thủ', '', 2]]) {
+    tran(['lien']); R(`var X = dat(0, 'lien', 3); ${js}`); const E = trumMoi('leech', R('[X.uid]'));
+    ca('[GPT#31] Star Leech × ' + ten, 'ụ 3★ → ' + mong + '★', R('X.sao') + '★ (leech giữ ' + (E.kho || 0) + ')', R('X.sao') === mong);
+  }
+  tran(['lien']); R(`var X = dat(0, 'lien', 1);`); const lc = R(`TRUM_KN.leech.chon({ trum: 'leech', uid: 5 }, B, B.t.filter(Boolean))`);
+  ca('[GPT#31] Star Leech, bàn chỉ có ụ 1★', 'không nhắm (không về 0★)', JSON.stringify(lc), lc === null || (Array.isArray(lc) && !lc.length));
+  // GPT#32: Static Jammer ưu tiên hỗ trợ CÒN hoạt động (bỏ ụ đá)
+  tran(['radar', 'lien', 'chimang']); R(`var S1 = dat(0, 'radar', 3, 'da'), S2 = dat(1, 'chimang', 3), A1 = dat(2, 'lien', 5), A2 = dat(3, 'lien', 4);`);
+  const jm = R(`TRUM_KN.jammer.chon({ trum: 'jammer', uid: 7 }, B, B.t.filter(T => T && !T.st.da)).map(T => T.id + T.sao)`);
+  ca('[GPT#32] Static Jammer chọn mục tiêu', 'hỗ trợ còn chạy trước (chimang3), rồi ụ sao cao (lien5); bỏ ô đá', jm.join(','), jm[0] === 'chimang3' && jm[1] === 'lien5');
+  // GPT#38: bàn đầy — Twin / Cloner không đè ô, REINFORCE +1★ ụ yếu nhất
+  tran(['sinhdoi', 'nhanban', 'lien', 'canon', 'tia']); R(`for (let o = 0; o < 15; o++) dat(o, 'lien', 2); B.t[0] = null; B.t[1] = null; dat(0, 'sinhdoi', 3); dat(1, 'sinhdoi', 3); var u0 = B.t.filter(Boolean).map(T => T.uid).join(); ghep(B, B.t[0], B.t[1]);`);
+  ca('[GPT#38] bàn gần đầy (13 ụ + 2 Twin) ghép Twin', 'ụ cũ giữ nguyên, ≤15 ụ, bàn nhất quán', R('B.t.filter(Boolean).length') + ' ụ ' + R('chk()'), R('chk()') === '' && R('B.t.filter(Boolean).length') <= 15);
+  tran(['lien']); R(`for (let o = 0; o < 15; o++) dat(o, 'lien', o === 4 ? 1 : 3); B.mana = 999; B.mv.cd = 0; var g0 = B.mv.gia; var r = CH.dung(B);`);
+  ca('[GPT#38] REINFORCE bàn đầy', '+1★ cho 2 ụ yếu nhất, không sinh đè', 'ô4=' + R('B.t[4].sao') + '★ ' + R('chk()'), R('B.t[4].sao') === 2 && R('chk()') === '');
+  // GPT#39: REINFORCE không có đích (bàn đầy, mọi ụ 7★ hoặc đá) → không trừ mana, không hồi chiêu
+  tran(['lien']); R(`for (let o = 0; o < 15; o++) dat(o, 'lien', o < 3 ? 2 : 7, o < 3 ? 'da' : ''); B.mana = 999; B.mv.cd = 0; var r = CH.dung(B);`);
+  ca('[GPT#39] REINFORCE: bàn đầy, chỉ còn ụ 7★ / đá', 'không dùng được, không trừ mana', 'ok=' + R('r.ok') + ' mana=' + R('B.mana'), !R('r.ok') && R('B.mana') === 999);
 }
 
 // ===== KẾT =====
