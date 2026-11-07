@@ -20,7 +20,7 @@ const UI = {
     let r = null;
     try { // tối đa 4 s (Safari đôi khi treo fetch lúc nạp lại trang) → dùng bản nhúng meta.js
       const ac = typeof AbortController !== 'undefined' ? new AbortController() : null, hen = ac && setTimeout(() => ac.abort(), 4000);
-      const res = await fetch('assets/roster.json?v=2ef3c16d', { cache: 'no-cache', signal: ac ? ac.signal : undefined }); if (res.ok) r = await res.json(); clearTimeout(hen);
+      const res = await fetch('assets/roster.json?v=3352ecdb', { cache: 'no-cache', signal: ac ? ac.signal : undefined }); if (res.ok) r = await res.json(); clearTimeout(hen);
     } catch (e) { }
     G.roster = applyText(r || window.ROSTER_EMBED || []);
     SND.nutNhan(); // nhãn nút NHẠC/SFX theo trạng thái đã lưu
@@ -59,7 +59,7 @@ const UI = {
         alpha = tichLuy / BUOC;
         FX.giam = (k > 1 ? 1 / Math.sqrt(k) : 1) * (typeof TKP !== 'undefined' && TKP.on() ? 0.5 : 1); // tiết kiệm pin: nửa số hạt
         FX.capNhat(thuc * (k > 1 ? Math.sqrt(k) : 1)); // hiệu ứng theo thời gian thực (nhanh lên êm khi tăng tốc)
-      }
+      } else if (FX.chop > 0) FX.chop = Math.max(0, FX.chop - thuc * 2.6); // rà VFX 07/11: bàn đứng (tạm dừng / TAI.doi giải mã ảnh sau chiêu lớn) → chớp màn vẫn tắt, không đọng lớp phủ màu cả màn
       if (!TAI.cho) REN.ve(G.dung || TAI.doi ? 0 : thuc, alpha); // đang tải: không vẽ (không bao giờ lộ hình thiếu ảnh); TAI.doi: vẽ bàn đứng yên
       if (G.ban.length && (this._hud = !this._hud || khoang > 20)) this.capNhat(); // HUD (DOM) 30 lần/giây là đủ, đỡ dựng lại bố cục
       REN._viec = performance.now() - t0v; // thời gian JS thật của khung (REN.doKhung: phân biệt máy bận với trần 30/60 Hz)
@@ -181,7 +181,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       const d = document.createElement('button'); d.className = 'the'; d.dataset.act = 'nang'; d.dataset.id = id;
       d.style.setProperty('--m', TIERS[r.bac].mau);
       d.innerHTML = cardArt(id) +
-        '<span class="lv">LV1</span><span class="gia"><img src="assets/ui_nangcap.webp?v=21f670ed" alt=""><b>100</b></span>';
+        '<span class="lv"></span><span class="gia"><img src="assets/ui_nangcap.webp?v=21f670ed" alt=""><b>100</b></span>';
       bo.appendChild(d);
     }
     // dải đoạn tới trùm: 1 ô / wave trong chu kỳ, ô cuối = trùm
@@ -234,8 +234,8 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     nt.classList.toggle('du', du); nt.classList.toggle('thieu', !du);
     document.querySelectorAll('#bo-the .the').forEach(d => {
       const id = d.dataset.id, lv = B.lv[id];
-      const nlv = typeof THEBAI !== 'undefined' ? THEBAI.nhanTran(B, id) : 'LV' + lv, elv = d._lv || (d._lv = d.querySelector('.lv'));
-      chu(elv, nlv); if (elv && elv._dai !== (nlv.length >= 6)) { elv._dai = nlv.length >= 6; elv.classList.toggle('lv-dai', elv._dai); } // 'LV16+1' dài: canh giữa ô (QA ngâm: lòi ra khung thẻ ở iPhone 13)
+      const nlv = THEBAI.nhanTran(B, id), elv = d._lv || (d._lv = d.querySelector('.lv'));
+      chu(elv, nlv); if (elv && elv._max !== (lv >= 5)) { elv._max = lv >= 5; elv.classList.toggle('lv-max', elv._max); } // '' / +1 / +2 / +3 / MAX (MAX vàng; ô giá ẩn khi tối đa)
       // số ụ loại này trên bàn: tấm đếm .dem-u (icon chồng ụ + số) — js/demkn.js
       const g = d._g || (d._g = d.querySelector('.gia b'));
       if (lv >= 5) { chu(g, TEXT.ui.max); d.classList.add('max'); d.classList.remove('du', 'thieu'); }
@@ -365,7 +365,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     const L = [];
     let so = '';
     if (T) {
-      so = T.sao + '★ · ' + (typeof THEBAI !== 'undefined' ? THEBAI.nhanTran(G.ban[T.ban], id) : 'LV' + (G.ban[T.ban].lv[id] || 1));
+      const nt = THEBAI.nhanTran(G.ban[T.ban], id); so = T.sao + '★' + (nt ? ' · ' + nt : ''); // cùng nhãn thẻ trận: +n / MAX
       if (sk.dmg) so += ' · ' + TEXT.ui.dmg + ' ' + Math.round(dmgU(T));
       const tc = tocTT(id, T); if (tc) so += ' · ' + tc;
       if (sk.mo && !(SUP_GIA[id])) so += ' · ' + sk.mo(T); // ụ hỗ trợ: hiệu lực hiện tại nằm ở dòng ký hiệu bên dưới (đã gồm mốc sao)

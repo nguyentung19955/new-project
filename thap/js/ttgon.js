@@ -20,7 +20,7 @@
     } else {
       // ô số + nguồn buff do statthuc.js chèn (.st-live). Ụ không có sát thương & không phải hỗ trợ: 1 dòng hiệu lực
       const coLive = sk.dmg || (sk.vai === 'ht' && hoTroTT(T));
-      let so = T.sao + '★ · ' + (typeof THEBAI !== 'undefined' ? THEBAI.nhanTran(G.ban[T.ban], id) : 'LV' + (G.ban[T.ban].lv[id] || 1));
+      const nt = THEBAI.nhanTran(G.ban[T.ban], id); let so = T.sao + '★' + (nt ? ' · ' + nt : ''); // cùng nhãn thẻ trận: +n / MAX
       if (!coLive && sk.mo) { try { so += ' · ' + sk.mo(T); } catch (e) { } }
       if (typeof THATSO !== 'undefined' && THATSO.puDong) { const pu = THATSO.puDong(G.ban[T.ban], id); if (pu) so += ' · ' + pu; } // ụ không sát thương: power-up nâng chính số kỹ năng (số ở mô tả đã gồm) — KIEM.md mục IX 'Đã quyết' #1
       if (sk.chuDong) so += ' · ' + (T.nap >= 1 ? TEXT.ui.readyTap : TEXT.ui.charge(Math.round(T.nap * 100)));

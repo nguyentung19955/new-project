@@ -667,10 +667,10 @@ const REN = {
     this.veNhanBan(ctx);
     // vật trên đường (mây độc, vũng độc, mìn, cầu vồng…) vẽ dưới quái
     for (const o of G.hu) if (HU[o.k] && HU[o.k].duoi) { this._T = o.T || o._T || null; HU[o.k].ve(ctx, o, this); }
+    { const da = []; // hố đen DƯỚI quái (chống rối claude/chong-roi: trước đè lên quái/đường); nhiều hố trùng tâm (nhiều ụ cùng nhịp) chỉ vẽ 1 → không chồng đặc
+      for (const o of G.hu) if (o.k === 'hoden') { if (da.some(q => Math.abs(q.x - o.x) < o.r * 0.3 && Math.abs(q.y - o.y) < o.r * 0.3)) continue; da.push(o); this._T = o.T || o._T || null; HU.hoden.ve(ctx, o, this); } }
     this._T = null;
     this.veQuai(ctx);
-    for (const o of G.hu) if (o.k === 'hoden') { this._T = o.T || o._T || null; HU.hoden.ve(ctx, o, this); } // hố đen đè lên quái bị hút
-    this._T = null;
     this._hang = [];
     this.veO(ctx);
     for (const o of G.hu) if (o.k === 'tuong') { this._T = o.T || o._T || null; HU.tuong.ve(ctx, o, this); }

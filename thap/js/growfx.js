@@ -359,7 +359,7 @@ function chocU(G, B, T, dt) {
   });
   if (!B.ai) SND[hop ? 'gThe' : (s === 2 ? 'gNung' : 'gThe')]();
 }
-P.hopbi = P.tienhoa = () => {}; // 07/11: Hộp Bí Ẩn + Hộp Tiến Hoá KHÔNG BẮN → bỏ đòn chọc chocU
+P.hopbi = P.tienhoa = () => {}; // 07/11: Hộp Bí Ẩn + Hộp Tiến Hoá là ụ KHÔNG BẮN (thẻ ghi "Does not shoot", như Daron/Moa DCDW) → bỏ đòn chọc chocU gây sát thương
 HU.gTiaVang = { // tia vàng mảnh (Hộp Tiến Hoá dạng 3 / Pháo Đồng Bộ dạng 3): lõi trắng 1.5 px + quầng vàng 3–4 px
   ve(ctx, o, R) {
     const u = o.t / o.song; if (o.E && !o.E.chet) { o.x1 = o.E.x; o.y1 = o.E.y; }

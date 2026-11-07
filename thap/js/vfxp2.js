@@ -111,7 +111,7 @@ HU.p2fx = {
   if (typeof HU === 'undefined' || !HU.hoden) return;
   const T0 = 'p2_blackhole', ve0 = HU.hoden.ve;
   HU.hoden.ve = function (ctx, o, R) {
-    const u = o.t / o.song, mo = Math.min(1, o.t / 0.3) * (u > 0.9 ? (1 - u) * 10 : 1);
+    const u = o.t / o.song, mo = 0.5 * Math.min(1, o.t / 0.3) * (u > 0.9 ? (1 - u) * 10 : 1); // ×0,5 (chống rối): vùng xoáy không che đường
     if (P2.co(T0)) { P2.k(ctx, T0, (o.t * 14) % 16, o.x, o.y, o.r * 2 / VUNG_ANH.p2_blackhole, mo); return; } // mép xoáy THẤY ĐƯỢC = bán kính hút/nghiền o.r
     const hd = R.co('hu_hoden', o.r * 2); if (!hd) return ve0.call(this, ctx, o, R);
     ctx.save(); ctx.translate(o.x, o.y); ctx.globalAlpha = mo; ctx.rotate(-o.t * 1.6); const rr = o.r * 1.03; ctx.drawImage(hd, -rr, -rr, rr * 2, rr * 2); ctx.restore();
@@ -206,12 +206,14 @@ P2.evoBom = function (ctx, T, d, cuoi, al) {
   };
   const sk = typeof SKILLS !== 'undefined' && SKILLS.lualien;
   if (sk && sk.veThem) sk.veThem = function (ctx, T, S, al) { // lửa đang mang: có tờ → lửa sống 16 khung; chưa có → cỡ cố định (bỏ phập phồng)
-    const n = Math.min(SKILLS.lualien.MAX || 8, T.lc || 0); if (!n) return; // Lửa Thập Tự: tối đa 8 — 4 nhánh + lõi lớn dần từ 5 lửa
-    const pos = [[1, 0], [0, 1], [-1, 0], [0, -1]], r = S * 0.36, co = !!P2.co('p2_ember'), im = co ? null : REN.img('fx_cuuvi_dan');
+    const n = Math.min(8, T.lc || 0); if (!n) return; // Lửa Thập Tự: hình bão hoà ở 8 (số lửa không trần) — 4 nhánh + lõi lớn dần từ 5 lửa
+    // ĐỘT PHÁ: lửa đổi màu theo bậc (bản sao PNG lọc màu dựng 1 lần — DOTPHA.ten)
+    const bac = typeof DOTPHA !== 'undefined' ? DOTPHA.bacU(T) : 0, toE = bac ? DOTPHA.tenT('p2_ember', T) : 'p2_ember';
+    const pos = [[1, 0], [0, 1], [-1, 0], [0, -1]], r = S * 0.36, co = !!P2.co(toE), im = co ? null : REN.img(bac ? DOTPHA.tenT('fx_cuuvi_dan', T) : 'fx_cuuvi_dan');
     if (!co && !im) return;
     ctx.globalCompositeOperation = 'lighter';
-    for (let i = 0; i < Math.min(4, n); i++) { if (co) P2.k(ctx, 'p2_ember', (G.t * 20 + i * 4) % 16, pos[i][0] * r, pos[i][1] * r, S * 0.26, al * 0.9, -Math.PI / 2, true); else PX.ve(ctx, im, pos[i][0] * r, pos[i][1] * r, S * 0.21, S * 0.21, -Math.PI / 2, al * 0.85); }
-    if (n >= 5) { const k = 1 + 0.08 * (n - 5); if (co) P2.k(ctx, 'p2_ember', (G.t * 20 + 9) % 16, 0, 0, S * 0.36 * k, al * 0.7, -Math.PI / 2, true); else PX.ve(ctx, im, 0, 0, S * 0.29 * k, S * 0.29 * k, -Math.PI / 2, al * 0.6); }
+    for (let i = 0; i < Math.min(4, n); i++) { if (co) P2.k(ctx, toE, (G.t * 20 + i * 4) % 16, pos[i][0] * r, pos[i][1] * r, S * 0.26, al * 0.9, -Math.PI / 2, true); else PX.ve(ctx, im, pos[i][0] * r, pos[i][1] * r, S * 0.21, S * 0.21, -Math.PI / 2, al * 0.85); }
+    if (n >= 5) { const k = 1 + 0.08 * (n - 5); if (co) P2.k(ctx, toE, (G.t * 20 + 9) % 16, 0, 0, S * 0.36 * k, al * 0.7, -Math.PI / 2, true); else PX.ve(ctx, im, 0, 0, S * 0.29 * k, S * 0.29 * k, -Math.PI / 2, al * 0.6); }
     ctx.globalCompositeOperation = 'source-over';
   };
 })();

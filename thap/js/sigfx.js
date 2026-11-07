@@ -15,6 +15,7 @@ const SIG = {
   ten(id, g) { return 'sig_' + this.MA[id] + '_' + g; },
   // Leviathan TIDAL BREATH — ảnh ChatGPT mới (null = chưa có → dùng ảnh tạm có sẵn; không gọi tải ảnh chưa tồn tại)
   LEV: { rong: 'lev_rong', bang: 'fx_lev_bang' },
+  ROI: ['fx_marionette_tay', 'fx_marionette_thanh', 'fx_marionette_day'], // Rối Máy bản mới (thiếu ảnh → vẽ bản cũ sig_l22_*)
   // tải lười: chỉ dải của ụ có trong bộ bài trên bàn (kiểm 1 lần/giây)
   nap() {
     if (this.t - this._tNap < 1) return; this._tNap = this.t;
@@ -23,6 +24,7 @@ const SIG = {
       this.daNap.add(id);
       for (const k in SIG_META) if (k.startsWith('sig_' + ma + '_')) REN.img(k);
       if (id === 'leviathan') for (const k of [this.LEV.rong, this.LEV.bang, 'fx_bang_trung', 'fx_leviathan_trung']) if (k) REN.img(k);
+      if (id === 'marionette') for (const k of this.ROI) REN.img(k);
       if (id === 'ronglua') for (const k of ['wyrm_rong', 'fx_wyrm_lua', 'fx_ronglua_trung']) REN.img(k);
     }
   },
@@ -103,6 +105,8 @@ const SIG = {
 
 // ===================================================== PHÁT HIỆN (đúng lúc kỹ năng nổ ra) =====================================================
 if (typeof SIG_META !== 'undefined') SIG_META.fx_lev_bang = [16, 230, 77]; // dải 16 khung luồng băng (raw_fx_lev_bang.png, 4×4 → 1 hàng)
+// Rối Máy (07/11): găng vàng 8 khung (mở → nắm), thanh rối gỗ 6 khung (lắc), dây vàng 4 khung (lấp lánh) — tools/thap-cat-marionette.py
+if (typeof SIG_META !== 'undefined') Object.assign(SIG_META, { fx_marionette_tay: [8, 219, 240], fx_marionette_thanh: [6, 180, 162], fx_marionette_day: [4, 32, 180] });
 if (typeof SIG_META !== 'undefined') SIG_META.fx_wyrm_lua = [16, 300, 150]; // dải 16 khung luồng lửa Wyrm (raw_fx_wyrm_lua.png, 4×4 → 1 hàng; tools/thap-cat-wyrm.py)
 SIG.PHAT = {
   roi(o) { // Marionette gắn dây rối
@@ -110,7 +114,7 @@ SIG.PHAT = {
     this.them('roi', 1e9, { o, E: o.E, ngan: this.ngan(o.T) && !phu, phu });
   },
   rewind(o) { this.them('rewind', 1.25, { o, T: o.T, ngan: this.ngan(o.T), keo: o.keo.slice(0, 6).map(q => ({ E: q.E, s0: q.s0, s1: q.s1, p: q.E.p })) }); },
-  hoden(o) { this.them('hoden', 1e9, { o, x: o.x, y: o.y, r: o.r, ngan: this.ngan(o.T) }); },
+  hoden(o) { if (this.ds.some(m => m.k === 'hoden' && !m.tNo && m.t < 0.3 && Math.abs(m.x - o.x) < o.r * 0.3 && Math.abs(m.y - o.y) < o.r * 0.3)) return; this.them('hoden', 1e9, { o, x: o.x, y: o.y, r: o.r, ngan: this.ngan(o.T) }); }, // chống rối: nhiều hố trùng tâm cùng lúc chỉ 1 bộ hình mở màn
   rongBo(o) { const c = this.o(o.T); this.them('rong', 1e9, { o, T: o.T, cx: c.x, cy: c.y, ngan: this.ngan(o.T) }); },
   thoThuy(o) { this.them('tho', 1e9, { o, T: o.T, p: o.p, ngan: this.ngan(o.T) }); },
   hydraTia(o) {
@@ -141,11 +145,46 @@ SIG.K = {
       m.nhac = m.no ? 0 : 13 * this.eo((m.t - (m.ngan ? 0.3 : 0.6)) / 0.3);
       return m.no && m.t - m.tNo > 0.62;
     },
+    moi(ctx, m) {
+      const E = m.E, t = m.t, s = m.ngan ? 0.55 : 1, kt = m.phu ? 0.85 : 1, tay = (m.o.T && m.o.T.sao || 1) >= 4, lat = !!m.phu;
+      const co = E.d.co || 40, tD = 0.24 * s; // tD: thời gian hạ xuống
+      if (!m.no) {
+        const x = E.x, y = E.y, vao = this.eo(t / tD), al = Math.min(1, t / 0.08) * (t > 1.3 ? 0.88 : 1);
+        if (tay) {
+          // găng: tâm lòng bàn tay (≈ 58% chiều cao khung) đè lên nửa trên con quái; ngón chĩa xuống ôm lấy nó
+          // găng nhỏ hơn quái, đầu ngón (≈ 90% chiều cao khung) bấu vào đỉnh quái → thân quái vẫn thấy rõ bên dưới
+          const w = Math.max(34, Math.min(56, co * 0.9)) * kt, sc = 1.15 - 0.15 * vao;
+          const tg = t - tD, fr = tg < 0 ? 0 : Math.min(5, tg / (0.2 * s) * 5) + (tg > 0.2 * s + 0.5 && Math.floor(this.t * 2.2) % 3 === 0 ? 0.6 : 0);
+          this.k(ctx, 'fx_marionette_tay', fr, x, y - co * 0.1 - 30 * (1 - vao), w * sc, { ay: 0.9, a: al, lat });
+        } else {
+          // thanh rối lơ lửng trên đầu quái + 3 dây (vẽ dây trước để đầu dây khuất dưới thanh)
+          const w = 50 * kt, cy = y - co * 0.5 - 30 * kt - 26 * (1 - vao) + Math.sin(this.t * 2.4) * 1.2;
+          const SEQ = [0, 1, 2, 1, 0, 4, 5, 4], fr = SEQ[Math.floor(this.t * 6) % 8], g = (fr === 2 ? -1 : fr === 1 ? -0.5 : fr === 5 ? 1 : fr === 4 ? 0.5 : 0);
+          const dai = Math.max(0, Math.min(1, (t - tD * 0.7) / (0.16 * s))), h = w * 162 / 180, ty = y - co * 0.32;
+          if (dai > 0) {
+            this.K.roiDay.call(this, ctx, x - w * 0.32, cy - h * 0.05 + g * 2, x - co * 0.16, ty, al, dai);
+            this.K.roiDay.call(this, ctx, x + w * 0.33, cy - h * 0.05 - g * 2, x + co * 0.16, ty, al, dai);
+            this.K.roiDay.call(this, ctx, x, cy - h * 0.22, x, ty - 3, al * 0.9, dai);
+          }
+          this.k(ctx, 'fx_marionette_thanh', fr, x, cy, w, { a: al, lat });
+        }
+      } else {
+        const u = m.t - m.tNo, x = m.nx, y = m.ny;
+        if (u < 0.32) {
+          const ra = Math.max(0, 1 - Math.max(0, u - 0.14) / 0.18), len = 14 * this.eo(u / 0.3);
+          if (tay) { const w = Math.max(34, Math.min(56, co * 0.9)) * kt; this.k(ctx, 'fx_marionette_tay', 5 * (1 - Math.min(1, u / 0.16)), x, y - co * 0.1 - len, w, { ay: 0.9, a: ra, lat }); }
+          else this.k(ctx, 'fx_marionette_thanh', 0, x, y - co * 0.5 - 30 * kt - len * 1.5, 50 * kt, { a: ra, lat });
+        }
+        const fe = this.f(u, 0.06, 0.62, this.n('marionette', 'toy'));
+        if (fe >= 0) this.k(ctx, 'sig_l22_toy', fe, x, y - 6, 104 * kt);
+      }
+    },
     duoi(ctx, m) { // bóng/neo trên đường dưới con rối đang treo
       if (m.no || !(m.nhac > 1)) return; const E = m.E;
       this.k(ctx, 'sig_l22_shadow', (this.t * 6) % 3, E.x, E.y + m.nhac + 4, 30, { a: 0.75 * Math.min(1, m.nhac / 8) });
     },
     ve(ctx, m) {
+      if (this.ROI.every(k => REN.img(k))) return this.K.roi.moi.call(this, ctx, m);
       const E = m.E, t = m.t, s = m.ngan ? 0.5 : 1, kt = m.phu ? 0.72 : 1;
       if (!m.no) {
         const x = E.x, y = E.y, hy = y - ((E.d.co || 40) * 0.5 + 40) * kt, hx = Math.max(48, Math.min(W - 48, x)); // tay luôn nằm trong màn
@@ -175,6 +214,13 @@ SIG.K = {
     },
   },
 
+  // Rối Máy bản mới (07/11) — 1–3★ STRINGS: thanh rối gỗ hạ xuống trên đầu quái, 3 dây vàng búng xuống móc vào quái, thanh lắc khi kéo lùi;
+  // 4–6★ GOLDEN HAND: găng vàng (nhìn từ trên) hạ xuống, khép ngón nắm lấy quái (khung 0 → 6), giữ chặt khi kéo lùi; 7★: 2 con rối (con thứ 2 lật gương).
+  // Hết giờ / quái chết: găng mở ngón buông ra (thanh rối bay lên, dây đứt) rồi nổ rối đồ chơi. Chỉ đặt vị trí/xoay/phóng/mờ/chọn khung ảnh.
+  roiDay(ctx, x0, y0, x1, y1, a, dai) { // 1 sợi dây từ (x0,y0) xuống (x1,y1); giữ tỉ lệ ảnh (móc không méo); dai 0..1 = đang búng xuống
+    const dx = x1 - x0, dy = y1 - y0, L = Math.hypot(dx, dy) * dai; if (L < 3) return;
+    this.k(ctx, 'fx_marionette_day', Math.floor(this.t * 8) % 4, x0, y0, L * 32 / 180, { h: L, ay: 0, a, g: -Math.atan2(dx, dy) });
+  },
   // ---------- M05 CHRONO THRONE: ngai đồng hồ trồi lên → kim quay ngược → bóng ma quái tua lùi → đồng hồ cát vỡ ----------
   rewind: {
     ve(ctx, m) {
@@ -207,10 +253,11 @@ SIG.K = {
     ve(ctx, m) {
       const t = m.t, r = m.r, s0 = m.ngan ? 0.3 : 0;
       if (!m.tNo || t - m.tNo < 0) {
-        if (!m.ngan) { const fs = this.f(t, 0, 0.32, 5); if (fs >= 0) this.k(ctx, 'sig_m01_shards', fs, m.x, m.y, r * 2.5 * (1.15 - 0.15 * t / 0.32)); }
-        const fl = this.f(t, 0.26 - s0, 0.66 - s0, 9); if (fl >= 0 || (t >= 0.66 - s0 && t < 0.82 - s0)) this.k(ctx, 'sig_m01_lens', fl < 0 ? 8 : fl, m.x, m.y, r * 2.1, { a: this.mo(t, Math.max(0, 0.26 - s0), 0.82 - s0, 0.05, 0.16) * 0.88 });
+        // chống rối (claude/chong-roi): mảnh/mống mắt/xoáy mở màn ≤ 50% đục → không che đường và quái (nén nổ/nhả giữ nguyên)
+        if (!m.ngan) { const fs = this.f(t, 0, 0.32, 5); if (fs >= 0) this.k(ctx, 'sig_m01_shards', fs, m.x, m.y, r * 2.5 * (1.15 - 0.15 * t / 0.32), { a: 0.5 }); }
+        const fl = this.f(t, 0.26 - s0, 0.66 - s0, 9); if (fl >= 0 || (t >= 0.66 - s0 && t < 0.82 - s0)) this.k(ctx, 'sig_m01_lens', fl < 0 ? 8 : fl, m.x, m.y, r * 2.1, { a: this.mo(t, Math.max(0, 0.26 - s0), 0.82 - s0, 0.05, 0.16) * 0.5 });
         // xoáy chồng nhẹ lên đĩa gốc trong 0.6–1.05 s (quái bị hút)
-        const fw = this.f(t, 0.62 - s0, 1.08 - s0, 8); if (fw >= 0) this.k(ctx, 'sig_m01_swirl', fw, m.x, m.y, r * 2.3, { g: -t * 2, a: this.mo(t, 0.62 - s0, 1.08 - s0, 0.08, 0.2) * 0.9 });
+        const fw = this.f(t, 0.62 - s0, 1.08 - s0, 8); if (fw >= 0) this.k(ctx, 'sig_m01_swirl', fw, m.x, m.y, r * 2.3, { g: -t * 2, a: this.mo(t, 0.62 - s0, 1.08 - s0, 0.08, 0.2) * 0.5 });
       }
       if (m.tNo) {
         const u = m.t - m.tNo;

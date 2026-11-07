@@ -127,7 +127,7 @@ SKILLS.bang = { // Băng (Liza) — ĐẶC BIỆT (đợt vai trò): định k�
   ky: (T) => (ms(T, 5) ? 4.5 : 6),          // 5★ QUICK FROST
   dai: (T) => Math.round(((ms(T, 3) ? 0.5 : 0) + knThe(G.ban[T.ban], 'bang')) * 10) / 10, // 3★ LONG FREEZE · cấp thẻ: 2 s → 3 s (+ power-up KY_NANG_CAP.pu)
   so: (T) => (ms(T, 7) ? 2 : 1),            // 7★ DOUBLE FREEZE
-  mo: (T) => 'Every ' + SKILLS.bang.ky(T) + 's freezes ' + (SKILLS.bang.so(T) > 1 ? '2 lead enemies ' : 'the lead enemy ') + SKILLS.bang.dai(T) + 's (big ×0.6; bosses only 50% slow 0.6s) + 30% chill (bosses 15%) · 3s freeze immunity · Frost Flyers immune',
+  mo: (T) => 'Every ' + SKILLS.bang.ky(T) + 's freezes ' + (SKILLS.bang.so(T) > 1 ? '2 lead enemies ' : 'the lead enemy ') + SKILLS.bang.dai(T) + 's (big ×0.6; bosses only 50% slow 0.6s) + 30% chill · 3s freeze immunity · Frost Flyers immune',
   ung: (G, B) => dsMucTieu(B).filter(E => !E.chet && !E.d.khangCham && !(E.bangMien > G.t)).sort((a, b) => (G.duong[a.p].len - a.s) - (G.duong[b.p].len - b.s)),
   capNhat(G, B, T, dt) {
     const ds = this.ung(G, B);
@@ -143,12 +143,12 @@ SKILLS.bang = { // Băng (Liza) — ĐẶC BIỆT (đợt vai trò): định k�
     return true;
   },
 };
-// đóng băng 1 quái (Frost): thường = dai, quái to ×0.6, trùm 0.6 s; sau đó lạnh 30% thêm 2 s (trùm 15% — trần chậm của trùm); miễn đóng băng 3 s (không khoá nối tiếp)
+// đóng băng 1 quái (Frost): thường = dai, quái to ×0.6, trùm 0.6 s; sau đó lạnh 30% thêm 2 s (trùm: kẹp trần chậm trùm HOTRO.CHAM_TRUM 50%); miễn đóng băng 3 s (không khoá nối tiếp)
 function dongBang(E, dai, T) {
   if (E.chet) return;
   const d = E.trum ? 0.6 : E.d.to ? dai * 0.6 : dai;
   E.chan = Math.max(E.chan, d); E.bangMien = G.t + d + 3;
-  E.chamT = Math.max(E.chamT, d + 2); E.cham = Math.max(E.cham, E.trum ? 0.15 : 0.3);
+  E.chamT = Math.max(E.chamT, d + 2); E.cham = Math.max(E.cham, E.trum ? Math.min(0.3, HOTRO.CHAM_TRUM) : 0.3);
   FX.chu1(E.x, E.y - 22, 'FROZEN', '#bff4ff', 11); FX.no('bang_vo', E.x, E.y, 70, 0.45);
 }
 SKILLS.doc = { // Độc (Unknown) — ĐẶC BIỆT (đợt vai trò): ĐÁNH DẤU quái đầu 5 s → mọi ụ gây thêm 12% (làm mới thời gian, không cộng dồn giá trị); không tự gây sát thương
@@ -229,7 +229,7 @@ SKILLS.mana = { // Máy Mana (Syrinx): không bắn; sinh mana mỗi 7 s
 SKILLS.radar = { // Radar (Kirinus): HỖ TRỢ — +tốc bắn cho 4 ô thẳng (hotro.js: 12% 1★ → 28% 7★, trần chung 45%)
   vai: 'ht', dmg: 0, toc: 0,
   them: (T) => 0.12 * HOTRO.k(T),
-  mo: (T) => '+' + Math.round(Math.min(SKILLS.radar.them(T), HOTRO.tran(T, 'toc')) * 100) + '% fire rate to N/E/S/W neighbours' + (ms(T, 5) ? ' · +4% crit' : '') + (ms(T, 7) ? ' · OVERDRIVE every 8s: +25% for 2s (up to the ' + +(HOTRO.tran(T, 'toc') * 100).toFixed(1) + '% fire-rate cap)' : ''),
+  mo: (T) => '+' + Math.round(Math.min(SKILLS.radar.them(T), HOTRO.tran(T, 'toc')) * 100) + '% fire rate to N/E/S/W neighbours' + (ms(T, 5) ? ' · +4% crit' : '') + (ms(T, 7) ? ' · OVERDRIVE every 8s: +25% for 2s' : ''),
   hoTro(G, T, N, ra) { ra.toc = this.them(T) + (T.odCon > 0 ? 0.25 : 0); if (T.odCon > 0) ra.capOD = 0.15; if (ms(T, 5)) ra.crit = 0.04; }, // 7★ OVERDRIVE: +25% trong 2 s — trần tốc +15% trong lúc OVERDRIVE (BAO-CAO gioi-han Mức 3)
   capNhat(G, B, T, dt) {
     T.goc += dt * 1.3; // chảo radar quay đều
@@ -279,8 +279,10 @@ SKILLS.mortar = { // Súng Cối (Nade): bắn quái ngẫu nhiên, đạn vòng
     const dmg = dmgU(T), cum = T.banLan % 3 === 0; // mỗi phát thứ 3: đạn CHÙM (cơ chế mới so với Pháo Nổ)
     banDan({ img: 'dan_phao', x, y, muc: E, px: E.x, py: E.y, sp: 190, co: cum ? 26 : 22, cong: 90, B, T, duoi: true, nho: true,
       trung(G, d) {
-        noLan(d.x, d.y, 46, dmg, B); FX.no('no_phao', d.x, d.y, 46 * 2.5, 0.5); FX.bui(d.x, d.y, 6, 10); FX.lac(3); SND.no(0.4);
-        if (cum) for (let i = 0; i < 3; i++) { const a = i * 2.09 + Math.random(), px = d.x + Math.cos(a) * 30, py = d.y + Math.sin(a) * 30; noLan(px, py, 26, dmg * 0.45, B, { phu: true }); FX.no('no_phao', px, py, 60, 0.35); }
+        const chum = cum && typeof VXM !== 'undefined' && VXM.co('fx_mortar_chum'); // rà VFX 07/11: đạn chùm = 1 dải nổ chùm 5 cánh ChatGPT (thay 4 ảnh nổ rời)
+        noLan(d.x, d.y, 46, dmg, B); if (!chum) FX.no('no_phao', d.x, d.y, 46 * 2.5, 0.5); FX.bui(d.x, d.y, 6, 10); FX.lac(3); SND.no(0.4);
+        if (cum) G.hu.push({ k: 'vxmPhat', t: 0, song: 0.6, ten: 'fx_mortar_chum', x: d.x, y: d.y, w: 132 });
+        if (cum) for (let i = 0; i < 3; i++) { const a = i * 2.09 + Math.random(), px = d.x + Math.cos(a) * 30, py = d.y + Math.sin(a) * 30; noLan(px, py, 26, dmg * 0.45, B, { phu: true }); if (!chum) FX.no('no_phao', px, py, 60, 0.35); }
       } });
     if (cum) nhanU(T, 'CLUSTER', '#ffb35a');
   },
@@ -529,7 +531,7 @@ HU.vetinh = { // tia bắn phá từ đỉnh màn hình
     if (!o.E.chet) { o.x = o.E.x; o.y = o.E.y; }
     if (!o.da && o.t > 0.16) {
       o.da = true; noLan(o.x, o.y, o.r || 30, o.dmg, o.B, { mau: '#9fe6ff' });
-      FX.no('dien', o.x, o.y, 70, 0.35); FX.no('no_phao', o.x, o.y, 60, 0.4); if (!o.vang || TVX.duocLac && TVX.duocLac(0.5)) FX.lac(2);
+      if (!(typeof VXM !== 'undefined' && VXM.co('fx_orbital_bomno'))) { FX.no('dien', o.x, o.y, 70, 0.35); FX.no('no_phao', o.x, o.y, 60, 0.4); } if (!o.vang || TVX.duocLac && TVX.duocLac(0.5)) FX.lac(2); // có dải nổ quỹ đạo (vfxmoi.js) → không chồng 2 ảnh nổ cũ
     }
   },
   ve(ctx, o, R) {
@@ -602,7 +604,7 @@ HU.hoden = { // hố đen: kéo quái về tâm, rút máu, cuối cùng nghiề
     if (Math.random() < dt * 40) { const a = Math.random() * 6.28, r = o.r * rnd(0.6, 1.1); FX.hat1('lua', o.x + Math.cos(a) * r, o.y + Math.sin(a) * r, -Math.cos(a + 0.9) * r * 2.2, -Math.sin(a + 0.9) * r * 2.2, 0.45, 7, pick(['#9a4bff', '#b04bff', '#ffffff'])); }
     if (o.t >= o.song - 0.02 && !o.no) {
       o.no = true; noLan(o.x, o.y, o.r, o.dmg, o.B, { mau: '#ff6ad5' });
-      G.dangBan = o.T; FX.no('laser_trung', o.x, o.y, o.r * 3, 0.5); FX.lac(8); FX.sang(0.25, '#9a4bff'); FX.vong1(o.x, o.y, o.r, 4, '#c070ff', 0.3, 5); // nổ nghiền = ảnh fx_blackhole_trung TÍM của ụ (trước: G.dangBan trống → nổ laser đỏ-hồng chung) SND.no(1);
+      G.dangBan = o.T; FX.no('laser_trung', o.x, o.y, o.r * 3, 0.5); FX.lac(6); FX.sang(0.08, '#9a4bff'); /* (rà VFX 07/11) bỏ phủ tím toàn màn */ FX.vong1(o.x, o.y, o.r, 4, '#c070ff', 0.3, 5); // nổ nghiền = ảnh fx_blackhole_trung TÍM của ụ (trước: G.dangBan trống → nổ laser đỏ-hồng chung) SND.no(1);
     }
   },
   ve(ctx, o, R) {
@@ -622,7 +624,7 @@ HU.sam = { // overlord: tia sấm khổng lồ + chớp màn hình
   cap(G, o) {
     if (!o.da && o.t > 0.08) {
       o.da = true; noLan(o.x, o.y, o.r, o.dmg, o.B, { mau: '#fff27a' });
-      FX.no('dien', o.x, o.y, o.r * 3, 0.55); FX.no('no_phao', o.x, o.y, o.r * 2.2, 0.6); FX.sang(0.7, '#fff6c0'); FX.lac(12);
+      FX.no('dien', o.x, o.y, o.r * 3, 0.55); FX.no('no_phao', o.x, o.y, o.r * 2.2, 0.6); FX.sang(0.1, '#fff6c0'); FX.lac(6); // (rà VFX 07/11) bỏ chớp trắng toàn màn + rung vừa phải: sáng tập trung ở chỗ sét đánh
       FX.vong1(o.x, o.y, 10, o.r, '#fff27a', 0.4, 6); FX.tiaLua(o.x, o.y, 30, '#fff27a', 320, 14);
       // AFTERSHOCK: sét dư chấn nhảy tới 4 quái gần nhất ngoài tâm nổ (×2 mỗi con) — phần "wow" bậc ĐỎ họ Energy
       // (QA vàng-đỏ: trước đây o.dmg/6 = ×1.5 và trúng lại cả quái đã dính nổ — chữ kỹ năng hứa ×2 cho 4 quái KHÁC)

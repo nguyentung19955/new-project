@@ -37,12 +37,36 @@ const FX = {
   khoi(x, y, co, vx, vy) { this.hat1('khoi', x, y, vx || (Math.random() - 0.5) * 10, vy || -12, 0.55, co || 18); },
 
   chu1(x, y, s, mau, co, kieu) {
+    // chống rối (claude/chong-roi): số sát thương trùng chỗ (cùng màu/kiểu) trong ~150 ms → cộng dồn vào 1 số, không đẻ thêm chữ
+    if ((!kieu || kieu === 'crit') && typeof s === 'string' && /^\d+$/.test(s)) {
+      for (let i = this.chu.length - 1; i >= 0; i--) {
+        const c = this.chu[i];
+        if (c.t < 0.15 && c.kieu === (kieu || '') && c.mau === (mau || '#fff') && c.gop && Math.abs(c.x - x) < 24 && Math.abs(c.y - y) < 18) { c.s = String(+c.s + +s); return c; }
+      }
+    }
     if (this.chu.length >= this.MAX_CHU) this.chu.shift();
-    this.chu.push({ x, y, s, mau: mau || '#fff', co: co || 13, t: 0, song: kieu === 'to' ? 1.1 : kieu === 'nhan' ? 1.3 : kieu === 'crit' ? 0.6 : !kieu ? 0.5 : 0.8, kieu: kieu || '' });
+    this.chu.push({ x, y, s, mau: mau || '#fff', co: co || 13, t: 0, song: kieu === 'to' ? 1.1 : kieu === 'nhan' ? 1.3 : kieu === 'crit' ? 0.6 : !kieu ? 0.5 : 0.8, kieu: kieu || '', gop: (!kieu || kieu === 'crit') && typeof s === 'string' && /^\d+$/.test(s) });
     return this.chu[this.chu.length - 1];
   },
   // dải khung 'fx_<ten>' (6 khung), co = đường kính vẽ (px), goc = xoay
   no(ten, x, y, co, song, goc, bam) {
+    // chống rối (claude/chong-roi): nổ trúng cùng loại, cách < ~0,3 ô, vụ cũ mới bắt đầu < 80 ms → không đẻ dải mới,
+    // chỉ phóng vụ cũ 1 bậc +25% (bậc cố định: cỡ đổi liên tục = dựng lại ảnh thu nhỏ mỗi khung → giật) và kéo dài đời một chút. Chớp nòng, nổ lớn (co ≥ 70) và dải trùm giữ nguyên.
+    if (ten !== 'chop_nong' && !(co >= 70) && !ten.startsWith('trum_')) {
+      const B0 = typeof G !== 'undefined' && G.ban && G.ban[0], r = 0.3 * ((B0 && Math.min(B0.cw, B0.ch)) || 64), r2 = r * r;
+      for (let i = this.anim.length - 1; i >= 0; i--) {
+        const A = this.anim[i];
+        if (A.k0 !== ten || A.t >= 0.08) continue;
+        const dx = A.x - x, dy = A.y - y; if (dx * dx + dy * dy > r2) continue;
+        A.co = A.co0 * 1.25; A.song = Math.min(A.song0 * 1.35, A.song + 0.03);
+        return;
+      }
+    }
+    const kq = this._no(ten, x, y, co, song, goc, bam), A = this.anim[this.anim.length - 1]; // _no luôn đẩy 1 dải vào cuối
+    if (A && A.k0 === undefined) { A.k0 = ten; A.co0 = A.co; A.song0 = A.song; }
+    return kq;
+  },
+  _no(ten, x, y, co, song, goc, bam) {
     if (this.anim.length >= this.MAX_ANIM) { const i = this.anim.findIndex(A => A.co < 70); this.anim.splice(i >= 0 ? i : 0, 1); } // đầy: bỏ dải nổ NHỎ cũ nhất (giữ nổ lớn của chiêu)
     // hiệu ứng v2 theo ụ (fxu.js): chớp nòng / nổ trúng riêng của ụ đang bắn — 1 ảnh tĩnh, code chỉ phóng/xoay/mờ
     const U = typeof FXU !== 'undefined' && typeof G !== 'undefined' && G.dangBan;
@@ -108,3 +132,11 @@ const FX = {
     this.chop = Math.max(0, this.chop - dt * 2.6);
   },
 };
+
+// ụ đang được chạm xem (dải thông tin #tt đang mở cho nó, hoặc đang soi vùng ụ hỗ trợ) — vòng nạp / hào quang buff hiện đủ sáng
+function uDangXem(T) {
+  if (!T || typeof UI === 'undefined') return false;
+  if (UI.xemHT && UI.xemHT.T === T) return true;
+  if (!UI.xemU || UI.xemU.T !== T) return false;
+  const tt = document.getElementById('tt'); return !!(tt && !tt.hidden);
+}

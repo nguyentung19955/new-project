@@ -47,7 +47,7 @@
     const mo = SKILLS.radar.mo;
     SKILLS.radar.odThat = (T) => Math.max(0, Math.min(SKILLS.radar.them(T) + 0.25, HOTRO.tran(T, 'toc') + 0.15) - HOTRO.hd(T, 'toc', SKILLS.radar.them(T))); // OVERDRIVE: trần tốc +15% trong 2 s (hotro.js capOD)
     // thay CẢ cụm 'OVERDRIVE every 8s: +25% for 2s (up to the …)' của skills.js (trước: chỉ thay đầu cụm → 2 câu chồng nhau '+7% … : +25% …')
-    SKILLS.radar.mo = function (T) { const s = mo.apply(this, arguments); return ms(T, 7) ? s.replace(/OVERDRIVE every 8s(: \+\d+% for 2s \([^)]*\))?/, 'OVERDRIVE every 8s: +' + pc(SKILLS.radar.odThat(T)) + '% for 2s (fire-rate cap ' + pc(HOTRO.tran(T, 'toc') + 0.15) + '% during it)') : s; };
+    SKILLS.radar.mo = function (T) { const s = mo.apply(this, arguments); return ms(T, 7) ? s.replace(/OVERDRIVE every 8s(: \+\d+% for 2s( \([^)]*\))?)?/, 'OVERDRIVE every 8s: +' + pc(SKILLS.radar.odThat(T)) + '% for 2s') : s; };
   }
   // Amplifier: trần riêng của cộng dồn đã ghi ngay trong câu kỹ năng (skills2.js 'total up to +X%, its own cap') — 07/11
 
@@ -159,6 +159,7 @@
   window.THATSO.capThe = (id, t) => {
     const e = id === 'khuech' ? ['amp'] : TRAN_HT[id], r = G.rosterMap && G.rosterMap[id]; if (!e || !r || id === 'lophanung' || !t) return '';
     const f = (k) => id === 'nangsao' ? 0.5 * (1 + HOTRO.capLvK(r.bac, k)) : HOTRO.tranGoc(r.bac, HOTRO.capLvK(r.bac, k), e[0]), v = (x) => +(x * 100).toFixed(1) + '%'; // Star Lift: trần riêng 50%
+    if (!(f(t.k) < 1)) return ''; // 07/11: không trần (chỉ còn giới hạn tự nhiên: chậm 90%) — không hiện 'cap'
     return 'cap ' + v(f(t.k)) + (t.max ? '' : ' → ' + v(f(t.k + 1)));
   };
 
@@ -171,7 +172,7 @@
   const knV = (e, v) => (v < 0 ? '−' : '+') + (e.dv === 's' ? +Math.abs(v).toFixed(2) : +Math.abs(v).toFixed(2)) + (e.dv || '');
   // 'Freeze +0.15s' / 'Recharge −0.5s' / 'kill-chance cap +0.5%' cho n bước
   window.THATSO.puBuoc = (id, n) => {
-    if (id === 'tuthan') return 'kill-chance cap +' + +(HOTRO.PU_CHET * 100 * n).toFixed(1) + '%';
+    if (id === 'tuthan') return 'kill chance +' + +(HOTRO.PU_CHET * 100 * n).toFixed(1) + '%';
     const e = KY_NANG_CAP[id]; return e && e.pu ? e.ten + ' ' + knV(e, e.pu * n) : '';
   };
   window.THATSO.chuPU = (id) => PU_KN.includes(id)

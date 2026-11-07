@@ -758,7 +758,7 @@ function thucHienChieu(E, B) {
       break;
     }
     case 'janus':
-      for (const T of muc) { deBan(T, 0, '#e0c070'); T.st.da = true; const c = rong(T); FX.bui(c.x, c.y, 10, 16); FX.lac(4); }
+      for (const T of muc) { if (biKhoa(T)) continue; deBan(T, 0, '#e0c070'); T.st.da = true; const c = rong(T); FX.bui(c.x, c.y, 10, 16); FX.lac(4); }
       break;
     case 'joker_king': // ném mimic → ụ bị biến thành mimic rồi ép ghép với ụ cùng sao
       for (const T of muc) {
@@ -777,7 +777,7 @@ function thucHienChieu(E, B) {
       SND.tia();
       break;
     case 'octopus':
-      for (const T of muc) { deBan(T, 0, '#ff8a2a'); T.st.lua = 6; }
+      for (const T of muc) { if (biKhoa(T)) continue; deBan(T, 0, '#ff8a2a'); T.st.lua = 6; } // ụ khoá (đá/băng) không nhận trạng thái xấu mới — rà cộng hưởng 07/11, người dùng chốt
       break;
   }
 }

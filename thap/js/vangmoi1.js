@@ -57,24 +57,24 @@ function vm1Fx(id, x, y, w, song, mau) { G.hu.push({ k: 'vm1Fx', t: 0, song: son
 // =====================================================================================================
 // P1 · LỬA THẬP TỰ / CROSS EMBER (lualien, Kalaratri "십자 방향") — Vàng TC (co-che-moi/DE-XUAT.md §3-B, người dùng chốt 07/11):
 //      GHÉP có Ember Relay → +1 LỬA cho MỌI Ember Relay cùng HÀNG + cùng CỘT với ô ghép (xa mấy cũng được; gồm ụ ra nếu là Relay).
-//      Tối đa 8 lửa / ụ. Mỗi lửa +10% sát thương (LV9) → +15% (LV15) và +2% chí mạng. Ụ vừa nhận lửa +15% tốc bắn 5 s.
+//      KHÔNG TRẦN số lửa (như Kalaratri DCDW). Mỗi lửa +10% sát thương (LV9) → +15% (LV15) và +2% chí mạng. Ụ vừa nhận lửa +15% tốc bắn 5 s.
 //      LỬA GIỮ QUA GHÉP: ụ ra là Relay → giữ số lửa LỚN NHẤT của 2 nguyên liệu Relay (rồi +1 như mọi Relay trên chữ thập).
 //      Duyệt bàn theo o tăng dần (online tất định). PVP / CO-OP: chỉ bàn của chính mình. Ô đá không nhận lửa.
 // =====================================================================================================
 SKILLS.lualien = {
   vai: 'tc', dmg: 17, toc: 1.0, nham: 'dau', napMau: null,
-  MAX: 8, CRIT: 0.02,
+  CRIT: 0.02, // không trần lửa (người dùng 07/11: DCDW không áp trần Kalaratri)
   moiLua: (T) => VM1.kn(T, 'lualien'),
   mo(T) {
-    const n = Math.min(this.MAX, T.lc || 0), p = this.moiLua(T);
-    return 'Flames ' + n + '/' + this.MAX + ' → +' + VM1.pct(n * p) + '% damage, +' + n * 2 + '% crit · each flame +' + VM1.pct(p) + '% (' + VM1.chuLv(T, 'lualien', (v) => '+' + VM1.pct(v) + '%') + ') · merging a Relay gives +1 flame to EVERY Relay in the same row and column · a Relay result keeps the higher flames';
+    const n = T.lc || 0, p = this.moiLua(T);
+    return 'Flames ' + n + ' → +' + VM1.pct(n * p) + '% damage, +' + n * 2 + '% crit · each flame +' + VM1.pct(p) + '% (' + VM1.chuLv(T, 'lualien', (v) => '+' + VM1.pct(v) + '%') + ') · merging a Relay gives +1 flame to EVERY Relay in the same row and column · a Relay result keeps the higher flames';
   },
   sinh(G, T) { T.lc = T.lc || 0; },
-  capNhat(G, B, T) { const n = Math.min(this.MAX, T.lc || 0); if (n) { T.buf.dmg += n * this.moiLua(T); T.buf.crit += n * this.CRIT; } return false; },
+  capNhat(G, B, T) { const n = T.lc || 0; if (n) { T.buf.dmg += n * this.moiLua(T); T.buf.crit += n * this.CRIT; } return false; },
   ban(G, B, T, E) {
     giat(T, 0.6); const [x, y] = chopNong(T, 22); SND.lien();
-    const dmg = dmgU(T), n = Math.min(this.MAX, T.lc || 0);
-    banDan({ img: 'tia_lua', x, y, muc: E, px: E.x, py: E.y, sp: 600, co: 13 + n * 0.7, B, T, trung: (G, d, M) => { if (M) trung(M, dmg, { B, mau: '#ff9a3a' }); FX.tiaLua(d.x, d.y, 2 + (n >> 1), '#ff8a2a', 110, 6); } });
+    const dmg = dmgU(T), n = T.lc || 0, nv = Math.min(8, n); // nv: chỉ cỡ hình
+    banDan({ img: 'tia_lua', x, y, muc: E, px: E.x, py: E.y, sp: 600, co: 13 + nv * 0.7, B, T, trung: (G, d, M) => { if (M) trung(M, dmg, { B, mau: '#ff9a3a' }); FX.tiaLua(d.x, d.y, 2 + (nv >> 1), '#ff8a2a', 110, 6); } });
   },
   // ô cùng hàng + cùng cột với ô o (không gồm o), o tăng dần
   chuThap(o) { const c = o % 5, h = (o / 5) | 0, ds = []; for (let i = 0; i < 15; i++) if (i !== o && (i % 5 === c || ((i / 5) | 0) === h)) ds.push(i); return ds; },
@@ -83,7 +83,7 @@ SKILLS.lualien = {
     const o = b.o;
     if (ra && ra.id === 'lualien') { // lửa giữ qua ghép: max của 2 nguyên liệu Relay
       const giu = Math.max(a.id === 'lualien' ? a.lc || 0 : 0, b.id === 'lualien' ? b.lc || 0 : 0);
-      ra.lc = Math.min(this.MAX, Math.max(ra.lc || 0, giu));
+      ra.lc = Math.max(ra.lc || 0, giu);
     }
     const ds = [];
     for (const i of this.chuThap(o)) { const X = B.t[i]; if (X && X.id === 'lualien' && !X.st.da && X !== ra) ds.push(X); }
@@ -91,7 +91,7 @@ SKILLS.lualien = {
     const tam = B.o[o];
     vm1Fx('lualien', tam.x, tam.y, B.cw * 2.6, 0.7, '#ff8a2a');
     for (const X of ds) {
-      X.lc = Math.min(this.MAX, (X.lc || 0) + 1);
+      X.lc = (X.lc || 0) + 1;
       X.tocV = X.tocT > 0 ? Math.max(X.tocV || 0, 0.15) : 0.15; X.tocT = Math.max(X.tocT || 0, 5);
       X.sang = 1; if (typeof buffNo === 'function') buffNo(X, 'dmg', 0.5);
       const q = B.o[X.o]; if (X !== ra) G.hu.push({ k: 'vm1Tia', t: 0, song: 0.22 + 0.07 * (Math.abs(X.o % 5 - o % 5) + Math.abs(((X.o / 5) | 0) - ((o / 5) | 0))), x0: tam.x, y0: tam.y, x1: q.x, y1: q.y });
@@ -99,7 +99,7 @@ SKILLS.lualien = {
     if (!B.ai || G.che === 'pvp') SND.combo(Math.min(20, ds.length * 3 + 2));
   },
   veThem(ctx, T, S, al) { // lửa đang mang: ngọn lửa PNG ở 4 nhánh chữ thập (+ lõi khi ≥ 5)
-    const n = Math.min(this.MAX, T.lc || 0); if (!n) return;
+    const n = Math.min(8, T.lc || 0); if (!n) return; // hình bão hoà ở 8 (chỉ hình, không trần lửa)
     const im = REN.img('fx_cuuvi_dan'); if (!im) return;
     ctx.globalCompositeOperation = 'lighter';
     const pos = [[1, 0], [0, 1], [-1, 0], [0, -1]];
@@ -114,16 +114,16 @@ HU.vm1Tia = { // lửa bay từ ô ghép sang ô kề: ngọn lửa PNG trượt
 };
 
 // =====================================================================================================
-// P2 · QUANTUM CHOIR (hopca) — Vàng TC. Đếm ụ KHÁC trên bàn MÌNH có CÙNG SAO (mọi loại, tối đa 7; ô đá không tính):
+// P2 · QUANTUM CHOIR (hopca) — Vàng TC. Đếm ụ KHÁC trên bàn MÌNH có CÙNG SAO (mọi loại, KHÔNG trần — như Kalaratri DCDW; ô đá không tính):
 //      +18% sát thương mỗi ụ khớp (LV9, +2 điểm/cấp → LV15 30%). 7★: thêm +12% tốc bắn. CO-OP: sao bàn đồng đội không tính.
 // =====================================================================================================
 SKILLS.hopca = {
   vai: 'tc', dmg: 15, toc: 1.0, nham: 'dau',
   moi: (T) => VM1.kn(T, 'hopca'),
-  dem(B, T) { let n = 0; for (const X of B.t) if (X && X !== T && X.sao === T.sao && !X.st.da) n++; return Math.min(7, n); },
+  dem(B, T) { let n = 0; for (const X of B.t) if (X && X !== T && X.sao === T.sao && !X.st.da) n++; return n; },
   mo(T) {
     const B = G.ban[T.ban], n = B ? this.dem(B, T) : 0, p = this.moi(T);
-    return n + ' other ' + T.sao + '★ turret(s) → +' + VM1.pct(n * p) + '% damage · +' + VM1.pct(p) + '% per same-star turret, max 7 (' + VM1.chuLv(T, 'hopca', (v) => '+' + VM1.pct(v) + '%') + ')' + (T.sao >= 7 ? ' · 7★: +12% fire rate' : ' · 7★ adds +12% fire rate');
+    return n + ' other ' + T.sao + '★ turret(s) → +' + VM1.pct(n * p) + '% damage · +' + VM1.pct(p) + '% per same-star turret, no cap (' + VM1.chuLv(T, 'hopca', (v) => '+' + VM1.pct(v) + '%') + ')' + (T.sao >= 7 ? ' · 7★: +12% fire rate' : ' · 7★ adds +12% fire rate');
   },
   capNhat(G, B, T) { const n = this.dem(B, T); if (n > (T.hop || 0) && T.tuoi > 0.3) { const c = B.o[T.o]; vm1Fx('hopca', c.x, c.y, B.cw * 1.7, 0.8, '#d9b8ff'); } T.hop = n; T.buf.dmg += n * this.moi(T); if (T.sao >= 7) T.buf.toc += 0.12; return false; },
   ban(G, B, T, E) {
@@ -134,20 +134,19 @@ SKILLS.hopca = {
 };
 
 // =====================================================================================================
-// P4 · FUSION ARCHIVE (luutru) — Vàng TC. MỌI lần ghép thành công trên bàn mình → +1 ĐIỂM LƯU cho mọi Fusion Archive đang có (tối đa 40);
+// P4 · FUSION ARCHIVE (luutru) — Vàng TC. MỌI lần ghép thành công trên bàn mình → +1 ĐIỂM LƯU cho mọi Fusion Archive đang có (KHÔNG trần — như Kalaratri DCDW);
 //      Archive mới xuất hiện nhận 50% tổng số lần ghép của trận (làm tròn xuống). Mỗi điểm +2.5% sát thương (LV9, +0.25 điểm/cấp → LV15 4%).
 //      Ghép Archive + Archive: 3 xung nổ 160% sát thương vào chỗ quái đông nhất. Chỉ đếm ghép của chính mình (PVP/CO-OP).
 // =====================================================================================================
 SKILLS.luutru = {
   vai: 'tc', dmg: 15, toc: 1.0, nham: 'dau',
-  MAX: 40,
   moi: (T) => VM1.kn(T, 'luutru'),
   mo(T) {
     const n = T.kho || 0, p = this.moi(T);
-    return 'Archive ' + n + '/40 → +' + VM1.pct(n * p) + '% damage · every merge you make +1 (+' + VM1.pct(p) + '% each, ' + VM1.chuLv(T, 'luutru', (v) => '+' + VM1.pct(v) + '%') + ') · new Archives start with 50% of your merges · Archive + Archive: 3 pulses × 160%';
+    return 'Archive ' + n + ' → +' + VM1.pct(n * p) + '% damage · every merge you make +1 (+' + VM1.pct(p) + '% each, ' + VM1.chuLv(T, 'luutru', (v) => '+' + VM1.pct(v) + '%') + ') · new Archives start with 50% of your merges · Archive + Archive: 3 pulses × 160%';
   },
-  sinh(G, T) { const B = G.ban[T.ban]; if (T.kho == null) T.kho = Math.min(this.MAX, Math.floor(((B && B.ghepN) || 0) * 0.5)); },
-  capNhat(G, B, T) { if (T.kho) T.buf.dmg += Math.min(this.MAX, T.kho) * this.moi(T); return false; },
+  sinh(G, T) { const B = G.ban[T.ban]; if (T.kho == null) T.kho = Math.floor(((B && B.ghepN) || 0) * 0.5); },
+  capNhat(G, B, T) { if (T.kho) T.buf.dmg += T.kho * this.moi(T); return false; },
   ban(G, B, T, E) {
     giat(T, 0.5); const [x, y] = chopNong(T, 20); SND.tia();
     const dmg = dmgU(T);
@@ -159,13 +158,20 @@ SKILLS.luutru = {
     let x = tam.x, y = tam.y;
     if (ds.length) { let best = -1; for (const E of ds) { const n = ds.reduce((s, Q) => s + (Math.hypot(Q.x - E.x, Q.y - E.y) < 50 ? 1 : 0), 0); if (n > best) { best = n; x = E.x; y = E.y; } } }
     const dmg = dmgU(b) * 1.6;
-    G.hu.push({ k: 'vm1Xung', t: 0, song: 0.9, x, y, B, dmg, n: 0 });
+    G.hu.push({ k: 'vm1Xung', t: 0, song: HU.vm1Xung.TRE + 0.9, x, y, B, dmg, n: 0 });
   },
 };
-HU.vm1Xung = { // 3 xung nổ cách nhau 0.25 s, bán kính 45 px
+HU.vm1Xung = { // 3 xung nổ cách nhau 0.25 s, bán kính 45 px — xung đầu lúc ụ mới LỘ RA sau hoạt cảnh ghép (GF.M.lo 470 ms; rà VFX 07/11:
+  //   trước nổ lúc 0 ms, trước khi thấy kết quả ghép; o.t còn bị cộng 2 lần/bước → 3 xung dồn trong 0.25 s). Tổng sát thương giữ nguyên (3 × 160%).
+  TRE: 0.47,
   cap(G, o, dt) {
-    o.t += dt;
-    while (o.n < 3 && o.t >= o.n * 0.25) { o.n++; noLan(o.x, o.y, 45, o.dmg, o.B, { B: o.B, mau: '#bfe4ff' }); vm1Fx('luutru', o.x, o.y, 110, 0.55, '#bfe4ff'); FX.lac(2); SND.no(0.4); }
+    while (o.n < 3 && o.t >= this.TRE + o.n * 0.25) {
+      if (o.n === 0) { // chỗ quái đông nhất TẠI lúc nổ (quái đã đi tiếp 0.47 s) — cùng cách chọn như lúc ghép, tất định
+        const ds = dsMucTieu(o.B).filter(E => !E.chet);
+        if (ds.length) { let best = -1; for (const E of ds) { const n = ds.reduce((s, Q) => s + (Math.hypot(Q.x - E.x, Q.y - E.y) < 50 ? 1 : 0), 0); if (n > best) { best = n; o.x = E.x; o.y = E.y; } } }
+      }
+      o.n++; noLan(o.x, o.y, 45, o.dmg, o.B, { B: o.B, mau: '#bfe4ff' }); vm1Fx('luutru', o.x, o.y, 110, 0.55, '#bfe4ff'); FX.lac(2); SND.no(0.4);
+    }
     return o.t >= o.song;
   },
   ve() { },
@@ -175,10 +181,12 @@ HU.vm1Xung = { // 3 xung nổ cách nhau 0.25 s, bán kính 45 px
   const _ghepVM1 = ghep;
   ghep = function (B, a, b, ep) {
     const B2 = b && G.ban[b.ban];
+    // chỉ GHÉP THẬT mới đếm (luật Star Breaker, conghuong2): Teleporter / Copycat / Overclock / Scrap Forge không phải ghép — Teleporter qua lại từng nuôi Archive vô hạn (rà cộng hưởng 07/11)
+    const db = !ep && a && b ? ghepDBHop(a, b) : null, khong = db && [SKILLS.dichchuyen, SKILLS.saochep, SKILLS.epxung, SKILLS.loren].includes(db.sk);
     const r = _ghepVM1.apply(this, arguments);
-    if (r && B2) {
+    if (r && B2 && !khong) {
       B2.ghepN = (B2.ghepN || 0) + 1;
-      for (const X of B2.t) if (X && X.id === 'luutru' && X !== r) X.kho = Math.min(SKILLS.luutru.MAX, (X.kho || 0) + 1);
+      for (const X of B2.t) if (X && X.id === 'luutru' && X !== r) X.kho = (X.kho || 0) + 1;
     }
     return r;
   };
@@ -254,10 +262,10 @@ themHo('star', 3, 'hopca', 'stronger for every same-star turret on board');
 themHo('summon', 3, 'luutru', 'every merge you make adds permanent damage');
 themHo('amp', 3, 'xuonganh', 'merge stamps a HERO tile: big fire-rate boost');
 Object.assign(GROW, {
-  lualien: { mau: '#ff8a2a', khongAnh: true, ten: ['COLD RELAY', 'KINDLED', 'FULL BLAZE'], dk: 'Flames 0 / 1–7 / 8 (full: +80% damage, +16% crit at LV9)',
-    gd: (T) => { const n = T.lc || 0; return { s: n >= 8 ? 3 : n >= 1 ? 2 : 1, p: n / 8, v: [0.125] }; } },
-  luutru: { mau: '#bfe4ff', khongAnh: true, ten: ['EMPTY SHELVES', 'FILING', 'GRAND ARCHIVE'], dk: 'Archive 0–9 / 10–29 / 30–40',
-    gd: (T) => { const n = T.kho || 0; return { s: n >= 30 ? 3 : n >= 10 ? 2 : 1, p: n / 40, v: [0.25, 0.75] }; } },
+  lualien: { mau: '#ff8a2a', khongAnh: true, ten: ['COLD RELAY', 'KINDLED', 'FULL BLAZE'], dk: 'Flames 0 / 1–7 / 8+ (no cap: every flame keeps adding damage & crit)',
+    gd: (T) => { const n = T.lc || 0; return { s: n >= 8 ? 3 : n >= 1 ? 2 : 1, p: Math.min(1, n / 8), v: [0.125] }; } },
+  luutru: { mau: '#bfe4ff', khongAnh: true, ten: ['EMPTY SHELVES', 'FILING', 'GRAND ARCHIVE'], dk: 'Archive 0–9 / 10–29 / 30+ (no cap: every merge keeps adding damage)',
+    gd: (T) => { const n = T.kho || 0; return { s: n >= 30 ? 3 : n >= 10 ? 2 : 1, p: Math.min(1, n / 40), v: [0.25, 0.75] }; } },
 });
 // ảnh tạm: tới khi ảnh ChatGPT riêng về, assets/<id>_nong.png, pilot_, pn/, hero/, nho/, glyph/ là BẢN SAO ảnh của ụ cho mượn (VM1.TAM);
 // cỡ đầu (HEAD_K) / mũi nòng (ART_META) mượn theo. Lắp ảnh thật (tools/thap-dau-u3.py …) thì xoá id khỏi VM1.TAM.
@@ -274,9 +282,9 @@ for (const id of VM1.IDS) PILOTS.add(id);
 }
 if (typeof addEventListener === 'function') addEventListener('DOMContentLoaded', () => {
   if (typeof DEMKN !== 'undefined') Object.assign(DEMKN.DS, {
-    lualien(T) { const n = T.lc || 0; return n > 0 ? { m: [{ ic: 'ic_dmg', s: n + '/8' }], sang: n >= 8 } : null; },
-    hopca(T, B) { const n = SKILLS.hopca.dem(B, T); return n > 0 ? { m: [{ ic: 'ic_dmg', s: '×' + n }], sang: n >= 7 } : null; },
-    luutru(T) { const n = T.kho || 0; return n > 0 ? { m: [{ ic: 'ic_dmg', s: n + '' }], sang: n >= 40 } : null; },
+    lualien(T) { const n = T.lc || 0; return n > 0 ? { m: [{ ic: 'ic_dmg', s: n + '' }] } : null; }, // không trần: chỉ số (màu theo ĐỘT PHÁ)
+    hopca(T, B) { const n = SKILLS.hopca.dem(B, T); return n > 0 ? { m: [{ ic: 'ic_dmg', s: '×' + n }] } : null; },
+    luutru(T) { const n = T.kho || 0; return n > 0 ? { m: [{ ic: 'ic_dmg', s: n + '' }] } : null; },
     xuonganh(T, B) { const n = (B.hero || []).filter(h => h.het > G.t).length; return n > 0 ? { m: [{ ic: 'ic_toc', s: n + '/2' }], sang: n >= 2 } : null; },
   });
 });
@@ -289,3 +297,81 @@ if (typeof addEventListener === 'function') addEventListener('DOMContentLoaded',
     return r;
   };
 }
+
+// =====================================================================================================
+// ĐỘT PHÁ (07/11, người dùng chốt): kỹ năng cộng dồn KHÔNG trần + khi số cộng dồn vượt ngưỡng → thêm thưởng bậc (cộng dồn theo bậc):
+//   Bậc I +15% tốc bắn · II +30% ST chí mạng · III +25% sát thương · IV +10% tỉ lệ chí mạng & +50% ST chí mạng (tỉ lệ chí mạng vẫn ≤ 100%, critU).
+//   Ngưỡng theo tốc độ cộng dồn của từng ụ (NGUONG). Scrap Forge: thưởng vào ụ NHẬN (ụ Tấn công mạnh nhất). Tất định (chỉ đọc trạng thái).
+//   Hình: icon tấm đếm + lửa Ember đổi màu theo bậc = bản sao PNG lọc màu (ctx.filter) DỰNG 1 LẦN rồi giữ (DOTPHA.ten) · lên bậc: nổ PNG + chữ.
+// =====================================================================================================
+const DOTPHA = {
+  NGUONG: { lualien: [5, 10, 20, 40], hopca: [3, 5, 8, 12], luutru: [10, 25, 50, 100], loren: [6, 15, 30, 60], leviathan: [25, 50, 100, 200],
+    lienket: [3, 5, 8, 12], combo: [5, 10, 20, 40], cuuvi: [1, 3, 6, 10] },
+  SO: { lualien: (T) => T.lc || 0, hopca: (T) => T.hop || 0, luutru: (T) => T.kho || 0, loren: (T) => T.lo || 0, leviathan: (T) => T.vuc || 0,
+    lienket: (T) => T.chuoi || 1, combo: (T) => { const B = G.ban && G.ban[T.ban]; return (B && B.combo) || 0; }, cuuvi: (T) => T.xaN || 0 },
+  LA: ['', 'I', 'II', 'III', 'IV'],
+  MAU: ['', '#ffd84a', '#7fc8ff', '#d9a0ff', '#ffffff'],
+  // lọc màu PNG theo bậc: chuẩn hoá về cam (sepia) rồi xoay màu → vàng / xanh lam / tím / trắng sáng
+  LOC: ['', 'sepia(1) saturate(4) hue-rotate(5deg) brightness(1.25)', 'sepia(1) saturate(4) hue-rotate(170deg) brightness(1.15)', 'sepia(1) saturate(4) hue-rotate(230deg) brightness(1.15)', 'sepia(1) saturate(0.3) brightness(1.9)'],
+  bac(n, nguong) { let b = 0; if (nguong) for (const x of nguong) if (n >= x) b++; return b; },
+  bacU(T) { const f = T && this.SO[T.id]; return f ? this.bac(f(T), this.NGUONG[T.id]) : 0; },
+  thuong(b) { return { toc: b >= 1 ? 0.15 : 0, cdmg: (b >= 2 ? 0.3 : 0) + (b >= 4 ? 0.5 : 0), dmg: b >= 3 ? 0.25 : 0, crit: b >= 4 ? 0.1 : 0 }; },
+  chu(id, T) {
+    const ng = this.NGUONG[id], n = this.SO[id](T), b = this.bac(n, ng), t = this.thuong(b), ds = [];
+    if (t.toc) ds.push('+' + Math.round(t.toc * 100) + '% fire rate'); if (t.cdmg) ds.push('+' + Math.round(t.cdmg * 100) + '% crit dmg');
+    if (t.dmg) ds.push('+' + Math.round(t.dmg * 100) + '% damage'); if (t.crit) ds.push('+' + Math.round(t.crit * 100) + '% crit');
+    return (b ? 'BREAKTHROUGH ' + this.LA[b] + ': ' + ds.join(', ') : 'Breakthroughs at ' + ng.join('/')) + (b > 0 && b < 4 ? ' · next breakthrough at ' + ng[b] : '');
+  },
+  // bậc IV: cầu vồng chậm = chọn 1 trong 6 bản sao đã lọc sẵn theo thời gian (không lọc mỗi khung)
+  LOC4: [0, 60, 120, 180, 240, 300].map(h => 'sepia(1) saturate(2.6) hue-rotate(' + h + 'deg) brightness(1.55)'),
+  buoc4() { return ((typeof VX !== 'undefined' ? VX.t : 0) * 1.5 | 0) % 6; },
+  // bậc để VẼ: chính ụ cộng dồn, hoặc ụ NHẬN của Scrap Forge (hào quang buff trên ụ nhận cũng đổi màu)
+  bacVe(T) { if (!T) return 0; const b = this.bacU(T); return b || (T.dpNhanT != null && typeof G !== 'undefined' && G.t - T.dpNhanT < 0.3 ? T.dpNhan || 0 : 0); },
+  // VÒNG BẬC dưới ụ (thay hào quang lửa to — người dùng 07/11 'ưu tiên đơn giản'): fx_vong_mong (vòng sáng mảnh PNG) lọc màu: cam (có cộng dồn, chưa đột phá) → vàng → lam → tím → cầu vồng
+  coVong(T) { return !!T && (!!this.NGUONG[T.id] || this.bacVe(T) > 0); },
+  // vòng PNG trắng → tô màu bậc 1 lần (source-atop, giữ lõi sáng) → giữ trong REN.anh
+  MAU_VONG: ['#ff7a1a', '#ffd23f', '#3f9dff', '#b45cff'],
+  MAU_VONG4: ['#ff5a5a', '#ffffff', '#5cff7a', '#3fe0ff', '#5c7aff', '#ff5ce0'],
+  tenVong(T) {
+    const b = this.bacVe(T), f = this.SO[T.id];
+    if (!b && !(f && f(T) > 0)) return null;
+    if (typeof document === 'undefined' || typeof REN === 'undefined' || !REN.anh) return null;
+    const v = b === 4 ? this.buoc4() : -1, mau = b === 4 ? this.MAU_VONG4[v] : this.MAU_VONG[b], k = 'fx_vong_mong~v' + b + (v >= 0 ? 'h' + v : '');
+    if (REN.anh[k]) return k;
+    const a = REN.img('fx_vong_mong'); if (!a || !a.width) return null;
+    const c = document.createElement('canvas'); c.width = a.width; c.height = a.height; const x = c.getContext('2d'); if (!x) return null;
+    x.drawImage(a, 0, 0); x.globalCompositeOperation = 'source-atop'; x.globalAlpha = 0.82; x.fillStyle = mau; x.fillRect(0, 0, c.width, c.height); // vetay-ok: png (vòng mảnh lọc màu bậc)
+    REN.anh[k] = { _cv: c, complete: true, naturalWidth: c.width, naturalHeight: c.height }; if (REN.CO_DINH) REN.CO_DINH.add(k); return k;
+  },
+  tenT(goc, T) { const b = this.bacVe(T); return this.ten(goc, b, b === 4 ? this.buoc4() : -1); },
+  // tên ảnh đã lọc màu bậc b (dựng 1 lần, giữ trong REN.anh như ảnh thường; tờ P2 mượn cỡ khung) · v = bước cầu vồng bậc IV (−1: trắng)
+  ten(goc, b, v) {
+    if (!b || typeof document === 'undefined' || typeof REN === 'undefined' || !REN.anh) return goc;
+    const cv = b === 4 && v >= 0, k = goc + '~dp' + b + (cv ? 'h' + v : ''); if (REN.anh[k]) return k;
+    const a = REN.img(goc); if (!a || !a.width) return goc;
+    const c = document.createElement('canvas'); c.width = a.width; c.height = a.height;
+    const x = c.getContext('2d'); if (!x || !('filter' in x)) return goc;
+    x.filter = cv ? this.LOC4[v] : this.LOC[b]; x.drawImage(a, 0, 0); x.filter = 'none';
+    REN.anh[k] = { _cv: c, complete: true, naturalWidth: c.width, naturalHeight: c.height };
+    if (REN.CO_DINH) REN.CO_DINH.add(k);
+    if (typeof P2 !== 'undefined' && P2.M && P2.M[goc]) P2.M[k] = P2.M[goc];
+    return k;
+  },
+};
+for (const id in DOTPHA.NGUONG) {
+  const sk = SKILLS[id]; if (!sk) continue;
+  if (sk.capNhat) { const cn = sk.capNhat; sk.capNhat = function (G, B, T) {
+    const r = cn.apply(this, arguments);
+    const b = DOTPHA.bacU(T), X = id === 'loren' ? T.forgeX : T;
+    if (b && X && X !== T) { X.dpNhan = X.dpNhanT === G.t ? Math.max(X.dpNhan || 0, b) : b; X.dpNhanT = G.t; }
+    if (b && X) { const t = DOTPHA.thuong(b); X.buf.toc += t.toc; X.buf.cdmg = (X.buf.cdmg || 0) + t.cdmg; X.buf.dmg += t.dmg; X.buf.crit += t.crit; }
+    if (b > (T.dpB || 0) && T.tuoi > 0.3 && B && B.o && B.o[T.o]) { // lên bậc: nổ PNG + chữ (chỉ trình bày)
+      const c = B.o[T.o]; try { FX.no('no_phao', c.x, c.y, 50 + 12 * b, 0.4); nhanU(T, 'BREAKTHROUGH ' + DOTPHA.LA[b], DOTPHA.MAU[b], b >= 3); } catch (e) { }
+    }
+    T.dpB = b;
+    return r;
+  }; }
+  if (sk.mo) { const mo = sk.mo; sk.mo = function (T) { const s = mo.apply(this, arguments); try { return T ? s + ' · ' + DOTPHA.chu(id, T) : s; } catch (e) { return s; } }; }
+}
+if (SKILLS.cuuvi && SKILLS.cuuvi.xa) { const xa = SKILLS.cuuvi.xa; SKILLS.cuuvi.xa = function (T) { if (G.ban[T.ban] && conTren(T)) T.xaN = (T.xaN || 0) + 1; return xa.apply(this, arguments); };
+  const gh = SKILLS.cuuvi.ghep; SKILLS.cuuvi.ghep = function (G, B, a, b, ra) { const r = gh ? gh.apply(this, arguments) : undefined; if (ra && ra.id === 'cuuvi') ra.xaN = Math.max(a.id === 'cuuvi' ? a.xaN || 0 : 0, b.id === 'cuuvi' ? b.xaN || 0 : 0); return r; }; } // Nine-tail: đếm số lần xả cầu lửa (đuôi về 0 mỗi vòng)

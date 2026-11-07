@@ -84,11 +84,10 @@ const THEBAI = {
     const r = {}; (deck || []).forEach((id, i) => { const v = parseInt(m[i + 1] || '0', 36); r[id] = Math.max(0, Math.min(14, v | 0)); });
     return r;
   },
-  // nhãn LV trên thẻ trong trận: cấp thẻ + bước power-up (+1/+2/+3, MAX ở ô giá)
+  // nhãn thẻ trong trận (07/11 người dùng: bỏ chữ LV): cấp trận 1 → '' (không hiện), mỗi lần nâng trong trận '+1'/'+2'/'+3', tối đa (lv ≥ 5) → 'MAX'
   nhanTran(B, id) {
-    const st = ((B && B.lv && B.lv[id]) || 1) - 1, r = typeof G !== 'undefined' && G.rosterMap && G.rosterMap[id];
-    const lv = (r ? THE.lvDau[r.bac] : 1) + ((B && B.capThe && B.capThe[id]) || 0);
-    return 'LV' + lv + (st > 0 ? '+' + st : '');
+    const lv = (B && B.lv && B.lv[id]) || 1;
+    return lv >= 5 ? ((typeof TEXT !== 'undefined' && TEXT.ui && TEXT.ui.max) || 'MAX') : lv > 1 ? '+' + (lv - 1) : '';
   },
 
   // ---------- TÚI THƯỞNG cuối trận ----------

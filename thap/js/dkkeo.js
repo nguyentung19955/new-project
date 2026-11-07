@@ -1,6 +1,8 @@
 // TURRET MERGE — KÉO THẢ ở màn XÂY BỘ BÀI (HUD mượt A, js/home.js).
 //  · Thẻ trong lưới → 1 trong 5 ô: ô trống = thêm, ô có ụ = đổi (ụ cũ về lưới). Ô → lưới / vuốt nhanh xuống = bỏ khỏi bộ. Ô → ô = đổi chỗ.
-//  · Bắt đầu kéo: giữ 150 ms, hoặc đi ngang > 8 px, hoặc (chuột) đi bất kỳ hướng > 8 px. Cảm ứng đi dọc = cuộn lưới (tự cuộn, có quán tính);
+//  · Bắt đầu kéo: giữ 280 ms không xê dịch (< 8 px), hoặc (chuột) đi bất kỳ hướng > 8 px. Cảm ứng trên thẻ lưới: xê dịch > 8 px trước khi giữ đủ
+//    = CUỘN (bất kể hướng — 07/11 người dùng: vuốt/cuộn hay bị hiểu nhầm thành kéo ụ vào bộ), vuốt nhanh không bao giờ thành kéo;
+//    (trước: giữ 150 ms hoặc đi ngang > 8 px = kéo). Cảm ứng đi dọc = cuộn lưới (tự cuộn, có quán tính);
 //    đang cuộn mà ngón tay kéo lên khỏi mép trên lưới (về phía bộ bài) = nhấc thẻ dưới điểm chạm lên kéo luôn.
 //  · iOS Safari: lưới ở màn bộ bài đặt touch-action:none và TỰ cuộn → Safari không giành cử chỉ (trước đây pan-y → Safari cuộn + pointercancel = mất kéo).
 //  · HỢP ĐỒNG DOM (QUY-TAC-HINH.md quy tắc 10): thẻ lưới = phần tử [data-id] trong #chon-luoi; ô bộ bài = [data-slot="0..4"] trong #chon-bo
@@ -10,7 +12,7 @@
 //  thả sai = lắc ảnh + thông báo (UI.nhac, tấm h2_tam_do). Code chỉ dịch/phóng/mờ ảnh (transform, 60 fps).
 'use strict';
 const DK = {
-  GIU: 150, NGUONG: 8, VE: 180,
+  GIU: 280, NGUONG: 8, VE: 180,
   d: null, keo: null, _chan: 0,
   giam: () => !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches),
   vuaKeo() { return performance.now() < this._chan; },
@@ -73,8 +75,9 @@ const DK = {
       d.x = e.clientX; d.y = e.clientY;
       if (d.cuon) return this.cuonTay(e, t);
       if (ax < this.NGUONG && ay < this.NGUONG) return;
-      // thẻ lưới + cảm ứng: đi dọc = cuộn lưới (tự cuộn); ngang = kéo. Chuột/bút: đi bất kỳ hướng = kéo. Ô bộ bài: bất kỳ hướng = kéo
-      if (d.tu === 'cuon' || (d.tu === 'the' && d.loai === 'touch' && ay >= ax)) { clearTimeout(this._gt); d.cuon = true; d.y0c = e.clientY; return this.cuonTay(e, t); }
+      // thẻ lưới + cảm ứng: xê dịch trước khi giữ đủ = cuộn lưới (mọi hướng; kéo chỉ khi giữ lâu hoặc kéo lên khỏi mép trên lưới).
+      // Chuột/bút: đi bất kỳ hướng = kéo. Ô bộ bài: bất kỳ hướng = kéo (hàng bộ bài không cuộn; vuốt nhanh xuống = bỏ)
+      if (d.tu === 'cuon' || (d.tu === 'the' && d.loai === 'touch')) { clearTimeout(this._gt); d.cuon = true; d.y0c = e.clientY; return this.cuonTay(e, t); }
       if (!d.el) { this.huyD(); return; }
       this.batDau(); return;
     }

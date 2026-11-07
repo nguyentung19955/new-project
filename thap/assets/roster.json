@@ -229,9 +229,9 @@
   "ten": "Chiller",
   "bac": "xanh",
   "dcdw": "Neptune",
-  "kyNang": "Support: neighbours’ hits also slow (max 38%, bosses 15%)",
+  "kyNang": "Support: neighbours’ hits also slow (no cap, bosses max 50%)",
   "ten_vi": "Máy Phát Lạnh",
-  "kyNang_vi": "Hỗ trợ: đòn của ụ kề kèm làm chậm (tối đa 38%, trùm 15%)"
+  "kyNang_vi": "Hỗ trợ: đòn của ụ kề kèm làm chậm (không trần, trùm tối đa 50%)"
  },
  {
   "id": "mortar",
@@ -748,9 +748,9 @@
   "ten": "Scrap Forge",
   "bac": "vang",
   "dcdw": "Original (Scrap Forge)",
-  "kyNang": "Special (original): FEED it a 1–3★ turret — your best Attack turret gains damage while the Forge stays on the board (max +60%). Only feeding counts, not other merges",
+  "kyNang": "Special (original): FEED it a 1–3★ turret — your best Attack turret gains damage while the Forge stays on the board (no cap). Only feeding counts, not other merges",
   "ten_vi": "Lò Rèn Phế Liệu",
-  "kyNang_vi": "Đặc biệt (ụ riêng): cho ĂN ụ 1–3★ — ụ Tấn công mạnh nhất +sát thương khi Lò còn trên bàn (tối đa +60%). Chỉ tính lúc cho ăn, không tính ghép khác",
+  "kyNang_vi": "Đặc biệt (ụ riêng): cho ĂN ụ 1–3★ — ụ Tấn công mạnh nhất +sát thương khi Lò còn trên bàn (không trần). Chỉ tính lúc cho ăn, không tính ghép khác",
   "vai": "db",
   "ho": "star",
   "moi": "TUONG-MOI-20"
@@ -832,22 +832,22 @@
   "ten": "Ember Relay",
   "bac": "vang",
   "dcdw": "Kalaratri",
-  "kyNang": "Merging a Relay gives +1 flame to every Relay in the same row and column (max 8); each flame +damage & crit",
+  "kyNang": "Merging a Relay gives +1 flame to every Relay in the same row and column (no cap); each flame +damage & crit",
   "vai": "tc",
   "ho": "blast",
   "ten_vi": "Lửa Thập Tự",
-  "kyNang_vi": "Ghép → +1 lửa cho mọi Ember Relay cùng hàng và cùng cột (tối đa 8); mỗi lửa +sát thương & chí mạng"
+  "kyNang_vi": "Ghép → +1 lửa cho mọi Ember Relay cùng hàng và cùng cột (không trần); mỗi lửa +sát thương & chí mạng"
  },
  {
   "id": "hopca",
   "ten": "Quantum Choir",
   "bac": "vang",
   "dcdw": "Cosmem",
-  "kyNang": "+damage for every other turret on your board with the same ★ (max 7); 7★ +fire rate",
+  "kyNang": "+damage for every other turret on your board with the same ★ (no cap); 7★ +fire rate",
   "vai": "tc",
   "ho": "star",
   "ten_vi": "Hợp Xướng Lượng Tử",
-  "kyNang_vi": "+sát thương theo số ụ cùng sao trên bàn (tối đa 7); 7★ +tốc bắn"
+  "kyNang_vi": "+sát thương theo số ụ cùng sao trên bàn (không trần); 7★ +tốc bắn"
  },
  {
   "id": "luutru",

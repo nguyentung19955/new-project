@@ -86,7 +86,7 @@ function xuyenCrit(E, dmg, T, o) { // chí mạng xuyên: quái phía sau gần 
 SKILLS.nhieusong = {
   vai: 'db', dmg: 18, toc: 1, nham: 'dau', // 11 → 18 (đo bậc 06/11)
   n: (T) => sao7(T, [1, 1, 2, 2, 3, 3, 4]), t: (T) => sao7(T, [3, 3.5, 4, 4.5, 5, 5.5, 6]), m: (T) => sao7(T, [5, 5, 10, 10, 15, 15, 20]),
-  mo: (T) => { const s = SKILLS.nhieusong, S = { sao: Math.min(7, T.sao + 1) }; return 'On merge (as ' + S.sao + '★): PVP jams ' + s.n(S) + ' rival turrets −40% for ' + s.t(S) + 's + their next summon +' + s.m(S) + ' mana · CO-OP ally next summon FREE + 10% speed ' + s.t(S) + 's · SOLO slows all 20% (bosses 15%) for ' + s.t(S) + 's'; }, // QA Tím: số hiện = số thật khi ghép (sao kết quả)
+  mo: (T) => { const s = SKILLS.nhieusong, S = { sao: Math.min(7, T.sao + 1) }; return 'On merge (as ' + S.sao + '★): PVP jams ' + s.n(S) + ' rival turrets −40% for ' + s.t(S) + 's + their next summon +' + s.m(S) + ' mana · CO-OP ally next summon FREE + 10% speed ' + s.t(S) + 's · SOLO slows all 20% for ' + s.t(S) + 's'; }, // QA Tím: số hiện = số thật khi ghép (sao kết quả)
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'dan_tia', co: 14, mau: '#8a7bff', sp: 540 }); },
   ghep(G, B, a, b, ra) {
     const S = { sao: Math.min(7, a.sao + 1) }, n = this.n(S), t = this.t(S), m = this.m(S), c0 = B.o[b.o];
@@ -94,8 +94,7 @@ SKILLS.nhieusong = {
       const D = banKhac(B); if (!D) return;
       const ds = D.t.filter(X => X && SKILLS[X.id].dmg && !(X.mienNhieu > G.t) && !(X.st.kep > 0) && !X.st.bang && !X.st.da && !(X.st.lua > 0)).sort(() => Math.random() - 0.5).slice(0, n);
       for (const X of ds) { X.st.ngam = Math.max(X.st.ngam, 0.65); const c = D.o[X.o]; tiaPhep(c0.x, c0.y, c.x, c.y, '#8a7bff'); }
-      G.hu.push({ k: 'nhieu', t: 0, song: 0.65, D, ds, tg: t, B });
-      D.gia += m; D.giaTru = (D.giaTru || 0) + m;
+      G.hu.push({ k: 'nhieu', t: 0, song: 0.65, D, ds, tg: t, B, m }); // +mana triệu hồi áp lúc nhiễu trúng (HU.nhieu): Holy Shield / khiên ụ bị nhắm chặn luôn phần này — rà cộng hưởng 07/11, người dùng chốt
       nhanU(ra, 'JAM ×' + ds.length, '#8a7bff', true); SND.set();
     } else if (G.che === 'coop') {
       const D = banKhac(B); if (!D) return;
@@ -115,10 +114,11 @@ HU.nhieu = { // báo trước 0.65 s (tâm ngắm) → nhiễu: dùng trạng th
     o.da = true;
     for (const X of o.ds) {
       if (o.D.t[X.o] !== X) continue;
-      if (chanKhien(o.D, X)) continue;
+      if (chanKhien(o.D, X)) { o.chan = true; continue; }
       X.st.kep = Math.max(X.st.kep, o.tg); X.mienNhieu = G.t + o.tg + 8;
       const c = o.D.o[X.o]; FX.chu1(c.x, c.y - 20, 'JAMMED', '#8a7bff', 12, 'to');
     }
+    if (o.m && !o.chan && !(o.D.khien > 0)) { o.D.gia += o.m; o.D.giaTru = (o.D.giaTru || 0) + o.m; } // khiên ụ / Holy Shield chặn được 1 lần nhiễu → chặn cả +mana
     return true;
   },
 };
@@ -189,7 +189,7 @@ SKILLS.nhatthuc = {
   vai: 'tc', dmg: 15, toc: 0.9, nham: 'dau',
   d: (T) => sao7(T, [1.5, 1.6, 1.7, 1.8, 2, 2.2, 2.5]),
   sinh(G, T) { const B = G.ban[T.ban]; const khac = B && B.t.find(X => X && X.id === 'nhatthuc' && X !== T); T.dem = khac ? !khac.dem : false; T.doiT = 8; T.ca = 0; },
-  mo: (T) => (T.dem ? 'NIGHT: 100 px moon cone ×0.6, slows 25% (bosses 15%)' : 'DAY: beam ×' + SKILLS.nhatthuc.d(T) + ' + burn 4s') + ' · swaps in ' + Math.ceil(T.doiT || 0) + 's' + (T.sao >= 7 ? ' · ECLIPSE: both modes 1.5s + ×4 ring on each swap' : ''),
+  mo: (T) => (T.dem ? 'NIGHT: 100 px moon cone ×0.6, slows 25%' : 'DAY: beam ×' + SKILLS.nhatthuc.d(T) + ' + burn 4s') + ' · swaps in ' + Math.ceil(T.doiT || 0) + 's' + (T.sao >= 7 ? ' · ECLIPSE: both modes 1.5s + ×4 ring on each swap' : ''),
   capNhat(G, B, T, dt) {
     T.doiT = (T.doiT == null ? 8 : T.doiT) - dt; T.ca = Math.max(0, (T.ca || 0) - dt);
     if (T.doiT <= 0) {
@@ -243,37 +243,34 @@ HU.non = { // sóng trăng hình nón (cung tròn đồng tâm, không méo)
 
 // =====================================================================================================
 // G6 · SCRAP FORGE (loren) — Vàng TC: KÉO bất kỳ ụ 1–3★ khác loại thả lên Forge (hoặc kéo Forge lên nó) → ăn: +f cộng dồn LÒ (+4% sát thương/cộng dồn,
-//      tối đa 60, giữ khi ghép lên sao); ăn ụ 3★ = ×3. Búa nóng nổ 30 px; ≥40 cộng dồn: mỗi phát văng 1 mảnh sắt nóng vào 2 quái.
+//      KHÔNG trần — như Kalaratri DCDW, giữ khi ghép lên sao); ăn ụ 3★ = ×3. Búa nóng nổ 30 px; ≥40 cộng dồn: mỗi phát văng 1 mảnh sắt nóng vào 2 quái.
 // =====================================================================================================
 SKILLS.loren = { // Lò Rèn Phế Liệu — ĐẶC BIỆT (ụ RIÊNG của mình, không phải Aurora/Jacheongbi DCDW; khác Fusion Archive = mạnh theo MỌI lần ghép): KHÔNG bắn; KÉO ụ 1–3★ khác loại thả lên (hoặc kéo Forge lên nó) → ăn: +f cộng dồn LÒ;
-  // mỗi cộng dồn = +4% sát thương VĨNH VIỄN cho ụ Tấn công mạnh nhất trên bàn (sao cao nhất), tối đa 15 cộng dồn (+60%, trần mỗi ụ nhận)
+  // mỗi cộng dồn = +4% sát thương VĨNH VIỄN cho ụ Tấn công mạnh nhất trên bàn (sao cao nhất), KHÔNG trần cộng dồn / trần ụ nhận; nhiều Forge cộng thẳng vào nhau
   vai: 'db', dmg: 0, toc: 0,
-  MAX: 15,
   f: (T) => sao7(T, [1, 1, 2, 2, 3, 3, 4]),
   moi: (T) => (knThe(G.ban[T.ban], 'loren') || 4) / 100, // +% sát thương mỗi cộng dồn theo cấp thẻ (KY_NANG_CAP.loren)
-  // giá trị THẬT ụ nhận được (kẹp trần +60%) — chữ hiển thị dùng đúng số này
-  tran: (T) => 0.6, // trần +60% mỗi ụ nhận (power-up: +%/lò qua KY_NANG_CAP.pu)
-  tong: (T) => Math.min(SKILLS.loren.tran(T), SKILLS.loren.moi(T) * (T.lo || 0)),
+  // giá trị THẬT ụ nhận được (không trần; power-up: +%/lò qua KY_NANG_CAP.pu) — chữ hiển thị dùng đúng số này
+  tong: (T) => SKILLS.loren.moi(T) * (T.lo || 0),
   dich: (B) => B.t.filter(X => X && SKILLS[X.id] && SKILLS[X.id].vai === 'tc').sort((a, b) => b.sao - a.sao || (SKILLS[b.id].dmg * TIERS[b.bac].hs) - (SKILLS[a.id].dmg * TIERS[a.bac].hs) || a.o - b.o)[0] || null,
-  mo(T) { const X = this.dich(G.ban[T.ban]); return 'Forge ' + (T.lo || 0) + '/' + this.MAX + ' (+' + +(this.moi(T) * 100).toFixed(2) + '% each, max +' + Math.round(this.tran(T) * 100) + '%) → +' + Math.round(this.tong(T) * 100) + '% damage to your best Attack turret while this Forge stays on the board' + (X ? ' (' + (TEXT.turret[X.id] ? TEXT.turret[X.id].name : X.id) + ' ' + X.sao + '★)' : '') + ' · FEED it: drag a 1–3★ turret onto it: +' + this.f(T) + ' (3★ food ×3) · only feeding counts (other merges don\'t)'; },
+  mo(T) { const X = this.dich(G.ban[T.ban]); return 'Forge ' + (T.lo || 0) + ' (+' + +(this.moi(T) * 100).toFixed(2) + '% each, no cap) → +' + Math.round(this.tong(T) * 100) + '% damage to your best Attack turret while this Forge stays on the board' + (X ? ' (' + (TEXT.turret[X.id] ? TEXT.turret[X.id].name : X.id) + ' ' + X.sao + '★)' : '') + ' · FEED it: drag a 1–3★ turret onto it: +' + this.f(T) + ' (3★ food ×3) · only feeding counts (other merges don\'t)'; },
   gocDau: (T, t) => -Math.PI / 2, // VFX P3: bỏ đung đưa ảnh đầu
   capNhat(G, B, T) {
     const X = this.dich(B); T.forgeX = X;
     if (X && T.lo) {
-      if (X._forgeT !== G.t) { X._forgeT = G.t; X._forgeS = 0; }
-      const v = Math.min(this.tong(T), this.tran(T) - X._forgeS); // trần +60% (+power-up) cho mỗi ụ nhận (nhiều Forge không cộng quá)
-      if (v > 0) { X._forgeS += v; X.buf.dmg += v; X.nguon.push({ k: 'dmg', v, T }); }
+      const v = this.tong(T); // không trần: nhiều Forge cộng thẳng vào ụ nhận
+      if (v > 0) { X.buf.dmg += v; X.nguon.push({ k: 'dmg', v, T }); }
     }
     return true;
   },
   ghepDB: {
     haiChieu: true,
-    hopLe: (a, b) => b.id !== 'loren' && b.sao <= 3 && b.ban === a.ban && !b.st.da && (a.lo || 0) < SKILLS.loren.MAX,
+    hopLe: (a, b) => b.id !== 'loren' && b.id !== 'mimic' && b.sao <= 3 && b.ban === a.ban && !b.st.da, // Mimic + Forge = ghép thường (Mimic 'merges with any same-star turret' thắng) — rà cộng hưởng 07/11, người dùng chốt
     lam(G, B, a, b) { // a = Forge, b = ụ bị ăn
       const n = SKILLS.loren.f(a) * (b.sao >= 3 ? 3 : 1);
       B.t[b.o] = null;
       G.bay.push({ id: b.id, sao: b.sao, x0: B.o[b.o].x, y0: B.o[b.o].y, x1: B.o[a.o].x, y1: B.o[a.o].y, t: 0, bac: b.bac });
-      a.lo = Math.min(SKILLS.loren.MAX, (a.lo || 0) + n); a.sang = 1; a.anim = { k: 'no', t: 0.25 };
+      a.lo = (a.lo || 0) + n; a.sang = 1; a.anim = { k: 'no', t: 0.25 };
       const c = B.o[a.o]; FX.chu1(c.x, c.y - 30, '+' + n + ' FORGE', '#ff6a1a', 15, 'to'); FX.tiaLua(c.x, c.y, 16, '#ff6a1a', 200, 10); FX.no('no_phao', c.x, c.y, 60, 0.35);
       const X = SKILLS.loren.dich(B); if (X) { const cx = B.o[X.o]; tiaPhep(c.x, c.y, cx.x, cx.y, '#ff6a1a'); }
       SND.dat(); SND.no(0.3);
@@ -317,7 +314,8 @@ chanKhien = function (B, T) {
     if (!G._trumDang && T) { const c = B.o[T.o]; VX.chanKhien(B, T); FX.chu1(c.x, c.y - 18, TEXT.fx.blocked, '#bff6ff', 11); }
     if (!G._trumDang) { // phản lại: kẹp ụ mạnh nhất của đối thủ 4 s (7★: 2 ụ)
       const D = banKhac(B);
-      if (D) for (const X of D.t.filter(X => X && SKILLS[X.id].dmg && !(X.st.kep > 0)).sort((x, y) => y.sao - x.sao).slice(0, M.sao >= 7 ? 2 : 1)) {
+      if (D) for (const X of D.t.filter(X => X && SKILLS[X.id].dmg && !(X.st.kep > 0) && !biKhoa(X)).sort((x, y) => y.sao - x.sao).slice(0, M.sao >= 7 ? 2 : 1)) {
+        if (_chanKhienGoc(D, X)) continue; // phản = phá của đối thủ: khiên ụ / Holy Shield bên kia chặn, KHÔNG phản dây chuyền (gọi bản gốc, bỏ qua Mirror bên kia) — rà cộng hưởng 07/11, người dùng chốt
         X.st.kep = 4; const c0 = B.o[M.o], c = D.o[X.o]; tiaPhep(c0.x, c0.y, c.x, c.y, '#bff6ff'); FX.chu1(c.x, c.y - 20, 'REFLECTED', '#bff6ff', 12, 'to');
       }
     }
@@ -418,7 +416,7 @@ Object.assign(GROW, {
   nhatthuc: ttSao('#ffcc33', ['DUSK', 'CORONA', 'TOTAL ECLIPSE'], '1–3★ / 4–6★ / 7★: both modes at once on every swap'),
   marionette: ttSao('#a01848', ['STRINGS', 'GOLDEN HAND', 'TWIN PUPPETS'], '1–3★ / 4–6★ (big enemies) / 7★ (2 puppets)'),
   guongcong: ttSao('#bff6ff', ['MIRROR', 'TWIN PANES', 'SHARD HALO'], '1–3★ / 4–6★ / 7★: reflects ×2'),
-  // (QA vàng-đỏ: ngưỡng cũ 15/40 cộng dồn từ bản Forge bắn — trần nay 15 → dạng 3 không bao giờ tới; 'hot shards' không còn)
-  loren: { mau: '#ff6a1a', khongAnh: true, ten: ['COLD FORGE', 'BELLOWS', 'MOLTEN CORE'], dk: 'Forge stacks 0–4 / 5–14 / 15 (full: +60% to your best Attack turret)',
-    gd: (T) => { const n = T.lo || 0; return { s: n >= 15 ? 3 : n >= 5 ? 2 : 1, p: n / 15, v: [1 / 3, 1] }; } },
+  // (bỏ trần 07/11: dạng 3 từ 15 cộng dồn trở lên, số vẫn cộng tiếp; vòng tiến độ bão hoà ở 15)
+  loren: { mau: '#ff6a1a', khongAnh: true, ten: ['COLD FORGE', 'BELLOWS', 'MOLTEN CORE'], dk: 'Forge stacks 0–4 / 5–14 / 15+ (no cap: every stack keeps adding damage to your best Attack turret)',
+    gd: (T) => { const n = T.lo || 0; return { s: n >= 15 ? 3 : n >= 5 ? 2 : 1, p: Math.min(1, n / 15), v: [1 / 3, 1] }; } },
 });
