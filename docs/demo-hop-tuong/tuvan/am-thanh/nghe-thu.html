@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Turret Merge — nghe thử SFX (ChatGPT)</title>
+<style>
+body{margin:0;padding:16px;background:#0b0e14;color:#e8f1ff;font:15px/1.4 system-ui,sans-serif}
+h1{font-size:20px;margin:0 0 4px;color:#38e8ff}h2{font-size:14px;margin:18px 0 8px;color:#8aa0bf}
+p{color:#8aa0bf;font-size:13px;margin:4px 0}
+.l{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+button{background:#172031;color:#e8f1ff;border:1px solid #38e8ff44;border-radius:10px;padding:10px;font:600 13px system-ui;text-align:left;min-height:52px;touch-action:manipulation;cursor:pointer}
+button:active,button.on{background:#22406a}button small{display:block;color:#8aa0bf;font-weight:400;font-size:11px}
+.top{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.top button{flex:1 1 160px;text-align:center;min-height:40px}
+</style></head><body>
+<h1>TURRET MERGE · nghe thử SFX do ChatGPT tạo</h1>
+<p>38 file WAV 32 kHz mono trong thư mục <code>sfx/</code>. Chạm để nghe. File chuẩn hoá đỉnh −1 dBFS nên mặc định nghe "thô" (to đều theo đỉnh); bật "gain gợi ý" để nghe cân bằng như trong game.</p>
+<div class="top"><button id="g">Gain gợi ý: TẮT</button><button id="spam">▶▶ Thử wave đông 5 s (bắn + trúng + chết)</button><button id="stop">■ Dừng</button></div>
+<div id="ds"></div>
+<script>
+const DATA = [["Tiến trình & thưởng", [{"n": "summon", "ms": 400, "c": "triệu/đặt", "g": -12.0, "vi": "Triệu hồi"}, {"n": "place_lock", "ms": 280, "c": "triệu/đặt", "g": -10.7, "vi": "Ụ đáp/khoá ô"}, {"n": "merge_1", "ms": 480, "c": "ghép", "g": -8.8, "vi": "Ghép 1–3★ (biến thể 1)"}, {"n": "merge_2", "ms": 480, "c": "ghép", "g": -8.4, "vi": "Ghép 1–3★ (biến thể 2)"}, {"n": "merge_3", "ms": 480, "c": "ghép", "g": -6.7, "vi": "Ghép 1–3★ (biến thể 3)"}, {"n": "merge_high", "ms": 820, "c": "ghép cao", "g": -5.8, "vi": "Ghép cao 4–5★ (tạm cho 6–8★)"}, {"n": "jackpot", "ms": 990, "c": "thưởng lớn", "g": -1.8, "vi": "Jackpot"}, {"n": "breakthrough", "ms": 900, "c": "thưởng lớn", "g": -1.5, "vi": "Đột phá"}, {"n": "level_up", "ms": 470, "c": "tiến trình", "g": -8.3, "vi": "Lên cấp"}, {"n": "reveal", "ms": 420, "c": "tiến trình", "g": -9.3, "vi": "Lộ kết quả"}, {"n": "star_milestone", "ms": 700, "c": "tiến trình", "g": -6.7, "vi": "Mốc sao"}]], ["Chiến đấu", [{"n": "hit_light", "ms": 60, "c": "hit/kill/gun", "g": -19.0, "vi": "Trúng nhẹ"}, {"n": "crit", "ms": 170, "c": "crit", "g": -15.9, "vi": "Chí mạng"}, {"n": "kill_small", "ms": 130, "c": "hit/kill/gun", "g": -16.2, "vi": "Quái nhỏ chết"}, {"n": "shot_gun", "ms": 82, "c": "hit/kill/gun", "g": -16.8, "vi": "Bắn: súng"}, {"n": "shot_gatling", "ms": 73, "c": "hit/kill/gun", "g": -18.3, "vi": "Bắn: liên thanh"}, {"n": "shot_sniper", "ms": 190, "c": "vũ khí", "g": -11.4, "vi": "Bắn: tỉa/rail"}, {"n": "shot_cannon", "ms": 340, "c": "vũ khí lớn", "g": -12.6, "vi": "Bắn: pháo"}, {"n": "shot_launcher", "ms": 340, "c": "vũ khí lớn", "g": -11.7, "vi": "Bắn: phóng"}, {"n": "shot_laser", "ms": 180, "c": "vũ khí", "g": -17.3, "vi": "Bắn: laser"}, {"n": "shot_energy", "ms": 250, "c": "vũ khí", "g": -17.5, "vi": "Bắn: năng lượng"}, {"n": "shot_frost", "ms": 220, "c": "vũ khí", "g": -16.2, "vi": "Bắn: băng"}, {"n": "shot_fire", "ms": 270, "c": "vũ khí", "g": -14.7, "vi": "Bắn: lửa (mới)"}, {"n": "shot_poison", "ms": 300, "c": "vũ khí", "g": -17.1, "vi": "Bắn: độc"}, {"n": "shot_lightning", "ms": 200, "c": "vũ khí", "g": -11.0, "vi": "Bắn: sét"}, {"n": "shot_melee", "ms": 180, "c": "vũ khí", "g": -13.1, "vi": "Bắn: cận chiến"}, {"n": "shot_summoner", "ms": 310, "c": "vũ khí", "g": -17.8, "vi": "Bắn: triệu hồi drone"}, {"n": "shot_explosion", "ms": 380, "c": "vũ khí lớn", "g": -9.5, "vi": "Nổ"}, {"n": "support_pulse", "ms": 440, "c": "wave/hỗ trợ", "g": -15.6, "vi": "Xung hỗ trợ"}]], ["Trùm / wave / kết thúc / UI", [{"n": "boss_intro", "ms": 1000, "c": "trùm/kết", "g": -6.5, "vi": "Trùm xuất hiện"}, {"n": "boss_skill", "ms": 690, "c": "trùm/kết", "g": -6.7, "vi": "Trùm tung chiêu"}, {"n": "boss_down", "ms": 1300, "c": "trùm/kết", "g": -5.6, "vi": "Trùm chết"}, {"n": "wave_start", "ms": 720, "c": "wave/hỗ trợ", "g": -11.0, "vi": "Bắt đầu wave"}, {"n": "wave_clear", "ms": 520, "c": "wave/hỗ trợ", "g": -14.6, "vi": "Hết wave"}, {"n": "win", "ms": 1120, "c": "trùm/kết", "g": -8.5, "vi": "Thắng"}, {"n": "lose", "ms": 870, "c": "trùm/kết", "g": -11.7, "vi": "Thua"}, {"n": "ui_tap", "ms": 90, "c": "UI", "g": -13.9, "vi": "Chạm nút"}, {"n": "ui_back", "ms": 150, "c": "UI", "g": -14.9, "vi": "Quay lại/đóng"}]]];
+let dungGain = false; const dangPhat = new Set(); let spamId = 0;
+function phat(n, g, nhay) {
+  const a = new Audio('sfx/' + n + '.wav');
+  let v = dungGain ? Math.pow(10, g / 20) * 4 : 1; // ×4 (+12 dB) để nghe được khi bật gain (giữ tương quan giữa các âm)
+  if (nhay) { a.playbackRate = 1 + (Math.random() * 2 - 1) * 0.04; v *= Math.pow(10, (Math.random() * 2 - 1) * 0.05); }
+  a.volume = Math.max(0, Math.min(1, v)); a.preservesPitch = false;
+  dangPhat.add(a); a.onended = () => dangPhat.delete(a); a.play().catch(() => {});
+}
+const ds = document.getElementById('ds'), G = {};
+for (const [ten, ls] of DATA) {
+  const h = document.createElement('h2'); h.textContent = ten; ds.appendChild(h);
+  const l = document.createElement('div'); l.className = 'l'; ds.appendChild(l);
+  for (const r of ls) { G[r.n] = r.g; const b = document.createElement('button');
+    b.innerHTML = '▶ ' + r.vi + '<small>' + r.n + '.wav · ' + r.ms + ' ms · ' + r.c + ' · gain ' + (r.g > 0 ? '+' : '') + r.g + ' dB</small>';
+    b.onclick = () => phat(r.n, r.g); l.appendChild(b); }
+}
+document.getElementById('g').onclick = (e) => { dungGain = !dungGain; e.target.textContent = 'Gain gợi ý: ' + (dungGain ? 'BẬT' : 'TẮT'); e.target.classList.toggle('on', dungGain); };
+document.getElementById('stop').onclick = () => { clearInterval(spamId); for (const a of dangPhat) a.pause(); dangPhat.clear(); };
+document.getElementById('spam').onclick = () => {
+  clearInterval(spamId); const t0 = Date.now(); const ho = ['shot_gun', 'shot_gatling', 'shot_laser', 'shot_frost', 'shot_fire', 'shot_lightning', 'shot_energy'];
+  spamId = setInterval(() => { if (Date.now() - t0 > 5000) return clearInterval(spamId);
+    const k = ho[(Math.random() * ho.length) | 0]; phat(k, G[k], true);
+    if (Math.random() < .35) phat('hit_light', G.hit_light, true); if (Math.random() < .12) phat('kill_small', G.kill_small, true);
+    if (Math.random() < .08) phat('crit', G.crit, true); if (Math.random() < .03) phat('shot_explosion', G.shot_explosion, true); }, 90);
+};
+</script></body></html>
