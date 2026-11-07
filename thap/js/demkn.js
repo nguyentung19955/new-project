@@ -21,9 +21,9 @@ const DEMKN = {
       return m.length ? { m, sang: b.ngang >= 5 || b.doc >= 3 } : null;
     },
     cuuvi(T) { const n = T.duoi || 0; return n > 0 ? { m: [{ ic: 'ic_chet', s: n + '/9' }], sang: n >= 8 } : null; },
-    loren(T) { const n = T.lo || 0; return n > 0 ? { m: [{ ic: 'ic_dmg', s: n + '/' + SKILLS.loren.MAX }], sang: n >= SKILLS.loren.MAX } : null; },
-    // VỰC SÂU (ABYSS): icon xoáy vực riêng (không dùng ic_dmg chung) + chữ xanh biển sâu; đủ 100 → 'MAX' (chữ vàng)
-    leviathan(T) { const n = Math.min(100, T.vuc || 0); return n > 0 ? { m: [{ ic: DEMKN.icVuc(), s: n >= 100 ? 'MAX' : '' + n }], mau: n >= 100 ? '#b8f6ff' : '#5fe3ff' } : null; },
+    loren(T) { const n = T.lo || 0; return n > 0 ? { m: [{ ic: 'ic_dmg', s: n + '' }], sang: n >= 15 } : null; }, // không trần: chỉ hiện số
+    // VỰC SÂU (ABYSS): icon xoáy vực riêng (không dùng ic_dmg chung) + chữ xanh biển sâu; không trần → luôn hiện số (≥100 chữ sáng hơn)
+    leviathan(T) { const n = T.vuc || 0; return n > 0 ? { m: [{ ic: DEMKN.icVuc(), s: '' + n }], mau: n >= 100 ? '#b8f6ff' : '#5fe3ff' } : null; },
     nangluong(T, B) { const k = Math.round(SKILLS.nangluong.k(B) * 100); return k > 0 ? { m: [{ ic: 'ic_mana', s: '+' + k + '%' }], sang: k >= 500 } : null; },
     // (Sói: bỏ bộ đếm mạng — Sói không còn lớn dần theo mạng; dạng thường / thức tỉnh quay lúc sinh)
     docton(T, B) { const n = SKILLS.docton.ke(B, T); return n === 0 ? { m: [{ ic: 'ic_toc', s: '+100%' }], sang: true } : n >= 3 ? { m: [{ ic: 'ic_toc', s: '−30%' }] } : null; },

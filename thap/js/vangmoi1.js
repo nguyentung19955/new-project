@@ -114,16 +114,16 @@ HU.vm1Tia = { // lửa bay từ ô ghép sang ô kề: ngọn lửa PNG trượt
 };
 
 // =====================================================================================================
-// P2 · QUANTUM CHOIR (hopca) — Vàng TC. Đếm ụ KHÁC trên bàn MÌNH có CÙNG SAO (mọi loại, tối đa 7; ô đá không tính):
+// P2 · QUANTUM CHOIR (hopca) — Vàng TC. Đếm ụ KHÁC trên bàn MÌNH có CÙNG SAO (mọi loại, KHÔNG trần — như Kalaratri DCDW; ô đá không tính):
 //      +18% sát thương mỗi ụ khớp (LV9, +2 điểm/cấp → LV15 30%). 7★: thêm +12% tốc bắn. CO-OP: sao bàn đồng đội không tính.
 // =====================================================================================================
 SKILLS.hopca = {
   vai: 'tc', dmg: 15, toc: 1.0, nham: 'dau',
   moi: (T) => VM1.kn(T, 'hopca'),
-  dem(B, T) { let n = 0; for (const X of B.t) if (X && X !== T && X.sao === T.sao && !X.st.da) n++; return Math.min(7, n); },
+  dem(B, T) { let n = 0; for (const X of B.t) if (X && X !== T && X.sao === T.sao && !X.st.da) n++; return n; },
   mo(T) {
     const B = G.ban[T.ban], n = B ? this.dem(B, T) : 0, p = this.moi(T);
-    return n + ' other ' + T.sao + '★ turret(s) → +' + VM1.pct(n * p) + '% damage · +' + VM1.pct(p) + '% per same-star turret, max 7 (' + VM1.chuLv(T, 'hopca', (v) => '+' + VM1.pct(v) + '%') + ')' + (T.sao >= 7 ? ' · 7★: +12% fire rate' : ' · 7★ adds +12% fire rate');
+    return n + ' other ' + T.sao + '★ turret(s) → +' + VM1.pct(n * p) + '% damage · +' + VM1.pct(p) + '% per same-star turret, no cap (' + VM1.chuLv(T, 'hopca', (v) => '+' + VM1.pct(v) + '%') + ')' + (T.sao >= 7 ? ' · 7★: +12% fire rate' : ' · 7★ adds +12% fire rate');
   },
   capNhat(G, B, T) { const n = this.dem(B, T); if (n > (T.hop || 0) && T.tuoi > 0.3) { const c = B.o[T.o]; vm1Fx('hopca', c.x, c.y, B.cw * 1.7, 0.8, '#d9b8ff'); } T.hop = n; T.buf.dmg += n * this.moi(T); if (T.sao >= 7) T.buf.toc += 0.12; return false; },
   ban(G, B, T, E) {
@@ -134,20 +134,19 @@ SKILLS.hopca = {
 };
 
 // =====================================================================================================
-// P4 · FUSION ARCHIVE (luutru) — Vàng TC. MỌI lần ghép thành công trên bàn mình → +1 ĐIỂM LƯU cho mọi Fusion Archive đang có (tối đa 40);
+// P4 · FUSION ARCHIVE (luutru) — Vàng TC. MỌI lần ghép thành công trên bàn mình → +1 ĐIỂM LƯU cho mọi Fusion Archive đang có (KHÔNG trần — như Kalaratri DCDW);
 //      Archive mới xuất hiện nhận 50% tổng số lần ghép của trận (làm tròn xuống). Mỗi điểm +2.5% sát thương (LV9, +0.25 điểm/cấp → LV15 4%).
 //      Ghép Archive + Archive: 3 xung nổ 160% sát thương vào chỗ quái đông nhất. Chỉ đếm ghép của chính mình (PVP/CO-OP).
 // =====================================================================================================
 SKILLS.luutru = {
   vai: 'tc', dmg: 15, toc: 1.0, nham: 'dau',
-  MAX: 40,
   moi: (T) => VM1.kn(T, 'luutru'),
   mo(T) {
     const n = T.kho || 0, p = this.moi(T);
-    return 'Archive ' + n + '/40 → +' + VM1.pct(n * p) + '% damage · every merge you make +1 (+' + VM1.pct(p) + '% each, ' + VM1.chuLv(T, 'luutru', (v) => '+' + VM1.pct(v) + '%') + ') · new Archives start with 50% of your merges · Archive + Archive: 3 pulses × 160%';
+    return 'Archive ' + n + ' → +' + VM1.pct(n * p) + '% damage · every merge you make +1 (+' + VM1.pct(p) + '% each, ' + VM1.chuLv(T, 'luutru', (v) => '+' + VM1.pct(v) + '%') + ') · new Archives start with 50% of your merges · Archive + Archive: 3 pulses × 160%';
   },
-  sinh(G, T) { const B = G.ban[T.ban]; if (T.kho == null) T.kho = Math.min(this.MAX, Math.floor(((B && B.ghepN) || 0) * 0.5)); },
-  capNhat(G, B, T) { if (T.kho) T.buf.dmg += Math.min(this.MAX, T.kho) * this.moi(T); return false; },
+  sinh(G, T) { const B = G.ban[T.ban]; if (T.kho == null) T.kho = Math.floor(((B && B.ghepN) || 0) * 0.5); },
+  capNhat(G, B, T) { if (T.kho) T.buf.dmg += T.kho * this.moi(T); return false; },
   ban(G, B, T, E) {
     giat(T, 0.5); const [x, y] = chopNong(T, 20); SND.tia();
     const dmg = dmgU(T);
@@ -178,7 +177,7 @@ HU.vm1Xung = { // 3 xung nổ cách nhau 0.25 s, bán kính 45 px
     const r = _ghepVM1.apply(this, arguments);
     if (r && B2) {
       B2.ghepN = (B2.ghepN || 0) + 1;
-      for (const X of B2.t) if (X && X.id === 'luutru' && X !== r) X.kho = Math.min(SKILLS.luutru.MAX, (X.kho || 0) + 1);
+      for (const X of B2.t) if (X && X.id === 'luutru' && X !== r) X.kho = (X.kho || 0) + 1;
     }
     return r;
   };
@@ -256,8 +255,8 @@ themHo('amp', 3, 'xuonganh', 'merge stamps a HERO tile: big fire-rate boost');
 Object.assign(GROW, {
   lualien: { mau: '#ff8a2a', khongAnh: true, ten: ['COLD RELAY', 'KINDLED', 'FULL BLAZE'], dk: 'Flames 0 / 1–7 / 8+ (no cap: every flame keeps adding damage & crit)',
     gd: (T) => { const n = T.lc || 0; return { s: n >= 8 ? 3 : n >= 1 ? 2 : 1, p: Math.min(1, n / 8), v: [0.125] }; } },
-  luutru: { mau: '#bfe4ff', khongAnh: true, ten: ['EMPTY SHELVES', 'FILING', 'GRAND ARCHIVE'], dk: 'Archive 0–9 / 10–29 / 30–40',
-    gd: (T) => { const n = T.kho || 0; return { s: n >= 30 ? 3 : n >= 10 ? 2 : 1, p: n / 40, v: [0.25, 0.75] }; } },
+  luutru: { mau: '#bfe4ff', khongAnh: true, ten: ['EMPTY SHELVES', 'FILING', 'GRAND ARCHIVE'], dk: 'Archive 0–9 / 10–29 / 30+ (no cap: every merge keeps adding damage)',
+    gd: (T) => { const n = T.kho || 0; return { s: n >= 30 ? 3 : n >= 10 ? 2 : 1, p: Math.min(1, n / 40), v: [0.25, 0.75] }; } },
 });
 // ảnh tạm: tới khi ảnh ChatGPT riêng về, assets/<id>_nong.png, pilot_, pn/, hero/, nho/, glyph/ là BẢN SAO ảnh của ụ cho mượn (VM1.TAM);
 // cỡ đầu (HEAD_K) / mũi nòng (ART_META) mượn theo. Lắp ảnh thật (tools/thap-dau-u3.py …) thì xoá id khỏi VM1.TAM.

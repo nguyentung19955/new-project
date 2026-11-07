@@ -209,7 +209,7 @@ const KY_NANG_CAP = {
   bomhen: { ten: 'Weaken', base: 10, buoc: 0.25, max: 13.5, dv: '%', tien: '+', pu: 0.75 },     // quái quanh vụ nổ nhận thêm % sát thương (vào trần suy yếu 25%)
   tienhoa: { ten: 'Fuse time', base: 100, buoc: -2, max: 88, dv: '%', pu: -3 },               // thời gian đếm ngược × giá trị/100
   haoquang: { ten: 'Barrier', base: 3, buoc: 0.125, max: 3.5, dv: 's', pu: 0.15 },             // thời gian rào bất tử (trước mốc sao)
-  loren: { ten: 'Per stack', base: 4, buoc: 0.25, max: 5.5, dv: '%', tien: '+', pu: 0.3 },      // +% sát thương mỗi cộng dồn lò (trần +60% / ụ nhận giữ nguyên)
+  loren: { ten: 'Per stack', base: 4, buoc: 0.25, max: 5.5, dv: '%', tien: '+', pu: 0.3 },      // +% sát thương mỗi cộng dồn lò (không trần; power-up +0.3%/cộng dồn)
   khoisinh: { ten: 'Raise time', base: 100, buoc: -2, max: 92, dv: '%', pu: -3 },            // chu kỳ +1★ × giá trị/100
   // hỗ trợ: giá trị buff chính ở 1★ (đường cong sao HOTRO.K nhân lên như cũ) — ≈ +40% ở cấp 15 · 07/11: hạ 1★ của ụ chạm trần sớm (BAO-CAO gioi-han §4 mục 2)
   radar: { ten: 'Rate buff', base: 18, buoc: 0.6, max: 25.2, dv: '%', tien: '+', ht: 1 },

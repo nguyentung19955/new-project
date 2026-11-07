@@ -3200,3 +3200,11 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 
 ## claude/demo-hop-tuong — sửa màn tải đứng ở 20% (07/11)
 - `thap/js/taitai.js`: trọng số mỗi file khi tính % tải bị chặn ở 350 KB (ảnh nền lớn không còn "nuốt" thanh tiến độ); vạch tải trận chỉ tạo sau khi khởi động xong, menu luôn cập nhật vạch. Đo mạng 4G giả lập: % tăng đều 20→60% trong 30 s thay vì đứng yên ở 20%.
+
+## claude/demo-hop-tuong — bỏ trần cộng dồn 4 ụ đặc biệt (07/11)
+- Người dùng chốt: kỹ năng cộng dồn đặc biệt KHÔNG có trần (như Kalaratri DCDW), tiếp nối Ember Relay (f5cbf778).
+- Quantum Choir (`hopca`): đếm MỌI ụ cùng sao trên bàn (bỏ tối đa 7).
+- Fusion Archive (`luutru`): bỏ MAX 40 (sinh / capNhat / hook ghép); GROW 0–9 / 10–29 / 30+, chỉ vòng tiến độ bão hoà ở 40.
+- Scrap Forge (`loren`): bỏ trần 15 cộng dồn (luôn cho ăn được) và trần +60% mỗi ụ nhận — nhiều Forge cộng thẳng; power-up giữ +0.3%/cộng dồn; GROW 15+.
+- Leviathan: bỏ trần 100 ABYSS; tấm đếm luôn hiện số (không còn 'MAX'), ≥100 chữ sáng hơn.
+- Chữ EN/VI (text.js, roster.json, meta.js, skilldemo, hudb, demkn) + vi.json/ngonngu-vi.js; test thap-kt-vang-moi (cân bằng đạt), thap-kt-kynang-vd, thap-kt-leviathan cập nhật.
