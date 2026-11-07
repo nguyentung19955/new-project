@@ -1010,8 +1010,10 @@ const REN = {
     // bệ riêng đã tải xong → dùng; đang tải / lỗi → bệ chung (không chờ)
     const kR = this.DE_RIENG[T.id], tenR = kR ? T.id + '_de' : null;
     const rieng = tenR && this.img(tenR) ? tenR : null, ten = rieng || 'de_chung';
-    const k = this.s * this.dpr, n = Math.round(S * 1.5 * k), key = 'than|' + (rieng || T.bac) + '|' + (da ? 1 : 0) + '|' + n + (bong ? '|b' : '') + '|' + km;
-    let c = this.cGet(key); if (c) return c;
+    // VIỀN BẬC (người dùng 07/11 18:25): viền kim loại ôm hình bóng bệ, màu = bậc (Trắng bạc · Xanh · Tím · Vàng · Đỏ); đầu ụ giữ màu riêng
+    const vb = rieng && this.VIEN_ON ? this.vienBac(T.id, T.bac, da) : null, vCho = vb === 0; // 0 = ảnh viền đang tải → vẽ tạm không viền, không giữ cache
+    const k = this.s * this.dpr, n = Math.round(S * 1.5 * k), key = 'than|' + (rieng || '') + '|' + T.bac + '|' + (da ? 1 : 0) + '|' + n + (bong ? '|b' : '') + '|' + km;
+    let c = vCho ? null : this.cGet(key); if (c) return c;
     let de = da ? this.banXam(ten) : this.img(ten);
     if (!de && !(this.anh[ten] && this.anh[ten]._loi)) return null; // còn đang tải
     if (!de) return null; // KHÔNG vẽ bệ code (đang tải → vòng xoay PNG)
@@ -1019,12 +1021,33 @@ const REN = {
     const x = this.c2d(c);
     const q = n / (S * 1.5); x.scale(q, q); x.translate(S * 0.75, S * 0.75);
     const SB = S * 0.714, SD = rieng ? SB * kR : SB;
+    const dw = de.naturalWidth || de.width;
     de = this.mip(de, SD * q);
     if (bong) { x.globalAlpha = 0.7; x.drawImage(this.cham1('#000000'), 2 - SB * 0.62, SB * 0.06 + 3 - SB * 0.62, SB * 1.24, SB * 1.24); x.globalAlpha = 1; } // bóng = PNG tô đen
+    if (vb) { const SV = SD * vb.width / (vb.dw || dw); x.drawImage(this.mip(vb, SV * q), -SV / 2, -SV / 2, SV, SV); } // viền cùng tâm bệ, khung = bệ + 12 px mỗi phía
     x.drawImage(de, -SD / 2, -SD / 2, SD, SD);
     // (bỏ vòng màu khoá vẽ code quanh bệ — QUY-TAC-HINH 1/4; nhận diện = biểu tượng vai trò PNG góc ô)
     // (BỎ vòng bậc tier_ring_<bac> quanh bệ — người dùng 2026-11-06: đầu ụ đã thể hiện bậc; mọi chế độ / bóng kéo / bảng kết quả đều qua hàm này)
-    return this.cSet(key, c);
+    return vCho ? c : this.cSet(key, c);
+  },
+  // VIỀN BẬC: <id>_vien.png (trắng, vát sẵn — tools/thap-cat-umod.py) tô màu bậc 1 lần (multiply giữ vát kim loại) → giữ trong REN.anh như DOTPHA.tenVong.
+  // Vàng/Đỏ: thêm ánh kim nhẹ (cộng sáng chính ảnh viền). Ụ xám (da): viền bạc. Trả: ảnh đã tô · 0 đang tải · null không có viền (bệ chung / lỗi tải).
+  VIEN_ON: !window.KHONG_VIEN,
+  MAU_VIEN: { trang: '#c9d0da', xanh: '#3f95ff', tim: '#ad5cff', vang: '#ffbf2a', do: '#ff4436' },
+  vienBac(id, bac, da) {
+    const b = da || !this.MAU_VIEN[bac] ? 'trang' : bac, k = id + '_vien~' + b;
+    const co = this.anh[k]; if (co) return co._cv;
+    const a = this.img(id + '_vien'); if (!a) return this.anh[id + '_vien'] && this.anh[id + '_vien']._loi ? null : 0;
+    if (typeof document === 'undefined') return null;
+    const c = document.createElement('canvas'); c.width = a.naturalWidth || a.width; c.height = a.naturalHeight || a.height; const x = c.getContext('2d'); if (!x) return null;
+    x.drawImage(a, 0, 0);
+    x.globalCompositeOperation = 'multiply'; x.fillStyle = this.MAU_VIEN[b]; x.fillRect(0, 0, c.width, c.height); // vetay-ok: png (tô màu bậc lên ảnh viền)
+    x.globalCompositeOperation = 'destination-in'; x.drawImage(a, 0, 0); // giữ đúng alpha ảnh viền
+    if (b === 'vang' || b === 'do') { x.globalCompositeOperation = 'lighter'; x.globalAlpha = 0.22; x.drawImage(a, 0, 0); x.globalAlpha = 1; } // ánh kim
+    x.globalCompositeOperation = 'source-over';
+    c.dw = c.width - 24; // cạnh ảnh bệ gốc (viền = bệ + 12 px mỗi phía — VIEN_PAD của tools/thap-cat-umod.py)
+    this.anh[k] = { _cv: c, complete: true, naturalWidth: c.width, naturalHeight: c.height }; if (this.CO_DINH) this.CO_DINH.add(k);
+    return c;
   },
   // HUY HIỆU CẤP SAO (TU-VAN-NHAN-DIEN 7C): 1 lục giác tối cố định, viền vàng nhạt, SỐ to màu ngà (1–7) — cùng cỡ mọi cấp.
   // Không xoay, neo góc trên-phải ô. 7★: nền đỏ thẫm + vương miện nhỏ phía trên (ngoài huy hiệu).

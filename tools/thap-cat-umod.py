@@ -17,7 +17,9 @@ Cách làm (QUY-TAC-HINH mục 5 + KET-QUA mục 1):
   - vị trí/tỉ lệ đầu và bệ trong ô 1: so mẫu nhiều tỉ lệ (SQDIFF có mặt nạ) → trục xoay = tâm bệ đưa về ô 3;
   - mọi ụ nằm TRONG Ô ở MỌI GÓC XOAY: bán kính xa nhất của đầu tính từ trục ≤ R_MAX ô → thu cả ụ nếu vượt;
   - thu Lanczos nhân-trước-alpha, loang màu ra mép trong suốt.
+  <id>_vien.png  viền bậc TRẮNG (vát kim loại) ôm hình bóng bệ, cùng tâm, khung = bệ + 12 px mỗi phía → render.js tô màu bậc (REN.vienBac)
 Chạy: python3 tools/thap-cat-umod.py [id …]      (OUT=… để ghi chỗ khác; KHONG_JS=1 không sửa artscale.js)
+      CHI_VIEN=1 python3 tools/thap-cat-umod.py [id …]   chỉ dựng lại <id>_vien.png từ <id>_de.png có sẵn (VIEN_PX=8 độ dày)
 In bảng đo + ghi docs/demo-hop-tuong/tuvan/u-moi/cat-game.json (khớp, thu nhỏ, đảo đã bỏ).
 """
 import os, sys, json, re
@@ -174,6 +176,43 @@ def luu(c, ten):
     im = anh(c); im.save(os.path.join(OUT, ten + '.png'), optimize=True); return im
 
 
+# --- VIỀN BẬC (người dùng 07/11 18:25): <id>_vien.png = viền kim loại TRẮNG ôm sát hình bóng bệ (game tô màu theo bậc lúc chạy).
+# Lấy từ alpha bệ (rãnh tối 1–2 px sát bệ rồi dải màu): nở VIEN_PX px (ở cỡ ảnh bệ ≈ 0,85 px màn DPR 3) trừ lõi bệ co 1 px (viền luồn 1 px dưới mép bệ → không hở),
+# mép ngoài mềm 1 px; độ sáng = vát kim loại (sáng trên-trái, tối dưới-phải) + gờ sáng mảnh ở mép ngoài.
+# Khung ảnh = khung bệ + VIEN_PAD mỗi phía, CÙNG TÂM → render.js vẽ cỡ SD × (cạnh viền / cạnh bệ).
+VIEN_PX = float(os.environ.get('VIEN_PX', 8))
+VIEN_PAD = 12
+
+
+def vien(im_de):
+    a = np.asarray(im_de.convert('RGBA')).astype(np.float64)[..., 3] / 255
+    a = np.pad(a, VIEN_PAD)
+    m = a > 0.5
+    dt = nd.distance_transform_edt(~m)                                   # khoảng cách tới bệ (px)
+    ngoai = np.clip(VIEN_PX + 0.5 - dt, 0, 1)                            # nở VIEN_PX, mép ngoài mềm 1 px
+    loi = nd.binary_erosion(m, iterations=1)
+    al = ngoai * (1 - loi)
+    # vát: pháp tuyến từ mặt nạ nở đã làm mờ, ánh sáng từ trên-trái
+    h = nd.gaussian_filter(ngoai, 1.6)
+    gy, gx = np.gradient(h)
+    n = np.hypot(gx, gy) + 1e-6
+    lam = (-gx * -0.62 + -gy * -0.78) / n                                # pháp tuyến hướng ra ngoài · hướng sáng (trên-trái)
+    lum = 0.72 + 0.28 * lam
+    gio = np.clip(1 - np.abs(dt - (VIEN_PX - 1.2)) / 1.1, 0, 1) * np.clip(lam, 0, 1)   # gờ sáng mảnh ở mép ngoài phía sáng
+    lum = np.clip(lum + 0.25 * gio, 0, 1)
+    ranh = np.clip(1 - np.abs(dt - 1.2) / 1.3, 0, 1)                     # rãnh tối mảnh sát mép bệ: tách viền khỏi bệ (bệ vàng + viền vàng vẫn đọc được)
+    lum = lum * (1 - 0.7 * ranh)
+    lum = np.where(dt < 0.5, 0.3, lum)                                   # phần luồn dưới mép bệ: tối
+    out = np.zeros(a.shape + (4,)); out[..., 0] = out[..., 1] = out[..., 2] = lum; out[..., 3] = al
+    out[out[..., 3] < 0.01] = 0
+    return Image.fromarray((out * 255).round().astype(np.uint8), 'RGBA')
+
+
+def luu_vien(i, im_de=None):
+    im_de = im_de or Image.open(os.path.join(OUT, i + '_de.png'))
+    vien(im_de).save(os.path.join(OUT, i + '_vien.png'), optimize=True)
+
+
 def mui(dau):
     """mũi nòng (đầu đã xoay nòng → PHẢI): điểm đặc xa nhất bên phải trong dải giữa ±8%, theo nửa cạnh ảnh"""
     a = dau[..., 3] > 0.5; h, w = a.shape; b = a[int(h * .42):int(h * .58)]
@@ -217,6 +256,7 @@ def mot(i):
     kde = 2 * half / bmax * f                                           # render: SD = SB × kde
     nde = int(round(PX_DE * 2 * half * g))
     im_de = luu(thu(de, nde), i + '_de')
+    luu_vien(i, im_de)
     # --- ĐẦU: khung vuông tâm = trục, nửa cạnh = rH + 3
     hh = rH + 3
     dau = np.rot90(dat_giua(c3, qx, qy, hh), -1).copy()
@@ -271,6 +311,9 @@ def js_set(txt, ten, obj, ghichu=''):
 
 def main():
     roster = [r['id'] for r in json.load(open(os.path.join(GOC, 'thap/assets/roster.json'), encoding='utf-8'))]
+    if os.environ.get('CHI_VIEN'):  # chỉ dựng lại <id>_vien.png từ <id>_de.png đã có (không cần ảnh gốc ChatGPT)
+        for i in sys.argv[1:] or [i for i in roster if os.path.exists(os.path.join(OUT, i + '_de.png'))]: luu_vien(i)
+        return
     ids = sys.argv[1:] or [i for i in roster if os.path.exists(nguon(i))]
     bao = json.load(open(BAO, encoding='utf-8')) if os.path.exists(BAO) else {}
     for i in ids:
