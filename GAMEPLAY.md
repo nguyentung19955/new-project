@@ -3351,3 +3351,7 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - Ảnh: `thap/assets/<id>_vien.png` (93 ụ, trắng có vát sáng trên-trái + rãnh tối sát bệ) sinh từ alpha của `<id>_de.png` trong `tools/thap-cat-umod.py` (`CHI_VIEN=1 python3 tools/thap-cat-umod.py` để dựng lại riêng viền; `VIEN_PX` độ dày, mặc định 8 px ảnh). Khung = bệ + 12 px mỗi phía, cùng tâm.
 - Game: `REN.vienBac(id, bac, da)` tô màu 1 lần (multiply + giữ alpha, như DOTPHA.tenVong) rồi giữ trong `REN.anh`; `REN.than()` vẽ viền ngay dưới bệ (cache thân theo bậc). Không có ảnh viền / bệ chung → không viền (dự phòng). `window.KHONG_VIEN=1` tắt.
 - Vòng ĐỘT PHÁ (vòng sáng mềm tròn dưới ụ cộng dồn) giữ nguyên — tròn, mờ, to hơn bệ nên vẫn tách khỏi viền bậc (đã xem ảnh). Ảnh trước/sau: `docs/demo-hop-tuong/tuvan/vien-bac/`.
+
+## claude/demo-hop-tuong — FREEZER đóng băng ụ NGẪU NHIÊN (07/11)
+- DEEP FREEZE nay chọn **ngẫu nhiên** 3–5 ụ mỗi lần (bỏ ưu tiên ụ nhiều sao). Vẫn tất định theo `rngTrum` (online khớp), cùng số ụ (`LUAT_BANG.so`) và 6 s; ô đá không bị chọn, ụ đang băng được tránh nếu còn ụ khác; Halo/khiên như cũ; co-op chia 2 bàn như cũ.
+- Chữ mô tả trùm (EN + VI): "Freezes 3 random turrets…" / "Đóng băng ngẫu nhiên # ụ…"; màn vào trận: "Freezes 3–5 random turrets".
