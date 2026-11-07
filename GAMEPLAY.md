@@ -3198,6 +3198,12 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - Ảnh mới tải lên `thap-art/`: `raw_mod_*` (7 ụ mẫu kiểu module, nhánh claude/kiem-nhan-dien đo nhận diện).
 - (07/11 11:00) Sửa méo tam giác cảnh báo ở 2 đầu băng trùm (`bang_trum_nen`): border-image cắt 40/70 và tỉ lệ đều ngang–dọc ở băng báo trùm trong trận (tvb.css, anhgen.css) và băng "BOSSES THIS MATCH" đầu trận (vaotran.css). Ảnh kiểm 390×844 + 844×390.
 
+## claude/trum-quai-moi — thap: gắn 12 trùm + 6 quái "không tay chân" (07/11)
+- Ảnh mới (người dùng duyệt GIF `tuvan/trum-moi`, `tuvan/quai-moi`): trùm/quái là VẬT THỂ không tay chân (slime vương miện, khối băng, hộp đá Janus, hộp hề, mắt ác mộng, hoa lửa, tổ ong, mìn gai, lăng kính, lõi đôi, bánh răng, ốc sao; quái: slime, mắt dơi, tinh thể bay, đá lăn, chùm slime, bọc trứng).
+- Cắt bằng `tools/thap-cat-trum2.py` (loang nền từ viền ô, không khoá magenta toàn cục; khử ánh hồng; bỏ đốm lẻ; Lanczos nhân-trước-alpha ≤ 3× cỡ hiển thị). Ra: `trum_<id>_8` (đi), `trum_<id>_atk_16` (tung chiêu 8 khung, ô ×1.5 để hiệu ứng không bị cắt, Janus dùng `chieu_v2`), `trum_<id>_portrait` (băng giới thiệu), `quai_<id>_8`; dải 4 khung dự phòng cho 6 trùm cũ + quái.
+- Không còn hướng nhìn: xoá các dải `_side_8` / `_back_8`; `quaianim.js` HUONG_CHUNG = 1 dải cho mọi hướng, không lật (chữ/mặt không bị soi gương); `trum.js` TRUM_ATK + TRUM_CHANDUNG đủ 12 trùm, TRUM_HUONG rỗng; dải chiêu chỉ làm nóng trùm sắp ra (nongskill.js), không nạp cả 12. K8 đo lại để thân to ~như cũ. Gameplay không đổi.
+- `tools/thap-kt-huong.js`: vật thể HUONG_CHUNG không xin dải hướng (tránh 404).
+- Kiểm: thap-kt-huong (solo) XANH — 12 trùm nhìn bàn khi chiêu, 0 404, fps 58; thap-kt-trum-don solo XANH 264 tình huống; chụp 844×390 + 390×844 xem tận mắt.
 ## claude/demo-hop-tuong — sửa màn tải đứng ở 20% (07/11)
 - `thap/js/taitai.js`: trọng số mỗi file khi tính % tải bị chặn ở 350 KB (ảnh nền lớn không còn "nuốt" thanh tiến độ); vạch tải trận chỉ tạo sau khi khởi động xong, menu luôn cập nhật vạch. Đo mạng 4G giả lập: % tăng đều 20→60% trong 30 s thay vì đứng yên ở 20%.
 

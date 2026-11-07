@@ -202,12 +202,12 @@
     const tl = REN.tenTrai && REN.tenTrai(t0); if (tl) ds.push(tl);
     const td = REN.tenDanh && REN.tenDanh(E); if (td) ds.push(td);
     else if (typeof TRUM_ATK !== 'undefined' && TRUM_ATK.has(id)) { REN.img('trum_' + id + '_atk_16'); du = false; }
-    for (const t of ds) REN.nongDai(t, co);
+    for (const t of ds) REN.nongDai(t, t === td && typeof ATK_K !== 'undefined' ? co * ATK_K : co);
     REN.nongDai(t0, co, 'trang');
     if (typeof TRUM_THU_TU !== 'undefined' && TRUM_THU_TU.includes(id)) REN.nongDai('trum_' + id, 86); // dải 4 khung lúc tung chiêu
     if (id === 'twin_core' && typeof TRM !== 'undefined') REN.nongDai(t0, Math.round(86 * TRM.CON_CO) * kc);
     if (id === 'janus') xep('xam|de_chung', () => REN.banXam && REN.banXam('de_chung')); // hoá đá ụ: bản xám của đế (getImageData cả ảnh)
-    if (id === 'hive') for (const t of ['quai_bay_8', 'quai_bay_side_8', 'quai_bay_back_8']) REN.nongDai(t, 50 * (K8b.bay || 1)); // drone
+    if (id === 'hive') for (const t of ['quai_bay_8']) REN.nongDai(t, 50 * (K8b.bay || 1)); // drone
     if (id === 'freezer' && typeof BANGFX !== 'undefined') {
       BANGFX.napTruoc();
       const B = G.ban[0], S = B ? Math.min(B.cw, B.ch) : 40;
