@@ -903,15 +903,18 @@ const REN = {
     if (dau) {
       ctx.save();
       let goc = T.goc;
-      if (T.id === 'mana') { goc = 0; const p = 1 + 0.1 * T.sang; ctx.translate(0, -2); ctx.scale(p, p); } // VFX P3: bỏ nhún + phập phồng ảnh đầu (lúc sinh mana vẫn phồng 1 nhịp theo T.sang)
+      if (T.id === 'mana') { goc = -Math.PI / 2; const p = 1 + 0.1 * T.sang; ctx.translate(0, -2); ctx.scale(p, p); } // VFX P3: bỏ nhún + phập phồng ảnh đầu (lúc sinh mana vẫn phồng 1 nhịp theo T.sang)
       if (T.id === 'mimic') goc = T.goc;
       if (skT.gocDau) { const g2 = skT.gocDau(T, this.t, ctx); if (g2 != null) goc = g2; } // đầu không xoay theo mục tiêu (hộp, cột…)
       // đầu súng + bóng mềm đổ xuống bệ, dựng sẵn chung 1 ảnh → 1 lần vẽ xoay mỗi ụ (thay vì 2)
       if (AU) { if (AU.by) ctx.translate(0, AU.by); AN.veDuoi(ctx, T, C0, al, gd, da, this, goc); }
+      const pg = !o.ghost && this.DE_RIENG[T.id] && window.PHU_GIUA && PHU_GIUA[T.id]; // phần phụ tại trục (Tesla: vòng cuộn · Mạch Máu: tim · Lõi Combo: lõi)
+      if (pg === 'duoi') this.vePhu(ctx, T, C0, al, da);
       ctx.rotate(goc + (AU ? AU.tw : 0)); ctx.translate(AU ? AU.rx : (T.rx || 0), AU ? AU.py : 0);
       if (AU && (AU.sx !== 1 || AU.sy !== 1)) ctx.scale(AU.sx, AU.sy);
       if (!VX.veBien(ctx, T, C0, al, da, this)) this.veDauLop(ctx, T.id, gd, C0, al, 1, da); // đang biến hình: hoà 2 dạng
       if (AU) AN.veTren(ctx, T, C0, al, gd, da, this);
+      if (pg === 'tren') this.vePhu(ctx, T, C0, al, da);
       // ánh sáng phụ: mimic cầu vồng, mana phát sáng, tesla cuộn nạp, laser nóng
       let sang = 0;
       if (T.id === 'mana') sang = 0.2 + T.sang * 0.6; // VFX P3: bỏ đầu sáng phập phồng
@@ -972,6 +975,17 @@ const REN = {
     ctx.globalAlpha = 1;
     if (A) VX.sau(ctx, T, x, y, St, A);
   },
+  // phần phụ <id>_phu (ô 4 của tấm module) vẽ tại trục, ctx ở tâm ụ (chưa xoay đầu): quay chậm ngược chiều;
+  // Tesla: vòng cuộn sáng dần khi sắp phóng (T.cd < 0.18) — dùng lại ảnh, không vẽ hình bằng code
+  vePhu(ctx, T, C0, al, da) {
+    const k = window.PHU_K && PHU_K[T.id]; if (!k) return;
+    const D = C0 * k, a = this.co(T.id + '_phu', D, da ? 'xam' : ''); if (!a) return;
+    ctx.save(); ctx.rotate(T.id === 'set' ? -this.t * 0.8 + (T.pha || 0) : (T.id === 'combo' ? this.t * 0.6 : 0));
+    ctx.globalAlpha = al; ctx.drawImage(a, -D / 2, -D / 2, D, D);
+    const s = T.id === 'set' && !da && T.cd < 0.18 ? (0.18 - T.cd) * 4 : 0;
+    if (s > 0) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * Math.min(0.6, s); ctx.drawImage(a, -D / 2, -D / 2, D, D); ctx.globalCompositeOperation = 'source-over'; }
+    ctx.restore(); ctx.globalAlpha = al;
+  },
   dauBong(ten, D, da) {
     const k = this.s * this.dpr, n = Math.max(2, Math.round(D * k)), key = 'db|' + ten + '|' + n + '|' + (da ? 1 : 0);
     let c = this.cGet(key); if (c) return c;
@@ -989,7 +1003,8 @@ const REN = {
   // Không còn vòng bậc / ô xúc xắc sao (tư vấn B.2, G). Bệ = 70% cạnh ngắn ô (~60% cạnh dài), tròn tuyệt đối.
   // Ụ MODULE (claude/u-module): 7 ụ có BỆ RIÊNG gen ChatGPT (tools/thap-cat-umod.py) — hình bóng khác nhau thay bệ tròn chung.
   // giá trị = khung ảnh <id>_de / cạnh lớn nhất của bệ (tâm ảnh = điểm gắn đầu) → bệ chiếm cùng chỗ với de_chung (SB)
-  DE_RIENG: { canon: 1.017, lien: 1.025, set: 1.261, bang: 1.062, radar: 1.014, blackhole: 1.101, doc: 1.013 },
+  // 93 ụ (tools/thap-cat-umod.py → artscale.js window.DE_RIENG); ?ucu=1 (bộ đầu cũ) → bệ chung
+  DE_RIENG: (!window.UCU && window.DE_RIENG) || {},
   than(T, S, da, bong) {
     const km = 0; // (vòng màu khoá đã bỏ)
     // bệ riêng đã tải xong → dùng; đang tải / lỗi → bệ chung (không chờ)
@@ -1245,3 +1260,13 @@ const REN = {
     ctx.globalAlpha = 1;
   },
 };
+
+// claude/u-module: THIẾT BỊ không nòng vai hỗ trợ / đặc biệt (docs/demo-hop-tuong/tuvan/u-moi/PHAN-HO.md, cột Loại = thiết bị)
+// KHÔNG xoay đầu theo quái như súng — quay chậm tại chỗ như GIF họ (gocDau). Logic ngắm/bắn của ụ không đổi (T.goc vẫn tính),
+// đòn phát từ lõi (dauNong: ụ có gocDau). Ụ đã có gocDau riêng (hộp, cột, ăng-ten…) giữ nguyên.
+(function () {
+  if (typeof SKILLS === 'undefined' || window.UCU) return;
+  const TB = ['nhanmana', 'thanhdia', 'cauvong', 'sinhdoi', 'hasao', 'tron', 'nhanban', 'epxung', 'xaotron', 'nangsao', 'vughep', 'saochep', 'pandora', 'mana', 'phagiap', 'bua', 'bomhen', 'mimic', 'dichchuyen', 'kepha', 'taylo', 'khien', 'khoathoigian', 'thaukinh', 'nhieusong', 'santhuong', 'dongbo', 'guongcong', 'marionette', 'xuonganh', 'mauhut', 'nguyenrua', 'lophanung', 'ngaithoigian', 'bang', 'radar', 'doc'];
+  for (const id of TB) if (SKILLS[id] && !SKILLS[id].gocDau) SKILLS[id].gocDau = (T, t) => -Math.PI / 2 + (T.pha || 0) * 0.3 + t * 0.35;
+})();
+

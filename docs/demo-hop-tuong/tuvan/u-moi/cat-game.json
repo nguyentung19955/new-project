@@ -1,0 +1,2348 @@
+{
+"anhsang": {
+"DE_RIENG": 1.012,
+"HEAD_K": 0.7297,
+"PHU_K": 0.3772,
+"co": {
+"de": 177,
+"nong": 219
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+4406.5762
+],
+"khop_dau": [
+0.855,
+4752.2334
+],
+"nguon": "raw_mod_anhsang.png",
+"thu": 1.0,
+"tip": 0.984,
+"truc_o3": [
+290.4,
+394.8
+]
+},
+"aten": {
+"DE_RIENG": 1.013,
+"HEAD_K": 0.7582,
+"PHU_K": 0.6329,
+"co": {
+"de": 177,
+"nong": 227
+},
+"dao_bo": {},
+"khop_be": [
+0.99,
+7493.5386
+],
+"khop_dau": [
+0.86,
+6532.6958
+],
+"nguon": "raw_mod_aten.png",
+"thu": 1.0,
+"tip": 0.986,
+"truc_o3": [
+313.0,
+320.0
+]
+},
+"bang": {
+"DE_RIENG": 1.0127,
+"HEAD_K": 0.5391,
+"PHU_K": 0.3304,
+"co": {
+"de": 177,
+"nong": 162
+},
+"dao_bo": {},
+"khop_be": [
+1.005,
+5693.4546
+],
+"khop_dau": [
+0.755,
+1522.833
+],
+"nguon": "raw_mod_bang.png",
+"thu": 1.0,
+"tip": 0.983,
+"truc_o3": [
+312.9,
+376.0
+]
+},
+"bao": {
+"DE_RIENG": 1.0115,
+"HEAD_K": 0.8508,
+"PHU_K": 0.3442,
+"co": {
+"de": 177,
+"nong": 255
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+4639.7329
+],
+"khop_dau": [
+0.74,
+2839.3813
+],
+"nguon": "raw_mod_bao.png",
+"thu": 1.0,
+"tip": 0.951,
+"truc_o3": [
+314.7,
+451.2
+]
+},
+"baotuyet": {
+"DE_RIENG": 1.011,
+"HEAD_K": 0.4911,
+"PHU_K": 0.451,
+"co": {
+"de": 177,
+"nong": 147
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+1317.4631
+],
+"khop_dau": [
+0.805,
+4234.1143
+],
+"nguon": "raw_mod_baotuyet.png",
+"thu": 1.0,
+"tip": 0.862,
+"truc_o3": [
+308.3,
+306.6
+]
+},
+"bienmau": {
+"DE_RIENG": 1.0113,
+"HEAD_K": 0.8185,
+"PHU_K": 0.3871,
+"co": {
+"de": 177,
+"nong": 246
+},
+"dao_bo": {},
+"khop_be": [
+0.98,
+7234.6348
+],
+"khop_dau": [
+1.0,
+2592.5869
+],
+"nguon": "raw_mod_bienmau.png",
+"thu": 1.0,
+"tip": 0.791,
+"truc_o3": [
+311.2,
+348.2
+]
+},
+"blackhole": {
+"DE_RIENG": 1.0123,
+"HEAD_K": 0.3511,
+"PHU_K": 0.4043,
+"co": {
+"de": 177,
+"nong": 105
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+326.8831
+],
+"khop_dau": [
+0.675,
+382.8201
+],
+"nguon": "raw_mod_blackhole.png",
+"thu": 1.0,
+"tip": 0.669,
+"truc_o3": [
+312.7,
+282.5
+]
+},
+"bomhen": {
+"DE_RIENG": 1.0127,
+"HEAD_K": 0.9067,
+"PHU_K": 0.2451,
+"co": {
+"de": 177,
+"nong": 272
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+1682.8217
+],
+"khop_dau": [
+0.99,
+997.8029
+],
+"nguon": "raw_mod_bomhen.png",
+"thu": 1.0,
+"tip": 0.961,
+"truc_o3": [
+316.6,
+352.0
+]
+},
+"bua": {
+"DE_RIENG": 1.0136,
+"HEAD_K": 0.9589,
+"PHU_K": 0.5329,
+"co": {
+"de": 177,
+"nong": 288
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+6104.5957
+],
+"khop_dau": [
+0.57,
+2530.9976
+],
+"nguon": "raw_mod_bua.png",
+"thu": 1.0,
+"tip": 0.988,
+"truc_o3": [
+315.0,
+393.0
+]
+},
+"canon": {
+"DE_RIENG": 1.0146,
+"HEAD_K": 0.7907,
+"PHU_K": 0.3469,
+"co": {
+"de": 177,
+"nong": 237
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+1411.2261
+],
+"khop_dau": [
+0.815,
+3561.7524
+],
+"nguon": "raw_mod_canon.png",
+"thu": 1.0,
+"tip": 0.982,
+"truc_o3": [
+312.8,
+394.4
+]
+},
+"cauvong": {
+"DE_RIENG": 0.9747,
+"HEAD_K": 0.9771,
+"PHU_K": 0.5832,
+"co": {
+"de": 171,
+"nong": 293
+},
+"dao_bo": {},
+"khop_be": [
+0.955,
+4905.4072
+],
+"khop_dau": [
+0.885,
+4449.7227
+],
+"nguon": "raw_mod_cauvong.png",
+"thu": 0.964,
+"tip": 0.988,
+"truc_o3": [
+316.5,
+509.0
+]
+},
+"chimang": {
+"DE_RIENG": 1.0119,
+"HEAD_K": 0.705,
+"PHU_K": 0.5228,
+"co": {
+"de": 177,
+"nong": 212
+},
+"dao_bo": {},
+"khop_be": [
+0.98,
+8730.6338
+],
+"khop_dau": [
+1.075,
+3009.9553
+],
+"nguon": "raw_mod_chimang.png",
+"thu": 1.0,
+"tip": 0.983,
+"truc_o3": [
+314.0,
+307.3
+]
+},
+"chuato": {
+"DE_RIENG": 0.9854,
+"HEAD_K": 0.9786,
+"PHU_K": 0.5904,
+"co": {
+"de": 172,
+"nong": 294
+},
+"dao_bo": {},
+"khop_be": [
+0.95,
+7913.9819
+],
+"khop_dau": [
+0.99,
+2129.4651
+],
+"nguon": "raw_mod_chuato.png",
+"thu": 0.974,
+"tip": 0.847,
+"truc_o3": [
+317.2,
+324.2
+]
+},
+"combo": {
+"DE_RIENG": 1.0132,
+"HEAD_K": 0.6081,
+"PHU_K": 0.3793,
+"co": {
+"de": 177,
+"nong": 182
+},
+"dao_bo": {
+"o3": [
+2
+]
+},
+"khop_be": [
+1.0,
+5137.1025
+],
+"khop_dau": [
+0.835,
+6636.3403
+],
+"nguon": "raw_mod_combo.png",
+"thu": 1.0,
+"tip": 0.924,
+"truc_o3": [
+311.5,
+312.8
+]
+},
+"cuongno": {
+"DE_RIENG": 1.0129,
+"HEAD_K": 0.7011,
+"PHU_K": 0.7263,
+"co": {
+"de": 177,
+"nong": 210
+},
+"dao_bo": {},
+"khop_be": [
+0.995,
+5686.5615
+],
+"khop_dau": [
+0.87,
+2511.6377
+],
+"nguon": "raw_mod_cuongno.png",
+"thu": 1.0,
+"tip": 0.936,
+"truc_o3": [
+311.9,
+333.6
+]
+},
+"cuuvi": {
+"DE_RIENG": 1.0111,
+"HEAD_K": 0.9532,
+"PHU_K": 0.4146,
+"co": {
+"de": 177,
+"nong": 286
+},
+"dao_bo": {},
+"khop_be": [
+0.85,
+11360.6816
+],
+"khop_dau": [
+0.875,
+8577.0244
+],
+"nguon": "raw_mod_cuuvi.png",
+"thu": 1.0,
+"tip": 0.989,
+"truc_o3": [
+318.9,
+422.9
+]
+},
+"dichchuyen": {
+"DE_RIENG": 1.0109,
+"HEAD_K": 0.5733,
+"PHU_K": 0.3044,
+"co": {
+"de": 177,
+"nong": 172
+},
+"dao_bo": {},
+"khop_be": [
+0.97,
+4281.7007
+],
+"khop_dau": [
+0.82,
+4448.9312
+],
+"nguon": "raw_mod_dichchuyen.png",
+"thu": 1.0,
+"tip": 0.947,
+"truc_o3": [
+313.2,
+442.5
+]
+},
+"doc": {
+"DE_RIENG": 1.0129,
+"HEAD_K": 0.8204,
+"PHU_K": null,
+"co": {
+"de": 177,
+"nong": 246
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+1292.071
+],
+"khop_dau": [
+0.86,
+2979.9927
+],
+"nguon": "raw_mod_doc.png",
+"thu": 1.0,
+"tip": 0.987,
+"truc_o3": [
+313.8,
+412.4
+]
+},
+"docton": {
+"DE_RIENG": 1.0122,
+"HEAD_K": 0.8331,
+"PHU_K": 0.4225,
+"co": {
+"de": 177,
+"nong": 250
+},
+"dao_bo": {},
+"khop_be": [
+0.97,
+4159.2832
+],
+"khop_dau": [
+0.91,
+659.6227
+],
+"nguon": "raw_mod_docton.png",
+"thu": 1.0,
+"tip": 0.987,
+"truc_o3": [
+313.2,
+344.9
+]
+},
+"dongbo": {
+"DE_RIENG": 1.0106,
+"HEAD_K": 0.5128,
+"PHU_K": 0.3177,
+"co": {
+"de": 177,
+"nong": 154
+},
+"dao_bo": {
+"o1": [
+6,
+1
+]
+},
+"khop_be": [
+1.0,
+5827.0532
+],
+"khop_dau": [
+0.82,
+3043.052
+],
+"nguon": "raw_mod_dongbo.png",
+"thu": 1.0,
+"tip": 0.858,
+"truc_o3": [
+325.1,
+301.7
+]
+},
+"drone": {
+"DE_RIENG": 1.011,
+"HEAD_K": 0.7418,
+"PHU_K": 0.3063,
+"co": {
+"de": 177,
+"nong": 223
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+4569.1128
+],
+"khop_dau": [
+0.855,
+915.0902
+],
+"nguon": "raw_mod_drone.png",
+"thu": 1.0,
+"tip": 0.116,
+"truc_o3": [
+313.6,
+166.2
+]
+},
+"epxung": {
+"DE_RIENG": 1.0111,
+"HEAD_K": 0.5464,
+"PHU_K": 0.3023,
+"co": {
+"de": 177,
+"nong": 164
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+3755.6201
+],
+"khop_dau": [
+0.85,
+2177.5642
+],
+"nguon": "raw_mod_epxung.png",
+"thu": 1.0,
+"tip": 0.422,
+"truc_o3": [
+313.1,
+293.6
+]
+},
+"guongcong": {
+"DE_RIENG": 1.0117,
+"HEAD_K": 0.7654,
+"PHU_K": 0.5289,
+"co": {
+"de": 177,
+"nong": 230
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+11163.2744
+],
+"khop_dau": [
+1.015,
+9325.6309
+],
+"nguon": "raw_mod_guongcong.png",
+"thu": 1.0,
+"tip": 0.971,
+"truc_o3": [
+314.2,
+322.5
+]
+},
+"haoquang": {
+"DE_RIENG": 1.0123,
+"HEAD_K": 0.9343,
+"PHU_K": 0.5791,
+"co": {
+"de": 177,
+"nong": 280
+},
+"dao_bo": {},
+"khop_be": [
+0.985,
+10282.9131
+],
+"khop_dau": [
+1.02,
+7157.6489
+],
+"nguon": "raw_mod_haoquang.png",
+"thu": 1.0,
+"tip": 0.556,
+"truc_o3": [
+316.5,
+307.3
+]
+},
+"hasao": {
+"DE_RIENG": 1.0102,
+"HEAD_K": 0.5723,
+"PHU_K": 0.4124,
+"co": {
+"de": 177,
+"nong": 172
+},
+"dao_bo": {},
+"khop_be": [
+1.01,
+6108.1016
+],
+"khop_dau": [
+0.875,
+5274.4351
+],
+"nguon": "raw_mod_hasao.png",
+"thu": 1.0,
+"tip": 0.324,
+"truc_o3": [
+314.6,
+306.3
+]
+},
+"hopbi": {
+"DE_RIENG": 1.013,
+"HEAD_K": 0.6382,
+"PHU_K": 0.4955,
+"co": {
+"de": 177,
+"nong": 191
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+3416.7134
+],
+"khop_dau": [
+0.88,
+1731.8646
+],
+"nguon": "raw_mod_hopbi.png",
+"thu": 1.0,
+"tip": 0.879,
+"truc_o3": [
+313.5,
+326.2
+]
+},
+"hopca": {
+"DE_RIENG": 1.0115,
+"HEAD_K": 0.7444,
+"PHU_K": 0.5075,
+"co": {
+"de": 177,
+"nong": 223
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+8869.1172
+],
+"khop_dau": [
+0.885,
+4938.5044
+],
+"nguon": "raw_mod_hopca.png",
+"thu": 1.0,
+"tip": 0.987,
+"truc_o3": [
+313.5,
+373.6
+]
+},
+"hutmana": {
+"DE_RIENG": 1.0126,
+"HEAD_K": 0.4703,
+"PHU_K": 0.4485,
+"co": {
+"de": 177,
+"nong": 141
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+888.6174
+],
+"khop_dau": [
+0.765,
+4599.7559
+],
+"nguon": "raw_mod_hutmana.png",
+"thu": 1.0,
+"tip": 0.971,
+"truc_o3": [
+314.8,
+306.3
+]
+},
+"hydra": {
+"DE_RIENG": 1.0112,
+"HEAD_K": 0.9514,
+"PHU_K": 0.6154,
+"co": {
+"de": 177,
+"nong": 285
+},
+"dao_bo": {},
+"khop_be": [
+0.83,
+8379.9795
+],
+"khop_dau": [
+0.89,
+6641.5513
+],
+"nguon": "raw_mod_hydra.png",
+"thu": 1.0,
+"tip": 0.988,
+"truc_o3": [
+315.4,
+402.0
+]
+},
+"kepha": {
+"DE_RIENG": 1.0119,
+"HEAD_K": 0.6751,
+"PHU_K": 0.3074,
+"co": {
+"de": 177,
+"nong": 203
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+5343.9717
+],
+"khop_dau": [
+0.82,
+6048.3745
+],
+"nguon": "raw_mod_kepha.png",
+"thu": 1.0,
+"tip": 0.67,
+"truc_o3": [
+274.0,
+311.4
+]
+},
+"khien": {
+"DE_RIENG": 1.0116,
+"HEAD_K": 0.5093,
+"PHU_K": 0.2427,
+"co": {
+"de": 177,
+"nong": 153
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+1446.4727
+],
+"khop_dau": [
+0.81,
+3537.4905
+],
+"nguon": "raw_mod_khien.png",
+"thu": 1.0,
+"tip": 0.832,
+"truc_o3": [
+314.3,
+285.6
+]
+},
+"khoathoigian": {
+"DE_RIENG": 1.012,
+"HEAD_K": 0.725,
+"PHU_K": 0.4077,
+"co": {
+"de": 177,
+"nong": 218
+},
+"dao_bo": {},
+"khop_be": [
+1.005,
+4491.1016
+],
+"khop_dau": [
+0.89,
+3334.553
+],
+"nguon": "raw_mod_khoathoigian.png",
+"thu": 1.0,
+"tip": 0.983,
+"truc_o3": [
+313.8,
+339.9
+]
+},
+"khoisinh": {
+"DE_RIENG": 1.0104,
+"HEAD_K": 0.6319,
+"PHU_K": 0.3667,
+"co": {
+"de": 177,
+"nong": 190
+},
+"dao_bo": {},
+"khop_be": [
+1.015,
+9236.6777
+],
+"khop_dau": [
+0.855,
+6092.7397
+],
+"nguon": "raw_mod_khoisinh.png",
+"thu": 1.0,
+"tip": 0.758,
+"truc_o3": [
+313.4,
+334.9
+]
+},
+"khuech": {
+"DE_RIENG": 1.0128,
+"HEAD_K": 0.802,
+"PHU_K": 0.3619,
+"co": {
+"de": 177,
+"nong": 241
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+4259.7124
+],
+"khop_dau": [
+0.91,
+1195.5223
+],
+"nguon": "raw_mod_khuech.png",
+"thu": 1.0,
+"tip": 0.986,
+"truc_o3": [
+313.3,
+368.2
+]
+},
+"kiembang": {
+"DE_RIENG": 0.8372,
+"HEAD_K": 0.9778,
+"PHU_K": 0.2777,
+"co": {
+"de": 146,
+"nong": 293
+},
+"dao_bo": {},
+"khop_be": [
+0.96,
+3126.3364
+],
+"khop_dau": [
+0.94,
+1892.7186
+],
+"nguon": "raw_mod_kiembang.png",
+"thu": 0.826,
+"tip": 0.987,
+"truc_o3": [
+315.9,
+458.2
+]
+},
+"lanhgia": {
+"DE_RIENG": 1.0136,
+"HEAD_K": 0.801,
+"PHU_K": 0.5282,
+"co": {
+"de": 177,
+"nong": 240
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+8658.3818
+],
+"khop_dau": [
+0.915,
+5482.5117
+],
+"nguon": "raw_mod_lanhgia.png",
+"thu": 1.0,
+"tip": 0.884,
+"truc_o3": [
+313.1,
+338.7
+]
+},
+"laser": {
+"DE_RIENG": 1.0127,
+"HEAD_K": 0.8076,
+"PHU_K": 0.2931,
+"co": {
+"de": 177,
+"nong": 242
+},
+"dao_bo": {
+"o1": [
+9
+]
+},
+"khop_be": [
+0.91,
+7428.4312
+],
+"khop_dau": [
+0.895,
+3227.3601
+],
+"nguon": "raw_mod_laser.png",
+"thu": 1.0,
+"tip": 0.982,
+"truc_o3": [
+309.6,
+369.2
+]
+},
+"leviathan": {
+"DE_RIENG": 1.0115,
+"HEAD_K": 0.7915,
+"PHU_K": 0.4561,
+"co": {
+"de": 177,
+"nong": 237
+},
+"dao_bo": {},
+"khop_be": [
+0.99,
+9286.1758
+],
+"khop_dau": [
+0.875,
+3794.6428
+],
+"nguon": "raw_mod_leviathan.png",
+"thu": 1.0,
+"tip": 0.949,
+"truc_o3": [
+315.8,
+353.1
+]
+},
+"lien": {
+"DE_RIENG": 1.015,
+"HEAD_K": 0.9549,
+"PHU_K": null,
+"co": {
+"de": 178,
+"nong": 286
+},
+"dao_bo": {},
+"khop_be": [
+0.99,
+2586.0339
+],
+"khop_dau": [
+0.845,
+2589.2637
+],
+"nguon": "raw_mod_lien.png",
+"thu": 1.0,
+"tip": 0.981,
+"truc_o3": [
+312.8,
+408.6
+]
+},
+"lienket": {
+"DE_RIENG": 1.0109,
+"HEAD_K": 0.7093,
+"PHU_K": 0.3767,
+"co": {
+"de": 177,
+"nong": 213
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+5163.4453
+],
+"khop_dau": [
+1.0,
+484.5953
+],
+"nguon": "raw_mod_lienket.png",
+"thu": 1.0,
+"tip": 0.982,
+"truc_o3": [
+313.5,
+314.0
+]
+},
+"loa": {
+"DE_RIENG": 1.0141,
+"HEAD_K": 0.9295,
+"PHU_K": 0.4521,
+"co": {
+"de": 177,
+"nong": 279
+},
+"dao_bo": {},
+"khop_be": [
+1.005,
+7223.7256
+],
+"khop_dau": [
+0.91,
+1836.9359
+],
+"nguon": "raw_mod_loa_v2.png",
+"thu": 1.0,
+"tip": 0.987,
+"truc_o3": [
+314.3,
+371.2
+]
+},
+"lophanung": {
+"DE_RIENG": 1.0112,
+"HEAD_K": 0.9191,
+"PHU_K": 0.424,
+"co": {
+"de": 177,
+"nong": 276
+},
+"dao_bo": {},
+"khop_be": [
+0.96,
+10419.7129
+],
+"khop_dau": [
+0.93,
+5532.3223
+],
+"nguon": "raw_mod_lophanung.png",
+"thu": 1.0,
+"tip": 0.986,
+"truc_o3": [
+319.4,
+410.5
+]
+},
+"loren": {
+"DE_RIENG": 1.0144,
+"HEAD_K": 0.9402,
+"PHU_K": 0.4295,
+"co": {
+"de": 177,
+"nong": 282
+},
+"dao_bo": {},
+"khop_be": [
+1.045,
+7275.3481
+],
+"khop_dau": [
+0.745,
+6677.7065
+],
+"nguon": "raw_mod_loren.png",
+"thu": 1.0,
+"tip": 0.98,
+"truc_o3": [
+321.9,
+418.3
+]
+},
+"lualien": {
+"DE_RIENG": 1.0123,
+"HEAD_K": 0.7167,
+"PHU_K": 0.4853,
+"co": {
+"de": 177,
+"nong": 215
+},
+"dao_bo": {},
+"khop_be": [
+1.005,
+5303.4404
+],
+"khop_dau": [
+0.91,
+2566.0745
+],
+"nguon": "raw_mod_lualien.png",
+"thu": 1.0,
+"tip": 0.985,
+"truc_o3": [
+314.3,
+339.1
+]
+},
+"luoicheo": {
+"DE_RIENG": 1.0125,
+"HEAD_K": 0.8642,
+"PHU_K": 0.3889,
+"co": {
+"de": 177,
+"nong": 259
+},
+"dao_bo": {},
+"khop_be": [
+0.995,
+6565.5576
+],
+"khop_dau": [
+0.94,
+3663.6438
+],
+"nguon": "raw_mod_luoicheo.png",
+"thu": 1.0,
+"tip": 0.577,
+"truc_o3": [
+313.4,
+306.5
+]
+},
+"luutru": {
+"DE_RIENG": 1.0117,
+"HEAD_K": 0.7086,
+"PHU_K": 0.384,
+"co": {
+"de": 177,
+"nong": 213
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+7120.7661
+],
+"khop_dau": [
+0.875,
+4882.6934
+],
+"nguon": "raw_mod_luutru.png",
+"thu": 1.0,
+"tip": 0.97,
+"truc_o3": [
+314.9,
+380.7
+]
+},
+"mana": {
+"DE_RIENG": 1.0139,
+"HEAD_K": 0.972,
+"PHU_K": 0.3638,
+"co": {
+"de": 177,
+"nong": 292
+},
+"dao_bo": {},
+"khop_be": [
+0.995,
+3025.3555
+],
+"khop_dau": [
+1.0,
+2578.0974
+],
+"nguon": "raw_mod_mana_v2.png",
+"thu": 1.0,
+"tip": 0.259,
+"truc_o3": [
+315.0,
+290.4
+]
+},
+"marionette": {
+"DE_RIENG": 1.0119,
+"HEAD_K": 0.758,
+"PHU_K": 0.3548,
+"co": {
+"de": 177,
+"nong": 227
+},
+"dao_bo": {},
+"khop_be": [
+0.995,
+5296.6812
+],
+"khop_dau": [
+0.83,
+4451.2314
+],
+"nguon": "raw_mod_marionette.png",
+"thu": 1.0,
+"tip": 0.988,
+"truc_o3": [
+313.2,
+369.4
+]
+},
+"mauhut": {
+"DE_RIENG": 1.0112,
+"HEAD_K": 0.6957,
+"PHU_K": 0.5263,
+"co": {
+"de": 177,
+"nong": 209
+},
+"dao_bo": {},
+"khop_be": [
+1.005,
+6169.4995
+],
+"khop_dau": [
+0.975,
+6499.2119
+],
+"nguon": "raw_mod_mauhut.png",
+"thu": 1.0,
+"tip": 0.985,
+"truc_o3": [
+313.1,
+306.1
+]
+},
+"maychem": {
+"DE_RIENG": 0.9311,
+"HEAD_K": 0.9782,
+"PHU_K": 0.4354,
+"co": {
+"de": 163,
+"nong": 293
+},
+"dao_bo": {},
+"khop_be": [
+0.97,
+4218.6411
+],
+"khop_dau": [
+0.955,
+3798.4924
+],
+"nguon": "raw_mod_maychem.png",
+"thu": 0.919,
+"tip": 0.809,
+"truc_o3": [
+315.2,
+404.2
+]
+},
+"mimic": {
+"DE_RIENG": 0.8289,
+"HEAD_K": 0.9784,
+"PHU_K": 0.5099,
+"co": {
+"de": 145,
+"nong": 294
+},
+"dao_bo": {},
+"khop_be": [
+0.865,
+8116.2798
+],
+"khop_dau": [
+0.9,
+1491.826
+],
+"nguon": "raw_mod_mimic.png",
+"thu": 0.817,
+"tip": 0.852,
+"truc_o3": [
+274.7,
+403.6
+]
+},
+"min": {
+"DE_RIENG": 1.0141,
+"HEAD_K": 0.8404,
+"PHU_K": 0.3547,
+"co": {
+"de": 177,
+"nong": 252
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+3530.8303
+],
+"khop_dau": [
+0.855,
+2365.5793
+],
+"nguon": "raw_mod_min.png",
+"thu": 1.0,
+"tip": 0.943,
+"truc_o3": [
+313.2,
+374.9
+]
+},
+"mortar": {
+"DE_RIENG": 1.0128,
+"HEAD_K": 0.8258,
+"PHU_K": 0.3713,
+"co": {
+"de": 177,
+"nong": 248
+},
+"dao_bo": {},
+"khop_be": [
+0.995,
+9995.8672
+],
+"khop_dau": [
+0.9,
+2314.4175
+],
+"nguon": "raw_mod_mortar.png",
+"thu": 1.0,
+"tip": 0.984,
+"truc_o3": [
+313.0,
+416.2
+]
+},
+"nam": {
+"DE_RIENG": 1.0117,
+"HEAD_K": 0.5416,
+"PHU_K": 0.381,
+"co": {
+"de": 177,
+"nong": 162
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+2520.5198
+],
+"khop_dau": [
+0.82,
+2615.822
+],
+"nguon": "raw_mod_nam.png",
+"thu": 1.0,
+"tip": 0.921,
+"truc_o3": [
+314.4,
+346.2
+]
+},
+"nangluong": {
+"DE_RIENG": 1.0121,
+"HEAD_K": 0.7287,
+"PHU_K": 0.3972,
+"co": {
+"de": 177,
+"nong": 219
+},
+"dao_bo": {},
+"khop_be": [
+0.995,
+3017.822
+],
+"khop_dau": [
+1.0,
+1572.7566
+],
+"nguon": "raw_mod_nangluong.png",
+"thu": 1.0,
+"tip": 0.984,
+"truc_o3": [
+313.8,
+313.0
+]
+},
+"nangsao": {
+"DE_RIENG": 0.7928,
+"HEAD_K": 0.9754,
+"PHU_K": 0.3585,
+"co": {
+"de": 139,
+"nong": 293
+},
+"dao_bo": {},
+"khop_be": [
+0.995,
+6637.1343
+],
+"khop_dau": [
+0.735,
+7744.3574
+],
+"nguon": "raw_mod_nangsao.png",
+"thu": 0.782,
+"tip": 0.993,
+"truc_o3": [
+301.6,
+635.9
+]
+},
+"nayda": {
+"DE_RIENG": 0.9481,
+"HEAD_K": 0.9774,
+"PHU_K": 0.4118,
+"co": {
+"de": 166,
+"nong": 293
+},
+"dao_bo": {},
+"khop_be": [
+0.995,
+4313.6484
+],
+"khop_dau": [
+0.93,
+2272.4636
+],
+"nguon": "raw_mod_nayda.png",
+"thu": 0.937,
+"tip": 0.987,
+"truc_o3": [
+313.2,
+446.7
+]
+},
+"nemesis": {
+"DE_RIENG": 1.0113,
+"HEAD_K": 0.7929,
+"PHU_K": 0.5527,
+"co": {
+"de": 177,
+"nong": 238
+},
+"dao_bo": {},
+"khop_be": [
+1.005,
+10297.7646
+],
+"khop_dau": [
+0.99,
+3128.5552
+],
+"nguon": "raw_mod_nemesis.png",
+"thu": 1.0,
+"tip": 0.984,
+"truc_o3": [
+313.9,
+348.3
+]
+},
+"ngaithoigian": {
+"DE_RIENG": 0.7786,
+"HEAD_K": 0.9763,
+"PHU_K": 0.4175,
+"co": {
+"de": 136,
+"nong": 293
+},
+"dao_bo": {},
+"khop_be": [
+0.9,
+9754.8721
+],
+"khop_dau": [
+0.86,
+5993.1509
+],
+"nguon": "raw_mod_ngaithoigian.png",
+"thu": 0.769,
+"tip": 0.989,
+"truc_o3": [
+282.8,
+492.5
+]
+},
+"ngoisao": {
+"DE_RIENG": 1.0122,
+"HEAD_K": 0.6746,
+"PHU_K": 0.3299,
+"co": {
+"de": 177,
+"nong": 202
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+6083.9043
+],
+"khop_dau": [
+1.0,
+4127.4946
+],
+"nguon": "raw_mod_ngoisao.png",
+"thu": 1.0,
+"tip": 0.983,
+"truc_o3": [
+324.0,
+329.5
+]
+},
+"nguyenrua": {
+"DE_RIENG": 1.0117,
+"HEAD_K": 0.7238,
+"PHU_K": 0.336,
+"co": {
+"de": 177,
+"nong": 217
+},
+"dao_bo": {},
+"khop_be": [
+0.995,
+5214.0728
+],
+"khop_dau": [
+0.86,
+1377.098
+],
+"nguon": "raw_mod_nguyenrua.png",
+"thu": 1.0,
+"tip": 0.941,
+"truc_o3": [
+314.4,
+341.3
+]
+},
+"nhanban": {
+"DE_RIENG": 1.0132,
+"HEAD_K": 0.8786,
+"PHU_K": 0.464,
+"co": {
+"de": 177,
+"nong": 264
+},
+"dao_bo": {},
+"khop_be": [
+1.01,
+7569.6831
+],
+"khop_dau": [
+0.895,
+6235.813
+],
+"nguon": "raw_mod_nhanban.png",
+"thu": 1.0,
+"tip": 0.988,
+"truc_o3": [
+314.0,
+401.8
+]
+},
+"nhanmana": {
+"DE_RIENG": 1.0118,
+"HEAD_K": 0.5305,
+"PHU_K": 0.2632,
+"co": {
+"de": 177,
+"nong": 159
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+821.6963
+],
+"khop_dau": [
+0.82,
+1456.6056
+],
+"nguon": "raw_mod_nhanmana.png",
+"thu": 1.0,
+"tip": 0.277,
+"truc_o3": [
+314.5,
+290.8
+]
+},
+"nhatthuc": {
+"DE_RIENG": 1.012,
+"HEAD_K": 0.8714,
+"PHU_K": 0.4221,
+"co": {
+"de": 177,
+"nong": 261
+},
+"dao_bo": {},
+"khop_be": [
+0.895,
+7851.2007
+],
+"khop_dau": [
+0.855,
+5320.501
+],
+"nguon": "raw_mod_nhatthuc.png",
+"thu": 1.0,
+"tip": 0.988,
+"truc_o3": [
+312.8,
+364.7
+]
+},
+"nhieusong": {
+"DE_RIENG": 0.9611,
+"HEAD_K": 0.9779,
+"PHU_K": 0.4858,
+"co": {
+"de": 168,
+"nong": 293
+},
+"dao_bo": {},
+"khop_be": [
+0.89,
+4453.8584
+],
+"khop_dau": [
+0.855,
+3456.7612
+],
+"nguon": "raw_mod_nhieusong.png",
+"thu": 0.949,
+"tip": 0.989,
+"truc_o3": [
+314.2,
+431.4
+]
+},
+"no5": {
+"DE_RIENG": 1.0117,
+"HEAD_K": 0.7961,
+"PHU_K": 0.6495,
+"co": {
+"de": 177,
+"nong": 239
+},
+"dao_bo": {
+"o4": [
+3,
+4,
+1,
+5,
+2
+]
+},
+"khop_be": [
+0.99,
+5322.9551
+],
+"khop_dau": [
+0.97,
+1990.2666
+],
+"nguon": "raw_mod_no5.png",
+"thu": 1.0,
+"tip": 0.802,
+"truc_o3": [
+315.0,
+279.9
+]
+},
+"orbital": {
+"DE_RIENG": 1.0126,
+"HEAD_K": 0.4803,
+"PHU_K": 0.4218,
+"co": {
+"de": 177,
+"nong": 144
+},
+"dao_bo": {},
+"khop_be": [
+0.975,
+5164.4551
+],
+"khop_dau": [
+0.64,
+2669.9922
+],
+"nguon": "raw_mod_orbital.png",
+"thu": 1.0,
+"tip": 0.98,
+"truc_o3": [
+312.3,
+307.4
+]
+},
+"overlord": {
+"DE_RIENG": 1.0114,
+"HEAD_K": 0.9126,
+"PHU_K": 0.427,
+"co": {
+"de": 177,
+"nong": 274
+},
+"dao_bo": {},
+"khop_be": [
+0.995,
+4986.8999
+],
+"khop_dau": [
+0.99,
+2888.1108
+],
+"nguon": "raw_mod_overlord.png",
+"thu": 1.0,
+"tip": 0.434,
+"truc_o3": [
+315.5,
+335.0
+]
+},
+"pandora": {
+"DE_RIENG": 0.9166,
+"HEAD_K": 0.9781,
+"PHU_K": 0.4599,
+"co": {
+"de": 160,
+"nong": 293
+},
+"dao_bo": {},
+"khop_be": [
+0.855,
+8291.1123
+],
+"khop_dau": [
+0.85,
+5749.2168
+],
+"nguon": "raw_mod_pandora.png",
+"thu": 0.905,
+"tip": 0.92,
+"truc_o3": [
+341.8,
+417.4
+]
+},
+"phagiap": {
+"DE_RIENG": 1.0132,
+"HEAD_K": 0.8801,
+"PHU_K": 0.6012,
+"co": {
+"de": 177,
+"nong": 264
+},
+"dao_bo": {},
+"khop_be": [
+0.92,
+7626.1499
+],
+"khop_dau": [
+0.825,
+4125.4214
+],
+"nguon": "raw_mod_phagiap.png",
+"thu": 1.0,
+"tip": 0.975,
+"truc_o3": [
+326.5,
+424.7
+]
+},
+"phun": {
+"DE_RIENG": 0.7135,
+"HEAD_K": 0.9783,
+"PHU_K": 0.5266,
+"co": {
+"de": 125,
+"nong": 293
+},
+"dao_bo": {},
+"khop_be": [
+0.87,
+10524.0557
+],
+"khop_dau": [
+0.995,
+4164.4214
+],
+"nguon": "raw_mod_phun.png",
+"thu": 0.703,
+"tip": 0.989,
+"truc_o3": [
+320.3,
+408.3
+]
+},
+"radar": {
+"DE_RIENG": 1.014,
+"HEAD_K": 0.6206,
+"PHU_K": 0.3987,
+"co": {
+"de": 177,
+"nong": 186
+},
+"dao_bo": {},
+"khop_be": [
+0.98,
+6873.8037
+],
+"khop_dau": [
+0.595,
+9163.4805
+],
+"nguon": "raw_mod_radar.png",
+"thu": 1.0,
+"tip": 0.754,
+"truc_o3": [
+314.0,
+283.0
+]
+},
+"railgun": {
+"DE_RIENG": 1.0112,
+"HEAD_K": 0.8346,
+"PHU_K": 0.3876,
+"co": {
+"de": 177,
+"nong": 250
+},
+"dao_bo": {},
+"khop_be": [
+0.99,
+6276.3726
+],
+"khop_dau": [
+0.91,
+2880.8362
+],
+"nguon": "raw_mod_railgun.png",
+"thu": 1.0,
+"tip": 0.983,
+"truc_o3": [
+313.8,
+377.1
+]
+},
+"ronglua": {
+"DE_RIENG": 0.897,
+"HEAD_K": 0.9778,
+"PHU_K": 0.5932,
+"co": {
+"de": 157,
+"nong": 293
+},
+"dao_bo": {},
+"khop_be": [
+0.86,
+5920.751
+],
+"khop_dau": [
+0.87,
+7996.6899
+],
+"nguon": "raw_mod_ronglua.png",
+"thu": 0.886,
+"tip": 0.989,
+"truc_o3": [
+314.5,
+416.5
+]
+},
+"santhuong": {
+"DE_RIENG": 1.0125,
+"HEAD_K": 0.6166,
+"PHU_K": 0.428,
+"co": {
+"de": 177,
+"nong": 185
+},
+"dao_bo": {},
+"khop_be": [
+0.995,
+3983.1289
+],
+"khop_dau": [
+0.845,
+4521.2354
+],
+"nguon": "raw_mod_santhuong.png",
+"thu": 1.0,
+"tip": 0.98,
+"truc_o3": [
+314.0,
+349.2
+]
+},
+"saochep": {
+"DE_RIENG": 1.0135,
+"HEAD_K": 0.9259,
+"PHU_K": 0.5033,
+"co": {
+"de": 177,
+"nong": 278
+},
+"dao_bo": {},
+"khop_be": [
+1.005,
+5272.022
+],
+"khop_dau": [
+0.98,
+2678.4663
+],
+"nguon": "raw_mod_saochep_v2.png",
+"thu": 1.0,
+"tip": 0.974,
+"truc_o3": [
+312.9,
+340.0
+]
+},
+"set": {
+"DE_RIENG": 1.013,
+"HEAD_K": 0.8853,
+"PHU_K": 0.4144,
+"co": {
+"de": 177,
+"nong": 266
+},
+"dao_bo": {},
+"khop_be": [
+0.83,
+12944.3975
+],
+"khop_dau": [
+0.875,
+4420.9282
+],
+"nguon": "raw_mod_set.png",
+"thu": 1.0,
+"tip": 0.548,
+"truc_o3": [
+314.0,
+382.0
+]
+},
+"sinhdoi": {
+"DE_RIENG": 1.0108,
+"HEAD_K": 0.4288,
+"PHU_K": 0.2798,
+"co": {
+"de": 177,
+"nong": 129
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+2053.8743
+],
+"khop_dau": [
+0.825,
+5429.7144
+],
+"nguon": "raw_mod_sinhdoi.png",
+"thu": 1.0,
+"tip": 0.957,
+"truc_o3": [
+312.8,
+306.2
+]
+},
+"soi": {
+"DE_RIENG": 1.0108,
+"HEAD_K": 0.8051,
+"PHU_K": 0.3822,
+"co": {
+"de": 177,
+"nong": 242
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+4131.1445
+],
+"khop_dau": [
+0.765,
+2141.0332
+],
+"nguon": "raw_mod_soi.png",
+"thu": 1.0,
+"tip": 0.804,
+"truc_o3": [
+312.6,
+446.8
+]
+},
+"sungluc": {
+"DE_RIENG": 0.884,
+"HEAD_K": 0.9786,
+"PHU_K": 0.4249,
+"co": {
+"de": 155,
+"nong": 294
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+4163.772
+],
+"khop_dau": [
+0.985,
+867.6401
+],
+"nguon": "raw_mod_sungluc.png",
+"thu": 0.871,
+"tip": 0.988,
+"truc_o3": [
+314.6,
+383.0
+]
+},
+"taylo": {
+"DE_RIENG": 1.0125,
+"HEAD_K": 0.5975,
+"PHU_K": 0.497,
+"co": {
+"de": 177,
+"nong": 179
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+3270.0527
+],
+"khop_dau": [
+0.84,
+2696.7112
+],
+"nguon": "raw_mod_taylo.png",
+"thu": 1.0,
+"tip": 0.799,
+"truc_o3": [
+315.9,
+307.9
+]
+},
+"thanhdia": {
+"DE_RIENG": 1.0127,
+"HEAD_K": 0.6638,
+"PHU_K": 0.4956,
+"co": {
+"de": 177,
+"nong": 199
+},
+"dao_bo": {},
+"khop_be": [
+0.88,
+12363.4512
+],
+"khop_dau": [
+0.595,
+14624.3428
+],
+"nguon": "raw_mod_thanhdia.png",
+"thu": 1.0,
+"tip": 0.948,
+"truc_o3": [
+384.0,
+262.0
+]
+},
+"thaukinh": {
+"DE_RIENG": 1.012,
+"HEAD_K": 0.6545,
+"PHU_K": 0.3943,
+"co": {
+"de": 177,
+"nong": 196
+},
+"dao_bo": {},
+"khop_be": [
+0.995,
+5584.3276
+],
+"khop_dau": [
+0.935,
+2873.2573
+],
+"nguon": "raw_mod_thaukinh.png",
+"thu": 1.0,
+"tip": 0.872,
+"truc_o3": [
+313.0,
+312.9
+]
+},
+"tia": {
+"DE_RIENG": 0.6837,
+"HEAD_K": 0.9776,
+"PHU_K": 0.223,
+"co": {
+"de": 120,
+"nong": 293
+},
+"dao_bo": {},
+"khop_be": [
+0.96,
+5574.7861
+],
+"khop_dau": [
+0.895,
+648.3572
+],
+"nguon": "raw_mod_tia.png",
+"thu": 0.672,
+"tip": 0.99,
+"truc_o3": [
+315.7,
+412.1
+]
+},
+"tienhoa": {
+"DE_RIENG": 1.0114,
+"HEAD_K": 0.8638,
+"PHU_K": 0.337,
+"co": {
+"de": 177,
+"nong": 259
+},
+"dao_bo": {},
+"khop_be": [
+0.995,
+5296.1743
+],
+"khop_dau": [
+0.85,
+1742.1147
+],
+"nguon": "raw_mod_tienhoa_v2.png",
+"thu": 1.0,
+"tip": 0.947,
+"truc_o3": [
+317.0,
+379.5
+]
+},
+"tron": {
+"DE_RIENG": 1.0119,
+"HEAD_K": 0.4607,
+"PHU_K": 0.2021,
+"co": {
+"de": 177,
+"nong": 138
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+96.4728
+],
+"khop_dau": [
+0.8,
+523.6642
+],
+"nguon": "raw_mod_tron.png",
+"thu": 1.0,
+"tip": 0.966,
+"truc_o3": [
+313.0,
+323.0
+]
+},
+"tuthan": {
+"DE_RIENG": 1.0122,
+"HEAD_K": 0.7707,
+"PHU_K": 0.5285,
+"co": {
+"de": 177,
+"nong": 231
+},
+"dao_bo": {},
+"khop_be": [
+0.94,
+4585.958
+],
+"khop_dau": [
+0.785,
+4358.3545
+],
+"nguon": "raw_mod_tuthan.png",
+"thu": 1.0,
+"tip": 0.988,
+"truc_o3": [
+332.1,
+387.9
+]
+},
+"vughep": {
+"DE_RIENG": 0.9646,
+"HEAD_K": 0.9789,
+"PHU_K": 0.4714,
+"co": {
+"de": 169,
+"nong": 294
+},
+"dao_bo": {},
+"khop_be": [
+0.94,
+6121.0063
+],
+"khop_dau": [
+0.99,
+3555.7585
+],
+"nguon": "raw_mod_vughep_v2.png",
+"thu": 0.953,
+"tip": 0.891,
+"truc_o3": [
+323.3,
+348.0
+]
+},
+"vungdoc": {
+"DE_RIENG": 0.8503,
+"HEAD_K": 0.9777,
+"PHU_K": 0.362,
+"co": {
+"de": 149,
+"nong": 293
+},
+"dao_bo": {},
+"khop_be": [
+0.93,
+3385.4614
+],
+"khop_dau": [
+0.895,
+1723.4919
+],
+"nguon": "raw_mod_vungdoc.png",
+"thu": 0.839,
+"tip": 0.99,
+"truc_o3": [
+317.2,
+422.1
+]
+},
+"wallgen": {
+"DE_RIENG": 1.0104,
+"HEAD_K": 0.6723,
+"PHU_K": 0.2731,
+"co": {
+"de": 177,
+"nong": 202
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+2278.3147
+],
+"khop_dau": [
+0.965,
+1891.6132
+],
+"nguon": "raw_mod_wallgen.png",
+"thu": 1.0,
+"tip": 0.303,
+"truc_o3": [
+315.1,
+281.0
+]
+},
+"xaotron": {
+"DE_RIENG": 1.0112,
+"HEAD_K": 0.7851,
+"PHU_K": 0.2858,
+"co": {
+"de": 177,
+"nong": 236
+},
+"dao_bo": {},
+"khop_be": [
+1.005,
+7032.1626
+],
+"khop_dau": [
+0.915,
+1934.493
+],
+"nguon": "raw_mod_xaotron.png",
+"thu": 1.0,
+"tip": 0.761,
+"truc_o3": [
+306.5,
+367.6
+]
+},
+"xucxac": {
+"DE_RIENG": 0.976,
+"HEAD_K": 0.9795,
+"PHU_K": 0.3351,
+"co": {
+"de": 171,
+"nong": 294
+},
+"dao_bo": {},
+"khop_be": [
+1.045,
+7513.1753
+],
+"khop_dau": [
+0.895,
+2842.0676
+],
+"nguon": "raw_mod_xucxac.png",
+"thu": 0.96,
+"tip": 0.984,
+"truc_o3": [
+315.9,
+390.2
+]
+},
+"xuonganh": {
+"DE_RIENG": 1.0113,
+"HEAD_K": 0.4804,
+"PHU_K": 0.4029,
+"co": {
+"de": 177,
+"nong": 144
+},
+"dao_bo": {},
+"khop_be": [
+0.925,
+9230.0811
+],
+"khop_dau": [
+0.73,
+3553.8945
+],
+"nguon": "raw_mod_xuonganh.png",
+"thu": 1.0,
+"tip": 0.983,
+"truc_o3": [
+312.6,
+338.5
+]
+}
+}
