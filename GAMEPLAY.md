@@ -3196,3 +3196,4 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - Bài kiểm cập nhật theo luật mới: Lửa Thập Tự cả hàng + cột, tối đa 8 lửa (`thap-kt-vang-moi.js`); kiểm online bỏ trường mũi tên+số của Pháo La Bàn khi so cờ đá/bản sao (`thap-kt-conghuong2.js`, `thap-kt-copycat-da.js`).
 - Luật hình (`thap/QUY-TAC-HINH.md` mục 2): gen ảnh xong là đóng tab Chrome ngay.
 - Ảnh mới tải lên `thap-art/`: `raw_mod_*` (7 ụ mẫu kiểu module, nhánh claude/kiem-nhan-dien đo nhận diện).
+- (07/11 11:00) Sửa méo tam giác cảnh báo ở 2 đầu băng trùm (`bang_trum_nen`): border-image cắt 40/70 và tỉ lệ đều ngang–dọc ở băng báo trùm trong trận (tvb.css, anhgen.css) và băng "BOSSES THIS MATCH" đầu trận (vaotran.css). Ảnh kiểm 390×844 + 844×390.

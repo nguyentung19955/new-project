@@ -88,7 +88,7 @@ html body #wrap.co-tvb #tt.hb-qi.hb-rong { overflow-x: hidden; } /* nút ✕ lù
 /* ================= B12 · CẢNH BÁO TRÙM GỌN ≤ 96 px@390 (98 logic): chân dung 56 · tên 18 · mối đe doạ 13 · đếm 16 ================= */
 html body #wrap.co-tvb #canh-bao.tvb-cb { left: 8px; right: 8px; min-height: 0; box-sizing: border-box; padding: 14px 64px 14px 52px; z-index: 28; /* đệm 14 trên/dưới: chữ không đè viền 16 px của bang_trum_nen (≈ 86 px, vẫn ≤ 96) */
   display: grid; grid-template-columns: 62px minmax(0, 1fr) auto; grid-template-rows: auto auto auto; column-gap: 10px; align-content: center; align-items: center; justify-items: start; text-align: left;
-  border-image: url(../assets/bang_trum_nen.png) 40 110 fill / 16px 46px stretch; }
+  border-image: url(../assets/bang_trum_nen.png) 40 70 fill / 25px 43px stretch; } /* tỉ lệ đều ≈ 0,61 cả ngang lẫn dọc (cao ≈ 86 px / ảnh 140 px): trước 16 px dọc · 46 px ngang → tam giác cảnh báo ở hai đầu bị kéo dài gấp đôi */
 html body #wrap.co-tvb #canh-bao.tvb-cb > img { display: none; }
 html body #wrap.co-tvb #canh-bao.tvb-cb .cb-sp { display: block; grid-column: 1; grid-row: 1 / 4; width: 62px; height: 62px; margin: 0; }
 html body #wrap.co-tvb #canh-bao.tvb-cb.cb-bao .cb-sp { animation: cb-8n2 .9s steps(8) infinite; }
