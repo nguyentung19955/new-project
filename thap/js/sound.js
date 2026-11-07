@@ -10,6 +10,9 @@
 // v3 (11/2026): NHẠC chuyển sang nhac.js (darksynth thích ứng: menu / trận theo cường độ / trùm + stinger); SFX lớn (ghép, lên sao,
 //   triệu hồi, chỉ huy, wave, trùm) thêm "va chạm điện ảnh" (sub bão hoà) + riser + hợp âm supersaw anh hùng + vang (convolver);
 //   âm lượng NHẠC / SFX riêng (thanh trượt trong bảng TẠM DỪNG + ?sfxlab), lưu localStorage.
+// v4 (11/2026): MẪU ÂM anime / hào hùng (assets/sfx/*.mp3, 25 sự kiện) phát trước, synth cũ làm dự phòng khi mẫu chưa nạp;
+//   luật trộn: trần 24 giọng + 4 mức ưu tiên (cướp giọng p3), giới hạn tần suất/giọng từng sự kiện + cả nhóm bắn, né nhạc lấy mức
+//   sâu nhất (không cộng dồn), lệch cao độ ±1,5–5 %; bỏ giọng "WAVE", 1 BRAAM khi trùm ra; chuỗi tổng bỏ nhấn 2.8 kHz + limiter gắt/tanh.
 'use strict';
 const SND = (() => {
   const AC = window.AudioContext || window.webkitAudioContext;
@@ -31,15 +34,16 @@ const SND = (() => {
   function taoBus(c, day) {
     const B = { c };
     B.out = c.createGain(); B.out.gain.value = VOL.master; B.out.connect(c.destination);
+    // v4 (11/2026, tư vấn âm thanh): bỏ limiter gắt −9 dB 14:1 + soft-clip tanh → nén nhẹ 3,5:1 rồi limiter trần ≈ −1 dB
     B.lim = c.createDynamicsCompressor();
-    B.lim.threshold.value = -9; B.lim.knee.value = 4; B.lim.ratio.value = 14; B.lim.attack.value = 0.002; B.lim.release.value = 0.16;
-    // sau limiter: soft-clip tanh nhẹ (chặn đỉnh lọt qua attack của limiter)
-    B.clip = c.createWaveShaper(); { const n = 2048, cv = new Float32Array(n); for (let i = 0; i < n; i++) { const x = i / (n - 1) * 2 - 1; cv[i] = Math.tanh(x * 1.25) / Math.tanh(1.25); } B.clip.curve = cv; }
-    B.lim.connect(B.clip); B.clip.connect(B.out);
-    // EQ tổng (loa điện thoại): cắt sub < 80 Hz (loa không phát được, chỉ ăn headroom → đục), nhấn 2.8 kHz cho rõ
+    B.lim.threshold.value = -12; B.lim.knee.value = 6; B.lim.ratio.value = 3.5; B.lim.attack.value = 0.004; B.lim.release.value = 0.2;
+    B.tran = c.createDynamicsCompressor();
+    B.tran.threshold.value = -2; B.tran.knee.value = 0; B.tran.ratio.value = 20; B.tran.attack.value = 0.001; B.tran.release.value = 0.1;
+    B.bu = c.createGain(); B.bu.gain.value = 1.3; // bù +2,3 dB (chuỗi cũ nén mạnh làm to hơn) → nhạc / sự kiện lớn giữ độ to cũ; limiter chặn đỉnh
+    B.lim.connect(B.bu); B.bu.connect(B.tran); B.tran.connect(B.out);
+    // EQ tổng (loa điện thoại): cắt sub < 80 Hz (loa không phát được, chỉ ăn headroom → đục); bỏ nhấn +2.5 dB @2.8 kHz (dải 2–4 kHz đã chật)
     B.hp = c.createBiquadFilter(); B.hp.type = 'highpass'; B.hp.frequency.value = 80; B.hp.Q.value = 0.7;
-    B.pk = c.createBiquadFilter(); B.pk.type = 'peaking'; B.pk.frequency.value = 2800; B.pk.Q.value = 0.9; B.pk.gain.value = 2.5;
-    B.hp.connect(B.pk); B.pk.connect(B.lim);
+    B.hp.connect(B.lim);
     B.sfx = c.createGain(); B.sfx.gain.value = day ? VOL.sfx : batSfx ? gSfx() : 0; B.sfx.connect(B.hp);
     B.wpn = c.createGain(); B.wpn.connect(B.sfx); // bus vũ khí: bị né dưới tiếng lớn
     B.nhac = c.createGain(); B.nhac.gain.value = day ? VOL.nhac : batNhac ? gNhac() : 0;
@@ -75,7 +79,7 @@ const SND = (() => {
     nut: [35, 2], trieu: [70, 2], dat: [45, 3], ghep: [60, 3], nang: [80, 2], thucTinh: [400, 1],
     phao: [85, 3], lien: [52, 3], tia: [80, 3], rail: [140, 2], set: [85, 3], bang: [100, 3], doc: [110, 2], nap: [110, 2],
     no: [65, 4], mana: [180, 2], hoTro: [120, 1], sam: [300, 1], hoden: [500, 1], mv: [300, 1],
-    trung: [90, 2], crit: [85, 2], chet: [45, 3], chetTrum: [500, 1], canhBao: [1200, 1], bao: [400, 2], chieuTrum: [300, 2],
+    trung: [160, 2], crit: [85, 2], chet: [45, 3], chetTrum: [500, 1], canhBao: [1200, 1], bao: [400, 2], chieuTrum: [300, 2],
     lot: [250, 1], wave: [800, 1], ketThuc: [1500, 1], _: [40, 3],
     wDan: [42, 4], wTia: [75, 3], wPhao: [80, 3], wPhong: [95, 2], wLaser: [70, 3], wNl: [80, 3], wBang: [90, 3], wDoc: [100, 2], wSet: [80, 3], wCan: [70, 3], wTrieu: [110, 2],
   };
@@ -91,7 +95,7 @@ const SND = (() => {
       if (!batSfx || ac.state !== 'running') return null;
       const L = LIM[k] || LIM._, n = performance.now();
       if (lan[k] && n - lan[k] < L[0]) return null;
-      if ((dang[k] || 0) >= L[1] || TK.giong >= 40 || (TK.giong >= 26 && (pri || 1) < 2)) { TK.bo++; return null; }
+      if ((dang[k] || 0) >= L[1] || TK.giong >= TRAN || (TK.giong >= TRAN - 6 && (pri || 1) < 2)) { TK.bo++; return null; }
       lan[k] = n;
     }
     return moV(k, k.charCodeAt(0) === 119 && k.length > 1 && k[1] < 'a' ? bus.wpn : bus.sfx, true, 0.32); // 'wXxx' = vũ khí
@@ -183,8 +187,11 @@ const SND = (() => {
   // ring-mod: tín hiệu nhân với sóng sin tần số f (âm kim loại / robot)
   function ring(v, f, t0, t1) { const g = gn(v, 0), m = osc(v, 'sine', f, t0, t1); m.connect(g.gain); return g; }
   // né nhạc dưới tiếng lớn (sidechain kiểu ducking)
+  // luật trộn v4: nhiều lệnh né chồng nhau → lấy mức SÂU NHẤT đang hiệu lực, không cộng dồn / không giật lên rồi xuống ("bơm")
+  const DK = { sau: 0, het: 0 };
   function duck(sau, dai) {
     if (!bus) return;
+    if (!offline) { const n = performance.now(); if (n < DK.het && sau <= DK.sau) return; DK.sau = sau; DK.het = n + (0.025 + dai) * 1000; }
     const p = bus.duck.gain, t = bus.c.currentTime;
     if (p.cancelAndHoldAtTime) p.cancelAndHoldAtTime(t); else { p.cancelScheduledValues(t); p.setValueAtTime(p.value, t); }
     p.linearRampToValueAtTime(Math.max(0.12, 1 - sau), t + 0.025); p.linearRampToValueAtTime(1, t + 0.025 + dai);
@@ -193,6 +200,87 @@ const SND = (() => {
       if (w.cancelAndHoldAtTime) w.cancelAndHoldAtTime(t); else { w.cancelScheduledValues(t); w.setValueAtTime(w.value, t); }
       w.linearRampToValueAtTime(Math.max(0.35, 1 - sau * 0.6), t + 0.02); w.linearRampToValueAtTime(1, t + 0.02 + dai * 0.8);
     }
+  }
+
+  // =====================================================================================================
+  //  MẪU ÂM v4 (11/2026): bộ SFX anime / hào hùng (file MP3 mono 96 kbps ở assets/sfx/, chọn ở
+  //  docs/demo-hop-tuong/tuvan/am-thanh-anime/CHON.md). Nạp bằng Web Audio (fetch sớm → decodeAudioData khi đã có
+  //  AudioContext, tức sau lần chạm đầu — iOS). Mẫu nào chưa nạp / lỗi → giữ âm tổng hợp cũ (dự phòng).
+  //  Đi qua cùng bus SFX (vũ khí: bus wpn) → theo nút SFX + thanh âm lượng SFX, tắt tiếng là im.
+  //  Tắt hẳn mẫu để so: ?nomau
+  // =====================================================================================================
+  // ưu tiên p: 0 cao nhất (cảnh báo trùm) … 3 thấp nhất (bắn / trúng / chết / nổ thường) — đông thì cướp giọng p3 trước.
+  // [gain, p, cách tối thiểu ms, số giọng, lệch cao độ ±, né nhạc dB (0 = không né), nhóm]
+  // gain: đưa RMS về đích theo nhóm (tư vấn: bắn −29, trúng/chết −31, crit −26, UI −25, ghép −18, ghép cao −16, sự kiện lớn −15 dBFS)
+  const MAU = {
+    'ban-sung': [0.32, 3, 70, 3, 0.04, 0, 'ban'], 'ban-nang-luong': [0.25, 3, 70, 3, 0.04, 0, 'ban'], 'ban-bang': [0.21, 3, 80, 2, 0.04, 0, 'ban'],
+    'ban-lua': [0.29, 3, 80, 2, 0.04, 0, 'ban'], 'ban-doc': [0.33, 3, 90, 2, 0.05, 0, 'ban'], 'ban-set': [0.27, 3, 80, 2, 0.04, 0, 'ban'],
+    'can-chien': [0.28, 3, 80, 2, 0.04, 0, 'ban'],
+    'ha-quai': [0.2, 3, 220, 2, 0.04, 0], 'chi-mang': [0.23, 3, 180, 2, 0.02, 0], 'no': [0.36, 3, 120, 3, 0.03, 0],
+    'ui-cham': [0.76, 2, 40, 2, 0.015, 0], 'ui-quay-lai': [0.79, 2, 40, 1, 0.015, 0],
+    'summon': [0.42, 2, 110, 2, 0.02, 0], 'merge': [0.6, 2, 90, 2, 0.02, 2], 'ho-tro': [0.48, 2, 250, 1, 0.02, 0],
+    'bat-dau-dot': [0.47, 2, 1500, 1, 0, 3], 'xong-dot': [0.54, 2, 1500, 1, 0, 2],
+    'merge-sao-cao': [0.75, 1, 300, 1, 0, 4], 'dot-pha': [0.83, 1, 800, 1, 0, 5], 'jackpot': [0.84, 1, 600, 1, 0, 5],
+    'boss-ky-nang': [0.52, 1, 400, 1, 0, 3], 'boss-guc-nga': [1.38, 1, 1000, 1, 0, 7], 'thang': [0.84, 1, 3000, 1, 0, 9], 'thua': [0.84, 1, 3000, 1, 0, 9],
+    'boss-xuat-hien': [0.84, 0, 2000, 1, 0, 7],
+  };
+  const NHOM = { ban: [60, 6] };           // cả nhóm bắn: ≤ ~16 phát/s, ≤ 6 giọng (wave đông 40–80 yêu cầu/s)
+  const TRAN = 24;                         // trần giọng toàn cục (tổng hợp + mẫu)
+  const MB = {}, PF = {}, MS = [], MT = { nap: 0, loi: 0, phat: 0, chan: 0, cuop: 0, max: 0, dem: {}, maxK: {} };
+  const laNoMau = /[?&]nomau\b/.test(location.search);
+  let mauTat = false; // tắt mẫu lúc chạy (kiểm thử A/B cùng 1 trận)
+  const layAB = (k) => PF[k] || (PF[k] = fetch('assets/sfx/' + k + '.mp3').then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.arrayBuffer(); }));
+  function giaiMa(ab) { // Safari cũ chỉ có dạng callback; mới thì trả Promise — nhận cả hai, chỉ xong 1 lần
+    return new Promise((ok, ko) => { let x = 0; const a = (b) => { if (!x++) ok(b); }, e = (er) => { if (!x++) ko(er || new Error('decode')); };
+      try { const p = ac.decodeAudioData(ab, a, e); if (p && p.then) p.then(a, e); } catch (er) { e(er); } });
+  }
+  let napBat = false;
+  function napMau() { // gọi khi đã có AudioContext (mo)
+    if (napBat || laNoMau || !ac) return; napBat = true;
+    for (const k in MAU) layAB(k).then(giaiMa).then(b => { MB[k] = b; MT.nap++; }, () => { MT.loi++; });
+  }
+  // tải trước dữ liệu (chưa giải mã) lúc trang rảnh → lần chạm đầu giải mã ngay, không chờ mạng
+  if (!laNoMau && typeof fetch === 'function') {
+    const truoc = () => setTimeout(() => { for (const k in MAU) layAB(k).catch(() => { }); }, 1200);
+    if (document.readyState === 'complete') truoc(); else window.addEventListener('load', truoc, { once: true });
+  }
+  const lanM = {}, dangM = {};
+  // phát mẫu k. Trả true = sự kiện đã do mẫu lo (đã phát HOẶC bị luật trộn chặn) → không phát âm tổng hợp; false = chưa có mẫu → dùng synth
+  function phatMau(k, o) {
+    if (offline || mauTat || !bus || !MB[k]) return false;
+    if (!batSfx || ac.state !== 'running') return true;
+    const M = MAU[k], n = performance.now(), nh = M[6] && NHOM[M[6]];
+    if (lanM[k] && n - lanM[k] < M[2]) { MT.chan++; return true; }
+    if (nh && lanM[M[6]] && n - lanM[M[6]] < nh[0]) { MT.chan++; return true; }
+    if ((dangM[k] || 0) >= M[3] || (nh && (dangM[M[6]] || 0) >= nh[1])) { MT.chan++; TK.bo++; return true; }
+    if (TK.giong >= TRAN - 6 && M[1] >= 3) { MT.chan++; TK.bo++; return true; }
+    if (TK.giong >= TRAN) { // đầy: âm quan trọng (p ≤ 1) cướp giọng mẫu p3 cũ nhất; còn lại bỏ
+      const cu = M[1] <= 1 && MS.find(v => v.p >= 3 && !v.dung);
+      if (!cu) { MT.chan++; TK.bo++; return true; }
+      dungM(cu); MT.cuop++;
+    }
+    lanM[k] = n; if (M[6]) lanM[M[6]] = n;
+    const c = ac, t = c.currentTime + 0.005, s = c.createBufferSource(), g = c.createGain();
+    s.buffer = MB[k];
+    s.playbackRate.value = ((o && o.r) || 1) * (M[4] ? 1 + (R() * 2 - 1) * M[4] : 1);  // lệch cao độ cho âm lặp (họ vũ khí: dời giọng riêng)
+    g.gain.value = M[0] * ((o && o.k) || 1);
+    s.connect(g); g.connect(M[6] === 'ban' ? bus.wpn : bus.sfx);
+    const v = { k, p: M[1], s, g, nh: M[6], dung: false };
+    MS.push(v); dangM[k] = (dangM[k] || 0) + 1; if (v.nh) dangM[v.nh] = (dangM[v.nh] || 0) + 1;
+    TK.giong++; if (TK.giong > TK.giongMax) TK.giongMax = TK.giong; MT.phat++; if (MS.length > MT.max) MT.max = MS.length;
+    MT.dem[k] = (MT.dem[k] || 0) + 1; for (const x of [k, v.nh]) if (x && dangM[x] > (MT.maxK[x] || 0)) MT.maxK[x] = dangM[x];
+    s.onended = () => xongM(v);
+    s.start(t);
+    setTimeout(() => xongM(v), (s.buffer.duration / s.playbackRate.value) * 1000 + 1500); // dự phòng onended không tới
+    if (M[5]) { const sau = 1 - Math.pow(10, -M[5] / 20); duck(sau, Math.min(2.2, s.buffer.duration * 0.8)); }
+    return true;
+  }
+  function dungM(v) { if (v.dung) return; v.dung = true; try { const t = ac.currentTime; v.g.gain.cancelScheduledValues(t); v.g.gain.setValueAtTime(v.g.gain.value, t); v.g.gain.linearRampToValueAtTime(0, t + 0.03); v.s.stop(t + 0.035); } catch (e) { xongM(v); } }
+  function xongM(v) {
+    if (v.xong) return; v.xong = true;
+    try { v.s.disconnect(); v.g.disconnect(); } catch (e) { }
+    const i = MS.indexOf(v); if (i >= 0) MS.splice(i, 1);
+    dangM[v.k]--; if (v.nh) dangM[v.nh]--; TK.giong--;
   }
 
   // ---------- GIỌNG ROBOT (tổng hợp formant, kiểu vocoder) ----------
@@ -260,14 +348,14 @@ const SND = (() => {
   const rr = (k) => (rrN[k] = ((rrN[k] || 0) + 1) % 3);
   const W = {
     // ĐẠN / LIÊN THANH: "tk" số — click HP + sóng vuông rơi qua bandpass cộng hưởng + tick FM kim loại
-    dan() { const v = V('wDan', 0); if (!v) return; const t = v.t + R() * 0.004, i = rr('dan'), f = vr([1900, 1650, 2150][i], 0.05);
+    dan() { if (phatMau('ban-sung')) return; const v = V('wDan', 0); if (!v) return; const t = v.t + R() * 0.004, i = rr('dan'), f = vr([1900, 1650, 2150][i], 0.05);
       burst(v, t, 0.012, 0.42, 'highpass', 4200, 0.8);
       const bp = loc(v, 'bandpass', f * 1.1, 5); bp.connect(v.out); tone(v, 'square', f, f * 0.42, t, 0.032, 0.42, bp, 0.001);
       fm(v, f * 1.5, 1.414, 2.5, 0.1, t, 0.026, 0.1);
       tone(v, 'triangle', vr(260, 0.06), 120, t, 0.028, 0.32);
       vaoCrush(v, 0.42); fin(v); },
     // BẮN TỈA / ĐẠN NẶNG / RAIL ngắn: "k-PSSHEW" — crack + zap FM tụt cao độ + rít cộng hưởng + ping kim loại
-    tia() { const v = V('wTia', 1); if (!v) return; const t = v.t, i = rr('tia'), p = vr([1, 0.94, 1.06][i], 0.03);
+    tia() { if (phatMau('ban-sung', { r: 1.1 })) return; const v = V('wTia', 1); if (!v) return; const t = v.t, i = rr('tia'), p = vr([1, 0.94, 1.06][i], 0.03);
       burst(v, t, 0.028, 0.55, 'highpass', 2200, 0.8);
       fm(v, 3400 * p, 0.5, 6, 0.4, t, 0.11, 0.2, null, 240 * p);
       const lp = loc(v, 'lowpass', 6000, 11); lp.frequency.setValueAtTime(6000, t); lp.frequency.exponentialRampToValueAtTime(500, t + 0.12); lp.connect(v.out);
@@ -276,7 +364,7 @@ const SND = (() => {
       tone(v, 'triangle', 210, 85, t, 0.06, 0.4);
       vaoCrush(v, 0.18); gui(v, 0.16); fin(v); },
     // PHÁO / NỔ: "DMM-k-tchk" — đấm tầm trung (nghe được trên loa nhỏ) + crack + crunch số + servo nạp đạn
-    phao() { const v = V('wPhao', 1); if (!v) return; const t = v.t, i = rr('phao'), p = vr([1, 0.92, 1.07][i], 0.03);
+    phao() { if (phatMau('ban-sung', { r: 0.86 })) return; const v = V('wPhao', 1); if (!v) return; const t = v.t, i = rr('phao'), p = vr([1, 0.92, 1.07][i], 0.03);
       tone(v, 'triangle', 330 * p, 105, t, 0.1, 0.5); tone(v, 'sine', 150 * p, 55, t, 0.18, 0.4);
       burst(v, t, 0.07, 0.55, 'bandpass', 1700 * p, 0.9, null, 450);
       burst(v, t, 0.05, 0.3, 'lowpass', 3000, 0.7, bus.crush);
@@ -285,14 +373,14 @@ const SND = (() => {
       tone(v, 'square', 420, 980, t2, 0.06, 0.1, bp, 0.004); burst(v, t2 + 0.065, 0.012, 0.3, 'bandpass', 3600, 8);
       fin(v); },
     // PHÓNG (tên lửa / drone / mìn / bom): bíp khoá mục tiêu + vút FM đi lên + xì ồn quét
-    phong() { const v = V('wPhong', 1); if (!v) return; const t = v.t, p = vr(1, 0.05);
+    phong() { if (phatMau('ban-sung', { r: 0.95 })) return; const v = V('wPhong', 1); if (!v) return; const t = v.t, p = vr(1, 0.05);
       tone(v, 'square', 1760 * p, 0, t, 0.022, 0.05); tone(v, 'square', 2349 * p, 0, t + 0.045, 0.022, 0.05);
       burst(v, t + 0.03, 0.2, 0.3, 'bandpass', 500, 2.2, null, 4200, 0.03);
       fm(v, 380 * p, 2, 4, 1, t + 0.03, 0.18, 0.12, null, 2300 * p);
       tone(v, 'triangle', 270, 120, t + 0.03, 0.05, 0.32);
       vaoCrush(v, 0.2); fin(v); },
     // LASER (phát bắn rời): "PEWW" — răng cưa tụt qua lọc cộng hưởng quét + sin lệch + ring-mod
-    laser() { const v = V('wLaser', 1); if (!v) return; const t = v.t, i = rr('laser'), p = vr([1, 1.12, 0.9][i], 0.03);
+    laser() { if (phatMau('ban-nang-luong', { r: 1.08 })) return; const v = V('wLaser', 1); if (!v) return; const t = v.t, i = rr('laser'), p = vr([1, 1.12, 0.9][i], 0.03);
       const lp = loc(v, 'lowpass', 9000, 14); lp.frequency.setValueAtTime(9000, t); lp.frequency.exponentialRampToValueAtTime(700, t + 0.13); lp.connect(v.out);
       tone(v, 'sawtooth', 2400 * p, 260 * p, t, 0.13, 0.22, lp, 0.002);
       tone(v, 'sine', 4800 * p, 520 * p, t, 0.08, 0.12);
@@ -300,7 +388,7 @@ const SND = (() => {
       burst(v, t, 0.008, 0.2, 'highpass', 7000, 0.7);
       gui(v, 0.22); fin(v); },
     // NĂNG LƯỢNG / CẦU PLASMA: nạp vút ngắn → "vwOMP" FM rung + bandpass cộng hưởng tụt
-    nl() { const v = V('wNl', 1); if (!v) return; const t = v.t, i = rr('nl'), p = vr([1, 1.19, 0.89][i], 0.03);
+    nl() { if (phatMau('ban-nang-luong', { r: 0.92 })) return; const v = V('wNl', 1); if (!v) return; const t = v.t, i = rr('nl'), p = vr([1, 1.19, 0.89][i], 0.03);
       tone(v, 'sine', 300 * p, 1150 * p, t, 0.045, 0.14, null, 0.02);
       const t2 = t + 0.05; fm(v, 950 * p, 1.5, 5, 0.6, t2, 0.15, 0.2, null, 420 * p);
       const bp = loc(v, 'bandpass', 1800, 7); bp.frequency.setValueAtTime(1800, t2); bp.frequency.exponentialRampToValueAtTime(500, t2 + 0.15); bp.connect(v.out);
@@ -308,21 +396,21 @@ const SND = (() => {
       burst(v, t2, 0.01, 0.18, 'highpass', 5500, 0.7); tone(v, 'triangle', 240, 110, t2, 0.05, 0.25);
       gui(v, 0.28); fin(v); },
     // BĂNG / CRYO: chuông pha lê FM (bội không hoà âm) + xì khí lạnh quét xuống + tick kính
-    bang() { const v = V('wBang', 1); if (!v) return; const t = v.t, i = rr('bang'), f = vr([2400, 2850, 2100][i], 0.04);
+    bang() { if (phatMau('ban-bang')) return; const v = V('wBang', 1); if (!v) return; const t = v.t, i = rr('bang'), f = vr([2400, 2850, 2100][i], 0.04);
       fm(v, f, 3.5, 2.2, 0, t, 0.22, 0.13); fm(v, f * 2.76, 1.41, 1, 0, t, 0.1, 0.05);
       burst(v, t, 0.13, 0.22, 'highpass', 7500, 0.9, null, 2400, 0.004);
       tone(v, 'triangle', f * 2.2, 0, t, 0.014, 0.12);
       tone(v, 'triangle', 300, 140, t, 0.035, 0.18);
       vaoCrush(v, 0.12); gui(v, 0.3); fin(v); },
     // ĐỘC / AXIT SINH HỌC: "blorp" răng cưa qua lọc cộng hưởng bị LFO vuông + bong bóng số + xì phun
-    doc() { const v = V('wDoc', 1); if (!v) return; const t = v.t, p = vr(1, 0.08), d = 0.17;
+    doc() { if (phatMau('ban-doc')) return; const v = V('wDoc', 1); if (!v) return; const t = v.t, p = vr(1, 0.08), d = 0.17;
       const lp = loc(v, 'lowpass', 1300, 15), lfo = osc(v, 'square', vr(24, 0.2), t, t + d + 0.04), lg = gn(v, 800); ch(lfo, lg, lp.frequency); lp.connect(v.out);
       tone(v, 'sawtooth', 170 * p, 120 * p, t, d, 0.3, lp, 0.005);
       [0, 0.045, 0.09].forEach(o => tone(v, 'square', vr(520, 0.25), vr(1500, 0.2), t + o + R() * 0.01, 0.03, 0.08, bus.crush, 0.002));
       burst(v, t, 0.09, 0.15, 'bandpass', 2600, 2.2, null, 1200);
       fin(v); },
     // SÉT / TESLA: crack + hồ quang (ồn dải quét xuống, AM sóng vuông) + rè răng cưa crush + zap cao
-    set() { const v = V('wSet', 1); if (!v) return; const t = v.t, d = 0.1 + R() * 0.05;
+    set() { if (phatMau('ban-set')) return; const v = V('wSet', 1); if (!v) return; const t = v.t, d = 0.1 + R() * 0.05;
       burst(v, t, 0.01, 0.45, 'highpass', 5000, 0.7);
       const ns = on(v, t, t + d + 0.03), bp = loc(v, 'bandpass', vr(5000, 0.2), 2.2), am = gn(v, 0), lfo = osc(v, 'square', vr(110, 0.25), t, t + d + 0.03), g = gn(v);
       bp.frequency.setValueAtTime(bp.frequency.value, t); bp.frequency.exponentialRampToValueAtTime(1700, t + d);
@@ -332,7 +420,7 @@ const SND = (() => {
       for (let k = 0; k < 2; k++) burst(v, t + 0.02 + R() * d, 0.006, 0.28, 'highpass', 6500, 0.7);
       fin(v); },
     // CẬN CHIẾN / VUỐT / BÚA: servo rít → va đập kim loại (ring-mod) + đấm tầm trung + crunch
-    can() { const v = V('wCan', 1); if (!v) return; const t = v.t, i = rr('can'), p = vr([1, 1.1, 0.92][i], 0.04);
+    can() { if (phatMau('can-chien')) return; const v = V('wCan', 1); if (!v) return; const t = v.t, i = rr('can'), p = vr([1, 1.1, 0.92][i], 0.04);
       const bp = loc(v, 'bandpass', 900, 4); bp.connect(v.out); tone(v, 'square', 280 * p, 680 * p, t, 0.035, 0.08, bp, 0.003);
       const t2 = t + 0.035;
       burst(v, t2, 0.05, 0.5, 'bandpass', 2600 * p, 3, null, 1100);
@@ -346,6 +434,8 @@ const SND = (() => {
       lfo.connect(am.gain); env(g.gain, t, 0.01, 0.14, 0.13); ch(ns, b, am, g, v.out);
       vaoCrush(v, 0.25); gui(v, 0.2); fin(v); },
   };
+  // LỬA (họ mới v4, chỉ có mẫu ban-lua; chưa nạp → tiếng lửa tổng hợp gLua)
+  W.lua = () => S.gLua(1);
   // ụ (id) → họ vũ khí khi ụ đó gọi âm <nguồn>; không có trong bảng → họ mặc định của chính âm đó
   const DOI = {
     'aten:tia': 'laser', 'dongbo:tia': 'laser', 'haoquang:tia': 'laser', 'ngaithoigian:tia': 'laser', 'nhatthuc:tia': 'laser',
@@ -367,6 +457,7 @@ const SND = (() => {
     set: 'Sét — Tesla, Súng Bão, Chuỗi Liên Kết, Nhiều Sóng',
     can: 'Cận chiến — Nắm Đấm Sắt, Sói Máy, Máy Chém, Búa Đẩy, Loren',
     trieu: 'Triệu hồi — Chúa Tổ (bầy), Marionette',
+    lua: 'Lửa (mẫu v4) — dạng lửa Grow-up (gLua)',
   };
   function hoCua(src) { const T = typeof G !== 'undefined' && G && G.dangBan; return (T && T.id && DOI[T.id + ':' + src]) || null; }
   const ban = (macDinh, src) => { W[hoCua(src) || macDinh](); };
@@ -376,11 +467,11 @@ const SND = (() => {
   // =====================================================================================================
   const S = {
     // UI: chạm gọn, sạch
-    nut() { const v = V('nut', 2); if (!v) return; const t = v.t;
+    nut() { if (phatMau(laLui() ? 'ui-quay-lai' : 'ui-cham')) return; const v = V('nut', 2); if (!v) return; const t = v.t;
       tone(v, 'sine', vr(1900, 0.03), 1250, t, 0.05, 0.16); tone(v, 'square', vr(3800, 0.03), 0, t, 0.012, 0.035);
       burst(v, t, 0.008, 0.05, 'highpass', 6000, 0.7); fin(v); },
     // TRIỆU HỒI: vật chất hoá số — quét lên + lấp lánh (tiếng khoá servo phát lúc ụ đáp xuống: dat)
-    trieu() { const v = V('trieu', 2); if (!v) return; const t = v.t;
+    trieu() { if (phatMau('summon')) return; const v = V('trieu', 2); if (!v) return; const t = v.t;
       const bp = loc(v, 'bandpass', 300, 6); bp.frequency.setValueAtTime(300, t); bp.frequency.exponentialRampToValueAtTime(3800, t + 0.22); bp.connect(v.out);
       tone(v, 'sawtooth', 180, 900, t, 0.22, 0.3, bp, 0.02); tone(v, 'square', 360, 1800, t, 0.22, 0.08, bp, 0.02);
       burst(v, t, 0.2, 0.08, 'highpass', 3000, 0.8, null, 9000, 0.12);
@@ -397,7 +488,7 @@ const SND = (() => {
       tone(v, 'sine', vr(130, 0.06), 48, t2, 0.08, 0.5); burst(v, t2, 0.025, 0.3, 'bandpass', vr(2200, 0.1), 2);
       const rm = ring(v, 1170, t2, t2 + 0.12); rm.connect(v.out); tone(v, 'triangle', vr(2350, 0.05), 0, t2, 0.06, 0.12, rm); fin(v); },
     // GHÉP: 2 tông hội tụ → hợp âm stab sáng + khoá cơ khí (sao càng cao càng lên giọng)
-    ghep(sao, xa) { const v = V('ghep', 2); if (!v) return; const t = v.t, k = xa ? 0.45 : 1, sv = Math.min(8, sao || 2);
+    ghep(sao, xa) { if (phatMau((sao || 2) >= 4 ? 'merge-sao-cao' : 'merge', { k: xa ? 0.45 : 1 })) return; const v = V('ghep', 2); if (!v) return; const t = v.t, k = xa ? 0.45 : 1, sv = Math.min(8, sao || 2);
       const st = [0, 0, 2, 3, 5, 7, 8, 10, 12][sv], r = 220 * Math.pow(2, st / 12), m0 = 57 + st;
       tone(v, 'triangle', r * 0.75, r * 2, t, 0.11, 0.12 * k, null, 0.01); tone(v, 'triangle', r * 3, r * 2, t, 0.11, 0.1 * k, null, 0.01);
       burst(v, t, 0.02, 0.06 * k, 'bandpass', 900, 2, null, 4000, 0.09);
@@ -418,7 +509,7 @@ const SND = (() => {
       tone(v, 'sawtooth', r * 4, r * 4.05, t2, 0.2, 0.035, f); [1, 1.5, 2].forEach((m, i) => tone(v, 'sine', r * 4 * m, 0, t2 + 0.04 + i * 0.04, 0.14, 0.03));
       gui(v, 0.3); vang(v, 0.3); duck(0.3, 0.4); fin(v); },
     // THỨC TỈNH: như nâng cấp nhưng nặng hơn — sub bùm + arp răng cưa + hợp âm ring-mod
-    thucTinh() { const v = V('thucTinh', 2); if (!v) return; const t = v.t;
+    thucTinh() { if (phatMau('dot-pha')) return; const v = V('thucTinh', 2); if (!v) return; const t = v.t;
       tone(v, 'sine', 75, 30, t, 0.6, 0.7);
       const f = loc(v, 'lowpass', 900, 4); f.frequency.setValueAtTime(900, t); f.frequency.exponentialRampToValueAtTime(7000, t + 0.4); f.connect(v.out);
       [0, 3, 7, 10, 12, 15, 19].forEach((s, i) => tone(v, 'sawtooth', 220 * Math.pow(2, s / 12), 0, t + i * 0.05, 0.12, 0.06, f));
@@ -445,7 +536,7 @@ const SND = (() => {
       tone(v, 'sawtooth', 3400, 90, t2, 0.28, 0.16, lp);
       tone(v, 'triangle', 220, 80, t2, 0.12, 0.45); vaoCrush(v, 0.25); gui(v, 0.3); duck(0.25, 0.3); fin(v); },
     // NỔ: đấm tầm trung + crack quét + thân ồn + vụn số crush (nổ lớn: glitch lặp + mảnh kim loại FM + rền)
-    no(m) { m = m == null ? 0.4 : m; const v = V('no', m > 0.8 ? 2 : 1); if (!v) return; const t = v.t, d = 0.18 + m * 0.4;
+    no(m) { m = m == null ? 0.4 : m; if (phatMau('no', { k: 0.6 + Math.min(1, m) * 0.5 })) return; const v = V('no', m > 0.8 ? 2 : 1); if (!v) return; const t = v.t, d = 0.18 + m * 0.4;
       tone(v, 'triangle', vr(300 + m * 60, 0.06), 80, t, d * 0.45, 0.45 + m * 0.2);
       tone(v, 'sine', vr(130, 0.05), 45, t, d * 0.6, 0.3 + m * 0.25);
       burst(v, t, d * 0.35, 0.5 + m * 0.3, 'bandpass', 2200 + m * 800, 0.9, null, 380);
@@ -453,12 +544,12 @@ const SND = (() => {
       burst(v, t, d * 0.6, 0.18 + m * 0.15, 'bandpass', 1500, 0.8, bus.crush, 500);
       if (m > 0.5) for (let i = 0; i < 3; i++) tone(v, 'square', vr(900 - i * 180, 0.2), 0, t + 0.03 + i * 0.028, 0.02, 0.06, bus.crush, 0.001);
       if (m > 0.8) { tone(v, 'sine', 70, 34, t + 0.04, d * 1.3, 0.35, null, 0.04); for (let i = 0; i < 4; i++) fm(v, vr(2300, 0.3), 1.41, 3, 0, t + 0.06 + i * 0.06 + R() * 0.03, 0.08, 0.05); }
-      if (m > 0.3) duck(0.2 + m * 0.45, 0.25 + m * 0.45); fin(v); },
+      if (m > 0.8) duck(0.2 + m * 0.3, 0.25 + m * 0.45); fin(v); }, // v4: nổ thường không né nhạc (chỉ nổ rất lớn)
     // MANA: blip toàn ảnh nhẹ
     mana() { const h = hoCua('mana'); if (h) return W[h](); const v = V('mana', 1); if (!v) return; const t = v.t;
       tone(v, 'sine', 1320, 1760, t, 0.09, 0.09); tone(v, 'triangle', 1980, 2640, t + 0.03, 0.07, 0.04); gui(v, 0.3); fin(v); },
     // CHẠM Ụ HỖ TRỢ: blip hologram mềm (rung FM nhẹ)
-    hoTro() { const v = V('hoTro', 1); if (!v) return; const t = v.t;
+    hoTro() { if (phatMau('ho-tro')) return; const v = V('hoTro', 1); if (!v) return; const t = v.t;
       const a = tone(v, 'sine', 1046, 0, t, 0.14, 0.08, null, 0.01), m = osc(v, 'sine', 18, t, t + 0.2), mg = gn(v, 25); ch(m, mg, a.frequency);
       tone(v, 'sine', 1568, 0, t + 0.05, 0.14, 0.06, null, 0.01); burst(v, t, 0.02, 0.03, 'highpass', 7000, 0.7); gui(v, 0.35); fin(v); },
     // OVERLORD: siêu sấm — hồ quang dài + bùm sub
@@ -492,14 +583,14 @@ const SND = (() => {
       else fm(v, vr(2700, 0.15), 1.73, 2, 0, t, 0.02, 0.045);
       burst(v, t, 0.008, 0.05, 'highpass', 5000, 0.7); fin(v); },
     // CHÍ MẠNG: ping kim loại sáng, vút lên + bíp số
-    crit() { const v = V('crit', 1); if (!v) return; const t = v.t, f = vr(3200, 0.05);
+    crit() { if (phatMau('chi-mang')) return; const v = V('crit', 1); if (!v) return; const t = v.t, f = vr(3200, 0.05);
       fm(v, f, 1.5, 2, 0.2, t, 0.1, 0.07, null, f * 1.3); tone(v, 'sine', f * 1.5, f * 1.75, t + 0.02, 0.07, 0.04); tone(v, 'square', f * 0.5, 0, t, 0.025, 0.03, bus.crush);
       burst(v, t, 0.015, 0.08, 'highpass', 6000, 0.7); gui(v, 0.2); fin(v); },
     // QUÁI CHẾT: pop/glitch số (bậc cao độ ngẫu nhiên qua crush)
-    chet(trum) { if (trum) return S.chetTrum(); const v = V('chet', 0); if (!v) return; const t = v.t;
+    chet(trum) { if (trum) return S.chetTrum(); if (phatMau('ha-quai')) return; const v = V('chet', 0); if (!v) return; const t = v.t;
       for (let i = 0; i < 3; i++) tone(v, 'square', 400 + R() * 1200, 0, t + i * 0.018, 0.016, 0.07, bus.crush, 0.001);
       burst(v, t, 0.03, 0.18, 'bandpass', 1500, 1); tone(v, 'sine', 300, 80, t, 0.06, 0.18); fin(v); },
-    chetTrum() { const v = V('chetTrum', 2); if (!v) return; const t = v.t;
+    chetTrum() { if (phatMau('boss-guc-nga')) return; const v = V('chetTrum', 2); if (!v) return; const t = v.t;
       const f = loc(v, 'lowpass', 3000); f.frequency.setValueAtTime(3000, t); f.frequency.exponentialRampToValueAtTime(200, t + 0.9); f.connect(v.out);
       tone(v, 'sawtooth', 900, 35, t, 0.9, 0.2, f); tone(v, 'square', 450, 18, t, 0.9, 0.08, f);
       for (let i = 0; i < 10; i++) tone(v, 'square', (1600 - i * 130) * vr(1, 0.3), 0, t + i * 0.03, 0.025, 0.08, bus.crush, 0.001);
@@ -508,7 +599,7 @@ const SND = (() => {
 
     // ---------- TRÙM ----------
     // cảnh báo trùm xuất hiện: còi robot 2 tông + giọng formant "WARNING"
-    canhBao() { const v = V('canhBao', 2); if (!v) return; const t = v.t;
+    canhBao() { if (phatMau('boss-xuat-hien')) return; const v = V('canhBao', 2); if (!v) return; const t = v.t;
       const o = osc(v, 'square', 880, t, t + 0.62), lp = loc(v, 'lowpass', 3000), g = gn(v), am = gn(v, 0.6), tr = osc(v, 'sine', 30, t, t + 0.62), tg = gn(v, 0.4);
       for (let i = 0; i < 4; i++) { o.frequency.setValueAtTime(i % 2 ? 622 : 880, t + i * 0.14); }
       ch(tr, tg, am.gain); env(g.gain, t, 0.01, 0.1, 0.56); ch(o, lp, am, g, v.out);
@@ -523,7 +614,7 @@ const SND = (() => {
       const bp = loc(v, 'bandpass', 200, 5); bp.frequency.setValueAtTime(200, t); bp.frequency.exponentialRampToValueAtTime(1400, t + 0.9); bp.connect(v.out);
       tone(v, 'sawtooth', 200, 1400, t, 0.15, 0.25, bp, 0.8); fin(v); },
     // trùm tung chiêu: va chạm nặng + màu riêng từng trùm
-    chieuTrum(id) { const v = V('chieuTrum', 2); if (!v) return; const t = v.t;
+    chieuTrum(id) { if (phatMau('boss-ky-nang')) return; const v = V('chieuTrum', 2); if (!v) return; const t = v.t;
       boom(v, t, 0.75, 110); burst(v, t, 0.25, 0.35, 'lowpass', 2200, 0.7, null, 300); burst(v, t, 0.12, 0.12, 'bandpass', 1300, 1, bus.crush);
       if (id === 'mad_crown') for (let i = 0; i < 6; i++) tone(v, 'square', 300 + R() * 1500, 0, t + i * 0.03, 0.025, 0.07, bus.crush, 0.001);
       else if (id === 'freezer') [[1, 0.1, 0.6], [2.76, 0.06, 0.35], [5.4, 0.03, 0.2]].forEach(([m, a, d]) => tone(v, 'sine', 900 * m, 0, t, d, a));
@@ -539,15 +630,15 @@ const SND = (() => {
       const p = g.gain; p.setValueAtTime(0, t); p.linearRampToValueAtTime(0.25, t + 0.01); p.setValueAtTime(0.25, t + 0.14); p.linearRampToValueAtTime(0, t + 0.16);
       p.linearRampToValueAtTime(0.25, t + 0.21); p.setValueAtTime(0.25, t + 0.37); p.linearRampToValueAtTime(0, t + 0.4);
       tone(v, 'sine', 55, 50, t, 0.4, 0.3); vaoCrush(v, 0.35); duck(0.5, 0.5); fin(v); },
-    // BẮT ĐẦU WAVE: riser → stab hợp âm + kick + giọng robot "WAVE"
-    wave(n, trum) { const v = V('wave', 2); if (!v) return; const t = v.t, t2 = t + 0.35;
+    // BẮT ĐẦU WAVE: riser → stab hợp âm + kick
+    wave(n, trum) { if (phatMau('bat-dau-dot')) return; const v = V('wave', 2); if (!v) return; const t = v.t, t2 = t + 0.35;
       riser(v, t, 0.35, trum ? 0.34 : 0.28);
       // DROP: va chạm sub + hợp âm (thường: Em9 sáng / trùm: tam cung tối)
       boom(v, t2, trum ? 1.3 : 0.85, trum ? 120 : 150); if (trum) boom(v, t2 + 0.3, 0.7, 90);
       stab(v, t2, trum ? [40, 52, 58, 64, 67, 70] : [52, 59, 64, 66, 71, 76], trum ? 0.6 : 0.4, 0.028, trum ? 3600 : 5000);
-      noiRobot(v, t2 + 0.07, TU.wave, trum ? 72 : 100, 0.55); gui(v, 0.25); vang(v, 0.35); duck(0.55, 1); fin(v); },
+      gui(v, 0.25); vang(v, 0.35); duck(0.55, 1); fin(v); }, // v4: bỏ giọng robot "WAVE" mỗi wave (mỏi tai sau 30 wave)
     // KẾT THÚC: thắng = arp trưởng đi lên + hợp âm ngân; thua = "tape-stop" tụt giọng + rè
-    ketThuc(thang) { const nh = stinger(thang ? 'thang' : 'thua'); const v = V('ketThuc', 2); if (!v) return; const t = v.t;
+    ketThuc(thang) { if (phatMau(thang ? 'thang' : 'thua')) return; const nh = stinger(thang ? 'thang' : 'thua'); const v = V('ketThuc', 2); if (!v) return; const t = v.t;
       if (nh) { boom(v, t, thang ? 0.8 : 1, thang ? 150 : 100); vang(v, 0.4); fin(v); return; } // nhạc đang bật → fanfare / sting ở bus nhạc
       if (thang) {
         const f = loc(v, 'lowpass', 4000, 2); f.connect(v.out);
@@ -563,6 +654,11 @@ const SND = (() => {
         const lp = loc(v, 'lowpass', 700); lp.connect(v.out); tone(v, 'square', 55, 50, t + 1.05, 0.5, 0.15, lp, 0.01);
       }
       gui(v, 0.4); duck(0.85, 2.2); fin(v); },
+    // JACKPOT (v4): mẫu riêng; chưa nạp → mượn thức tỉnh như cũ
+    jackpot() { if (phatMau('jackpot')) return; S.thucTinh(); },
+    // HẾT WAVE (v4, sân sạch quái): mẫu; dự phòng = 3 nốt Mi–Si–Sol ngắn
+    xongDot() { if (phatMau('xong-dot')) return; const v = V('wave', 2); if (!v) return; const t = v.t;
+      [64, 71, 67].forEach((m, i) => tone(v, 'triangle', hz(m + 12), 0, t + i * 0.09, 0.22, 0.07)); gui(v, 0.3); duck(0.2, 0.5); fin(v); },
     // ---- ỤNG MỚI (skills3.js) ----
     // tích-tắc đồng hồ (Chrono Lock khoá / Chrono Throne)
     tich() { const v = V('tich', 1); if (!v) return; const t = v.t;
@@ -625,7 +721,7 @@ const SND = (() => {
     gKim() { const v = V('gKim', 1); if (!v) return; const t = v.t; burst(v, t, 0.012, 0.22, 'bandpass', 3400, 7); tone(v, 'triangle', 3000, 1200, t + 0.01, 0.08, 0.05); fin(v); },
     gEcho() { const v = V('gEcho', 1); if (!v) return; const t = v.t; tone(v, 'sine', 600, 1400, t, 0.18, 0.06); burst(v, t, 0.2, 0.06, 'bandpass', 2000, 4, null, 600); gui(v, 0.5); fin(v); },
     // lửa: 1 cam · 2 lam (gắt hơn) · 3 trắng (rít cao)
-    gLua(m) { const v = V('gLua', 0); if (!v) return; const t = v.t, k = m || 1;
+    gLua(m) { if (phatMau('ban-lua', { k: 0.7 + 0.15 * Math.min(2, (m || 1) - 1) })) return; const v = V('gLua', 0); if (!v) return; const t = v.t, k = m || 1;
       burst(v, t, 0.16, 0.12, 'lowpass', 700 + 500 * k, 0.7); burst(v, t, 0.1, 0.05 * k, 'bandpass', 2500 + 1200 * k, 1.5); fin(v); },
     gBang() { const v = V('gBang', 1); if (!v) return; const t = v.t; for (let i = 0; i < 3; i++) tone(v, 'sine', vr(3200 + i * 600, 0.05), 0, t + i * 0.03, 0.08, 0.04); burst(v, t, 0.05, 0.08, 'highpass', 6000, 1); fin(v); },
     gThe() { const v = V('gThe', 0); if (!v) return; const t = v.t; burst(v, t, 0.03, 0.14, 'bandpass', 3000, 3); tone(v, 'square', 660, 990, t, 0.04, 0.03); fin(v); },
@@ -665,13 +761,31 @@ const SND = (() => {
     if (!ac) {
       try { ac = new AC({ latencyHint: 'interactive' }); } catch (e) { try { ac = new AC(); } catch (e2) { return; } }
       bus = taoBus(ac);
+      napMau(); // mẫu SFX v4: giải mã khi đã có context (dữ liệu đã tải trước)
       try { const b = ac.createBuffer(1, 1, 22050), s = ac.createBufferSource(); s.buffer = b; s.connect(ac.destination); s.start(0); } catch (e) { } // iOS cũ
     }
     if (ac.state !== 'running' && !document.hidden) { try { const p = ac.resume(); if (p && p.then) p.then(() => { if (batNhac) chayNhac(); }, () => { }); } catch (e) { } }
     try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) { } // iOS 17+: phát cả khi gạt im lặng
     if (batNhac) chayNhac();
   }
-  ['pointerdown', 'touchend', 'mousedown', 'keydown'].forEach(e => document.addEventListener(e, mo, { capture: true, passive: true }));
+  // chỉ mở khoá ở sự kiện CÓ cấp quyền phát (user activation): chạm = touchend / pointerup (pointerdown cảm ứng thì chưa → tạo/resume
+  // ở đó bị chặn + cảnh báo "AudioContext was not allowed to start"), chuột = mousedown/pointerdown, phím (trừ phím bổ trợ)
+  const moKhoa = (e) => {
+    if (e.type === 'pointerdown' && e.pointerType && e.pointerType !== 'mouse') return; // chạm / bút: chờ pointerup / touchend
+    if (e.type === 'pointerup' && e.pointerType === 'mouse') return;                   // chuột: đã mở ở pointerdown / mousedown
+    if (e.type === 'keydown' && /^(Shift|Control|Alt|Meta|CapsLock|Fn)$/.test(e.key)) return;
+    mo();
+  };
+  ['pointerdown', 'pointerup', 'touchend', 'mousedown', 'keydown'].forEach(e => document.addEventListener(e, moKhoa, { capture: true, passive: true }));
+  // nút "quay lại / đóng" → mẫu ui-quay-lai thay ui-cham: nhớ phần tử vừa chạm (SND.nut không nhận tham số)
+  let chamCuoi = null, chamLuc = 0;
+  document.addEventListener('pointerdown', (e) => { chamCuoi = e.target; chamLuc = performance.now(); }, { capture: true, passive: true });
+  function laLui() {
+    if (!chamCuoi || performance.now() - chamLuc > 1500 || !chamCuoi.closest) return false;
+    const b = chamCuoi.closest('[data-act],button'); if (!b) return false;
+    const a = (b.dataset && b.dataset.act) || '', l = (b.getAttribute('aria-label') || '') + ' ' + b.className;
+    return /(^|-)(dong|ve|back|thoat|huy|close|tiep)$/.test(a) || /\b(close|back|dong|hm-dong)\b/i.test(l);
+  }
   document.addEventListener('visibilitychange', () => {
     if (!ac) return;
     try { if (document.hidden) ac.suspend(); else ac.resume(); } catch (e) { }
@@ -715,13 +829,17 @@ const SND = (() => {
       if (bus) { if (loai === 'nhac' && batNhac) datGain(bus.nhac.gain, gNhac()); if (loai === 'sfx' && batSfx) datGain(bus.sfx.gain, gSfx()); } return UV[loai]; },
     // cảnh nhạc: 0 menu · 1 trận · 2 trùm (vào trùm → stinger BRAAM)
     nhac(muc) { muc = Math.max(0, Math.min(2, muc | 0)); const cu = NH.canh; NH.canh = muc;
-      if (muc === 2 && cu !== 2) stinger('trum');
+      if (muc === 2 && cu !== 2 && !MB['boss-xuat-hien']) stinger('trum'); // v4: chỉ MỘT BRAAM — có mẫu trùm xuất hiện thì bỏ stinger nhạc
       if (NH.chay && bus && bus.may) bus.may.datCanh(muc); },
     // ép cường độ trận (0..1, null = tự động theo wave + số quái) — dùng cho ?sfxlab
     cuongDo(x) { NH.ep = x == null ? null : Math.max(0, Math.min(1, +x)); if (bus && bus.may) bus.may.ep = NH.ep; },
     stinger,
+    // mẫu SFX v4 (kiểm thử): danh sách sự kiện, đã nạp, đang phát
+    mau: () => ({ ds: Object.keys(MAU), nap: Object.keys(MB), dang: MS.length, tk: JSON.parse(JSON.stringify(MT)), tat: laNoMau, cfg: MAU, nhom: NHOM, tran: TRAN }),
     thongKe: () => Object.assign({ ctx: ac ? ac.state : 'none', nhac: NH.chay, canh: NH.canh, I: bus && bus.may ? +bus.may.I.toFixed(2) : 0, songNhac: bus && bus.may ? bus.may.tk.song : 0, songNhacMax: bus && bus.may ? bus.may.tk.max : 0, laser: !!LZ }, TK),
     danhSach: Object.keys(S), W, HO, DOI,
+    phatMau: (k, o) => phatMau(k, o),
+    mauTat: (x) => { if (x != null) mauTat = !!x; return mauTat; }, // true = mẫu đã lo (phát / bị luật trộn chặn); false = chưa có mẫu
   };
   for (const k of Object.keys(S)) API[k] = S[k];
   return API;
@@ -729,7 +847,7 @@ const SND = (() => {
 // móc âm thanh cho hiệu ứng triệu hồi/ghép/biến hình (hieuung.js) — dùng lại các giọng sẵn có, tắt chung bằng nút SFX
 SND.lo = (bac) => SND.nang(2 + Math.min(3, bac || 0));       // lộ kết quả ghép (cao dần theo bậc)
 SND.bien = () => SND.gNap();                                  // nạp + khoá khi biến hình
-SND.sao = () => SND.nang(5);                                  // đạt mốc sao SKILL UP / BINGO
+SND.sao = () => { if (!SND.phatMau('merge-sao-cao')) SND.nang(5); };  // đạt mốc sao SKILL UP / BINGO (v4: mẫu ghép sao cao)
 SND.hu = () => SND.thucTinh();                                // tiếng hú Sói thức tỉnh
 SND.xich = () => SND.hoTro();                                 // xích liên kết hình thành
 
@@ -759,7 +877,7 @@ if (/[?&]sfxlab\b/.test(location.search)) (() => {
       ['Mana', () => SND.mana()], ['Chạm ụ hỗ trợ', () => SND.hoTro()], ['Combo', () => SND.combo(6)]]],
     ['Chỉ huy / wave / trùm / lõi / kết thúc', [['Kỹ năng chỉ huy', () => SND.mv()], ['Bắt đầu wave', () => SND.wave(3, false)], ['Wave TRÙM', () => SND.wave(10, true)],
       ['Cảnh báo trùm', () => SND.canhBao()], ['Trùm báo chiêu', () => SND.bao()], ['Trùm tung chiêu', () => SND.chieuTrum('janus')], ['Lọt quái / mất mạng', () => SND.lot()],
-      ['Thắng', () => SND.ketThuc(true)], ['Thua', () => SND.ketThuc(false)]]],
+      ['Thắng', () => SND.ketThuc(true)], ['Thua', () => SND.ketThuc(false)], ['Hết wave', () => SND.xongDot()], ['Jackpot', () => SND.jackpot()]]],
   ];
   const RATE = { dan: 55, tia: 300, phao: 600, phong: 700, laser: 280, nl: 350, bang: 450, doc: 500, set: 320, can: 260, trieu: 600 };
   function dung() {

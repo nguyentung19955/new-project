@@ -508,7 +508,11 @@ function capNhatTran(dt) {
     G.tWave += dt;
     const conTrum = G.quai.some(e => e.trum && !e.chet);
     if (G.laTrum) { if (!conTrum && !G.hang.length && G.tWave > 4) { G.cho = 2.5; G.laTrum = false; } }
-    else if (G.tWave >= LUAT.thoiGianWave || (G.tWave > 6 && !G.hang.length && !G.quai.some(e => !e.chet))) G.cho = 1.2;
+    else if (G.tWave >= LUAT.thoiGianWave || (G.tWave > 6 && !G.hang.length && !G.quai.some(e => !e.chet))) {
+      G.cho = 1.2;
+      // âm HẾT WAVE (v4): chỉ khi dọn sạch sân (wave cuối → âm thắng lo)
+      if (!G.hang.length && !G.quai.some(e => !e.chet) && (G.che === 'pvp' || G.wave < LUAT.waveMax) && SND.xongDot) try { SND.xongDot(); } catch (e) { }
+    }
     if (G.cho > 0 && G.che !== 'pvp' && G.wave >= LUAT.waveMax && !G.quai.some(e => !e.chet)) ketThuc(true); // PVP: không giới hạn wave — đột tử tới khi 1 bên hết tim
   }
   // hàng sinh quái

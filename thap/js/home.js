@@ -127,12 +127,26 @@ const HM = {
     const mo = typeof HD === 'undefined' || HD.moKhoa();
     this.mo('cai', this.dau('SETTINGS') +
       am('nhac', 'MUSIC', 'nhac') + am('sfx', 'SFX', 'amthanh') +
-      '<div class="hm-cai2"><button class="hm-nut2" data-act="tk-mo">PILOT PROFILE</button><button class="hm-nut2" data-act="hd-choi">' + (mo ? 'REPLAY TUTORIAL' : 'PLAY TUTORIAL') + '</button></div>');
+      '<div class="hm-cai2"><button class="hm-nut2" data-act="tk-mo">PILOT PROFILE</button><button class="hm-nut2" data-act="hd-choi">' + (mo ? 'REPLAY TUTORIAL' : 'PLAY TUTORIAL') + '</button><button class="hm-nut2 hm-cre-nut" data-act="hm-cre">CREDITS</button></div>');
     SND.nutNhan();
     this.el('hm-tam').querySelectorAll('[data-hmam]').forEach(r => {
       r.addEventListener('input', () => { SND.amLuong(r.dataset.hmam, r.value / 100); const o = this.el('hm-tam').querySelector('[data-hmso="' + r.dataset.hmam + '"]'); if (o) o.textContent = r.value + '%'; });
       r.addEventListener('change', () => { if (r.dataset.hmam === 'sfx') SND.nut(); });
     });
+  },
+
+  // GHI CÔNG (v4 âm thanh): mẫu SFX CC BY 4.0 (Oculus Audio Pack 01) bắt buộc ghi tác giả / nguồn / giấy phép — xem
+  // docs/demo-hop-tuong/tuvan/am-thanh-anime/sfx/LICENSES.md + CHON.md. Dòng giấy phép giữ nguyên tiếng Anh (data-nn-giu).
+  moCre() {
+    this.mo('cre', this.dau('CREDITS') + '<div class="hm-cre">' +
+      '<b>SOUND EFFECTS</b>' +
+      '<p class="hm-cre-by" data-nn-giu>"Oculus Audio Pack 01" by Oculus VR, LLC<br>developers.meta.com/vr/downloads/package/oculus-audio-pack-1/<br>Licensed under CC BY 4.0 · creativecommons.org/licenses/by/4.0/</p>' +
+      '<p>Changes: trimmed, volume-normalised and layered with other sounds.</p>' +
+      '<p>Used for: breakthrough, jackpot, critical hit, button tap, back button, support pulse, victory and defeat.</p>' +
+      '<p>All other sound effects are CC0 (public domain):</p>' +
+      '<p class="hm-cre-by" data-nn-giu>Kenney (kenney.nl) · jaggedstone · rubberduck · starninjas · Pixel-boy / Sparklin Labs (Superpowers) · Electricity Game Sound Pack (OpenGameArt) · Wyzowl sfx-kit · AtomCut Library</p>' +
+      '<p>Music and the remaining sounds are generated live in the game.</p>' +
+      '</div>');
   },
 
   moPre() {
@@ -267,6 +281,7 @@ const HM = {
       case 'hm-bst': SND.nut(); this.di('dk', true); break;
       case 'hm-ve': SND.nut(); this.di('hm'); break;
       case 'hm-cai': SND.nut(); this.moCai(); break;
+      case 'hm-cre': SND.nut(); this.moCre(); break;
       case 'hm-pre': SND.nut(); this.moPre(); break;
       case 'hm-pre-chon': this.dong(); BOBAI.thu(el.dataset.bb); this.noi = UI.chon[0]; this.armed = -1; this.ve(); this.duBo(); break;
       case 'hm-loc': SND.nut(); this.moLoc(); break;
