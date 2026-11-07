@@ -3408,3 +3408,10 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - `thap/js/sigfx.js` TIDAL BREATH (Abyss): giọt mưa chạm đúng tim đường (bỏ lệch ngang 3 px), giọt đầu/cuối kẹp cách đầu đường 20 px.
 - Chỉ trình bày: cap() / vùng trúng / sát thương / thời điểm giữ nguyên. Lưu ý: ảnh Hố Đen lớn (r > 50) nay nhỏ hơn bán kính hút thật (thap-kt-vfx-p0 đo cỡ vẽ gốc trước khi thu nhỏ nên vẫn xanh).
 - Ảnh: `docs/demo-hop-tuong/tuvan/vfx-ra-soat/TRUOC-SAU-tam-duong.gif`, `tam-duong-390x844-*.jpg`, `tam-duong-844x390-*.jpg`.
+
+## claude/demo-hop-tuong — Hố Đen về đúng bán kính hút + vòng hồng sét Overlord thu nhỏ, tâm trên đường (07/11 23:26)
+- Người dùng 23:26: (1) sau bản đặt tâm lên đường, hình Hố Đen nhỏ hơn vùng hút thật → cho hình Hố Đen khớp lại bán kính hút (chỉ Hố Đen được miễn giới hạn cỡ), vẫn đặt tâm trên đường, không cắt; (2) vòng hồng quanh mỗi cú sét Overlord vẫn to kiểu cũ → thu nhỏ theo cỡ các hiệu ứng sân khác (~bề rộng đường) và đặt tâm đúng điểm sét đánh trên đường.
+- `thap/js/vfxmoi.js`: HU.hoden + SIG.K.hoden (M01) gọi VXD.dat với giới hạn 1e9 → không thu nhỏ, mép xoáy = o.r (1★ 68 · 4★ 80 · 7★ 92 px), chỉ dời tâm lên tim đường.
+- Vòng hồng = vòng dư âm `FX.vong1` do `CG.veMot` (camgiac.js) sinh ra LÚC VẼ nổ trúng `fx_overlord_trung` (r1 = 0,62 × 110 ≈ 68 px) → lọt ra ngoài VXD (cũ: to ~157 px, tâm lệch theo quái). Nay bọc lời gọi veMot trong VXD.dang → vòng vào VXD.vong: cỡ ≤ 1,1 × DMAX, tâm ghim trên tim đường. Vùng trúng / sát thương không đổi.
+- `tools/thap-kt-vfx-p0.js`: đo mép xoáy Black Hole tính cả hệ thu nhỏ của ctx (trước đo cỡ trước khi thu nên không bắt được lỗi; bản cũ nay báo 50,6/80 → đỏ, bản mới 80/80).
+- Test: thap-kt-vfx-p0 xanh, thap-kt-khong-ban đạt. Ảnh: `docs/demo-hop-tuong/tuvan/vfx-ra-soat/TRUOC-SAU-hoden-overlord.jpg` (390×844 + 844×390).

@@ -287,7 +287,7 @@ const ok = (dk, ten, chi) => { if (dk) console.log('  ✓ ' + ten); else { conso
     const gan = (a, b, tol, ten) => { ghi.push(ten + ' ' + a.toFixed(1) + '/' + b.toFixed(1)); if (!(Math.abs(a - b) <= tol * b)) loi.push(ten + ': thấy ' + a.toFixed(1) + ' px ↔ trúng ' + b.toFixed(1) + ' px'); };
     const B = G.ban[0], ctx = document.createElement('canvas').getContext('2d');
     // Black Hole (tờ P2 16 khung) — bắt cỡ vẽ của REN.khungMuot
-    const km = REN.khungMuot; let co = 0; REN.khungMuot = function (c, ten, f, x, y, w) { co = w; return true; };
+    const km = REN.khungMuot; let co = 0; REN.khungMuot = function (c, ten, f, x, y, w) { co = w * (c && c.getTransform ? Math.hypot(c.getTransform().a, c.getTransform().b) : 1); return true; }; // tính cả hệ thu nhỏ của VXD.dat (vfxmoi.js) → đo cỡ THẤY trên màn, không phải cỡ trước khi thu
     const bh = await doc('p2_blackhole', 0, 15), cr = await doc('p2_cryo', 8, 11);
     await new Promise(ok => { REN.img('p2_blackhole'); REN.img('p2_cryo'); setTimeout(ok, 300); });
     for (let i = 0; i < 40 && !(REN.img('p2_blackhole') && REN.img('p2_cryo')); i++) await new Promise(ok => setTimeout(ok, 100));

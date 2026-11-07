@@ -133,7 +133,7 @@ HU.vxmPhat = {
 // HIỆU ỨNG TRÊN SÂN ĐẶT TRÊN ĐƯỜNG (user 07/11 23:09 — thay bản CẮT ảnh theo dải đường 19:05):
 //   KHÔNG cắt/che ảnh nữa. Mỗi hiệu ứng ĐÁP XUỐNG SÂN (nổ, bổ nhào, vũng, mìn, tường, hố đen, sét, tuyết…) được
 //   (a) dời TÂM / CHÂN (điểm chạm đất) lên TIM đường (điểm gần nhất trên polyline G.duong),
-//   (b) thu nhỏ quanh tâm để khung ảnh ≤ VXD.DMAX (thân sáng ≈ 1,5 bề rộng đường) — mép ảnh được tràn ra ngoài đường,
+//   (b) thu nhỏ quanh tâm để khung ảnh ≤ VXD.DMAX (thân sáng ≈ 1,5 bề rộng đường) — mép ảnh được tràn ra ngoài đường (TRỪ Hố Đen: giữ cỡ thật = bán kính hút, user 07/11 23:26),
 //   (c) không lố qua 2 ĐẦU đường: dời tâm vào trong dọc đường (không cắt ảnh).
 //   Chỉ TRÌNH BÀY: vùng trúng / sát thương / thời điểm (cap() gốc) giữ nguyên.
 // =====================================================================================================
@@ -174,10 +174,10 @@ const VXD = {
 (function () {
   if (typeof HU === 'undefined' || typeof FX === 'undefined') return;
   // 1) lớp HU: dời tâm lên tim đường + thu nhỏ (D = cỡ vẽ gốc của từng hiệu ứng)
-  const boc = (k, D) => { const H = HU[k]; if (!H || !H.ve || H._vxd) return; const v = H.ve; H._vxd = 1; H.ve = function (ctx, o, R) { if (o.x == null) return v.call(this, ctx, o, R); return VXD.dat(ctx, o.x, o.y, D(o), () => v.call(this, ctx, o, R)); }; };
+  const boc = (k, D, M) => { const H = HU[k]; if (!H || !H.ve || H._vxd) return; const v = H.ve; H._vxd = 1; H.ve = function (ctx, o, R) { if (o.x == null) return v.call(this, ctx, o, R); return VXD.dat(ctx, o.x, o.y, D(o), () => v.call(this, ctx, o, R), M); }; };
   boc('may', (o) => (o.r || 40) * 2.4); // Toxic Pool / mây độc: vũng ~2.4r
   boc('min', (o) => (o.sao3 ? 32 : 25)); // mìn chờ: chỉ dời tâm
-  boc('hoden', (o) => (o.r || 64) * 2); // Hố Đen: đĩa xoáy đường kính 2r → ≤ DMAX
+  boc('hoden', (o) => (o.r || 64) * 2, 1e9); // Hố Đen: đĩa xoáy đường kính 2r — MIỄN giới hạn DMAX (user 07/11 23:26): mép xoáy = đúng bán kính hút o.r, chỉ dời tâm lên tim đường
   boc('vetChay', () => 40); // vệt cháy Dragon Dive
   boc('vxmPhat', (o) => o.w || 0); // nổ chùm Mortar (132 px → DMAX)
   // rồng bổ nhào (bản cũ + VXM.rong): tâm rồng trên tim đường, không lố qua đầu đường (VXM.rong ghim lại với pad nhỏ hơn → không dời 2 lần)
@@ -211,7 +211,7 @@ const VXD = {
       for (const a of VXD.anim) {
         const u = Math.min(1, a.t / a.song);
         let x = a.x, y = a.y; if (a.bam && !a.bam.chet) { x = a.bam.x; y = a.bam.y; }
-        if (a.mot) { VXD.dat(ctx, x, y, (a.co || 0) * 1.06, () => this.veMot(ctx, a, u)); ctx.globalCompositeOperation = 'lighter'; continue; }
+        if (a.mot) { VXD.dang++; try { VXD.dat(ctx, x, y, (a.co || 0) * 1.06, () => this.veMot(ctx, a, u)); } finally { VXD.dang--; } ctx.globalCompositeOperation = 'lighter'; continue; } // vòng dư âm veMot sinh lúc VẼ (vd vòng hồng quanh sét Overlord) → vào VXD.vong: thu nhỏ ≤ DMAX + tâm trên tim đường (user 07/11 23:26)
         const sc = 0.9 + 0.16 * (1 - (1 - u) * (1 - u)); let al = Math.min(1, u / 0.06);
         if (u > 0.65) { const v = (u - 0.65) / 0.35; al *= 1 - v * v * (3 - 2 * v); }
         const co = Math.min(a.co * sc, VXD.DMAX), [qx, qy] = VXD.ghim(x, y, co * 0.42);
@@ -239,8 +239,8 @@ const VXD = {
       return VXD.dat(ctx, x, y, o.w || 0, () => v.call(this, ctx, o, R));
     };
   }
-  // Hố Đen khoảnh khắc đặc biệt (sigfx M01: mảnh đường / thấu kính / xoáy / nghiền): cùng tâm + cùng hệ thu nhỏ với đĩa xoáy HU.hoden
-  if (typeof SIG !== 'undefined' && SIG.K && SIG.K.hoden && SIG.K.hoden.ve) { const v = SIG.K.hoden.ve; SIG.K.hoden.ve = function (ctx, m, R) { if (m.x == null) return v.call(this, ctx, m, R); return VXD.dat(ctx, m.x, m.y, (m.r || 64) * 2, () => v.call(this, ctx, m, R)); }; }
+  // Hố Đen khoảnh khắc đặc biệt (sigfx M01: mảnh đường / thấu kính / xoáy / nghiền): cùng tâm với đĩa xoáy HU.hoden, KHÔNG thu nhỏ (= bán kính hút thật)
+  if (typeof SIG !== 'undefined' && SIG.K && SIG.K.hoden && SIG.K.hoden.ve) { const v = SIG.K.hoden.ve; SIG.K.hoden.ve = function (ctx, m, R) { if (m.x == null) return v.call(this, ctx, m, R); return VXD.dat(ctx, m.x, m.y, (m.r || 64) * 2, () => v.call(this, ctx, m, R), 1e9); }; } // cùng miễn DMAX với đĩa xoáy
   // 3) Bão Tuyết: bông tuyết rơi xuống TIM ĐƯỜNG (lệch ngang nhỏ) — hạt trình bày, không đổi luật
   if (HU.tuyet) HU.tuyet.cap = function (G, o) {
     if (o.t < 0.8 && G.duong && G.duong.length) for (let i = 0; i < 4; i++) {
