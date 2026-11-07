@@ -51,14 +51,14 @@ const FX = {
   // dải khung 'fx_<ten>' (6 khung), co = đường kính vẽ (px), goc = xoay
   no(ten, x, y, co, song, goc, bam) {
     // chống rối (claude/chong-roi): nổ trúng cùng loại, cách < ~0,3 ô, vụ cũ mới bắt đầu < 80 ms → không đẻ dải mới,
-    // chỉ phóng vụ cũ nhẹ (tổng ≤ +25%) và kéo dài đời một chút. Chớp nòng, nổ lớn (co ≥ 70) và dải trùm giữ nguyên.
+    // chỉ phóng vụ cũ 1 bậc +25% (bậc cố định: cỡ đổi liên tục = dựng lại ảnh thu nhỏ mỗi khung → giật) và kéo dài đời một chút. Chớp nòng, nổ lớn (co ≥ 70) và dải trùm giữ nguyên.
     if (ten !== 'chop_nong' && !(co >= 70) && !ten.startsWith('trum_')) {
       const B0 = typeof G !== 'undefined' && G.ban && G.ban[0], r = 0.3 * ((B0 && Math.min(B0.cw, B0.ch)) || 64), r2 = r * r;
       for (let i = this.anim.length - 1; i >= 0; i--) {
         const A = this.anim[i];
         if (A.k0 !== ten || A.t >= 0.08) continue;
         const dx = A.x - x, dy = A.y - y; if (dx * dx + dy * dy > r2) continue;
-        A.co = Math.min(A.co0 * 1.25, A.co * 1.06); A.song = Math.min(A.song0 * 1.35, A.song + 0.03);
+        A.co = A.co0 * 1.25; A.song = Math.min(A.song0 * 1.35, A.song + 0.03);
         return;
       }
     }
