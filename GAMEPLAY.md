@@ -3682,6 +3682,7 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - GIF trước | sau 390×844 (đi 1×, 3× + rẽ, chiêu, trúng, chết) + bảng khung + ảnh trong trận: `docs/demo-hop-tuong/tuvan/trum-anim-code/` (dựng lại: `tools/thap-chup-trumcode.js`, bước mô phỏng tay → tất định).
 - Test: thap-kt-trum-don XANH (1320 tình huống) · thap-kt-anim XANH · thap-kt-vfx-p0 XANH.
 - Thêm **freezer** (khối băng nhảy, dẻo 0,6: lõi bông tuyết bùng sáng + 2 cụm sương toả ở đất lúc chạm) và **joker_king** (hộp + NẮP rời `_m_nap`: lạch cạch khi chạm đất, lấy đà rung hé, tung chiêu bật mở lộ lò xo rồi sập) — ảnh cắt bằng `tools/thap-trum-master-nhay2.py`, GIF `trum-anim-code/{freezer,joker_king}_truoc-sau.gif`; test trum-don/anim/vfx-p0 XANH.
+- Thêm 4 trùm **lơ lửng** (nền prism) có PHẦN RỜI cắt từ ảnh cũ (`tools/thap-trum-master-bay.py`): **nightmare** (lõi mắt đỏ nhấp nháy) · **twin_core** (2 vòng lõi đủ tròn tách–khép + quỹ đạo ngược pha, tia sét kéo giãn nối 2 tâm) · **janus** (8 mảnh bay quanh khối: co vào lúc lấy đà, văng ra lúc tung) · **octopus** (hoa lửa uốn lắc neo mép chậu, bùng cao lúc tung); GIF `trum-anim-code/{nightmare,twin_core,janus,octopus}_truoc-sau.gif`; test trum-don/anim/vfx-p0 XANH.
 
 ## claude/demo-hop-tuong — Bỏ vòng sáng khoanh ụ cùng loại khi chạm thẻ khay trận (08/11)
 
