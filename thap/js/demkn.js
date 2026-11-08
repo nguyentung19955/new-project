@@ -123,7 +123,7 @@ const DEMKN = {
   if (typeof ND !== 'undefined') {
     const xep = ND.xep, veHH = ND.veHuyHieu;
     ND.xep = function (T, x, y, C, hs, al, B) { const h = xep.apply(this, arguments); const k = C / Math.min(B.cw, B.ch); h.B = B; h.cx = x; h.yDay = y + (B.ch * k) / 2 - 1.5; h.C = C; return h; };
-    ND.veHuyHieu = function (ctx, h) { veHH.apply(this, arguments); if (h.B && h.hs > 0.5) { try { DEMKN.ve(ctx, h.T, h.B, h.cx, h.yDay, h.C, h.al); } catch (e) { } } };
+    ND.veHuyHieu = function (ctx, h) { veHH.apply(this, arguments); if (h.B && h.hs > 0.5) { try { DEMKN.ve(ctx, h.T, h.B, h.cx, h.yDay, h.C, h.al); } catch (e) { } } if (h.T && h.T.id === 'lualien' && typeof LUA_VET !== 'undefined' && LUA_VET._pop.size) LUA_VET.veHH(ctx, h); }; // Ember: loé lửa + "+N" trên tấm đếm (vangmoi1.js)
   }
   if (typeof UI !== 'undefined') {
     const capGoc = UI.capNhat;

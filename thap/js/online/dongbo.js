@@ -243,7 +243,7 @@ const ONS = {
     if (T.id === 'soi') T.thuc = c.includes('w');
     T.banSao = c.includes('c'); T.st.da = c.includes('S');
     T.epxung = so('e') / 100; if (T.id === 'loren') T.lo = so('l');
-    if (T.id === 'lualien') T.lc = so('r'); if (T.id === 'luutru') T.kho = so('k');
+    if (T.id === 'lualien') { const cu = T.lc || 0; T.lc = so('r'); if (typeof LUA_VET !== 'undefined') LUA_VET.conRoi(T, cu); } if (T.id === 'luutru') T.kho = so('k'); // Ember: lửa tăng → "+N" (chỉ hình)
     if (T.id === 'canon' && /h\d+;/.test(c)) { T.hb = (so('h') & 15) || 1; T.cmC = so('n'); }
     if (T.id === 'loren') T.dang = so('a') ? 'toc' : 'dmg';
     { const m = c.match(/b(\d)x(\d+);/); T.anv = m ? { k: m[1] === '1' ? 'toc' : 'dmg', v: +m[2] / 10000 } : null; }

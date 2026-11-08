@@ -3691,3 +3691,7 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 ## claude/demo-hop-tuong — Bỏ icon cạnh thanh máu trùm/quái (08/11)
 
 - Bỏ 2 trái tim (`ui_tim`, số tim mất nếu trùm lọt, hiện khi trùm đi quá 70% đường) và bông tuyết (`ic_cham`, dấu bị chậm) cạnh thanh máu trùm/quái (`trumvfx.js`, `quaianim.js`, `render.js`); bị chậm vẫn thấy qua thanh máu xanh băng + vòng gió lạnh/băng trên thân. Giữ sao Star Leech đang giữ (giết trả lại ★) và mảnh khiên Prism. Đạt: trum-don, vfx-p0, khong-ban.
+
+## claude/demo-hop-tuong — Ember Relay: hiệu ứng nhận lửa hàng/cột (08/11)
+
+- Lửa Thập Tự: ghép 2 Relay → vệt lửa (`fx_ronglua_vet`) chạy từ ô ghép dọc hàng/cột tới Relay được cộng lửa (~0,25–0,46 s, dưới đầu súng; chỉ đốm lửa màu mốc ở đầu vệt nằm trên), Relay nhận hiện "+N" màu mốc (cam/trắng/lam/vàng/đỏ) + icon lửa trên tấm đếm loé 1 nhịp; ụ ra là Relay hiện số lửa mới. Chỉ hình (`LUA_VET`, vangmoi1.js; móc `demkn.js`; bàn con rối online chỉ "+N" — `dongbo.js`), không đổi luật. Ảnh: `docs/demo-hop-tuong/tuvan/ember/hieu-ung-hang-cot.jpg`.
