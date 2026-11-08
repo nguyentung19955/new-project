@@ -37,8 +37,8 @@ const HUONG_HOA = 0.12;      // hoà 120 ms khi đổi hướng nhìn ở khúc 
 // Mọi thứ theo THỜI GIAN THỰC / QUÃNG ĐƯỜNG (không đếm khung) → 30/60 FPS, 1×/3× như nhau. Chỉ hình — mô phỏng không đổi.
 const TRUM_ANIM_CODE = {
   hive: { kieu: 'lan', r: 0.457, day: 0.457, sang: 1 },
-  prism: { kieu: 'bay', day: 0, sang: 1 },
-  mad_crown: { kieu: 'nhay', day: 0.41, buoc: 0.6, nhip: 0.8, vm: [0.607, 0.431], sang: 1 },
+  prism: { kieu: 'bay', day: 0, sang: 1, bob: 0.085, nga: [0.065, 0.22], chop: 1.5 }, // bob = biên độ nhấp nhô (×C) · nga = [hệ số nghiêng theo tốc độ rẽ, nghiêng tối đa] · chop = độ chớp lúc tung chiêu
+  mad_crown: { kieu: 'nhay', day: 0.41, buoc: 0.6, nhip: 0.8, vm: [0.607, 0.431], vmK: 2.6, sang: 1, loang: 1 }, // vmK = độ lắc vương miện · loang = vệt thạch loang + rung thạch lúc chạm đất
   // freezer: khối băng nặng, nhảy chậm hơn; lõi bông tuyết sáng theo nhịp + bùng lúc chạm đất; khoi = 2 cụm sương _m_khoi toả ra ở đất lúc chạm (tools/thap-trum-master-nhay2.py)
   freezer: { kieu: 'nhay', day: 0.467, buoc: 0.66, nhip: 0.7, sang: 1, khoi: 1, deo: 0.6 },
   // joker_king: hộp + NẮP rời _m_nap (neo = đáy giữa nắp) — nắp lạch cạch khi chạm đất, lấy đà chiêu nắp rung hé, tung chiêu nắp bật mở (lộ lò xo trong hộp) rồi sập về
@@ -256,14 +256,16 @@ Object.assign(REN, {
         nen -= 0.17 * lx;                                  // giãn bật ra rồi lò xo về
         const lao = Math.sin(Math.min(1, r / 0.09) * Math.PI / 2) * (1 - eoBack(Math.min(1, r / 0.6))) + Math.exp(-10 * r) * 0.6;
         R.ox += Math.cos(gb2) * C * 0.07 * lao; R.oy += Math.sin(gb2) * C * 0.07 * lao; // lao về bàn rồi giật về
-        R.fl = Math.max(R.fl, 0.75 * Math.pow(Math.max(0, 1 - r / 0.25), 2)); R.sang += 1.2 * Math.exp(-6 * r);
+        const K = cf.chop || 1;
+        R.fl = Math.max(R.fl, Math.min(0.95, 0.75 * K) * Math.pow(Math.max(0, 1 - r / (0.25 * K)), 2)); R.sang += 1.2 * K * Math.exp(-6 * r);
       } else E._cdRel = null;
     }
     const st = clamp(Math.abs(E._cdW) * 0.025, 0, 0.07); // rẽ: giãn ngang
     if (cf.kieu === 'bay') {
       const h = 0.5 + 0.5 * Math.sin(t * 2.3 + E.uid);
-      R.cao = h; R.oy -= C * (0.03 + 0.05 * h); R.bs = 1 - 0.18 * h;
-      E._cdL += (clamp(Math.cos(gv) * 0.09 + E._cdW * 0.03, -0.14, 0.14) - E._cdL) * (1 - Math.exp(-dt * 5));
+      const bob = cf.bob || 0.05, [kN, mN] = cf.nga || [0.03, 0.14];
+      R.cao = h; R.oy -= C * (0.03 + bob * h); R.bs = 1 - 0.18 * h * bob / 0.05;
+      E._cdL += (clamp(Math.cos(gv) * 0.09 + E._cdW * kN, -mN, mN) - E._cdL) * (1 - Math.exp(-dt * (cf.nga ? 7 : 5)));
       R.rot += E._cdL + Math.sin(t * 1.3 + E.uid) * 0.02;
       const tho = 0.018 * Math.sin(t * 1.7 + E.uid);
       R.sx = (1 + tho + st) * (1 + nen * 0.8); R.sy = (1 + tho - st) * (1 - nen);
@@ -280,7 +282,13 @@ Object.assign(REN, {
       R.cao = h; R.hop = h * C * 0.14; R.oy -= R.hop; R.bs = 1 - 0.35 * h;
       R.sx = 1 + (q + nen) * 0.85 + st; R.sy = 1 - q - nen;
       R.sxL = 1 + (qL + nen) * 0.85; R.syL = 1 - qL - nen; // vương miện theo nhịp trễ 8% → lắc theo quán tính
-      R.vmRot = (qL - q) * 1.6 + Math.sin(t * 2.1 + E.uid) * 0.03;
+      R.vmRot = (qL - q) * (cf.vmK || 1.6) + Math.sin(t * 2.1 + E.uid) * 0.03;
+      if (cf.loang) { // thạch: rung ngang–dọc tắt dần sau chạm đất; vương miện bị hất lắc theo
+        const j = 0.07 * Math.exp(-7 * rL) * Math.sin(19 * rL);
+        R.sx += j; R.sy -= j * 0.9; R.sxL += j * 0.5; R.syL -= j * 0.45;
+        R.vmRot += 0.11 * Math.exp(-6 * rL) * Math.sin(15 * rL + 0.6);
+        R.loang = rL;
+      }
       R.rot += clamp(E._cdW * 0.03, -0.08, 0.08);
       R.sang += 0.2 + 0.2 * Math.sin(t * 2.6 + E.uid);
       if (cf.khoi) { R.khoi = rL; R.sang += 0.55 * Math.exp(-6 * rL) - 0.12; } // lõi băng: bùng lạnh lúc chạm đất, dịu khi bay
@@ -315,6 +323,12 @@ Object.assign(REN, {
       x2.globalAlpha = 0.3; x2.drawImage(this.cham1('#fff3cf'), n * 0.06, n * 0.02, n * 0.55, n * 0.55);   // bóng sáng trên-trái
       x2.globalCompositeOperation = 'source-over'; x2.globalAlpha = 1;
       anh = o;
+    }
+    if (cf.loang && R.loang < 0.5) { // vệt thạch loang dưới thân lúc chạm đất: vũng hồng mềm ở ĐẤT, toả rộng rồi mờ (tâm trên đường)
+      const e = R.loang / 0.5, w = C * (0.8 + 0.45 * e);
+      ctx.setTransform(M); ctx.translate(x + R.ox, y + R.oy + (R.hop || 0) + b - C * 0.02);
+      ctx.globalAlpha = 0.75 * Math.pow(1 - e, 1.5); ctx.drawImage(this.cham1('#ff4fae'), -w / 2, -w * 0.13, w, w * 0.26);
+      ctx.globalAlpha *= 0.6; ctx.drawImage(this.cham1('#ffd0ea'), -w * 0.3, -w * 0.07, w * 0.6, w * 0.12);
     }
     const xoay = cf.kieu === 'lan' ? E._cdA : 0;
     dat(0, R.sx, R.sy); ctx.globalAlpha = 1; ctx.drawImage(anh, -C / 2, -C / 2, C, C);
