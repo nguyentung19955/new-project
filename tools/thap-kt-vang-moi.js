@@ -35,8 +35,8 @@ R(`B.deck = ['lien']; var ra = ghep(B, a, b);`);
 ok(R('n1.lc === 6 && xa.lc === 5 && n2.lc === 14'), 'ghép 0 → 1: cùng hàng ô ghép (ô 2, ô 3) +2 +3 → 6, 5 · ô 6 (cột ô ghép ô 1) 9 + 2 + 3 = 14 (luật 08/11: theo ô ghép)', R('[n1.lc, xa.lc, n2.lc]'));
 ok(!R('kc.lc'), 'ụ khác loại không nhận lửa');
 R('n1.lc = 10; capNhatBan(B, 1/30)');
-ok(Math.abs(R('n1.buf.dmg') - (0.2 + R('DOTPHA.thuong(1, "lualien").dmg'))) < 1e-6 && Math.abs(R('n1.buf.crit') - 0.012) < 1e-6, '10 lửa: +20% ST, +1.2 điểm % chí mạng (đột phá I)');
-ok(/max 70/.test(R('SKILLS.lualien.mo(n1)')), 'chữ xem: trần 70');
+ok(Math.abs(R('n1.buf.dmg') - (0.8 + R('DOTPHA.thuong(1, "lualien").dmg'))) < 1e-6 && Math.abs(R('n1.buf.crit') - 0.04) < 1e-6, '10 lửa: +80% ST, +4 điểm % chí mạng (đột phá I) — 08/11');
+ok(/no flame limit/.test(R('SKILLS.lualien.mo(n1)')), 'chữ xem: không trần lửa');
 
 console.log('Quantum Choir (hopca)');
 tran(['hopca', 'lien', 'canon', 'bang', 'tia']);
@@ -84,7 +84,7 @@ const VANG = ['aten', 'railgun', 'hydra', 'cuuvi', 'nemesis', 'nhatthuc', 'soi',
 const ds = (id, o) => [1, 4, 7].map(s => Math.round(dps(id, s, o)));
 const nen = VANG.map(id => [id, ds(id)]);
 const min = [0, 1, 2].map(i => Math.min(...nen.map(x => x[1][i]))), max = [0, 1, 2].map(i => Math.max(...nen.map(x => x[1][i])));
-const MOI = [['lualien', { lc: 10 }, 'Ember Relay (10 lửa — 08/11: mỗi lửa 2%)'], ['hopca', { ban: 1 }, 'Quantum Choir (7 ụ cùng sao)'], ['luutru', { kho: 20 }, 'Fusion Archive (20 điểm)']];
+const MOI = [['lualien', { lc: 10 }, 'Ember Relay (10 lửa — 08/11: mỗi lửa 8%)'], ['hopca', { ban: 1 }, 'Quantum Choir (7 ụ cùng sao)'], ['luutru', { kho: 20 }, 'Fusion Archive (20 điểm)']];
 if (process.env.BANG) { console.log('| Ụ | 1★ | 4★ | 7★ |'); for (const [id, v] of nen) console.log('| ' + id + ' | ' + v.join(' | ') + ' |'); }
 console.log('Cân bằng (dải Vàng hiện có 1★ ' + min[0] + '–' + max[0] + ' · 4★ ' + min[1] + '–' + max[1] + ' · 7★ ' + min[2] + '–' + max[2] + ')');
 for (const [id, o, ten] of MOI) {

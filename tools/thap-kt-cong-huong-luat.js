@@ -454,7 +454,7 @@ if (nhom('10 · jackpot')) {
   ca('[JP] PERFECT FREQUENCY đã bỏ: 4 ụ Tấn công 3 loại giữ 9 s', 'không có jackpot', R('jK4.some(X => X.jp)'), !R('jK4.some(X => X.jp)'));
   // 9 ĐỘT PHÁ theo độ khó (08/11: Choir / Forge bỏ đột phá — Harmony / Twin Anvil làm lại)
   { const b = R('JSON.stringify(DOTPHA.thuong(4, "lualien"))'), c = R('JSON.stringify(DOTPHA.thuong(4, "cuuvi"))');
-    ca('[JP] ĐỘT PHÁ IV theo độ khó', 'Ember (3) < Nine-Tail (4)', b + ' ' + c, R('DOTPHA.thuong(4,"lualien").cdmg < DOTPHA.thuong(4,"cuuvi").cdmg && DOTPHA.thuong(4,"lualien").cdmg === 0.8')); }
+    ca('[JP] ĐỘT PHÁ IV theo độ khó', 'Ember (5, 08/11: lửa chỉ đến khi rời bàn) > Nine-Tail (4)', b + ' ' + c, R('DOTPHA.thuong(4,"lualien").cdmg > DOTPHA.thuong(4,"cuuvi").cdmg && Math.abs(DOTPHA.thuong(4,"lualien").cdmg - 1.35) < 1e-9')); }
   // CỘNG DỒN DO HÀNH ĐỘNG = RIÊNG TỪNG Ụ (người dùng 18:57): Leviathan nuốt → chỉ ụ đó +ABYSS; ụ mới 0; ghép 2 Leviathan ra Leviathan giữ số lớn hơn
   tran(['leviathan', 'lien']); nap(); R(`var LA = dat(0, 'leviathan', 3), LB = dat(1, 'leviathan', 3); LA.vuc = 10; var EQ = sinhQuai('bo', G.duong.findIndex(p => p.ban === 0), 50); EQ.vao = 1;
     HU.xoay.cap(G, { E: EQ, T: LA, B, t: 9, song: 1, da: false }, 0);`); buoc(0.05);

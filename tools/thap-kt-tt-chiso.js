@@ -94,6 +94,12 @@ const doc = (p) => p.evaluate(() => {
     const so = await p.evaluate(() => { const T = G.ban[0].t[12]; return { d: ST.so(dmgU(T) * 0.5), t: (nhipU(T) * 3 / SKILLS.soi.KY_TT).toFixed(2) }; });
     ok(a.o.dmg.b === '3×' + so.d && a.o.toc.b === so.t + '/s' && a.o.crit.b === '100%', 'Sói thức tỉnh: 3×(50% DMG), nhịp loạt, CRIT 100%', JSON.stringify([a.o, so]));
     await p.screenshot({ path: path.join(SHOTS, '390x844-soi.png') });
+    // Ember Relay 5★ 70 lửa (08/11 tăng: mỗi lửa +8% ST, +0.4 điểm % chí mạng, +4% STCM; đột phá độ khó 5) — cũ: CRIT 28% · CRIT DMG 280%
+    await p.evaluate(() => { const T = _dat(13, 'lualien', 5); T.lc = 70; }); await p.waitForTimeout(300);
+    a = await cham(p, 13);
+    ok(a.o.crit.b === '53%' && a.o.cdmg.b === '615%' && a.o.crit.len && a.o.cdmg.len, 'Ember 5★ 70 lửa: CRIT 53% (10 + 28 + 15) · CRIT DMG 615% (200 + 280 + 50 + 85)', JSON.stringify([a.o.crit, a.o.cdmg]));
+    ok(a.o.dmg.b === a.so.dmgU && a.o.toc.b === a.so.tocU + '/s', 'Ember: DMG = dmgU, SPD = tocU', JSON.stringify([a.o.dmg, a.o.toc, a.so]));
+    await p.screenshot({ path: path.join(SHOTS, '390x844-ember70.png') });
     // đóng băng → SPD 0, đỏ
     await p.evaluate(() => { G.ban[0].t[6].st.bang = 30; }); await p.waitForTimeout(300);
     a = await cham(p, 6);
