@@ -159,7 +159,7 @@ const TEXT = {
     thanhdia:     { name: 'Sanctum',        skill: 'Support: when it arrives, it cleans and shields its Neighbours (4 sides). Attack Neighbours get +damage. Shields come back over time' },
     // ụ cờ bạc Đỏ (jackpot.js, 08/11)
     cobac:        { name: 'Lucky Slot',     skill: 'Spins 3 fruit reels when it appears (summon or merge). A pair = +1 point to that fruit; 3 of a kind = JACKPOT: +2 to all fruits. No match = spin again. Points are shared by all Lucky Slots. Orange = damage, Watermelon = speed, Grape = crit damage. Raising its star in place (like Merge King) doesn\'t spin again.' },
-    bienmau:      { name: 'Prism Thief',    skill: 'Each one has 1 colour: red kills, gold gives mana, blue freezes, green crits. Put 4 different colours side by side and swipe through all 4: CHROMATIC CIRCUIT' },
+    bienmau:      { name: 'Prism Thief',    skill: 'Each one has 1 colour: red kills, gold gives mana, blue freezes, green crits. Put 4 different colours side by side and swipe through all 4: they FUSE into one 4-colour Spectrum Prism with all 4 effects. Fuse it again to make it stronger, no limit' },
   },
 };
 

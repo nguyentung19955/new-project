@@ -181,6 +181,7 @@ const GF = {
       ctx.globalAlpha = 0.5 - 0.15 * lift; ctx.drawImage(bong, bx - w / 2, by - h / 2, w, h); ctx.globalAlpha = 1;
     }
     ctx.save();
+    if (ng && T.id === 'bienmau') ng = 0; // Prism Thief: mặt nạ luôn nằm NGANG, kể cả lúc cầm kéo (không nghiêng)
     if (ng) { ctx.translate(x, y); ctx.rotate(ng); ctx.translate(-x, -y); }
     REN.veU(ctx, T, x, y, { scale: sc, ghost: true });
     ctx.restore(); ctx.globalAlpha = 1;
@@ -205,7 +206,9 @@ const GF = {
   veMeo(ctx, src) {
     const B = G.ban[src.ban], dang = UI.keo && UI.keo.dang, hover = dang ? this.hoverT : null, C = this.tile(B);
     let s = null, c = null, y = 0;
-    if (hover && hopLeGhep(src, hover)) { s = KG.chuMeo(src, hover); c = B.o[hover.o]; y = c.y + C * 0.78; }
+    const dp = dang && UI.keo.duong; // Prism Thief: vuốt đủ 4 ô hợp thể hợp lệ → mẹo hợp thể (skills7.js), thay mẹo ghép thường
+    if (dp && dp.length === 4 && SKILLS.bienmau && SKILLS.bienmau.kiemMach(B, dp).ds) { s = KG.TXT.tipPM; c = B.o[dp[3]]; y = c.y + C * 0.78; }
+    else if (hover && hopLeGhep(src, hover)) { s = KG.chuMeo(src, hover); c = B.o[hover.o]; y = c.y + C * 0.78; }
     else if (UI.chonGhep && !dang) { s = KG.TXT.tapTip; c = B.o[src.o]; y = c.y - C * 0.78; }
     if (!s) { KG._tip = null; return; }
     if (KG.soMeo() >= 3 && (s === KG.TXT.tip || s === KG.TXT.tapTip)) return; // mẹo kỹ năng kéo thả / ghép đặc biệt: luôn hiện

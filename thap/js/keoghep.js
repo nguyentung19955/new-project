@@ -13,7 +13,7 @@ const KG = {
   CHON_S: 4, // chế độ chạm–chạm: ụ được chọn giữ 4 s
   LO_S: 1.0, // tấm kết quả hiện ~1 s
   ANH: ['khung_chon', 'sup_ring', 'h2_vong_do', 'nhan_kn', 'h2_sao', 'h2_sao_sang', 'h2_vfx_ghep'],
-  TXT: { tip: 'Random type, +1★', tipDB: 'Special merge', tipSao: (n) => 'Same turret, +' + n + '★', tipKN: 'Skill, not a merge', tapTip: 'Tap a glowing turret to merge', huy: 'Cancelled' },
+  TXT: { tip: 'Random type, +1★', tipDB: 'Special merge', tipSao: (n) => 'Same turret, +' + n + '★', tipKN: 'Skill, not a merge', tapTip: 'Tap a glowing turret to merge', tipPM: 'Release: FUSE into 1 mask', huy: 'Cancelled' },
   lo: [], // tấm kết quả đang hiện: { B, o, T, t0 }
   _tip: null,
 
@@ -104,7 +104,9 @@ const KG = {
   veMeo(ctx, src, hover) {
     const B = G.ban[src.ban];
     let s = null, c = null;
-    if (hover && hopLeGhep(src, hover)) { s = this.chuMeo(src, hover); c = B.o[hover.o]; }
+    const dp = UI.keo && UI.keo.dang && UI.keo.duong; // Prism Thief: đang vuốt đủ 4 ô hợp thể hợp lệ → mẹo hợp thể thay mẹo ghép (skills7.js)
+    if (dp && dp.length === 4 && SKILLS.bienmau && SKILLS.bienmau.kiemMach(B, dp).ds) { s = this.TXT.tipPM; c = B.o[dp[3]]; }
+    else if (hover && hopLeGhep(src, hover)) { s = this.chuMeo(src, hover); c = B.o[hover.o]; }
     else if (UI.chonGhep && !(UI.keo && UI.keo.dang)) { s = this.TXT.tapTip; c = B.o[src.o]; }
     if (!s) { this._tip = null; return; }
     if (this.soMeo() >= 3 && (s === this.TXT.tip || s === this.TXT.tapTip)) return;

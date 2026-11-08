@@ -96,6 +96,14 @@ function upLuatGhep(id) {
     L.push(['Other merges', 'Mimic merges give a random turret as usual. Merge King raises the star and keeps the directions + stacks. A Copycat copy keeps them too.']);
     return L.concat([['Stone', 'If Janus Cube petrifies it, it only merges with stone of the same star (result: a higher-star stone).']]);
   }
+  if (id === 'bienmau') { // Prism Thief: HỢP THỂ (08/11 lần 2) — skills7.js, docs/demo-hop-tuong/tuvan/prism/THIET-KE.md
+    L.push(['Colour', 'Each Prism Thief gets 1 random colour when it appears: red kills, gold gives mana, blue freezes, green crits.']);
+    L.push(['Fusion', 'Put 4 Prisms of 4 different colours side by side and swipe one line through all 4. They fuse into ONE 4-colour Spectrum Prism on the last tile. The other 3 tiles become empty. This counts as a merge.']);
+    L.push(['Spectrum Prism', 'Has all 4 effects on every hit. Each fusion: +' + Math.round(SKILLS.bienmau.HOP_DMG * 100) + '% damage, +' + Math.round(SKILLS.bienmau.HOP_TOC * 100) + '% fire rate and higher chances. Stacks of all 4 Prisms add up. Star = the highest star of the 4.']);
+    L.push(['Fuse again', 'Swipe the mask with 3 Prisms of different colours (the mask counts as any colour), or drag a Spectrum Prism onto another one. The fusion number adds up. No limit.']);
+    L.push(['Other merges', 'A Spectrum Prism does not merge normally (no Mimic, no random turret). Merge King raises its star and keeps the fusion. A Copycat copy is a new Prism with a new random colour.']);
+    return L.concat([['Stone', 'If Janus Cube petrifies it, it cannot fuse until the stone is broken.']]);
+  }
   if (id === 'mimic') L.push(['Joker merge', 'Merges with any turret of the same star. The result gets +' + Math.round(knThe(null, 'mimic')) + '% damage for 8s.']);
   else if (sk.ghepDB) L.push([sk.ghepDB.laGhep ? 'Special merge' : 'Drag skill', upSC(mo1 || (TEXT.turret[id] || {}).skill) + '.']);
   if (sk.ghep) L.push(['Merge trigger', upSC((TEXT.turret[id] || {}).skill || mo1) + '.']);

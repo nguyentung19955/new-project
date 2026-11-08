@@ -20,7 +20,7 @@ const UI = {
     let r = null;
     try { // tối đa 4 s (Safari đôi khi treo fetch lúc nạp lại trang) → dùng bản nhúng meta.js
       const ac = typeof AbortController !== 'undefined' ? new AbortController() : null, hen = ac && setTimeout(() => ac.abort(), 4000);
-      const res = await fetch('assets/roster.json?v=7315c829', { cache: 'no-cache', signal: ac ? ac.signal : undefined }); if (res.ok) r = await res.json(); clearTimeout(hen);
+      const res = await fetch('assets/roster.json?v=099adbe7', { cache: 'no-cache', signal: ac ? ac.signal : undefined }); if (res.ok) r = await res.json(); clearTimeout(hen);
     } catch (e) { }
     G.roster = applyText(r || window.ROSTER_EMBED || []).filter(x => !(typeof THE_BO !== 'undefined' && THE_BO.includes(x.id))); // thẻ đã bỏ (Hào Quang Thánh) — thebai.js
     SND.nutNhan(); // nhãn nút NHẠC/SFX theo trạng thái đã lưu
@@ -504,12 +504,12 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
         if (!k.T.st.bang && B.t.some(N => N && N !== k.T && hopLeGhep(k.T, N))) this.chonGhep = { T: k.T, t0: performance.now() };
         return;
       }
-      // Prism Thief: vuốt qua 4 ô liền → CHROMATIC CIRCUIT (skills7.js) thay cho ghép; đi qua ≥ 3 ô Prism mà sai luật → báo lý do, không ghép
+      // Prism Thief: vuốt qua 4 ô liền → HỢP THỂ thành 1 mặt nạ 4 màu (skills7.js) thay cho ghép; đi qua ≥ 3 ô Prism mà sai luật → báo lý do, không ghép
       if (k.duong && typeof SKILLS.bienmau.kiemMach === 'function') {
         const p = k.duong, soP = new Set(p.filter(o => B.t[o] && B.t[o].id === 'bienmau')).size;
         if (p.length === 4 && SKILLS.bienmau.mach(B, p)) return;
         if (soP >= 3) { const v = p.length === 4 ? SKILLS.bienmau.kiemMach(B, p) : { loi: 'path' }, c = B.o[p[p.length - 1]];
-          const chu = { path: 'SWIPE EXACTLY 4 CELLS', prism: '4 PRISM THIEVES NEEDED', colour: 'NEED 4 DIFFERENT COLOURS', cd: 'CIRCUIT READY IN ' + Math.ceil((B.pmCd || 0) - G.t) + 'S' }[v.loi] || '';
+          const chu = { path: 'SWIPE EXACTLY 4 CELLS', prism: '4 PRISM THIEVES NEEDED', colour: 'NEED 4 DIFFERENT COLOURS' }[v.loi] || '';
           if (chu) FX.chu1(c.x, c.y - 22, chu, '#ff9a9a', 12); return; }
       }
       // kéo: chỉ ghép khi thả đúng lên ô HỢP LỆ; mọi chỗ khác = huỷ (không ghép)
