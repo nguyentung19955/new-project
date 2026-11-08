@@ -270,7 +270,7 @@ Object.assign(REN, {
         const w = Math.max(18, co * 0.55), yy = yb - co * 0.42;
         PX.thanh(ctx, E.x - w / 2, yy, w, 3, E.hp / E.max, E.docT > 0 ? '#7cff4a' : (lanh ? '#6fd8ff' : '#ff4a4a'));
       }
-      if (lanh) { ctx.globalAlpha = 0.85; const kh = this.kyHieu('cham', 8); ctx.drawImage(kh, E.x - Math.max(18, co * 0.55) / 2 - 10, yb - co * 0.42 - 3, 8, 8); ctx.globalAlpha = 1; }
+      // (bỏ bông tuyết cạnh thanh máu — người dùng 08/11; bị chậm vẫn thấy: thanh máu xanh băng + vòng gió lạnh / băng trên thân)
       if (E.trum) {
         const w = 70, yy = yb - co * 0.6; // 0.55 → 0.6: đỉnh nảy của mad_crown/freezer/joker_king chạm thanh máu
         PX.thanh(ctx, E.x - w / 2, yy, w, 4, E.hp / E.max, TRUM[E.trum].mau);

@@ -623,6 +623,10 @@ const REN = {
     for (const d of G.dan) {
       d.__x = d.x; d.__y = d.y; d.__z = d.z;
       if (d._x !== undefined) { d.x = d._x + (d.x - d._x) * a; d.y = d._y + (d.y - d._y) * a; if (d.z !== undefined) d.z = d._z + (d.z - d._z) * a; }
+      if (d.dd && typeof epKhungTL === 'function') { // tên lửa đuổi La Bàn: VẼ trong hộp bàn + đường (luật bay giữ nguyên — game.js epKhungTL)
+        [d.x, d.y] = epKhungTL(d.B, d.x, d.y);
+        if (d._x !== undefined) { d.__px = d._x; d.__py = d._y; [d._x, d._y] = epKhungTL(d.B, d._x, d._y); }
+      }
     }
     for (const B of G.ban) for (const T of B.t) if (T) {
       T.__g = T.goc; T.__rx = T.rx;
@@ -638,7 +642,7 @@ const REN = {
   },
   traLai() {
     for (const E of G.quai) { E.x = E.__x; E.y = E.__y; E.gv = E.__g; E.tChet = E.__c; }
-    for (const d of G.dan) { d.x = d.__x; d.y = d.__y; d.z = d.__z; }
+    for (const d of G.dan) { d.x = d.__x; d.y = d.__y; d.z = d.__z; if (d.__px !== undefined) { d._x = d.__px; d._y = d.__py; d.__px = undefined; } }
     for (const B of G.ban) for (const T of B.t) if (T) { T.goc = T.__g; T.rx = T.__rx; if (T.anim && T.anim.__t !== undefined) T.anim.t = T.anim.__t; }
     for (const o of G.hu) {
       o.t = o.__t;
@@ -829,7 +833,7 @@ const REN = {
         const w = Math.max(18, co * 0.55), yy = y - co * 0.42;
         this.thanhAnh(ctx, x - w / 2, yy, w, 3.5, E.hp / E.max, E.docT > 0 ? '#7cff4a' : (E.cham > 0 && !E.d.khangCham ? '#6fd8ff' : '#ff4a4a'));
       }
-      if (lanh) { ctx.globalAlpha = 0.85 * al; const k = this.kyHieu('cham', 8); ctx.drawImage(k, x - Math.max(18, co * 0.55) / 2 - 10, y - co * 0.42 - 3, 8, 8); ctx.globalAlpha = al; }
+      // (bỏ bông tuyết cạnh thanh máu — người dùng 08/11; bị chậm vẫn thấy: thanh máu xanh băng + viền băng trên thân)
       if (E.trum && !E.chet) {
         const w = 70, yy = y - co * 0.55;
         this.thanhAnh(ctx, x - w / 2, yy - 1, w, 6, E.hp / E.max, TRUM[E.trum].mau);

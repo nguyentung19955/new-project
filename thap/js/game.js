@@ -828,8 +828,8 @@ function banDan(o) {
 }
 function capNhatDan(d, dt) {
   d.t += dt;
-  TVX.dan(d, dt);
-  if (d.dd) return danDuoi(d, dt); // tên lửa đuổi (Pháo La Bàn)
+  if (!d.dd) TVX.dan(d, dt);
+  if (d.dd) { const x = d.x, y = d.y; [d.x, d.y] = epKhungTL(d.B, x, y); TVX.dan(d, dt); d.x = x; d.y = y; return danDuoi(d, dt); } // tên lửa đuổi (Pháo La Bàn) — hạt vfx theo vị trí VẼ (epKhungTL)
   if (d.cong) {
     // đạn cầu vồng (pháo, cối): bay theo parabol tới điểm rơi (bám mục tiêu nếu còn sống)
     if (d.muc && !d.muc.chet) { d.px += (d.muc.x - d.px) * Math.min(1, dt * 6); d.py += (d.muc.y - d.py) * Math.min(1, dt * 6); }
@@ -868,9 +868,27 @@ function danDuoi(d, dt) {
     if (d.t > 0.12) { const xoay = (6 + d.t * 16) * dt, lech = gocLech(v.g, Math.atan2(dy, dx)); v.g += Math.max(-xoay, Math.min(xoay, lech)); }
   } else if (d.t > 0.6) { d.trung(G, d, null); return true; }
   d.x += Math.cos(v.g) * b; d.y += Math.sin(v.g) * b; d.goc = v.g; d.px = d.x; d.py = d.y;
-  if (d.duoi === 'tenlua' && Math.random() < dt * 40) FX.hat1('khoi', d.x - Math.cos(v.g) * 8, d.y - Math.sin(v.g) * 8, 0, -4, 0.3, 6); // vfx: khói đuôi (không ảnh hưởng luật)
+  if (d.duoi === 'tenlua' && Math.random() < dt * 40) { const [kx, ky] = epKhungTL(d.B, d.x - Math.cos(v.g) * 8, d.y - Math.sin(v.g) * 8); FX.hat1('khoi', kx, ky, 0, -4, 0.3, 6); } // vfx: khói đuôi (không ảnh hưởng luật)
   if (d.t > 3.5) { d.trung(G, d, null); return true; }
   return false;
+}
+
+// KHUNG VẼ TÊN LỬA (08/11, "sao tên lửa lại bắn lên tận ngoài thế này"): luật bay giữ NGUYÊN (danDuoi tất định, nổ đúng lúc/đúng chỗ cũ),
+//   chỉ vị trí VẼ (đạn, khói, hạt) bị ép mềm vào hộp bàn + đường của bàn đó (mép đường + 10 px, trong canvas) — phần vượt ra co theo hàm mũ,
+//   nên tên lửa không còn bay vọt lên vùng trống trên cổng quái; khi trở lại trong hộp thì trùng đúng vị trí thật (lúc nổ luôn trên đường).
+function khungTL(B) {
+  if (!B) return null;
+  if (B._kTL && B._kTL.d === G.duong && B._kTL.n === G.duong.length) return B._kTL.k;
+  let x0 = B.x, y0 = B.y, x1 = B.x + B.w, y1 = B.y + B.h;
+  for (const p of G.duong) { if (p.ban != null && p.ban !== B.i) continue; for (const [x, y] of p.pts) { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); } }
+  const r = DUONG_RONG / 2, cw = typeof W === 'number' ? W : 1e9, ch = typeof H === 'number' ? H : 1e9, m = 10;
+  const k = [Math.max(m, x0 - r), Math.max(m, y0 - r), Math.min(cw - m, x1 + r), Math.min(ch - m, y1 + r), m];
+  B._kTL = { d: G.duong, n: G.duong.length, k }; return k;
+}
+function epKhungTL(B, x, y) {
+  const k = khungTL(B); if (!k) return [x, y];
+  const m = k[4], ep = (v, a, b) => v < a ? a - m * (1 - Math.exp((v - a) / m)) : v > b ? b + m * (1 - Math.exp((b - v) / m)) : v;
+  return [ep(x, k[0], k[2]), ep(y, k[1], k[3])];
 }
 
 // ---------- AI (đồng đội / đối thủ; ?auto=1 cho bàn mình khi kiểm thử) ----------
