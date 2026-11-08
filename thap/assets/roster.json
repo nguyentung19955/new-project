@@ -924,9 +924,9 @@
   "ten": "Lucky Slot",
   "bac": "do",
   "dcdw": "(new)",
-  "kyNang": "Spins a fruit slot when it appears (summon or merge): Orange +damage, Watermelon +speed, Grape +crit damage, shared by all Lucky Slots. Raising its star in place (like Merge King) doesn't spin again. 10% JACKPOT: all three",
+  "kyNang": "Spins 3 fruit reels when it appears: a pair = +1 point to that fruit, 3 of a kind = JACKPOT (+2 to all fruits), no match = spin again. Orange +damage, Watermelon +speed, Grape +crit damage, shared by all Lucky Slots",
   "ten_vi": "Máy Xèng",
-  "kyNang_vi": "Quay xèng trái cây khi xuất hiện (triệu hồi hoặc ghép): Cam +sát thương, Dưa hấu +tốc bắn, Nho +sát thương chí mạng, dùng chung cho mọi Máy Xèng. Tăng sao tại chỗ (vd Merge King) không quay lại. 10% JACKPOT: cả ba",
+  "kyNang_vi": "Quay 3 cuộn trái cây khi xuất hiện: ra cặp = +1 điểm cho quả đó, 3 ô giống nhau = JACKPOT (+2 cho mọi quả), không trùng = quay lại. Cam +sát thương, Dưa hấu +tốc bắn, Nho +sát thương chí mạng, dùng chung cho mọi Máy Xèng",
   "vai": "tc",
   "ho": "joker",
   "moi": "CO-BAC"

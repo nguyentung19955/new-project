@@ -254,11 +254,11 @@ const ONS = {
     if (T.id === 'tienhoa') T.chay = c.includes('X');
     if (T.id === 'cobac') T.cbS = so('z');
   },
-  // Lucky Slot: máy bạn đã quay → bàn con rối phát lại cuộn xèng đúng quả + nhận ngăn quả của máy bạn (không tự rút)
+  // Lucky Slot: máy bạn đã quay → bàn con rối phát lại máy xèng 3 ô đúng chuỗi + nhận ngăn quả của máy bạn (không tự rút)
   apCB(B1, d) {
     if (!d || typeof CB === 'undefined') return;
     const T = B1.t[d.o];
-    if (T && T.id === 'cobac' && !(T.cbS > 0)) CB.quay(B1, T, { f: d.f, s: d.s, n: d.n }); // chỉ 1 lần quay / ụ (lên sao tại chỗ không quay lại)
+    if (T && T.id === 'cobac' && !(T.cbS > 0)) CB.quay(B1, T, { q: d.q, f: d.f, s: d.s, n: d.n }); // chỉ 1 lần quay / ụ (lên sao tại chỗ không quay lại) · q = MỌI ô của MỌI lượt (3 ô, quay lại khi khác hết) → phát lại y hệt
     if (Array.isArray(d.st) && d.st.length === 3) B1.cb = d.st.map(x => Math.max(0, x | 0));
     if (d.n) B1.cbN = Math.max(B1.cbN | 0, d.n | 0);
   },

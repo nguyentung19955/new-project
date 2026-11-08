@@ -76,7 +76,7 @@ const doc = (p) => p.evaluate(() => {
     await p.evaluate(() => { G.ban[0].cb = [10, 10, 10]; }); await p.waitForTimeout(400);
     b = await cham(p, 8);
     ok(parseFloat(b.o.dmg.b) > parseFloat(a.o.dmg.b) && b.o.dmg.len, 'Lucky Slot: Cam → DMG tăng, xanh', a.o.dmg.b + ' → ' + b.o.dmg.b);
-    ok(b.o.cdmg.b === '300%' && b.o.cdmg.len, 'Lucky Slot: Nho 10 → CRIT DMG 300%', JSON.stringify(b.o.cdmg));
+    ok(b.o.cdmg.b === '350%' && b.o.cdmg.len, 'Lucky Slot: Nho 10 → CRIT DMG 350% (200% + 10 × 15%, số mỗi điểm 08/11)', JSON.stringify(b.o.cdmg));
     ok(parseFloat(b.o.toc.b) > parseFloat(a.o.toc.b), 'Lucky Slot: Dưa → SPD tăng', a.o.toc.b + ' → ' + b.o.toc.b);
     await p.screenshot({ path: path.join(SHOTS, '390x844-cobac.png') });
     // Pháo La Bàn NSWE + stack: DMG = dmgMoi (mỗi tên lửa), SPD = tocU × số hướng

@@ -198,10 +198,11 @@ const SD_K = {
   luoicheo: { kieu: 'ht', ke: CHEO4.map((o, i) => [o, i % 2 ? 'canon' : 'lien', 's']), c: [[0.2, 'Buffs the 4 diagonal cells'], [2.0, 'All 4 diagonals filled: resonance', { cham: 0.5 }]] },
   ngaithoigian: { q: Q.nhom(5, 200, 26, 30), cham: [4.2], truoc: (T) => { T.nap = 0.92; T.napDay = -99; }, c: [[0.2, 'Enemies slow down over time'], [4.2, 'Tap: rewind pushes enemies back', { cham: 0.7 }]], dai: 9 },
   nemesis: { q: Q.trum('janus', 99, 40).concat(Q.hang(2, 210, 40, 3)), c: [[0.2, 'Every 10 hits: a VERDICT'], [2.4, 'More elites or bosses: +damage forever', { ev: 'hit', cham: 0.5 }]] },
-  // Lucky Slot (jackpot.js): ụ giữa quay ra CAM; 2,6 s Lucky Slot thứ 2 xuất hiện → quay JACKPOT (kết quả ép qua G._cbEp — clip, không đổi luật trận)
-  cobac: { kieu: 'tc', q: Q.hang(5, 180, 40, 8), truoc: (T, B) => { if (B) { B.cb = [0, 0, 0]; B.cbN = 0; B.cbV = null; } G._cbEp = [0, 3]; if (T) T.cbS = 0; },
-    them: [[2.6, (B, D, T) => { if (!T || B.t[8]) return; const N = sinhU(taoU(B, 'cobac', T.sao, 8)); N.goc = -Math.PI / 2; B.t[8] = N; VX.trieu(N); }]],
-    c: [[0.2, 'Spins a fruit slot when it appears'], [1.2, 'Orange = damage · Watermelon = speed · Grape = crit damage', { cham: 0.5 }], [2.6, 'Every Lucky Slot shares the fruit stacks'], [3.8, '10% JACKPOT: all three fruits!', { cham: 0.6 }]], dai: 7.5 },
+  // Lucky Slot (jackpot.js, máy xèng 3 ô): ụ giữa ra 3 quả khác nhau → tự quay lại → cặp DƯA (+1); 4,4 s Lucky Slot thứ 2 xuất hiện → 3 NHO = JACKPOT
+  //   (chuỗi ép qua G._cbEp — clip, không đổi luật trận)
+  cobac: { kieu: 'tc', q: Q.hang(5, 180, 40, 8), truoc: (T, B) => { if (B) { B.cb = [0, 0, 0]; B.cbN = 0; B.cbV = null; } G._cbEp = [[[0, 1, 2], [1, 1, 0]], [[2, 2, 2]]]; if (T) T.cbS = 0; },
+    them: [[4.4, (B, D, T) => { if (!T || B.t[8]) return; const N = sinhU(taoU(B, 'cobac', T.sao, 8)); N.goc = -Math.PI / 2; B.t[8] = N; VX.trieu(N); }]],
+    c: [[0.2, 'Spins 3 fruit reels when it appears'], [1.95, 'No match: it spins again'], [3.8, 'A pair: +1 point to that fruit', { cham: 0.5 }], [4.6, 'Orange = damage · Watermelon = speed · Grape = crit damage'], [6.35, '3 of a kind: JACKPOT! +2 to all fruits', { cham: 0.6 }], [7.6, 'Every Lucky Slot shares the points']], dai: 9 },
   docton: { q: Q.dong(8, 0.5, 4), them: [[4.2, (B) => { const N = sinhU(taoU(B, 'lien', SD.sao, 8)); B.t[8] = N; VX.trieu(N); }]], c: [[0.2, 'Alone: shoots ×2 faster'], [4.2, 'A Neighbour stops the bonus', { cham: 0.6 }]] },
   thaukinh: { kieu: 'ht', may: [1.8, 3.4, 'ke'], q: Q.hang(5, 200, 30, 8), c: [[0.2, 'Neighbours’ crits hit harder'], [1.8, 'Crits go through enemies', { cham: 0.5 }]] },
   nhieusong: { kieu: 'ghep', doi: [[4, 'canon', 3], [9, 'tia', 4], [14, 'set', 3]], c: [[0.2, 'Merge two Signal Jammers'], [2.5, 'Rival turrets get jammed', { cham: 0.7 }], [3.6, 'Jammed: −40% fire rate']] },
@@ -294,7 +295,7 @@ const SD_GD = {
   ngaithoigian: ['Piercing clock-hand dart', 'Dart stamps a slowing clock', 'Pierces the line, then echoes'],
   ronglua: ['Orange flame cone burns', 'Blue flame: +30% vs big', 'White flame, longer burning trail'],
   luoicheo: ['Diagonal damage buff', 'Buffed hits spark teal rings', 'Every 3rd shot shows an echo (visual only)'],
-  cobac: ['Slot gun: spins on arrival', 'HIGH ROLLER: each spin adds more', 'GRAND CASINO: 7 per spin'],
+  cobac: ['Slot gun: spins 3 reels on arrival', 'HIGH ROLLER: a bigger coin gun', 'GRAND CASINO: the full casino'],
   chuato: ['1–3 drones circle the hive', 'More drones: a stronger volley', '7 drones: the full brood'],
   leviathan: ['Bubble shot with splash', 'Eats big enemies too', 'Huge bubbles, eats flyers too'],
   combo: ['Warm-up: a plain core', 'On a roll: spinning rings', 'Overdrive: red-hot core'],
@@ -347,7 +348,7 @@ const SD_MO = {
   cauvong: (T) => 'Neighbours +' + Math.round(SKILLS.cauvong.k(T) * 100) + '% vs enemies on it',
   ngaithoigian: (T) => 'Enemies slow up to ' + Math.round(SKILLS.ngaithoigian.sMax(T) * 100) + '%',
   hydra: (T) => T.sao + (T.sao > 1 ? ' heads' : ' head') + ', ' + Math.round(SKILLS.hydra.vien(T) * 100) + '% damage each',
-  cobac: (T) => 'Each spin adds ' + T.sao + ' · 10% JACKPOT',
+  cobac: () => 'Pair +1 · 3 of a kind: JACKPOT +2 all',
   chuato: (T) => 'Up to ' + T.sao + ' drones',
   leviathan: () => 'ABYSS: +4% damage each, no cap',
   khoisinh: (T) => '+1★ to a neighbour every ' + SKILLS.khoisinh.g(T) + 's',
