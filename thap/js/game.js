@@ -119,8 +119,8 @@ function taoU(B, id, sao, o) {
   };
 }
 // LUẬT "BẢN SAO THEO Ô ĐÍCH" (09/11 người dùng: "ghép ụ xịn vào ụ copy thì giữ ụ copy, còn ngược lại thì ưu tiên ụ xịn" — chọn kéo cái nào vào cái nào là chiến thuật):
-//   ghép CÙNG LOẠI ra đúng loại đó (La Bàn + La Bàn, hợp thể Prism → ô cuối, Anvil + Anvil, Merge King + Merge King, ghép thường X + X ra lại X: Ember, Leviathan,
-//   GIU_CONG_DON…) → kết quả lấy cờ bản sao của Ụ ĐÍCH (ô thả). Biến tại chỗ giữ cờ của chính ụ đó. Ghép ra ụ KHÁC loại (ngẫu nhiên, Mimic) = ụ mới thật.
+//   ghép ĐẶC BIỆT CÙNG LOẠI thiết kế để ụ đích đi tiếp (La Bàn + La Bàn, hợp thể Prism → ô cuối, Anvil + Anvil, Merge King + Merge King) → kết quả lấy cờ
+//   bản sao của Ụ ĐÍCH (ô thả). Biến tại chỗ giữ cờ của chính ụ đó. GHÉP THƯỜNG (kể cả X + X bốc trúng lại X, Mimic, Wild Link) = ụ mới THẬT (sửa 09/11).
 function giuBanSao(N, dich) { if (N) N.banSao = !!(dich && dich.banSao); return N; }
 // gọi hook 'sinh' của kỹ năng khi ụ xuất hiện (vd. Sói Máy 30% ra bản thức tỉnh)
 function sinhU(T) { const sk = SKILLS[T.id]; if (sk && sk.sinh) sk.sinh(G, T); return T; }
@@ -135,14 +135,29 @@ function rngSinh(T, muoi) {
   if (B) B._snN = (B._snN | 0) + 1;
   return rngHat((hat * (muoi | 0) + ((B && B.i) | 0) * 389 + (T.o | 0) * 157 + ((B && B._snN) | 0) * 7919) | 0);
 }
+// RNG LUẬT có hạt (NT9, AUDIT-0811 F15/F16): quyết định ĐỔI BÀN (ụ ra khi ghép thường, ô/loại triệu hồi, Twin Maker, Hộp Bí Ẩn, Scrambler, Signal Jammer)
+//   — không Math.random. Hạt = hạt trận + muối (chỗ gọi) + NGƯỜI CHƠI (không phải chỉ số bàn trên máy: online khách thấy mình là bàn 0) + ô + bộ đếm riêng
+//   theo muối của bàn. Hiệu ứng ghép lên bàn ĐỐI THỦ (Scrambler, Jammer) chạy trên cả 2 máy (máy chủ bàn + bàn con rối qua gói 'gh') → cùng ô, cùng loại.
+function nguoiCua(B) { return (typeof ONS !== 'undefined' && ONS.on && !ONS.host && G.ban.length === 2) ? 1 - B.i : B.i; }
+function rngLuat(B, muoi, o) {
+  const hat = (typeof ONS !== 'undefined' && ONS.on ? ONS.seed : G.hat) || 1, dem = B._rl || (B._rl = {});
+  const n = dem[muoi] = (dem[muoi] | 0) + 1;
+  return rngHat((hat * 2246822519 + (muoi | 0) * 3266489917 + nguoiCua(B) * 668265263 + (o | 0) * 374761393 + n * 2654435761) | 0);
+}
+// trộn tất định theo thứ tự ô (thay sort(() => Math.random() - 0.5))
+function tronO(ds, r) { const a = ds.slice().sort((x, y) => x.o - y.o); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+// +★ TỰ ĐỘNG (Genesis, REINFORCE, Pandora VAULT/ALLY STAR, Star Leech trả sao, Star Lift — CAN-HOI 8B / AUDIT F10): bỏ ụ ĐÁ và ụ BĂNG.
+//   Merge King (kéo tay, quaKhoa) vẫn nâng được ô đá/băng — luật DCDW đã duyệt.
+function nhanSaoTuDong(T) { return !!T && T.sao < LUAT.saoMax && !biKhoa(T); }
 // bàn còn lại (PVP = đối thủ, CO-OP = đồng đội), SOLO = null
 function banKhac(B) { return G.ban.find(X => X !== B) || null; }
 function oTrong(B) { const ds = []; for (let i = 0; i < 15; i++) if (!B.t[i]) ds.push(i); return ds; }
 function trieu(B, mienPhi, idEp) {
   const tr = oTrong(B); if (!tr.length) return null;
   if (!mienPhi) { if (B.mana < B.gia) return null; B.mana -= B.gia; B.gia += LUAT.giaTrieuTang; }
-  const o = pick(tr);
-  const id = idEp || pick(B.deck);
+  const r = rngLuat(B, 13); // ô + loại: RNG luật có hạt (online: gói 'tr' mang đúng ô/loại)
+  const o = tr[Math.floor(r() * tr.length)];
+  const id = idEp || B.deck[Math.floor(r() * B.deck.length)];
   const T = sinhU(taoU(B, id, 1, o));
   B.t[o] = T;
   VX.trieu(T); // hiệu ứng triệu hồi theo thời gian thực (hieuung.js) — không chặn thao tác, luật chơi không chờ hoạt ảnh
@@ -155,7 +170,7 @@ function trieu(B, mienPhi, idEp) {
 function sinhDoi(B, sao, oNguon, ep) {
   if (!ep && B.net && typeof ONS !== 'undefined' && ONS.on) return null;
   const tr = oTrong(B); if (!tr.length) return null;
-  let r = Math.random;
+  let r = rngLuat(B, 17, oNguon);
   if (!ep && typeof ONS !== 'undefined' && ONS.on) r = rngHat((ONS.seed || 1) * 7907 + Math.round(G.t * 60) * 31 + (oNguon | 0) * 977 + B.i * 13);
   const o = ep ? ep.o : tr[Math.floor(r() * tr.length)];
   const id = ep ? ep.id : B.deck[Math.floor(r() * B.deck.length)]; // DCDW: đều ngẫu nhiên trong bộ bài như triệu hồi thường
@@ -223,7 +238,7 @@ function ghepDacBiet(a, b) {
 //   Mọi bộ đếm / kỹ năng "khi ghép" (Archive, MERGE SURGE, Mirror Gate, hướng dẫn, nhiệm vụ / thống kê, chớp + tấm kết quả ghép) dùng hàm này.
 //   Gọi TRƯỚC ghep() (ụ kéo còn trên bàn).
 function laGhepThat(a, b, ep) { if (ep) return true; const db = a && b ? ghepDBHop(a, b) : null; return !db || !!(db.sk.ghepDB.laGhep && db.sk.ghepDB.laGhep(db.a, db.b)); }
-const GIU_CONG_DON = { hopbi: ['tuoi'], tienhoa: ['egg'], leviathan: ['vuc'] }; // cộng dồn giữ khi ghép cùng loại ra cùng loại
+// (09/11 người dùng Q1 = A: bỏ GIU_CONG_DON — ghép thường ra ụ TRÙNG loại vẫn là ụ MỚI, cộng dồn riêng ụ về 0; xem AUDIT-0811 F5)
 // ghép a (kéo) vào b → ở ô b ra ụ NGẪU NHIÊN trong bộ bài, +1 sao (luật DCDW / Random Dice)
 function ghep(B, a, b, ep) {
   if (!ep && !hopLeGhep(a, b)) return null;
@@ -245,7 +260,8 @@ function ghep(B, a, b, ep) {
     if (ep && G._tdS) saoRa = G._tdS; else if (!ep && saoRa < LUAT.saoMax && r() < tdThuong(B2)) saoRa++;
     B2._td = { s: sTB, ra: saoRa }; // test / hình: sao trung bình + sao ra (có +1★ cấp thẻ hay không)
   }
-  const ra = sinhU(taoU(B2, idRa || pick(B2.deck), saoRa, b.o));
+  // ụ ra ghép thường: RNG LUẬT có hạt (NT9) — online bàn con rối nhận đúng loại qua gói 'gh' (bộ 1 phần tử)
+  const ra = sinhU(taoU(B2, idRa || (B2.deck.length > 1 ? B2.deck[Math.floor(rngLuat(B2, 11, b.o)() * B2.deck.length)] : B2.deck[0]), saoRa, b.o));
   if (daDa) ra.st.da = true;
   B2.t[a.o] = null; B2.t[b.o] = ra;
   ra.goc = b.goc;
@@ -260,16 +276,12 @@ function ghep(B, a, b, ep) {
   for (const id of (daDa ? [] : new Set([a.id, b.id]))) { const sk = SKILLS[id]; if (sk && sk.ghep) { sk.ghep(G, B2, ga, gb, B2.t[b.o] || ra); kh.push(id); } }
   G._treNhan = 0;
   if (kh.length) VX.kichHoat(B2, b.o, kh);
-  // GHÉP 2 ụ CÙNG LOẠI ra ĐÚNG loại đó → giữ cộng dồn lớn nhất của 2 nguyên liệu (BAO-CAO gioi-han §4 mục 6): Scrap Forge (lò), Overclock (ép xung trên thân),
-  //   Mystery Box / Evolver (bộ đếm). Leviathan: VỰC SÂU lưu theo bàn (skills5.js). Ember Relay: session khác (Lửa Thập Tự).
-  if (!daDa && a.id === b.id && B2.t[b.o] === ra && ra.id === a.id) {
-    for (const k of (GIU_CONG_DON[ra.id] || [])) ra[k] = Math.max(a[k] || 0, b[k] || 0, ra[k] || 0);
-    if (a.epxung || b.epxung) ra.epxung = Math.max(a.epxung || 0, b.epxung || 0, ra.epxung || 0);
-    giuBanSao(ra, b); // ra lại đúng loại = ụ ĐÍCH tiếp tục → cờ bản sao theo ô đích (luật 09/11)
-  }
+  // GHÉP THƯỜNG luôn ra 1 ụ MỚI THẬT, kể cả khi bốc ngẫu nhiên trúng đúng loại nguyên liệu (09/11 người dùng: "ụ loại A merge ụ loại A ra ụ loại A
+  //   nó khác với ụ loại A + ụ loại A ra ụ ngẫu nhiên, dù ngẫu nhiên ra ụ loại A cũng không thể coi đó là cùng 1 ụ"; Q1 = A, Q2 = A):
+  //   banSao = false, cộng dồn riêng ụ (ABYSS, Hộp, Evolver, Rồng nhiệt, đuôi…) về số lúc sinh, không mang Ép Xung / buff Anvil / khiên.
+  //   Chỉ ghép ĐẶC BIỆT cùng loại được thiết kế để ụ ĐÍCH đi tiếp (La Bàn, Prism hợp thể, Anvil + Anvil, Merge King + Merge King) theo ô đích (giuBanSao).
+  //   Ember: kỹ năng khi ghép riêng (ụ ra = A + C lửa) — vẫn là ụ thật.
   const kq = B2.t[b.o] || ra;
-  // buff Twin Anvil (skills4.js) theo ụ con khi ghép thường: lấy buff MẠNH hơn của 2 nguyên liệu (không cộng, không nhân đôi)
-  if (!daDa && (a.anv || b.anv) && kq === ra) { const x = a.anv, y = b.anv; ra.anv = !x ? y : !y ? x : (y.v > x.v ? y : x); }
   // (+1★ hiện bằng con dấu sao ảnh trong phát lại ghép — ghepfx.js)
   if (kq === ra) mocMoi(ra, tuDo ? Math.max(a.sao, b.sao) : b.sao, VX.TRE_LO + 0.12);
   SND.ghep(kq.sao, B2.ai);
@@ -768,7 +780,8 @@ function capNhatTrum(E, dt) {
     const n = LUAT_BANG.so(G.wave), xep = (L) => tronTrum(L, r);
     const B2 = G.che === 'coop' && G.ban.length === 2 ? G.ban[1 - B.i] : null;
     const ds2 = B2 ? B2.t.filter(T => T && !T.st.da && !(T.st.bang > 0)) : [];
-    const ds1 = ds.filter(T => !(T.st.bang > 0)).length ? ds.filter(T => !(T.st.bang > 0)) : ds;
+    const ds1 = ds.filter(T => !(T.st.bang > 0)); // NT7 (AUDIT F3): ụ đang băng KHÔNG bị băng lại / kéo dài — hết ụ để băng thì chiêu hụt
+    if (!ds1.length && !ds2.length) { E.knT = 2; return; }
     let n1 = B2 ? Math.ceil(n / 2) : n, n2 = n - n1;
     if (!B2) n2 = 0;
     if (ds2.length < n2) { n1 += n2 - ds2.length; n2 = ds2.length; }
@@ -813,7 +826,7 @@ function thucHienChieu(E, B) {
         FX.tiaLua(rong(T).x, rong(T).y, 14, '#ff6ad5'); }
       break;
     case 'freezer': { // nhiều ụ, 6 s; Halo (khiên bàn từ Halo) → nửa thời gian, vẫn mọi ụ. Hình: BANGFX (js/bangfx.js) — mảnh băng bay → bọc băng → vỡ
-      const dong = (BB, L, giay) => L.forEach((T, i) => { const tre = 0.32 + i * 0.09; T.st.bang = giay + tre; if (typeof BANGFX !== 'undefined') BANGFX.ban(E, BB, T, tre); else { const c = BB.o[T.o]; FX.no('bang_vo', c.x, c.y, 80, 0.45); } });
+      const dong = (BB, L, giay) => L.forEach((T, i) => { if (biKhoa(T)) return; const tre = 0.32 + i * 0.09; T.st.bang = giay + tre; if (typeof BANGFX !== 'undefined') BANGFX.ban(E, BB, T, tre); else { const c = BB.o[T.o]; FX.no('bang_vo', c.x, c.y, 80, 0.45); } });
       dong(B, muc, E.bao.haloA ? LUAT_BANG.giay / 2 : LUAT_BANG.giay);
       if (B2 && B2 !== B && muc2.length) { // CO-OP: phần của bàn đồng đội — khiên/Halo của bàn đó
         const halo2 = B2.halo > 0 && B2.khien > 0 && B2.khien <= B2.halo + 0.05;

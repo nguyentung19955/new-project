@@ -172,7 +172,7 @@ SKILLS.leviathan = {
   mo: (T) => 'ABYSS ' + (T.vuc || 0) + ' · +' + 4 * (T.vuc || 0) + '% damage · this turret only (a new one starts at 0) · its kills: elite +3, boss +10 · devours a small enemy every ' + SKILLS.leviathan.e(T) + 's (' + SKILLS.leviathan.TAM + ' px' + (T.sao >= 4 ? ', big ones ×3' : '') + (T.sao >= 7 ? ', flyers too' : '') + ') · bubble splash 30 px · ' + (T.sao >= 3 ? 'TAP when full: TIDAL BREATH ×' + (4 + 0.1 * (T.vuc || 0)).toFixed(1) + ' — water orbs shoot up from the turret and rain down along the whole path' : 'TIDAL BREATH unlocks at 3★'),
   TAM: 160, // tầm nuốt 120 → 160 px: mọi ô hàng giữa với tới đường (BAO-CAO gioi-han §4 mục 7)
   // VỰC SÂU RIÊNG TỪNG Ụ (người dùng 07/11 18:57): chỉ Leviathan NUỐT mới được điểm; ụ mới = 0; ụ bị biến/đổi/thay (ghép ra ụ khác, Mad Crown, Hộp…) mất điểm;
-  //   ghép 2 Leviathan ra Leviathan → giữ số LỚN HƠN (GIU_CONG_DON, game.js) — như Ember Relay
+  //   ghép 2 Leviathan ra Leviathan = ụ MỚI → 0 (09/11 người dùng Q1 = A, bỏ GIU_CONG_DON)
   sinh(G, T) { T.vuc = T.vuc || 0; T.nuot = 0; },
   // (người dùng duyệt 08/11) đòn của CHÍNH ụ này hạ TINH ANH (quái to) +3 ABYSS, hạ TRÙM +10 ABYSS (quái thường: nuốt +1 như cũ)
   khiGiet(G, T, E) {
@@ -479,7 +479,7 @@ SKILLS.ronglua = {
   ghepHangCot(B, o, sao, a, b) {
     const c = o % 5, h = (o / 5) | 0;
     for (let i = 0; i < 15; i++) {
-      const X = B.t[i]; if (!X || X.id !== 'ronglua' || X.st.da || X === a || X === b || i === o) continue;
+      const X = B.t[i]; if (!X || X.id !== 'ronglua' || biKhoa(X) || X === a || X === b || i === o) continue;
       if (i % 5 !== c && ((i / 5) | 0) !== h) continue;
       const them = this.GHEP * sao; X.nhiet = this.nhiet(X) + them; X.sang = 1; // tăng 1 lần: chỉ chớp
       if (typeof G !== 'undefined' && G.hu) { const p = B.o[o], q = B.o[i]; G.hu.push({ k: 'rongNap', t: 0, song: 0.35 + 0.06 * (Math.abs(i % 5 - c) + Math.abs(((i / 5) | 0) - h)), x0: p.x, y0: p.y, x1: q.x, y1: q.y, n: them }); }
@@ -528,7 +528,7 @@ Object.assign(SKILLS.ronglua, {
     return this.veDang(ctx, T, f, C, al, 1, da, R);
   },
 });
-GIU_CONG_DON.ronglua = ['nhiet']; // Rồng + Rồng ra Rồng: giữ nhiệt lớn hơn
+// (09/11 Q1 = A: bỏ GIU_CONG_DON.ronglua — Rồng + Rồng ra Rồng = ụ mới, nhiệt về 0)
 {
   const _ghepRong = ghep;
   ghep = function (B, a, b, ep) {

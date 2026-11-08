@@ -105,8 +105,8 @@ const CHM = {
       if (h.k === 'tech') { for (const T of h.ds) if (this.song(B, T) && !this.khoaT(T)) { T.buf.toc += h.toc; } }
       else if (h.k === 'twin') {
         if (!this.song(B, h.a) || !this.song(B, h.b)) { L.splice(i, 1); continue; } // ghép 1 trong 2 → cả cặp hết
-        for (const T of [h.a, h.b]) { T.buf.dmg += h.dmg; }
-      } else if (h.k === 'thap') { for (const T of h.ds) if (this.song(B, T)) { T.buf.dmg += h.dmg; } }
+        for (const T of [h.a, h.b]) if (!this.khoaT(T)) { T.buf.dmg += h.dmg; } // ụ khoá giữa chừng: không cộng (như QUICK TUNE / NEXUS — AUDIT F13)
+      } else if (h.k === 'thap') { for (const T of h.ds) if (this.song(B, T) && !this.khoaT(T)) { T.buf.dmg += h.dmg; } }
       else if (h.k === 'nexus') {
         const T = h.T; if (!this.song(B, T)) { L.splice(i, 1); continue; } // ghép ụ chủ lực → hết
         h.day = h.day.filter(S => this.song(B, S) && !this.khoaT(S) && this.thang(S.o, T.o) && this.kc(S.o, T.o) > 1); // đứt thì không nối lại
@@ -120,8 +120,8 @@ const CHM = {
     for (const h of (B && B.chm) || []) {
       const s = ' ' + Math.ceil(h.con) + 's';
       if (h.k === 'tech' && h.ds.includes(T) && !this.khoaT(T)) them('toc', h.toc, 'Commander QUICK TUNE' + s);
-      else if (h.k === 'twin' && (h.a === T || h.b === T)) them('dmg', h.dmg, 'Commander TWIN SIGNAL' + s);
-      else if (h.k === 'thap' && h.ds.includes(T)) them('dmg', h.dmg, 'Commander CROSSFIRE' + s);
+      else if (h.k === 'twin' && (h.a === T || h.b === T) && !this.khoaT(T)) them('dmg', h.dmg, 'Commander TWIN SIGNAL' + s);
+      else if (h.k === 'thap' && h.ds.includes(T) && !this.khoaT(T)) them('dmg', h.dmg, 'Commander CROSSFIRE' + s);
       else if (h.k === 'nexus' && h.T === T && h.day.length) { let dm = 0; for (const S of h.day) dm += this.giaTriDay(S, h.d); them('dmg', dm, 'Commander NEXUS LINK' + s); them('toc', h.d.tocDay * h.day.length, 'Commander NEXUS LINK' + s); }
     }
   },

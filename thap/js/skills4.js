@@ -103,7 +103,8 @@ SKILLS.nhieusong = {
     const S = { sao: Math.min(7, a.sao + 1) }, n = this.n(S), t = this.t(S), m = this.m(S), c0 = B.o[b.o];
     if (G.che === 'pvp') {
       const D = banKhac(B); if (!D) return;
-      const ds = D.t.filter(X => X && SKILLS[X.id].dmg && !(X.mienNhieu > G.t) && !(X.st.kep > 0) && !X.st.bang && !X.st.da && !(X.st.lua > 0)).sort(() => Math.random() - 0.5).slice(0, n);
+      const ds0 = D.t.filter(X => X && SKILLS[X.id].dmg && !(X.mienNhieu > G.t) && !(X.st.kep > 0) && !X.st.bang && !X.st.da && !(X.st.lua > 0)); // RNG luật có hạt theo người ghép (NT9 / AUDIT F15)
+      const ds = tronO(ds0, rngLuat(B, 29, b.o)).slice(0, n);
       for (const X of ds) { X.st.ngam = Math.max(X.st.ngam, 0.65); const c = D.o[X.o]; tiaPhep(c0.x, c0.y, c.x, c.y, '#8a7bff'); }
       G.hu.push({ k: 'nhieu', t: 0, song: 0.65, D, ds, tg: t, B, m }); // +mana triệu hồi áp lúc nhiễu trúng (HU.nhieu): Holy Shield / khiên ụ bị nhắm chặn luôn phần này — rà cộng hưởng 07/11, người dùng chốt
       nhanU(ra, 'JAM ×' + ds.length, '#8a7bff', true); SND.set();
@@ -276,7 +277,7 @@ SKILLS.loren = {
   buff(T, B) { const lo = this.so(T), d = this.dang(T), m = this.moi(T, B) * (d === 'toc' ? this.PCT.toc / this.PCT.dmg : 1); return { k: d, v: Math.round(m * lo * 10000) / 10000 }; },
   mo(T) {
     const B = G.ban[T.ban], d = this.dang(T), lo = this.so(T), b = this.buff(T, B), n = this.n(B);
-    return (d === 'dmg' ? 'DAMAGE ANVIL' : 'SPEED ANVIL') + ' · stacks ' + lo + '/14 · drag onto another turret: it gets +' + +(b.v * 100).toFixed(1) + '% ' + (d === 'dmg' ? 'damage' : 'fire rate') + ' for good (' + (d === 'dmg' ? '3' : '2') + '% per stack; one buff type per turret) · drag onto an Anvil of the SAME type: stacks add up (max 14), two ' + lo + '-stack Anvils: ' + Math.min(14, lo * 2) + ' stacks, ' + this.tiLe(Math.min(14, lo * 2), n) + '% success — more stacks = more risk · fail: the dragged Anvil is lost, the target keeps the bigger stacks' + (n ? ' · +' + 4 * n + '% success when the total is 8+' : '');
+    return (d === 'dmg' ? 'DAMAGE ANVIL' : 'SPEED ANVIL') + ' · stacks ' + lo + '/14 · drag onto another turret: it gets +' + +(b.v * 100).toFixed(1) + '% ' + (d === 'dmg' ? 'damage' : 'fire rate') + ' for good (' + (d === 'dmg' ? '3' : '2') + '% per stack; one buff type per turret; lost if it merges) · drag onto an Anvil of the SAME type: stacks add up (max 14), two ' + lo + '-stack Anvils: ' + Math.min(14, lo * 2) + ' stacks, ' + this.tiLe(Math.min(14, lo * 2), n) + '% success — more stacks = more risk · fail: the dragged Anvil is lost, the target keeps the bigger stacks' + (n ? ' · +' + 4 * n + '% success when the total is 8+' : '');
   },
   gocDau: (T, t) => -Math.PI / 2,
   dauAnh: (T) => (T.dang === 'toc' ? 'lorentoc_nong' : null), // dạng tốc: đầu bánh răng (render.js REN.dauEp)

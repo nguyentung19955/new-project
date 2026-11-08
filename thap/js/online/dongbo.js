@@ -193,7 +193,7 @@ const ONS = {
         case 'mv': { const mv = B1.mv; mv.cd = 0; B1.mana = Math.max(B1.mana, mv.gia); CH_HOP(B1, d && d.o != null ? d.o : undefined); if (d && d.m != null) B1.mana = d.m; break; }
         case 'cb': this.apCB(B1, d); break; // Lucky Slot: kết quả quay xèng của bạn (jackpot.js CB)
         case 'pm': if (d && Array.isArray(d.o) && SKILLS.bienmau && SKILLS.bienmau.mach) SKILLS.bienmau.mach(B1, d.o, true, d.r); break; // Prism Thief: HỢP THỂ (đường vuốt + cờ ô kết quả) của bạn
-        case 'cd': { const T = d && B1.t[d.o]; const sk = T && SKILLS[T.id]; if (sk && sk.chuDong) { T.nap = 1; T.st.bang = 0; T.st.da = false; this._cd = 1; try { sk.chuDong(G, B1, T); } finally { this._cd = 0; } } break; }
+        case 'cd': { const T = d && B1.t[d.o]; const sk = T && SKILLS[T.id]; if (sk && sk.chuDong) { T.nap = 1; this._cd = 1; /* AUDIT F17: không tự gỡ đá/băng trên bàn con rối — chờ ảnh chụp */ try { sk.chuDong(G, B1, T); } finally { this._cd = 0; } } break; }
         case 'w': if (!this.host && d) { this.hostWave = Math.max(this.hostWave, d.n); if (G.wave < d.n) { G.cho = 0; wavMoi(); } } break;
         case 'l': if (this.host && d) this.truTim(d.n, d.id); break;
         case 'vao': this.banVao = true; break;
@@ -229,6 +229,14 @@ const ONS = {
     if (T.id === 'tienhoa' && T.chay) f += 'X'; // trứng cháy
     if (T.id === 'ronglua' && T.nhiet > 0) f += 'H' + Math.round(T.nhiet * 100) + ';'; // Rồng Máy: nhiệt lò (×100, giữ 2 số lẻ)
     if (T.id === 'cobac' && T.cbS) f += 'z' + T.cbS + ';'; // Lucky Slot: sao đã quay (bàn con rối không tự quay)
+    // AUDIT F14 (09/11): MỌI cộng dồn riêng ụ + trạng thái trên thân đi theo cờ ô → bàn con rối khớp máy chủ bàn
+    if (T.id === 'leviathan' && T.vuc) f += 'v' + T.vuc + ';'; // Leviathan: ABYSS
+    if (T.id === 'cuuvi') { if (T.duoi) f += 'd' + T.duoi + ';'; if (T.xaN) f += 'f' + T.xaN + ';'; } // Nine-Tail: đuôi + số lần xả (đột phá)
+    if (T.id === 'nemesis') { if (T.nmDem) f += 'N' + T.nmDem + ';'; if (T.nmN) f += 'm' + T.nmN + ';'; if (T.nmE) f += 'E' + T.nmE + ';'; if (T.nmToc) f += 'O' + Math.round(T.nmToc * 1000) + ';'; if (T.nmDmg) f += 'D' + Math.round(T.nmDmg * 1000) + ';'; } // Nemesis: đếm phán quyết + buff đã cộng
+    if (T.id === 'khoisinh') { if (T.luot != null) f += 'L' + ((T.luot | 0) + 1) + ';'; if (T.sinhT) f += 'I' + Math.round(T.sinhT * 10) + ';'; } // Genesis: lượt còn + đồng hồ
+    if (T.id === 'chuato' && T.thaN) f += 'j' + T.thaN + ';'; // Hive: số drone lần thả trước (nhịp nở)
+    if (T.khien > 0) f += 'i' + T.khien + ';'; if (T.aurora > 0) f += 'o' + Math.round(T.aurora * 10) + ';'; // khiên 1 lần · Aurora (Mimic)
+    if (T.st && T.st.lua > 0) f += 'p' + Math.round(T.st.lua * 10) + ';'; if (T.st && T.st.kep > 0) f += 'y' + Math.round(T.st.kep * 10) + ';'; // cháy · kẹp
     return [T.id, T.sao, f];
   },
   datO(B, o, s) {
@@ -256,6 +264,13 @@ const ONS = {
     if (T.id === 'tienhoa') T.chay = c.includes('X');
     if (T.id === 'ronglua') T.nhiet = so('H') / 100;
     if (T.id === 'cobac') T.cbS = so('z');
+    // AUDIT F14: cộng dồn riêng ụ + trạng thái trên thân (xem oTT)
+    if (T.id === 'leviathan') T.vuc = so('v');
+    if (T.id === 'cuuvi') { T.duoi = so('d'); T.xaN = so('f'); }
+    if (T.id === 'nemesis') { T.nmDem = so('N'); T.nmN = so('m'); T.nmE = so('E'); T.nmToc = so('O') / 1000; T.nmDmg = so('D') / 1000; }
+    if (T.id === 'khoisinh') { const l = so('L'); T.luot = l ? l - 1 : T.luot; T.sinhT = so('I') / 10; }
+    if (T.id === 'chuato') T.thaN = so('j');
+    T.khien = so('i'); T.aurora = so('o') / 10; T.st.lua = so('p') / 10; T.st.kep = so('y') / 10;
   },
   // Lucky Slot: máy bạn đã quay → bàn con rối phát lại máy xèng 3 ô đúng chuỗi + nhận ngăn quả của máy bạn (không tự rút)
   apCB(B1, d) {
@@ -330,6 +345,11 @@ const ONS = {
   },
   apAnh(B, v, khoiPhuc) {
     if (!v || !Array.isArray(v.c)) return;
+    const lr = typeof LUA_ROI !== 'undefined' && B && !B.net; // AUDIT F4: ụ đổi do MẠNG (đồng bộ lại bàn mình) không phải "rời bàn" → không truyền lửa Ember
+    if (lr) LUA_ROI.quet(B);
+    try { this._apAnh(B, v, khoiPhuc); } finally { if (lr) LUA_ROI.chup(B); }
+  },
+  _apAnh(B, v, khoiPhuc) {
     const c = this.oCua(B);
     if (this.bam(c) !== v.h || khoiPhuc) {
       let sua = 0;

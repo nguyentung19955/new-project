@@ -42,8 +42,10 @@ function banNhe(B, T, E, o) {
 function tiaPhep(x0, y0, x1, y1, mau) { G.hu.push({ k: 'tiaPhep', t: 0, song: 0.55, x0, y0, x1, y1, mau }); }
 // biến ụ tại chỗ thành loại khác (hộp bí ẩn, tiến hoá, xáo trộn…)
 // LUẬT BIẾN TẠI CHỖ (docs/demo-hop-tuong/tuvan/tuong-tac/MA-TRAN.md): ụ mới là CÙNG 1 ô "đổi hình" — giữ BẢN SAO (−% Copycat + dấu tím)
-//   và khiên; mọi buff/debuff tạm khác của thân cũ hết (thân mới). Ụ bị khoá (đá / băng) KHÔNG bị biến (người gọi tự bỏ qua).
-function giuKhiBien(N, T) { N.goc = T.goc; N.khien = T.khien; N.banSao = !!T.banSao; if (typeof CHM !== 'undefined') CHM.thay(T, N); return N; } // + buff chỉ huy (không phải ghép → giữ)
+//   ; mọi buff trên thân cũ (Ép Xung, buff Twin Anvil, Aurora, khiên 1 lần) MẤT — ụ biến thành loại KHÁC = ụ MỚI (09/11 người dùng Q4 = B,
+//   "mất vì đó là cơ chế biến đổi", nhất quán Q1). Cả Copycat. Buff chỉ huy có thời hạn (CHM) vẫn chuyển sang thân mới (buff của bàn, không phải của thân).
+//   Không phải biến hình (giữ hết): +★ tại chỗ, Rồng đổi dạng theo sao, Sói thức tỉnh. Ụ bị khoá (đá / băng) KHÔNG bị biến (người gọi tự bỏ qua).
+function giuKhiBien(N, T) { N.goc = T.goc; N.banSao = !!T.banSao; if (typeof CHM !== 'undefined') CHM.thay(T, N); return N; } // + buff chỉ huy (không phải ghép → giữ)
 function chuyenU(B, T, id, sao, doi) {
   const N = giuKhiBien(sinhU(taoU(B, id, clamp(sao, 1, LUAT.saoMax), T.o)), T);
   B.t[T.o] = N;
@@ -565,7 +567,8 @@ SKILLS.hopbi = { // Hộp Bí Ẩn (Daron): sau 47 s biến thành ụ ngẫu nh
     if (T.nap >= 1) {
       if (B.net && typeof ONS !== 'undefined' && ONS.on) return true; // bàn con rối online: chờ ảnh chụp bàn của bạn (không tự quay ụ khác máy bạn)
       const toiThieu = Math.max(ms(T, 7) ? 5 : ms(T, 5) ? 3 : 1, Math.min(6, T.sao | 0)); // 5★ LUCKY BOX · 7★ TOP PRIZE · sàn = ★ của hộp (BAO-CAO Mức 3)
-      const sao = toiThieu + rint((ms(T, 7) ? 8 : 7) - toiThieu), /* 1–6★ (7★ hộp: 5–7★) — đo bậc 06/11 */ N = chuyenU(B, T, pick(deckTru(B, ['hopbi'])), sao, true);
+      const r = rngLuat(B, 19, T.o), bo = deckTru(B, ['hopbi']); // RNG luật có hạt (NT9)
+      const sao = toiThieu + Math.floor(r() * ((ms(T, 7) ? 8 : 7) - toiThieu)), /* 1–6★ (7★ hộp: 5–7★) — đo bậc 06/11 */ N = chuyenU(B, T, bo[Math.floor(r() * bo.length)], sao, true);
       VX.hen(0.5, () => nhanU(N, 'BOX OPEN: ' + sao + '★ ' + (TEXT.turret[N.id] ? TEXT.turret[N.id].name.toUpperCase() : ''), '#c77dff', true)); SND.ghep();
     } else if (Math.random() < 0.02 + T.nap * 0.1) { const c = tamU(T); FX.hat1('lua', c.x + rnd(-12, 12), c.y + rnd(-12, 6), 0, -30, 0.5, 6, '#c77dff'); }
     return true;
@@ -610,8 +613,9 @@ SKILLS.xaotron = { // Máy Xáo Trộn (Neban): khi GHÉP — PVP đổi ngẫu 
     const n = 1 + Math.floor(a.sao / 2), c0 = B.o[b.o];
     if (G.che === 'pvp') {
       const D = banKhac(B); if (!D) return;
-      const ds = D.t.filter(X => X && !biKhoa(X)).sort(() => Math.random() - 0.5).slice(0, n); // đá / băng: không bị xáo
-      for (const X of ds) { const c = D.o[X.o]; tiaPhep(c0.x, c0.y, c.x, c.y, '#ff6ad5'); if (!chanKhien(D, X)) { const ds2 = D.deck.filter(id => id !== X.id && SKILLS[id]); chuyenU(D, X, ds2.length ? pick(ds2) : X.id, X.sao); } }
+      const r = rngLuat(B, 23, b.o); // RNG luật có hạt theo NGƯỜI ghép: máy chủ bàn + bàn con rối của đối thủ ra cùng ô, cùng loại (NT9 / AUDIT F15)
+      const ds = tronO(D.t.filter(X => X && !biKhoa(X)), r).slice(0, n); // đá / băng: không bị xáo
+      for (const X of ds) { const c = D.o[X.o]; tiaPhep(c0.x, c0.y, c.x, c.y, '#ff6ad5'); if (!chanKhien(D, X)) { const ds2 = D.deck.filter(id => id !== X.id && SKILLS[id]); chuyenU(D, X, ds2.length ? ds2[Math.floor(r() * ds2.length)] : X.id, X.sao); } }
       nhanU(ra, 'RIVAL SCRAMBLED', '#ff6ad5', true);
     } else {
       const D = banKhac(B) || B; let k = 0;
@@ -751,7 +755,7 @@ SKILLS.dongbo = { // Pháo Đồng Bộ (Dana) — HỖ TRỢ: DCDW Dana — buf
 SKILLS.vughep = { // Vua Ghép (Aurora King): kéo lên ụ CÙNG SAO → ụ đó +1 sao (bản vàng 10% → +2)
   vai: 'db', dmg: 16.67, toc: 0.9, nham: 'dau',
   sinh(G, T) { T.vang = rngSinh(T, 4447)() < knThe(G.ban[T.ban], 'vughep') / 100; }, // quay MỚI mỗi lần xuất hiện (cả bản sao Copycat) — RNG tất định // 10% ở cấp đầu → 22% cấp 15
-  mo: (T) => (T.vang ? 'GOLDEN Merge King: drag onto a same-star turret → +2★' : 'Drag onto same-star turret: +1★') + ', keeps its type · ' + Math.round(knThe(T && G.ban[T.ban], 'vughep')) + '% of summons/merges come out GOLDEN (+2★) · also on stone (stays stone) · Merge King + Merge King: one Merge King +1★ (keeps Golden)',
+  mo: (T) => (T.vang ? 'GOLDEN Merge King: drag onto a same-star turret → +2★' : 'Drag onto same-star turret: +1★') + ', keeps its type · ' + Math.round(knThe(T && G.ban[T.ban], 'vughep')) + '% of summons/merges come out GOLDEN (+2★) · also on stone (stays stone) · Merge King + Merge King: the target Merge King +1★ (+2★ if the dragged one is Golden), keeps its own form',
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'tia_lua', co: 16, mau: '#ffe46b', sp: 480 }); },
   ghepDB: {
     nangTaiCho: true, // +★ TẠI CHỖ (giữ thân ụ đích, giữ cộng dồn) — KHÔNG tính là ghép (không khai laGhep — game.js laGhepThat)
@@ -761,10 +765,10 @@ SKILLS.vughep = { // Vua Ghép (Aurora King): kéo lên ụ CÙNG SAO → ụ đ
     xemSao: (a, b) => Math.min(LUAT.saoMax, b.sao + (a.vang ? 2 : 1)), // vàng kéo lên bất kỳ ụ (kể cả Merge King) → +2★ // huy hiệu sao xem trước khi rê
     lam(G, B, a, b) {
       if (b.id === 'vughep') { // MK + MK: giữ ụ đích (Merge King); ụ KÉO là vàng → +2★ (như kéo lên ụ khác), thường → +1★ (người dùng 07/11);
-        // bản vàng: giữ vàng nếu 1 trong 2 là vàng (không quay lại 10% → tất định, 2 máy online ra cùng kết quả)
+        // đích giữ dạng của chính nó (vàng / thường) — không quay lại → tất định, 2 máy online ra cùng kết quả
         B.t[a.o] = null;
         G.bay.push({ id: a.id, sao: a.sao, x0: B.o[a.o].x, y0: B.o[a.o].y, x1: B.o[b.o].x, y1: B.o[b.o].y, t: 0, bac: a.bac });
-        b.vang = !!(a.vang || b.vang);
+        // (09/11 Q3 = A: đích giữ DẠNG của nó — MK vàng kéo lên MK thường chỉ +2★, không biến đích thành vàng)
         const n = a.vang ? 2 : 1;
         nangSao(B, b, n, a.vang ? 'GOLD KING +2★' : b.vang ? 'GOLD KING +1★' : 'MERGE KING +1★');
         return b;
@@ -825,7 +829,7 @@ SKILLS.hasao = { // Súng Hạ Sao (Giltine) — HỖ TRỢ (đợt vai trò): �
 };
 SKILLS.saochep = { // Máy Sao Chép (Shamash): kéo lên ụ CÙNG SAO → thành bản sao của ụ đó (70% chỉ số ở cấp đầu → 94% thẻ max, KY_NANG_CAP.saochep)
   vai: 'db', dmg: 13.33, toc: 1.2, nham: 'dau',
-  mo: (T) => 'Drag onto same-star turret (frozen too, NOT stone): becomes a copy at ' + Math.round(heSaoChep(T && G.ban[T.ban]) * 100) + '% damage · random traits (colour, direction, Gold, Awakened, slot spin…) roll anew · keeps the Copycat\'s own buffs · merging into a copy keeps it a copy; merging a copy into a real one makes it real', // 08/11: bỏ 'the copy is never stone' (đá không chép được nữa)
+  mo: (T) => 'Drag onto same-star turret (frozen too, NOT stone): becomes a copy at ' + Math.round(heSaoChep(T && G.ban[T.ban]) * 100) + '% damage · random traits (colour, direction, Gold, Awakened, slot spin…) roll anew · the Copycat\'s own buffs (Overclock, Anvil, Aurora, shield) are lost · special same-type merges (Compass, Anvil, Merge King, Prism fusion) follow the target: into a copy stays a copy · a normal merge always makes a new real turret', // 08/11: bỏ 'the copy is never stone' (đá không chép được nữa)
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'tia_lua', co: 16, mau: '#ffe46b', sp: 480 }); },
   ghepDB: {
     // 08/11 người dùng chốt: KHÔNG chép ô ĐÁ (hoá đá) — ô BĂNG vẫn chép được
@@ -835,10 +839,9 @@ SKILLS.saochep = { // Máy Sao Chép (Shamash): kéo lên ụ CÙNG SAO → thà
     quaKhoa: true,
     lam(G, B, a, b) {
       // 08/11 người dùng: bản sao là 1 lần XUẤT HIỆN mới → dạng ngẫu nhiên lúc sinh QUAY LẠI (chuyenU → sinhU): Merge King vàng, Sói thức tỉnh,
-      //   Pháo La Bàn 1 hướng mới + 0 stack (không chép NSWE), Prism màu mới, Twin Anvil dạng mới, Lucky Slot quay máy xèng. Buff KHÔNG ngẫu nhiên
-      //   trên thân Copycat (Aurora, Ép Xung) vẫn giữ như cũ.
+      //   Pháo La Bàn 1 hướng mới + 0 stack (không chép NSWE), Prism màu mới, Twin Anvil dạng mới, Lucky Slot quay máy xèng.
+      //   09/11 người dùng Q4 = B: Copycat cũng là BIẾN HÌNH → buff trên thân Copycat (Aurora, Ép Xung, buff Anvil, khiên) MẤT (bỏ "giữ buff của Copycat").
       const N = chuyenU(B, a, b.id, a.sao); N.banSao = true;
-      N.aurora = Math.max(N.aurora || 0, a.aurora || 0); N.epxung = (N.epxung || 0) + (a.epxung || 0);
       const c0 = B.o[b.o], c = B.o[N.o]; tiaPhep(c0.x, c0.y, c.x, c.y, '#b98cff');
       nhanU(N, 'COPY', '#c9a2ff', true);
       return N;

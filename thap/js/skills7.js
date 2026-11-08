@@ -84,7 +84,7 @@ SKILLS.mauhut = {
     const X = B.t[m.o];
     if (!X || X.uid !== m.uid || X.id !== m.id || X === T) { T.mh = null; return false; } // mục tiêu bị ghép / đổi loại / mất: huỷ
     if (X.sao !== m.sao) { m.con = X.sao > m.sao ? m.con + 3 * (X.sao - m.sao) : Math.max(Math.min(1, m.con), m.con - 3 * (m.sao - X.sao)); m.sao = X.sao; }
-    if (X.st.da) return false; // mục tiêu hoá đá: dừng
+    if (biKhoa(X)) return false; // mục tiêu hoá đá / ĐÓNG BĂNG: dừng đếm, tan băng thì đếm tiếp (09/11 Q6 = A)
     m.con -= dt;
     if (m.con > 0) return false;
     if (B.net && typeof ONS !== 'undefined' && ONS.on) { m.con = 0; return false; } // bàn con rối: chờ ảnh chụp bàn của bạn

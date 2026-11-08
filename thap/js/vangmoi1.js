@@ -61,7 +61,7 @@ function vm1Fx(id, x, y, w, song, mau) { G.hu.push({ k: 'vm1Fx', t: 0, song: son
 //        CỦA CHÍNH NÓ: lửa X = min(trần X, lửa X + Σ lửa các Ember rời bàn cùng lúc có chung hàng/cột với X). Ember chung đường với cả A và C nhận cả 2.
 //        Ghép A vào C cùng hàng/cột → Ember thứ 3 trên đường đó nhận A + C (đúng công thức người dùng). Mỗi Ember rời bàn chỉ góp 1 lần.
 //        Không nhận: Ember cũng rời bàn trong cùng lượt, ụ đang đứng ở ô của Ember vừa rời (ụ kết quả ghép / ụ biến hình), Ember mới xuất hiện
-//        trong cùng lượt (chưa có trên bàn lúc Ember kia rời), ô đá.
+//        trong cùng lượt (chưa có trên bàn lúc Ember kia rời), ô đá, ô BĂNG (09/11 Q5 = A: ụ khoá không nhận cộng dồn hàng/cột, như buff hỗ trợ).
 //      KHÔNG truyền khi Ember VẪN Ở ĐÓ: hoá đá, đóng băng, bị biến thành ụ khác tại chỗ (trùm / kỹ năng / Joker King…), Teleporter đổi chỗ,
 //        bị bắn trừ sao (haSao: trùm / Star Breaker; người dùng: "Cả bị súng bắn trừ sao cũng vậy") — giữ lửa. Trừ sao ở 1★ làm ụ VỠ (rời bàn) → truyền.
 //        Nhận biết: Ember biến mất mà ô cũ còn ụ khác (không phải do ghép) = biến hình → không truyền; ô cũ trống hoặc Ember là nguyên liệu ghép = rời bàn.
@@ -69,7 +69,7 @@ function vm1Fx(id, x, y, w, song, mau) { G.hu.push({ k: 'vm1Fx', t: 0, song: son
 //        Mimic, Wild Link, ghép đặc biệt) → lửa của nó truyền theo hàng/cột của Ô GHÉP (ô đích, nơi ụ ra xuất hiện), không theo ô cũ của nó.
 //        Ghép B vào C (đều Ember): mọi Ember khác cùng hàng/cột với ô C nhận lửa B + lửa C (A = 5 + 5 + 5 = 15); mỗi lần ghép chỉ tính 1 lần.
 //        Rời bàn đơn lẻ khác (bán, Blood Circuit nuốt, trùm phá, vỡ do trừ sao…): vẫn theo hàng/cột ô của chính nó.
-//      Ghép Ember chỉ khi CÙNG SAO (luật ghép thường). Ụ ra (nếu là Ember): giữ như cũ = max(★ mới sinh, min(trần, A + C)) — câu hỏi mở cho người dùng.
+//      Ghép Ember chỉ khi CÙNG SAO (luật ghép thường). Ụ ra (nếu bốc trúng Ember) = Ember MỚI, lửa = ★ lúc sinh (09/11 người dùng, Q1 = A).
 //      Ụ mới sinh: lửa = số sao. TĂNG 08/11 (người dùng: "hơi ít nhỉ, so với các tướng vàng có cộng dồn" — lửa chỉ đến khi Ember RỜI BÀN = tốn kém
 //        → thưởng cao): mỗi lửa +8% sát thương, +0.4 điểm % chí mạng (tổng ≤ 100%, critU), +4% ST chí mạng (cũ +2% / +0.12 / 0).
 //        BỎ TRẦN lửa (cũ LV9 70 → LV15 160; người dùng không thích trần ở kỹ năng cộng dồn đặc biệt) — giữ màu mốc 10/30/50/70.
@@ -99,14 +99,8 @@ SKILLS.lualien = {
   chuThap(o) { const c = o % 5, h = (o / 5) | 0, ds = []; for (let i = 0; i < 15; i++) if (i !== o && (i % 5 === c || ((i / 5) | 0) === h)) ds.push(i); return ds; },
   // tổng lửa của 1 lần ghép 2 Relay = lửa A + lửa C (thuần — tools/thap-kt-vang-g2.js); ụ ra nhận min(trần, tổng)
   tong(a, b, cap) { return Math.min(cap, (a.lc || 0) + (b.lc || 0)); },
-  // KHI GHÉP: chỉ lo Ụ RA (nếu là Ember) — truyền lửa cho hàng/cột do LUA_ROI (Ember rời bàn) làm, sau khi ghép xong
-  ghep(G, B, a, b, ra) {
-    if (a.id !== 'lualien' || b.id !== 'lualien' || a.sao !== b.sao) return; // chỉ 2 Ember CÙNG SAO
-    if (!ra || ra.id !== 'lualien' || ra.st.da) return;
-    const tong = this.tong(a, b, this.tran(ra)), cu = ra.lc || 0;
-    if (cu < tong) { ra.lc = tong; ra.sang = 1; }
-    LUA_VET.popRa(B, ra);
-  },
+  // (09/11 người dùng — Q1 = A + "A + A ra ụ ngẫu nhiên, dù ra A cũng không phải cùng 1 ụ"): ghép 2 Ember là GHÉP THƯỜNG → ụ ra (nếu bốc trúng Ember)
+  //   là Ember MỚI, lửa = lúc sinh (= ★), KHÔNG lấy A + C. Lửa A + C chỉ truyền cho Ember KHÁC cùng hàng/cột ô ghép (LUA_ROI, 330d812a).
   veThem(ctx, T, S, al) { // 1 ngọn lửa nhỏ (màu theo mốc) lượn quanh đầu ụ — không vòng
     const n = T.lc || 0; if (!n) return;
     const im = REN.img(this.icon(n)) || REN.img('fx_cuuvi_dan'); if (!im) return;
@@ -133,7 +127,7 @@ const LUA_ROI = {
     for (const [T, o0, o1] of roi) {
       const n = T.lc || 0, o = o1 == null ? o0 : o1; if (n <= 0) continue;
       for (const i of S.chuThap(o)) {
-        const X = B.t[i]; if (!X || X.id !== 'lualien' || X.st.da || oRoi.has(i) || (co && !co.has(X))) continue;
+        const X = B.t[i]; if (!X || X.id !== 'lualien' || biKhoa(X) || oRoi.has(i) || (co && !co.has(X))) continue;
         const v = cong.get(X) || { n: 0, tu: [] }; v.n += n; if (!v.tu.includes(o)) v.tu.push(o); cong.set(X, v);
       }
     }
@@ -159,6 +153,12 @@ const LUA_ROI = {
     let r; try { r = _gh.apply(this, arguments); } finally { LUA_ROI.quet(B2); for (const X of em) if (B2 && B2.t.includes(X)) { delete X._gop; delete X._gopO; } }
     return r;
   };
+  // AUDIT F4 (09/11): đường rời bàn NGOÀI capNhatBan (trùm phá / Nightmare 1★ trong capNhatQuai, đạn / hiệu ứng) để ô trống tới khung sau; nếu giữa 2 khung
+  //   người chơi / chỉ huy / Twin Maker đặt ụ mới vào ĐÚNG ô đó thì lần quét sau tưởng là "biến hình tại chỗ" → mất truyền lửa. Quét TRƯỚC mọi lối đặt ụ vào ô trống.
+  for (const ten of ['trieu', 'sinhDoi', 'dungMV']) {
+    const goc = window[ten]; if (typeof goc !== 'function') continue;
+    window[ten] = function (B) { if (B && B.t) LUA_ROI.quet(B); return goc.apply(this, arguments); };
+  }
 }
 // HIỆU ỨNG NHẬN LỬA (người dùng 08/11: "không có hiệu ứng để biết là hàng cột của ụ ember được cộng lửa") — CHỈ HÌNH, không đổi luật:
 //   · Vệt lửa (dải fx_ronglua_vet, nhịp 6 khung) chạy từ ô ghép dọc HÀNG/CỘT tới Relay nhận xa nhất mỗi hướng (~0,25–0,46 s), rồi tắt nhanh.
@@ -566,4 +566,4 @@ for (const id in DOTPHA.NGUONG) {
   if (sk.mo) { const mo = sk.mo; sk.mo = function (T) { const s = mo.apply(this, arguments); try { return T ? s + ' · ' + DOTPHA.chu(id, T) : s; } catch (e) { return s; } }; }
 }
 if (SKILLS.cuuvi && SKILLS.cuuvi.xa) { const xa = SKILLS.cuuvi.xa; SKILLS.cuuvi.xa = function (T) { if (G.ban[T.ban] && conTren(T)) T.xaN = (T.xaN || 0) + 1; return xa.apply(this, arguments); };
-  const gh = SKILLS.cuuvi.ghep; SKILLS.cuuvi.ghep = function (G, B, a, b, ra) { const r = gh ? gh.apply(this, arguments) : undefined; if (ra && ra.id === 'cuuvi') ra.xaN = Math.max(a.id === 'cuuvi' ? a.xaN || 0 : 0, b.id === 'cuuvi' ? b.xaN || 0 : 0); return r; }; } // Nine-tail: đếm số lần xả cầu lửa (đuôi về 0 mỗi vòng)
+} // Nine-tail: đếm số lần xả cầu lửa (đuôi về 0 mỗi vòng) — 09/11 Q1 = A: ghép thường ra Nine-Tail = ụ mới, xaN về 0 (bỏ giữ max)

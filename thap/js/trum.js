@@ -194,7 +194,7 @@ chet = function (E, B) {
     const BB = G.ban[E.ban];
     const r = rngTrum(E);
     for (let i = 0; i < E.kho; i++) {
-      const ds = BB.t.filter(T => T && T.sao < LUAT.saoMax && !T.st.da);
+      const ds = BB.t.filter(nhanSaoTuDong); // +★ tự động: bỏ đá + băng (AUDIT F10)
       if (ds.length) { const T = chonTrum(ds, r); T.sao++; T.sang = 1; const c = BB.o[T.o]; TRM.fx('leech', 'starup', c.x, c.y, 80, 0.5); TRM.chu(c.x, c.y - 22, '+1★ RETURNED', '#ffd84a', 13); }
       else BB.mana += manaGiet(G.wave) * 3;
     }
