@@ -189,7 +189,7 @@ Object.assign(REN, {
     if (p.some(q => !q)) return;
     const tw = fl ? this.co(g, Cb, 'trang') : null;
     ctx.setTransform(M); ctx.translate(x + R.ox, y + R.oy + b); ctx.rotate(R.rot); ctx.scale(R.sx, R.sy); ctx.translate(0, -b);
-    const ve = (a, aw, dx, dy) => { ctx.globalAlpha = 1; ctx.drawImage(a, -C / 2 + dx * C, -C / 2 + dy * C, C, C); if (aw) { ctx.globalAlpha = fl; ctx.drawImage(aw, -C / 2 + dx * C, -C / 2 + dy * C, C, C); } };
+    const ve = (a, aw, dx, dy) => { ctx.globalAlpha = 1; ctx.drawImage(a, -C / 2 + dx * C, -C / 2 + dy * C, C, C); if (aw) { ctx.globalAlpha = fl; ctx.globalCompositeOperation = 'lighter'; ctx.drawImage(aw, -C / 2 + dx * C, -C / 2 + dy * C, C, C); ctx.globalCompositeOperation = 'source-over'; } };
     const veSang = (fn) => { if (!sang || R.sang <= 0.01) return; ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = Math.min(1, R.sang); fn(sang, 1); if (R.sang > 1) { ctx.globalAlpha = R.sang - 1; fn(sang, 1.1); } ctx.restore(); };
     if (cf.phan === 'doi') {
       ve(than, tw, 0, 0);                                                              // khối nối phía sau
@@ -209,7 +209,7 @@ Object.assign(REN, {
         const ww = (h[2] - h[0]) * C, hh = (h[3] - h[1]) * C;
         ctx.save(); ctx.translate(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr);
         ctx.rotate(cf.kim[i] ? Math.sin(R.ph * 1.3 + i) * 0.12 : R.orb + Math.sin(R.ph + i) * 0.1); // kim cương vàng giữ thẳng, mảnh đá xoay theo quỹ đạo
-        for (const [q, al] of [[p[0], 1], [pw[0], fl]]) if (q && al) { ctx.globalAlpha = al; ctx.drawImage(q, h[0] * n, h[1] * n, (h[2] - h[0]) * n, (h[3] - h[1]) * n, -ww / 2, -hh / 2, ww, hh); }
+        for (const [q, al] of [[p[0], 1], [pw[0], fl]]) if (q && al) { ctx.globalAlpha = al; ctx.globalCompositeOperation = q === p[0] ? 'source-over' : 'lighter'; ctx.drawImage(q, h[0] * n, h[1] * n, (h[2] - h[0]) * n, (h[3] - h[1]) * n, -ww / 2, -hh / 2, ww, hh); }
         ctx.restore();
       }
     } else if (cf.phan === 'lua') {
@@ -227,7 +227,7 @@ Object.assign(REN, {
         return c;
       };
       const veU = (c) => ctx.drawImage(c, -C / 2 - PX * C, -C / 2 - PY * C, C * (1 + 2 * PX), C * (1 + PY));
-      ctx.globalAlpha = 1; veU(uon(0, p[0])); if (pw[0]) { ctx.globalAlpha = fl; veU(uon(1, pw[0])); }
+      ctx.globalAlpha = 1; veU(uon(0, p[0])); if (pw[0]) { ctx.globalAlpha = fl; ctx.globalCompositeOperation = 'lighter'; veU(uon(1, pw[0])); ctx.globalCompositeOperation = 'source-over'; }
       veSang((a) => { // lõi lửa uốn theo hoa, rune chậu đứng yên
         ctx.save(); ctx.beginPath(); ctx.rect(-C, -C, 2 * C, yc + C); ctx.clip(); veU(uon(2, a)); ctx.restore();
         ctx.save(); ctx.beginPath(); ctx.rect(-C, yc, 2 * C, C); ctx.clip(); ctx.drawImage(a, -C / 2, -C / 2, C, C); ctx.restore();
@@ -264,7 +264,7 @@ Object.assign(REN, {
     const gv = E.gv != null ? E.gv : E.goc, kd = 1 - Math.exp(-dt * 10);
     if (dt > 0) E._cdW += (clamp(gocLech(E._cdG, gv) / dt, -6, 6) - E._cdW) * kd;
     E._cdG = gv;
-    const R = { g, C, Cb, ox: 0, oy: 0, rot: 0, sx: 1, sy: 1, sang: 0.3, fl: he * he * 0.45, bs: 1, cao: 0 };
+    const R = { g, C, Cb, ox: 0, oy: 0, rot: 0, sx: 1, sy: 1, sang: 0.3, fl: he * he * 0.3, bs: 1, cao: 0 };
     let nen = 0.06 * he, wA = 0, rA = -1; // trúng đòn: nén · wA lấy đà 0..1 · rA giây từ lúc tung (−1: không)
     // ---- chiêu: lấy đà → tung (lúc chiêu nổ = E.bao vừa hết) → lắng ----
     const B = G.ban[E.ban], c = B && B.o && B.o[7], gb = c ? Math.atan2(c.y - y, c.x - x) : Math.PI / 2;
@@ -285,7 +285,8 @@ Object.assign(REN, {
         const lao = Math.sin(Math.min(1, r / 0.09) * Math.PI / 2) * (1 - eoBack(Math.min(1, r / 0.6))) + Math.exp(-10 * r) * 0.6;
         R.ox += Math.cos(gb2) * C * 0.07 * lao; R.oy += Math.sin(gb2) * C * 0.07 * lao; // lao về bàn rồi giật về
         const K = cf.chop || 1;
-        R.fl = Math.max(R.fl, Math.min(0.95, 0.75 * K) * Math.pow(Math.max(0, 1 - r / (0.25 * K)), 2)); R.sang += 1.2 * K * Math.exp(-6 * r);
+        // chớp tung chiêu: lớp trắng CỘNG SÁNG ('lighter') ~40–50% trong ~0,12 s — thân vẫn thấy rõ (trước: phủ trắng đặc 75–95% → khối trắng/hồng 1 khung)
+        R.fl = Math.max(R.fl, Math.min(0.5, 0.42 * K) * Math.pow(Math.max(0, 1 - r / 0.12), 1.5)); R.sang += 0.3 * K * Math.exp(-12 * r);
       } else E._cdRel = null;
     }
     const st = clamp(Math.abs(E._cdW) * 0.025, 0, 0.07); // rẽ: giãn ngang
@@ -382,7 +383,7 @@ Object.assign(REN, {
       anh = o;
     }
     if (cf.loang && R.loang < 0.5) { // vệt thạch loang dưới thân lúc chạm đất: vũng hồng mềm ở ĐẤT, toả rộng rồi mờ (tâm trên đường)
-      const e = R.loang / 0.5, w = C * (0.8 + 0.45 * e);
+      const e = R.loang / 0.5, w = Math.min(C * (0.8 + 0.45 * e), 2 * Math.max(4, Math.min(x + R.ox - 2, W - 2 - x - R.ox))); // sát mép canvas: vũng hẹp lại, không bị cắt
       ctx.setTransform(M); ctx.translate(x + R.ox, y + R.oy + (R.hop || 0) + b - C * 0.02);
       ctx.globalAlpha = 0.75 * Math.pow(1 - e, 1.5); ctx.drawImage(this.cham1('#ff4fae'), -w / 2, -w * 0.13, w, w * 0.26);
       ctx.globalAlpha *= 0.6; ctx.drawImage(this.cham1('#ffd0ea'), -w * 0.3, -w * 0.07, w * 0.6, w * 0.12);
@@ -400,13 +401,14 @@ Object.assign(REN, {
       if (R.sang > 1) { ctx.globalAlpha = R.sang - 1; ctx.drawImage(sang2, -C * 0.55, -C * 0.55, C * 1.1, C * 1.1); }
       ctx.restore();
     }
-    if (R.fl > 0.02) { const w = trang ? this.cdTrang(anh) : this.co(g, Cb, 'trang'); if (w) { ctx.globalAlpha = R.fl; if (xoay) ctx.rotate(xoay); ctx.drawImage(w, -C / 2, -C / 2, C, C); } }
+    if (R.fl > 0.02) { const w = trang ? this.cdTrang(anh) : this.co(g, Cb, 'trang'); if (w) { ctx.globalAlpha = R.fl; ctx.globalCompositeOperation = 'lighter'; if (xoay) ctx.rotate(xoay); ctx.drawImage(w, -C / 2, -C / 2, C, C); ctx.globalCompositeOperation = 'source-over'; } }
     if (cf.vanh) { dat(0, R.sx, R.sy); this.cdVanh(ctx, cf, R, C, Cb, g, 1); } // nửa trước vành gai (che đáy thân)
     if (cf.khoi && R.khoi < 0.55) { // sương chạm đất: 2 cụm toả ra 2 bên, neo ở ĐẤT (không theo độ nảy), tâm = tâm thân trên đường
       const k = this.co(g + '_khoi', Cb);
       if (k) {
         const e = 1 - Math.pow(1 - R.khoi / 0.55, 2);
-        ctx.setTransform(M); ctx.translate(x + R.ox, y + R.oy + (R.hop || 0) + b); ctx.scale(0.85 + 0.45 * e, 0.8 + 0.3 * e);
+        const kx = Math.min(0.85 + 0.45 * e, Math.max(0.2, Math.min(x + R.ox - 2, W - 2 - x - R.ox) / (C * 0.5))); // sát mép canvas: sương toả hẹp lại
+        ctx.setTransform(M); ctx.translate(x + R.ox, y + R.oy + (R.hop || 0) + b); ctx.scale(kx, 0.8 + 0.3 * e);
         ctx.globalAlpha = 0.9 * Math.pow(1 - R.khoi / 0.55, 1.5); ctx.drawImage(k, -C / 2, -C / 2 - b, C, C);
       }
     }
@@ -416,7 +418,7 @@ Object.assign(REN, {
         const px = (cf.nap[0] - 0.5) * C, py = (cf.nap[1] - 0.5) * C;
         dat(0, 1, 1); ctx.translate(px * R.sxL, b + (py - b) * R.syL - (R.nap || 0) * C); ctx.rotate(R.vmRot * 0.5 + (R.napRot || 0));
         ctx.globalAlpha = 1; ctx.drawImage(np, -C / 2 - px, -C / 2 - py, C, C);
-        if (R.fl > 0.02) { const w = this.co(g + '_nap', Cb, 'trang'); if (w) { ctx.globalAlpha = R.fl; ctx.drawImage(w, -C / 2 - px, -C / 2 - py, C, C); } }
+        if (R.fl > 0.02) { const w = this.co(g + '_nap', Cb, 'trang'); if (w) { ctx.globalAlpha = R.fl; ctx.globalCompositeOperation = 'lighter'; ctx.drawImage(w, -C / 2 - px, -C / 2 - py, C, C); ctx.globalCompositeOperation = 'source-over'; } }
       }
     }
     if (cf.napL) { // nắp không lăn (ăng-ten / giá + cờ lê): cùng nén–giãn với thân, lắc quanh điểm neo
@@ -425,7 +427,7 @@ Object.assign(REN, {
         const px = (cf.napL[0] - 0.5) * C, py = (cf.napL[1] - 0.5) * C;
         dat(0, R.sx, R.sy); ctx.translate(px, py); ctx.rotate(R.napRot || 0); ctx.translate(-px, -py);
         ctx.globalAlpha = 1; ctx.drawImage(nap, -C / 2, -C / 2, C, C);
-        if (R.fl > 0.02) { const w = this.co(g + '_nap', Cb, 'trang'); if (w) { ctx.globalAlpha = R.fl; ctx.drawImage(w, -C / 2, -C / 2, C, C); } }
+        if (R.fl > 0.02) { const w = this.co(g + '_nap', Cb, 'trang'); if (w) { ctx.globalAlpha = R.fl; ctx.globalCompositeOperation = 'lighter'; ctx.drawImage(w, -C / 2, -C / 2, C, C); ctx.globalCompositeOperation = 'source-over'; } }
       }
     }
     if (cf.ong) { dat(0, R.sx, R.sy); this.cdOng(ctx, E, cf, R, C, Cb, g, 1); }
@@ -435,7 +437,7 @@ Object.assign(REN, {
         const px = (cf.vm[0] - 0.5) * C, py = (cf.vm[1] - 0.5) * C;
         dat(0, 1, 1); ctx.translate(px * R.sxL, b + (py - b) * R.syL); ctx.rotate(R.vmRot);
         ctx.globalAlpha = 1; ctx.drawImage(vm, -C / 2 - px, -C / 2 - py, C, C);
-        if (R.fl > 0.02) { const w = this.co(g + '_vm', Cb, 'trang'); if (w) { ctx.globalAlpha = R.fl; ctx.drawImage(w, -C / 2 - px, -C / 2 - py, C, C); } }
+        if (R.fl > 0.02) { const w = this.co(g + '_vm', Cb, 'trang'); if (w) { ctx.globalAlpha = R.fl; ctx.globalCompositeOperation = 'lighter'; ctx.drawImage(w, -C / 2 - px, -C / 2 - py, C, C); ctx.globalCompositeOperation = 'source-over'; } }
       }
     }
     ctx.setTransform(M); ctx.globalAlpha = 1;
@@ -475,7 +477,7 @@ Object.assign(REN, {
     ctx.beginPath(); ctx.rect(-D, mat < 0 ? -D : 0, 2 * D, D); ctx.clip();
     ctx.scale(1, ky); ctx.rotate(R.vanhA || 0);
     ctx.globalAlpha = 1; ctx.drawImage(im, -D / 2, -D / 2, D, D);
-    if (R.fl > 0.02) { const w = this.co(g + '_vanh', 2 * vr * Cb, 'trang'); if (w) { ctx.globalAlpha = R.fl; ctx.drawImage(w, -D / 2, -D / 2, D, D); } }
+    if (R.fl > 0.02) { const w = this.co(g + '_vanh', 2 * vr * Cb, 'trang'); if (w) { ctx.globalAlpha = R.fl; ctx.globalCompositeOperation = 'lighter'; ctx.drawImage(w, -D / 2, -D / 2, D, D); ctx.globalCompositeOperation = 'source-over'; } }
     ctx.restore();
   },
   // ---- lăn 3D: Q (thân → nhìn; x phải, y xuống, z vào màn) quay theo quãng đường. Lăn: trục = pháp tuyến đất × hướng đi
@@ -593,9 +595,34 @@ Object.assign(REN, {
       const rung = 1 + 0.05 * Math.sin(t * 31 + i);
       ctx.save(); ctx.translate(px, py); ctx.scale(rung, 2 - rung);
       ctx.globalAlpha = sau ? 0.85 : 1; ctx.drawImage(dai, i * O, 0, O, O, -sz / 2, -sz / 2, sz, sz);
-      if (R.fl > 0.02) { ctx.globalAlpha = R.fl; ctx.drawImage(this.cdTrangOng(dai), i * O, 0, O, O, -sz / 2, -sz / 2, sz, sz); }
+      if (R.fl > 0.02) { ctx.globalAlpha = R.fl; ctx.globalCompositeOperation = 'lighter'; ctx.drawImage(this.cdTrangOng(dai), i * O, 0, O, O, -sz / 2, -sz / 2, sz, sz); ctx.globalCompositeOperation = 'source-over'; }
       ctx.restore();
     });
+  },
+  // trùm sát mép canvas: độ lệch ngang (px logic) để cả thân nằm trong vùng thấy được — tính từ khung chữ nhật thật (alpha) của ảnh gốc + phần rời
+  trumLech(E, cf, cd, C, x, co) {
+    let lo = -0.45, hi = 0.45, k = 1.04;
+    if (cd && cf) { const r = this.cdRong(E.trum, cf, cd.g); if (r) { lo = r[0]; hi = r[1]; } k = cf.kieu === 'nhay' ? 1.2 : cf.kieu === 'bo' ? 1.12 : 1.06; } // biên nén–giãn / bò duỗi
+    const st = E.cham > 0 || E.docT > 0 || E.chayT > 0 || E.cvT > 0 || E.cvPT > 0 || E.giapT > 0 || E.yeu > 0 || E.chan > 0 ? 0.57 * co : 0; // lớp trạng thái phủ thân (veStV2, ≈ co × 1.1)
+    const m = 2, L = Math.min(x + lo * C * k, x - st), P = Math.max(x + hi * C * k, x + st);
+    return L < m ? m - L : P > W - m ? W - m - P : 0;
+  },
+  cdRong(id, cf, g) { // [trái, phải] của phần có hình so với tâm ô (tỉ lệ cạnh ô), gộp thân + phần rời; tính 1 lần / trùm
+    const M = this._cdRongC || (this._cdRongC = {}); if (M[id]) return M[id];
+    const ds = [g]; for (let i = 0; i < (cf.np || 0); i++) ds.push(g + '_p' + i);
+    if (cf.nap || cf.napL) ds.push(g + '_nap'); if (cf.vm) ds.push(g + '_vm');
+    const n = 96, c = document.createElement('canvas'); c.width = c.height = n; const x2 = c.getContext('2d');
+    for (const t of ds) { const im = this.img(t); if (!im) return null; x2.drawImage(im, 0, 0, n, n); }
+    const d = x2.getImageData(0, 0, n, n).data; let l = n, r = -1;
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) if (d[(j * n + i) * 4 + 3] > 24) { if (i < l) l = i; if (i > r) r = i; }
+    if (r < 0) return null;
+    let lo = l / n - 0.5, hi = (r + 1) / n - 0.5;
+    if (cf.vanh) { lo = Math.min(lo, cf.vanh[0] - cf.vanh[2] - 0.5); hi = Math.max(hi, cf.vanh[0] + cf.vanh[2] - 0.5); }
+    if (cf.ong) for (const [ox, oy] of cf.ong) { const q = Math.hypot(ox - 0.5, oy - 0.5) + cf.ongR; lo = Math.min(lo, -q); hi = Math.max(hi, q); } // ong bay vòng
+    if (cf.phan === 'manh') { let q = 0; for (const h of cf.hop) q = Math.max(q, Math.hypot((h[0] + h[2]) / 2 - cf.tam[0], (h[1] + h[3]) / 2 - cf.tam[1]) + Math.hypot(h[2] - h[0], h[3] - h[1]) / 2); q *= 1.1; lo = Math.min(lo, cf.tam[0] - 0.5 - q); hi = Math.max(hi, cf.tam[0] - 0.5 + q); } // mảnh bay quanh: bán kính quỹ đạo lớn nhất
+    if (cf.phan === 'lua') { lo -= 0.06; hi += 0.06; } // hoa lửa uốn
+    if (cf.phan === 'doi') { lo -= 0.06; hi += 0.06; } // 2 lõi tách
+    return (M[id] = [lo, hi]);
   },
   cdTrangOng(d) { return d._tr || (d._tr = this.toBien(d, 'trang')); },
   // trạng thái trên quái bằng ảnh tờ ST (fx_st_*): danh sách cần vẽ cho quái E
@@ -660,7 +687,7 @@ Object.assign(REN, {
           const cfX = E._cdOn && TRUM_ANIM_CODE[E.trum], sX = cfX && this.cdChup(E, cfX, co, kc); // trùm vẽ bằng code: nổ đúng ảnh đang thấy
           if (sX) { this._xac.push({ x: E.x + (E._cdOx || 0), y: E.y + (E._cdOy || 0), goc: E._gv || 0, lat: 1, co: co * kc * (E._sc || 1), f: 0, t: 0, dai: sX, w: this.toBien(sX, 'trang') }); continue; }
           const kX = E._kHv || 1, tX = E._tHv || ten, dX = this.coDai(tX, co * kc * kX) || dai;
-          this._xac.push({ x: E.x, y: E.y + (E._oy || 0), goc: E._gv || 0, lat: E._lat || 1, co: co * kc * kX * (E._sc || 1), f: E._f || 0, t: 0, dai: dX, w: this.coDai(tX, co * kc * kX, 'trang') });
+          this._xac.push({ x: E.x + (E._lechX || 0), y: E.y + (E._oy || 0), goc: E._gv || 0, lat: E._lat || 1, co: co * kc * kX * (E._sc || 1), f: E._f || 0, t: 0, dai: dX, w: this.coDai(tX, co * kc * kX, 'trang') });
         }
         continue;
       }
@@ -691,11 +718,18 @@ Object.assign(REN, {
       let sc = 0.6 + 0.4 * (E.vao * E.vao * (3 - 2 * E.vao)); // xuất hiện êm
       sc *= 1 - 0.035 * he; // nén nhẹ khi trúng đòn
       const cf = E.trum && TRUM_ANIM_BAT ? TRUM_ANIM_CODE[E.trum] : null, cd = cf ? this.cdTinh(E, cf, co, kc, sc, he, t, dt, x, y) : null;
-      E._cdOn = !!cd; if (cd) { E._cdOx = cd.ox; E._cdOy = cd.oy; }
+      // trùm ở làn sát mép (làn trái x≈27 / làn phải x≈404): mép canvas cắt mất thân → vẽ LÙI VÀO trong (chỉ hình; vị trí gameplay giữ nguyên)
+      let lech = 0;
+      if (E.trum) { // mượt: lùi vào nhanh (k 20/s), trả về chậm (k 8/s) → không giật khi trạng thái bật/tắt; gặp lần đầu / dt = 0: lấy luôn
+        const mt = this.trumLech(E, cf, cd, cd ? cd.C : co * kc * sc, x, co), c0 = E._lechX;
+        lech = c0 == null || !(dt > 0) ? mt : c0 + (mt - c0) * (1 - Math.exp(-dt * (Math.abs(mt) > Math.abs(c0) ? 20 : 8)));
+      }
+      x += lech; E._lechX = lech;
+      E._cdOn = !!cd; if (cd) { E._cdOx = cd.ox + lech; E._cdOy = cd.oy; }
       // ---- bóng ----
       const bco = co * (bay ? 0.62 : 0.78) * sc * (bay ? 1 - (hover + 6) * 0.02 : 1) * (cd ? cd.bs : 1); // trùm code: bóng nhỏ lại khi nảy/bay lên
       ctx.globalAlpha = (bay ? 0.32 : 0.5) * (cd ? 0.6 + 0.4 * cd.bs : 1);
-      if (bong) ctx.drawImage(REN.mip(bong, bco * REN.s * REN.dpr), E.x + 2 - bco / 2, E.y + 4 + (bay ? 8 : 0) - bco * 0.42, bco, bco * 0.84);
+      if (bong) ctx.drawImage(REN.mip(bong, bco * REN.s * REN.dpr), E.x + lech + 2 - bco / 2, E.y + 4 + (bay ? 8 : 0) - bco * 0.42, bco, bco * 0.84);
       ctx.globalAlpha = 1;
       // ---- quầng báo chiêu của trùm ----
       if (E.bao) {
@@ -775,7 +809,7 @@ Object.assign(REN, {
       // (bỏ bông tuyết cạnh thanh máu — người dùng 08/11; bị chậm vẫn thấy: thanh máu xanh băng + vòng gió lạnh / băng trên thân)
       if (E.trum) {
         const w = 70, yy = yb - co * 0.6; // 0.55 → 0.6: đỉnh nảy của mad_crown/freezer/joker_king chạm thanh máu
-        PX.thanh(ctx, E.x - w / 2, yy, w, 4, E.hp / E.max, TRUM[E.trum].mau);
+        PX.thanh(ctx, clamp(E.x + lech, w / 2 + 2, W - w / 2 - 2) - w / 2, yy, w, 4, E.hp / E.max, TRUM[E.trum].mau);
         if (E.bao) { // dây báo chiêu tới ụ bị nhắm: tia PNG tô màu trùm, lặp + trượt (thay nét đứt vẽ code)
           const B = G.ban[E.ban];
           ctx.save(); ctx.globalCompositeOperation = 'lighter';

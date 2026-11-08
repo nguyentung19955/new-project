@@ -614,3 +614,6 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 
 ## claude/demo-hop-tuong — Sói Máy: ĐÁNH LAN (08/11)
 - Sói Máy (`soi`, skills2.js): mỗi viên trúng lan 40% sát thương lên quái trong 0.6 ô (thức tỉnh 50% · 0.8 ô); lan chỉ chí mạng khi viên chính chí mạng; D 55 → 52 (đơn mục tiêu −5%, +1 quái lân cận +32%/+42%, +2 quái +70%/+89%); VFX `HU.soiLan` vòng sóng + 3 vết vuốt giữa điểm trúng; tất định (không Math.random).
+
+## claude/demo-hop-tuong — Trùm: không bị cắt ở làn mép, bỏ bóng 3 cánh Prism, chớp tung chiêu dịu (08/11)
+- Trùm làn sát mép canvas (x≈27 / x≈404) vẽ lùi vào trong cho trọn thân (chỉ hình, vị trí gameplay giữ nguyên; quaianim.js trumLech); vòng khiên Prism chỉ vẽ khi khiên bật (trumvfx.js); chớp tung chiêu = lớp sáng cộng ~42–50%/0,12 s thay phủ trắng đặc, chớp trúng đòn nhẹ hơn (0,45→0,3).

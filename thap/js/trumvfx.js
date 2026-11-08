@@ -147,8 +147,9 @@ const TVF = {
       const co = E.d.co;
       if (E.bao) {
         const u = clamp(E.bao.t / (E.bao.song || 1.4), 0, 1), n = this.nhip(u, this._n), v = this.VONG[E.trum] || 'tb_trum';
-        PX.ve(ctx, this.anh(v), E.x, E.y + co * 0.12, co * 1.35 * n[0], co * 1.35 * n[0] * 0.62, 0, n[1] * 0.9);
-      } else if (E.dashT > 0) PX.ve(ctx, this.anh('tb_sao'), E.x, E.y + co * 0.12, co * 1.2, co * 0.74, t * 6, 0.7);
+        const xv = E.x + (E._lechX || 0), wv = Math.min(co * 1.35 * n[0], 2 * Math.max(8, Math.min(xv - 2, W - 2 - xv))); // sát mép canvas: vòng thu hẹp lại, không bị cắt
+        PX.ve(ctx, this.anh(v), xv, E.y + co * 0.12, wv, wv * 0.62, 0, n[1] * 0.9);
+      } else if (E.dashT > 0) PX.ve(ctx, this.anh('tb_sao'), E.x + (E._lechX || 0), E.y + co * 0.12, co * 1.2, co * 0.74, t * 6, 0.7);
     }
     ctx.globalAlpha = 1;
   },
@@ -156,9 +157,9 @@ const TVF = {
     const t = this.t();
     for (const E of G.quai) {
       if (!E.trum || E.chet) continue;
-      const co = E.d.co, x = E.x, y = E.y, yb = y - co * 0.55;
+      const co = E.d.co, x = E.x + (E._lechX || 0), y = E.y, yb = y - co * 0.55; // _lechX: trùm sát mép vẽ lùi vào (quaianim.js trumLech)
       const K = E.khien;
-      if (K && K.can) { // mảnh khiên: còn = sáng, đã vỡ (đủ loại ụ khác nhau) = tối; khiên tắt → mờ cả vòng chờ dựng lại
+      if (K && K.can && K.on) { // mảnh khiên: còn = sáng, đã vỡ (đủ loại ụ khác nhau) = tối; khiên TẮT → không vẽ gì (trước: vòng 3 cánh mờ 25% dưới thân như bóng thừa)
         const seg = this.CO.has('prism_seg'), r = co * 0.56;
         for (let i = 0; i < K.can; i++) {
           const a = -Math.PI / 2 + i * Math.PI * 2 / K.can, con = K.on && i >= K.ds.size, al = K.on ? (con ? 0.9 : 0.4) : 0.25;
