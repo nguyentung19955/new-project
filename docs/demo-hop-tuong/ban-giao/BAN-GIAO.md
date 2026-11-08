@@ -8,7 +8,7 @@
   - Nhánh làm việc: `claude/demo-hop-tuong`, thư mục `thap/` (docs ở `docs/demo-hop-tuong/`).
   - Nhánh live: `claude/mobile-tower-defense-game-k5oxzo` — xuất bản = chỉ thay thư mục `thap/` bằng bản của nhánh làm việc (`git fetch` → `git checkout FETCH_HEAD -- thap`), commit 'thap: xuất bản — …', push.
 - Live: https://nguyentung19955.github.io/new-project/thap/ và https://turret-merge.web.app (tự deploy từ nhánh live).
-- **KHÔNG đụng**: `demo/`, `firebase.json` gốc, `.firebaserc`, `.github/workflows/firebase-hosting.yml`. Không in/commit khoá API (PixelLab, Firebase apiKey, service account).
+- Nhánh làm việc (từ 08/11) chỉ còn Turret Merge; trên nhánh live **KHÔNG đụng** phần của game kia (`demo/`, `firebase.json` gốc, `.firebaserc`, `.github/workflows/firebase-hosting.yml`). Không in/commit khoá API (PixelLab, Firebase apiKey, service account).
 - Luật bắt buộc trong code: `thap/QUY-TAC-HINH.md` (hình chỉ từ ChatGPT PNG; luật 6 = sửa ở 1 chỗ thì áp mọi chế độ/màn; luật 7 = nghiêng về DCDW; luật 8 = chạy `node tools/thap-kt-hoiquy.js` trước khi xuất bản). Online phải tất định (gameplay không phụ thuộc hiệu ứng/FPS).
 
 ## 2. Người dùng làm việc thế nào (quan trọng)
