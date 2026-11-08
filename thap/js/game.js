@@ -121,7 +121,16 @@ function taoU(B, id, sao, o) {
 // gọi hook 'sinh' của kỹ năng khi ụ xuất hiện (vd. Sói Máy 30% ra bản thức tỉnh)
 function sinhU(T) { const sk = SKILLS[T.id]; if (sk && sk.sinh) sk.sinh(G, T); return T; }
 // sinhU bằng RNG cho trước (chiêu trùm tất định: Mad Crown biến ra Merge King / Sói vẫn quay vàng / thức tỉnh, 2 máy online ra như nhau)
-function sinhR(T, r) { const r0 = Math.random; if (r) Math.random = r; try { return sinhU(T); } finally { Math.random = r0; } }
+function sinhR(T, r) { const r0 = Math.random, s0 = G._rSinh; if (r) { Math.random = r; G._rSinh = r; } try { return sinhU(T); } finally { Math.random = r0; G._rSinh = s0; } }
+// LUẬT "NGẪU NHIÊN KHI XUẤT HIỆN" (người dùng 08/11): ụ có dạng quay lúc sinh (Merge King vàng, Sói thức tỉnh, Pháo La Bàn 1 hướng, Prism màu, Twin Anvil dạng,
+//   Lucky Slot quay) — MỌI đường ụ xuất hiện (triệu hồi, ghép thường, Copycat chép, Twin Maker, Cloner, REINFORCE, Hộp/Pandora/trùm biến, Genesis, AI) đều quay MỚI.
+//   RNG tất định: hạt trận + bàn + ô + số lần quay của bàn (không Math.random); sinhR (chiêu trùm / Genesis) ép RNG của nó. Online: cờ dạng đi theo gói tr / gh / ảnh chụp.
+function rngSinh(T, muoi) {
+  if (G._rSinh) return G._rSinh;
+  const B = G.ban && G.ban[T.ban], hat = (typeof ONS !== 'undefined' && ONS.on ? ONS.seed : G.hat) || 1;
+  if (B) B._snN = (B._snN | 0) + 1;
+  return rngHat((hat * (muoi | 0) + ((B && B.i) | 0) * 389 + (T.o | 0) * 157 + ((B && B._snN) | 0) * 7919) | 0);
+}
 // bàn còn lại (PVP = đối thủ, CO-OP = đồng đội), SOLO = null
 function banKhac(B) { return G.ban.find(X => X !== B) || null; }
 function oTrong(B) { const ds = []; for (let i = 0; i < 15; i++) if (!B.t[i]) ds.push(i); return ds; }
@@ -152,6 +161,7 @@ function sinhDoi(B, sao, oNguon, ep) {
   const T = sinhU(taoU(B, id, Math.max(1, Math.min(LUAT.saoMax, sao | 0)), o));
   B.t[o] = T;
   B._tw = { o, id, s: T.sao, f: (T.vang ? 'g' : '') + (T.thuc ? 'w' : '') };
+  if (typeof ONS !== 'undefined' && ONS.oTT) B._tw.fl = ONS.oTT(T)[2]; // online: đủ cờ dạng quay lúc sinh (màu Prism, hướng La Bàn, dạng Anvil…)
   if (typeof VX !== 'undefined' && VX.sinhDoi) VX.sinhDoi(B, oNguon, T); else if (typeof VX !== 'undefined') VX.trieu(T);
   return T;
 }

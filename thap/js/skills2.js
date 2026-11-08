@@ -53,9 +53,7 @@ function chuyenU(B, T, id, sao, doi) {
   FX.vong1(c.x, c.y, 8, 52, TIERS[N.bac].mau, 0.45, 4); FX.tiaLua(c.x, c.y, 18, TIERS[N.bac].mau, 210, 12); FX.no('laser_trung', c.x, c.y, 70, 0.35);
   return N;
 }
-// DẠNG cố định của 1 ụ (quay lúc sinh): Merge King vàng, Sói thức tỉnh — bản sao / con rối online giữ đúng dạng, không quay lại
-const BIEN_THE = { vughep: 'vang', soi: 'thuc' };
-function giuBienThe(N, X) { const k = N && X && N.id === X.id && BIEN_THE[N.id]; if (k) N[k] = !!X[k]; if (N && X && N.id === 'canon' && X.id === 'canon') { N.hb = X.hb; N.cmC = X.cmC || 0; } return N; } // Pháo La Bàn: bản sao giữ tổ hợp hướng + stack + số
+// (08/11: bỏ giuBienThe — bản sao Copycat KHÔNG giữ dạng quay lúc sinh nữa; chuyenU → sinhU quay mới: vàng / thức tỉnh / hướng La Bàn / màu Prism / dạng Anvil / Lucky Slot quay)
 // ụ trong BỘ BÀI trừ các loại `tru` (Hộp Bí Ẩn không ra chính nó…). Lọc hết → vẫn CHỈ trong bộ bài (kể cả loại bị trừ), KHÔNG BAO GIỜ lấy toàn bộ danh sách ụ (DCDW)
 function deckTru(B, tru) { const bo = B.deck.filter(id => SKILLS[id] && G.rosterMap[id]); const ds = bo.filter(id => !tru.includes(id)); return ds.length ? ds : bo; }
 function nangSao(B, T, n, chu) {
@@ -752,7 +750,7 @@ SKILLS.dongbo = { // Pháo Đồng Bộ (Dana) — HỖ TRỢ: DCDW Dana — buf
 };
 SKILLS.vughep = { // Vua Ghép (Aurora King): kéo lên ụ CÙNG SAO → ụ đó +1 sao (bản vàng 10% → +2)
   vai: 'db', dmg: 16.67, toc: 0.9, nham: 'dau',
-  sinh(G, T) { T.vang = Math.random() < knThe(G.ban[T.ban], 'vughep') / 100; }, // 10% ở cấp đầu → 22% cấp 15
+  sinh(G, T) { T.vang = rngSinh(T, 4447)() < knThe(G.ban[T.ban], 'vughep') / 100; }, // quay MỚI mỗi lần xuất hiện (cả bản sao Copycat) — RNG tất định // 10% ở cấp đầu → 22% cấp 15
   mo: (T) => (T.vang ? 'GOLDEN Merge King: drag onto a same-star turret → +2★' : 'Drag onto same-star turret: +1★') + ', keeps its type · ' + Math.round(knThe(T && G.ban[T.ban], 'vughep')) + '% of summons/merges come out GOLDEN (+2★) · also on stone (stays stone) · Merge King + Merge King: one Merge King +1★ (keeps Golden)',
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'tia_lua', co: 16, mau: '#ffe46b', sp: 480 }); },
   ghepDB: {
@@ -819,7 +817,7 @@ SKILLS.hasao = { // Súng Hạ Sao (Giltine) — HỖ TRỢ (đợt vai trò): �
 };
 SKILLS.saochep = { // Máy Sao Chép (Shamash): kéo lên ụ CÙNG SAO → thành bản sao của ụ đó (70% chỉ số ở cấp đầu → 94% thẻ max, KY_NANG_CAP.saochep)
   vai: 'db', dmg: 13.33, toc: 1.2, nham: 'dau',
-  mo: (T) => 'Drag onto same-star turret (frozen too, NOT stone): becomes a copy at ' + Math.round(heSaoChep(T && G.ban[T.ban]) * 100) + '% damage · keeps its form (Awakened, Gold) and the Copycat\'s own buffs', // 08/11: bỏ 'the copy is never stone' (đá không chép được nữa)
+  mo: (T) => 'Drag onto same-star turret (frozen too, NOT stone): becomes a copy at ' + Math.round(heSaoChep(T && G.ban[T.ban]) * 100) + '% damage · random traits (colour, direction, Gold, Awakened, slot spin…) roll anew · keeps the Copycat\'s own buffs', // 08/11: bỏ 'the copy is never stone' (đá không chép được nữa)
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'tia_lua', co: 16, mau: '#ffe46b', sp: 480 }); },
   ghepDB: {
     // 08/11 người dùng chốt: KHÔNG chép ô ĐÁ (hoá đá) — ô BĂNG vẫn chép được
@@ -828,9 +826,11 @@ SKILLS.saochep = { // Máy Sao Chép (Shamash): kéo lên ụ CÙNG SAO → thà
     // (DCDW: không nguồn nào cấm Shamash chép đá; Frey còn biến hình được ô đá — docs/demo-hop-tuong/tuvan/copycat-da/DCDW.md)
     quaKhoa: true,
     lam(G, B, a, b) {
-      // DCDW Shamash: bản sao giữ DẠNG của ụ gốc (Sói thức tỉnh, Merge King vàng) + buff trên thân Copycat (Aurora, Ép Xung) — không quay ngẫu nhiên lại
+      // 08/11 người dùng: bản sao là 1 lần XUẤT HIỆN mới → dạng ngẫu nhiên lúc sinh QUAY LẠI (chuyenU → sinhU): Merge King vàng, Sói thức tỉnh,
+      //   Pháo La Bàn 1 hướng mới + 0 stack (không chép NSWE), Prism màu mới, Twin Anvil dạng mới, Lucky Slot quay máy xèng. Buff KHÔNG ngẫu nhiên
+      //   trên thân Copycat (Aurora, Ép Xung) vẫn giữ như cũ.
       const N = chuyenU(B, a, b.id, a.sao); N.banSao = true;
-      giuBienThe(N, b); N.aurora = Math.max(N.aurora || 0, a.aurora || 0); N.epxung = (N.epxung || 0) + (a.epxung || 0);
+      N.aurora = Math.max(N.aurora || 0, a.aurora || 0); N.epxung = (N.epxung || 0) + (a.epxung || 0);
       const c0 = B.o[b.o], c = B.o[N.o]; tiaPhep(c0.x, c0.y, c.x, c.y, '#b98cff');
       nhanU(N, 'COPY', '#c9a2ff', true);
       return N;
@@ -877,7 +877,7 @@ SKILLS.soi = { // Sói Máy (Werewolf) — mỗi lần TRIỆU HỒI / GHÉP ra 
   vai: 'tc', dmg: 55, toc: 1 / 1.8, nham: 'dau',
   KY: 1.8, KY_TT: 1.2, CACH: 0.1, // giây: nghỉ bản thường · nghỉ loạt thức tỉnh · cách giữa 3 viên
   tiLe: (B) => Math.min(0.5, knThe(B, 'soi') / 100),
-  sinh(G, T) { T.thuc = Math.random() < this.tiLe(G.ban[T.ban]); T.loat = 0; if (T.thuc) setTimeout(() => { SND.thucTinh(); }, 250); },
+  sinh(G, T) { T.thuc = rngSinh(T, 6271)() < this.tiLe(G.ban[T.ban]); T.loat = 0; if (T.thuc) setTimeout(() => { SND.thucTinh(); }, 250); },
   mo: (T) => (T && T.thuc ? 'AWAKENED: 3-barrel volley every 1.2s (3 shots × 50% damage, 0.1s apart) · always crits' : 'NORMAL: one barrel, 1 shot every 1.8s · ' + Math.round(SKILLS.soi.tiLe(T && G.ban[T.ban]) * 100) + '% of summons/merges come out AWAKENED (3 barrels, always crit)') + (ms(T, 3) ? ' · +10% crit' : '') + (ms(T, 5) ? ' · +25% damage' : '') + (ms(T, 7) ? ' · howl: neighbours +25% fire rate' : ''),
   luonCrit: (T) => !!T.thuc,
   capNhat(G, B, T, dt) { // tự quản nhịp bắn (loạt 3 viên) → luật thuần theo dt, tất định

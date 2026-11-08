@@ -98,8 +98,9 @@ if (nhom('1 · ghepDB × biến thể nguồn/đích')) {
           if (kq.m && (kq.m.da !== b0.da || kq.m.bang !== b0.bang || kq.m.sao !== b0.sao)) sai('Teleporter: đích đổi chỗ phải giữ đá/băng/sao'); }
         if (S === 'saochep') { if (!kq.m || kq.m.id !== b0.id || kq.m.sao !== 3 && kd !== 's7' || !kq.m.banSao) sai('Copycat: ô Copycat phải thành bản sao ' + b0.id + ' cùng sao (có ' + JSON.stringify(kq.m) + ')');
           else { if (kq.m.da || kq.m.bang) sai('Copycat: "the copy is never stone" — bản sao đang khoá');
-            if (b0.id === 'vughep' && kq.m.vang !== b0.vang) sai('Copycat: không giữ dạng VÀNG');
-            if (b0.id === 'soi' && kq.m.thuc !== b0.thuc) sai('Copycat: không giữ dạng THỨC TỈNH'); }
+            // 08/11 người dùng: bản sao = lần xuất hiện MỚI → dạng quay lúc sinh (vàng / thức tỉnh) QUAY LẠI, không chép gốc (phân bố: tools/thap-kt-ngau-nhien-sinh.js)
+            if (b0.id === 'vughep' && typeof kq.m.vang !== 'boolean') sai('Copycat: bản sao Merge King phải có dạng vàng/thường (quay mới)');
+            if (b0.id === 'soi' && typeof kq.m.thuc !== 'boolean') sai('Copycat: bản sao Sói phải có dạng thức tỉnh/thường (quay mới)'); }
           if (!kq.n || !kq.n.cung) sai('Copycat: ụ gốc phải giữ nguyên'); }
         if (S === 'epxung' && !dao) { if (!R(`!!SKILLS['${X}'].dmg`)) sai('Overclock lên ụ KHÔNG bắn (thẻ: "same-star shooting turret")'); else if (!kq.n || !kq.n.cung || !(kq.n.ep > b0.ep)) sai('Overclock: đích phải +tốc cùng thân'); }
         // Twin Anvil (08/11): lên Anvil cùng dạng → ụ kéo mất, đích giữ thân, cộng dồn không giảm · lên ụ khác → Anvil mất, đích giữ thân + có buff (anv)

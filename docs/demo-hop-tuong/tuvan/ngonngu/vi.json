@@ -4864,5 +4864,9 @@
 " — #-reel fruit slot: pair = +# shared fruit point, # of a kind = jackpot": " — Máy xèng # cuộn trái cây: ra cặp = +# điểm quả dùng chung, # ô giống = JACKPOT",
 " — #-reel fruit slot: pair = +# shared fruit point, # of a kind = jackpot.": " — Máy xèng # cuộn trái cây: ra cặp = +# điểm quả dùng chung, # ô giống = JACKPOT.",
 " #-reel fruit slot: pair = +# shared fruit point, # of a kind = jackpot": " Máy xèng # cuộn trái cây: ra cặp = +# điểm quả dùng chung, # ô giống = JACKPOT",
-" #-reel fruit slot: pair = +# shared fruit point, # of a kind = jackpot.": " Máy xèng # cuộn trái cây: ra cặp = +# điểm quả dùng chung, # ô giống = JACKPOT."
+" #-reel fruit slot: pair = +# shared fruit point, # of a kind = jackpot.": " Máy xèng # cuộn trái cây: ra cặp = +# điểm quả dùng chung, # ô giống = JACKPOT.",
+"Drag onto same-star turret (frozen too, NOT stone): becomes a copy at #% damage · random traits (colour, direction, Gold, Awakened, slot spin…) roll anew · keeps the @'s own buffs": "Kéo lên ụ cùng sao (kể cả ụ băng, không phải ô đá): thành bản sao #% sát thương · đặc tính ngẫu nhiên (màu, hướng, Vàng, Thức tỉnh, quay máy xèng…) được quay lại · giữ buff riêng của @",
+"random traits (colour, direction, Gold, Awakened, slot spin…) roll anew": "đặc tính ngẫu nhiên (màu, hướng, Vàng, Thức tỉnh, quay máy xèng…) được quay lại",
+"keeps the @'s own buffs": "giữ buff riêng của @",
+"keeps the Copycat's own buffs": "giữ buff riêng của Copycat"
 }

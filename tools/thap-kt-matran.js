@@ -93,7 +93,7 @@ function luat(s, e, r) {
   if (s === 'cmSo') { // Pháo La Bàn: ghép Pháo vào Pháo = ụ ĐÍCH +1★ giữ mũi tên của đích; số theo cùng/vuông/ngược hướng
     if (e === 'ghepDich') return L('giu', 'ụ đích giữ mũi tên (ngược hướng: số trừ, tối thiểu 1 + sóng nổ)');
     if (e === 'ghepKeo') return L('mat', 'ụ kéo mất; đích giữ mũi tên của đích');
-    if (e === 'copyLen') return L('giu', 'bản sao giữ mũi tên + số (× % sao chép)');
+    if (e === 'copyLen') return L('ngau', 'bản sao = lần xuất hiện mới: 1 hướng ngẫu nhiên, 0 stack (08/11)');
   }
   // ghép 2 ụ CÙNG LOẠI ra đúng loại đó: giữ max cộng dồn Overclock (BAO-CAO gioi-han §4 mục 6, game.js GIU_CONG_DON)
   if (s === 'epxung' && (e === 'ghepKeo' || e === 'ghepDich') && r && r.id === (LOAI_TT[s] || 'lien')) return L('giu', 'ghép cùng loại ra cùng loại: giữ Ép Xung lớn nhất');
@@ -111,7 +111,7 @@ function luat(s, e, r) {
   if (s === 'vang' || s === 'thuc') {
     if (['hopMo', 'tienHoa'].includes(e)) return L('na', 'ụ là Hộp/Evolver');
     if (['xaoTron', 'xaoCoop', 'xaoPVP', 'madCrown'].includes(e)) return L('mat', 'thành loại khác');
-    if (e === 'copyLen') return L('giu', 'bản sao giữ DẠNG (DCDW Shamash chép Sói thức tỉnh)');
+    if (e === 'copyLen') return L('ngau', 'bản sao QUAY LẠI dạng ngẫu nhiên lúc sinh (người dùng 08/11) — có thể trùng hoặc khác gốc');
     if (e === 'copyKeo') return L('na', 'Copycat không có dạng này');
     return L('giu', 'cùng thân');
   }
@@ -237,7 +237,7 @@ function trongTrang(arg) {
     let a = P(0, 1, 0, 2), b = P(1, 4, 0, 3); ghep(B, a, b); const c1 = [B.t[1] === b, b.sao, b.hb, b.cmC, !B.t[0]];
     a = P(2, 1, 0, 5); const c2 = [hopLeGhep(a, b)]; a = P(2, 10, 0, 4); ghep(B, a, b); c2.push(b.sao, b.hb);
     a = P(3, 15, 2, 1); ghep(B, a, b); const c3 = [b.sao, b.hb, b.cmC];
-    const C = dat(B, 9, 'saochep', 3); ghep(B, C, b); const k = B.t[9]; const c4 = [k && k.id, k && k.banSao, k && k.hb, k && k.cmC];
+    const C = dat(B, 9, 'saochep', 3); ghep(B, C, b); const k = B.t[9]; const c4 = [k && k.id, k && k.banSao, k && [1, 2, 4, 8].includes(k.hb), k && k.cmC]; // 08/11: bản sao = 1 hướng ngẫu nhiên MỚI, 0 stack
     them.cm = JSON.stringify([c1, c2, c3, c4]); G.quai = []; xoa(); }
   { xoa(); B.deck = ['lualien']; const R = (o, n) => { const T = dat(B, o, 'lualien', 3); T.lc = n; return T; };
     const r0 = R(0, 0), r4 = R(4, 0), r12 = R(12, 0), r10 = R(10, 0), a = R(6, 5), b = R(2, 2); ghep(B, a, b);
@@ -269,7 +269,7 @@ function trongTrang(arg) {
     if (r.kq === 'na' || L.k === 'na') { na++; ghi = { k: 'na', ly: L.k === 'na' ? L.ly : r.ly }; bang[r.s + '|' + r.e] = ghi; continue; }
     if (r.kq === 'kad') { kad++; bang[r.s + '|' + r.e] = { k: 'kad', ly: r.ly }; continue; }
     kiem++;
-    ok = r.kq === L.k || (r.kq === 'ca2' && (L.k === 'giu' || L.k === 'mat'));
+    ok = r.kq === L.k || (r.kq === 'ca2' && (L.k === 'giu' || L.k === 'mat')) || (L.k === 'ngau' && (r.kq === 'giu' || r.kq === 'mat' || r.kq === 'ca2'));
     const loiThem = [];
     if (r.tile != null && Math.abs(r.tile - r.tileDung) > 0.002) loiThem.push('sức mạnh bản sao ×' + r.tile + ' ≠ ×' + r.tileDung);
     if (r.tile != null && !r.dau) loiThem.push('dải xem nhanh thiếu dấu Copycat + %');
@@ -279,7 +279,7 @@ function trongTrang(arg) {
   }
   if (Math.abs(them.orbital - them.heso) > 0.002) LOI.push('✗ bom Orbital của bản sao ×' + them.orbital + ' ≠ ×' + them.heso);
   if (!them.evo.ok) LOI.push('✗ Evolver mất sao phải đếm lại từ đầu (5★→4★, 7★ xịt→6★), lên sao giữ thời gian: ' + JSON.stringify(them.evo));
-  if (them.cm !== JSON.stringify([[true, 3, 5, 0, true], [false, 4, 15], [3, 15, 3], ['canon', true, 15, 3]])) LOI.push('✗ Pháo La Bàn: luật ghép sai ' + them.cm + ' (cần N2★+S3★ = NS 3★ · NS+N không ghép · NS+WE 4★ = NSWE 4★ · NSWE(2)+NSWE 1★ → 3★ stack 3 · Copycat giữ tổ hợp + stack)');
+  if (them.cm !== JSON.stringify([[true, 3, 5, 0, true], [false, 4, 15], [3, 15, 3], ['canon', true, true, 0]])) LOI.push('✗ Pháo La Bàn: luật ghép sai ' + them.cm + ' (cần N2★+S3★ = NS 3★ · NS+N không ghép · NS+WE 4★ = NSWE 4★ · NSWE(2)+NSWE 1★ → 3★ stack 3 · Copycat chép = 1 hướng ngẫu nhiên mới, 0 stack)');
   if (them.lc !== JSON.stringify([7, 7, 7, 7, 0])) LOI.push('✗ Lửa Thập Tự: ' + them.lc + ' (luật 08/11: ghép 5 + 2 = 7 lửa → ụ ra và mọi Relay cùng hàng/cột (ô 0, 4, 12) lên 7; ô 10 không cùng hàng/cột = 0 — bỏ luật cũ "max rồi +1")');
   if (them.dr !== JSON.stringify([7, 2])) LOI.push('✗ Drone Kéo Xa: ' + them.dr + ' (cần góc → góc 6 ô + 3★/3 = 7 drone; kề 1 ô = 2)');
   if (!them.capLoai) LOI.push('✗ Hộp Bí Ẩn (bản sao) mở ra: sức mạnh không theo cấp của LOẠI kết quả × % sao chép');
@@ -292,7 +292,7 @@ function trongTrang(arg) {
 })().catch(e => { console.log('✗ ' + (e.stack || e)); process.exit(1); });
 
 function ghiMD(bang, so, tenT, tenS) {
-  const KY = { giu: 'GIỮ', mat: 'mất', chan: 'CHẶN', na: '—', kad: '·' };
+  const KY = { giu: 'GIỮ', ngau: 'QUAY MỚI', mat: 'mất', chan: 'CHẶN', na: '—', kad: '·' };
   let t = '<!-- BẢNG SINH TỰ ĐỘNG: GHI_MD=1 node tools/thap-kt-matran.js -->\n';
   t += '| Sự kiện \\ Trạng thái | ' + TT.map(x => x[0]).join(' | ') + ' |\n|---|' + TT.map(() => '---').join('|') + '|\n';
   for (const [e] of SK) t += '| **' + e + '** ' + tenS[e] + ' | ' + TT.map(([s]) => { const c = bang[s + '|' + e]; return c ? KY[c.k] + (c.ok === false ? ' ✗' : '') : '?'; }).join(' | ') + ' |\n';

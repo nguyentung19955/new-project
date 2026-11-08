@@ -276,7 +276,10 @@ SKILLS.bienmau = {
   },
   dauAnh(T) { return this.ANH[this.mau(T)]; },
   dauAnhK: () => 0.86,
-  gocDau(T) { return REN.img && REN.img(SKILLS.bienmau.ANH[SKILLS.bienmau.mau(T)]) ? 0 : null; }, // mặt nạ không xoay theo mục tiêu
+  // mặt nạ LUÔN nằm ngang/thẳng đứng đúng chiều (08/11 người dùng: cầm kéo thấy mặt nạ dựng dọc) — không xoay theo mục tiêu, cả lúc cầm kéo:
+  //   mặt nạ màu (bienmau_m_*) vẽ thẳng ở góc 0; đầu dự phòng bienmau_nong (vẽ theo chiều nòng → phải) xoay −90° cho thẳng
+  gocDau() { return REN._dauEp && REN._dauEp[0] === 'bienmau' ? 0 : -Math.PI / 2; },
+  dauGhost: (T) => T && T.pm != null, // bản đang cầm (ghost) cũng vẽ đúng mặt nạ màu của ụ
   capNhat(G, B, T) {
     const q = this.mau(T), st = Math.min(this.tran(T), T.pms || 0);
     if (q === 1) T.buf.dmg += 0.01 * st;
