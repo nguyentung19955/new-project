@@ -164,3 +164,10 @@ html body #wrap #bo-the .the.ot > .lv:empty, html body #wrap #bo-the .the > .lv:
 
 /* ───────── 07/11 bóng kéo / giữ tay (js/dkkeo.js): cùng khung ô lưới (o_vien_<bậc> + ngọc), không còn khung Pass 9 ───────── */
 html body #wrap .dk-ma.dk-ma-ot > img.dk-ma-de { z-index: 0 !important; }
+
+/* ───────── BẬC CHỈ HUY (08/11): ô chỉ huy dùng viền o_vien_<bậc> như ụ (otoigian.js bacMV) + nhãn bậc chữ màu TIERS ───────── */
+html body #wrap .hm-mvh-po .ot-mini { width: 48px; height: 48px; margin: 0; }
+html body #wrap .hm-mvh .mv-bac { display: block; margin: 0 0 3px; font: 800 10px/1 var(--f-hien); font-style: normal; letter-spacing: .14em; text-shadow: 0 1px 0 #000; }
+html body #wrap .dkd-cmd-chu small .mv-bac { font: inherit; font-style: normal; letter-spacing: inherit; text-shadow: 0 1px 0 #000; }
+html body #wrap .mv-bac { font-style: normal; }
+html body #wrap #chon-mv .mv .mv-bac { display: block; font-size: 8px; font-weight: 900; letter-spacing: .1em; }

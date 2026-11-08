@@ -3598,3 +3598,11 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - **Âm** (`sound.js`): `cbCuon` tích-tích suốt lượt cuộn, `cbDung(j)` "cạch" mỗi ô (cao dần trái → phải), `cbCap` chuông cặp, `cbHut` "hụt" khi khác hết, `jackpot` (mẫu jackpot.mp3).
 - Chữ: `mo()`, text.js, roster.json + mục cobac trong ROSTER_EMBED (meta.js), clip hướng dẫn (khác hết → quay lại → cặp dưa; Lucky Slot thứ 2 → 3 nho JACKPOT), GROW / NHIP / họ JOKER; vi.json → ngonngu-vi.js.
 - Test: `tools/thap-kt-co-bac.js` viết lại (tất định cùng hạt, cặp +1, 3 giống +2 mỗi ngăn, khác hết quay lại, tỉ lệ 20 000 lần, số mỗi điểm/không trần cam-nho, online phát lại cả chuỗi, khay 3 số 3 cỡ màn + Playwright khung hình); `thap-kt-tt-chiso` (Nho 10 → 350 %). Tờ liên hoàn: `docs/demo-hop-tuong/tuvan/co-bac/xeng-3-o.jpg`. Mô phỏng: `tools/thap-sim-co-bac.js diem|dps`.
+
+## claude/demo-hop-tuong — bậc chỉ huy Trắng / Xanh / Tím / Vàng (08/11)
+- Người dùng: "chỉ huy cũng cần phân cấp trắng xanh tím vàng". Bậc **chỉ hiển thị** (`MAVUONG.<id>.bac`, `mvBac`, `mvDS` trong `thap/js/data.js`); không đổi giá, hồi chiêu, tác dụng, online.
+  - REINFORCE (mặc định) = **Xanh** · RAGE = **Tím** · HOLY SHIELD = **Vàng** · Trắng để dành. Lý do: `docs/demo-hop-tuong/tuvan/chi-huy-bac/BANG.md`.
+- Ô chỉ huy dùng viền `o_vien_<bậc>` như ụ (trước đây luôn viền vàng) + giữ vương miện: thẻ khay trận (mọi chế độ), băng chỉ huy màn bộ bài, bảng chọn chỉ huy, hàng ô nhỏ (bộ mẫu, sảnh ONLINE, kết quả), dải đối thủ/đồng đội (trước đây rơi về viền trắng). Khung lớn dự phòng = `the_khung_<bậc>`.
+- Nhãn bậc (COMMON/RARE/EPIC/LEGENDARY, đã có bản Việt) ở bảng chọn, băng chỉ huy, trang chỉ huy (màu trang = màu bậc), dải `#tt`. Bảng chọn + trang chỉ huy xếp theo bậc.
+- Chỉ huy miễn phí (không gacha/cửa hàng) → không có tỉ lệ/giá theo bậc; bản lưu cũ giữ nguyên chỉ huy đã chọn. Không ảnh mới.
+- Test: mới `tools/thap-kt-chi-huy-bac.js` (bậc hợp lệ, luật không đổi, bản lưu cũ/id lạ, viền đúng màu ở mọi chỗ × 390×844 / 844×390 / 667×375, tiếng Việt).

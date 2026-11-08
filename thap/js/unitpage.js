@@ -296,7 +296,7 @@ const UP = {
     if (typeof UI !== 'undefined' && UI.veBoChon) UI.veBoChon();
   },
   buoc(d) {
-    if (this.mv) { const ds = Object.keys(MAVUONG), j = (ds.indexOf(this.mv) + d + ds.length) % ds.length; this.veMV(ds[j], d); return; }
+    if (this.mv) { const ds = typeof mvDS === 'function' ? mvDS() : Object.keys(MAVUONG), j = (ds.indexOf(this.mv) + d + ds.length) % ds.length; this.veMV(ds[j], d); return; }
     if (!this.ds.length) return;
     const i = this.ds.indexOf(this.id), j = (i + d + this.ds.length) % this.ds.length;
     this.ve(this.ds[j], d);
@@ -413,14 +413,15 @@ const UP = {
   veMV(id, huong) {
     const d = MAVUONG[id]; if (!d) return;
     this.mv = id; this.id = null;
-    const el = this.el, ds = Object.keys(MAVUONG), i = ds.indexOf(id);
-    el.style.setProperty('--m', d.mau); el.style.setProperty('--m2', d.mau); el.dataset.bac = 'mv'; el.classList.add('la-mv');
+    const el = this.el, ds = typeof mvDS === 'function' ? mvDS() : Object.keys(MAVUONG), i = ds.indexOf(id);
+    const bac = typeof mvBac === 'function' ? mvBac(id) : 'trang', tier = TIERS[bac]; // bậc chỉ huy (08/11): màu trang = màu bậc, như trang ụ
+    el.style.setProperty('--m', tier.mau); el.style.setProperty('--m2', tier.mau2); el.dataset.bac = bac; el.classList.add('la-mv');
     el.querySelector('.up-so').innerHTML = 'Commander <span>' + (i + 1) + ' / ' + ds.length + '</span>';
     const noi = el.querySelector('.up-noi');
     const tt = UP_MV[id] || {}, ten = upSC(String(d.ten).toLowerCase());
     noi.querySelector('.up-a').innerHTML =
       '<section class="up-hero"><div class="up-pi"><img src="' + heroOf('af_' + id) + '" alt="" onerror="this.onerror=null;this.src=\'assets/' + d.anh + '.png\'"></div><span class="up-seri">CMD-0' + (i + 1) + '</span></section>' +
-      '<div class="up-bien"><div class="up-ten">' + upEsc(ten) + '</div><div class="up-meta"><b>COMMANDER</b> • ' + upEsc(tt.vai || 'ACTIVE SKILL').toUpperCase() + '</div>' +
+      '<div class="up-bien"><div class="up-ten">' + upEsc(ten) + '</div><div class="up-meta"><b>' + upEsc(String(tier.ten).toUpperCase()) + '</b> • <span>COMMANDER</span> • ' + upEsc(tt.vai || 'ACTIVE SKILL').toUpperCase() + '</div>' +
       '<span class="up-bn-ic"><img class="ic" src="' + mvIcURL(id) + '" alt=""></span></div>' +
       // tư vấn C §B15: 3 thuộc tính kỹ năng (mana · hồi chiêu · thời gian) thay lưới 4 ô của trang ụ — giá ×2 mỗi lần dùng ghi ngay trong ô mana
       '<div class="up-spec ba">' + this.o('Mana cost', d.gia + ' · ×2 next') + this.o('Cooldown', d.cd + 's') + this.o('Duration', tt.lau || '—') + '</div>' +

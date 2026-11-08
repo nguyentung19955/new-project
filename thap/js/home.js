@@ -88,7 +88,7 @@ const HM = {
     o.style.setProperty('--mm', d.mau);
     if (o.dataset.mv === UI.mv) return;
     o.dataset.mv = UI.mv;
-    const kh = (typeof KHUNG !== 'undefined') ? KHUNG.url('mv') : 'assets/the_khung_mv.png';
+    const kh = (typeof KHUNG !== 'undefined') ? KHUNG.url(typeof mvBac === 'function' ? mvBac(UI.mv) : 'mv') : 'assets/the_khung_mv.png'; // khung theo bậc chỉ huy (08/11)
     const sa = typeof srcTai === 'function' ? srcTai() : 'src';
     o.innerHTML = '<span class="o-mv-po"><img class="po" ' + sa + '="' + (typeof anhUrl === 'function' ? anhUrl(d.anh) : 'assets/' + d.anh + '.png') + '" alt="" draggable="false" onerror="this.onerror=null;this.src=\'' + mvIcURL(UI.mv) + '\'"></span>' +
       '<img class="o-mv-kh" ' + sa + '="' + kh + '" alt="" draggable="false"><img class="o-mv-ki" ' + sa + '="' + mvIcURL(UI.mv) + '" alt="" draggable="false">';
@@ -178,9 +178,12 @@ const HM = {
   },
   locLai() { if (this.sheet === 'loc') { const s = this.el('hm-tam').scrollTop; this.moLoc(); this.el('hm-tam').scrollTop = s; this.el('hm-mo').classList.add('vao'); } this.veDeck(); },
 
+  // nhãn bậc chỉ huy (chữ TEXT.tier — đã có bản Việt; màu TIERS) — 08/11
+  mvBacNhan(id) { if (typeof mvBac !== 'function') return ''; const t = TIERS[mvBac(id)]; return '<i class="mv-bac" style="color:' + t.mau + '">' + this.esc(t.ten) + '</i>'; },
   moMVs() {
-    this.mo('mvs', this.dau('COMMANDER', 'One skill per match, tap its card in battle') + '<div class="hm-ds">' + Object.entries(MAVUONG).map(([id, d]) =>
-      '<div class="hm-hang hm-mvh' + (id === UI.mv ? ' on' : '') + '" style="--mm:' + d.mau + '"><button class="hm-mvh-chon" data-act="hm-mv-chon" data-id="' + id + '"><span class="hm-mvh-po"><img src="' + mvIcURL(id) + '" alt=""></span><span><b>' + this.esc(d.ten) + '</b><small>' + this.esc(d.mo) + '</small></span>' + (id === UI.mv ? '<em>SELECTED</em>' : '') + '</button>' +
+    this.mo('mvs', this.dau('COMMANDER', 'One skill per match, tap its card in battle') + '<div class="hm-ds">' + (typeof mvDS === 'function' ? mvDS() : Object.keys(MAVUONG)).map(id => [id, MAVUONG[id]]).map(([id, d]) =>
+      // 08/11: ô chân dung tối giản viền theo BẬC chỉ huy + vương miện (OT.miniMV) + nhãn bậc màu TIERS (như trang ụ); xếp theo bậc
+      '<div class="hm-hang hm-mvh' + (id === UI.mv ? ' on' : '') + '" style="--mm:' + d.mau + '" data-bac="' + (typeof mvBac === 'function' ? mvBac(id) : '') + '"><button class="hm-mvh-chon" data-act="hm-mv-chon" data-id="' + id + '"><span class="hm-mvh-po">' + (typeof OT !== 'undefined' ? OT.miniMV(id) : '<img src="' + mvIcURL(id) + '" alt="">') + '</span><span>' + this.mvBacNhan(id) + '<b>' + this.esc(d.ten) + '</b><small>' + this.esc(d.mo) + '</small></span>' + (id === UI.mv ? '<em>SELECTED</em>' : '') + '</button>' +
       '<button class="hm-ct" data-act="hm-mv-ct" data-id="' + id + '">DETAILS</button></div>').join('') + '</div>');
   },
 

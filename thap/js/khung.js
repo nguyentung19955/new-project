@@ -103,7 +103,7 @@ const KHUNG = {
   UI.vaoTran = function () {
     const r = vaoGoc.apply(this, arguments);
     document.querySelectorAll('#bo-the .the').forEach(d => KHUNG.gan(d, bac(d.dataset.id)));
-    KHUNG.gan($('#the-mv'), 'mv');
+    { const te = $('#the-mv'), B = G.ban[0], bm = typeof mvBac === 'function' && B && B.mv ? mvBac(B.mv.id) : 'mv'; KHUNG.gan(te, bm); const k = te && te.querySelector(':scope > .kh'); if (k) k.src = KHUNG.url(bm); } // khung thẻ chỉ huy theo BẬC (08/11)
     return r;
   };
   const theGoc = UI.theChon;

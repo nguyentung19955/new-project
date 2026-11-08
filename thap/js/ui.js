@@ -118,10 +118,11 @@ const UI = {
     }
     $('#nut-xep').textContent = this.xep === 'bac' ? TEXT.ui.sortTier : this.xep === 'ho' ? TEXT.ui.sortFamily : TEXT.ui.sortName;
     const mv = $('#chon-mv'); mv.innerHTML = '';
-    for (const [id, d] of Object.entries(MAVUONG)) {
+    for (const id of (typeof mvDS === 'function' ? mvDS() : Object.keys(MAVUONG))) { // xếp theo bậc chỉ huy (08/11)
+      const d = MAVUONG[id], tb = TIERS[typeof mvBac === 'function' ? mvBac(id) : 'trang'];
       const b = document.createElement('button'); b.className = 'mv' + (this.mv === id ? ' chon' : ''); b.dataset.act = 'mv-chon'; b.dataset.id = id;
-      b.style.setProperty('--mm', d.mau);
-      b.innerHTML = mvArt(id) + '<div><b>' + d.ten + '</b><span>' + d.mo + '</span></div>';
+      b.style.setProperty('--mm', d.mau); b.dataset.bac = d.bac || '';
+      b.innerHTML = mvArt(id) + '<div><i class="mv-bac" style="color:' + tb.mau + '">' + tb.ten + '</i><b>' + d.ten + '</b><span>' + d.mo + '</span></div>';
       mv.appendChild(b);
     }
     document.querySelectorAll('.che').forEach(b => b.classList.toggle('chon', b.dataset.che === this.che));
@@ -323,7 +324,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     an.onerror = () => { an.onerror = null; an.src = mvIcURL(id); };
     an.src = typeof anhUrl === 'function' ? anhUrl(d.anh) : 'assets/' + d.anh + '.png';
     tt.querySelector('.tt-ten').textContent = d.ten; tt.querySelector('.tt-ten').style.color = d.mau;
-    tt.querySelector('.tt-bac').textContent = 'COMMANDER';
+    { const tb = TIERS[typeof mvBac === 'function' ? mvBac(id) : 'trang']; tt.style.setProperty('--m', tb.mau); tt.querySelector('.tt-bac').textContent = tb.ten; } // bậc chỉ huy (08/11) — như ụ: nhãn + --m màu bậc
     tt.querySelector('.tt-phu').textContent = 'Archfiend skill · tap the button to cast';
     tt.querySelector('.tt-kn').textContent = d.mo;
     const gia = B ? B.mv.gia : d.gia, cd = B ? B.mv.cd : 0;

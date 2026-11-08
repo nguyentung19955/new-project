@@ -35,7 +35,7 @@ const VT = {
   theMV(B, i) {
     const d = MAVUONG[B.mv.id];
     return '<div class="vt-the vt-cmd" style="--i:' + i + '"><div class="vt-kh"><img class="vt-po pilot" src="' + (typeof anhUrl === 'function' ? anhUrl(d.anh) : 'assets/' + d.anh + '.png') + '" alt="" onerror="this.onerror=null;this.src=\'' + mvIcURL(B.mv.id) + '\';this.classList.remove(\'pilot\')">' +
-      '<img class="vt-khung" src="' + KHUNG.url('mv') + '" alt=""></div><div class="vt-ten"><b style="color:' + d.mau + '">' + d.ten + '</b></div></div>';
+      '<img class="vt-khung" src="' + KHUNG.url(typeof mvBac === 'function' ? mvBac(B.mv.id) : 'mv') + '" alt=""><img class="vt-mien" src="assets/o_mien.png" alt=""></div><div class="vt-ten"><b style="color:' + d.mau + '">' + d.ten + '</b></div></div>';
   },
   boBai(B, nhan, tre) {
     return '<section class="vt-bo" style="--t:' + tre + 's"><div class="vt-bang xanh"><b>' + nhan + '</b></div><div class="vt-hang">' +
@@ -58,7 +58,7 @@ const VT = {
       const B = G.ban[1], mv = MAVUONG[B.mv.id];
       h += '<div class="vt-doi"><small>' + (G.che === 'pvp' ? this.CHU.rival : this.CHU.ally) + '</small><span>' +
         B.deck.map(id => { const r = G.rosterMap[id] || { bac: 'trang' }; return '<i class="vt-mini"><img class="po" src="' + thumbOf(id) + '" alt=""><img class="kh" src="' + KHUNG.url(r.bac) + '" alt=""></i>'; }).join('') +
-        (mv ? '<i class="vt-mini"><img class="po" src="' + (typeof anhUrl === 'function' ? anhUrl(mv.anh) : 'assets/' + mv.anh + '.png') + '" alt=""><img class="kh" src="' + KHUNG.url('mv') + '" alt=""></i>' : '') + '</span></div>';
+        (mv ? '<i class="vt-mini"><img class="po" src="' + (typeof anhUrl === 'function' ? anhUrl(mv.anh) : 'assets/' + mv.anh + '.png') + '" alt=""><img class="kh" src="' + KHUNG.url(typeof mvBac === 'function' && B.mv ? mvBac(B.mv.id) : 'mv') + '" alt=""></i>' : '') + '</span></div>';
     }
     h += '<div class="vt-cham"><b>CONTINUE</b><small class="vt-dem"></small></div>';
     this.el.innerHTML = '<div class="vt-cot">' + h + '</div>';

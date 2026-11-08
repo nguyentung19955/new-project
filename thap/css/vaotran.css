@@ -67,3 +67,5 @@
 #tb-trum.co-vt > img { display: none; }
 .co-hud2 #tb-trum .vt-chip { width: 17px; height: 17px; }
 @media (prefers-reduced-motion: reduce) { #nd-gt .vt-sp { animation: none; } #nd-gt .vt-cham { animation: none; } }
+/* chỉ huy (08/11): khung the_khung_<bậc> như ụ + chip vương miện o_mien góc trên-phải (giữ nhận diện chỉ huy, không che ngọc/cánh giữa khung) */
+#nd-gt .vt-cmd .vt-mien { position: absolute; z-index: 3; right: -2%; top: -4%; width: 34%; height: auto; pointer-events: none; filter: drop-shadow(0 1px 1px #000c); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */

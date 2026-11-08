@@ -36,7 +36,7 @@ const DKD = {
     if (c && c.dataset.mv !== UI.mv) {
       c.dataset.mv = UI.mv; c.setAttribute('aria-label', 'Commander: ' + d.ten + ' (tap to change)');
       c.innerHTML = '<i class="ot-mini ot-mv dkd-cmd-po" data-mv="' + UI.mv + '"><img class="po" ' + (typeof srcTai === 'function' ? srcTai() : 'src') + '="' + (typeof anhUrl === 'function' ? anhUrl(d.anh) : 'assets/' + d.anh + '.png') + '" alt="" draggable="false"></i>' +
-        '<span class="dkd-cmd-chu"><small>COMMANDER</small><b>' + HM.esc(d.ten) + '</b><em>' + HM.esc(d.mo || '') + '</em></span><span class="dkd-cmd-doi">CHANGE</span>';
+        '<span class="dkd-cmd-chu"><small>COMMANDER' + (typeof HM.mvBacNhan === 'function' ? ' · ' + HM.mvBacNhan(UI.mv) : '') + '</small><b>' + HM.esc(d.ten) + '</b><em>' + HM.esc(d.mo || '') + '</em></span><span class="dkd-cmd-doi">CHANGE</span>';
     }
     // hàng xếp
     const ti = this.el('#dk-o input'); if (ti && ti.placeholder !== 'Search') ti.placeholder = 'Search'; // ô tìm co lại cạnh 3 chip xếp
