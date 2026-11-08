@@ -136,87 +136,87 @@ Prompt đầy đủ 8 ảnh thử: `prompts.json`.
 | tia | Sniper | Trắng | Terran (người) |
 | set ★ | Tesla | Trắng | Voltari (năng lượng) |
 | maychem | Guillotine | Trắng | Terran (người) |
-| phagiap | Armor Breaker | Trắng | Ferrin (thú nhân) |
-| bua | Hammer | Trắng | Ferrin (thú nhân) |
+| phagiap | Armor Breaker | Trắng | Ferrin (thú nhân) ⟳ |
+| bua | Hammer | Trắng | Ferrin (thú nhân) ⟳ |
 | nam | Iron Fist | Trắng | Ferrin (thú nhân) |
 | bomhen | Time Bomb | Trắng | Synthari (người máy) |
-| nhanmana | Mana Doubler | Xanh | Voltari (năng lượng) |
-| kiembang | Ice Blade | Xanh | Cryon (xứ băng) |
+| nhanmana | Mana Doubler | Xanh | Vespari (côn trùng) ⟳ |
+| kiembang | Ice Blade | Xanh | Ferrin (thú nhân) ⟳ |
 | mimic ★ | Mimic | Xanh | Ferrin (thú nhân) |
-| chimang | Crit Antenna | Xanh | Vespari (côn trùng) |
-| dichchuyen | Teleporter | Xanh | Nyx (hư không) |
+| chimang | Crit Antenna | Xanh | Vespari (côn trùng) ⟳ |
+| dichchuyen | Teleporter | Xanh | Terran (người) ⟳ |
 | radar | Radar | Xanh | Terran (người) |
 | drone | Drone Bay | Xanh | Synthari (người máy) |
 | tron | Fusion Mixer | Xanh | Voltari (năng lượng) |
-| nangluong | Energy Cannon | Xanh | Voltari (năng lượng) |
+| nangluong | Energy Cannon | Xanh | Terran (người) ⟳ |
 | laser | Laser | Xanh | Synthari (người máy) |
-| lanhgia | Chiller | Xanh | Cryon (xứ băng) |
+| lanhgia | Chiller | Xanh | Ferrin (thú nhân) ⟳ |
 | mortar | Mortar | Xanh | Terran (người) |
 | khuech | Amplifier | Xanh | Synthari (người máy) |
 | vungdoc | Toxic Pool | Xanh | Vespari (côn trùng) |
 | loa | Cooldown Horn | Xanh | Ferrin (thú nhân) |
-| hutmana | Mana Leech | Xanh | Nyx (hư không) |
+| hutmana | Mana Leech | Xanh | Thalassi (thủy tộc) ⟳ |
 | min | Mine Layer | Xanh | Terran (người) |
 | cuongno | Berserker | Tím | Ferrin (thú nhân) |
-| baotuyet | Blizzard | Tím | Cryon (xứ băng) |
+| baotuyet | Blizzard | Tím | Cryon (xứ băng) ⟳ |
 | nhanban | Cloner | Tím | Synthari (người máy) |
 | lienket | Chain Link | Tím | Voltari (năng lượng) |
 | kepha | Jammer | Tím | Synthari (người máy) |
 | taylo | Cleanser | Tím | Thalassi (thủy tộc) |
 | khien | Shield Gen | Tím | Terran (người) |
 | hopbi ★ | Mystery Box | Tím | Terran (người) |
-| nangsao | Star Lift | Tím | Nyx (hư không) |
-| tuthan | Reaper Pillar | Tím | Nyx (hư không) |
-| xaotron | Scrambler | Tím | Terran (người) |
-| epxung | Overclock | Tím | Voltari (năng lượng) |
+| nangsao | Star Lift | Tím | Synthari (người máy) ⟳ |
+| tuthan | Reaper Pillar | Tím | Nyx (hư không) ⟳ |
+| xaotron | Scrambler | Tím | Ferrin (thú nhân) ⟳ |
+| epxung | Overclock | Tím | Synthari (người máy) ⟳ |
 | no5 | Fifth Shot | Tím | Terran (người) |
-| bao | Storm Gun | Tím | Voltari (năng lượng) |
-| anhsang | Lighthouse | Tím | Thalassi (thủy tộc) |
-| aten | Purifier | Vàng | Thalassi (thủy tộc) |
+| bao | Storm Gun | Tím | Ferrin (thú nhân) ⟳ |
+| anhsang | Lighthouse | Tím | Terran (người) ⟳ |
+| aten | Purifier | Vàng | Voltari (năng lượng) ⟳ |
 | dongbo | Sync Cannon | Vàng | Terran (người) |
 | railgun | Railgun | Vàng | Terran (người) |
-| vughep | Merge King | Vàng | Terran (người) |
-| sinhdoi | Twin Maker | Vàng | Thalassi (thủy tộc) |
-| hasao | Star Breaker | Vàng | Nyx (hư không) |
-| saochep | Copycat | Vàng | Synthari (người máy) |
-| ngoisao | Star Cannon | Vàng | Nyx (hư không) |
+| vughep | Merge King | Vàng | Terran (người) ⟳ |
+| sinhdoi | Twin Maker | Vàng | Thalassi (thủy tộc) ⟳ |
+| hasao | Star Breaker | Vàng | Nyx (hư không) ⟳ |
+| saochep | Copycat | Vàng | Ferrin (thú nhân) ⟳ |
+| ngoisao | Star Cannon | Vàng | Ferrin (thú nhân) ⟳ |
 | soi | Werewolf | Vàng | Ferrin (thú nhân) |
 | tienhoa | Evolver | Vàng | Vespari (côn trùng) |
 | cauvong | Rainbow | Vàng | Thalassi (thủy tộc) |
 | wallgen | Wall Projector | Vàng | Synthari (người máy) |
-| orbital | Orbital | Vàng | Terran (người) |
+| orbital | Orbital | Vàng | Terran (người) ⟳ |
 | blackhole ★ | Black Hole | Đỏ | Nyx (hư không) |
 | overlord ★ | Overlord | Đỏ | Voltari (năng lượng) |
 | lophanung | Cryo Reactor | Đỏ | Cryon (xứ băng) |
 | haoquang | Holy Halo | Đỏ | Terran (người) |
 | nayda | Ricochet | Tím | Terran (người) |
-| combo | Combo Core | Tím | Voltari (năng lượng) |
-| khoathoigian | Chrono Lock | Tím | Nyx (hư không) |
+| combo | Combo Core | Tím | Ferrin (thú nhân) ⟳ |
+| khoathoigian | Chrono Lock | Tím | Synthari (người máy) ⟳ |
 | hydra | Hydra | Vàng | Thalassi (thủy tộc) |
 | cuuvi | Nine-Tail | Vàng | Ferrin (thú nhân) |
-| pandora | Pandora Vault | Vàng | Nyx (hư không) |
+| pandora | Pandora Vault | Vàng | Vespari (côn trùng) ⟳ |
 | luoicheo | Resonance Grid | Vàng | Voltari (năng lượng) |
-| ngaithoigian | Chrono Throne | Đỏ | Nyx (hư không) |
+| ngaithoigian | Chrono Throne | Đỏ | Terran (người) ⟳ |
 | nemesis | Nemesis | Vàng | Nyx (hư không) |
-| docton | Lone Ace | Tím | Terran (người) |
-| thaukinh | Focus Lens | Tím | Cryon (xứ băng) |
-| nhieusong | Signal Jammer | Tím | Synthari (người máy) |
+| docton | Lone Ace | Tím | Terran (người) ⟳ |
+| thaukinh | Focus Lens | Tím | Terran (người) ⟳ |
+| nhieusong | Signal Jammer | Tím | Synthari (người máy) ⟳ |
 | santhuong | Bounty Beacon | Tím | Terran (người) |
-| nhatthuc | Eclipse | Vàng | Nyx (hư không) |
+| nhatthuc | Eclipse | Vàng | Nyx (hư không) ⟳ |
 | loren | Scrap Forge | Vàng | Ferrin (thú nhân) |
 | guongcong | Mirror Gate | Vàng | Cryon (xứ băng) |
-| marionette | Marionette | Vàng | Synthari (người máy) |
+| marionette | Marionette | Vàng | Synthari (người máy) ⟳ |
 | chuato | Hive Queen | Đỏ | Vespari (côn trùng) |
 | leviathan | Leviathan | Đỏ | Thalassi (thủy tộc) |
-| khoisinh | Genesis Core | Đỏ | Voltari (năng lượng) |
+| khoisinh | Genesis Core | Đỏ | Voltari (năng lượng) ⟳ |
 | ronglua | Wyrm Engine | Đỏ | Ferrin (thú nhân) |
 | lualien | Ember Relay | Vàng | Voltari (năng lượng) |
-| hopca | Quantum Choir | Vàng | Thalassi (thủy tộc) |
+| hopca | Quantum Choir | Vàng | Thalassi (thủy tộc) ⟳ |
 | luutru | Fusion Archive | Vàng | Synthari (người máy) |
 | xuonganh ★ | Hero Foundry | Vàng | Ferrin (thú nhân) |
-| mauhut | Blood Circuit | Vàng | Vespari (côn trùng) |
+| mauhut | Blood Circuit | Vàng | Vespari (côn trùng) ⟳ |
 | nguyenrua | Hex Saboteur | Vàng | Vespari (côn trùng) |
-| thanhdia | Sanctum | Vàng | Terran (người) |
+| thanhdia | Sanctum | Vàng | Terran (người) ⟳ |
 | bienmau | Prism Thief | Vàng | Cryon (xứ băng) |
 
 Đếm: Terran (người) 23, Voltari (năng lượng) 13, Nyx (hư không) 12, Ferrin (thú nhân) 11, Synthari (người máy) 11, Cryon (xứ băng) 8, Thalassi (thủy tộc) 8, Vespari (côn trùng) 7
@@ -233,3 +233,8 @@ Prompt đầy đủ 8 ảnh thử: `prompts.json`.
 | blackhole | Nyx | `raw/cd_blackhole.png` | đẹp |
 | mimic | Ferrin (cáo) + rương mimic | `raw/cd_mimic.png` | đẹp, đạo cụ hợp lý |
 | hopbi | Terran | `raw/cd_hopbi.png` | đẹp |
+
+
+## 8. Đa dạng hoá (08/11)
+
+⟳ = 36 ụ vẽ lại để khỏi na ná nhau (đổi tộc/tuổi/dáng/tóc-mũ/màu chủ đạo). Rà soát + lý do: `TRUNG-NHAU.md`; prompt: `prompts-da-dang.json`; trước/sau: `TRUOC-SAU-da-dang.jpg`; bảng tổng mới: `TONG-94.jpg`.

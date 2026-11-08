@@ -3606,3 +3606,11 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - Nhãn bậc (COMMON/RARE/EPIC/LEGENDARY, đã có bản Việt) ở bảng chọn, băng chỉ huy, trang chỉ huy (màu trang = màu bậc), dải `#tt`. Bảng chọn + trang chỉ huy xếp theo bậc.
 - Chỉ huy miễn phí (không gacha/cửa hàng) → không có tỉ lệ/giá theo bậc; bản lưu cũ giữ nguyên chỉ huy đã chọn. Không ảnh mới.
 - Test: mới `tools/thap-kt-chi-huy-bac.js` (bậc hợp lệ, luật không đổi, bản lưu cũ/id lạ, viền đúng màu ở mọi chỗ × 390×844 / 844×390 / 667×375, tiếng Việt).
+
+## claude/demo-hop-tuong — chân dung đa dạng: hết "na ná nhau" (08/11)
+- Người dùng: "Nhiều hình đại diện trông na ná nhau". Rà 94 ô ở 64 px + 128 px và đo histogram HSV / L2 ảnh thu nhỏ trên vùng mặt → 9 nhóm trùng (Nyx tím tóc bạc nền tím ×10, Voltari tím ×4, cô gái thủy tộc tóc ngọc ×6, Cryon da nhạt ×8, tóc vàng nền vàng ×~17, trai tóc tím, 3 sói + 3 sư tử, plasma xanh ×3…). Chi tiết: `docs/demo-hop-tuong/tuvan/chan-dung-moi/TRUNG-NHAU.md`.
+- Vẽ lại bằng ChatGPT 36 ảnh (giữ phong cách đã chốt, thêm câu "Distinctive look … DOMINANT COLOURS …", đổi tộc/tuổi/dáng/tóc-mũ/màu chủ đạo): 28 ụ trùng nhóm + 5 ảnh yếu (hasao, tuthan mặt tối; baotuyet mặt nhạt; ngaithoigian mặt đồng hồ có số → chỉ vạch; vughep vương miện bay → đội chặt) + 3 ụ còn ảnh cũ (kiembang báo tuyết, chimang bướm đêm, dichchuyen cô đưa thư áo cam). Prompt: `prompts-da-dang.json`; bảng tộc mới (⟳) trong `STYLE.md`.
+- Cắt + nối bằng `tools/thap-cat-chandung.py` (mốc mặt mới trong `tools/thap-cat-chandung.json`) → pilot/pn/hero + PO_NEO/HERO_NEO/FACE_BOX cho 36 ụ.
+- Đo lại: cặp histogram ≥ 0,70: 15 → 3; cặp L2 < 45: 22 → 3 (còn lại: maychem↔tia, cuuvi↔haoquang — Holy Halo đã bỏ khỏi game).
+- Ảnh: `TRUOC-SAU-da-dang.jpg` (trước/sau 36 ụ), `TONG-94.jpg` (bảng tổng mới). Đã xem: kho, bộ bài, trang ụ, sảnh, khay trận ở 390×844 và 844×390.
+- Test: thap-kt-khong-ban đạt (25 ụ); thap-kt-vuot-deck 24/24; thap-kt-chandung: không lỗi cắt mặt ở 36 ụ mới — còn lỗi có sẵn "chip up-q đè mặt" ở thẻ kho (mọi ụ) và cobac (chip cuộn cb-q ở khay/đồng đội, ô bộ bài "không có mốc") thuộc việc Lucky Slot.
