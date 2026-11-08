@@ -265,3 +265,8 @@
 .dk-o-ic { flex: none; width: 24px; height: 24px; object-fit: contain; }
 img.dk-noi-ct { flex: none; width: 30px; height: 30px; object-fit: contain; }
 .hm-dong.hm-ic1 > img { width: 38px; }
+/* chỉ huy chưa mở (08/11): chữ điều kiện + nút giá ngọc (ảnh PNG shop_ngoc + số) */
+.hm-mvh.khoa .hm-mvh-po { opacity: .55; }
+.hm-mv-mo { display: block; margin-top: 3px; font: 700 10px/1.2 var(--f-hien); font-style: normal; color: #ffb35a; }
+.hm-mv-mua { flex: none; display: flex; align-items: center; gap: 3px; height: var(--cham); padding: 0 8px; font: 900 12px/1 var(--f-hien); color: #e6c6ff; }
+.hm-mv-mua img { width: 18px; height: 18px; object-fit: contain; }

@@ -274,6 +274,19 @@ const SD_MV = {
   eve: { ke: [[2, 'lien', 3], [6, 'canon', 3], [7, 'sungluc', 4], [8, 'set', 3], [12, 'bang', 3]], dong: [6, 8], da: [12], q: Q.trum('freezer', 3.4, 90), mvT: 2.0, dai: 9.4,
     c: [[0.2, 'Debuffs lock your turrets'], [1.1, 'Tap the commander'], [2.1, 'Freeze, stone & burn cleared', { cham: 0.7 }], [3.4, 'The Boss uses a skill…'], [4.8, 'Holy Shield blocks it', { ev: 'chan', cham: 0.7 }]] },
 };
+// chỉ huy mới (08/11): clip dùng kỹ năng THẬT (dungMV tự chọn đích như AI — cùng đích người chơi sẽ chạm)
+Object.assign(SD_MV, {
+  tech: { ke: [[6, 'lien', 1], [7, 'sungluc', 2], [8, 'set', 1], [12, 'canon', 4]], q: Q.hang(4, 180, 40, 7), mana: 1, manaDau: 60, mvT: 2.4, dai: 9.4,
+    c: [[0.2, 'Quick Tune: low-star turrets'], [1.4, 'Tap the commander'], [2.5, '1★ and 2★ Attack turrets: 40% faster', { cham: 0.7 }], [5.6, 'The 4★ turret gets nothing'], [7.6, 'Lasts 10 seconds']] },
+  tide: { ke: [[6, 'lien', 2], [8, 'set', 2]], q: Q.hang(5, 190, 34, 9), mana: 1, manaDau: 60, mvT: 2.2, dai: 9.0,
+    c: [[0.2, 'Enemies rush down the path'], [1.2, 'Tap the commander'], [2.3, 'Drag Net: 25% slower on your path', { cham: 0.7 }], [5.2, 'Bosses: only 12% slower'], [7.2, 'Lasts 6 seconds']] },
+  twin: { ke: [[6, 'lien', 3], [8, 'lien', 3], [12, 'canon', 2]], q: Q.hang(4, 180, 40, 9), mana: 1, manaDau: 60, mvT: 2.6, dai: 10.4,
+    c: [[0.2, 'Two 3★ twins: same type, same star'], [1.5, 'Tap the commander, then a twin'], [2.7, 'Both twins: +60% damage', { cham: 0.7 }], [5.6, 'Keep them, or merge them?'], [7.8, 'Merging either twin ends the buff']] },
+  hawk: { ke: [[6, 'lien', 2], [7, 'sungluc', 2], [8, 'set', 2], [2, 'canon', 2], [12, 'lien', 2]], q: Q.hang(4, 180, 40, 9), mana: 1, manaDau: 60, mvT: 2.6, dai: 10.0,
+    c: [[0.2, 'Mix turret types in one cross'], [1.5, 'Tap the commander, then a cell'], [2.7, 'Row and column light up', { cham: 0.7 }], [4.8, '4 types: +80% damage'], [7.4, 'More types, more damage (max +100%)']] },
+  weaver: { ke: [[1, 'lien', 4], [3, 'radar', 3], [11, 'chimang', 3], [7, 'set', 2]], q: Q.hang(4, 180, 40, 10), mana: 1, manaDau: 80, mvT: 2.6, dai: 10.4,
+    c: [[0.2, 'Supports in its row and column, not next to it'], [1.5, 'Tap the commander, then your main turret'], [2.7, 'Each Support links to it', { cham: 0.7 }], [5.0, 'Each link: +damage and +10% speed'], [7.6, 'A moved or frozen Support breaks its link']] },
+});
 function sdKichBanMV(mv) {
   const r = Object.assign({}, SD_MV[mv]), d = MAVUONG[mv];
   r.kieu = 'mv'; r.o = null; r.ke = (r.ke || []).slice(); r.c = r.c.slice(); r.dai = r.dai || 8.4;

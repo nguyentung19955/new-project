@@ -28,3 +28,6 @@ Chỉ huy **không** có trong rương/gacha, cửa hàng, nhiệm vụ → khô
 - Khung lớn `the_khung_<bậc>.png` (như ụ) thay `the_khung_mv` ở các đường vẽ dự phòng (khung Pass 9).
 - Nhãn bậc (COMMON/RARE/EPIC/LEGENDARY — đã có bản Việt): bảng chọn chỉ huy, băng chỉ huy, trang chi tiết chỉ huy (màu trang = màu bậc), dải thông tin `#tt`.
 - Bảng chọn + trang chi tiết xếp chỉ huy theo bậc (`mvDS`). Không thêm bộ lọc (3 chỉ huy — lọc thừa).
+
+## Cập nhật 08/11 — chỉ huy mới
+Thêm 5 chỉ huy (QUICK TUNE, DRAG NET = Trắng · TWIN SIGNAL = Xanh · CROSSFIRE = Tím · NEXUS LINK = Vàng) → mỗi bậc 2 chỉ huy. Chi tiết + cách có: `../chi-huy-moi/THIET-KE.md`.

@@ -40,7 +40,7 @@ const CHT = {
     this.dat(vc, 'hidden', !cd);
     if (cd) { this.dat(vc.querySelector('.f'), '--p', (1 - B.mv.cd / d.cd).toFixed(3)); this.dat(vc.querySelector('b'), 'text', Math.ceil(B.mv.cd) + 's'); }
     // tác dụng RAGE / HOLY SHIELD
-    const con = d.khoa === 'cuong' ? (B.cuong || 0) : d.khoa === 'khien' ? (B.khien || 0) : 0, vt = te.querySelector('.cht-vong.tac');
+    const con = d.khoa === 'cuong' ? (B.cuong || 0) : d.khoa === 'khien' ? (B.khien || 0) : (typeof CHM !== 'undefined' && CHM.KHOA[d.khoa] ? CHM.con(B, d.khoa) : 0), vt = te.querySelector('.cht-vong.tac');
     this.dat(vt, 'hidden', !(con > 0));
     if (con > 0) { this.dat(vt.querySelector('.f'), '--p', Math.min(1, con / d.hieuLuc).toFixed(3)); this.dat(vt.querySelector('b'), 'text', Math.ceil(con) + 's'); }
     // giá: cỡ chữ theo số chữ số + nhãn bội số ×2/×4…

@@ -27,7 +27,7 @@ const UI = {
     document.querySelectorAll('[data-t]').forEach(e => { const v = TEXT.ui[e.dataset.t]; if (typeof v === 'string') e.innerHTML = v; });
     G.rosterMap = {}; for (const x of G.roster) G.rosterMap[x.id] = x;
     try { if (typeof THEBAI !== 'undefined' && THEBAI.boThe) THEBAI.boThe(); } catch (e) { } // bù thẻ đã bỏ + thay trong bộ bài đã lưu (trước khi đọc turret_bo)
-    try { const l = JSON.parse(localStorage.getItem('turret_bo') || 'null'); if (l && l.chon) { this.chon = l.chon.filter(id => SKILLS[id] && G.rosterMap[id]); this.mv = MAVUONG[l.mv] ? l.mv : 'hero'; this.che = ['solo', 'coop', 'pvp'].includes(l.che) ? l.che : 'solo'; } } catch (e) { }
+    try { const l = JSON.parse(localStorage.getItem('turret_bo') || 'null'); if (l && l.chon) { this.chon = l.chon.filter(id => SKILLS[id] && G.rosterMap[id]); this.mv = MAVUONG[l.mv] && (typeof mvCo !== 'function' || mvCo(l.mv)) ? l.mv : 'hero'; /* chỉ huy chưa mở → REINFORCE (08/11) */ this.che = ['solo', 'coop', 'pvp'].includes(l.che) ? l.che : 'solo'; } } catch (e) { }
     this.veChon();
     document.addEventListener('click', (e) => this.bam(e));
     this.ganCham();
@@ -168,6 +168,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
 
   vao() {
     if (this.chon.length !== 5) return;
+    if (typeof mvCo === 'function' && !mvCo(this.mv) && !(G.debug && G.debug.af === this.mv)) this.mv = 'hero'; // chỉ huy chưa mở → REINFORCE (08/11; ?af= kiểm thử bỏ qua)
     SND.mo();
     try { localStorage.setItem('turret_bo', JSON.stringify({ chon: this.chon, mv: this.mv, che: this.che })); } catch (e) { }
     batDau(this.che, this.chon, this.mv);
@@ -428,7 +429,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       case 'vao': this.vao(); break;
       case 'trieu': if (B && !G.ketThuc) { if (trieu(B)) SND.trieu(); } break;
       case 'nang': if (this._boQuaBam) { this._boQuaBam = false; break; } if (B) { if (nangCap(B, el.dataset.id)) { el.classList.remove('sang'); void el.offsetWidth; el.classList.add('sang'); } } break;
-      case 'mv': if (this._boQuaMV) { this._boQuaMV = false; break; } if (B) dungMV(B); break;
+      case 'mv': if (this._boQuaMV) { this._boQuaMV = false; break; } if (B && !(typeof CHMU !== 'undefined' && CHMU.bat(B))) dungMV(B); break; // chỉ huy chạm-ô: vào chế độ ngắm (chihuy-moi.js)
       case 'tocdo': G.tocDo = G.tocDo >= 3 ? 1 : G.tocDo + 1; el.textContent = G.tocDo + '×'; break;
       case 'dung': this.huyKeo(); G.dung = true; $('#dung').hidden = false; $('#tt').hidden = true; break;
       case 'tiep': G.dung = false; $('#dung').hidden = true; break;

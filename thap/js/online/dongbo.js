@@ -190,7 +190,7 @@ const ONS = {
         case 'tr': this.apTrieu(B1, d); break;
         case 'gh': this.apGhep(B1, d); break;
         case 'nc': if (d && B1.lv[d.id] != null && !(SKILLS[d.id] && SKILLS[d.id].khongNang)) { B1.lv[d.id] = d.lv; for (const T of B1.t) if (T && T.id === d.id) T.lvSang = 1; } break;
-        case 'mv': { const mv = B1.mv; mv.cd = 0; B1.mana = Math.max(B1.mana, mv.gia); CH_HOP(B1); if (d && d.m != null) B1.mana = d.m; break; }
+        case 'mv': { const mv = B1.mv; mv.cd = 0; B1.mana = Math.max(B1.mana, mv.gia); CH_HOP(B1, d && d.o != null ? d.o : undefined); if (d && d.m != null) B1.mana = d.m; break; }
         case 'cb': this.apCB(B1, d); break; // Lucky Slot: kết quả quay xèng của bạn (jackpot.js CB)
         case 'pm': if (d && Array.isArray(d.o) && SKILLS.bienmau && SKILLS.bienmau.mach) SKILLS.bienmau.mach(B1, d.o, true); break; // Prism Thief: CHROMATIC CIRCUIT của bạn
         case 'cd': { const T = d && B1.t[d.o]; const sk = T && SKILLS[T.id]; if (sk && sk.chuDong) { T.nap = 1; T.st.bang = 0; T.st.da = false; this._cd = 1; try { sk.chuDong(G, B1, T); } finally { this._cd = 0; } } break; }
@@ -496,10 +496,10 @@ const ONS = {
       return r;
     });
     g('dungMV', (goc) => {
-      window.CH_HOP = (B) => goc(B); // áp chỉ huy cho bàn con rối (không gửi lại)
+      window.CH_HOP = (B, o) => goc(B, o); // áp chỉ huy cho bàn con rối (không gửi lại); o = ô đích (chỉ huy chạm-ô)
       return function (B) {
         const r = goc.apply(this, arguments);
-        if (self.on && r && B === G.ban[0]) self.gui('mv', { m: Math.round(B.mana) });
+        if (self.on && r && B === G.ban[0]) { const v = { m: Math.round(B.mana) }; if (B._mvO >= 0) v.o = B._mvO; self.gui('mv', v); }
         return r;
       };
     });

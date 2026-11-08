@@ -43,7 +43,7 @@ function tiaPhep(x0, y0, x1, y1, mau) { G.hu.push({ k: 'tiaPhep', t: 0, song: 0.
 // biến ụ tại chỗ thành loại khác (hộp bí ẩn, tiến hoá, xáo trộn…)
 // LUẬT BIẾN TẠI CHỖ (docs/demo-hop-tuong/tuvan/tuong-tac/MA-TRAN.md): ụ mới là CÙNG 1 ô "đổi hình" — giữ BẢN SAO (−% Copycat + dấu tím)
 //   và khiên; mọi buff/debuff tạm khác của thân cũ hết (thân mới). Ụ bị khoá (đá / băng) KHÔNG bị biến (người gọi tự bỏ qua).
-function giuKhiBien(N, T) { N.goc = T.goc; N.khien = T.khien; N.banSao = !!T.banSao; return N; }
+function giuKhiBien(N, T) { N.goc = T.goc; N.khien = T.khien; N.banSao = !!T.banSao; if (typeof CHM !== 'undefined') CHM.thay(T, N); return N; } // + buff chỉ huy (không phải ghép → giữ)
 function chuyenU(B, T, id, sao, doi) {
   const N = giuKhiBien(sinhU(taoU(B, id, clamp(sao, 1, LUAT.saoMax), T.o)), T);
   B.t[T.o] = N;

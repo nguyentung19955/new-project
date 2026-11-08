@@ -15,6 +15,7 @@ fs.mkdirSync(SHOTS, { recursive: true });
 let loi = 0; const ok = (dk, ten, chi) => { console.log((dk ? '  ✓ ' : '  ✗ ') + ten + (dk || chi == null ? '' : ' — ' + JSON.stringify(chi))); if (!dk) loi++; };
 const CO = [[390, 844], [844, 390], [667, 375]];
 const LUAT_GOC = { hero: [30, 15], dahlia: [40, 25], eve: [40, 25] }; // giá · hồi chiêu trước khi có bậc — không được đổi
+const MOI = { tech: ['trang', 25, 20], tide: ['trang', 30, 24], twin: ['xanh', 35, 22], hawk: ['tim', 45, 28], weaver: ['vang', 50, 30] }; // chỉ huy mới 08/11 (thap-kt-chi-huy-moi.js kiểm luật)
 
 async function mo(br, w, h, url, initLS, vi) {
   const ctx = await br.newContext({ viewport: { width: w, height: h } });
@@ -43,6 +44,8 @@ const otMV = (sel) => `(() => { const e = document.querySelector(${JSON.stringif
     const g = LUAT_GOC[d.id]; if (g) ok(d.gia === g[0] && d.cd === g[1], d.id + ': giá/hồi chiêu không đổi (' + d.gia + '/' + d.cd + 's)', d);
   }
   ok(['trang', 'xanh'].includes(du.ds.find(d => d.id === 'hero').bac), 'chỉ huy mặc định (hero) là Trắng/Xanh');
+  for (const id in MOI) { const d = du.ds.find(x => x.id === id); ok(d && d.bac === MOI[id][0] && d.gia === MOI[id][1] && d.cd === MOI[id][2], 'chỉ huy mới ' + id + ': bậc ' + MOI[id][0] + ', giá/hồi chiêu đúng thiết kế', d); }
+  { const dem = {}; for (const d of du.ds) dem[d.bac] = (dem[d.bac] || 0) + 1; ok(['trang', 'xanh', 'tim', 'vang'].every(b => dem[b] >= 2), 'bậc nào cũng có ≥ 2 chỉ huy (Trắng/Xanh/Tím/Vàng)', dem); }
   ok(du.sx.every((id, i) => i === 0 || TIER_THU(du.ds, du.sx[i - 1]) <= TIER_THU(du.ds, id)), 'mvDS xếp theo bậc', du.sx);
   ok(du.mv === 'dahlia', 'bản lưu cũ turret_bo (không có bậc) nạp đúng chỉ huy', du.mv);
   ok(du.la === 'trang' && du.tu === 'eve', 'id lạ → trắng · ảnh af_eve → eve');
@@ -107,11 +110,21 @@ const otMV = (sel) => `(() => { const e = document.querySelector(${JSON.stringif
       await p.context().close();
     }
   }
+  // ---------- 2b) chỉ huy mới: thẻ khay trận viền đúng bậc (844×390) ----------
+  for (const mv in MOI) {
+    p = await mo(br, 844, 390, '?mode=solo&deck=' + deck5.join(',') + '&af=' + mv + '&notut=1&seed=7&nointro=1', null);
+    await p.waitForFunction(() => G.ban && G.ban[0] && document.querySelector('#the-mv.ot'), null, { timeout: 30000 }).catch(() => { });
+    await p.waitForTimeout(1200);
+    const the = await p.evaluate(otMV('#the-mv'));
+    ok(the && the.b === MOI[mv][0] && the.ov.includes('o_vien_' + MOI[mv][0]) && the.mien, '844x390 ' + mv + ': thẻ chỉ huy khay trận viền ' + MOI[mv][0], the);
+    ok(!p._errs.length, '844x390 ' + mv + ': không lỗi trang (trận)', p._errs);
+    await p.context().close();
+  }
   // ---------- 3) tiếng Việt: nhãn bậc dịch ----------
   p = await mo(br, 390, 844, 'index.html?notut=1', { turret_bo: JSON.stringify({ chon: deck5, mv: 'eve', che: 'solo' }) }, true);
   await p.evaluate(() => { HM.di('dk'); HM.moMVs(); }); await p.waitForTimeout(900);
   const vi = await p.evaluate(() => [...document.querySelectorAll('.hm-mvh .mv-bac')].map(e => e.textContent));
-  ok(vi.length === 3 && vi.every(s => /[À-ỹđĐ]|THƯỜNG|HIẾM/.test(s)), 'tiếng Việt: nhãn bậc chỉ huy đã dịch', vi);
+  ok(vi.length === await p.evaluate(() => Object.keys(MAVUONG).length) && vi.every(s => /[À-ỹđĐ]|THƯỜNG|HIẾM/.test(s)), 'tiếng Việt: nhãn bậc chỉ huy đã dịch', vi);
   await p.screenshot({ path: path.join(SHOTS, '390x844-chon-vi.png') });
   await p.context().close();
   await br.close();

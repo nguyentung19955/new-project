@@ -183,8 +183,17 @@ const HM = {
   moMVs() {
     this.mo('mvs', this.dau('COMMANDER', 'One skill per match, tap its card in battle') + '<div class="hm-ds">' + (typeof mvDS === 'function' ? mvDS() : Object.keys(MAVUONG)).map(id => [id, MAVUONG[id]]).map(([id, d]) =>
       // 08/11: ô chân dung tối giản viền theo BẬC chỉ huy + vương miện (OT.miniMV) + nhãn bậc màu TIERS (như trang ụ); xếp theo bậc
-      '<div class="hm-hang hm-mvh' + (id === UI.mv ? ' on' : '') + '" style="--mm:' + d.mau + '" data-bac="' + (typeof mvBac === 'function' ? mvBac(id) : '') + '"><button class="hm-mvh-chon" data-act="hm-mv-chon" data-id="' + id + '"><span class="hm-mvh-po">' + (typeof OT !== 'undefined' ? OT.miniMV(id) : '<img src="' + mvIcURL(id) + '" alt="">') + '</span><span>' + this.mvBacNhan(id) + '<b>' + this.esc(d.ten) + '</b><small>' + this.esc(d.mo) + '</small></span>' + (id === UI.mv ? '<em>SELECTED</em>' : '') + '</button>' +
-      '<button class="hm-ct" data-act="hm-mv-ct" data-id="' + id + '">DETAILS</button></div>').join('') + '</div>');
+      '<div class="hm-hang hm-mvh' + (id === UI.mv ? ' on' : '') + (this.mvKhoa(id) ? ' khoa' : '') + '" style="--mm:' + d.mau + '" data-bac="' + (typeof mvBac === 'function' ? mvBac(id) : '') + '"><button class="hm-mvh-chon" data-act="hm-mv-chon" data-id="' + id + '"><span class="hm-mvh-po">' + (typeof OT !== 'undefined' ? OT.miniMV(id) : '<img src="' + mvIcURL(id) + '" alt="">') + '</span><span>' + this.mvBacNhan(id) + '<b>' + this.esc(d.ten) + '</b><small>' + this.esc(d.mo) + '</small>' + this.mvMoChu(id) + '</span>' + (id === UI.mv ? '<em>SELECTED</em>' : '') + '</button>' +
+      (this.mvKhoa(id) ? this.mvNutMua(id) : '') + '<button class="hm-ct" data-act="hm-mv-ct" data-id="' + id + '">DETAILS</button></div>').join('') + '</div>');
+  },
+  // CÁCH CÓ chỉ huy (08/11): mo2 = { wave, ngoc } — kỷ lục wave HOẶC trả ngọc (mvCo — data.js); chỉ huy miễn phí không có mo2
+  mvKhoa(id) { return typeof mvCo === 'function' && !mvCo(id); },
+  mvMoChu(id) { const m = MAVUONG[id].mo2; return this.mvKhoa(id) ? '<i class="hm-mv-mo">Locked · reach wave ' + m.wave + ' or unlock with gems</i>' : ''; },
+  mvNutMua(id) { const m = MAVUONG[id].mo2; return '<button class="hm-mv-mua" data-act="hm-mv-mua" data-id="' + id + '"><img src="' + (typeof KTUI !== 'undefined' ? KTUI.a(KTA.ngoc) : 'assets/shop_ngoc.png') + '" alt="Gems"><b>' + m.ngoc + '</b></button>'; },
+  mvMua(id) { // mở bằng ngọc: trừ ngọc 1 lần, lưu turret_kt.mvMo (không bao giờ lấy lại)
+    const d = MAVUONG[id]; if (!d || !d.mo2 || !this.mvKhoa(id) || typeof KT === 'undefined') return false;
+    if (!KT.tra({ ngoc: d.mo2.ngoc })) { if (UI.nhac) UI.nhac('Not enough gems'); return false; }
+    const s = KT.doc(); (s.mvMo || (s.mvMo = {}))[id] = 1; KT.luu(); return true;
   },
 
   // XEM NHANH 1 ụ: chân dung + tên + độ hiếm/vai + 1 dòng kỹ năng + THÊM/BỎ + DETAILS (trang ụ đầy đủ)
@@ -294,7 +303,8 @@ const HM = {
       case 'hm-loc-xoa': BOBAI.loc.vai = 'all'; BOBAI.loc.q = ''; BOBAI.luu(); this.bac = 'all'; this.luu(); { const t = this.el('bb-tim'); if (t) t.value = ''; } UI.xep = 'bac'; UI.veChon(); this.locLai(); break;
       case 'hm-mv6': SND.nut(); this.moMVs(); break; // ô chỉ huy (thứ 6): chạm = bảng chọn 1 trong 3 chỉ huy, mỗi hàng có DETAILS
       case 'hm-mvs': SND.nut(); if (typeof UP !== 'undefined') UP.moMV(UI.mv, el); else this.moMVs(); break; // hàng chỉ huy: chạm = trang chi tiết (đổi chỉ huy bằng mũi tên + Use commander)
-      case 'hm-mv-chon': UI.mv = el.dataset.id; this.luuBo(); SND.nut(); this.dong(); this.ve(); break;
+      case 'hm-mv-chon': if (this.mvKhoa(el.dataset.id)) { SND.nut(); if (UI.nhac) UI.nhac('Locked commander'); break; } UI.mv = el.dataset.id; this.luuBo(); SND.nut(); this.dong(); this.ve(); break;
+      case 'hm-mv-mua': if (this.mvMua(el.dataset.id)) { SND.nut(); this.moMVs(); } break;
       case 'hm-mv-ct': { const id = el.dataset.id, r = el.getBoundingClientRect(); this.dong(true); if (typeof UP !== 'undefined') UP.moMV(id, r); break; }
       case 'hm-noi': { const id = el.dataset.id; if (id && typeof UP !== 'undefined') { SND.nut(); UP.mo(id, el); } else if (!id) UI.nhac('Tap a turret below'); break; }
       case 'hm-them': this.them(el.dataset.id); break;
