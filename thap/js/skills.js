@@ -529,37 +529,79 @@ HU.ping = { // ụ hỗ trợ kích hoạt buff: 1 xung năng lượng ngắn (~
     ctx.lineCap = 'butt'; ctx.globalCompositeOperation = 'source-over';
   },
 };
-HU.rail = { // railgun: vạch nạp → tia xuyên
+HU.rail = { // SALVO BATTERY (id railgun, tên cũ Railgun): LUẬT GIỮ NGUYÊN — t = nap: 1 đường xuyên theo goc, trừ máu mọi quái trên đường (cùng mục tiêu, cùng ST, cùng lúc)
+  //   HÌNH (08/11, "Salvo battery sao vẫn bắn laze vậy?"): bỏ tia laze → LOẠT TÊN LỬA từ 4 nòng: phóng so le trong lúc nạp, bay vòng cung nhẹ, chạm đúng lúc trừ máu
+  //   ảnh dùng lại: tên lửa fx_canon_ten (vàng + ngọc xanh, hợp Salvo; chưa có → FXU.THAY.ten_laban), chớp nòng fx_canon_no, nổ fx_canon_trung. Chỉ trình bày, không Math.random.
+  // 4 nòng của đầu railgun_nong.png (272 px, nòng hướng +x): mũi nòng x ≈ 263, tâm nòng y ≈ 91,5 / 121 / 150 / 179 → dời ngang (phần D đầu súng, AN.muzzle)
+  NONG: [-0.164, -0.055, 0.051, 0.158],
+  THU: [1, 2, 0, 3],                                               // thứ tự nòng bắn (giữa → ngoài, xen kẽ)
+  soTen: (T) => Math.min(6, 3 + Math.ceil((T.sao || 1) / 2)),      // 1–2★ 4 · 3–4★ 5 · 5★+ 6 quả
+  tPhong(o, i) { return 0.1 + i * 0.045; },                         // phóng so le (≤ 0,33 s < nap 0,38)
+  tToi(o, i) { return o.nap + i * 0.02; },                          // chạm: lúc trừ máu (+ so le nhỏ)
+  lat(T, i) { return window.UCU ? 0 : this.NONG[this.THU[i % 4]]; }, // ?ucu=1 (đầu cũ 1 nòng): bắn từ giữa
+  // điểm rơi (hình) của quả i: sau nap = quái đã trúng (theo quái đang đi) · trước nap = dọc hướng ngắm tới mục tiêu
+  diem(o, i) {
+    if (o.da) {
+      if (o.hit.length) { const E = o.hit[i % o.hit.length]; return [E.x, E.y]; }
+      return [o.xr, o.yr];
+    }
+    const T = o.T, c = tamU(T), E = T.muc, L = E && !E.chet ? Math.max(60, Math.hypot(E.x - c.x, E.y - c.y)) : 240;
+    return [c.x + Math.cos(o.goc) * L, c.y + Math.sin(o.goc) * L];
+  },
+  chop(o, i) { // chớp nòng đúng nòng i (bám nòng đang xoay/giật)
+    const T = o.T, lat = this.lat(T, i), m = typeof AN !== 'undefined' ? AN.muzzle(T, lat) : dauNong(T);
+    o.s[i] = [m[0], m[1]];
+    const g0 = G.dangBan; G.dangBan = null;
+    if (typeof FXU !== 'undefined' && FXU.co('fx_canon_no')) FX.no1('fx_canon_no', true, m[0], m[1], 14, 0.13, T.goc, null, T);
+    else FX.no('chop_nong', m[0], m[1], 16, 0.1, T.goc);
+    G.dangBan = g0;
+    const A = FX.anim[FX.anim.length - 1];
+    if (A && (A.ten === 'chop_nong' || A.ten === 'fx_canon_no')) { A.lat = lat; A.nong4 = 1; A.co = REN.coDau(T) * 0.3; if (!A.T && T.buf) { A.T = T; A.dg = 0; } }
+  },
+  no(o, i, x, y) { // nổ chạm (dải nổ pháo, không phải nổ điện của Railgun cũ)
+    const g0 = G.dangBan; G.dangBan = null;
+    if (typeof FXU !== 'undefined' && FXU.co('fx_canon_trung')) FX.no1('fx_canon_trung', false, x, y, 42, 0.3, 0, null, o.T);
+    else FX.no('no_phao', x, y, 34, 0.26);
+    G.dangBan = g0;
+  },
   cap(G, o, dt) {
     const T = o.T;
     if (G.ban[T.ban].t[T.o] !== T) return true;
+    if (!o.s) { o.s = []; o.n = this.soTen(T); o.ph = 0; o.cham = 0; o.hit = []; }
+    while (o.ph < o.n && o.t >= this.tPhong(o, o.ph)) this.chop(o, o.ph++);
     if (!o.da && o.t >= o.nap) {
-      o.da = true; giat(T, 2.4); const [x, y] = chopNong(T, 40); phutKhoi(x, y, 2); FX.lac(3); SND.rail();
+      o.da = true; giat(T, 2.4); const [x, y] = dauNong(T); phutKhoi(x, y, 2); FX.lac(3); SND.phao(); /* tiếng pháo loạt (trước: SND.rail zap laze) */
       o.x0 = x; o.y0 = y; o.x1 = x + Math.cos(o.goc) * 700; o.y1 = y + Math.sin(o.goc) * 700;
       for (const E of dsMucTieu(o.B)) {
         const t = ((E.x - x) * Math.cos(o.goc) + (E.y - y) * Math.sin(o.goc));
         if (t < 0) continue;
         const px = x + Math.cos(o.goc) * t, py = y + Math.sin(o.goc) * t;
-        if (Math.hypot(E.x - px, E.y - py) < 14 + E.d.co * 0.25) { trung(E, o.dmg, { B: o.B, mau: '#9ffcff' }); FX.no('dien', E.x, E.y, 34, 0.25); }
+        if (Math.hypot(E.x - px, E.y - py) < 14 + E.d.co * 0.25) { trung(E, o.dmg, { B: o.B, mau: '#ffd23f' }); o.hit.push(E); }
       }
+      { const E = T.muc, L = E && !E.chet ? Math.max(60, Math.hypot(E.x - x, E.y - y)) : 240; o.xr = x + Math.cos(o.goc) * L; o.yr = y + Math.sin(o.goc) * L; } // không trúng ai: rơi xuống đường ngắm
+      for (let k = o.n; k < o.hit.length; k++) this.no(o, k, o.hit[k].x, o.hit[k].y); // xuyên nhiều quái hơn số tên lửa: quái dư vẫn có nổ
     }
+    if (o.da) while (o.cham < o.n && o.t >= this.tToi(o, o.cham)) { const [x, y] = this.diem(o, o.cham); this.no(o, o.cham++, x, y); }
     if (!o.da) { const E = T.muc; if (E && !E.chet) { const c = tamU(T); o.goc = Math.atan2(E.y - c.y, E.x - c.x); } }
     return false;
   },
   ve(ctx, o, R) {
-    const T = o.T;
-    ctx.globalCompositeOperation = 'lighter';
-    if (!o.da) {
-      const [x, y] = dauNong(T), u = o.t / o.nap;
-      PX.tia(ctx, x, y, x + Math.cos(o.goc) * 600, y + Math.sin(o.goc) * 600, 1 + u * 1.5, '#7ffcff', 0.3 + 0.5 * u, -o.t * 80); // đường ngắm = tia PNG trượt
-      R.anhGiua(ctx, 'tia_lua', x, y, 14 + u * 22, o.t * 8, 1);
-    } else {
-      const u = (o.t - o.nap) / (o.song - o.nap);
-      ctx.globalAlpha = 1 - u;
-      R.tia(ctx, 'tia_laser', o.x0, o.y0, o.x1, o.y1, 22 * (1 - u * 0.7), o.t * 400);
-      R.tia(ctx, 'dan_tia', o.x0, o.y0, o.x1, o.y1, 30 * (1 - u), 0, true);
+    if (!o.s) return;
+    const T = o.T, ten = typeof FXU !== 'undefined' && FXU.co('fx_canon_ten') ? 'fx_canon_ten' : typeof FXU !== 'undefined' ? FXU.THAY.ten_laban : null;
+    const w = REN.coU(T) * 0.3, t = o.t;
+    ctx.globalCompositeOperation = 'source-over';
+    for (let i = 0; i < o.n; i++) {
+      const s = o.s[i], t0 = this.tPhong(o, i), t1 = this.tToi(o, i);
+      if (!s || t < t0 || t >= t1) continue;
+      const u = (t - t0) / (t1 - t0), [ex, ey] = this.diem(o, i);
+      const dx = ex - s[0], dy = ey - s[1], L = Math.hypot(dx, dy) || 1, nx = -dy / L, ny = dx / L;
+      const lat = this.lat(T, i), amp = Math.min(26, Math.max(6, L * 0.12)) * (lat < 0 ? -1 : 1) * (0.7 + Math.abs(lat) * 2); // nòng ngoài cong rộng hơn
+      const p = (v) => { const e = v * (0.55 + 0.45 * v), b = Math.sin(Math.PI * e) * amp; return [s[0] + dx * e + nx * b, s[1] + dy * e + ny * b]; }; // tăng tốc nhẹ + vòng cung
+      const [x, y] = p(u), [x2, y2] = p(Math.min(1, u + 0.04)), g = Math.atan2(y2 - y, x2 - x);
+      const al = Math.min(1, u / 0.08);
+      if (!(ten && FXU.veNeo(ctx, ten, x, y, w, g, al))) R.anhGiua(ctx, 'dan_phao', x, y, w * 0.5, g, al);
     }
-    ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
   },
 };
 HU.vetinh = { // tia bắn phá từ đỉnh màn hình

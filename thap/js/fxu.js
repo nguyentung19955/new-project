@@ -35,7 +35,13 @@ const FXU = {
   DAN_CHUNG: new Set(['dan_phao', 'dan_lien', 'dan_tia', 'dan_bang', 'dan_doc', 'tia_lua']),
   NO_CHUNG: new Set(['no_phao', 'dien', 'bang_vo', 'laser_trung', 'khoi_doc']),
   co: (ten) => typeof FXU_META !== 'undefined' && !!FXU_META[ten],
-  ten(T, cot) { if (!T || !T.id) return null; const t = 'fx_' + T.id + '_' + cot; return this.co(t) ? t : null; },
+  // ụ đổi vai mà ảnh fx cũ còn mang hình cũ → mượn ảnh ụ khác (Salvo Battery = Railgun cũ: chớp nòng / nổ trúng điện-laze → lửa pháo của Pháo La Bàn)
+  MUON: { railgun: { no: 'fx_canon_no', trung: 'fx_canon_trung', tia: null } },
+  ten(T, cot) {
+    if (!T || !T.id) return null;
+    const mu = this.MUON[T.id]; if (mu && cot in mu) return mu[cot] && this.co(mu[cot]) ? mu[cot] : null;
+    const t = 'fx_' + T.id + '_' + cot; return this.co(t) ? t : null;
+  },
   cfg(id) { return this.CFG[id] || {}; },
   // ảnh cần nạp cho bộ bài (lười theo bộ bài → nhẹ bộ nhớ iOS)
   dsAnh(bans) {
@@ -45,6 +51,7 @@ const FXU = {
     for (const b of bans) for (const id of b.deck) for (const c of ['dan', 'no', 'trung', 'hieu', 'tia', 'dan2', 'dan3', 'trung3', 'dacbiet', 'vang', 'thuc']) if (this.co('fx_' + id + '_' + c)) ds.push('fx_' + id + '_' + c);
     // 8 ụ vàng mới (skills7.js): dải chiêu fx_<id>_sk — nạp + GIẢI MÃ trong lần vào trận (trước chỉ bắt đầu tải ở batDau → lần đầu ra skill chép/giải mã giữa trận)
     if (typeof SK7 !== 'undefined' && SK7.FX) for (const b of bans) for (const id of b.deck) if (SK7.FX.has(id) && !ds.includes('fx_' + id + '_sk')) ds.push('fx_' + id + '_sk');
+    for (const b of bans) for (const id of b.deck) if (this.MUON[id]) for (const c in this.MUON[id]) { const t = this.MUON[id][c]; if (t && this.co(t) && !ds.includes(t)) ds.push(t); }
     for (const k in this.THAY) if (this.co(this.THAY[k]) && !ds.includes(this.THAY[k])) ds.push(this.THAY[k]);
     return ds;
   },

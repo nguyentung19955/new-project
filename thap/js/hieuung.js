@@ -324,7 +324,7 @@ const VX = {
     // lớp ngoài của biến hình (không xoay)
     for (const B of G.ban) for (const T of B.t) if (T && T.vxB) { const c = B.o[T.o]; this.veBienNgoai(ctx, T, c.x, c.y, Math.min(B.cw, B.ch) * 0.98); }
     for (const e of this.ds) {
-      const tt = this.t - e.t0; if (tt < 0 || !e.B || !'sao kh hu lk bg td'.includes(e.k)) continue;
+      const tt = this.t - e.t0; if (tt < 0 || !e.B || !'sao kh hu lk td'.includes(e.k)) continue; // 'bg' (bingo Salvo): vẽ DƯỚI đầu ụ — VX.salvo.veDuoi
       const B = e.B, c = B.o[e.o], S = Math.min(B.cw, B.ch) * 0.98;
       ctx.save(); ctx.globalCompositeOperation = 'lighter';
       if (e.k === 'sao') { // đạt mốc sao: bùng sao vàng (phần sao của fx_starup, đã xoá vòng elip) + vòng tròn vàng
@@ -372,12 +372,6 @@ const VX = {
           ctx.globalAlpha = v > 0.7 ? (1 - v) / 0.3 : 1;
           ctx.drawImage(REN.mip(gl, w * REN.s * REN.dpr), q.x - w / 2, q.y - S * 0.5 - h / 2, w, h);
         }
-      } else if (e.k === 'bg') { // BINGO: vệt vàng quét qua hàng/cột (fx_bingo) + ô loé lần lượt
-        const u = tt / e.dai, p0 = B.o[e.ds[0]], p1 = B.o[e.ds[e.ds.length - 1]];
-        const ngang = p0.y === p1.y, ext = ngang ? B.cw * 0.5 : B.ch * 0.5;
-        const dx = ngang ? ext : 0, dy = ngang ? 0 : ext;
-        this.veVet(ctx, 'fx_bingo', p0.x - dx, p0.y - dy, p1.x + dx, p1.y + dy, Math.min(5.99, u * 7), u < 0.75 ? 1 : (1 - u) / 0.25, S * 0.7);
-        e.ds.forEach((o, i) => { const v = (tt - i * 0.06) / 0.3; if (v > 0 && v < 1) { const q = B.o[o]; ctx.globalAlpha = (1 - v) * 0.6; REN.anhGiua(ctx, REN.cham1('#ffd23f'), q.x, q.y, S * 1.0); } });
       }
       ctx.restore(); ctx.globalAlpha = 1;
     }
@@ -467,3 +461,72 @@ const VX = {
     }
   },
 };
+
+// ---------- SALVO BATTERY (id railgun): hàng / cột ĐỦ + đủ CẢ BÀN (08/11, người dùng: "thêm hiệu ứng hàng cột khi đủ hàng đủ cột, khi đủ cả bàn thì toàn bộ các ụ sáng hơn 1 chút") ----------
+//  · hàng/cột vừa ĐỦ (thưởng bật): vệt vàng fx_bingo quét qua + ô loé lần lượt (VX.ds 'bg', theoDoi) — giờ vẽ DƯỚI đầu ụ
+//  · đang ĐỦ: vệt vàng mờ thường trực dọc hàng/cột (khung cuối fx_bingo, alpha thấp, không nhấp nháy) — dưới đầu ụ
+//  · đủ CẢ BÀN (15 ô đều là Salvo, không ô đá): mọi ụ sáng hơn chút (SKILLS.railgun.sangDau) + loé mừng 1 lần (quét cả 3 hàng + quầng vàng)
+//  CHỈ TRÌNH BÀY: đọc B.t, không ghi gì vào trận (trạng thái hình để trong WeakMap), không Math.random.
+VX.salvo = {
+  _full: new WeakMap(), // B → VX.t lúc vừa đủ cả bàn (null = chưa đủ)
+  la(B, o) { const X = B.t[o]; return !!(X && X.id === 'railgun' && !X.st.da); },
+  co(B) { for (let o = 0; o < 15; o++) if (B.t[o] && B.t[o].id === 'railgun') return true; return false; },
+  day(B) {
+    const out = [];
+    for (let h = 0; h < 3; h++) { const ds = [0, 1, 2, 3, 4].map(i => h * 5 + i); if (ds.every(o => this.la(B, o))) out.push(ds); }
+    for (let c = 0; c < 5; c++) { const ds = [0, 1, 2].map(i => i * 5 + c); if (ds.every(o => this.la(B, o))) out.push(ds); }
+    return out;
+  },
+  theoDoi() {
+    for (const B of G.ban) {
+      let du = B.t.length >= 15; for (let o = 0; du && o < 15; o++) du = this.la(B, o);
+      const cu = this._full.get(B);
+      if (du && cu == null) {
+        this._full.set(B, VX.t);
+        VX.ds.push({ k: 'bgFull', B, o: 7, t0: VX.t, dai: 1.1 });
+        const T = B.t[7]; if (T && typeof nhanU === 'function') nhanU(T, 'FULL BOARD SALVO!', '#ffd23f');
+      } else if (!du && cu != null) this._full.delete(B);
+    }
+  },
+  // độ sáng thêm cho đầu ụ (đủ cả bàn): nền nhẹ + loé 0,7 s lúc vừa đủ
+  sang(T) {
+    const B = G.ban[T.ban], t0 = B && this._full.get(B); if (t0 == null) return 0;
+    const k = VX.t - t0; return 0.22 + (k < 0.7 ? 0.5 * (1 - k / 0.7) : 0);
+  },
+  vet(ctx, B, ds, f, al, h) {
+    const p0 = B.o[ds[0]], p1 = B.o[ds[ds.length - 1]], ngang = p0.y === p1.y, ext = ngang ? B.cw * 0.5 : B.ch * 0.5;
+    VX.veVet(ctx, 'fx_bingo', p0.x - (ngang ? ext : 0), p0.y - (ngang ? 0 : ext), p1.x + (ngang ? ext : 0), p1.y + (ngang ? 0 : ext), f, al, h);
+  },
+  veDuoi(ctx) {
+    if (!G.ban.length) return;
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    for (const B of G.ban) {
+      if (!B || !B.o || !this.co(B)) continue;
+      const S = Math.min(B.cw, B.ch) * 0.98;
+      for (const ds of this.day(B)) this.vet(ctx, B, ds, 5, 0.38, S * 0.42); // đang đủ: vệt mờ thường trực
+    }
+    for (const e of VX.ds) {
+      const tt = VX.t - e.t0, B = e.B; if (tt < 0 || !B || (e.k !== 'bg' && e.k !== 'bgFull')) continue;
+      const S = Math.min(B.cw, B.ch) * 0.98, c = B.o[e.o];
+      if (e.k === 'bg') {
+        // BINGO: vệt vàng quét qua hàng/cột (fx_bingo) + ô loé lần lượt
+        const u = tt / e.dai, p0 = B.o[e.ds[0]], p1 = B.o[e.ds[e.ds.length - 1]];
+        const ngang = p0.y === p1.y, ext = ngang ? B.cw * 0.5 : B.ch * 0.5;
+        const dx = ngang ? ext : 0, dy = ngang ? 0 : ext;
+        VX.veVet(ctx, 'fx_bingo', p0.x - dx, p0.y - dy, p1.x + dx, p1.y + dy, Math.min(5.99, u * 7), u < 0.75 ? 1 : (1 - u) / 0.25, S * 0.7);
+        e.ds.forEach((o, i) => { const v = (tt - i * 0.06) / 0.3; if (v > 0 && v < 1) { const q = B.o[o]; ctx.globalAlpha = (1 - v) * 0.6; REN.anhGiua(ctx, REN.cham1('#ffd23f'), q.x, q.y, S * 1.0); } });
+      } else { // đủ CẢ BÀN: quét cả 3 hàng lệch nhịp + quầng vàng toàn bàn
+        const u = tt / e.dai;
+        for (let h = 0; h < 3; h++) { const v = (tt - h * 0.1) / 0.8; if (v > 0 && v < 1) this.vet(ctx, B, [0, 1, 2, 3, 4].map(i => h * 5 + i), Math.min(5.99, v * 7), v < 0.75 ? 1 : (1 - v) / 0.25, S * 0.8); }
+        const p0 = B.o[0], p1 = B.o[14], w = Math.abs(p1.x - p0.x) + B.cw * 1.6;
+        ctx.globalAlpha = (u < 0.15 ? u / 0.15 : 1 - (u - 0.15) / 0.85) * 0.35; REN.anhGiua(ctx, REN.cham1('#ffd23f'), c.x, c.y, w);
+      }
+    }
+    ctx.restore(); ctx.globalAlpha = 1;
+  },
+};
+(function () {
+  const td = VX.theoDoi; VX.theoDoi = function () { const r = td.apply(this, arguments); try { VX.salvo.theoDoi(); } catch (e) { } return r; };
+  if (typeof REN !== 'undefined') { const vo = REN.veO; REN.veO = function (ctx) { try { VX.salvo.veDuoi(ctx); } catch (e) { } return vo.apply(this, arguments); }; }
+  if (typeof SKILLS !== 'undefined' && SKILLS.railgun && !SKILLS.railgun.sangDau) SKILLS.railgun.sangDau = (T) => VX.salvo.sang(T);
+})();
