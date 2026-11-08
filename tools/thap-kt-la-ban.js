@@ -1,6 +1,6 @@
 // TURRET MERGE — KIỂM PHÁO LA BÀN TỔ HỢP HƯỚNG (người dùng chốt 08/11)
 //   Luật: 1 hướng ngẫu nhiên N/S/W/E (tất định theo hạt) · ghép = HỢP hướng (khác sao được) · sao = trung bình làm tròn lên (không +1★)
-//   · hợp không thêm hướng → không ghép · NSWE + NSWE → stack = stack 2 bên + 1 (không trần) · mỗi hướng 1 tên lửa đuổi
+//   · cùng hướng / tập con cũng ghép (giữ hướng, sao trung bình — 08/11 lần 2) · CHỈ cấm Pháo chưa đủ + Pháo NSWE · NSWE + NSWE → stack = stack 2 bên + 1 (không trần) · mỗi hướng 1 tên lửa đuổi
 //   · Merge King giữ tổ hợp, Copycat chép = 1 hướng ngẫu nhiên mới + 0 stack (08/11), Mimic ra ụ ngẫu nhiên, đá chỉ ghép đá · gói online (oTT / datO / apGhep / apTrieu) khứ hồi.
 //   Phần 1: luật thuần (vm, không trình duyệt). Phần 2 (Playwright, có thì chạy): gói online + kéo thật bằng chuột + ảnh 844×390 & 390×844.
 // Chạy: node tools/thap-kt-la-ban.js   (phần 2 cần python3 -m http.server 8765 ở gốc repo; BASE=… đổi cổng; KHONG_PW=1 bỏ phần 2;
@@ -36,16 +36,18 @@ const N = 1, E = 2, Sx = 4, W = 8;
 console.log('1 · hợp hướng + tên');
 tran(['canon', 'lien', 'tia', 'set', 'bang']);
 ok(R('[1,2,4,8,5,9,3,12,6,10,13,7,11,14,15].map(m => S.ten(m)).join(" ")') === 'N E S W NS NW NE SW SE WE NSW NSE NWE SWE NSWE', '15 tổ hợp đọc theo thứ tự N S W E', R('[1,2,4,8,5,9,3,12,6,10,13,7,11,14,15].map(m => S.ten(m)).join(" ")'));
-{ const ds = []; for (let a = 1; a <= 15; a++) for (let b = 1; b <= 15; b++) { R(`var a = cn(0, ${a}, 2), b = cn(1, ${b}, 2)`); const hl = R('hopLeGhep(a, b)'), mong = (a | b) !== a && (a | b) !== b || (a === 15 && b === 15); if (hl !== mong) ds.push(a + '+' + b + '=' + hl); }
-  ok(!ds.length, '225 cặp: ghép được ⇔ hợp thêm hướng (hoặc NSWE + NSWE)', ds.slice(0, 8).join(', ')); }
+{ const ds = []; for (let a = 1; a <= 15; a++) for (let b = 1; b <= 15; b++) { R(`var a = cn(0, ${a}, 2), b = cn(1, ${b}, 2)`); const hl = R('hopLeGhep(a, b)'), mong = (a === 15) === (b === 15); if (hl !== mong) ds.push(a + '+' + b + '=' + hl); }
+  ok(!ds.length, '225 cặp: ghép được ⇔ không phải (1 bên NSWE, bên kia chưa đủ)', ds.slice(0, 8).join(', ')); }
 R(`var a = cn(0, ${N}, 1), b = cn(1, ${Sx}, 1), r = ghep(B, a, b)`);
 ok(R('r === b && B.t[1] === b && !B.t[0] && b.id === "canon" && b.hb === 5 && b.sao === 1'), 'N 1★ + S 1★ → NS 1★ (giữ thân đích, ô kéo trống, không +1★)', R('JSON.stringify([b.hb, b.sao, !!B.t[0]])'));
-for (const [x, y, sa, sb, mh, ms] of [[N, Sx, 3, 4, 5, 4], [5, W, 2, 5, 13, 4], [13, E, 3, 4, 15, 4], [3, 12, 7, 7, 15, 7], [N, W, 1, 6, 9, 4]]) {
+for (const [x, y, sa, sb, mh, ms] of [[N, Sx, 3, 4, 5, 4], [5, W, 2, 5, 13, 4], [13, E, 3, 4, 15, 4], [3, 12, 7, 7, 15, 7], [N, W, 1, 6, 9, 4],
+  [N, N, 2, 3, 1, 3], [5, 5, 3, 6, 5, 5], [5, N, 2, 2, 5, 2], [N, 5, 1, 4, 5, 3], [13, 5, 4, 7, 13, 6], [7, 6, 3, 3, 7, 3], // cùng hướng / tập con: giữ hướng, sao trung bình (08/11 lần 2)
+  [13, 6, 3, 4, 15, 4], [N, 14, 2, 5, 15, 4]]) { // NSW + SE → NSWE, N + SWE → NSWE (2 Pháo chưa đủ ra NSWE vẫn được, stack 0)) {
   R(`var a = cn(0, ${x}, ${sa}), b = cn(1, ${y}, ${sb}); ghep(B, a, b)`);
-  ok(R(`B.t[1] && B.t[1].hb === ${mh} && B.t[1].sao === ${ms} && !B.t[0]`), `${R(`S.ten(${x})`)} ${sa}★ + ${R(`S.ten(${y})`)} ${sb}★ → ${R(`S.ten(${mh})`)} ${ms}★ (trung bình làm tròn lên)`, R('JSON.stringify([B.t[1].hb, B.t[1].sao])'));
+  ok(R(`B.t[1] && B.t[1].hb === ${mh} && B.t[1].sao === ${ms} && B.t[1].cmC === 0 && !B.t[0]`), `${R(`S.ten(${x})`)} ${sa}★ + ${R(`S.ten(${y})`)} ${sb}★ → ${R(`S.ten(${mh})`)} ${ms}★ (trung bình làm tròn lên)`, R('JSON.stringify([B.t[1].hb, B.t[1].sao])'));
 }
 console.log('2 · ghép KHÔNG hợp lệ');
-for (const [x, y] of [[N, N], [5, N], [N, 5], [13, 5], [7, 15], [15, 1]]) {
+for (const [x, y] of [[13, 15], [15, 13], [N, 15], [15, 1], [7, 15], [15, 10]]) { // 08/11 lần 2: chỉ cấm Pháo chưa đủ + NSWE (2 chiều)
   R(`var a = cn(0, ${x}, 2), b = cn(1, ${y}, 2), r = ghep(B, a, b)`);
   ok(R('r === null && B.t[0] === a && B.t[1] === b && a.hb === ' + x + ' && b.hb === ' + y), R(`S.ten(${x})`) + ' + ' + R(`S.ten(${y})`) + ': không ghép (ô đứng yên)');
 }
@@ -149,9 +151,15 @@ async function trinhDuyet() {
       await keo(0, 1, async () => { await sleep(250); await chup('keo-n-len-s'); });
       let r = await p.evaluate(() => { const B = G.ban[0]; return [!!B.t[0], B.t[1] && B.t[1].hb, B.t[1] && B.t[1].sao]; });
       ok(JSON.stringify(r) === '[false,5,2]', 'kéo chuột N 2★ → S 2★: ô 1 = NS 2★, ô 0 trống', JSON.stringify(r));
-      // kéo N (ô 10) lên NS (ô 1) — không hợp lệ: không đổi gì
-      await keo(10, 1); r = await p.evaluate(() => { const B = G.ban[0]; return [B.t[10] && B.t[10].hb, B.t[1] && B.t[1].hb]; });
-      ok(JSON.stringify(r) === '[1,5]', 'kéo chuột N lên NS: không ghép (cả 2 đứng yên)', JSON.stringify(r));
+      // kéo N 3★ (ô 10) lên NS 2★ (ô 1) — tập con, hợp lệ từ 08/11 lần 2: NS giữ nguyên, sao = ceil(2.5) = 3
+      await keo(10, 1); r = await p.evaluate(() => { const B = G.ban[0]; return [!!B.t[10], B.t[1] && B.t[1].hb, B.t[1] && B.t[1].sao]; });
+      ok(JSON.stringify(r) === '[false,5,3]', 'kéo chuột N 3★ lên NS 2★: ghép → NS 3★ (hướng giữ nguyên)', JSON.stringify(r));
+      // ô sáng lúc kéo: Pháo NSW (ô 3) — sáng các Pháo chưa đủ (kể cả cùng/tập con), KHÔNG sáng NSWE (ô 4, 8)
+      r = await p.evaluate(() => { const B = G.ban[0], a = B.t[3]; return [1, 2, 5, 9, 11, 4, 8].map(o => B.t[o] ? hopLeGhep(a, B.t[o]) : null); });
+      ok(JSON.stringify(r) === '[true,true,true,true,true,false,false]', 'kéo NSW: sáng mọi Pháo chưa đủ, không sáng NSWE', JSON.stringify(r));
+      // kéo NSW (ô 3) lên NSWE (ô 4) — bị cấm: không đổi gì
+      await keo(3, 4); r = await p.evaluate(() => { const B = G.ban[0]; return [B.t[3] && B.t[3].hb, B.t[4] && B.t[4].hb, B.t[4] && B.t[4].cmC]; });
+      ok(JSON.stringify(r) === '[13,15,3]', 'kéo chuột NSW lên NSWE: không ghép (cả 2 đứng yên)', JSON.stringify(r));
       // NSWE + NSWE thật bằng chuột
       await keo(4, 8); r = await p.evaluate(() => { const T = G.ban[0].t[8]; return T && [T.hb, T.cmC, T.sao, !G.ban[0].t[4]]; });
       ok(JSON.stringify(r) === '[15,11,5,true]', 'kéo chuột NSWE(3) 4★ → NSWE(7) 5★: stack 11, sao 5', JSON.stringify(r));
@@ -166,7 +174,7 @@ async function trinhDuyet() {
       await p.evaluate(() => { const k = document.querySelector('.up-kn[data-up="more"]'); if (k) k.click(); }); await sleep(700);
       const luat = await p.evaluate(() => { const d = [...document.querySelectorAll('dl.up-dl dt')].find(x => /Combine/.test(x.textContent)); if (d) d.scrollIntoView({ block: 'start' }); return d ? d.parentElement.textContent : ''; });
       await sleep(400); await chup('trang-chi-tiet-luat');
-      ok(/Result star = average/.test(luat) && /cannot merge/.test(luat) && /stack/.test(luat), 'trang chi tiết: mục luật ghép có Combine / Star / Stack', luat.slice(0, 120));
+      ok(/Result star = average/.test(luat) && /Same or fewer directions can merge/.test(luat) && /NSWE Compass cannot merge/.test(luat) && /stack/.test(luat), 'trang chi tiết: mục luật ghép có Combine / Star / Stack', luat.slice(0, 120));
       ok(!errs.length, 'không lỗi trang', errs.slice(0, 3).join(' | '));
       await c.close();
     }

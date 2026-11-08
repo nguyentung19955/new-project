@@ -91,7 +91,8 @@ function upLuatGhep(id) {
     L.push(['Directions', 'Each Compass Cannon gets 1 random direction: N, S, W or E. Each direction fires 1 homing rocket.']);
     L.push(['Combine', 'Drag a Compass onto another Compass: the result has both directions (N + S = NS, NS + W = NSW, NSW + E = NSWE). Stars can be different.']);
     L.push(['Star', 'Result star = average of the two, rounded up (3★ + 4★ = 4★). No +1★.']);
-    L.push(['No new direction', 'If no new direction is added (N + N, NS + N), they cannot merge.']);
+    L.push(['Same directions', 'Same or fewer directions can merge too (N + N = N, NS + N = NS): the directions stay, star = average.']);
+    L.push(['NSWE', 'An NSWE Compass cannot merge with a Compass that is not NSWE.']);
     L.push(['Stack', 'NSWE + NSWE = NSWE + 1 stack (both stacks are kept). Each stack +' + Math.round(knThe(null, 'canon')) + '% damage. No limit.']);
     L.push(['Other merges', 'Mimic merges give a random turret as usual. Merge King raises the star and keeps the directions + stacks. A Copycat copy keeps them too.']);
     return L.concat([['Stone', 'If Janus Cube petrifies it, it only merges with stone of the same star (result: a higher-star stone).']]);

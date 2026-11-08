@@ -202,7 +202,7 @@ function hopLeGhep(a, b) {
   if (a.st.bang > 0 || b.st.bang > 0) return false;
   if (a.sao !== b.sao || a.sao >= LUAT.saoMax) return false;
   if (a.st.da || b.st.da) return a.st.da && b.st.da; // đá chỉ ghép với đá cùng sao
-  if (a.id === 'canon' && b.id === 'canon') return false; // Pháo La Bàn: chỉ ghép tổ hợp hướng (ghepDB) — hợp không thêm hướng → không ghép
+  if (a.id === 'canon' && b.id === 'canon') return false; // Pháo La Bàn: chỉ ghép tổ hợp hướng (ghepDB) — chỉ cấm Pháo chưa đủ NSWE + Pháo NSWE
   if (a.id === 'loren' && b.id === 'loren') return false; // Twin Anvil: chỉ ghép đặc biệt cùng dạng (khác dạng = không ghép được)
   if (a.id === b.id) return true;
   return a.id === 'mimic' || b.id === 'mimic'; // MIMIC ghép với BẤT KỲ ụ cùng sao

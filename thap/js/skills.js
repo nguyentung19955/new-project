@@ -21,7 +21,8 @@ function danThang(B, T, E, img, sp, co, trungFn, duoi) {
 // PHÁO LA BÀN / COMPASS CANNON (canon, bậc VÀNG) — TỔ HỢP HƯỚNG (người dùng chốt 08/11, thay luật mũi tên + số cũ):
 //  · Gọi ra: 1 hướng ngẫu nhiên N / S / W / E (T.hb = mặt nạ bit: 1 N · 2 E · 4 S · 8 W; bốc bằng rngHat(hạt trận + bàn + ô + số lần) — tất định cả offline).
 //  · Kéo Pháo La Bàn lên Pháo La Bàn (khác sao vẫn được): ra Pháo có HỢP các hướng (N+S → NS … → NSWE). SAO kết quả = trung bình 2 sao, làm tròn LÊN
-//      (N 3★ + S 4★ → NS 4★) — KHÔNG +1★. Không cho ghép khi hợp không thêm hướng nào (N+N, NS+N, N+NS…) → ô không sáng lúc kéo.
+//      (N 3★ + S 4★ → NS 4★) — KHÔNG +1★. Người dùng 08/11 (lần 2): cùng hướng / tập con cũng ghép được (N+N → N, NS+NS → NS, NS+N → NS; hướng giữ nguyên, sao = trung bình).
+//      CHỈ CẤM: Pháo chưa đủ NSWE ghép với Pháo NSWE (kéo chiều nào cũng vậy) → ô không sáng lúc kéo.
 //      Ngoại lệ: NSWE + NSWE → giữ NSWE, CỘNG DỒN (stack) = stack 2 bên + 1, KHÔNG TRẦN. Kết quả luôn là ụ THẬT (không phải bản sao).
 //  · Bắn: mỗi hướng đang có 1 TÊN LỬA ĐUỔI — phóng ra đúng hướng la bàn rồi rẽ đuổi quái xa nhất về phía hướng đó (hết quái → quái gần nhất).
 //      Sát thương mỗi quả theo số hướng k: ×1.0 / ×1.1 / ×1.0 / ×0.9 (tổng 1.0 / 2.2 / 3.0 / 3.6 lần 1 phát), nổ lan nhỏ ở điểm trúng.
@@ -40,13 +41,13 @@ SKILLS.canon = {
   ten(m) { return this.DOC.filter(i => m & (1 << i)).map(i => this.CHU[i]).join(''); }, // 'NS', 'NSW', 'NSWE'…
   du(T) { return this.hb(T) === this.DU; },
   saoGhep: (a, b) => Math.min(LUAT.saoMax, Math.ceil(((a.sao | 0) + (b.sao | 0)) / 2)), // trung bình, làm tròn lên
-  // kết quả ghép a (kéo) vào b (đích): null = không ghép được · { hb, sao, chong, kieu: 'them' | 'chong' }
+  // kết quả ghép a (kéo) vào b (đích): null = không ghép được · { hb, sao, chong, kieu: 'them' | 'cung' | 'chong' }
   hopNhat(a, b) {
     if (!a || !b || a.id !== 'canon' || b.id !== 'canon') return null;
     const x = this.hb(a), y = this.hb(b), u = x | y, sao = this.saoGhep(a, b);
     if (x === this.DU && y === this.DU) return { hb: u, sao, chong: this.chong(a) + this.chong(b) + 1, kieu: 'chong' };
-    if (u === x || u === y) return null; // hợp không thêm hướng (N+N, NS+N, N+NS…)
-    return { hb: u, sao, chong: 0, kieu: 'them' };
+    if (x === this.DU || y === this.DU) return null; // 08/11 lần 2: chỉ cấm Pháo chưa đủ hướng + Pháo NSWE (2 chiều kéo)
+    return { hb: u, sao, chong: 0, kieu: u === x && u === y ? 'cung' : 'them' }; // cùng hướng / tập con (N+N, NS+N) cũng ghép: hướng = hợp (giữ nguyên), sao = trung bình
   },
   moiChong: (T) => (knThe(T && G.ban[T.ban], 'canon') || 50) / 100,
   chongHieu(T) { return this.chong(T) * (ms(T, 5) ? 1.5 : 1); },
@@ -59,7 +60,7 @@ SKILLS.canon = {
   sinh(G, T) { if (!T.hb) { const B = G.ban[T.ban] || G.ban[0]; T.hb = 1 << (Math.floor(this.rng(B, T.o)() * 4) & 3); } if (T.cmC == null) T.cmC = 0; },
   mo(T) {
     const m = this.hb(T), k = this.dem(m), n = this.chong(T);
-    return 'Directions: ' + this.ten(m) + ' · ' + k + ' homing rocket' + (k > 1 ? 's' : '') + ' (×' + this.MOI[k] + ' damage each) · merge two Compasses to combine their directions · result star = average of the two, rounded up · same directions cannot merge · NSWE + NSWE adds a stack (no cap): each stack +' + Math.round(this.moiChong(T) * 100) + '% damage' + (m === this.DU ? ' · stacks: ' + n : '');
+    return 'Directions: ' + this.ten(m) + ' · ' + k + ' homing rocket' + (k > 1 ? 's' : '') + ' (×' + this.MOI[k] + ' damage each) · merge two Compasses to combine their directions · result star = average of the two, rounded up · same directions can merge too (directions stay) · only NSWE cannot merge with a Compass that is not NSWE · NSWE + NSWE adds a stack (no cap): each stack +' + Math.round(this.moiChong(T) * 100) + '% damage' + (m === this.DU ? ' · stacks: ' + n : '');
   },
   // mục tiêu theo hướng h: quái xa nhất về phía đó (hoà: uid nhỏ hơn) — tất định
   mucTieu(B, T, h) {
