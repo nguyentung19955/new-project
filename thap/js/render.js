@@ -930,7 +930,7 @@ const REN = {
       if (skT.gocDau) { const g2 = skT.gocDau(T, this.t, ctx); if (g2 != null) goc = g2; } // đầu không xoay theo mục tiêu (hộp, cột…)
       // đầu súng + bóng mềm đổ xuống bệ, dựng sẵn chung 1 ảnh → 1 lần vẽ xoay mỗi ụ (thay vì 2)
       if (AU) { if (AU.by) ctx.translate(0, AU.by); AN.veDuoi(ctx, T, C0, al, gd, da, this, goc); }
-      const pg = !o.ghost && this.DE_RIENG[T.id] && window.PHU_GIUA && PHU_GIUA[T.id]; // phần phụ tại trục (Tesla: vòng cuộn · Mạch Máu: tim · Lõi Combo: lõi)
+      const pg = !o.ghost && this.DE_RIENG[T.id] && window.PHU_GIUA && PHU_GIUA[T.id] && !(skT.dauAnh && T.id === 'mauhut' && skT.dauAnh(T)); // phần phụ tại trục (Tesla: vòng cuộn · Mạch Máu: tim — dạng 2–4 đã có tim trong đầu · Lõi Combo: lõi)
       if (pg === 'duoi') this.vePhu(ctx, T, C0, al, da);
       ctx.rotate(goc + (AU ? AU.tw : 0)); ctx.translate(AU ? AU.rx : (T.rx || 0), AU ? AU.py : 0);
       if (AU && (AU.sx !== 1 || AU.sy !== 1)) ctx.scale(AU.sx, AU.sy);

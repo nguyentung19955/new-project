@@ -20,7 +20,7 @@ const UI = {
     let r = null;
     try { // tối đa 4 s (Safari đôi khi treo fetch lúc nạp lại trang) → dùng bản nhúng meta.js
       const ac = typeof AbortController !== 'undefined' ? new AbortController() : null, hen = ac && setTimeout(() => ac.abort(), 4000);
-      const res = await fetch('assets/roster.json?v=23431daf', { cache: 'no-cache', signal: ac ? ac.signal : undefined }); if (res.ok) r = await res.json(); clearTimeout(hen);
+      const res = await fetch('assets/roster.json?v=435be56d', { cache: 'no-cache', signal: ac ? ac.signal : undefined }); if (res.ok) r = await res.json(); clearTimeout(hen);
     } catch (e) { }
     G.roster = applyText(r || window.ROSTER_EMBED || []).filter(x => !(typeof THE_BO !== 'undefined' && THE_BO.includes(x.id))); // thẻ đã bỏ (Hào Quang Thánh) — thebai.js
     SND.nutNhan(); // nhãn nút NHẠC/SFX theo trạng thái đã lưu
@@ -474,6 +474,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       const B = G.ban[0], C = Math.min(B.cw, B.ch);
       // khung canvas đo 1 lần lúc chạm (pointermove KHÔNG đọc bố cục → không ép trình duyệt tính lại layout mỗi lần rê)
       this.keo = { T, x, y, x0: x, y0: y, dang: false, id: e.pointerId, lech: e.pointerType === 'mouse' ? 0 : Math.round(C * 0.6), r: cv.getBoundingClientRect() };
+      if (e.pointerType !== 'mouse') this.keo.nguong = Math.max(7, 10 * W / Math.max(1, this.keo.r.width)); // ngón tay: rung ≤ 10 px màn hình vẫn là CHẠM (7 đơn vị logic chỉ ≈ 3 px khi màn ngang → chạm trứng cháy / chiêu bị coi là kéo)
       if (T.id === 'bienmau') this.keo.duong = [T.o];
       if (typeof REN !== 'undefined' && REN.nongKeo && !laHoTro(T)) REN.nongKeo(T); // dựng sẵn bản nhấc + huy hiệu, rải theo khung
     });
@@ -482,7 +483,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       // chỉ ghi toạ độ mới nhất (trình duyệt đã gộp các lần rê trong 1 khung); vẽ theo ngón ở khung rAF kế tiếp
       const [x, y] = this.diemLogic(e, k.r); k.x = x; k.y = y;
       if (k.duong) { const B = G.ban[0], C = Math.min(B.cw, B.ch); for (let i = 0; i < 15; i++) { const c = B.o[i]; if (Math.hypot(c.x - x, c.y - y) < C * 0.42) { if (k.duong[k.duong.length - 1] !== i) k.duong.push(i); break; } } } // Prism Thief: ô ngón tay đi qua (CHROMATIC CIRCUIT)
-      if (!k.dang && Math.hypot(x - k.x0, y - k.y0) > 7) {
+      if (!k.dang && Math.hypot(x - k.x0, y - k.y0) > (k.nguong || 7)) {
         if (k.T.st.bang > 0) { FX.chu1(x, y - 20, TEXT.fx.frozen, '#7fdcff', 12); this.keo = null; return; }
         k.dang = true; $('#tt').hidden = true; this.xemHT = null; this.chonGhep = null;
       }
@@ -500,7 +501,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
         if (c && c === k.T) { this.chonGhep = null; $('#tt').hidden = true; return; }
         this.chonGhep = null;
         const sk = SKILLS[k.T.id];
-        if (sk.chuDong && k.T.nap >= 1 && !k.T.st.bang && !k.T.st.da) { sk.chuDong(G, B, k.T); return; } // ụ ĐỎ: chạm khi nạp đầy = dùng kỹ năng chủ động
+        if (chamSan(k.T)) { sk.chuDong(G, B, k.T); return; } // ụ có ▶ (chiêu chủ động đầy / trứng cháy): chạm = dùng chiêu, không mở dải thông tin
         if (!$('#tt').hidden && this.xemU && this.xemU.T === k.T) { $('#tt').hidden = true; this.ttHet = 0; this.xemU = null; return; } // chạm lại ụ đang xem = đóng dải
         this.moTT(k.T.id, k.T);
         if (!k.T.st.bang && B.t.some(N => N && N !== k.T && hopLeGhep(k.T, N))) this.chonGhep = { T: k.T, t0: performance.now() };

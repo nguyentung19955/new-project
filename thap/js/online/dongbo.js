@@ -226,7 +226,7 @@ const ONS = {
     if (T.id === 'loren') f += 'a' + (T.dang === 'toc' ? 1 : 0) + ';'; // Twin Anvil: dạng (0 ST · 1 tốc)
     if (T.anv) f += 'b' + (T.anv.k === 'toc' ? 1 : 0) + 'x' + Math.round(T.anv.v * 10000) + ';'; // buff Anvil trên ụ
     if (T.id === 'bienmau') f += 'q' + ((T.pm | 0) & 3) + ';' + (T.pms ? 'u' + T.pms + ';' : '') + (T.pf > 0 ? 'F' + T.pf + ';K' + (T.pmk || [0, 0, 0, 0]).map(x => x | 0).join('.') + ';' : ''); // Prism Thief: màu + cộng dồn · hợp thể: F số hợp thể, K cộng dồn 4 màu
-    if (T.id === 'mauhut') { if (T.mau) f += 'B' + T.mau + ';'; if (T.mh) f += 'M' + T.mh.o + ';C' + Math.max(0, Math.round(T.mh.con * 10)) + ';'; if (T.rite && T.rite.het > G.t) f += 'R' + T.rite.o + ';T' + Math.round((T.rite.het - G.t) * 10) + ';'; } // Mạch Máu: máu / dấu / Rite
+    if (T.id === 'mauhut') { if (T.mau) f += 'B' + T.mau + ';P' + SKILLS.mauhut.dang(T) + ';'; if (T.mhN) f += 'Q' + T.mhN + ';'; if (T.mh) f += 'M' + T.mh.o + ';C' + Math.max(0, Math.round(T.mh.con * 10)) + ';'; } // Mạch Máu: máu / dạng / đếm phát (nova) / dấu
     if (T.id === 'tienhoa' && T.chay) f += 'X'; // trứng cháy
     if (T.id === 'ronglua' && T.nhiet > 0) f += 'H' + Math.round(T.nhiet * 100) + ';'; // Rồng Máy: nhiệt lò (×100, giữ 2 số lẻ)
     if (T.id === 'cobac' && T.cbS) f += 'z' + T.cbS + ';'; // Lucky Slot: sao đã quay (bàn con rối không tự quay)
@@ -258,9 +258,8 @@ const ONS = {
     { const m = c.match(/b(\d)x(\d+);/); T.anv = m ? { k: m[1] === '1' ? 'toc' : 'dmg', v: +m[2] / 10000 } : null; }
     if (T.id === 'bienmau') { T.pm = so('q') & 3; T.pms = so('u'); T.pf = so('F'); const m = c.match(/K([\d.]+);/); T.pmk = T.pf > 0 ? (m ? m[1].split('.').map(x => x | 0).concat([0, 0, 0, 0]).slice(0, 4) : [0, 0, 0, 0]) : undefined; }
     if (T.id === 'mauhut') {
-      T.mau = so('B');
-      if (/M\d+;/.test(c)) { const o = so('M'), X = B.t[o]; T.mh = X ? { o, uid: X.uid, id: X.id, sao: X.sao, con: so('C') / 10, tong: SKILLS.mauhut.tg(X.sao) } : null; } else T.mh = null;
-      if (/R\d+;/.test(c)) { const o = so('R'), X = B.t[o], h = heDB(B, 'mauhut'); T.rite = X ? { o, uid: X.uid, het: G.t + so('T') / 10, dmg: SKILLS.mauhut.DMG * h, toc: SKILLS.mauhut.TOC * h } : null; } else T.rite = null;
+      T.mau = so('B'); T.mhD = so('P'); T.mhN = so('Q');
+      if (/M\d+;/.test(c)) { const o = so('M'), X = B.t[o], t = X ? SKILLS.mauhut.tg(X.sao, B) : 0; T.mh = X ? { o, uid: X.uid, id: X.id, sao: X.sao, con: so('C') / 10, tong: Math.max(t, so('C') / 10) } : null; } else T.mh = null;
     }
     if (T.id === 'tienhoa') T.chay = c.includes('X');
     if (T.id === 'ronglua') T.nhiet = so('H') / 100;
