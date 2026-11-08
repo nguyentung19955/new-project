@@ -13,7 +13,7 @@ const KG = {
   CHON_S: 4, // chế độ chạm–chạm: ụ được chọn giữ 4 s
   LO_S: 1.0, // tấm kết quả hiện ~1 s
   ANH: ['khung_chon', 'sup_ring', 'h2_vong_do', 'nhan_kn', 'h2_sao', 'h2_sao_sang', 'h2_vfx_ghep'],
-  TXT: { tip: 'Random type, +1★', tipDB: 'Special merge', tapTip: 'Tap a glowing turret to merge', huy: 'Cancelled' },
+  TXT: { tip: 'Random type, +1★', tipDB: 'Special merge', tipSao: (n) => 'Same turret, +' + n + '★', tipKN: 'Skill, not a merge', tapTip: 'Tap a glowing turret to merge', huy: 'Cancelled' },
   lo: [], // tấm kết quả đang hiện: { B, o, T, t0 }
   _tip: null,
 
@@ -93,14 +93,21 @@ const KG = {
     ctx.globalAlpha = 1;
   },
 
+  // chữ mẹo khi rê src lên hover (đã hợp lệ): ghép thường "Random type, +1★" · ghép đặc biệt thật "Special merge" ·
+  //   kỹ năng kéo thả KHÔNG phải ghép (08/11, game.js laGhepThat): Merge King "Same turret, +n★", Copycat / Teleporter / Overclock… "Skill, not a merge"
+  chuMeo(src, hover) {
+    const db = ghepDBHop(src, hover); if (!db) return this.TXT.tip;
+    if (laGhepThat(src, hover)) return this.TXT.tipDB;
+    return db.sk.ghepDB.nangTaiCho && db.sk.ghepDB.xemSao ? this.TXT.tipSao(Math.max(1, db.sk.ghepDB.xemSao(db.a, db.b) - db.b.sao)) : this.TXT.tipKN;
+  },
   // mẹo trước khi ghép (3 lần đầu): "Random type, +1★" (ghép đặc biệt: "Special merge"); chạm–chạm: hướng dẫn chạm ô sáng
   veMeo(ctx, src, hover) {
     const B = G.ban[src.ban];
     let s = null, c = null;
-    if (hover && hopLeGhep(src, hover)) { s = ghepDBHop(src, hover) ? this.TXT.tipDB : this.TXT.tip; c = B.o[hover.o]; }
+    if (hover && hopLeGhep(src, hover)) { s = this.chuMeo(src, hover); c = B.o[hover.o]; }
     else if (UI.chonGhep && !(UI.keo && UI.keo.dang)) { s = this.TXT.tapTip; c = B.o[src.o]; }
     if (!s) { this._tip = null; return; }
-    if (this.soMeo() >= 3 && s !== this.TXT.tipDB) return;
+    if (this.soMeo() >= 3 && (s === this.TXT.tip || s === this.TXT.tapTip)) return;
     if (!this._tip || this._tip.s !== s) this._tip = { s, t0: performance.now() };
     const u = Math.min(1, (performance.now() - this._tip.t0) / 140);
     this.tam(ctx, s, c.x, c.y - Math.min(B.cw, B.ch) * 0.78, 13, '#eaf6ff', u, 0.9 + 0.1 * u);
@@ -163,9 +170,9 @@ const KG = {
 // ---------- bọc ghep(): hẹn tấm kết quả đúng lúc ụ mới lộ ra (không đổi luật / giờ) ----------
 if (typeof ghep === 'function') {
   const g = ghep;
-  ghep = function (B, a, b) {
-    const B2 = G.ban[b.ban], o = b.o, r = g.apply(this, arguments);
-    if (r && B2 && B2 === G.ban[0] && !B2.ai) {
+  ghep = function (B, a, b, ep) {
+    const B2 = G.ban[b.ban], o = b.o, th = laGhepThat(a, b, ep), r = g.apply(this, arguments);
+    if (r && th && B2 && B2 === G.ban[0] && !B2.ai) { // chỉ ghép thật mới có tấm kết quả ghép (Merge King +★ / Copycat / Teleporter: kỹ năng tự hiện nhãn)
       KG.ghiMeo();
       const lo = (r.vxA && r.vxA.lo) || VX.TRE_LO;
       VX.hen(lo, () => KG.hien(B2, o));

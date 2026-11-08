@@ -212,8 +212,8 @@ thucHienChieu = function (E, B) {
 const _ghepHT = ghep;
 ghep = function (B, a, b, ep) {
   const o = b ? b.o : null;
-  // chỉ GHÉP THẬT (ghép thường, Merge King nâng sao) mới có bùng tốc — Teleporter / Copycat / Overclock / Scrap Forge không phải ghép
-  const db = !ep && a && b ? ghepDBHop(a, b) : null, that = !db || db.sk === SKILLS.vughep;
+  // chỉ GHÉP THẬT mới có bùng tốc (game.js laGhepThat) — Merge King +★ tại chỗ, Copycat, Teleporter, Overclock, buff Anvil: không (08/11)
+  const that = laGhepThat(a, b, ep);
   const r = _ghepHT(B, a, b, ep);
   const R = r && that && o != null ? B.t[o] : null;
   if (R) { const S = HOTRO.keCo(B, R, 'hasao'); if (S && HOTRO.nhan(S, R)) { R.tocT = Math.max(R.tocT, 5); R.tocV = Math.max(R.tocV || 0, SKILLS.hasao.dot(S)); nhanU(R, 'MERGE SURGE', '#ff4b3e'); } }

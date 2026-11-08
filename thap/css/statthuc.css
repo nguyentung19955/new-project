@@ -23,3 +23,24 @@
 @media (max-width: 370px) { #tt .st-hang b { font-size: 12px; } #tt .st-dmg b { font-size: 17px; } #tt .st-hang > div { padding: 3px 4px 2px; } }
 /* khối live đã liệt kê từng nguồn → ẩn danh sách "EFFECTS ON" cũ cho gọn (chỉ ụ tấn công trong trận) */
 #tt .tt-so:has(.st-live .st-hang) > .d-nhan { display: none; }
+
+/* DẢI XEM NHANH TRONG TRẬN — KHỐI CHỈ SỐ (js/hudb.js soNgan + chiSoTT): hàng 4 ô DMG · SPD /s · CRIT · CRIT DMG dưới tên.
+   Buff → số xanh + số gốc gạch nhỏ; bất lợi → đỏ. Ụ không bắn: "Does not shoot" + hiệu lực hỗ trợ. Icon: PNG ic_* có sẵn.
+   :not(.hb-rong) để thắng tvb.css (#wrap.co-tvb …) mà không cần !important. */
+html body #wrap #tt.hb-qi.hb-cs:not(.hb-rong), html body #wrap.co-tvb #tt.hb-qi.hb-cs.co-mv:not(.hb-rong) { height: auto; min-height: 60px; align-items: flex-start; padding-top: 1px; padding-bottom: 1px; }
+html body #wrap #tt.hb-qi.hb-cs:not(.hb-rong) .tt-than, html body #wrap #tt.hb-qi.hb-cs.co-mv:not(.hb-rong) .tt-than { grid-template-rows: 22px auto auto auto; row-gap: 1px; align-content: start; }
+html body #wrap #tt.hb-qi.hb-cs:not(.hb-rong) .hb-so { grid-column: 1 / 3; grid-row: 2; display: flex; gap: 6px; align-items: center; min-width: 0; }
+html body #wrap #tt.hb-qi.hb-cs:not(.hb-rong) .tt-kn { grid-row: 3; }
+html body #wrap #tt.hb-qi.hb-cs:not(.hb-rong) .tt-mv { grid-column: 1 / 3; grid-row: 4; } /* dòng dạng/bộ đếm (motvong.js) dưới dòng kỹ năng */
+html body #wrap #tt.hb-qi.hb-cs:not(.hb-rong) .hb-so .cs-hang { display: flex; flex-direction: row; align-items: stretch; flex: 1 1 auto; gap: 3px; min-width: 0; }
+html body #wrap #tt.hb-qi.hb-cs:not(.hb-rong) .hb-so .cs { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 0; padding: 2px 4px 2px; background: #0b0d11cc; line-height: 1; overflow: hidden; }
+html body #wrap #tt.hb-qi.hb-cs:not(.hb-rong) .hb-so .cs small { display: flex; align-items: center; gap: 2px; font-size: 9px; line-height: 11px; font-weight: 800; color: #8b96a4; letter-spacing: .2px; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+html body #wrap #tt.hb-qi.hb-cs:not(.hb-rong) .hb-so .cs small img { width: 11px; height: 11px; flex: none; }
+html body #wrap #tt.hb-qi.hb-cs:not(.hb-rong) .hb-so .cs b { display: block; font-size: 15px; line-height: 16px; font-weight: 900; color: #f0f2f4; white-space: nowrap; }
+html body #wrap #tt.hb-qi.hb-cs:not(.hb-rong) .hb-so .cs b i { display: inline; font-size: 9.5px; font-style: normal; font-weight: 800; color: #8996a4; margin-left: 1px; }
+html body #wrap #tt.hb-qi.hb-cs:not(.hb-rong) .hb-so .cs s { display: block; font-size: 9px; line-height: 10px; font-weight: 700; color: #7c8591; }
+html body #wrap #tt.hb-qi.hb-cs:not(.hb-rong) .hb-so .cs.len b { color: #6dff8a; }
+html body #wrap #tt.hb-qi.hb-cs:not(.hb-rong) .hb-so .cs.xau b { color: #ff7a6b; }
+html body #wrap #tt.hb-qi.hb-cs:not(.hb-rong) .hb-so .cs-kb { flex: none; padding: 3px 6px; background: #0b0d11cc; font-size: 11.5px; line-height: 14px; font-weight: 800; color: #b9c1cc; white-space: nowrap; }
+html body #wrap #tt.hb-qi.hb-cs:not(.hb-rong) .hb-so .ht { flex-direction: row; flex: 0 1 auto; max-width: none; min-width: 0; font-size: 12px; line-height: 16px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+html body #wrap #tt.hb-qi.hb-cs:not(.hb-rong) .hb-so .hb-bs { flex: none; display: inline-flex; align-items: center; gap: 2px; }

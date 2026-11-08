@@ -81,11 +81,13 @@ SKILLS.canon = {
     if (!co) return;
     giat(T, 1.2); const [x, y] = chopNong(T, 30); phutKhoi(x, y, 2); SND.phao();
   },
+  // sát thương 1 tên lửa khi Pháo có k hướng (kk: hệ số loạt — FOUR WINDS 0.7) — dùng chung cho bắn thật + bảng chỉ số (statthuc.js)
+  dmgMoi(T, k, kk) { return (CONG_GOP ? dmgU(T, this.them(T)) : dmgU(T) * (1 + this.them(T))) * (ms(T, 7) ? 1.3 : 1) * this.MOI[k || 1] * (kk || 1); },
   // 1 tên lửa đuổi: phóng ra theo hướng la bàn h (0 N · 1 E · 2 S · 3 W) từ mép bệ, rồi rẽ đuổi mục tiêu (capNhatDan → danDuoi)
   banMot(G, B, T, E, h, k, kk) {
     const c = B.o[T.o], g = [-Math.PI / 2, 0, Math.PI / 2, Math.PI][h], r = Math.min(B.cw || 60, B.ch || 60) * 0.3;
     const x = c.x + Math.cos(g) * r, y = c.y + Math.sin(g) * r, rb = this.banKinh(T);
-    const dmg = (CONG_GOP ? dmgU(T, this.them(T)) : dmgU(T) * (1 + this.them(T))) * (ms(T, 7) ? 1.3 : 1) * this.MOI[k || 1] * (kk || 1);
+    const dmg = this.dmgMoi(T, k, kk);
     banDan({ img: 'ten_laban', x, y, muc: E, px: E.x, py: E.y, sp: 230, co: 26, B, T, duoi: 'tenlua', dd: { g, h },
       trung(G, d) {
         noLan(d.x, d.y, rb, dmg, B); FX.no('no_phao', d.x, d.y, rb * 2.4, 0.45); FX.vong1(d.x, d.y, 4, rb, '#7fe8ff', 0.3, 3); FX.tiaLua(d.x, d.y, 6, '#ffd070', 180); SND.no(0.25);
@@ -93,6 +95,7 @@ SKILLS.canon = {
   },
   ghepDB: {
     cungLoai: true, // Pháo La Bàn + Pháo La Bàn → Pháo La Bàn có hợp hướng (không ra ụ ngẫu nhiên)
+    laGhep: () => true, // B kéo vào B = GHÉP THẬT (Archive +1, MERGE SURGE, nhiệm vụ) — game.js laGhepThat
     hopLe: (a, b) => b.ban === a.ban && !!SKILLS.canon.hopNhat(a, b),
     xemSao: (a, b) => SKILLS.canon.saoGhep(a, b),
     lam(G, B, a, b) {

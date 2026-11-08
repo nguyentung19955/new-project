@@ -59,6 +59,28 @@ function statThuc(T) {
   return { dmg, goc, delta: goc > 0 ? dmg / goc - 1 : 0, toc, tocGoc, crit, cMul, dps, frozen, nguon: ds, coDmg: !!sk.dmg };
 }
 
+// chỉ số GỌN cho dải xem nhanh trong trận (hudb.js): số THẬT trên bàn này + số gốc để so (gốc = ụ ở sao hiện tại, cấp thẻ 1, không buff).
+//   dmg: sát thương 1 phát · toc: phát/giây (0 khi đóng băng/hoá đá) · crit: tỉ lệ · cMul: hệ số chí mạng (2 = 200%) · ban=false: ụ không bắn.
+//   Dùng chính dmgU / tocU / critU / nhipU / SKILLS.canon.dmgMoi của game → không lệch số đánh thật. Chỉ đọc, không đổi gì.
+const CS_RIENG = {
+  canon(T, c) { // Pháo La Bàn: mỗi lượt bắn k tên lửa (k = số hướng), mỗi quả dmgMoi (stack, POLE STAR, FOUR WINDS đã gồm)
+    const S = SKILLS.canon, k = S.dem(S.hb(T));
+    c.dmg = S.dmgMoi(T, k, 1); c.dmg0 *= S.MOI[k]; c.toc *= k; c.toc0 *= k; c.ghi = k > 1 ? k + '×' : '';
+  },
+  soi(T, c) { // Sói Máy: nhịp riêng (nhipU, không cấp thẻ tốc) — thức tỉnh: loạt 3 viên × 50% mỗi KY_TT giây
+    const S = SKILLS.soi, n = T.thuc ? 3 : 1, he = T.thuc ? 0.5 : 1, ky = T.thuc ? S.KY_TT : S.KY;
+    c.dmg = dmgU(T) * he; c.dmg0 *= he; c.toc = nhipU(T) * n / ky; c.toc0 = n / ky; c.ghi = T.thuc ? '3×' : '';
+  },
+};
+function chiSoTT(T) {
+  const sk = SKILLS[T.id] || {}; if (!sk.dmg) return { ban: false };
+  const s = statThuc(T), B = G.ban[T.ban];
+  const c = { ban: true, dmg: s.dmg, dmg0: s.goc / hsLv(B, T.id), toc: s.toc, toc0: s.tocGoc, crit: s.crit, crit0: Math.min(1, 0.1 + (sk.crit || 0)), cMul: s.cMul, cMul0: 2, frozen: s.frozen, ghi: '' };
+  if (CS_RIENG[T.id]) CS_RIENG[T.id](T, c);
+  if (s.frozen) c.toc = 0;
+  return c;
+}
+
 // ---------- hiển thị ----------
 const ST = {
   so(v) { return v >= 1e6 ? (v / 1e6).toFixed(2) + 'M' : v >= 1e4 ? (v / 1e3).toFixed(1) + 'k' : v >= 100 ? Math.round(v) + '' : v >= 10 ? v.toFixed(1) : v.toFixed(2); },

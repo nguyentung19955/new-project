@@ -370,7 +370,7 @@ thucHienChieu = function (E, B) { G._trumDang = true; try { return _thucHienChie
 const GUONG_CHEP = new Set(['nhanmana', 'drone', 'loa', 'nhanban', 'kepha', 'sinhdoi', 'orbital', 'khoathoigian', 'pandora', 'nhieusong']);
 const _ghepGuong = ghep;
 ghep = function (B, a, b, ep) {
-  const ids = a && b ? [...new Set([a.id, b.id])].filter(id => GUONG_CHEP.has(id)) : [], saoA = a ? a.sao : 1;
+  const ids = a && b && laGhepThat(a, b, ep) ? [...new Set([a.id, b.id])].filter(id => GUONG_CHEP.has(id)) : [], saoA = a ? a.sao : 1; // chỉ ghép thật (Merge King +★ / Copycat / Teleporter: không chép)
   const r = _ghepGuong(B, a, b, ep);
   if (r && ids.length && G.che === 'coop') {
     const D = banKhac(G.ban[b.ban]), M = SKILLS.guongcong.san(D);

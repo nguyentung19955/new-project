@@ -147,7 +147,9 @@ const TVB = {
     const datGoc = HB.dat;
     HB.dat = function (tt, rong) {
       const r = datGoc.apply(this, arguments);
-      if (!rong && !this.hai()) tt.style.top = (674 - 6 - 70) + 'px';
+      if (!rong && !this.hai()) { // dải có khối chỉ số (hb-cs, statthuc.css): cao tự do → neo ĐÁY tại 668, mọc lên vùng trống dưới làn đường
+        if (tt.classList.contains('hb-cs')) { tt.style.top = 'auto'; tt.style.bottom = (H - (674 - 6)) + 'px'; } else { tt.style.bottom = ''; tt.style.top = (674 - 6 - 70) + 'px'; }
+      }
       if (this.hai() && !rong) { tt.style.top = '680px'; return r; } // 2 bàn: dải gọn đè hàng mana/triệu hồi của khay (không che ô bàn nào; chạm xuyên qua dải)
       if (this.hai()) { tt.style.top = '68px'; if (rong) tt.style.maxHeight = Math.max(200, Math.round(this.oBan(G.ban[0]).tren - 8) - 68) + 'px'; } // dưới tấm treo RIVAL / SHARED của ray
       if (rong && !this.hai()) { tt.style.top = 'auto'; tt.style.bottom = '8px'; tt.style.maxHeight = '518px'; }

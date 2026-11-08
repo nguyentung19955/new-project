@@ -143,7 +143,7 @@ const HUD2 = {
   }
   if (typeof ghep === 'function') {
     const g = ghep;
-    ghep = function (B, a, b) { const r = g.apply(this, arguments); if (r) HUD2.ghep(G.ban[b.ban], b); return r; };
+    ghep = function (B, a, b, ep) { const th = laGhepThat(a, b, ep), r = g.apply(this, arguments); if (r && th) HUD2.ghep(G.ban[b.ban], b); return r; }; // chỉ ghép thật mới chớp ghép
   }
 
   // 08 · giá đồng đội: đèn trạng thái + nhãn Ally/Rival trên tấm chữ; đặt sát trên bàn phía trên (dưới ray trạng thái)

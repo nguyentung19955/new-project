@@ -756,6 +756,7 @@ SKILLS.vughep = { // Vua Ghép (Aurora King): kéo lên ụ CÙNG SAO → ụ đ
   mo: (T) => (T.vang ? 'GOLDEN Merge King: drag onto a same-star turret → +2★' : 'Drag onto same-star turret: +1★') + ', keeps its type · ' + Math.round(knThe(T && G.ban[T.ban], 'vughep')) + '% of summons/merges come out GOLDEN (+2★) · also on stone (stays stone) · Merge King + Merge King: one Merge King +1★ (keeps Golden)',
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'tia_lua', co: 16, mau: '#ffe46b', sp: 480 }); },
   ghepDB: {
+    nangTaiCho: true, // +★ TẠI CHỖ (giữ thân ụ đích, giữ cộng dồn) — KHÔNG tính là ghép (không khai laGhep — game.js laGhepThat)
     cungLoai: true, // Merge King + Merge King (cùng sao) → 1 Merge King sao kế tiếp (không ra ụ ngẫu nhiên)
     quaKhoa: true, // DCDW: Aurora King vẫn nâng sao ô ĐÁ (đá giữ nguyên, +★) → 2 ô đá cùng sao ghép được với nhau; ô băng cũng nhận +★
     hopLe: (a, b) => a.sao === b.sao && b.sao < LUAT.saoMax && b.ban === a.ban,

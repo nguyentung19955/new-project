@@ -341,8 +341,9 @@ const KT = {
   if (typeof batDau === 'function') { const g = batDau; batDau = function (che) { try { KT.batTran(che); } catch (e) { } return g.apply(this, arguments); }; }
   if (typeof ghep === 'function') {
     const g = ghep; ghep = function (B, a, b, ep) {
+      const th = laGhepThat(a, b, ep); // chỉ ghép thật mới tính (08/11: Merge King +★ / Copycat / Teleporter… không)
       const r = g.apply(this, arguments);
-      try { if (r && !ep && KT.tran && b && b.ban === 0 && !(G.ban[0] || {}).ai) { KT.tran.ghep++; const T = G.ban[0].t[b.o]; const sao = (T && T.sao) | 0; if (sao >= 5) KT.tran.sao5++; if (sao >= 7) KT.tran.sao7++; } } catch (e) { }
+      try { if (r && !ep && th && KT.tran && b && b.ban === 0 && !(G.ban[0] || {}).ai) { KT.tran.ghep++; const T = G.ban[0].t[b.o]; const sao = (T && T.sao) | 0; if (sao >= 5) KT.tran.sao5++; if (sao >= 7) KT.tran.sao7++; } } catch (e) { }
       return r;
     };
   }
