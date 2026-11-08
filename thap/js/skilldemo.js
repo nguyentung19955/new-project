@@ -258,12 +258,14 @@ const SD_K = {
   thanhdia: { kieu: 'ht', ke: [[2, 'lien', 's'], [6, 'canon', 's'], [8, 'lien', 's'], [12, 'canon', 's']], dong: [2, 8], truoc: (T, B) => { if (T) B.t[T.o] = null; },
     them: [[1.8, (B, D, T) => { if (!T || B.t[7]) return; const N = sinhU(taoU(B, 'thanhdia', T.sao, 7)); N.goc = -Math.PI / 2; B.t[7] = N; VX.trieu(N); }]],
     c: [[0.2, 'Two turrets are frozen'], [1.8, 'Sanctum arrives: cleans them', { ev: 'moi', cham: 0.7 }], [3.2, 'Neighbours get a 1-hit shield'], [4.6, (T) => 'Attack neighbours +' + sdBuf(T) + ' damage', { cham: 0.4 }]] },
-  // Prism Thief: 2 ụ đồng pha màu (tuoi) → ghép CÙNG màu = COMBO thật; Prism Thief thứ 3 (ô 12) nhận sát thương
-  // 08/11 (lỗi tester): kieu 'tc' — bỏ cú kéo-ghép mặc định 7→8 lúc 2.5 s (làm mất Prism Vàng ô 7 trong khi chữ nói 'vuốt đủ 4')
+  // Prism Thief (08/11 lần 2 — HỢP THỂ): 4 màu cạnh nhau → vuốt → 1 mặt nạ 4 màu ở ô cuối (13) → 3 Prism mới 6/7/8 → vuốt lại qua mặt nạ → hợp thể 2
+  //   kieu 'tc' (không có cú kéo-ghép mặc định); vuốt = gọi đúng luật SKILLS.bienmau.mach (cùng code trận)
   bienmau: { kieu: 'tc', q: Q.hang(4, 180, 40, 8), ke: [[6, 'bienmau', 's'], [8, 'bienmau', 's'], [13, 'bienmau', 's']],
-    truoc: (T, B) => { B.pmCd = 0; const m = [[6, 0], [7, 1], [8, 2], [13, 3]]; for (const [o, q] of m) { const X = B.t[o]; if (X) { X.pm = q; X.pms = 2; X.pmB = null; } } },
-    them: [[3.0, (B) => { SKILLS.bienmau.mach(B, [6, 7, 8, 13], true); }]],
-    c: [[0.2, 'Red kills, gold mana, blue freezes, green crits'], [1.6, '4 different colours side by side'], [3.0, 'Swipe all 4: Chromatic Circuit', { cham: 0.7 }], [4.4, 'The last colour picks the finish']], dai: 9 },
+    truoc: (T, B) => { const m = [[6, 0], [7, 1], [8, 2], [13, 3]]; for (const [o, q] of m) { const X = B.t[o]; if (X) { X.pm = q; X.pms = 2; X.pf = 0; X.pmk = null; } } },
+    them: [[2.8, (B) => { SKILLS.bienmau.mach(B, [6, 7, 8, 13], true); }],
+      [4.6, (B) => { for (const [o, q] of [[6, 0], [7, 1], [8, 2]]) if (!B.t[o]) { const N = taoU(B, 'bienmau', SD.sao, o); N.pm = q; N.pms = 1; N.goc = -Math.PI / 2; B.t[o] = N; VX.trieu(N); } }],
+      [6.0, (B) => { SKILLS.bienmau.mach(B, [6, 7, 8, 13], true); }]],
+    c: [[0.2, 'Red kills, gold mana, blue freezes, green crits'], [1.4, '4 different colours side by side'], [2.8, 'Swipe all 4: they fuse into one mask', { cham: 0.7 }], [4.6, 'The mask has all 4 colours'], [6.0, 'Fuse again: fusion 2, stronger', { cham: 0.7 }], [7.4, 'Every fusion: more damage, no limit']], dai: 9.6 },
 };
 // ---------- chỉ huy (Ma vương): chạm nút → kỹ năng thật (dungMV) ----------
 const SD_MV = {
@@ -382,7 +384,7 @@ const SD_MO = {
   xuonganh: (T) => 'Hero tile: +' + Math.round(SKILLS.xuonganh.TOC * SKILLS.xuonganh.he(T) * 100) + '% fire rate, 25s',
   mauhut: () => 'Eat a turret: 5 Blood per ★',
   nguyenrua: (T) => 'Hex chance ' + Math.round(SKILLS.nguyenrua.p(T) * 100) + '%, 8s team cooldown',
-  bienmau: (T) => SKILLS.bienmau.TEN[SKILLS.bienmau.mau(T)] + ' prism · stacks max ' + SKILLS.bienmau.tran(T),
+  bienmau: (T) => (SKILLS.bienmau.n(T) ? 'Spectrum prism · fusion ' + SKILLS.bienmau.n(T) : SKILLS.bienmau.TEN[SKILLS.bienmau.mau(T)] + ' prism') + ' · stacks max ' + SKILLS.bienmau.tran(T),
 };
 // kỹ năng chủ động mở từ 3★
 const SD_KHOA3 = ['chuato', 'leviathan', 'khoisinh', 'ronglua', 'ngaithoigian'];

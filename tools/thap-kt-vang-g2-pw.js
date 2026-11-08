@@ -50,8 +50,8 @@ module.exports = async function () {
     await p.mouse.move(pts[0][0], pts[0][1]); await p.mouse.down();
     for (let i = 1; i < 4; i++) for (let k = 1; k <= 6; k++) await p.mouse.move(pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * k / 6, pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * k / 6);
     await p.mouse.up();
-    r = await p.evaluate(() => { const B = G.ban[0]; return { cd: Math.round((B.pmCd || 0) - G.t), buff: B.t[10] && B.t[10].pmB && B.t[10].pmB.q, con: [10, 11, 12, 13].every(o => B.t[o] && B.t[o].id === 'bienmau') }; });
-    ok(r.cd >= 24 && r.buff === 3 && r.con, 'VUỐT 4 Prism 4 màu (pointer thật) → CHROMATIC CIRCUIT kết LỤC, không ghép (' + JSON.stringify(r) + ')');
+    r = await p.evaluate(() => { const B = G.ban[0]; return { n: B.t[13] && B.t[13].pf, trong: [10, 11, 12].every(o => !B.t[o]) }; });
+    ok(r.n === 1 && r.trong, 'VUỐT 4 Prism 4 màu (pointer thật) → HỢP THỂ 1 mặt nạ 4 màu ở ô cuối (' + JSON.stringify(r) + ')');
     await sleep(250); await chup(p, 'tran-prism-circuit');
     await buoc(p, 15); await sleep(150);
     r = await p.evaluate(() => { const B = G.ban[0]; return { o2: B.t[2] ? B.t[2].id : null, mau: B.t[8] && B.t[8].mau }; });

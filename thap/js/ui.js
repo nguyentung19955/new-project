@@ -504,12 +504,12 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
         if (!k.T.st.bang && B.t.some(N => N && N !== k.T && hopLeGhep(k.T, N))) this.chonGhep = { T: k.T, t0: performance.now() };
         return;
       }
-      // Prism Thief: vuốt qua 4 ô liền → CHROMATIC CIRCUIT (skills7.js) thay cho ghép; đi qua ≥ 3 ô Prism mà sai luật → báo lý do, không ghép
+      // Prism Thief: vuốt qua 4 ô liền → HỢP THỂ thành 1 mặt nạ 4 màu (skills7.js) thay cho ghép; đi qua ≥ 3 ô Prism mà sai luật → báo lý do, không ghép
       if (k.duong && typeof SKILLS.bienmau.kiemMach === 'function') {
         const p = k.duong, soP = new Set(p.filter(o => B.t[o] && B.t[o].id === 'bienmau')).size;
         if (p.length === 4 && SKILLS.bienmau.mach(B, p)) return;
         if (soP >= 3) { const v = p.length === 4 ? SKILLS.bienmau.kiemMach(B, p) : { loi: 'path' }, c = B.o[p[p.length - 1]];
-          const chu = { path: 'SWIPE EXACTLY 4 CELLS', prism: '4 PRISM THIEVES NEEDED', colour: 'NEED 4 DIFFERENT COLOURS', cd: 'CIRCUIT READY IN ' + Math.ceil((B.pmCd || 0) - G.t) + 'S' }[v.loi] || '';
+          const chu = { path: 'SWIPE EXACTLY 4 CELLS', prism: '4 PRISM THIEVES NEEDED', colour: 'NEED 4 DIFFERENT COLOURS' }[v.loi] || '';
           if (chu) FX.chu1(c.x, c.y - 22, chu, '#ff9a9a', 12); return; }
       }
       // kéo: chỉ ghép khi thả đúng lên ô HỢP LỆ; mọi chỗ khác = huỷ (không ghép)

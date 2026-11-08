@@ -192,7 +192,7 @@ const ONS = {
         case 'nc': if (d && B1.lv[d.id] != null && !(SKILLS[d.id] && SKILLS[d.id].khongNang)) { B1.lv[d.id] = d.lv; for (const T of B1.t) if (T && T.id === d.id) T.lvSang = 1; } break;
         case 'mv': { const mv = B1.mv; mv.cd = 0; B1.mana = Math.max(B1.mana, mv.gia); CH_HOP(B1, d && d.o != null ? d.o : undefined); if (d && d.m != null) B1.mana = d.m; break; }
         case 'cb': this.apCB(B1, d); break; // Lucky Slot: kết quả quay xèng của bạn (jackpot.js CB)
-        case 'pm': if (d && Array.isArray(d.o) && SKILLS.bienmau && SKILLS.bienmau.mach) SKILLS.bienmau.mach(B1, d.o, true); break; // Prism Thief: CHROMATIC CIRCUIT của bạn
+        case 'pm': if (d && Array.isArray(d.o) && SKILLS.bienmau && SKILLS.bienmau.mach) SKILLS.bienmau.mach(B1, d.o, true, d.r); break; // Prism Thief: HỢP THỂ (đường vuốt + cờ ô kết quả) của bạn
         case 'cd': { const T = d && B1.t[d.o]; const sk = T && SKILLS[T.id]; if (sk && sk.chuDong) { T.nap = 1; T.st.bang = 0; T.st.da = false; this._cd = 1; try { sk.chuDong(G, B1, T); } finally { this._cd = 0; } } break; }
         case 'w': if (!this.host && d) { this.hostWave = Math.max(this.hostWave, d.n); if (G.wave < d.n) { G.cho = 0; wavMoi(); } } break;
         case 'l': if (this.host && d) this.truTim(d.n, d.id); break;
@@ -224,7 +224,7 @@ const ONS = {
     if (T.lc) f += 'r' + T.lc + ';'; if (T.kho) f += 'k' + T.kho + ';'; // Ember Relay: lửa · Fusion Archive: điểm lưu (vangmoi1.js)
     if (T.id === 'loren') f += 'a' + (T.dang === 'toc' ? 1 : 0) + ';'; // Twin Anvil: dạng (0 ST · 1 tốc)
     if (T.anv) f += 'b' + (T.anv.k === 'toc' ? 1 : 0) + 'x' + Math.round(T.anv.v * 10000) + ';'; // buff Anvil trên ụ
-    if (T.id === 'bienmau') f += 'q' + ((T.pm | 0) & 3) + ';' + (T.pms ? 'u' + T.pms + ';' : ''); // Prism Thief: màu + cộng dồn
+    if (T.id === 'bienmau') f += 'q' + ((T.pm | 0) & 3) + ';' + (T.pms ? 'u' + T.pms + ';' : '') + (T.pf > 0 ? 'F' + T.pf + ';K' + (T.pmk || [0, 0, 0, 0]).map(x => x | 0).join('.') + ';' : ''); // Prism Thief: màu + cộng dồn · hợp thể: F số hợp thể, K cộng dồn 4 màu
     if (T.id === 'mauhut') { if (T.mau) f += 'B' + T.mau + ';'; if (T.mh) f += 'M' + T.mh.o + ';C' + Math.max(0, Math.round(T.mh.con * 10)) + ';'; if (T.rite && T.rite.het > G.t) f += 'R' + T.rite.o + ';T' + Math.round((T.rite.het - G.t) * 10) + ';'; } // Mạch Máu: máu / dấu / Rite
     if (T.id === 'tienhoa' && T.chay) f += 'X'; // trứng cháy
     if (T.id === 'ronglua' && T.nhiet > 0) f += 'H' + Math.round(T.nhiet * 100) + ';'; // Rồng Máy: nhiệt lò (×100, giữ 2 số lẻ)
@@ -247,7 +247,7 @@ const ONS = {
     if (T.id === 'canon' && /h\d+;/.test(c)) { T.hb = (so('h') & 15) || 1; T.cmC = so('n'); }
     if (T.id === 'loren') T.dang = so('a') ? 'toc' : 'dmg';
     { const m = c.match(/b(\d)x(\d+);/); T.anv = m ? { k: m[1] === '1' ? 'toc' : 'dmg', v: +m[2] / 10000 } : null; }
-    if (T.id === 'bienmau') { T.pm = so('q') & 3; T.pms = so('u'); }
+    if (T.id === 'bienmau') { T.pm = so('q') & 3; T.pms = so('u'); T.pf = so('F'); const m = c.match(/K([\d.]+);/); T.pmk = T.pf > 0 ? (m ? m[1].split('.').map(x => x | 0).concat([0, 0, 0, 0]).slice(0, 4) : [0, 0, 0, 0]) : undefined; }
     if (T.id === 'mauhut') {
       T.mau = so('B');
       if (/M\d+;/.test(c)) { const o = so('M'), X = B.t[o]; T.mh = X ? { o, uid: X.uid, id: X.id, sao: X.sao, con: so('C') / 10, tong: SKILLS.mauhut.tg(X.sao) } : null; } else T.mh = null;

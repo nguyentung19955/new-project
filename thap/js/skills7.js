@@ -244,114 +244,211 @@ SKILLS.thanhdia = {
 };
 
 // =====================================================================================================
-// LUPIN · PRISM THIEF (bienmau) — Vàng TC. LÀM LẠI 08/11 (người dùng duyệt TOM-TAT mục 7, CHATGPT-SPEC A1 §6):
-//      Mỗi Prism sinh ra 1 MÀU (hạt giống) giữ suốt đời — đầu = mặt nạ màu (bienmau_m_*):
-//        ĐỎ  4% giết ngay quái thường (không tinh anh/trùm) → +1 đầu lâu: +2% ST vào quái thường mỗi cộng dồn
-//        VÀNG 6% +2 mana (cả bàn tối đa 6 mana/giây) → +1 cộng dồn: +1% ST
+// LUPIN · PRISM THIEF (bienmau) — Vàng TC. LÀM LẠI 08/11 lần 2: TƯỚNG HỢP THỂ (người dùng 08/11: "nó đang là tướng có thể tăng sức mạnh sau khi
+//   hợp thể, càng hợp thể nhiều càng mạnh"; "vuốt nó không biến thành mặt nạ 4 màu à?") — thiết kế: docs/demo-hop-tuong/tuvan/prism/THIET-KE.md
+//   · Mỗi Prism ĐƠN xuất hiện với 1 MÀU ngẫu nhiên (RNG tất định) giữ suốt đời — đầu = mặt nạ màu (bienmau_m_*):
+//        ĐỎ  4% giết ngay quái thường (không tinh anh/trùm) → +1 cộng dồn: +2% ST vào quái thường
+//        VÀNG 6% +2 mana (cả bàn ≤ 6 mana/giây) → +1 cộng dồn: +1% ST
 //        LAM 8% đóng băng quái thường 1.0 s (+0.06 s / cộng dồn; tinh anh/trùm miễn) → +1 cộng dồn
-//        LỤC 10% đòn đó +40% ST chí mạng → +1 cộng dồn: +5% ST chí mạng vĩnh viễn
-//      Mỗi Prism hồi 1 s / quái cho lần kích hoạt. Trần cộng dồn 10 / 12 / 14 / 16 / 18 (LV9 / 11 / 13 / 15 / 17). Ngẫu nhiên: rngHat(hạt trận + bàn + ô + số đòn).
-//      CHROMATIC CIRCUIT: 4 Prism 4 MÀU KHÁC NHAU ở 4 ô nối liền (trên/dưới/trái/phải) — VUỐT 1 đường qua đủ 4 ô (không chéo, không lặp, không ô thứ 5).
-//        Hồi 25 s / bàn. Mỗi Prism tiêu ≤ 3 cộng dồn của mình (+5% độ mạnh mỗi cộng dồn, tối đa ×1.6). MÀU CUỐI vuốt = đòn kết:
-//        ĐỎ 4 Prism +70% ST vào quái thường / +25% tinh anh & trùm 6 s · VÀNG +8 + 2 × cộng dồn vàng đã tiêu mana (≤ 18) · LAM đóng băng 6 quái thường 1.5 s,
-//        choáng 2 tinh anh 0.3 s · LỤC 4 Prism +70% ST chí mạng +10% chí mạng 6 s. Không phải ghép. Online: gói 'pm' (dongbo.js), màu/cộng dồn theo cờ ô.
+//        LỤC 10% đòn đó +40% ST chí mạng → +1 cộng dồn: +5% ST chí mạng
+//      Trần cộng dồn Prism đơn 10 / 12 / 14 / 16 / 18 (LV9 / 11 / 13 / 15 / 17). Mỗi Prism hồi 1 s / quái / màu cho lần kích hoạt.
+//   · HỢP THỂ (SPECTRUM PRISM): VUỐT 1 đường qua 4 ô liền (trên/dưới/trái/phải, không chéo, không lặp) toàn Prism, các Prism ĐƠN trên đường phải
+//      khác màu nhau; MẶT NẠ HỢP THỂ trên đường là ô ĐẠI DIỆN (thay màu nào cũng được). → 4 ụ thành 1 MẶT NẠ 4 MÀU ở ô CUỐI, 3 ô kia trống.
+//      Là GHÉP THẬT (Archive, MERGE SURGE, nhiệm vụ… đếm 1 lần — đi qua ghep() bằng ghepDB laGhep). Không hồi chiêu (đã tiêu 3 ụ).
+//      Số HỢP THỂ n = tổng n của nguyên liệu + 1 (không trần). Cộng dồn từng màu CỘNG HẾT vào mặt nạ. Sao = sao CAO NHẤT của 4 ụ.
+//      Mặt nạ n: đủ 4 hiệu ứng mỗi phát; tỉ lệ mỗi màu × (1 + 0.25n); trần cộng dồn mỗi màu = trần đơn × (1 + n);
+//      +300% ST và +10% tốc mỗi n (= 3 ụ đã tiêu) (cùng nhóm cộng gộp); vàng +2 + ⌊n/2⌋ mana, trần mana/giây cả bàn 6 + 2 × n lớn nhất.
+//   · Kéo MẶT NẠ lên MẶT NẠ = hợp thể 2 mặt nạ (n = a + b + 1, cộng dồn cộng hết, sao cao nhất) — ghép thật.
+//      Mặt nạ KHÔNG ghép thường (với Prism đơn, Mimic…: không mất n vì lỡ tay). Merge King +★ tại chỗ: giữ n + cộng dồn (không phải ghép).
+//      Copycat chép mặt nạ: bản sao là lần XUẤT HIỆN mới → 1 Prism ĐƠN màu ngẫu nhiên mới, 0 cộng dồn (luật "chép / sinh → quay lại").
+//   · Online: gói 'pm' { o: đường vuốt, r: cờ ô kết quả } — bàn con rối chạy đúng hợp thể rồi chốt ô cuối theo máy bạn. Cờ ô: q màu · u cộng dồn đơn ·
+//      F n · K cộng dồn 4 màu (dongbo.js oTT). Mặt nạ luôn nằm NGANG, không xoay theo mục tiêu (kể cả bản cầm kéo).
 // =====================================================================================================
 const PRISM_MAU = ['#ff4a2a', '#ffd23f', '#4fb8ff', '#5cff7a'];
 SKILLS.bienmau = {
   vai: 'tc', dmg: 15, toc: 1, nham: 'dau',
   TEN: ['RED', 'GOLD', 'BLUE', 'GREEN'], ANH: ['bienmau_m_do', 'bienmau_m_vang', 'bienmau_m_lam', 'bienmau_m_luc'],
-  TI: [0.04, 0.06, 0.08, 0.10], HOI: 25, MANA_S: 6,
+  HOP: ['bienmau_hop_1', 'bienmau_hop_2', 'bienmau_hop_3', 'bienmau_hop_4'], // mặt nạ 4 màu: bậc sáng theo n (1–2 · 3–4 · 5–9 · 10+)
+  TI: [0.04, 0.06, 0.08, 0.10], MANA_S: 6,
+  HOP_DMG: 3, HOP_TOC: 0.10, HOP_TI: 0.25,
   mau: (T) => (T.pm | 0) & 3,
-  tran(T) { const k = (G.ban[T.ban] && G.ban[T.ban].capThe && G.ban[T.ban].capThe.bienmau) | 0; return 10 + 2 * Math.min(4, k >> 1); },
+  n: (T) => (T && T.id === 'bienmau' ? T.pf | 0 : 0),
+  bac: (n) => (n >= 10 ? 3 : n >= 5 ? 2 : n >= 3 ? 1 : 0),
+  tranDon(T) { const k = (G.ban[T.ban] && G.ban[T.ban].capThe && G.ban[T.ban].capThe.bienmau) | 0; return 10 + 2 * Math.min(4, k >> 1); },
+  tran(T) { return this.tranDon(T) * (1 + this.n(T)); },
+  // cộng dồn màu q (đã kẹp trần) · màu đang có
+  st(T, q) { const n = this.n(T), t = this.tran(T); if (n) return Math.min(t, (T.pmk && T.pmk[q]) | 0); return q === this.mau(T) ? Math.min(t, T.pms || 0) : 0; },
+  ds: (T) => ((T.pf | 0) > 0 ? [0, 1, 2, 3] : [(T.pm | 0) & 3]),
+  ti(T, q) { return Math.min(1, this.TI[q] * (1 + this.HOP_TI * this.n(T))); },
   thuong: (q) => (q === 0 ? 'kill a normal enemy at once' : q === 1 ? '+2 mana' : q === 2 ? 'freeze a normal enemy' : '+40% crit damage on that hit'),
+  so(T, q) { const st = this.st(T, q); return q === 0 ? '+' + st * 2 + '% damage vs normal enemies' : q === 1 ? '+' + st + '% damage' : q === 2 ? 'freeze ' + (1 + 0.06 * st).toFixed(2) + 's' : '+' + st * 5 + '% crit damage'; },
   mo(T) {
-    const q = this.mau(T), st = Math.min(this.tran(T), T.pms || 0), B = G.ban[T.ban], hoi = B ? Math.max(0, Math.ceil((B.pmCd || 0) - G.t)) : 0;
-    const so = q === 0 ? '+' + st * 2 + '% damage vs normal enemies' : q === 1 ? '+' + st + '% damage' : q === 2 ? 'freeze ' + (1 + 0.06 * st).toFixed(2) + 's' : '+' + st * 5 + '% crit damage';
-    return this.TEN[q] + ' PRISM: ' + Math.round(this.TI[q] * 100) + '% per hit to ' + this.thuong(q) + ' · stacks ' + st + '/' + this.tran(T) + ' → ' + so +
-      ' · CHROMATIC CIRCUIT' + (hoi ? ' (ready in ' + hoi + 's)' : '') + ': 4 Prisms of 4 different colours side by side — swipe one line through all 4 · the LAST colour you swipe decides the finish: red +70% damage, gold +mana, blue freeze, green +70% crit damage · 25s cooldown';
+    const n = this.n(T);
+    if (n) {
+      return 'SPECTRUM PRISM · fusion ' + n + ': all 4 colours on every hit · +' + Math.round(this.HOP_DMG * 100 * n) + '% damage, +' + Math.round(this.HOP_TOC * 100 * n) + '% fire rate · chances ' +
+        [0, 1, 2, 3].map(q => Math.round(this.ti(T, q) * 100) + '%').join(' / ') + ' (red / gold / blue / green) · stacks max ' + this.tran(T) + ' each: ' +
+        [0, 1, 2, 3].map(q => this.TEN[q].toLowerCase() + ' ' + this.st(T, q)).join(', ') +
+        ' · FUSE AGAIN: swipe it with 3 Prisms of different colours, or drag it onto another Spectrum Prism · every fusion makes it stronger, no limit';
+    }
+    const q = this.mau(T), st = this.st(T, q);
+    return this.TEN[q] + ' PRISM: ' + Math.round(this.TI[q] * 100) + '% per hit to ' + this.thuong(q) + ' · stacks ' + st + '/' + this.tran(T) + ' → ' + this.so(T, q) +
+      ' · FUSION: put 4 Prisms of 4 different colours side by side and swipe one line through all 4 — they fuse into ONE 4-colour SPECTRUM PRISM on the last tile (all 4 effects, stacks add up). Fuse it again to make it stronger';
   },
   sinh(G, T) {
     if (T.pm == null) { const B = G.ban[T.ban]; const hat = (typeof ONS !== 'undefined' && ONS.on ? ONS.seed : G.hat) || 1; if (B) B._pmN = (B._pmN | 0) + 1; T.pm = Math.floor(rngHat((hat * 5303 + ((B && B.i) | 0) * 389 + (T.o | 0) * 157 + ((B && B._pmN) | 0) * 7919) | 0)() * 4); }
     if (T.pms == null) T.pms = 0;
   },
-  dauAnh(T) { return this.ANH[this.mau(T)]; },
-  dauAnhK: () => 0.86,
-  // mặt nạ LUÔN nằm ngang/thẳng đứng đúng chiều (08/11 người dùng: cầm kéo thấy mặt nạ dựng dọc) — không xoay theo mục tiêu, cả lúc cầm kéo:
-  //   mặt nạ màu (bienmau_m_*) vẽ thẳng ở góc 0; đầu dự phòng bienmau_nong (vẽ theo chiều nòng → phải) xoay −90° cho thẳng
+  dauAnh(T) {
+    if (this.n(T)) { const h = this.HOP[this.bac(this.n(T))]; if (typeof REN !== 'undefined' && REN.img && REN.img(h)) return h; }
+    return this.ANH[this.mau(T)];
+  },
+  dauAnhK: (T) => (SKILLS.bienmau.n(T) ? 0.92 : 0.86),
+  // mặt nạ LUÔN nằm ngang, đúng chiều (08/11 người dùng: cầm kéo thấy mặt nạ dựng dọc) — không xoay theo mục tiêu, cả lúc cầm kéo:
+  //   mặt nạ (bienmau_m_* / bienmau_hop_*) vẽ thẳng ở góc 0; đầu dự phòng bienmau_nong (vẽ theo chiều nòng → phải) xoay −90° cho thẳng
   gocDau() { return REN._dauEp && REN._dauEp[0] === 'bienmau' ? 0 : -Math.PI / 2; },
-  dauGhost: (T) => T && T.pm != null, // bản đang cầm (ghost) cũng vẽ đúng mặt nạ màu của ụ
+  dauGhost: (T) => T && T.pm != null, // bản đang cầm (ghost) cũng vẽ đúng mặt nạ của ụ
+  // mặt nạ hợp thể: 4 đốm màu quay quanh (dưới đầu) — bậc sáng theo n; hình ảnh, không đổi luật
+  veThem(ctx, T, S, al, R) {
+    const n = this.n(T); if (!n || !R.cham1) return;
+    const b = this.bac(n), t = (R.t || 0) * (0.8 + 0.25 * b);
+    ctx.globalCompositeOperation = 'lighter';
+    for (let q = 0; q < 4; q++) { const a = t + q * Math.PI / 2; ctx.globalAlpha = al * (0.16 + 0.06 * b); R.anhGiua(ctx, R.cham1(PRISM_MAU[q]), Math.cos(a) * S * 0.3, Math.sin(a) * S * 0.3, S * (0.42 + 0.06 * b)); }
+  },
   capNhat(G, B, T) {
-    const q = this.mau(T), st = Math.min(this.tran(T), T.pms || 0);
-    if (q === 1) T.buf.dmg += 0.01 * st;
-    if (q === 3) T.buf.cdmg = (T.buf.cdmg || 0) + 0.05 * st;
-    const k = T.pmB; if (k && k.het > G.t && k.q === 3) { T.buf.cdmg = (T.buf.cdmg || 0) + k.cdmg; T.buf.crit += k.crit; }
+    const n = this.n(T);
+    for (const q of this.ds(T)) { const st = this.st(T, q); if (q === 1) T.buf.dmg += 0.01 * st; if (q === 3) T.buf.cdmg = (T.buf.cdmg || 0) + 0.05 * st; }
+    if (n) { T.buf.dmg += this.HOP_DMG * n; T.buf.toc += this.HOP_TOC * n; }
     return false;
   },
   rng(B, T) { T.pmN = (T.pmN | 0) + 1; const hat = (typeof ONS !== 'undefined' && ONS.on ? ONS.seed : G.hat) || 1; return rngHat((hat * 2833 + B.i * 401 + T.o * 1009 + T.pmN * 7919) | 0)(); },
   laThuong: (M) => !M.trum && !(M.d && M.d.to),
+  cong(T, q) { const t = this.tran(T); if (this.n(T)) { const k = T.pmk || (T.pmk = [0, 0, 0, 0]); k[q] = Math.min(t, (k[q] | 0) + 1); } else T.pms = Math.min(t, (T.pms || 0) + 1); T.sang = 1; },
+  manaTran(B) { let m = 0; for (const X of B.t) if (X && X.id === 'bienmau') m = Math.max(m, X.pf | 0); return this.MANA_S + 2 * m; },
   ban(G, B, T, E) {
     giat(T, 0.6); const [x, y] = dauNong(T); SND.tia();
-    const q = this.mau(T), S = this;
+    const S = this, ds = this.ds(T), n = this.n(T);
     danThang(B, T, E, SK7.anh('bienmau', 'dan', 'dan_tia'), 640, 16, (G, d, M) => {
       if (!M || M.chet) return;
-      const st = Math.min(S.tran(T), T.pms || 0), thuong = S.laThuong(M), k = T.pmB && T.pmB.het > G.t ? T.pmB : null;
-      let them = (q === 0 && thuong ? 0.02 * st : 0) + (k && k.q === 0 ? (thuong ? k.n : k.e) : 0);
-      // kích hoạt: 1 lần quay / đòn, hồi 1 s mỗi quái cho Prism này
-      const cd = M.pmCd || (M.pmCd = {}), kh = !(cd[T.uid] > G.t) && S.rng(B, T) < S.TI[q] && (q === 1 || q === 3 || thuong);
-      if (kh) cd[T.uid] = G.t + 1;
-      const cong = () => { T.pms = Math.min(S.tran(T), (T.pms || 0) + 1); T.sang = 1; };
-      if (kh && q === 3) { T.buf.cdmg = (T.buf.cdmg || 0) + 0.4; trung(M, dmgU(T, them), { B, mau: PRISM_MAU[3] }); T.buf.cdmg -= 0.4; cong(); return; }
-      trung(M, dmgU(T, them), { B, mau: PRISM_MAU[q] });
-      if (!kh) return;
-      if (q === 0 && !M.chet) { trung(M, M.hp + 1, { B, T, phu: true, crit: false, mau: '#ff4a2a' }); FX.chu1(M.x, M.y - 20, 'STOLEN', '#ff7a5a', 11); cong(); }
-      else if (q === 1) {
+      const thuong = S.laThuong(M), them = ds.includes(0) && thuong ? 0.02 * S.st(T, 0) : 0;
+      // mỗi màu 1 lần quay / đòn (thứ tự cố định đỏ → vàng → lam → lục), hồi 1 s mỗi quái mỗi màu cho Prism này
+      const cd = M.pmCd || (M.pmCd = {}), kh = [false, false, false, false];
+      for (const q of ds) { const k = T.uid * 4 + q; if (!(cd[k] > G.t) && S.rng(B, T) < S.ti(T, q) && (q === 1 || q === 3 || thuong)) { kh[q] = true; cd[k] = G.t + 1; } }
+      const crit = kh[3] ? 0.4 : 0;
+      T.buf.cdmg = (T.buf.cdmg || 0) + crit; trung(M, dmgU(T, them), { B, mau: PRISM_MAU[kh[3] ? 3 : ds[ds.length - 1]] }); T.buf.cdmg -= crit;
+      if (kh[3]) S.cong(T, 3);
+      if (kh[0] && !M.chet) { trung(M, M.hp + 1, { B, T, phu: true, crit: false, mau: '#ff4a2a' }); FX.chu1(M.x, M.y - 20, 'STOLEN', '#ff7a5a', 11); S.cong(T, 0); }
+      else if (kh[0]) S.cong(T, 0);
+      if (kh[1]) {
+        const v = 2 + (n >> 1), tr = S.manaTran(B);
         if (B.pmMt == null || G.t - B.pmMt >= 1) { B.pmMt = G.t; B.pmMv = 0; }
-        if ((B.pmMv || 0) + 2 <= S.MANA_S) { B.pmMv = (B.pmMv || 0) + 2; B.mana += 2; FX.chu1(M.x, M.y - 20, '+2', '#ffd23f', 11); }
-        cong();
-      } else if (q === 2 && !M.chet) { const t = 1 + 0.06 * Math.min(S.tran(T), T.pms || 0); M.chan = Math.max(M.chan || 0, t); FX.no('bang_vo', M.x, M.y, 50, 0.35); cong(); }
+        if ((B.pmMv || 0) + v <= tr) { B.pmMv = (B.pmMv || 0) + v; B.mana += v; FX.chu1(M.x, M.y - 20, '+' + v, '#ffd23f', 11); }
+        S.cong(T, 1);
+      }
+      if (kh[2]) { if (!M.chet) { const t = 1 + 0.06 * S.st(T, 2); M.chan = Math.max(M.chan || 0, t); FX.no('bang_vo', M.x, M.y, 50, 0.35); } S.cong(T, 2); }
     });
-    FX.no('chop_nong', x, y, 18, 0.08, T.goc);
+    FX.no('chop_nong', x, y, 18, 0.08, -Math.PI / 2);
   },
-  // kiểm 1 đường vuốt (4 ô) — trả { ds, loi } (thuần, không đổi gì)
+  // kiểm 1 đường vuốt (4 ô) — trả { ds } hoặc { loi } (thuần, không đổi gì)
   kiemMach(B, oS) {
     if (!B || !Array.isArray(oS) || oS.length !== 4) return { loi: 'path' };
-    if (new Set(oS).size !== 4) return { loi: 'path' };
+    if (new Set(oS).size !== 4 || oS.some(o => !(o >= 0 && o < 15 && (o | 0) === o))) return { loi: 'path' };
     for (let i = 1; i < 4; i++) { const a = oS[i - 1], b = oS[i]; if (!(Math.abs(a - b) === 5 || (Math.abs(a - b) === 1 && ((a / 5) | 0) === ((b / 5) | 0)))) return { loi: 'path' }; }
     const ds = oS.map(o => B.t[o]);
     if (ds.some(X => !X || X.id !== 'bienmau' || biKhoa(X))) return { loi: 'prism' };
-    if (new Set(ds.map(X => this.mau(X))).size !== 4) return { loi: 'colour' };
-    if ((B.pmCd || 0) > G.t) return { loi: 'cd' };
+    const don = ds.filter(X => !this.n(X)).map(X => this.mau(X));
+    if (new Set(don).size !== don.length) return { loi: 'colour' }; // Prism đơn trùng màu (mặt nạ hợp thể = ô đại diện)
     return { ds };
   },
-  mach(B, oS, ep) {
-    const v = this.kiemMach(B, oS); if (!v.ds) return false;
-    const ds = v.ds, cuoi = this.mau(ds[3]);
-    let tong = 0, vang = 0;
-    for (const X of ds) { const c = Math.min(3, X.pms || 0); X.pms = (X.pms || 0) - c; tong += c; if (this.mau(X) === 1) vang += c; }
-    const k = 1 + 0.05 * Math.min(12, tong);
-    B.pmCd = G.t + this.HOI;
-    if (cuoi === 0) for (const X of ds) X.pmB = { q: 0, het: G.t + 6, n: 0.7 * k, e: 0.25 * k };
-    else if (cuoi === 3) for (const X of ds) X.pmB = { q: 3, het: G.t + 6, cdmg: 0.7 * k, crit: 0.10 * k };
-    else if (cuoi === 1) B.mana += Math.min(18, 8 + 2 * vang);
-    else {
-      const qs = dsMucTieu(B).filter(E => !E.chet).sort((p, q) => (G.duong[p.p].len - p.s) - (G.duong[q.p].len - q.s));
-      for (const E of qs.filter(E => this.laThuong(E)).slice(0, 6)) { E.chan = Math.max(E.chan || 0, 1.5 * k); FX.no('bang_vo', E.x, E.y, 60, 0.4); }
-      for (const E of qs.filter(E => E.d && E.d.to && !E.trum).slice(0, 2)) E.chan = Math.max(E.chan || 0, 0.3);
+  // gộp danh sách ụ thành 1 mặt nạ ở ô của ụ cuối (luật thuần; gọi trong ghepDB.lam)
+  gop(B, ds) {
+    const L = ds[ds.length - 1], k = [0, 0, 0, 0];
+    let n = 1, sao = 1;
+    for (const X of ds) {
+      n += X.pf | 0; sao = Math.max(sao, X.sao);
+      if (this.n(X)) for (let q = 0; q < 4; q++) k[q] += (X.pmk && X.pmk[q]) | 0; else k[this.mau(X)] += X.pms || 0;
     }
-    for (let i = 0; i < 4; i++) { const X = ds[i], c = B.o[X.o]; X.sang = 1; if (i) { const p = B.o[ds[i - 1].o]; tiaPhep(p.x, p.y, c.x, c.y, PRISM_MAU[this.mau(X)]); } }
-    const c = B.o[ds[3].o]; fx7('bienmau', c.x, c.y, 110, 0.45);
-    FX.chu1(c.x, c.y - 30, 'CHROMATIC ' + this.TEN[cuoi], PRISM_MAU[cuoi], 14, 'to');
-    if (!B.ai || G.che === 'pvp') SND.combo(12);
-    if (!ep && typeof ONS !== 'undefined' && ONS.on && B === G.ban[0] && ONS.gui) ONS.gui('pm', { o: oS });
+    const N = taoU(B, 'bienmau', sao, L.o);
+    N.pm = this.mau(L); N.pms = 0; N.pf = n; N.pmk = k; N.goc = -Math.PI / 2;
+    N.banSao = ds.every(X => X.banSao); N.epxung = Math.max(...ds.map(X => X.epxung || 0)); N.aurora = Math.max(...ds.map(X => X.aurora || 0));
+    const t = this.tran(N); for (let q = 0; q < 4; q++) k[q] = Math.min(t, k[q]);
+    for (const X of ds) if (B.t[X.o] === X) B.t[X.o] = null;
+    B.t[L.o] = N; N.sang = 1;
+    return N;
+  },
+  // VUỐT hợp thể (ui.js / AI / gói 'pm'). ep = áp từ mạng (không gửi lại); r = cờ ô kết quả của máy bạn (chốt cho khớp)
+  mach(B, oS, ep, r) {
+    const v = this.kiemMach(B, oS);
+    if (!v.ds) {
+      if (ep && r && typeof ONS !== 'undefined' && Array.isArray(oS) && oS.length === 4) { for (const o of oS.slice(0, 3)) if (B.t[o] && B.t[o].id === 'bienmau') B.t[o] = null; ONS.datO(B, oS[3], r); return true; } // lệch: chốt theo máy bạn
+      return false;
+    }
+    const ds = v.ds, gui = !ep && typeof ONS !== 'undefined' && ONS.on && B === G.ban[0];
+    const nguon = ds.map(X => ({ o: X.o, ten: this.dauAnh(X), q: this.mau(X), n: this.n(X) }));
+    G._pmHop = { a: ds[2], b: ds[3], ds };
+    if (gui) ONS._apDung = (ONS._apDung | 0) + 1; // ghép này đi bằng gói 'pm' (đủ đường vuốt), không gửi thêm 'gh'
+    let N = null;
+    try { N = ghep(B, ds[2], ds[3]); } finally { G._pmHop = null; if (gui) ONS._apDung--; }
+    if (!N) return false;
+    if (ep && r && typeof ONS !== 'undefined') ONS.datO(B, oS[3], r);
+    this.vfx(B, nguon, B.t[oS[3]] || N);
+    if (gui && ONS.gui) ONS.gui('pm', { o: oS.slice(), r: ONS.oTT(B.t[oS[3]]) });
     return true;
   },
-  // AI: có đường 4 màu hợp lệ thì vuốt (thử mọi đường 4 ô liền)
+  // hiệu ứng hợp thể: 3 mặt nạ bay về ô cuối + dải nổ lăng kính (thời gian thực, không đổi luật)
+  vfx(B, nguon, N) {
+    if (!N || !B.o) return;
+    const c = B.o[N.o], C = Math.min(B.cw || 60, B.ch || 60);
+    G.hu.push({ k: 'pmHop', t: 0, song: 1.1, ban: B.i, x: c.x, y: c.y, C, ds: nguon.map(s => ({ ...s, x: B.o[s.o].x, y: B.o[s.o].y })), n: N.pf | 0 });
+    if (!B.ai || G.che === 'pvp') SND.combo(12);
+  },
+  // AI: có đường hợp thể hợp lệ thì vuốt (thử mọi đường 4 ô liền; ưu tiên đường kết thúc ở mặt nạ có sẵn / sao cao)
   timMach(B) {
     const ke = (o) => { const r = []; const c = o % 5; if (c > 0) r.push(o - 1); if (c < 4) r.push(o + 1); if (o >= 5) r.push(o - 5); if (o < 10) r.push(o + 5); return r; };
-    for (let a = 0; a < 15; a++) for (const b of ke(a)) for (const c of ke(b)) for (const d of ke(c)) { const p = [a, b, c, d]; if (this.kiemMach(B, p).ds) return p; }
-    return null;
+    let tot = null, diem = -1;
+    for (let a = 0; a < 15; a++) { const A = B.t[a]; if (!A || A.id !== 'bienmau') continue;
+      for (const b of ke(a)) for (const c of ke(b)) for (const d of ke(c)) {
+        const p = [a, b, c, d]; if (!this.kiemMach(B, p).ds) continue;
+        const D = B.t[d], s = (this.n(D) ? 100 : 0) + D.sao * 10 + p.reduce((x, o) => x + this.n(B.t[o]), 0);
+        if (s > diem) { diem = s; tot = p; }
+      } }
+    return tot;
+  },
+  // ghép đặc biệt CÙNG LOẠI: (1) đang hợp thể bằng vuốt (G._pmHop) · (2) kéo mặt nạ lên mặt nạ. Cả hai là GHÉP THẬT.
+  ghepDB: {
+    cungLoai: true,
+    hopLe(a, b) { const H = G._pmHop; if (H) return H.a === a && H.b === b; return SKILLS.bienmau.n(a) > 0 && b.id === 'bienmau' && SKILLS.bienmau.n(b) > 0 && !biKhoa(b); },
+    laGhep: () => true,
+    lam(G, B, a, b) {
+      const S = SKILLS.bienmau, H = G._pmHop;
+      if (H) return S.gop(B, H.ds);
+      const nguon = [a, b].map(X => ({ o: X.o, ten: S.dauAnh(X), q: S.mau(X), n: S.n(X) })), N = S.gop(B, [a, b]);
+      S.vfx(B, nguon, N);
+      return N;
+    },
   },
   ghep() { },
+};
+// hiệu ứng hợp thể: mặt nạ nguồn bay vòng về ô cuối (0–0.45 s) → nổ lăng kính (dải fx_bienmau_hop nếu có, không thì fx_bienmau_sk khung 12–15) + chữ FUSION n
+HU.pmHop = {
+  ve(ctx, o, R) {
+    const u = o.t / o.song, C = o.C, bay = Math.min(1, u / 0.5), e = bay * bay * (3 - 2 * bay);
+    if (u < 0.5) for (const s of o.ds) {
+      if (s.x === o.x && s.y === o.y) continue;
+      const x = s.x + (o.x - s.x) * e, y = s.y + (o.y - s.y) * e - Math.sin(e * Math.PI) * C * 0.35, im = R.img(s.ten);
+      ctx.globalAlpha = 1 - Math.max(0, (u - 0.4) / 0.1);
+      if (R.cham1) { ctx.globalCompositeOperation = 'lighter'; R.anhGiua(ctx, R.cham1(PRISM_MAU[s.n ? (Math.floor(u * 12) & 3) : s.q]), x, y, C * 0.8); ctx.globalCompositeOperation = 'source-over'; }
+      if (im) { const w = C * 0.72 * (1 - 0.35 * e), h = w * im.height / im.width; ctx.drawImage(im, x - w / 2, y - h / 2, w, h); } // mặt nạ bay giữ NGANG (không xoay)
+    }
+    ctx.globalAlpha = 1;
+    if (u >= 0.4) {
+      const v = (u - 0.4) / 0.6, hop = R.img('fx_bienmau_hop');
+      ctx.globalCompositeOperation = 'lighter';
+      if (hop) { const fw = hop.height, nf = Math.max(1, Math.round(hop.width / fw)), i = Math.min(nf - 1, Math.floor(v * nf)), w = C * 2; ctx.globalAlpha = 1 - Math.max(0, v - 0.8) / 0.2; ctx.drawImage(hop, i * fw, 0, fw, fw, o.x - w / 2, o.y - w / 2, w, w); }
+      else fx7Ve(ctx, R, 'bienmau', 12 + v * 4, o.x, o.y, C * 1.9, 1 - Math.max(0, v - 0.8) / 0.2);
+      ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
+    }
+    if (u >= 0.45 && o.n && typeof FX !== 'undefined' && !o._chu) { o._chu = 1; FX.chu1(o.x, o.y - C * 0.5, 'FUSION ' + o.n, '#ffffff', 14, 'to'); }
+  },
 };
 
 // =====================================================================================================
@@ -361,8 +458,11 @@ const _capNhatU7 = capNhatU;
 capNhatU = function (B, T, dt) { if (T.hexT > 0) { T.hexT -= dt; T.st.ngam = Math.max(T.st.ngam || 0, 0.05); return; } return _capNhatU7(B, T, dt); };
 const _aiBan7 = aiBan;
 aiBan = function (B, dt) {
-  // Prism Thief: có đường 4 màu → vuốt CHROMATIC CIRCUIT
-  if (B.aiT - dt <= 0 && B.t.some(X => X && X.id === 'bienmau') && !((B.pmCd || 0) > G.t)) { const p = SKILLS.bienmau.timMach(B); if (p) { B.aiT = 0.6; SKILLS.bienmau.mach(B, p); return; } }
+  // Prism Thief: có đường hợp thể → vuốt (SPECTRUM PRISM) · có 2 mặt nạ hợp thể → kéo mặt nạ lên mặt nạ
+  if (B.aiT - dt <= 0 && B.t.some(X => X && X.id === 'bienmau')) {
+    const p = SKILLS.bienmau.timMach(B); if (p) { B.aiT = 0.6; SKILLS.bienmau.mach(B, p); return; }
+    const M = B.t.filter(X => X && SKILLS.bienmau.n(X) > 0 && !biKhoa(X)); if (M.length >= 2) { B.aiT = 0.6; ghep(B, M[0], M[1]); return; }
+  }
   // bàn đầy, không còn cặp ghép thường → Mạch Máu (chưa đánh dấu) đánh dấu ụ sao thấp nhất được phép (nuốt dọn chỗ)
   if (B.aiT - dt <= 0 && oTrong(B).length === 0) {
     const ts = B.t.filter(Boolean), M = ts.filter(X => X.id === 'mauhut' && !biKhoa(X) && !X.mh);
@@ -379,7 +479,7 @@ batDau = function () {
   const r = _batDau7.apply(this, arguments);
   try {
     for (const B of G.ban) for (const id of B.deck) if (SK7.FX.has(id)) REN.img('fx_' + id + '_sk');
-    for (const B of G.ban) { if (B.deck.includes('mauhut')) { G.hu.push({ k: 'mhVe', t: 0, B }); REN.img('mauhut_phu'); } if (B.deck.includes('bienmau')) for (const a of SKILLS.bienmau.ANH) REN.img(a); }
+    for (const B of G.ban) { if (B.deck.includes('mauhut')) { G.hu.push({ k: 'mhVe', t: 0, B }); REN.img('mauhut_phu'); } if (B.deck.includes('bienmau')) for (const a of [...SKILLS.bienmau.ANH, ...SKILLS.bienmau.HOP, 'fx_bienmau_hop']) REN.img(a); }
   } catch (e) { }
   return r;
 };
@@ -390,7 +490,7 @@ if (typeof DC !== 'undefined' && DC.ngauNhien) { /* dkcham.js nạp sau — xem 
 themHo('star', 3, 'mauhut', 'marks a turret, eats it for Blood, Blood Rite buffs a neighbour');
 themHo('guard', 3, 'nguyenrua', 'merge hexes a rival turret −1★ (co-op: ally +1★)');
 themHo('guard', 3, 'thanhdia', 'cleanses + shields neighbours on arrival, damage aura');
-themHo('crit', 3, 'bienmau', '4 colours; swipe 4 different colours for CHROMATIC CIRCUIT');
+themHo('crit', 3, 'bienmau', '4 colours; swipe 4 different colours to FUSE a Spectrum Prism');
 
 Object.assign(MOC_RIENG, {
   nguyenrua: { 5: ['SHARP HEX', 'Hex chance +20% (vs 1★)'], 7: ['DOOM HEX', 'Hex chance +30% (cap 80%)'] },
@@ -400,7 +500,25 @@ Object.assign(SUP, { thanhdia: { icon: 'sup_khien', mau: '#fff2b0', link: 'sup_l
 SUP_LOAI.thanhdia = 'khien';
 SUP_GIA.thanhdia = (T) => SKILLS.thanhdia.k(T);
 
+// Prism Thief: vệt vuốt hợp thể — các ô ngón tay đã đi qua (UI.keo.duong) nối bằng tia màu + đốm sáng; đủ 4 ô hợp lệ = sáng trắng (chỉ hình ảnh)
+function pmVeVet(ctx) {
+  const k = typeof UI !== 'undefined' && UI.keo; if (!k || !k.dang || !k.duong || k.duong.length < 2 || typeof REN === 'undefined') return;
+  const B = G.ban[0]; if (!B || !B.o) return;
+  const p = k.duong.slice(0, 6), S = SKILLS.bienmau, du = p.length === 4 && !!S.kiemMach(B, p).ds, C = Math.min(B.cw, B.ch), t = REN.t || 0;
+  const mau = (o) => { const X = B.t[o]; return !X || X.id !== 'bienmau' ? '#ff6a6a' : S.n(X) ? PRISM_MAU[Math.floor(t * 6) & 3] : PRISM_MAU[S.mau(X)]; };
+  ctx.save(); ctx.lineCap = 'round'; ctx.globalCompositeOperation = 'lighter';
+  for (let i = 1; i < p.length; i++) {
+    const a = B.o[p[i - 1]], b = B.o[p[i]], g = ctx.createLinearGradient(a.x, a.y, b.x, b.y);
+    g.addColorStop(0, mau(p[i - 1])); g.addColorStop(1, mau(p[i]));
+    ctx.strokeStyle = g; ctx.globalAlpha = du ? 0.95 : 0.7; ctx.lineWidth = C * (du ? 0.16 : 0.11); ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    ctx.strokeStyle = '#ffffff'; ctx.globalAlpha = du ? 0.9 : 0.45; ctx.lineWidth = C * 0.04; ctx.stroke();
+  }
+  for (const o of p) { const c = B.o[o]; ctx.globalAlpha = du ? 0.8 : 0.5; REN.anhGiua(ctx, REN.cham1(mau(o)), c.x, c.y, C * (du ? 1.05 : 0.85)); }
+  ctx.restore(); ctx.globalAlpha = 1;
+}
 window.addEventListener('DOMContentLoaded', () => {
+  if (typeof MV !== 'undefined' && MV.TAG) MV.TAG.bienmau = ['stacks · ×fusions on a Spectrum Prism', 'cộng dồn · ×số hợp thể của mặt nạ 4 màu'];
+  if (typeof GF !== 'undefined' && GF.veCam && !GF._pmVet) { const g0 = GF.veCam; GF._pmVet = 1; GF.veCam = function (ctx) { try { pmVeVet(ctx); } catch (e) { } return g0.apply(this, arguments); }; }
   if (typeof DC !== 'undefined' && DC.ngauNhien && !DC._sk7) { // RANDOM lấp ổ trống (dkcham.js) dùng G.roster thẳng → lọc ụ chưa có hình
     const g = DC.ngauNhien; DC._sk7 = 1;
     DC.ngauNhien = function () { const r0 = G.roster; G.roster = r0.filter(r => !SK7.CHUA_ANH.has(r.id)); try { return g.apply(this, arguments); } finally { G.roster = r0; } };

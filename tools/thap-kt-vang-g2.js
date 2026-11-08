@@ -105,25 +105,15 @@ for (let i = 0; i < 40; i++) { R(`G.hat = ${i + 1}; B._anR = 0; B.t.fill(null); 
 ok(tc + tb === 40 && tb > tc, 'B5-3: 13 + 2 → hỏng giữ 13 ở sao cũ, mất ụ kéo; thành công 14 ở sao max (' + tc + ' thành công / ' + tb + ' hỏng)');
 R(`G.hat = 77; B.t.fill(null); B._anN = 0; var g1 = dat(3, 'loren', 1); B._anN = 0; var g2 = dat(3, 'loren', 1);`); ok(R('g1.dang === g2.dang'), 'dạng quay bằng hạt giống (tất định)');
 
-console.log('Prism Thief (bienmau)');
+console.log('Prism Thief (bienmau) — HỢP THỂ (kiểm đủ: tools/thap-kt-prism.js)');
 tran(['bienmau', 'lien', 'canon', 'bang', 'tia']);
 R(`var PP = [[0, 0], [1, 1], [6, 2], [7, 3]].map(([o, q]) => dat(o, 'bienmau', 2, T => { T.pm = q; T.pms = 2; }));`);
-ok(R('SKILLS.bienmau.tran(PP[0])') === 10 && (R('B.capThe.bienmau = 8'), R('SKILLS.bienmau.tran(PP[0])')) === 18, 'trần cộng dồn 10 (LV9) → 18 (LV17)'); R('B.capThe.bienmau = 0');
+ok(R('SKILLS.bienmau.tran(PP[0])') === 10 && (R('B.capThe.bienmau = 8'), R('SKILLS.bienmau.tran(PP[0])')) === 18, 'trần cộng dồn Prism đơn 10 (LV9) → 18 (LV17)'); R('B.capThe.bienmau = 0');
 ok(R('SKILLS.bienmau.kiemMach(B, [0, 6, 1, 7]).loi') === 'path', 'đường có bước chéo (0 → 6): không hợp lệ');
-ok(R('!!SKILLS.bienmau.kiemMach(B, [0, 1, 6, 5]).loi'), 'ô thứ 4 không phải Prism: không hợp lệ');
-
-ok(R('SKILLS.bienmau.kiemMach(B, [0, 1, 1, 7]).loi') === 'path', 'lặp ô: không hợp lệ');
-ok(R('SKILLS.bienmau.mach(B, [0, 1, 6, 7])') === true && R('PP.every(X => X.pms === 0)'), 'đường 0 → 1 → 6 → 7 (dạng chữ Z) hợp lệ: kích');
-R(`B.t.fill(null); B.pmCd = 0; var Q = [[0, 0], [1, 1], [2, 2], [7, 3]].map(([o, q]) => dat(o, 'bienmau', 2, T => { T.pm = q; T.pms = 2; })); var ok1 = SKILLS.bienmau.mach(B, [0, 1, 2, 7]); cn();`);
-ok(R('ok1') && gan(R('Q[0].pmB.cdmg'), 0.98) && gan(R('Q[0].pmB.crit'), 0.14) && gan(R('Q[3].buf.cdmg'), 0.98 + 0.0), 'B5-5: 8 cộng dồn tiêu, kết LỤC → +98% ST chí mạng, +14% chí mạng 6 s');
-ok(R('Q.every(X => X.pms === 0)') && gan(R('B.pmCd - G.t'), 25), 'mỗi Prism tiêu ≤ 3 cộng dồn · hồi 25 s');
-ok(R('SKILLS.bienmau.mach(B, [0, 1, 2, 7])') === false && R('SKILLS.bienmau.kiemMach(B, [0, 1, 2, 7]).loi') === 'cd', 'đang hồi: không kích');
-R(`B.pmCd = 0; B.mana = 0; for (const X of Q) X.pms = 0; Q[0].pm = 3; Q[1].pm = 0; Q[3].pm = 1; Q[3].pms = 2; SKILLS.bienmau.mach(B, [0, 1, 2, 7]);`);
-ok(R('B.mana') === 12, 'B5-6: kết VÀNG, tiêu 2 cộng dồn vàng → +12 mana');
+ok(R('SKILLS.bienmau.mach(B, [0, 1, 6, 7])') === true && R('B.t[7].pf') === 1 && R('JSON.stringify(B.t[7].pmk)') === '[2,2,2,2]' && R('!B.t[0] && !B.t[1] && !B.t[6]'), 'vuốt 4 màu → 1 mặt nạ 4 màu ở ô cuối, cộng dồn cộng hết');
 R(`G.quai.length = 0; B.t.fill(null); var V = dat(7, 'bienmau', 1, T => { T.pm = 1; T.pms = 0; }); B.mana = 0;`);
-// 30 lần kích hoạt vàng trong 1 s: mana ≤ 6
-R(`for (let i = 0; i < 30; i++) { if (B.pmMt == null || G.t - B.pmMt >= 1) { B.pmMt = G.t; B.pmMv = 0; } if ((B.pmMv || 0) + 2 <= SKILLS.bienmau.MANA_S) { B.pmMv += 2; B.mana += 2; } }`);
-ok(R('B.mana') === 6, 'trần mana Prism vàng: 6 mana / giây cả bàn');
+R(`for (let i = 0; i < 30; i++) { if (B.pmMt == null || G.t - B.pmMt >= 1) { B.pmMt = G.t; B.pmMv = 0; } if ((B.pmMv || 0) + 2 <= SKILLS.bienmau.manaTran(B)) { B.pmMv += 2; B.mana += 2; } }`);
+ok(R('B.mana') === 6, 'trần mana Prism vàng: 6 mana / giây cả bàn (không có mặt nạ)');
 
 console.log('Blood Circuit (mauhut)');
 tran(['mauhut', 'lien', 'tienhoa', 'loren', 'dongbo']);

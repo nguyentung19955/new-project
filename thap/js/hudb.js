@@ -101,6 +101,10 @@ const HB = {
     const kn = tt.querySelector('.tt-kn'), LT = X && X.T && X.T.id === 'leviathan' && G.ban[X.T.ban] && G.ban[X.T.ban].t[X.T.o] === X.T ? X.T : null;
     if (kn && LT) { const n = LT.vuc || 0, s = 'ABYSS ' + n + ' · +' + 4 * n + '% damage · devours enemies inside the cyan ring — place it next to the path to eat more'; if (kn._lev !== s) { kn._lev = s; kn.textContent = s; } }
     else if (kn) kn._lev = null;
+    // Prism Thief HỢP THỂ: dòng kỹ năng = mặt nạ 4 màu sống (số hợp thể, +% ST, cộng dồn) thay chữ chung của ụ đơn (skills7.js)
+    const PT = X && X.T && X.T.id === 'bienmau' && X.T.pf > 0 && G.ban[X.T.ban] && G.ban[X.T.ban].t[X.T.o] === X.T ? X.T : null;
+    if (kn && PT) { const S = SKILLS.bienmau, s = 'SPECTRUM PRISM · fusion ' + PT.pf + ' · all 4 colours · +' + Math.round(S.HOP_DMG * 100 * PT.pf) + '% damage · stacks ' + [0, 1, 2, 3].map(q => S.st(PT, q)).join('/') + ' · swipe it with 3 other Prisms to fuse again'; if (kn._pm !== s) { kn._pm = s; kn.textContent = s; } }
+    else if (kn) kn._pm = null;
   },
   mo(tt, id, T) {
     this.dung(tt);

@@ -85,12 +85,12 @@ const MOI = ['mauhut', 'nguyenrua', 'thanhdia', 'bienmau'];
   ok(r.dm > 0.09 && r.d3 === 0, 'Sanctum: ụ Tấn công kề +sát thương; ô không kề không có khiên (1★)', JSON.stringify([r.dm, r.d3]));
   ok(!r.cheo && r.k5 === 1, 'Sanctum 5★: tẩy + khiên cả ô CHÉO', JSON.stringify(r));
   // Prism Thief
-  r = await p.evaluate(() => { // 08/11 Prism Thief: màu cố định + CHROMATIC CIRCUIT (vuốt 4 màu)
+  r = await p.evaluate(() => { // 08/11 Prism Thief: màu cố định + HỢP THỂ (vuốt 4 màu)
     DUNG([[0, 'bienmau', 2, '', ], [1, 'bienmau', 2], [2, 'bienmau', 2], [3, 'bienmau', 2]]); const B = G.ban[0]; B.pmCd = 0;
     [0, 1, 2, 3].forEach(q => { B.t[q].pm = q; B.t[q].pms = 1; });
-    const mau0 = B.t[0].pm; capNhatBan(B, 1.5); return { giu: B.t[0].pm === mau0, ok: SKILLS.bienmau.mach(B, [0, 1, 2, 3]), cd: Math.round(B.pmCd - G.t) };
+    const mau0 = B.t[0].pm; capNhatBan(B, 1.5); return { giu: B.t[0].pm === mau0, ok: SKILLS.bienmau.mach(B, [0, 1, 2, 3]), n: B.t[3] && B.t[3].pf };
   });
-  ok(r.giu && r.ok && r.cd === 25, 'Prism Thief: màu không đổi theo thời gian · vuốt 4 màu → CHROMATIC CIRCUIT, hồi 25 s', JSON.stringify(r));
+  ok(r.giu && r.ok && r.n === 1, 'Prism Thief: màu không đổi theo thời gian · vuốt 4 màu → HỢP THỂ (mặt nạ 4 màu)', JSON.stringify(r));
   // Hex solo
   r = await p.evaluate(() => { DUNG([[0, 'nguyenrua', 2], [1, 'nguyenrua', 2]]); const B = G.ban[0]; B.hexCd = 0; const E = sinhQuai('bo', 0, G.duong[0].len * 0.3, 1); E.vao = 1; E.hp = E.max = 1e9; ghep(B, B.t[0], B.t[1]); const c1 = G.hu.filter(o => o.k === 'hexBay').length; B.t[2] = sinhU(taoU(B, 'nguyenrua', 2, 2)); B.t[3] = sinhU(taoU(B, 'nguyenrua', 2, 3)); ghep(B, B.t[2], B.t[3]); return { c1, c2: G.hu.filter(o => o.k === 'hexBay').length, cd: B.hexCd - G.t }; });
   ok(r.c1 === 1 && r.cd > 7, 'Hex SOLO: ghép → 1 âm thoa bay, hồi chung 8 s', JSON.stringify(r));

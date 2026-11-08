@@ -178,6 +178,7 @@ function ghepDBHop(a, b) {
 function hopLeGhep(a, b) {
   if (!a || !b || a === b) return false;
   if (ghepDBHop(a, b)) return true; // ghép đặc biệt (có loại không cần cùng sao; Merge King / Teleporter được lên ô đá/băng)
+  if ((a.id === 'bienmau' && a.pf > 0) || (b.id === 'bienmau' && b.pf > 0)) return false; // Prism Thief: mặt nạ HỢP THỂ không ghép thường (chỉ hợp thể / Merge King / Copycat) — skills7.js
   if (a.st.bang > 0 || b.st.bang > 0) return false;
   if (a.sao !== b.sao || a.sao >= LUAT.saoMax) return false;
   if (a.st.da || b.st.da) return a.st.da && b.st.da; // đá chỉ ghép với đá cùng sao
