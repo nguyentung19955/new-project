@@ -158,7 +158,7 @@ const TEXT = {
     nguyenrua:    { name: 'Hex Saboteur',   skill: 'Merge 2 Hex Saboteurs: a hex flies out. PvP: a rival turret may lose 1★. Co-op: an ally turret may get +1★. Solo: the first enemy is slowed and takes more damage' },
     thanhdia:     { name: 'Sanctum',        skill: 'Support: when it arrives, it cleans and shields its Neighbours (4 sides). Attack Neighbours get +damage. Shields come back over time' },
     // ụ cờ bạc Đỏ (jackpot.js, 08/11)
-    // ụ ghép tự do Tím (game.js laTuDo, 08/11)
+    // ụ ghép tự do VÀNG (game.js laTuDo, 08/11)
     tudo:         { name: 'Wild Link',      skill: 'Merges with ANY turret: any type, any star. Result: a random turret, star = average of the two, rounded up (3 + 4 stars = 4 stars, no bonus star). Counts as a real merge (triggers Twin Maker etc.). Works on Stone and Frozen turrets too: the result is unlocked' },
     cobac:        { name: 'Lucky Slot',     skill: 'Spins 3 fruit reels when it appears (summon or merge). A pair = +1 point to that fruit; 3 of a kind = JACKPOT: +2 to all fruits. No match = spin again. Points are shared by all Lucky Slots. Orange = damage, Watermelon = speed, Grape = crit damage. Raising its star in place (like Merge King) doesn\'t spin again.' },
     bienmau:      { name: 'Prism Thief',    skill: 'Each one has 1 colour: red kills, gold gives mana, blue freezes, green crits. Put 4 different colours side by side and swipe through all 4: they FUSE into one 4-colour Spectrum Prism with all 4 effects. Fuse it again to make it stronger, no limit' },

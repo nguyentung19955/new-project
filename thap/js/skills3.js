@@ -610,7 +610,7 @@ themHo('trap', 2, 'khoathoigian', 'time-locks the lead enemy, stored damage burs
 themHo('rapid', 3, 'hydra', 'one head per star, chained shots + mana MACHINE GUN (tap)');
 themHo('blast', 3, 'cuuvi', 'kills grow tails → 9 homing foxfires');
 themHo('joker', 3, 'pandora', 'merge opens 1 of 6 vault effects');
-themHo('joker', 2, 'tudo', 'merges with ANY turret; star = average of the two'); // Wild Link (08/11)
+themHo('joker', 3, 'tudo', 'merges with ANY turret; star = average of the two'); // Wild Link (08/11) — VÀNG (08/11 người dùng: xứng đáng tướng vàng hơn)
 themHo('amp', 3, 'luoicheo', 'DIAGONAL support; full grid = RESONANCE');
 themHo('trap', 4, 'ngaithoigian', 'everything slows with age + REWIND (active)');
 

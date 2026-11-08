@@ -194,7 +194,7 @@ function ghepDBHop(a, b) {
   if (!biKhoa(b)) return db;
   return !db.dao && db.sk.ghepDB.quaKhoa ? db : null; // đích bị khoá: chỉ kỹ năng quaKhoa của ụ KÉO
 }
-// WILD LINK (tudo, Tím Đặc biệt, 08/11 người dùng: "ghép với bất kỳ ụ nào, số sao = (ụ đó + ụ được ghép) / 2, kích hoạt được Twin"):
+// WILD LINK (tudo, VÀNG Đặc biệt (trước Tím), 08/11 người dùng: "ghép với bất kỳ ụ nào, số sao = (ụ đó + ụ được ghép) / 2, kích hoạt được Twin"):
 //   ghép với MỌI loại, MỌI sao. Kết quả = ụ NGẪU NHIÊN trong bộ bài (như ghép thường; RNG hạt giống trận — tất định), sao = ⌈(sao 2 ụ)/2⌉, KHÔNG +1★;
 //   cấp thẻ Wild Link: xác suất +1★ (KY_NANG_CAP.tudo). Là GHÉP THẬT (đi đường ghép thường: Archive, MERGE SURGE, nhiệm vụ, kỹ năng khi ghép…).
 //   Kỹ năng KHI GHÉP của 2 nguyên liệu thấy cả 2 ở sao ⌈trung bình⌉ (2 sao bằng nhau = y như ghép thường) → Twin Maker gọi thêm ụ đúng sao đó.
