@@ -3513,3 +3513,9 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - Chữ: `mo()`, trang chi tiết (Directions / Combine / Star / No new direction / Stack / Other merges), thẻ kỹ năng, roster, clip Test range ("N + S = NS: 2 homing rockets", "NS + WE = NSWE: 4 rockets"), bản Việt (`vi.json`, chữ tổ hợp giữ HOA — `UP_GIU`).
 - Test: mới `tools/thap-kt-la-ban.js` (225 cặp hợp lệ, sao trung bình, ghép sai, stack không trần, số tên lửa 1–4, tên lửa trúng, tất định, ghép đặc biệt, AI, gói online khứ hồi, kéo chuột thật + ảnh 844×390 & 390×844). Sửa kỳ vọng: `thap-kt-cong-huong-luat` (Pháo + Pháo không còn ghép thường; TRUE NORTH mới), `thap-kt-matran` (cmSo → hb + stack), `thap-kt-kynangcap` (canon chạm max đúng LV17).
 - Ảnh: `docs/demo-hop-tuong/tuvan/la-ban-to-hop/` (15 tổ hợp trong game, tên lửa bay, PROMPT.md).
+
+## claude/demo-hop-tuong — Pháo La Bàn: mũi tên hướng không bị đầu súng che (08/11)
+- Người dùng (08/11): "không được che mũi tên đỏ ở đầu… xoay đến hướng đó thì mũi tên đỏ đè vào". Chỉ đổi hình, luật không đổi.
+- `CM.veMui` (comoi.js): mũi tên hướng (`duong_mui`) vẽ ở LỚP CỐ ĐỊNH sau đầu súng (không xoay) → mũi đỏ luôn nằm dưới. N / E / W ở vành ngoài 0,43 S (ngoài tầm mũi đầu súng ~0,41 S); S ngay trên tấm đáy ô (0,2 S) để tấm không che. Lót bóng tối + quầng xanh nhẹ; nạp sẵn `duong_mui` khi bộ bài có Pháo.
+- Tấm đáy ô khi có tiến độ TRUE NORTH: bỏ chữ hướng (cờ `jpGon`, jackpot.js) → chỉ "★ 2/3" (NSWE có stack: "+n ★ 2/3") → không tràn ô hẹp.
+- Ảnh soát: `docs/demo-hop-tuong/tuvan/la-ban-to-hop/mui-ten-khong-che.png` (15 tổ hợp × đầu N/E/S/W/45°, 390×844 + 844×390, 4 cỡ khác).

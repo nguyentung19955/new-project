@@ -41,7 +41,8 @@ if (typeof DEMKN !== 'undefined') Object.assign(DEMKN.DS, {
     if (src && src !== T && src.id === 'canon' && src.ban === T.ban && KG.dich() === T && hopLeGhep(src, T)) {
       const kq = S.hopNhat(src, T); if (kq) return { m: [{ ic: 'canon_phu', s: nhan(kq.hb, kq.chong) }], sang: true };
     }
-    return { m: [{ ic: 'canon_phu', s: nhan(S.hb(T), S.chong(T)) }], sang: S.du(T) };
+    // jpGon: khi tấm có thêm tiến độ TRUE NORTH (★ 2/3, jackpot.js) thì bỏ chữ hướng (mũi tên trên ụ đã chỉ hướng) → tấm ngắn, không tràn ô hẹp; stack '+n' vẫn giữ
+    return { m: [{ ic: 'canon_phu', s: nhan(S.hb(T), S.chong(T)) }], sang: S.du(T), jpGon: !(S.du(T) && S.chong(T) > 0) };
   },
   drone(T, B) { // chỉ khi đang kéo Drone lên Drone: số drone sẽ phóng (theo quãng kéo)
     const src = typeof KG !== 'undefined' && KG.nguon ? KG.nguon() : null;
@@ -105,7 +106,7 @@ if (typeof batDau === 'function') {
     try {
       if (typeof REN !== 'undefined' && REN.img) {
         const co = new Set(); for (const B of G.ban) for (const id of B.deck || []) co.add(id);
-        if (co.has('canon')) { REN.img('canon_phu'); REN.img('mui_tiep'); if (window.LABAN_DE) for (let m = 1; m <= 15; m++) REN.img('canon_de_' + m); }
+        if (co.has('canon')) { REN.img('canon_phu'); REN.img('mui_tiep'); REN.img('duong_mui'); if (window.LABAN_DE) for (let m = 1; m <= 15; m++) REN.img('canon_de_' + m); }
         if (co.has('lualien') && CM.M.cm_vetlua) REN.img('cm_vetlua');
         if (co.has('drone')) { REN.img('ic_bom'); if (CM.M.cm_daykeo) REN.img('cm_daykeo'); }
       }
@@ -131,15 +132,20 @@ CM.veDe = function (x, R, m, SD, da) {
   }
   return true;
 };
-// mũi tên chevron (duong_mui) vẽ TRÊN đầu súng (SKILLS.canon.veThem) — đầu xoay không che mất hướng; S lùi vào trong vì tấm đếm đáy ô che mép dưới
+// mũi tên chevron (duong_mui) — LỚP CỐ ĐỊNH vẽ SAU đầu súng (SKILLS.canon.veThem, không xoay theo đầu): người dùng 08/11 "không được che mũi tên đỏ ở đầu"
+//   → đầu súng xoay tới N / E / S / W thì mũi đỏ luôn chui DƯỚI mũi tên hướng, hướng nào có cũng luôn thấy.
+//   N / E / W: ở vành ngoài (0,43 S — ngoài tầm mũi đầu súng ~0,41 S, vẫn trong ô); S: ngay TRÊN tấm đếm đáy ô (tấm vẽ sau ở lớp huy hiệu → không che).
+//   Mỗi mũi tên: lót bóng tối (PNG tô đen) cho tách khỏi mũi đỏ / vàng đầu súng + quầng xanh nhẹ. Cỡ theo S (mọi cỡ ô: trận, khay, demo).
 CM.veMui = function (ctx, T, S, al, R) {
-  if (T.st.da) return; // vẽ cả khi đã có bệ ảnh theo tổ hợp: đầu súng (xoay) + tấm đếm đáy ô che gai N / S của bệ
+  if (T.st.da) return;
   const mui = R.img('duong_mui'); if (!mui) return;
-  const m = SKILLS.canon.hb(T), SD = S * 0.714 * ((R.DE_RIENG && R.DE_RIENG.canon) || 1), w = SD * 0.26, hh = w * mui.height / mui.width;
+  const m = SKILLS.canon.hb(T), w = S * 0.2, hh = w * mui.height / mui.width;
   for (let h = 0; h < 4; h++) {
     if (!(m & (1 << h))) continue;
-    const g = [-Math.PI / 2, 0, Math.PI / 2, Math.PI][h], r = SD * (h === 2 ? 0.3 : 0.44);
-    ctx.save(); ctx.globalAlpha = al; ctx.translate(Math.cos(g) * r, Math.sin(g) * r); ctx.rotate(g); ctx.drawImage(mui, -w / 2, -hh / 2, w, hh); ctx.restore();
+    const g = [-Math.PI / 2, 0, Math.PI / 2, Math.PI][h], r = S * (h === 2 ? 0.2 : 0.43), x = Math.cos(g) * r, y = Math.sin(g) * r;
+    R.anhGiua(ctx, R.cham1('#000000'), x, y, w * 1.25, 0, al * 0.75); // lót tối
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; R.anhGiua(ctx, R.cham1('#3fd8ff'), x, y, w * 1.1, 0, al * 0.35); ctx.restore();
+    ctx.save(); ctx.globalAlpha = al; ctx.translate(x, y); ctx.rotate(g); ctx.drawImage(mui, -w / 2, -hh / 2, w, hh); ctx.restore();
   }
   ctx.globalAlpha = al;
 };

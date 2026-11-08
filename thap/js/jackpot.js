@@ -301,7 +301,7 @@ if (typeof addEventListener === 'function') addEventListener('DOMContentLoaded',
     DEMKN.DS[id] = function (T, B) {
       const v = f ? f.apply(this, arguments) : null, p = JP.tienDo(T, B);
       if (!p) return v;
-      const m = (v && v.m ? v.m.slice(0, 1) : []).concat([{ ic: 'ic_sao', s: p[0] + '/' + p[1] }]);
+      const m = (v && v.m && !v.jpGon ? v.m.slice(0, 1) : []).concat([{ ic: 'ic_sao', s: p[0] + '/' + p[1] }]); // jpGon (Pháo La Bàn): bỏ mục đầu cho tấm ngắn
       return Object.assign({}, v || {}, { m });
     };
   }
