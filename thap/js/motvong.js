@@ -79,7 +79,7 @@ const MV = {
     ngoisao: ['stars on board / next milestone', 'tổng sao trên bàn / mốc kế'],
     nangluong: ['energy bonus', 'thưởng năng lượng'],
     docton: ['fire-rate bonus (alone = +100%)', 'thưởng tốc bắn (đứng một mình = +100%)'],
-    lualien: ['flames carried (max 70, more with card level)', 'số lửa đang mang (tối đa 70, thêm theo cấp thẻ)'],
+    lualien: ['flames carried (no limit)', 'số lửa đang mang (không giới hạn)'],
     hopca: ['Harmony: touching same-star turrets (x/4)', 'Hoà âm: số ụ cùng sao kề bên (x/4)'],
     luutru: ['archive stacks', 'cộng dồn lưu trữ'],
     xuonganh: ['HERO tiles active', 'số ô ANH HÙNG đang bật'],

@@ -832,11 +832,11 @@
   "ten": "Ember Relay",
   "bac": "vang",
   "dcdw": "Kalaratri",
-  "kyNang": "Merging 2 Relays: every Relay in the row and column gets both flames added (max 70). Each flame +2% damage, +0.12% crit",
+  "kyNang": "Merging 2 Relays: every Relay in the row and column gets both flames added (no limit). Each flame +8% damage, +0.4% crit, +4% crit damage",
   "vai": "tc",
   "ho": "blast",
   "ten_vi": "Lửa Thập Tự",
-  "kyNang_vi": "Ghép 2 Relay: mọi Relay cùng hàng và cột nhận tổng lửa 2 ụ (tối đa 70). Mỗi lửa +2% ST, +0,12% chí mạng"
+  "kyNang_vi": "Ghép 2 Relay: mọi Relay cùng hàng và cột nhận tổng lửa 2 ụ (không giới hạn). Mỗi lửa +8% ST, +0,4% chí mạng, +4% ST chí mạng"
  },
  {
   "id": "hopca",

@@ -239,7 +239,7 @@ const SD_K = {
     truoc: (T, B) => { B.deck = ['lualien']; if (T) T.lc = 3; if (B.t[8]) B.t[8].lc = 1; if (B.t[13]) B.t[13].lc = 7; for (const o of [3, 6, 11]) if (B.t[o]) B.t[o].lc = 1; },
     them: [[2.4, (B) => { SD.lcCu = {}; for (const X of B.t) if (X && X.id === 'lualien') SD.lcCu[X.o] = X.lc || 0; }]],
     ve: (x, B) => sdLuaLien(x, B),
-    c: [[0.2, 'Number = flames on each Relay'], [1.3, 'Merge two same-star Embers'], [2.5, 'Both flames go along the merge tile\'s row + column', { cham: 0.6 }], [3.9, 'Not in that row or column: nothing'], [5.0, 'Each flame: +2% damage, +0.12% crit'], [6.2, 'Max 70 flames (more at LV11+)']], dai: 9 },
+    c: [[0.2, 'Number = flames on each Relay'], [1.3, 'Merge two same-star Embers'], [2.5, 'Both flames go along the merge tile\'s row + column', { cham: 0.6 }], [3.9, 'Not in that row or column: nothing'], [5.0, 'Each flame: +8% damage, +0.4% crit, +4% crit damage'], [6.2, 'Max 70 flames (more at LV11+)']], dai: 9 },
   // Quantum Choir: thêm ụ cùng sao (trùng) và khác sao (không tính) — chỉ số sát thương trước → sau
   hopca: { q: Q.hang(4, 180, 40, 8), ke: [[6, 'lien', 's'], [8, 'canon', (s) => s > 1 ? s - 1 : 2]],
     them: [[2.0, (B, D, T) => { if (T) sdThem(B, [[2, 'set', T.sao], [12, 'bang', T.sao]], T, 'dmg'); }], [4.0, (B, D, T) => { if (T) sdThem(B, [[3, 'sungluc', T.sao > 1 ? T.sao - 1 : 2]], T, 'dmg'); }]],
@@ -382,7 +382,7 @@ const SD_MO = {
   laser: (T) => 'Beam ramps to ×4 over 3s',
   mortar: (T) => 'Damage ' + Math.round(dmgU(T)) + ', 46 px splash',
   no5: (T) => 'Damage ' + Math.round(dmgU(T)) + ' per shot',
-  lualien: (T) => 'Each flame +2% damage, max ' + SKILLS.lualien.tran(T),
+  lualien: (T) => 'Each flame +8% damage, no cap',
   canon: (T) => 'Each stack +' + Math.round(SKILLS.canon.moiChong(T) * 100) + '% damage',
   drone: (T) => '1 drone per cell, +' + Math.floor(T.sao / 3) + ' bonus',
   hopca: () => '+25% damage per Harmony, max 4',

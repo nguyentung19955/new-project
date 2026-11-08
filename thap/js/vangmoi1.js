@@ -70,23 +70,26 @@ function vm1Fx(id, x, y, w, song, mau) { G.hu.push({ k: 'vm1Fx', t: 0, song: son
 //        Ghép B vào C (đều Ember): mọi Ember khác cùng hàng/cột với ô C nhận lửa B + lửa C (A = 5 + 5 + 5 = 15); mỗi lần ghép chỉ tính 1 lần.
 //        Rời bàn đơn lẻ khác (bán, Blood Circuit nuốt, trùm phá, vỡ do trừ sao…): vẫn theo hàng/cột ô của chính nó.
 //      Ghép Ember chỉ khi CÙNG SAO (luật ghép thường). Ụ ra (nếu là Ember): giữ như cũ = max(★ mới sinh, min(trần, A + C)) — câu hỏi mở cho người dùng.
-//      Ụ mới sinh: lửa = số sao. Mỗi lửa +2% sát thương và +0.12 điểm % chí mạng. Trần LV9 70 → LV11 100 → LV13 130 → LV15 160. Đột phá 10/30/50/70.
+//      Ụ mới sinh: lửa = số sao. TĂNG 08/11 (người dùng: "hơi ít nhỉ, so với các tướng vàng có cộng dồn" — lửa chỉ đến khi Ember RỜI BÀN = tốn kém
+//        → thưởng cao): mỗi lửa +8% sát thương, +0.4 điểm % chí mạng (tổng ≤ 100%, critU), +4% ST chí mạng (cũ +2% / +0.12 / 0).
+//        BỎ TRẦN lửa (cũ LV9 70 → LV15 160; người dùng không thích trần ở kỹ năng cộng dồn đặc biệt) — giữ màu mốc 10/30/50/70.
+//        Đột phá độ khó 5 (cũ 3): I +25% tốc · II +50% STCM · III +45% ST · IV +15% chí mạng & +85% STCM. Đột phá 10/30/50/70.
 //      Icon lửa theo mốc: <10 cam · ≥10 trắng · ≥30 xanh · ≥50 vàng · ≥70 đỏ (lua_t1–4). Online: bàn con rối (B.net) không tự truyền —
 //      lửa đi theo cờ ô 'r' (dongbo.js) từ máy chủ bàn → 2 máy cùng số.
 // =====================================================================================================
 SKILLS.lualien = {
   vai: 'tc', dmg: 17, toc: 1.0, nham: 'dau', napMau: null,
-  DMG: 0.02, CRIT: 0.0012,
-  tran(T) { const k = VM1.k(T); return k >= 6 ? 160 : k >= 4 ? 130 : k >= 2 ? 100 : 70; },
+  DMG: 0.08, CRIT: 0.004, CDMG: 0.04,
+  tran(T) { return Infinity; }, // KHÔNG TRẦN (08/11) — giữ hàm cho chỗ gọi cũ
   bac: (n) => (n >= 70 ? 4 : n >= 50 ? 3 : n >= 30 ? 2 : n >= 10 ? 1 : 0),
   ICON: ['fx_cuuvi_dan', 'lua_t1', 'lua_t2', 'lua_t3', 'lua_t4'],
   icon(n) { return this.ICON[this.bac(n)]; },
   mo(T) {
-    const n = Math.min(this.tran(T), T.lc || 0), cap = this.tran(T);
-    return 'Flames ' + n + '/' + cap + ' → +' + n * 2 + '% damage, +' + +(n * 0.12).toFixed(2) + '% crit chance · each flame: +2% damage, +0.12% crit · new Relays start with flames = ★ · when an Ember leaves the board for any reason, its flames pass to Embers in its row and column · merging two Embers: every other Ember in the merge tile\'s row and column gains both Embers\' flames · Embers that stay (stone, frozen, transformed, lost a star) keep their flames · max ' + cap + ' flames (LV11 100, LV13 130, LV15 160)';
+    const n = Math.min(this.tran(T), T.lc || 0);
+    return 'Flames ' + n + ' → +' + Math.round(n * this.DMG * 100) + '% damage, +' + +(n * this.CRIT * 100).toFixed(1) + '% crit chance, +' + Math.round(n * this.CDMG * 100) + '% crit damage · each flame: +8% damage, +0.4% crit (crit max 100%), +4% crit damage · new Relays start with flames = ★ · when an Ember leaves the board for any reason, its flames pass to Embers in its row and column · merging two Embers: every other Ember in the merge tile\'s row and column gains both Embers\' flames · Embers that stay (stone, frozen, transformed, lost a star) keep their flames · no flame limit';
   },
   sinh(G, T) { if (T.lc == null) T.lc = Math.min(this.tran(T), Math.max(1, T.sao | 0)); },
-  capNhat(G, B, T) { const n = Math.min(this.tran(T), T.lc || 0); if (n) { T.buf.dmg += n * this.DMG; T.buf.crit += n * this.CRIT; } return false; },
+  capNhat(G, B, T) { const n = Math.min(this.tran(T), T.lc || 0); if (n) { T.buf.dmg += n * this.DMG; T.buf.crit += n * this.CRIT; T.buf.cdmg = (T.buf.cdmg || 0) + n * this.CDMG; } return false; },
   ban(G, B, T, E) {
     giat(T, 0.6); const [x, y] = chopNong(T, 22); SND.lien();
     const dmg = dmgU(T), nv = Math.min(8, ((T.lc || 0) / 10) | 0); // nv: chỉ cỡ hình
@@ -444,7 +447,7 @@ themHo('star', 3, 'hopca', 'HARMONY: stronger next to same-star turrets');
 themHo('summon', 3, 'luutru', 'every real merge feeds one Archive: milestones 10–70');
 themHo('amp', 3, 'xuonganh', 'merge stamps a 25s HERO tile: big fire-rate boost');
 Object.assign(GROW, {
-  lualien: { mau: '#ff8a2a', khongAnh: true, ten: ['EMBER', 'KINDLED', 'FULL BLAZE'], dk: 'Flames 1–9 / 10–49 / 50+ (max 70, LV11 100, LV13 130, LV15 160)',
+  lualien: { mau: '#ff8a2a', khongAnh: true, ten: ['EMBER', 'KINDLED', 'FULL BLAZE'], dk: 'Flames 1–9 / 10–49 / 50+ (no limit)',
     gd: (T) => { const n = T.lc || 0; return { s: n >= 50 ? 3 : n >= 10 ? 2 : 1, p: Math.min(1, n / 70), v: [1 / 7, 5 / 7] }; } },
   luutru: { mau: '#bfe4ff', khongAnh: true, ten: ['EMPTY SHELVES', 'FILING', 'GRAND ARCHIVE'], dk: 'Charges 0–9 / 10–29 / 30+ (max 40, LV11 50, LV13 60, LV15 70)',
     gd: (T) => { const n = T.kho || 0; return { s: n >= 30 ? 3 : n >= 10 ? 2 : 1, p: Math.min(1, n / 40), v: [0.25, 0.75] }; } },
@@ -500,8 +503,8 @@ const DOTPHA = {
   bac(n, nguong) { let b = 0; if (nguong) for (const x of nguong) if (n >= x) b++; return b; },
   bacU(T) { const f = T && this.SO[T.id]; return f ? this.bac(f(T), this.NGUONG[T.id]) : 0; },
   // ĐỘT PHÁ THEO ĐỘ KHÓ (07/11, tư vấn ChatGPT duyệt): khó 3 = mốc cũ · khó 2 −20% · khó 4 / 5 cao hơn — độ khó theo công sức THẬT để tới bậc IV
-  //   (Choir 12 ụ cùng sao dễ với 1★ → khó 2; Archive ghép tự nhiên → 2; Ember / Leviathan 3; Forge / Chain Link / Combo / Nine-Tail 4)
-  KHO: { canon: 3, lualien: 3, leviathan: 3, lienket: 4, combo: 4, cuuvi: 4 },
+  //   (Choir 12 ụ cùng sao dễ với 1★ → khó 2; Archive ghép tự nhiên → 2; Leviathan 3; Ember 5 (08/11: lửa chỉ đến khi Ember rời bàn); Forge / Chain Link / Combo / Nine-Tail 4)
+  KHO: { canon: 3, lualien: 5, leviathan: 3, lienket: 4, combo: 4, cuuvi: 4 },
   // [I tốc, II STCM, III ST, IV tỉ lệ CM, IV STCM] theo độ khó
   BANG: { 2: [0.12, 0.25, 0.20, 0.08, 0.40], 3: [0.15, 0.30, 0.25, 0.10, 0.50], 4: [0.20, 0.40, 0.35, 0.12, 0.65], 5: [0.25, 0.50, 0.45, 0.15, 0.85] },
   thuong(b, id) { const v = this.BANG[this.KHO[id] || 3]; return { toc: b >= 1 ? v[0] : 0, cdmg: (b >= 2 ? v[1] : 0) + (b >= 4 ? v[4] : 0), dmg: b >= 3 ? v[2] : 0, crit: b >= 4 ? v[3] : 0 }; },

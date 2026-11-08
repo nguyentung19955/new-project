@@ -42,7 +42,11 @@ const TRUM_ANIM_CODE = {
   //  napL: ảnh _m_nap KHÔNG lăn (ăng-ten / giá + cờ lê), [x, y] = điểm neo lắc; lac = biên độ lắc trễ · ong: tâm từng ong trên dải _m_ong
   //  kieu 'bo' (leech): sâu đo/thạch — giãn DỌC đường đi, co ngang (giữ thể tích), đầu vươn trước đuôi bắt kịp; lớp sáng đập theo nhịp bò
   hive: { kieu: 'lan', r: 0.445, day: 0.445, sang: 1, cau: [0.5, 0.5, 0.445, 0.445], ong: [[0.475, 0.1], [0.85, 0.37], [0.155, 0.575]], ongR: 0.085 },
-  jammer: { kieu: 'lan', r: 0.37, day: 0.3, sang: 1, cau: [0.5, 0.575, 0.37, 0.305], truc: 1, napL: [0.5, 0.37], lac: 1 }, // vành gai quay theo quãng đường, ăng-ten lắc trễ
+  //  kieu 'vanh' (jammer, gen lại 08/11 — tools/thap-trum-master-jammer.py): 3 lớp riêng. Thân _m đứng thẳng, nhún nhẹ; VÀNH GAI _m_vanh (ảnh nhìn
+  //  thẳng từ trên, tròn đều) quay THUẬN KIM ĐỒNG HỒ mãi (quãng đường / r + quay chậm lúc đứng; không đổi chiều theo hướng đi) rồi nén dọc
+  //  vanh = [tâm x, y, bán kính ngoài, nén dọc] (tỉ lệ ô): nửa sau vẽ trước thân, nửa trước vẽ sau thân · quay = rad/s lúc đứng
+  //  lấy đà chiêu: vành quay nhanh dần · tung: vành phồng + chớp (xung) rồi quay chậm dần về · ăng-ten _m_nap lắc trễ quanh napL (lỗ đỉnh vòm)
+  jammer: { kieu: 'vanh', r: 0.46, day: 0.36, sang: 1, vanh: [0.5, 0.58, 0.46, 0.6], quay: 0.9, napL: [0.499, 0.45], lac: 1 },
   patcher: { kieu: 'lan', r: 0.41, day: 0.39, sang: 1, tamQ: [0.494, 0.556], napL: [0.494, 0.556], lac: 0 },
   leech: { kieu: 'bo', day: 0.4, sang: 1, buoc: 0.5 },
   prism: { kieu: 'bay', day: 0, sang: 1, bob: 0.085, nga: [0.065, 0.22], chop: 1.5 }, // bob = biên độ nhấp nhô (×C) · nga = [hệ số nghiêng theo tốc độ rẽ, nghiêng tối đa] · chop = độ chớp lúc tung chiêu
@@ -246,7 +250,7 @@ Object.assign(REN, {
     const g = 'trum_' + E.trum + '_m';
     if (!this.img(g) || (cf.sang && !this.img(g + '_sang')) || (cf.vm && !this.img(g + '_vm')) || (cf.nap && !this.img(g + '_nap')) || (cf.khoi && !this.img(g + '_khoi'))) return null;
     if (cf.phan && !this.cdPhanSan(g, cf)) return null;
-    if ((cf.napL && !this.img(g + '_nap')) || (cf.ong && !this.img(g + '_ong'))) return null;
+    if ((cf.napL && !this.img(g + '_nap')) || (cf.ong && !this.img(g + '_ong')) || (cf.vanh && !this.img(g + '_vanh'))) return null;
     const Cb = co * kc, C = Cb * sc;
     // quãng đường thật (vị trí nội suy) + chiều lăn
     if (E._cdX == null) { E._cdX = x; E._cdY = y; E._cdQ = 0; E._cdA = 0; E._cdSg = 1; E._cdW = 0; E._cdG = E.gv != null ? E.gv : E.goc; E._cdL = 0; E._cdT = 0; }
@@ -335,6 +339,15 @@ Object.assign(REN, {
       R.sx = 1 + nen * 0.85 + st * 0.5; R.sy = 1 - nen;
       R.rot += clamp(E._cdW * 0.025, -0.07, 0.07);
       R.sang += 0.18 + 0.45 * e + 0.08 * Math.sin(t * 3.1 + E.uid); // sáng đập theo nhịp bò
+    } else if (cf.kieu === 'vanh') {
+      // vành gai: góc chỉ TĂNG (thuận kim đồng hồ) — quay chậm theo giờ + theo quãng đường; lấy đà: nhanh dần ×6; tung: vọt rồi chậm dần về
+      const dtV = Math.min(dt, 0.1), du = rA >= 0 ? Math.exp(-4 * rA) : 0;
+      E._cdV = (E._cdV || 0) + dtV * (cf.quay || 0) * (1 + 5 * wA * wA) + d / (cf.r * Cb) + dtV * 9 * du;
+      R.vanhA = E._cdV;
+      R.vanhK = 1 + (rA >= 0 ? 0.09 * Math.sin(Math.min(1, rA / 0.12) * Math.PI / 2) * Math.exp(-5 * rA) : 0) - 0.02 * wA; // xung lúc tung (phồng rồi về), co nhẹ lúc lấy đà
+      R.oy -= C * 0.012 * (0.5 + 0.5 * Math.sin(t * 2.6 + E.uid)); // nhún nhẹ (thân đứng thẳng, không lăn)
+      R.sx = 1 + nen * 0.85 + st * 0.5; R.sy = 1 - nen;
+      R.sang += 0.15 + 0.15 * Math.sin(t * 2.4 + E.uid) + 0.5 * wA;
     } else { // lan
       R.sx = 1 + nen * 0.85 + st * 0.5; R.sy = 1 - nen;
       R.sang += 0.15 + 0.15 * Math.sin(t * 2.4 + E.uid);
@@ -378,6 +391,7 @@ Object.assign(REN, {
     if (R.bo) { ctx.setTransform(M); ctx.translate(x + R.ox, y + R.oy); ctx.rotate(R.bo.th); ctx.scale(R.bo.sp, R.bo.sq); ctx.rotate(-R.bo.th); ctx.translate(0, b); ctx.rotate(R.rot); ctx.scale(R.sx, R.sy); ctx.translate(0, -b); } // bò: giãn dọc đường đi
     else dat(0, R.sx, R.sy);
     if (cf.ong) this.cdOng(ctx, E, cf, R, C, Cb, g, -1); // ong đang ở nửa sau (bị thân che)
+    if (cf.vanh) this.cdVanh(ctx, cf, R, C, Cb, g, -1); // nửa sau vành gai (thân che)
     ctx.globalAlpha = 1; ctx.drawImage(anh, -C / 2, -C / 2, C, C);
     const sang2 = sangV;
     if (sang2 && R.sang > 0.01) {
@@ -387,6 +401,7 @@ Object.assign(REN, {
       ctx.restore();
     }
     if (R.fl > 0.02) { const w = trang ? this.cdTrang(anh) : this.co(g, Cb, 'trang'); if (w) { ctx.globalAlpha = R.fl; if (xoay) ctx.rotate(xoay); ctx.drawImage(w, -C / 2, -C / 2, C, C); } }
+    if (cf.vanh) { dat(0, R.sx, R.sy); this.cdVanh(ctx, cf, R, C, Cb, g, 1); } // nửa trước vành gai (che đáy thân)
     if (cf.khoi && R.khoi < 0.55) { // sương chạm đất: 2 cụm toả ra 2 bên, neo ở ĐẤT (không theo độ nảy), tâm = tâm thân trên đường
       const k = this.co(g + '_khoi', Cb);
       if (k) {
@@ -431,6 +446,13 @@ Object.assign(REN, {
     if (cf.phan) return this.cdPhanChup(E, cf, co * kc);
     const n = than.width, c = document.createElement('canvas'); c.width = n; c.height = n;
     const x2 = c.getContext('2d');
+    if (cf.vanh) { // vành gai (đúng góc đang quay) + thân + ăng-ten
+      x2.setTransform(1, 0, 0, 1, n / 2, n / 2); const R0 = { vanhA: E._cdV || 0, vanhK: 1, fl: 0 };
+      this.cdVanh(x2, cf, R0, n, co * kc, g, -1); x2.drawImage(than, -n / 2, -n / 2, n, n); this.cdVanh(x2, cf, R0, n, co * kc, g, 1);
+      const nap = cf.napL && this.co(g + '_nap', co * kc); if (nap) x2.drawImage(nap, -n / 2, -n / 2, n, n);
+      x2.setTransform(1, 0, 0, 1, 0, 0); c.nf = 1; c.fm = n; c.gap = 0;
+      return c;
+    }
     if (cf.cau || cf.tamQ) { // lăn 3D / quay tâm lệch: chụp đúng ảnh đang thấy + nắp + ong
       x2.drawImage(this.cdLanAnh(E, cf, than, null).anh, 0, 0);
       const nap = cf.napL && this.co(g + '_nap', co * kc); if (nap) x2.drawImage(nap, 0, 0, n, n);
@@ -444,6 +466,17 @@ Object.assign(REN, {
     const np = cf.nap && this.co(g + '_nap', co * kc); if (np) x2.drawImage(np, 0, 0, n, n);
     c.nf = 1; c.fm = n; c.gap = 0;
     return c;
+  },
+  // vành gai jammer: ảnh nhìn từ trên quay thuận kim đồng hồ (R.vanhA) rồi nén dọc theo phối cảnh; mat −1 nửa sau (trên tâm), 1 nửa trước
+  //  (gốc toạ độ ctx = tâm ô thân, C = cạnh ô). Cắt nửa theo đường ngang qua tâm vành TRƯỚC khi quay → chỗ nối không đổi khi vành quay.
+  cdVanh(ctx, cf, R, C, Cb, g, mat) {
+    const [vx, vy, vr, ky] = cf.vanh, D = 2 * vr * C * (R.vanhK || 1), im = this.co(g + '_vanh', 2 * vr * Cb); if (!im) return;
+    ctx.save(); ctx.translate((vx - 0.5) * C, (vy - 0.5) * C);
+    ctx.beginPath(); ctx.rect(-D, mat < 0 ? -D : 0, 2 * D, D); ctx.clip();
+    ctx.scale(1, ky); ctx.rotate(R.vanhA || 0);
+    ctx.globalAlpha = 1; ctx.drawImage(im, -D / 2, -D / 2, D, D);
+    if (R.fl > 0.02) { const w = this.co(g + '_vanh', 2 * vr * Cb, 'trang'); if (w) { ctx.globalAlpha = R.fl; ctx.drawImage(w, -D / 2, -D / 2, D, D); } }
+    ctx.restore();
   },
   // ---- lăn 3D: Q (thân → nhìn; x phải, y xuống, z vào màn) quay theo quãng đường. Lăn: trục = pháp tuyến đất × hướng đi
   //  (đi ngang: (0,−s,c) · đi dọc: (1,0,0)); truc: quay quanh trục cố định (con quay) theo chiều đi ngang gần nhất ----
