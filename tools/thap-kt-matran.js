@@ -78,7 +78,7 @@ function luat(s, e, r) {
     if (['janus', 'freezer', 'nightmare', 'leech'].includes(e)) return s === 'da' ? L('na', 'trùm không nhắm ô đá') : e === 'freezer' ? L('na', 'đã băng') : e === 'janus' ? L('chan', 'ụ khoá không nhận trạng thái xấu mới (người dùng chốt 07/11)') : L('giu', 'hạ sao vẫn trúng ụ đang băng');
     if (['eve', 'sanctum', 'cleanser'].includes(e)) return L('mat', 'được tẩy');
     if (['onlCung', 'onlKhac'].includes(e)) return s === 'da' ? L('giu', 'cờ S') : L('na', 'băng do trùm chạy y hệt 2 máy');
-    if (e === 'copyLen') return L('mat', 'Copycat chép được ô đá/băng → bản sao THƯỜNG đúng loại thật, ô gốc giữ khoá (9d79bd2, copycat-da/DCDW.md)');
+    if (e === 'copyLen') return s === 'da' ? L('chan', 'Copycat KHÔNG chép ô đá (luật 08/11); ô băng vẫn chép được') : L('mat', 'Copycat chép được ô băng → bản sao THƯỜNG đúng loại thật, ô gốc giữ khoá (9d79bd2, copycat-da/DCDW.md)');
     if (e === 'forge' || e === 'mauhut') return L('chan', 'ô khoá không bị kéo lên');
     return L('chan', 'khoá chặn kỹ năng, ghép, biến hình');
   }
@@ -229,9 +229,9 @@ function trongTrang(arg) {
     const K = B.t[7], F = taoU(B, 'lien', K.sao, 7); them.capLoai = K.id === 'lien' && Math.abs(dmgU(K) / dmgU(F) - heSaoChep(B)) < 1e-6; B.lv = lv0; B.deck = deck0; xoa(); }
   them.heso = heSaoChep(B);
   // Evolver MẤT SAO (KIEM.md mục IX 'Đã quyết' #3): mọi lần mất sao → đếm ngược lại TỪ ĐẦU (dưới 7★ như ca 7★ xịt c8d9e2e); tăng sao giữ thời gian đã chờ
-  { const evo = (sao, f) => { xoa(); const X = dat(B, 7, 'tienhoa', sao); capNhatU(B, X, 0.02); X.tuoi = 12; f(X); capNhatU(B, X, 0.02); const r = { id: X.id, sao: X.sao, tuoi: X.tuoi, xit: !!X.xit }; xoa(); return r; };
+  { const evo = (sao, f) => { xoa(); const X = dat(B, 7, 'tienhoa', sao); capNhatU(B, X, 0.02); X.egg = 12; f(X); capNhatU(B, X, 0.02); const r = { id: X.id, sao: X.sao, egg: X.egg, xit: !!X.xit }; /* 08/11: trứng đếm bằng T.egg (không còn T.tuoi) */ xoa(); return r; };
     const h5 = evo(5, X => haSao(B, X, 'kt')), h7 = evo(7, X => haSao(B, X, 'kt')), len = evo(3, X => { X.sao = 4; });
-    them.evo = { h5, h7, len, ok: h5.id === 'tienhoa' && h5.sao === 4 && h5.tuoi < 0.05 && h7.sao === 6 && !h7.xit && h7.tuoi < 0.05 && len.sao === 4 && len.tuoi > 11 }; }
+    them.evo = { h5, h7, len, ok: h5.id === 'tienhoa' && h5.sao === 4 && h5.egg < 0.05 && h7.sao === 6 && !h7.xit && h7.egg < 0.05 && len.sao === 4 && len.egg > 11 }; }
   // co-che-moi: Pháo La Bàn (cùng / vuông / ngược hướng), Lửa Thập Tự (cả hàng + cột, giữ lửa qua ghép), Drone Kéo Xa (quãng kéo)
   { xoa(); const P = (o, hb, n, s) => { const T = dat(B, o, 'canon', s || 2); T.hb = hb; T.cmC = n || 0; return T; }; // 08/11 tổ hợp hướng: hợp hướng, sao = trung bình làm tròn lên
     let a = P(0, 1, 0, 2), b = P(1, 4, 0, 3); ghep(B, a, b); const c1 = [B.t[1] === b, b.sao, b.hb, b.cmC, !B.t[0]];
@@ -280,7 +280,7 @@ function trongTrang(arg) {
   if (Math.abs(them.orbital - them.heso) > 0.002) LOI.push('✗ bom Orbital của bản sao ×' + them.orbital + ' ≠ ×' + them.heso);
   if (!them.evo.ok) LOI.push('✗ Evolver mất sao phải đếm lại từ đầu (5★→4★, 7★ xịt→6★), lên sao giữ thời gian: ' + JSON.stringify(them.evo));
   if (them.cm !== JSON.stringify([[true, 3, 5, 0, true], [false, 4, 15], [3, 15, 3], ['canon', true, 15, 3]])) LOI.push('✗ Pháo La Bàn: luật ghép sai ' + them.cm + ' (cần N2★+S3★ = NS 3★ · NS+N không ghép · NS+WE 4★ = NSWE 4★ · NSWE(2)+NSWE 1★ → 3★ stack 3 · Copycat giữ tổ hợp + stack)');
-  if (them.lc !== JSON.stringify([6, 1, 1, 1, 0])) LOI.push('✗ Lửa Thập Tự: ' + them.lc + ' (cần ụ ra giữ max 5 rồi +1 = 6; ô 0 & 4 cùng hàng, ô 12 cùng cột +1; ô 10 không cùng hàng/cột = 0)');
+  if (them.lc !== JSON.stringify([7, 7, 7, 7, 0])) LOI.push('✗ Lửa Thập Tự: ' + them.lc + ' (luật 08/11: ghép 5 + 2 = 7 lửa → ụ ra và mọi Relay cùng hàng/cột (ô 0, 4, 12) lên 7; ô 10 không cùng hàng/cột = 0 — bỏ luật cũ "max rồi +1")');
   if (them.dr !== JSON.stringify([7, 2])) LOI.push('✗ Drone Kéo Xa: ' + them.dr + ' (cần góc → góc 6 ô + 3★/3 = 7 drone; kề 1 ô = 2)');
   if (!them.capLoai) LOI.push('✗ Hộp Bí Ẩn (bản sao) mở ra: sức mạnh không theo cấp của LOẠI kết quả × % sao chép');
   for (const e of errs) LOI.push('✗ ' + e);

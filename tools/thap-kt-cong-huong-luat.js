@@ -441,13 +441,11 @@ if (nhom('10 · jackpot')) {
   cr(4, 2); ca('[JP] CHAIN REACTOR chỉ 2 ụ đủ đòn', 'không kích', R('jL.some(X => X.jp && X.jp.reactor)'), !R('jL.some(X => X.jp && X.jp.reactor)'));
   cr(4, 3, 'da'); ca('[JP] CHAIN REACTOR × 1 mắt xích hoá đá', 'chuỗi đứt → không kích', R('jL.some(X => X.jp && X.jp.reactor)'), !R('jL.some(X => X.jp && X.jp.reactor)'));
   // 5 BLOOD ECLIPSE — BỎ 08/11 (Blood Circuit làm lại)
-  // 6 TRUE NORTH
-  // 08/11 tổ hợp hướng: 3 lần ghép Pháo La Bàn trong 45 s, lần thứ 3 ra NSWE → kích · lần 3 chưa đủ NSWE → không · quá 45 s → không
+  // 6 TRUE NORTH — BỎ 08/11
   const tn = (ds, cho) => { tran(['canon', 'lien', 'tia', 'set', 'bao']); nap(); R('var jK = dat(14, "canon", 3); jK.hb = 1;');
     ds.forEach(([ha, hb], i) => { R(`{ const a = dat(${i * 2}, 'canon', 1), b = dat(${i * 2 + 1}, 'canon', 1); a.hb = ${ha}; b.hb = ${hb}; ghep(B, a, b); }`); if (cho && i === 0) buoc(cho); }); buoc(0.05); };
-  tn([[1, 4], [1, 2], [3, 12]]); ca('[JP] TRUE NORTH 3 ghép, lần 3 ra NSWE', 'mọi Pháo La Bàn nhận 12 s', jp('jK', 'truenorth'), jp('jK', 'truenorth'));
-  tn([[1, 4], [1, 2], [1, 6]]); ca('[JP] TRUE NORTH lần 3 chưa đủ NSWE (NES)', 'không kích', jp('jK', 'truenorth'), !jp('jK', 'truenorth'));
-  tn([[1, 4], [1, 2], [3, 12]], 46); ca('[JP] TRUE NORTH quá 45 s giữa lần 1 và 3', 'không kích', jp('jK', 'truenorth'), !jp('jK', 'truenorth'));
+  // 08/11 (người dùng): BỎ hẳn jackpot TRUE NORTH — 3 ghép, lần 3 ra NSWE không còn kích gì (bù: tên lửa +15% ST, skills.js MOI)
+  tn([[1, 4], [1, 2], [3, 12]]); ca('[JP] TRUE NORTH đã bỏ: 3 ghép, lần 3 ra NSWE', 'không có jackpot nào trên Pháo La Bàn', R('JSON.stringify(jK.jp || {})'), !R('jK.jp && Object.keys(jK.jp).length') && !R("'truenorth' in JP.DS"));
   const ss = (hat) => { tran(['pandora', 'lien', 'canon', 'tia', 'set']); nap(); R('deckX()'); R(`G.hat = ${hat}; var jA = dat(14, 'lien', 5); var jD0 = D ? dat(14, 'lien', 5, '', D) : null; var mo = [];`);
     for (let i = 0; i < 6; i++) { R(`B.mana = 0; ghep(B, dat(0, 'pandora', 1), dat(1, 'pandora', 1)); mo.push(B._pd.slice());`); buoc(1); } };
   ss(11); const ss1 = R('mo.map(x => x.join("+")).join(" ")');

@@ -197,7 +197,7 @@ SKILLS.hydra = {
   vien: (T) => (T.sao >= 7 ? 0.91 : 0.35 + 0.08 * T.sao),
   cach: (T) => (T.sao >= 7 ? 0.15 : 0.18),
   nghi: (T) => (T.sao >= 7 ? 1.6 : Math.max(1.6, 2.2 - 0.1 * T.sao)),
-  mo: (T) => T.sao + (T.sao > 1 ? ' heads' : ' head') + ': a chain of ' + T.sao + ' shots (' + Math.round(SKILLS.hydra.vien(T) * 100) + '% each, ' + SKILLS.hydra.cach(T) + 's apart), rest ' + SKILLS.hydra.nghi(T).toFixed(1) + 's · no mana power-up · ' + (T.sao >= 3 ? 'TAP (' + SKILLS.hydra.gia(T) + ' mana, cooldown 20s): ' + (T.sao >= 7 ? 'MACHINE GUN 10 shots/s × 45%' : 'shots twice as fast') + ' for ' + SKILLS.hydra.dai(T).toFixed(2) + 's' : 'tap skill unlocks at 3★'),
+  mo: (T) => (T.sao > 1 ? T.sao + ' heads: a chain of ' + T.sao + ' shots (' + Math.round(SKILLS.hydra.vien(T) * 100) + '% each, ' + SKILLS.hydra.cach(T) + 's apart), rest ' : '1 head: 1 shot (' + Math.round(SKILLS.hydra.vien(T) * 100) + '% damage), rest ') + SKILLS.hydra.nghi(T).toFixed(1) + 's · no mana power-up · ' + (T.sao >= 3 ? 'TAP (' + SKILLS.hydra.gia(T) + ' mana, cooldown 20s): ' + (T.sao >= 7 ? 'MACHINE GUN 10 shots/s × 45%' : 'shots twice as fast') + ' for ' + SKILLS.hydra.dai(T).toFixed(2) + 's' : 'tap skill unlocks at 3★'),
   sinh(G, T) { T.hq = 0; T.hqT = 0; T.hyA = 0; T.hdG = []; T.hdM = []; },
   capNhat(G, B, T, dt) {
     if (!T.hdG) this.sinh(G, T);

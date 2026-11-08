@@ -24,7 +24,7 @@ const gan = (a, b) => Math.abs(a - b) < 1e-6;
   // 1. bảng thuần
   let r = await p.evaluate(() => [0, 1, 2, 3, 4, 5, 6, 9].map(k => knGt(KY_NANG_CAP.saochep, k)));
   ok(JSON.stringify(r) === JSON.stringify([70, 74, 78, 82, 86, 90, 94, 94]), 'Copycat: % sao chép 70 → 74 → … → 94 (kẹp ở cấp 15; đo bậc 06/11: 50 → 70)', JSON.stringify(r));
-  r = await p.evaluate(() => { const ds = []; for (const id in KY_NANG_CAP) { const e = KY_NANG_CAP[id], bac = G.rosterMap[id] && G.rosterMap[id].bac; if (!bac || !SKILLS[id]) { ds.push(id + ':thiếu'); continue; } const n = THE.lvMax - THE.lvDau[bac], n2 = (THE.maxLv ? THE.maxLv(bac) : THE.lvMax) - THE.lvDau[bac], tron = (m) => Math.abs(knGt(e, m) - e.max) < 1e-6 && Math.abs(knGt(e, m - 1) - e.max) > 1e-6; if (!tron(n) && !tron(n2)) ds.push(id); /* 08/11: thẻ Vàng/Đỏ lên LV17 — bảng chạm max ở LV15 (cũ) hoặc ở cấp tối đa mới */ } return ds; });
+  r = await p.evaluate(() => { const ds = []; for (const id in KY_NANG_CAP) { if (typeof THE_BO !== 'undefined' && THE_BO.includes(id)) continue; /* 08/11: thẻ đã bỏ (THE_BO, vd haoquang) không còn trong roster */ const e = KY_NANG_CAP[id], bac = G.rosterMap[id] && G.rosterMap[id].bac; if (!bac || !SKILLS[id]) { ds.push(id + ':thiếu'); continue; } const n = THE.lvMax - THE.lvDau[bac], n2 = (THE.maxLv ? THE.maxLv(bac) : THE.lvMax) - THE.lvDau[bac], tron = (m) => Math.abs(knGt(e, m) - e.max) < 1e-6 && Math.abs(knGt(e, m - 1) - e.max) > 1e-6; if (!tron(n) && !tron(n2)) ds.push(id); /* 08/11: thẻ Vàng/Đỏ lên LV17 — bảng chạm max ở LV15 (cũ) hoặc ở cấp tối đa mới */ } return ds; });
   ok(!r.length, 'mọi mục bảng: chạm max đúng ở cấp 15 hoặc cấp tối đa của bậc (không vượt)', r.join(','));
 
   // 2. bản sao trong trận theo cấp thẻ Copycat
@@ -46,7 +46,7 @@ const gan = (a, b) => Math.abs(a - b) < 1e-6;
   ok(r[3].the > 1.1, 'cấp thẻ của ụ GỐC vẫn áp (Cannon +4 cấp: bản sao = ụ gốc đã lên cấp × 82%)', String(r[3].the));
   ok(/82% power/.test(r[1].st || ''), 'bảng chỉ số thật trong trận: "copy (82% power)"', r[1].st);
 
-  // 2b. ảnh trận: bản sao Copycat (cấp +3 = 71%) cạnh Cannon thật — bảng thông tin ụ bản sao
+  // 2b. ảnh trận: bản sao Copycat (cấp +3 = 82%, bậc mới 08/11 — trước 71%) cạnh Cannon thật — bảng thông tin ụ bản sao
   if (SHOTS) {
     const x = await p.evaluate(() => {
       const B = G.ban[0]; B.capThe = Object.assign({}, B.capThe, { saochep: 3, canon: 0 });
@@ -56,8 +56,8 @@ const gan = (a, b) => Math.abs(a - b) < 1e-6;
       const C = B.t.find(T => T && T.banSao); G.dung = true; UI.moTT(C.id, C);
       return { c: Math.round(dmgU(C)), g: Math.round(dmgU(Y)) };
     });
-    await p.waitForTimeout(700); await p.screenshot({ path: SHOTS + 'tran_banSao_71.png' });
-    ok(x.c === Math.round(x.g * 0.71) || Math.abs(x.c - x.g * 0.71) <= 1, 'ảnh trận: bản sao ' + x.c + ' = ' + x.g + ' × 71%', JSON.stringify(x));
+    await p.waitForTimeout(700); await p.screenshot({ path: SHOTS + 'tran_banSao_82.png' });
+    ok(x.c === Math.round(x.g * 0.82) || Math.abs(x.c - x.g * 0.82) <= 1, 'ảnh trận: bản sao ' + x.c + ' = ' + x.g + ' × 82%', JSON.stringify(x));
     await p.evaluate(() => { try { UI.dongTT && UI.dongTT(); } catch (e) { } G.dung = false; });
   }
   // 3. hỗ trợ + kỹ năng đặc biệt

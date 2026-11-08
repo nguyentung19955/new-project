@@ -31,7 +31,7 @@ function danThang(B, T, E, img, sp, co, trungFn, duoi) {
 SKILLS.canon = {
   vai: 'tc', dmg: 20, toc: 0.55, nham: 'dau', // bậc VÀNG (07/11 20:10): 20 × Vàng ×2.6
   BIT: [1, 2, 4, 8], CHU: ['N', 'E', 'S', 'W'], DOC: [0, 2, 3, 1], // bit theo chiều kim đồng hồ (0 N · 1 E · 2 S · 3 W); tên đọc theo thứ tự người dùng N S W E
-  DU: 15, MOI: [0, 1.0, 1.1, 1.0, 0.9], TP5: 0.2,
+  DU: 15, MOI: [0, 1.15, 1.25, 1.15, 1.05], TP5: 0.2, // MOI: ×ST mỗi tên lửa theo số hướng. 08/11 +15% (cũ 1.0/1.1/1.0/0.9) bù jackpot TRUE NORTH đã bỏ
   banKinh: (T) => 26 + 5 * T.sao,
   hb: (T) => (((T && T.hb) | 0) & 15) || 1,
   chong: (T) => Math.max(0, (T && T.cmC) | 0),
@@ -415,10 +415,24 @@ SKILLS.blackhole = {
       T.bhT = 0; giat(T, 1.2); chopNong(T, 30);
       const A = !!T.bhA; T.bhA = false;
       const r = this.r(T) + (A ? 24 : 0), giu = A ? 2.0 : 1.2, dmg = dmgU(T) * (this.nghien(T) + (A ? 3.0 : 0));
-      G.hu.push({ k: 'hoden', t: 0, song: giu, p: E.p, s: E.s, x: E.x, y: E.y, r, T, B, dmg, giu, A, acc: 0 });
+      const vt = this.choVua(E, r);
+      G.hu.push({ k: 'hoden', t: 0, song: giu, p: E.p, s: vt[0], x: vt[1], y: vt[2], r, T, B, dmg, giu, A, acc: 0 });
       SND.hoden();
     } else if (T.bhT > 1) T.bhT = 1;
     return true;
+  },
+  // 08/11 (lỗi tester: hố đen ở cổng quái bị cắt mép phải màn): tâm hố vẫn NẰM TRÊN ĐƯỜNG nhưng trượt dọc đường (≤ r, đám quái vẫn trong vùng)
+  //   tới chỗ gần nhất mà cả đĩa xoáy + mảnh vỡ (≈ 1.3 r: p2_blackhole 1.13 r, sig_m01 tới ~1.35 r) nằm gọn trong khung W×H → mép tràn khỏi đường được, không bị cắt.
+  choVua(E, r) {
+    const P = G.duong && G.duong[E.p], R = r * 1.3;
+    if (!P) return [E.s, E.x, E.y];
+    const tran = (x, y) => Math.max(0, x + R - W, R - x, R - y, y + R - H);
+    let kq = [E.s, E.x, E.y], bo = tran(E.x, E.y);
+    for (let d = 4; bo > 0 && d <= r * 1.25; d += 4) for (const q of [E.s + d, E.s - d]) {
+      if (q < 0 || q > P.len) continue;
+      const [x, y] = viTri(P, q), o = tran(x, y); if (o < bo) { bo = o; kq = [q, x, y]; }
+    }
+    return kq;
   },
   aiNen: (G, B, T) => dsMucTieu(B).filter(E => !E.chet).length >= 6 || G.quai.some(E => E.trum && !E.chet && banDuocQuai(B, E)),
   chuDong(G, B, T) {

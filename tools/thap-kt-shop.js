@@ -22,8 +22,9 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   await p.goto(BASE + '?notut=1', { waitUntil: 'commit' });
   await p.evaluate(() => { localStorage.clear(); localStorage.setItem('turret_the', JSON.stringify({ v: 1, vang: 4321, c: { canon: { lv: 4, n: 7 } } })); localStorage.setItem('turret_best', JSON.stringify({ solo: { wave: 41 } })); localStorage.setItem('turret_bo', JSON.stringify({ chon: ['canon', 'bang', 'tia', 'set', 'lien'], mv: 'hero', che: 'solo' })); });
   await vao();
-  let r = await p.evaluate(() => ({ vang: THEBAI.doc().vang, ngoc: THEBAI.doc().ngoc, lv: THEBAI.the('canon').lv, n: THEBAI.the('canon').n, w: KT.doc().tk.wave, bo: localStorage.getItem('turret_bo'), w30: KT.tt().find(a => a.id === 'w30').xong }));
-  ok(r.vang === 4321 && r.lv === 4 && r.n === 7 && r.ngoc === 0 && r.bo && r.w === 41 && r.w30, 'di chuyển bản cũ: giữ vàng/cấp thẻ/bộ bài, ngọc 0, kỷ lục wave → thành tựu mở', JSON.stringify(r));
+  let r = await p.evaluate(() => ({ vang: THEBAI.doc().vang, ngoc: THEBAI.doc().ngoc, lv: THEBAI.the('canon').lv, lv0: Math.max(4, (THE.lvDau || {})[(G.rosterMap.canon || {}).bac] || 0), n: THEBAI.the('canon').n, w: KT.doc().tk.wave, bo: localStorage.getItem('turret_bo'), w30: KT.tt().find(a => a.id === 'w30').xong }));
+  // 08/11: Pháo La Bàn giờ là thẻ Vàng (cấp đầu LV9) → cấp cũ 4 được nâng lên cấp đầu của bậc (lv0)
+  ok(r.vang === 4321 && r.lv === r.lv0 && r.n === 7 && r.ngoc === 0 && r.bo && r.w === 41 && r.w30, 'di chuyển bản cũ: giữ vàng/cấp thẻ/bộ bài, ngọc 0, kỷ lục wave → thành tựu mở', JSON.stringify(r));
   await p.evaluate(() => localStorage.setItem('turret_kt', '{hỏng'));
   await vao();
   r = await p.evaluate(() => ({ hong: !!localStorage.getItem('turret_kt_hong'), ok: !!KT.doc().pid, vang: THEBAI.doc().vang }));

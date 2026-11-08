@@ -19,7 +19,6 @@ const JP = {
     heist: { u: 'bienmau', ten: 'CHROMATIC HEIST', kho: 4, dmg: 1.6, toc: 0.65, cdmg: 1.2, song: 10, hoi: 30, mau: '#ffffff' },
     reactor: { u: 'lienket', ten: 'CHAIN REACTOR', kho: 4, dmg: 1.5, toc: 0.6, cdmg: 0.9, song: 12, hoi: 40, mau: '#d9a8ff' },
     eclipse: { u: 'mauhut', ten: 'BLOOD ECLIPSE', kho: 4, dmg: 1.8, toc: 0.7, cdmg: 1.1, song: 11, hoi: 30, mau: '#ff4a6a' },
-    truenorth: { u: 'canon', ten: 'TRUE NORTH', kho: 3, dmg: 1.1, toc: 0.45, cdmg: 0.7, song: 12, hoi: 30, mau: '#ffb35a' },
     chorus: { u: 'hopca', ten: 'GRAND CHORUS', kho: 4, dmg: 1.6, toc: 0.6, cdmg: 1.1, song: 12, hoi: 50, mau: '#d9b8ff' },
     royal: { u: 'pandora', ten: 'ROYAL VAULT', kho: 5, dmg: 2.2, toc: 0.85, cdmg: 1.5, song: 15, hoi: 0, mau: '#ffe46b' },
     loaded: { u: 'xucxac', ten: 'LOADED DICE', kho: 3, dmg: 0, toc: 0.7, cdmg: 0.8, song: 8, hoi: 30, mau: '#ffd23f' },
@@ -31,7 +30,7 @@ const JP = {
   HE_CUA: 60,                             // Chromatic Heist: ĐỎ → VÀNG → XANH trong 60 s
   CR_NHOM: 4, CR_CUA: 5, CR_DON: 3, CR_U: 3, CR_MOI: 6, CR_K: 2.5, // Chain Reactor
   BE_VAMP: 6, BE_CUA: 25, BE_XUNG: 3, BE_K: 3, // Blood Eclipse
-  TN_CUA: 45, TN_LAN: 3, TN_K: 6, // True North (08/11: lần ghép thứ 3 phải ra NSWE)
+  // (08/11 người dùng: BỎ hẳn jackpot TRUE NORTH của Pháo La Bàn — bù bằng sát thương tên lửa +15%, skills.js MOI)
   GC_U: 6, GC_TC: 3, GC_GIU: 10, GC_SAO: 3, // Grand Chorus (đội hình ≥ 3★ — mô phỏng: 1★ kích ngay wave 2)
   RV_MANA: 100,                           // Royal Vault
   LD_LAN: 12, LD_PHAT: 6, LD_SAO: 3,      // Loaded Dice (Pháo ≥ 3★ — mô phỏng: 1★ kích từ wave 1, 20 lần/trận)
@@ -76,7 +75,6 @@ const JP = {
       case 'orbital': { const o = B.jpOrb; return P(o && o.n > 0 && G.t - o.t0 < SKILLS.orbital.dai(B), o && o.n, 2); }
       case 'bienmau': { const o = B.jpPr; return P(o && o.n > 0 && G.t - o.t0 <= this.HE_CUA, o && o.n, 3); }
       case 'mauhut': { const o = B.jpBE; return P(o && G.t - o.t <= this.BE_CUA, 1, 2); }
-      case 'canon': { const o = B.jpTN; return P(o && o.n > 0 && G.t - o.t0 <= this.TN_CUA, o && o.n, 3); }
       case 'hopca': { const o = B.jpGC && B.jpGC[T.sao]; return P(o && !o.xong, o && Math.min(this.GC_GIU, Math.floor(G.t - o.t0)), this.GC_GIU); }
       case 'pandora': { const n = 6 - ((B.pdTui && B.pdTui.length) || 6); return P(B.pdTui && n > 0, n, 6); }
       case 'xucxac': { const s = new Set((T.ldH || []).filter(b => b >= 0)); return P(s.size > 0 && G.t >= this.cd(B, 'loaded' + T.uid), s.size, 3); }
@@ -126,27 +124,6 @@ HU.jpXung = { // 3 xung máu xuyên cả làn của mình (0,5 / 1,5 / 2,5 s), m
   ve() { },
 };
 
-// ---------- 6) TRUE NORTH — Pháo La Bàn (08/11 tổ hợp hướng): 3 lần ghép Pháo La Bàn trong 45 s, lần thứ 3 (trở đi) ra NSWE (đủ 4 hướng hoặc thêm stack)
-//      → mọi Pháo La Bàn +110% / +45% / +70 12 s + 1 phát xuyên × 600% về phía quái đầu. (Cũ: 3 ghép cùng mũi tên, số ≥ 6.)
-if (SKILLS.canon && SKILLS.canon.ghepDB) {
-  const S = SKILLS.canon, lam = S.ghepDB.lam;
-  S.ghepDB.lam = function (G, B, a, b) {
-    const r = lam.apply(this, arguments);
-    let o = B.jpTN; if (!o || G.t - o.t0 > JP.TN_CUA) o = { t0: G.t, n: 0 };
-    o.n++; B.jpTN = o;
-    if (o.n >= JP.TN_LAN && S.du(b) && JP.kich(B, 'truenorth', B.t.filter(X => X && X.id === 'canon'), b)) {
-      B.jpTN = null;
-      const E = quaiDau(B);
-      if (E) { // phát xuyên vàng: mọi quái trên đường thẳng từ ụ qua mục tiêu (kéo dài tới 600 px)
-        const c = B.o[b.o], vx = E.x - c.x, vy = E.y - c.y, L = Math.hypot(vx, vy) || 1, ux = vx / L, uy = vy / L, dmg = JP.goc(b) * JP.TN_K, ds = [];
-        for (const M of dsMucTieu(B)) { if (M.chet) continue; const u = (M.x - c.x) * ux + (M.y - c.y) * uy; if (u < 0 || u > 600) continue; const px = c.x + ux * u - M.x, py = c.y + uy * u - M.y; if (px * px + py * py <= (18 + M.d.co * 0.25) ** 2) ds.push(M); }
-        ds.sort((p, q) => p.uid - q.uid); for (const M of ds) trung(M, dmg, { B, T: b, phu: true, mau: '#ffb35a' });
-        G.hu.push({ k: 'tiaTia', t: 0, song: 0.3, x0: c.x, y0: c.y, x1: c.x + ux * 600, y1: c.y + uy * 600, mau: '#ffd23f' });
-      }
-    }
-    return r;
-  };
-}
 
 // ---------- 8) SIX SEALS — Pandora: túi xáo 6 phép (mỗi chu kỳ ra đủ 6, không lặp; thứ tự theo hạt giống) · lần mở thứ 6 thêm ROYAL VAULT:
 //      ụ Tấn công sao cao nhất +220% / +85% / +150 15 s + 100 mana. 6★ / 7★ rút thêm từ cùng túi (mỗi lần rút mở 1 dấu ấn).
@@ -281,11 +258,10 @@ HU.jpVe = { // mọi bàn (solo / co-op / pvp / online): ụ đang có jackpot �
 JP.CHU = {
   orbital: (d) => 'ORBITAL CASCADE: 2 Orbital merges (2+ stars) inside one awakening → every Orbital +' + d.p + '% damage, +' + d.t + '% fire rate, +' + d.c + '% crit dmg ' + d.s + 's + 4 bombs ×180% each (45s cooldown)',
   lienket: (d) => 'CHAIN REACTOR: a chain of 4+ where 3 links each land 3 hits within 5s → the chain +' + d.p + '% damage, +' + d.t + '% fire rate, +' + d.c + '% crit dmg ' + d.s + 's, every 6th hit fires a bolt ×250% (40s cooldown)',
-  canon: (d) => 'TRUE NORTH: 3 Compass merges within 45s, the 3rd makes NSWE → every Compass Cannon +' + d.p + '% damage, +' + d.t + '% fire rate, +' + d.c + '% crit dmg ' + d.s + 's + 1 piercing shot ×600%',
   radar: (d) => 'PERFECT FREQUENCY (3+ stars): 4 Attack neighbours of 3+ types held 8s → those 4 +' + d.p + '% damage, +' + d.t + '% fire rate, +' + d.c + '% crit dmg ' + d.s + 's (50s cooldown)',
 };
 {
-  const ID = { loren: 'masterwork', orbital: 'cascade', bienmau: 'heist', lienket: 'reactor', mauhut: 'eclipse', canon: 'truenorth', hopca: 'chorus', radar: 'frequency' };
+  const ID = { loren: 'masterwork', orbital: 'cascade', bienmau: 'heist', lienket: 'reactor', mauhut: 'eclipse', hopca: 'chorus', radar: 'frequency' };
   for (const u in JP.CHU) {
     const sk = SKILLS[u]; if (!sk || !sk.mo) continue;
     const mo = sk.mo, d0 = JP.DS[ID[u]], d = { p: Math.round(d0.dmg * 100), t: Math.round(d0.toc * 100), c: Math.round(d0.cdmg * 100), s: d0.song };
@@ -296,12 +272,12 @@ JP.CHU = {
 // ---------- tấm đếm (DEMKN): thêm tiến độ jackpot (icon sao + n/N) ----------
 if (typeof addEventListener === 'function') addEventListener('DOMContentLoaded', () => {
   if (typeof DEMKN === 'undefined') return;
-  for (const id of ['orbital', 'canon', 'pandora', 'xucxac', 'radar']) {
+  for (const id of ['orbital', 'pandora', 'xucxac', 'radar']) {
     const f = DEMKN.DS[id];
     DEMKN.DS[id] = function (T, B) {
       const v = f ? f.apply(this, arguments) : null, p = JP.tienDo(T, B);
       if (!p) return v;
-      const m = (v && v.m && !v.jpGon ? v.m.slice(0, 1) : []).concat([{ ic: 'ic_sao', s: p[0] + '/' + p[1] }]); // jpGon (Pháo La Bàn): bỏ mục đầu cho tấm ngắn
+      const m = (v && v.m ? v.m.slice(0, 1) : []).concat([{ ic: 'ic_sao', s: p[0] + '/' + p[1] }]);
       return Object.assign({}, v || {}, { m });
     };
   }

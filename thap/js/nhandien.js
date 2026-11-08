@@ -39,14 +39,15 @@ const ND = {
   xep(T, x, y, C, hs, al, B) {
     const d = C * 0.34, k = C / (Math.min(B.cw, B.ch));
     const dx = (B.cw * k) / 2 - d / 2 - 1.5, dy = (B.ch * k) / 2 - d / 2 - 1.5;
-    return { T, gx: x - dx, gy: y - dy, sx: x + dx, sy: y - dy, d, hs, al };
+    return { T, gx: x - dx, gy: y - dy, sx: x + dx, sy: y - dy, bx: x, by: y - (B.ch * k) / 2, d, hs, al }; // bx/by: huy hiệu sao GIỮA ô, mép trên ô (người dùng 08/11: 'sao ở giữa, trên ụ 1 tý')
   },
   veHuyHieu(ctx, h) {
     const T = h.T, d = h.d * h.hs; if (d < 1) return;
     ctx.globalAlpha = h.al;
     // (bỏ icon vai trò trên bàn — độ hiếm = vòng bậc PNG; vai trò chỉ ở bảng chạm ụ / thẻ bộ bài)
     if (T.banSao) { const ic = REN.img('nho/saochep'); if (ic) REN.anhGiua(ctx, ic, h.gx, h.gy, d * 1.05, 0, h.al); } // bản sao Copycat: icon Copycat nhỏ (PNG) góc trên-trái
-    if (h.dong) REN.veHuyHieuDong(ctx, h.sx, h.sy, T.sao, d); else REN.veHuyHieu(ctx, h.sx, h.sy, T.sao, d); // cỡ đang nảy/phóng: bậc cỡ cố định
+    if (h.bx != null && REN.veHuyHieuTren && REN.img('hh_sao' + Math.max(1, Math.min(7, T.sao | 0)))) REN.veHuyHieuTren(ctx, h.bx, h.by, T.sao, d, h.dong); // 08/11: giữa ô, ngay trên đầu ụ
+    else if (h.dong) REN.veHuyHieuDong(ctx, h.sx, h.sy, T.sao, d); else REN.veHuyHieu(ctx, h.sx, h.sy, T.sao, d); // cỡ đang nảy/phóng: bậc cỡ cố định · ảnh hh_sao chưa tải → khiên số cũ ở góc
     ctx.globalAlpha = 1;
   },
 

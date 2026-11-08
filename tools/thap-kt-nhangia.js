@@ -4,14 +4,14 @@
 //   · đáy nhãn nằm trong 11 px logic cuối của #duoi (khung khay), hoặc ra ngoài màn / vào vùng an toàn đáy,
 //   · chồng nhãn LV / MAX / số ụ (đỉnh nhãn giá phải ở dưới đáy nhãn LV),
 //   · tâm số giá thẻ và giá chỉ huy lệch nhau > 4 px logic (không thẳng hàng).
-// SOLO / CO-OP / PVP × 360x640, 390x844, 430x932, iPad 820x1180, ngang 1280x800; ONLINE (nếu máy chủ giả 8787 đang chạy) ở 390x844.
+// SOLO / CO-OP / PVP × 360x640, 390x844, 430x932, iPad 820x1180, ngang 1280x800, 844x390, 667x375 (08/11: + nhãn giá không chồng nhau); ONLINE (nếu máy chủ giả 8787 đang chạy) ở 390x844.
 // Chạy (gốc repo): python3 -m http.server 8765 &  [node tools/thap-online-mock-server.js 8787 &]
 //   NODE_PATH=/opt/npm-tools/node_modules node tools/thap-kt-nhangia.js [BASE]
 'use strict';
 const pw = require('playwright');
 const BASE = process.argv[2] || process.env.BASE || 'http://localhost:8765/thap/';
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-const CO = [[360, 640], [390, 844], [430, 932], [820, 1180], [1280, 800]];
+const CO = [[360, 640], [390, 844], [430, 932], [820, 1180], [1280, 800], [844, 390], [667, 375]]; // 08/11: + màn ngang điện thoại (lỗi tester: '100' chồng nhau → '10C', mất nhãn)
 
 function KIEM() {
   const out = [], wrap = document.getElementById('wrap');
@@ -20,7 +20,7 @@ function KIEM() {
   const hien = (e) => { if (!e) return false; const c = getComputedStyle(e); return c.display !== 'none' && c.visibility !== 'hidden' && R(e).height > 0; };
   const duoi = R(document.getElementById('duoi'));
   const sb = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--kt-sab')) || 0;
-  const tam = [];
+  const tam = [], hop = [];
   const kiem = (o, g, ten) => {
     if (!hien(g)) return;
     const ro = R(o), rg = R(g), b = g.querySelector('b'), rb = b ? R(b) : rg;
@@ -29,11 +29,17 @@ function KIEM() {
     if (rb.bottom > innerHeight - sb) out.push(ten + ': số giá ra ngoài màn / vào vùng an toàn đáy');
     for (const q of ['.lv', '.so', '.ot-so']) { const l = o.querySelector(':scope > ' + q); if (hien(l) && R(l).bottom > rb.top + 1 && R(l).top < rb.bottom) out.push(ten + ': giá chồng ' + q); }
     tam.push([ten, (rb.top + rb.bottom) / 2]);
+    hop.push([ten, rg]);
   };
   document.querySelectorAll('#bo-the .the').forEach((o, i) => kiem(o, o.querySelector(':scope > .gia'), 'thẻ ' + i));
   const mv = document.getElementById('the-mv'); if (mv) kiem(mv, mv.querySelector(':scope > .mv-gia'), 'chỉ huy');
   const tm = tam.find(t => t[0] === 'chỉ huy'), tt = tam.find(t => t[0] !== 'chỉ huy');
   if (tm && tt && Math.abs(tm[1] - tt[1]) / s > 4) out.push('giá chỉ huy lệch hàng giá thẻ ' + ((tm[1] - tt[1]) / s).toFixed(1) + ' px');
+  // 08/11: 2 nhãn giá (◆ + số) không được chồng nhau theo chiều ngang (cùng hàng) — màn ngang 844×390 / 667×375
+  for (let i = 0; i < hop.length; i++) for (let j = i + 1; j < hop.length; j++) {
+    const a = hop[i][1], c = hop[j][1];
+    if (a.left < c.right - 0.5 && c.left < a.right - 0.5 && a.top < c.bottom && c.top < a.bottom) out.push('nhãn giá ' + hop[i][0] + ' chồng ' + hop[j][0] + ' (' + (Math.min(a.right, c.right) - Math.max(a.left, c.left)).toFixed(1) + ' px)');
+  }
   if (!tam.length) out.push('không thấy nhãn giá nào');
   return { loi: out, n: tam.length };
 }

@@ -251,7 +251,8 @@ const SD_K = {
     them: [[1.8, (B, D, T) => { if (!T || B.t[7]) return; const N = sinhU(taoU(B, 'thanhdia', T.sao, 7)); N.goc = -Math.PI / 2; B.t[7] = N; VX.trieu(N); }]],
     c: [[0.2, 'Two turrets are frozen'], [1.8, 'Sanctum arrives: cleans them', { ev: 'moi', cham: 0.7 }], [3.2, 'Neighbours get a 1-hit shield'], [4.6, (T) => 'Attack neighbours +' + sdBuf(T) + ' damage', { cham: 0.4 }]] },
   // Prism Thief: 2 ụ đồng pha màu (tuoi) → ghép CÙNG màu = COMBO thật; Prism Thief thứ 3 (ô 12) nhận sát thương
-  bienmau: { q: Q.hang(4, 180, 40, 8), ke: [[6, 'bienmau', 's'], [8, 'bienmau', 's'], [13, 'bienmau', 's']],
+  // 08/11 (lỗi tester): kieu 'tc' — bỏ cú kéo-ghép mặc định 7→8 lúc 2.5 s (làm mất Prism Vàng ô 7 trong khi chữ nói 'vuốt đủ 4')
+  bienmau: { kieu: 'tc', q: Q.hang(4, 180, 40, 8), ke: [[6, 'bienmau', 's'], [8, 'bienmau', 's'], [13, 'bienmau', 's']],
     truoc: (T, B) => { B.pmCd = 0; const m = [[6, 0], [7, 1], [8, 2], [13, 3]]; for (const [o, q] of m) { const X = B.t[o]; if (X) { X.pm = q; X.pms = 2; X.pmB = null; } } },
     them: [[3.0, (B) => { SKILLS.bienmau.mach(B, [6, 7, 8, 13], true); }]],
     c: [[0.2, 'Red kills, gold mana, blue freezes, green crits'], [1.6, '4 different colours side by side'], [3.0, 'Swipe all 4: Chromatic Circuit', { cham: 0.7 }], [4.4, 'The last colour picks the finish']], dai: 9 },

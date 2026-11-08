@@ -41,8 +41,7 @@ if (typeof DEMKN !== 'undefined') Object.assign(DEMKN.DS, {
     if (src && src !== T && src.id === 'canon' && src.ban === T.ban && KG.dich() === T && hopLeGhep(src, T)) {
       const kq = S.hopNhat(src, T); if (kq) return { m: [{ ic: 'canon_phu', s: nhan(kq.hb, kq.chong) }], sang: true };
     }
-    // jpGon: khi tấm có thêm tiến độ TRUE NORTH (★ 2/3, jackpot.js) thì bỏ chữ hướng (mũi tên trên ụ đã chỉ hướng) → tấm ngắn, không tràn ô hẹp; stack '+n' vẫn giữ
-    return { m: [{ ic: 'canon_phu', s: nhan(S.hb(T), S.chong(T)) }], sang: S.du(T), jpGon: !(S.du(T) && S.chong(T) > 0) };
+    return { m: [{ ic: 'canon_phu', s: nhan(S.hb(T), S.chong(T)) }], sang: S.du(T) }; // 08/11: bỏ jackpot TRUE NORTH → tấm chỉ còn tổ hợp hướng / '+n' stack (bỏ cờ jpGon)
   },
   drone(T, B) { // chỉ khi đang kéo Drone lên Drone: số drone sẽ phóng (theo quãng kéo)
     const src = typeof KG !== 'undefined' && KG.nguon ? KG.nguon() : null;

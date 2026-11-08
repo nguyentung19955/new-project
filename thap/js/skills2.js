@@ -819,7 +819,7 @@ SKILLS.hasao = { // Súng Hạ Sao (Giltine) — HỖ TRỢ (đợt vai trò): �
 };
 SKILLS.saochep = { // Máy Sao Chép (Shamash): kéo lên ụ CÙNG SAO → thành bản sao của ụ đó (70% chỉ số ở cấp đầu → 94% thẻ max, KY_NANG_CAP.saochep)
   vai: 'db', dmg: 13.33, toc: 1.2, nham: 'dau',
-  mo: (T) => 'Drag onto same-star turret (frozen too, NOT stone): becomes a copy at ' + Math.round(heSaoChep(T && G.ban[T.ban]) * 100) + '% damage · keeps its form (Awakened, Gold) and the Copycat\'s own buffs · the copy is never stone',
+  mo: (T) => 'Drag onto same-star turret (frozen too, NOT stone): becomes a copy at ' + Math.round(heSaoChep(T && G.ban[T.ban]) * 100) + '% damage · keeps its form (Awakened, Gold) and the Copycat\'s own buffs', // 08/11: bỏ 'the copy is never stone' (đá không chép được nữa)
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'tia_lua', co: 16, mau: '#ffe46b', sp: 480 }); },
   ghepDB: {
     // 08/11 người dùng chốt: KHÔNG chép ô ĐÁ (hoá đá) — ô BĂNG vẫn chép được

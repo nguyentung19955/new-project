@@ -3642,7 +3642,6 @@
 "Each flame +#% damage, no cap": "Mỗi lửa +#% ST, không trần",
 "Merging a Relay gives +# flame to every Relay in the same row and column (no cap, kept through merges)": "Ghép Relay → +# lửa cho mọi Relay cùng hàng và cùng cột (không trần, giữ qua ghép)",
 "Flames # / #–# / #+ (no cap: every flame keeps adding damage & crit)": "Lửa # / #–# / #+ (không trần: mỗi lửa đều cộng thêm ST & chí mạng)",
-"flames carried (no cap)": "số lửa mang (không trần)",
 "Flames # → +#% damage, +#% crit · each flame +#% (LV# → LV#: +#%) · merging a Relay gives +# flame to every Relay in the same row and column · a Relay result keeps the higher flames": "Lửa # → +#% sát thương, +#% chí mạng · mỗi lửa +#% (LV# → LV#: +#%) · ghép Lửa Thập Tự cho +# lửa mọi Lửa Thập Tự cùng hàng và cùng cột · ra Lửa Thập Tự thì giữ số lửa cao hơn",
 "#+ (no cap: every flame keeps adding damage & crit)": "#+ (không trần: mỗi lửa đều cộng thêm ST & chí mạng)",
 "Flames # / #–# / #+ (no cap: every flame keeps adding damage & crit).": "Lửa # / #–# / #+ (không trần: mỗi lửa đều cộng thêm ST & chí mạng).",
@@ -4018,8 +4017,6 @@
 "Merge # Twin Makers: you also get a random turret of the same ★ (#%: one ★ higher).": "Ghép # Máy Sinh Đôi: được thêm một ụ ngẫu nhiên cùng sao (#%: cao hơn một ★).",
 "Support: Attack Neighbours (# sides) deal more damage. First #★ each wave: Solo: your weakest Attack turret +#% fire rate. Co-op: your ally's weakest +#%. PvP: the rival's first #★ −#% fire rate": "Hỗ trợ: ụ Tấn công Kề (# phía) +sát thương. Ụ #★ đầu tiên mỗi wave: Solo: ụ Tấn công yếu nhất của bạn +#% tốc bắn. Co-op: ụ yếu nhất của đồng đội +#%. PvP: ụ #★ đầu tiên của đối thủ −#% tốc bắn",
 "Support: Attack Neighbours (# sides) deal more damage. First #★ each wave: Solo: your weakest Attack turret +#% fire rate. Co-op: your ally's weakest +#%. PvP: the rival's first #★ −#% fire rate.": "Hỗ trợ: ụ Tấn công Kề (# phía) +sát thương. Ụ #★ đầu tiên mỗi wave: Solo: ụ Tấn công yếu nhất của bạn +#% tốc bắn. Co-op: ụ yếu nhất của đồng đội +#%. PvP: ụ #★ đầu tiên của đối thủ −#% tốc bắn.",
-"Drag it onto a same-star turret: it becomes a copy with #% damage. Works on Stone or Frozen turrets too (the copy is never Stone). Keeps Awakened and Gold": "Kéo lên ụ cùng sao: thành bản sao #% sát thương. Dùng được cả với ụ Hoá đá hoặc Đóng băng (bản sao không bị đá). Giữ dạng Thức tỉnh và Vàng",
-"Drag it onto a same-star turret: it becomes a copy with #% damage. Works on Stone or Frozen turrets too (the copy is never Stone). Keeps Awakened and Gold.": "Kéo lên ụ cùng sao: thành bản sao #% sát thương. Dùng được cả với ụ Hoá đá hoặc Đóng băng (bản sao không bị đá). Giữ dạng Thức tỉnh và Vàng.",
 "Counts all ★ on your board now. Every #★: it shoots faster. Every #★: more damage. If your stars go down, the bonus goes down": "Đếm tổng ★ đang có trên bàn. Mỗi #★: bắn nhanh hơn. Mỗi #★: mạnh hơn. Tổng sao giảm thì thưởng cũng giảm",
 "Counts all ★ on your board now. Every #★: it shoots faster. Every #★: more damage. If your stars go down, the bonus goes down.": "Đếm tổng ★ đang có trên bàn. Mỗi #★: bắn nhanh hơn. Mỗi #★: mạnh hơn. Tổng sao giảm thì thưởng cũng giảm.",
 "Melee wolf. Each Summon or Merge has a #% chance to come out AWAKENED. Awakened: always crits and attacks faster": "Sói cận chiến. Mỗi lần Triệu hồi hoặc Ghép có #% ra bản THỨC TỈNH. Thức tỉnh: luôn chí mạng, đánh nhanh hơn",
@@ -4803,5 +4800,12 @@
 "SWE": "SWE",
 "Directions: SWE": "Hướng: SWE",
 "NSWE": "NSWE",
-"Directions: NSWE": "Hướng: NSWE"
+"Directions: NSWE": "Hướng: NSWE",
+"# head: # shot (#% damage), rest #s": "# đầu: # viên (#% sát thương), nghỉ # s",
+"Copies any same-star turret, frozen too, not stone (less damage)": "Sao chép mọi ụ cùng sao, cả ụ đóng băng, không chép ụ hoá đá (ST thấp hơn)",
+"Drag it onto a same-star turret: it becomes a copy with #% damage. Works on Frozen turrets too, but not on Stone. Keeps Awakened and Gold": "Kéo lên ụ cùng sao: thành bản sao #% sát thương. Dùng được cả với ụ Đóng băng, nhưng không với ụ Hoá đá. Giữ dạng Thức tỉnh và Vàng",
+"Drag it onto a same-star turret: it becomes a copy with #% damage. Works on Frozen turrets too, but not on Stone. Keeps Awakened and Gold.": "Kéo lên ụ cùng sao: thành bản sao #% sát thương. Dùng được cả với ụ Đóng băng, nhưng không với ụ Hoá đá. Giữ dạng Thức tỉnh và Vàng.",
+"Each hit deals +#% of max HP (more per ★). Every # hits gives a VERDICT. More normal enemies hit: +#% fire rate forever (max +#%). More elites or bosses, or a tie: +#% damage forever (max +#%)": "Mỗi đòn thêm #% máu tối đa (tăng theo ★). Mỗi # đòn có một PHÁN QUYẾT. Trúng quái thường nhiều hơn: +#% tốc bắn vĩnh viễn (tối đa +#%). Tinh anh/trùm nhiều hơn hoặc hoà: +#% sát thương vĩnh viễn (tối đa +#%)",
+"flames carried (max #, more with card level)": "số lửa đang mang (tối đa #, thêm theo cấp thẻ)",
+"Harmony: touching same-star turrets (x/#)": "Hoà âm: số ụ cùng sao kề bên (x/#)"
 }

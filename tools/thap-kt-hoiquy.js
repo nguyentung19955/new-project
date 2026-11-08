@@ -508,15 +508,15 @@ async function online(b, W, H, D, co) {
     try { const o = execFileSync('node', [path.join(__dirname, 'thap-kt-nut-trieu.js'), BASE], { stdio: 'pipe', env: Object.assign({}, process.env, { KHONG_CHUP: '1' }), timeout: 600000 }); console.log(String(o).trim().split('\n').pop()); }
     catch (e) { const ds = String(e.stdout || e.message).split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-nut-trieu.js kẹt'])) LOI.push({ co: '-', buoc: 'nut_trieu', loai: 'nút SUMMON / ảnh HUD', chi: l.trim(), anh: '' }); console.log(ds.join('\n') || '  ✗ nút SUMMON: kẹt'); }
   }
-  // cộng hưởng kỹ năng với ô ĐÁ / BĂNG (luật DCDW: Merge King nâng sao ô đá → 2 đá cùng sao ghép; Teleporter đổi chỗ đá; Copycat chép đá → bản sao thường) — tools/thap-kt-conghuong.js
+  // cộng hưởng kỹ năng với ô ĐÁ / BĂNG (luật DCDW: Merge King nâng sao ô đá → 2 đá cùng sao ghép; Teleporter đổi chỗ đá; Copycat KHÔNG chép đá — 08/11) — tools/thap-kt-conghuong.js
   if (!process.env.CHI || /conghuong|solo/.test(process.env.CHI)) {
     try { execFileSync('node', [path.join(__dirname, 'thap-kt-conghuong.js')], { stdio: 'pipe', env: Object.assign({}, process.env, { SHOTS: '0' }), timeout: 300000 }); console.log('  ✓ cộng hưởng đá/băng (thap-kt-conghuong.js)'); }
     catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-conghuong.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'conghuong', loai: 'cộng hưởng đá/băng', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ cộng hưởng: lỗi chạy'); }
   }
-  // Copycat chép ô ĐÁ / BĂNG cùng sao → bản sao thường, ô đá/băng giữ nguyên (mọi chế độ + online + kéo thật) — tools/thap-kt-copycat-da.js
+  // Copycat chép ô BĂNG cùng sao → bản sao thường, ô băng giữ nguyên; ô ĐÁ: KHÔNG chép (luật 08/11) (mọi chế độ + online + kéo thật) — tools/thap-kt-copycat-da.js
   if (!process.env.CHI || /conghuong|solo|copycat/.test(process.env.CHI)) {
-    try { execFileSync('node', [path.join(__dirname, 'thap-kt-copycat-da.js')], { stdio: 'pipe', env: Object.assign({}, process.env, { BASE }), timeout: 300000 }); console.log('  ✓ Copycat chép đá/băng (thap-kt-copycat-da.js)'); }
-    catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-copycat-da.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'copycatda', loai: 'Copycat chép đá', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ Copycat chép đá: lỗi chạy'); }
+    try { execFileSync('node', [path.join(__dirname, 'thap-kt-copycat-da.js')], { stdio: 'pipe', env: Object.assign({}, process.env, { BASE }), timeout: 300000 }); console.log('  ✓ Copycat chép băng, không chép đá (thap-kt-copycat-da.js)'); }
+    catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-copycat-da.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'copycatda', loai: 'Copycat băng/đá', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ Copycat băng/đá: lỗi chạy'); }
   }
   // cộng hưởng kỹ năng ĐẶC BIỆT × NHAU (Copycat giữ dạng, đá không tính bingo/chuỗi, Star Breaker chỉ ghép thật, ghép đặc biệt online) — tools/thap-kt-conghuong2.js
   if (!process.env.CHI || /conghuong|solo/.test(process.env.CHI)) {

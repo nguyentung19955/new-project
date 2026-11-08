@@ -133,7 +133,7 @@ async function trinhDuyet() {
       }
       // bảng 15 tổ hợp (thứ tự N S W E · NS NW NE SW SE WE · NSW NSE NWE SWE · NSWE+3 stack) — ảnh xem tận mắt
       await p.evaluate(() => { const B = G.ban[0]; B.t.fill(null); G.dan.length = 0; G.quai.length = 0;
-        [1, 4, 8, 2, 5, 9, 3, 12, 6, 10, 13, 7, 11, 14, 15].forEach((m, o) => { const T = sinhU(taoU(B, 'canon', 3, o)); T.hb = m; T.cmC = m === 15 ? 3 : 0; T.goc = -Math.PI / 2; B.t[o] = T; }); B.jpTN = null; G.dung = true; });
+        [1, 4, 8, 2, 5, 9, 3, 12, 6, 10, 13, 7, 11, 14, 15].forEach((m, o) => { const T = sinhU(taoU(B, 'canon', 3, o)); T.hb = m; T.cmC = m === 15 ? 3 : 0; T.goc = -Math.PI / 2; B.t[o] = T; }); G.dung = true; });
       await sleep(700); await chup('to-hop-15'); await p.evaluate(() => { G.dung = false; });
       // bàn: nhiều tổ hợp + kéo thật
       await p.evaluate(() => {
