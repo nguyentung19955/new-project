@@ -70,6 +70,13 @@ const MAVUONG = {
 Object.assign(MAVUONG.hero,   { pham: 'ban', so: 2, duPhong: 'nangYeu' });
 Object.assign(MAVUONG.dahlia, { pham: 'ban', hieuLuc: 10, khoa: 'cuong' });
 Object.assign(MAVUONG.eve,    { pham: 'ban', hieuLuc: 8, khoa: 'khien' });
+// PHÂN CẤP CHỈ HUY (08/11, người dùng: "chỉ huy cũng cần phân cấp trắng xanh tím vàng") — CHỈ HIỂN THỊ: viền/khung/ngọc/nhãn
+//  cùng bộ màu TIERS của ụ; KHÔNG đổi luật, giá, hồi chiêu, đồng bộ online. Bảng lý do: docs/demo-hop-tuong/tuvan/chi-huy-bac/BANG.md
+//  hero (mặc định) = XANH · dahlia RAGE = TÍM · eve HOLY SHIELD = VÀNG. TRẮNG để dành cho chỉ huy đơn giản sau này.
+MAVUONG.hero.bac = 'xanh'; MAVUONG.dahlia.bac = 'tim'; MAVUONG.eve.bac = 'vang';
+function mvBac(id) { const d = MAVUONG[id]; return d && TIERS[d.bac] ? d.bac : 'trang'; } // bậc chỉ huy (id lạ/thiếu → trắng)
+function mvTuAnh(anh) { for (const k in MAVUONG) if (MAVUONG[k].anh === anh) return k; return null; } // 'af_eve' → 'eve'
+function mvDS() { return Object.keys(MAVUONG).sort((a, b) => TIERS[mvBac(a)].thuTu - TIERS[mvBac(b)].thuTu); } // xếp theo bậc như ụ (ổn định)
 const LUAT_MV = { heSoGia: 2, hetCho: true }; // giá ×2 mỗi lần dùng: 40 → 80 → 160
 
 // TIỀN TỆ (P0-06): trong game chỉ có MỘT loại tiền — MANA trong trận (giết quái, ụ mana). Không có tiền sưu tầm/ngoài trận.
