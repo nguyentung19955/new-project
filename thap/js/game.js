@@ -252,10 +252,11 @@ function nangCap(B, id) {
   if (!B.ai) SND.nang(B.lv[id]);
   return true;
 }
-function dungMV(B) {
+function dungMV(B, o) { // o: ô đích của chỉ huy chạm-ô (TWIN / CROSSFIRE / NEXUS — chihuy-moi.js); bỏ trống = tự chọn (AI)
   const mv = B.mv, d = MAVUONG[mv.id];
-  const r = CH.dung(B); // luật (điều kiện, trừ mana, giá ×2, hồi chiêu, bàn đầy, đồng hồ tác dụng): chihuy.js
+  const r = CH.dung(B, undefined, o); // luật (điều kiện, trừ mana, giá ×2, hồi chiêu, bàn đầy, đồng hồ tác dụng): chihuy.js
   if (!r.ok) return false;
+  B._mvO = r.o != null ? r.o : -1; // online: gói 'mv' mang ô đích (bàn con rối áp đúng ô)
   const cx = B.x + B.w / 2, cy = B.y + B.h / 2, nguoi = !B.ai && B === G.ban[0];
   // RAGE / HOLY SHIELD: không chớp toàn màn (reduce flash) — khoảnh khắc chỉ huy vẽ trên từng ô (trumvfx.js)
   FX.vong1(cx, cy, 20, 240, d.mau || '#ffffff', 0.6, 6);
@@ -603,6 +604,7 @@ function capNhatBan(B, dt) {
   }
   mocBuf(B); // mốc sao chung 3★ (+20% tốc)
   HOTRO.apDung(B, dt); // hệ thống hỗ trợ chung (hotro.js): hình ô, đường cong sao 3/5/7★, bản mạnh nhất / loại, trần theo nhóm
+  if (typeof CHM !== 'undefined') CHM.buf(B); // chỉ huy mới (08/11): buff có thời hạn vào T.buf (cộng gộp)
   for (const T of B.t) if (T) capNhatU(B, T, dt);
   if (B.ai || G.debug.auto) aiBan(B, dt);
 }
@@ -687,7 +689,7 @@ function capNhatQuai(dt) {
     if (E.vmT > 0) E.vmT -= dt; if (E.ywT > 0) E.ywT -= dt; if (E.loT > 0) E.loT -= dt; if (E.tpT > 0) E.tpT -= dt; if (E.tempoT > 0) E.tempoT -= dt;
     if (E.chamT > 0) { E.chamT -= dt; if (E.chamT <= 0) E.cham = 0; }
     if (E.docT > 0) { E.docT -= dt; E.docAcc = (E.docAcc || 0) + E.doc * dt; if (E.docAcc >= 1 || E.docT <= 0) { trung(E, E.docAcc, { crit: false, mau: '#9dff5a', im: E.docAcc < 4, B: E.docB }); E.docAcc = 0; } if (E.docT <= 0) E.doc = 0; if (E.chet) continue; } // hết độc → xoá dps độc (không sống lại khi bị gắn cờ độc sau)
-    let v = E.d.v * (1 - (E.d.khangCham ? 0 : E.cham));
+    let v = E.d.v * (1 - (E.d.khangCham ? 0 : (typeof CHM !== 'undefined' ? CHM.gopCham(E, E.cham, CHM.chamQuai(E)) : E.cham))); // + DRAG NET (gộp nhân, trần 90 % / trùm 50 %)
     if (E.chan > 0) { E.chan -= dt; v = E.trum ? v * 0.5 : 0; }
     if (E.keo) { E.s += E.keo * dt; E.keo = 0; }
     E.s += v * dt;

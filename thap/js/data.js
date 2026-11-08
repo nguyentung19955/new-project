@@ -62,6 +62,12 @@ const MAVUONG = {
   hero:   { ten: TEXT.af.hero.name,   anh: 'af_hero',   icon: 'ui_thuong', mau: '#6fc8ff', gia: 30, cd: 15, mo: TEXT.af.hero.desc },
   dahlia: { ten: TEXT.af.dahlia.name, anh: 'af_dahlia', icon: 'fx_cuongno_hieu', mau: '#ff6a3a', gia: 40, cd: 25, mo: TEXT.af.dahlia.desc },
   eve:    { ten: TEXT.af.eve.name,    anh: 'af_eve',    icon: 'sup_khien', mau: '#ffe9a0', gia: 40, cd: 25, mo: TEXT.af.eve.desc },
+  // CHỈ HUY MỚI (08/11, docs/demo-hop-tuong/tuvan/chi-huy-moi/THIET-KE.md) — luật ở chihuy-moi.js (CHM); chon = chạm chỉ huy rồi chạm 1 ô ('u' = ụ, 'o' = ô bất kỳ)
+  tech:   { ten: TEXT.af.tech.name,   anh: 'af_tech',   icon: 'cmd_ic_tech',   mau: '#dfe8f2', gia: 25, cd: 20, mo: TEXT.af.tech.desc },
+  tide:   { ten: TEXT.af.tide.name,   anh: 'af_tide',   icon: 'cmd_ic_tide',   mau: '#7fe8ff', gia: 30, cd: 24, mo: TEXT.af.tide.desc },
+  twin:   { ten: TEXT.af.twin.name,   anh: 'af_twin',   icon: 'cmd_ic_twin',   mau: '#5fb8ff', gia: 35, cd: 22, mo: TEXT.af.twin.desc },
+  hawk:   { ten: TEXT.af.hawk.name,   anh: 'af_hawk',   icon: 'cmd_ic_hawk',   mau: '#ff5a8a', gia: 45, cd: 28, mo: TEXT.af.hawk.desc },
+  weaver: { ten: TEXT.af.weaver.name, anh: 'af_weaver', icon: 'cmd_ic_weaver', mau: '#ffd36a', gia: 50, cd: 30, mo: TEXT.af.weaver.desc },
 };
 // LUẬT CHỈ HUY (P0-09) — chihuy.js là máy trạng thái dùng bảng này (node: tools/test-chihuy.js)
 //  hieuLuc = giây tác dụng (thanh RAGE 10 s / khiên lõi 8 s) · pham = 'ban': chỉ bàn của người dùng (CO-OP không lan sang đồng đội)
@@ -70,10 +76,23 @@ const MAVUONG = {
 Object.assign(MAVUONG.hero,   { pham: 'ban', so: 2, duPhong: 'nangYeu' });
 Object.assign(MAVUONG.dahlia, { pham: 'ban', hieuLuc: 10, khoa: 'cuong' });
 Object.assign(MAVUONG.eve,    { pham: 'ban', hieuLuc: 8, khoa: 'khien' });
+Object.assign(MAVUONG.tech,   { pham: 'ban', hieuLuc: 10, khoa: 'tech', toc: 0.4, saoToi: 2 });
+Object.assign(MAVUONG.tide,   { pham: 'ban', hieuLuc: 6, khoa: 'luoi', cham: 0.25, chamTrum: 0.12 });
+Object.assign(MAVUONG.twin,   { pham: 'ban', hieuLuc: 12, khoa: 'twin', chon: 'u', dmg: 0.6 });
+Object.assign(MAVUONG.hawk,   { pham: 'ban', hieuLuc: 10, khoa: 'thap', chon: 'o', dmgLoai: 0.2, dmgMax: 1 });
+Object.assign(MAVUONG.weaver, { pham: 'ban', hieuLuc: 11, khoa: 'nexus', chon: 'u', day: 3, dmgDay: 0.15, dmgSao: 0.05, tocDay: 0.1 });
 // PHÂN CẤP CHỈ HUY (08/11, người dùng: "chỉ huy cũng cần phân cấp trắng xanh tím vàng") — CHỈ HIỂN THỊ: viền/khung/ngọc/nhãn
 //  cùng bộ màu TIERS của ụ; KHÔNG đổi luật, giá, hồi chiêu, đồng bộ online. Bảng lý do: docs/demo-hop-tuong/tuvan/chi-huy-bac/BANG.md
 //  hero (mặc định) = XANH · dahlia RAGE = TÍM · eve HOLY SHIELD = VÀNG. TRẮNG để dành cho chỉ huy đơn giản sau này.
 MAVUONG.hero.bac = 'xanh'; MAVUONG.dahlia.bac = 'tim'; MAVUONG.eve.bac = 'vang';
+MAVUONG.tech.bac = 'trang'; MAVUONG.tide.bac = 'trang'; MAVUONG.twin.bac = 'xanh'; MAVUONG.hawk.bac = 'tim'; MAVUONG.weaver.bac = 'vang';
+// CÁCH CÓ (08/11): Trắng + 3 chỉ huy cũ miễn phí (không bao giờ lấy lại); Xanh/Tím/Vàng mới = kỷ lục wave HOẶC ngọc (mở ở bảng chọn chỉ huy, lưu turret_kt.mvMo)
+MAVUONG.twin.mo2 = { wave: 15, ngoc: 150 }; MAVUONG.hawk.mo2 = { wave: 30, ngoc: 400 }; MAVUONG.weaver.mo2 = { wave: 50, ngoc: 1000 };
+function mvCo(id) { // đã có chỉ huy này chưa (không có mo2 = miễn phí)
+  const d = MAVUONG[id]; if (!d) return false; if (!d.mo2) return true;
+  if (typeof KT === 'undefined' || !KT.doc) return true; // trang không có kinh tế (test range…) → không khoá
+  const s = KT.doc(); return !!((s.mvMo && s.mvMo[id]) || (s.tk && s.tk.wave >= d.mo2.wave));
+}
 function mvBac(id) { const d = MAVUONG[id]; return d && TIERS[d.bac] ? d.bac : 'trang'; } // bậc chỉ huy (id lạ/thiếu → trắng)
 function mvTuAnh(anh) { for (const k in MAVUONG) if (MAVUONG[k].anh === anh) return k; return null; } // 'af_eve' → 'eve'
 function mvDS() { return Object.keys(MAVUONG).sort((a, b) => TIERS[mvBac(a)].thuTu - TIERS[mvBac(b)].thuTu); } // xếp theo bậc như ụ (ổn định)

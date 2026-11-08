@@ -228,6 +228,12 @@ const UP_MV = {
   hero: { lau: 'Instant', vai: 'Tempo · fills the board fast', dl: [['Effect', 'Summons two free 1★ turrets from your deck into empty cells'], ['Board full', 'Each missing cell gives +1★ to your weakest turret instead'], ['Best with', 'Merge-trigger turrets: more copies to merge']] },
   dahlia: { lau: '10s', vai: 'Burst · save it for a boss', dl: [['Effect', 'Every turret on your board deals double damage'], ['Stacks with', 'Stars, card levels and support buffs'], ['Best with', 'Cast it as a boss arrives']] },
   eve: { lau: '8s', vai: 'Counter · blocks boss skills', dl: [['Effect', 'Clears freeze, stone and burn from every turret'], ['Shield', 'Blocks every boss skill for 8 seconds'], ['Best with', 'Boss waves that lock your turrets']] },
+  // chỉ huy mới (08/11) — chữ tiếng Anh đơn giản
+  tech: { lau: '10s', vai: 'Early game · fast and simple', dl: [['Effect', 'Your 1★ and 2★ Attack turrets fire 40% faster'], ['Who gets it', 'Turrets on the board when you cast. Frozen or stone turrets miss out'], ['Best with', 'Early waves, when most turrets are 1★ or 2★']] },
+  tide: { lau: '6s', vai: 'Defense · buys time', dl: [['Effect', 'Enemies on your path move 25% slower (bosses 12%)'], ['Stacks with', 'Frost slows. Total slow is capped at 90% (bosses 50%)'], ['Best with', 'A big group close to your exit']] },
+  twin: { lau: '12s', vai: 'Choice · keep the pair or merge it', dl: [['How to cast', 'Tap the card, then tap an Attack turret that has a twin (same type and star)'], ['Effect', 'Both twins deal +60% damage'], ['Merging', 'Merging either twin ends the buff. Merge King stars and swaps do not'], ['Best with', 'A strong pair you can keep for a while']] },
+  hawk: { lau: '10s', vai: 'Formation · mix your row and column', dl: [['How to cast', 'Tap the card, then tap any cell'], ['Effect', 'Attack turrets in that row and column get +20% damage for each different turret type there'], ['Max', '+100% (5 types)'], ['Best with', 'A cross of many different turrets']] },
+  weaver: { lau: '11s', vai: 'Puzzle · build a support cross', dl: [['How to cast', 'Tap the card, then tap your main Attack turret'], ['Links', 'Up to 3 Support turrets in the same row or column, not next to it (closest first)'], ['Each link', '+15% damage, +5% per Support star, and +10% speed'], ['Breaks', 'A link breaks if its Support moves, freezes or merges. Merging the main turret ends it'], ['Best with', 'Your best turret where Support rows and columns meet']] },
 };
 const UP = {
   id: null, ds: [], sao: 3, dungXem: false,
@@ -356,6 +362,7 @@ const UP = {
   capNutBo() {
     const nut = this.el.querySelector('.up-nut'), chu = nut.querySelector('.up-nut-chu'), so = nut.querySelector('.up-nut-so');
     if (this.mv) { // trang chỉ huy: dùng chỉ huy này
+      if (typeof mvCo === 'function' && !mvCo(this.mv)) { const m = MAVUONG[this.mv].mo2; chu.textContent = UP_TXT.locked; so.textContent = 'Wave ' + m.wave + ' or ' + m.ngoc + ' gems'; nut.disabled = true; nut.classList.remove('bo'); return; } // chưa mở (08/11)
       const dang = UI.mv === this.mv;
       chu.textContent = dang ? 'Selected' : 'Use commander'; so.textContent = dang ? '' : 'Current: ' + upSC(String((MAVUONG[UI.mv] || MAVUONG.hero).ten).toLowerCase());
       nut.disabled = false; nut.classList.toggle('bo', dang); return;
@@ -427,7 +434,7 @@ const UP = {
       '<div class="up-spec ba">' + this.o('Mana cost', d.gia + ' · ×2 next') + this.o('Cooldown', d.cd + 's') + this.o('Duration', tt.lau || '—') + '</div>' +
       this.theKN('Commander skill', upSC(d.mo) + '.', '') + this.hangTest(true);
     el.querySelector('.up-b').innerHTML =
-      this.muc(1, 'Skill', '<p class="up-mo">' + upEsc(upSC(d.mo)) + '.</p><p class="up-phu"><b>How to cast.</b> Tap the commander button during a battle. The mana cost doubles after each use.</p>') +
+      this.muc(1, 'Skill', '<p class="up-mo">' + upEsc(upSC(d.mo)) + '.</p><p class="up-phu"><b>How to cast.</b> ' + (d.chon ? 'Tap the commander button, then tap a cell on your board.' : 'Tap the commander button during a battle.') + ' The mana cost doubles after each use.</p>' + (d.mo2 ? '<p class="up-phu"><b>Unlock.</b> Reach wave ' + d.mo2.wave + ', or pay ' + d.mo2.ngoc + ' gems in the commander list.</p>' : '')) +
       this.muc(2, 'How it works', '<dl class="up-dl">' + (tt.dl || []).map(([a, b]) => '<dt>' + upEsc(a) + '</dt><dd>' + upEsc(b) + '</dd>').join('') + '</dl>');
     el.querySelector('.up-tam-ten').textContent = ten;
     el.querySelector('.up-ts-ten').textContent = ten + ' · test range';

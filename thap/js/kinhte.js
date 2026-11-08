@@ -86,7 +86,7 @@ const KT = {
   dongHo(ms) { const s = Math.floor(ms / 1000), h = Math.floor(s / 3600), m = Math.floor(s / 60) % 60, x = s % 60, p = (v) => (v < 10 ? '0' : '') + v; return h >= 48 ? Math.floor(h / 24) + 'd ' + (h % 24) + 'h' : p(h) + ':' + p(m) + ':' + p(x); },
 
   // ---------- lưu / di chuyển ----------
-  moi() { return { v: this.V, pid: Math.random().toString(36).slice(2, 10), n: 0, ngayMax: 0, sp: {}, ru: { pv: 0, pd: 0, mo: 0 }, vq: {}, nv: {}, dn: { ngay: 0, so: 0 }, sk: {}, tt: {}, tk: { thang: 0, trum: 0, sao7: 0, wave: 0, nang: 0, ruong: 0 } }; },
+  moi() { return { v: this.V, pid: Math.random().toString(36).slice(2, 10), n: 0, ngayMax: 0, sp: {}, ru: { pv: 0, pd: 0, mo: 0 }, vq: {}, nv: {}, dn: { ngay: 0, so: 0 }, sk: {}, tt: {}, tk: { thang: 0, trum: 0, sao7: 0, wave: 0, nang: 0, ruong: 0 }, mvMo: {} }; }, // mvMo: chỉ huy đã mở bằng ngọc (08/11)
   doc() {
     if (this.s) return this.s;
     let s = null;
@@ -322,6 +322,7 @@ const KT = {
     if (b.dn && a.dn) { if ((b.dn.so | 0) > (a.dn.so | 0)) a.dn = b.dn; }
     if (b.sk && a.sk && b.sk.tuan === a.sk.tuan) { or(a.sk.nhan, b.sk.nhan); a.sk.diem = Math.max(a.sk.diem | 0, b.sk.diem | 0); }
     or(a.tt, b.tt);
+    a.mvMo = a.mvMo || {}; or(a.mvMo, b.mvMo); // chỉ huy đã mở: OR (không bao giờ mất)
     a.ru = a.ru || {}; for (const k of ['mo']) a.ru[k] = Math.max(a.ru[k] | 0, (b.ru || {})[k] | 0);
     for (const k in (b.tk || {})) a.tk[k] = Math.max(a.tk[k] | 0, b.tk[k] | 0);
     for (const id in (goc.e.c || {})) { const x = dd.c[id] || { lv: 0, n: 0 }, y = goc.e.c[id]; if ((y.lv | 0) > (x.lv | 0)) dd.c[id] = y; }

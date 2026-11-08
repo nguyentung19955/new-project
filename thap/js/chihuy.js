@@ -2,7 +2,8 @@
 // Chạy được trong node (tools/test-chihuy.js) bằng cách truyền env giả; trên trình duyệt env lấy từ biến toàn cục.
 // LUẬT:
 //  · Điều kiện dùng: trận chưa kết thúc · không tạm dừng · hết hồi chiêu · đủ mana · (REINFORCE) còn ô trống HOẶC còn ụ chưa 7★.
-//    Không đạt → KHÔNG trừ mana, KHÔNG bắt đầu hồi chiêu, trả lý do ('ketthuc'|'dung'|'hoi'|'thieu'|'day').
+//    Không đạt → KHÔNG trừ mana, KHÔNG bắt đầu hồi chiêu, trả lý do ('ketthuc'|'dung'|'hoi'|'thieu'|'day'|'dich' = chỉ huy mới không có đích).
+//  · Chỉ huy mới (QUICK TUNE / DRAG NET / TWIN / CROSSFIRE / NEXUS, 08/11): đích + hiệu lực ở chihuy-moi.js (CHM, B.chm).
 //  · Dùng được → trừ mana, giá ×LUAT_MV.heSoGia (40 → 80 → 160), hồi chiêu = d.cd. Chạm liên tục: lần 2 bị 'hoi' (không trừ 2 lần).
 //  · REINFORCE: sinh min(2, ô trống) ụ 1★ miễn phí (giá Triệu hồi KHÔNG tăng); mỗi ụ không có chỗ → +1★ cho ụ yếu nhất (sao thấp nhất,
 //    bậc thấp nhất; bỏ ụ hoá đá / 7★), mỗi ụ chỉ nhận 1 lần.
@@ -12,7 +13,7 @@
 'use strict';
 const CH = {
   env() {
-    return { G, MAVUONG, LUAT, LUAT_MV, TIERS, oTrong, trieu: (B) => trieu(B, true), nangSao: (B, T) => nangSao(B, T, 1, 'REINFORCE'),
+    return { G, MAVUONG, LUAT, LUAT_MV, TIERS, oTrong, SKILLS: typeof SKILLS !== 'undefined' ? SKILLS : {}, CHM: typeof CHM !== 'undefined' ? CHM : null, trieu: (B) => trieu(B, true), nangSao: (B, T) => nangSao(B, T, 1, 'REINFORCE'),
       donSach: (B, T) => { if (typeof VX !== 'undefined' && VX.donSach) VX.donSach(B, T); } };
   },
   // ụ yếu nhất để nâng khi bàn đầy
@@ -35,19 +36,24 @@ const CH = {
     if (e.G.dung) return 'dung';
     if (B.mv.cd > 0) return 'hoi';
     if (B.mana < B.mv.gia) return 'thieu';
+    const dm = e.MAVUONG[B.mv.id];
+    if (dm && e.CHM && e.CHM.KHOA[dm.khoa] && !e.CHM.keHoach(B, dm, undefined, e)) return 'dich'; // chỉ huy mới: không có đích hợp lệ (chihuy-moi.js)
     const k = this.keHoach(B, e);
     if (k && k.sinh === 0 && !k.nang.length) return 'day';
     return 'san';
   },
   giaSau(B, n, e) { e = e || this.env(); let g = B.mv.gia; for (let i = 0; i < n; i++) g *= e.LUAT_MV.heSoGia; return g; },
-  dung(B, e) {
+  dung(B, e, o) { // o: ô đích (chỉ huy chạm-ô: TWIN / CROSSFIRE / NEXUS); không có → tự chọn
     e = e || this.env();
     const tt = this.trangThai(B, e);
     if (tt !== 'san') return { ok: false, ly: tt };
     const mv = B.mv, d = e.MAVUONG[mv.id];
+    const moi = e.CHM && e.CHM.KHOA[d.khoa] ? e.CHM.keHoach(B, d, d.chon ? o : undefined, e) : null;
+    if (e.CHM && e.CHM.KHOA[d.khoa] && !moi) return { ok: false, ly: 'dich' }; // ô chạm không hợp lệ → không trừ mana
     const k = this.keHoach(B, e);
     B.mana -= mv.gia; mv.gia *= e.LUAT_MV.heSoGia; mv.cd = d.cd;
     const r = { ok: true, id: mv.id, sinh: [], nang: [] };
+    if (moi) { r.hl = e.CHM.apDung(B, d, moi); r.o = moi.o != null ? moi.o : -1; }
     if (k) {
       for (let i = 0; i < k.sinh; i++) { const T = e.trieu(B); if (T) r.sinh.push(T); }
       for (const T of k.nang) if (e.nangSao(B, T)) r.nang.push(T);
@@ -71,6 +77,7 @@ const CH = {
     e = e || this.env();
     B.mv.cd = Math.max(0, B.mv.cd - dt);
     if (this.dungDongHo(B, e)) return;
+    if (e.CHM) e.CHM.tick(B, dt);
     B.cuong = Math.max(0, (B.cuong || 0) - dt); B.khien = Math.max(0, (B.khien || 0) - dt);
   },
 };

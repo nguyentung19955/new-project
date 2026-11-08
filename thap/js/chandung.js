@@ -44,7 +44,7 @@ const HERO_NEO = {
   hydra: [13.4, 28.4, 39.5], cuuvi: [16.6, 31.6, 51.3], pandora: [10, 25, 61.1], luoicheo: [14.3, 29.3, 50], ngaithoigian: [24, 39, 50], nemesis: [15.1, 30.1, 50],
   docton: [10, 25, 46.1], thaukinh: [6, 21, 43.5], nhieusong: [23, 38, 40.8], santhuong: [19.6, 34.6, 60.5], nhatthuc: [21, 36, 46.1], loren: [11.3, 26.3, 47.4],
   guongcong: [15.6, 30.6, 46.1], marionette: [13, 28, 27.8], chuato: [13.9, 28.9, 50], leviathan: [12, 27, 46.1], khoisinh: [10, 25, 39.5], ronglua: [11.3, 26.3, 46.1],
-  af_hero: [0, 36, 50], af_dahlia: [0, 35, 55], af_eve: [5, 38, 55], bienmau: [14.3, 29.3, 47.4], hopca: [12, 27, 38.2], lualien: [14.3, 29.3, 46.1], luutru: [7.3, 22.3, 46.1], mauhut: [0.5, 15.5, 43.5], nguyenrua: [7, 22, 50], thanhdia: [5.5, 20.5, 47.4], xuonganh: [17.3, 32.3, 50], cobac: [27.7, 42.7, 49.3],};
+  af_hero: [0, 36, 50], af_dahlia: [0, 35, 55], af_eve: [5, 38, 55], af_tech: [1, 17.5, 57], af_tide: [0, 16, 55], af_twin: [7, 19.5, 52], af_hawk: [3.5, 17, 55], af_weaver: [0, 17, 52], bienmau: [14.3, 29.3, 47.4], hopca: [12, 27, 38.2], lualien: [14.3, 29.3, 46.1], luutru: [7.3, 22.3, 46.1], mauhut: [0.5, 15.5, 43.5], nguyenrua: [7, 22, 50], thanhdia: [5.5, 20.5, 47.4], xuonganh: [17.3, 32.3, 50], cobac: [27.7, 42.7, 49.3],};
 // mốc của 1 ảnh: PO_NEO, hoặc suy từ FACE_BOX (khung đầu tóc→cằm: mắt ≈ giữa khung đầu)
 function poNeo(id) {
   if (id && id.startsWith('hero:')) return HERO_NEO[id.slice(5)] || null;

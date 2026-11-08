@@ -5,7 +5,8 @@
 //  · Giá chỉ huy đổi trực tiếp (nảy số + "40→80" bay lên); thanh RAGE 10 s trên nút; khiên 8 s ở lõi (ic_khien + giây).
 'use strict';
 const TIENUI = {
-  LY: { thieu: 'NOT ENOUGH MANA', hoi: 'COOLDOWN', day: 'BOARD FULL · ALL 7★', dung: 'PAUSED', ketthuc: '' },
+  LY: { thieu: 'NOT ENOUGH MANA', hoi: 'COOLDOWN', day: 'BOARD FULL · ALL 7★', dung: 'PAUSED', ketthuc: '', dich: 'NO TARGET' },
+  LY_DICH: { tech: 'NO 1★–2★ ATTACK TURRET', twin: 'NO TWIN PAIR', thap: 'NO ATTACK TURRET', nexus: 'NO SUPPORT IN ROW OR COLUMN' }, // chỉ huy mới: không có đích
   _gia: -1, _tt: '',
   lan(el, c, ms) { el.classList.remove(c); void el.offsetWidth; el.classList.add(c); setTimeout(() => el.classList.remove(c), ms); },
   img(n) { return (typeof anhUrl === 'function' ? anhUrl(n) : 'assets/' + n + '.png'); },
@@ -58,6 +59,11 @@ const TIENUI = {
     const d = MAVUONG[B.mv.id], cu = B.mv.gia / LUAT_MV.heSoGia;
     this.bay(cu + '→' + B.mv.gia, 'tn-bay');
     if (d.khoa === 'cuong') this.bay('RAGE ' + d.hieuLuc + 's', 'tn-bay tn-cam');
+    if (r.hl) { // chỉ huy mới: số ụ nhận / số dây (chữ bay ngắn)
+      const h = r.hl, ch = h.k === 'tech' ? h.ds.length + ' TURRETS +40% SPEED' : h.k === 'luoi' ? 'SLOW ' + Math.round(h.cham * 100) + '% · ' + h.max + 's' : h.k === 'twin' ? 'TWINS +' + Math.round(h.dmg * 100) + '% DMG'
+        : h.k === 'thap' ? h.n + ' TYPES · +' + Math.round(h.dmg * 100) + '% DMG' : h.day.length + (h.day.length > 1 ? ' LINKS' : ' LINK');
+      this.bay(ch, 'tn-bay tn-vang');
+    }
     if (r.nang && r.nang.length && !r.sinh.length) this.bay('FULL → +1★ ×' + r.nang.length, 'tn-bay tn-vang');
     else if (r.nang && r.nang.length) this.bay(r.sinh.length + ' NEW · +1★ ×' + r.nang.length, 'tn-bay tn-vang');
   },
@@ -75,6 +81,7 @@ const TIENUI = {
   tuChoi(el, ly) {
     const t = this.LY[ly]; if (!t) return;
     if (ly === 'thieu') { const B = G.ban[0]; this.bay('NEED ' + Math.ceil(B.mv.gia - B.mana) + ' MORE', 'tn-bay tn-do'); }
+    else if (ly === 'dich') { const d = MAVUONG[G.ban[0].mv.id]; this.bay(this.LY_DICH[d && d.khoa] || t, 'tn-bay tn-do'); }
     else this.bay(t, 'tn-bay tn-do');
   },
   // gợi ý 1 lần: số xanh dưới thẻ = POWER-UP (trả bằng MANA)
@@ -107,7 +114,7 @@ const TIENUI = {
     const r = ttGoc.apply(this, arguments);
     const d = MAVUONG[id], B = G.ban[0] && !$('#top').hidden ? G.ban[0] : null; if (!d) return r;
     const g = B ? B.mv.gia : d.gia, cd = B ? B.mv.cd : 0, h = LUAT_MV.heSoGia;
-    const them = d.so ? ' · board full → +1★ to weakest' : d.hieuLuc ? ' · lasts ' + d.hieuLuc + 's (own board only)' : '';
+    const them = d.so ? ' · board full → +1★ to weakest' : d.hieuLuc ? ' · lasts ' + d.hieuLuc + 's (own board only)' + (d.chon ? ' · tap the card, then tap a cell' : '') : '';
     $('#tt .tt-so').innerHTML = '<div class="d-so">Cost ' + g + ' → ' + g * h + ' → ' + g * h * h + ' mana · cooldown ' + d.cd + 's' + (cd > 0 ? ' · ready in ' + Math.ceil(cd) + 's' : '') + them + '</div>';
     return r;
   };

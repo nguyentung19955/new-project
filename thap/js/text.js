@@ -53,6 +53,11 @@ const TEXT = {
     hero:   { name: 'REINFORCE',   desc: 'Instantly summon two 1★ turrets (free); no room → +1★ to your weakest' },
     dahlia: { name: 'RAGE',        desc: '+100% damage to the whole board for 10s' },
     eve:    { name: 'HOLY SHIELD', desc: 'Clears freeze, stone & burn + blocks boss skills and rival merge effects for 8s' },
+    tech:   { name: 'QUICK TUNE',  desc: 'Your 1★ and 2★ Attack turrets fire 40% faster for 10s' },
+    tide:   { name: 'DRAG NET',    desc: 'Enemies on your path move 25% slower for 6s (bosses 12%)' },
+    twin:   { name: 'TWIN SIGNAL', desc: 'Tap a turret that has a twin (same type and star): both deal +60% damage for 12s. Merging either twin ends the buff' },
+    hawk:   { name: 'CROSSFIRE',   desc: 'Tap a cell: Attack turrets in its row and column get +20% damage for each different turret type there (max +100%) for 10s' },
+    weaver: { name: 'NEXUS LINK',  desc: 'Tap an Attack turret: links up to 3 Support turrets in its row or column (not next to it). Each link gives +15% damage (+5% per Support star) and +10% speed for 11s' },
   },
   // 64 ụ: name = tên hiển thị, skill = mô tả ngắn. portrait (tuỳ chọn) = đường dẫn ảnh thẻ thay thế (mặc định assets/nho/<id>.png)
   turret: {
