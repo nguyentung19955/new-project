@@ -5404,5 +5404,8 @@
 "Awakened: # barrels, always crits, wider splash": "Thức tỉnh: # nòng, luôn chí mạng, lan rộng hơn",
 "Normal: one barrel, # shot every #s, splash #%": "Bản thường: 1 nòng, # phát mỗi # s, đánh lan #%",
 "Awakened: #-shot volley every #s, always crits, splash #%": "Thức tỉnh: loạt # viên mỗi # s, luôn chí mạng, đánh lan #%",
-"Wolf gun. Normal: one barrel, a shot every #s. Every hit splashes #% damage to enemies within # tile. Each Summon or Merge has a #% chance to come out AWAKENED: the mouth opens # barrels, a #-shot volley every #s that always crits, splash #% within # tile": "Súng sói. Bản thường: 1 nòng, 1 phát mỗi # s. Mỗi đòn trúng đánh lan #% sát thương lên quái trong # ô. Mỗi lần Triệu hồi hoặc Ghép có #% ra bản THỨC TỈNH: há mồm # nòng, loạt # viên mỗi # s, luôn chí mạng, đánh lan #% trong # ô"
+"Wolf gun. Normal: one barrel, a shot every #s. Every hit splashes #% damage to enemies within # tile. Each Summon or Merge has a #% chance to come out AWAKENED: the mouth opens # barrels, a #-shot volley every #s that always crits, splash #% within # tile": "Súng sói. Bản thường: 1 nòng, 1 phát mỗi # s. Mỗi đòn trúng đánh lan #% sát thương lên quái trong # ô. Mỗi lần Triệu hồi hoặc Ghép có #% ra bản THỨC TỈNH: há mồm # nòng, loạt # viên mỗi # s, luôn chí mạng, đánh lan #% trong # ô",
+"Snipes a random turret: −#★ (#★ explodes)": "Bắn tỉa 1 ụ ngẫu nhiên: −#★ (#★ nổ tung)",
+"Snipes a random turret": "Bắn tỉa 1 ụ ngẫu nhiên",
+"Nightmare snipes a random turret: −#★.": "Nightmare bắn tỉa 1 ụ ngẫu nhiên của bạn: −#★."
 }
