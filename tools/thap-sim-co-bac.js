@@ -47,7 +47,7 @@ if (require.main === module) {
     R(ctx, `const _sinhCB = sinhU; sinhU = function (T) { const r = _sinhCB.apply(this, arguments); const B = G.ban[T.ban]; B.capThe = Object.assign(B.capThe || {}, { [T.id]: 3 }); if (T.id === 'cobac') { B.cb = (_dpsCB || [0, 0, 0]).slice(); T.cbS = 4; T.cbQuay = 0; } return r; };`);
     const dps = (id, st) => { R(ctx, `_dpsCB = ${JSON.stringify(st || [0, 0, 0])};`); return dpsBan(ctx, [[2, id, 4]], T0, { wave: 12, max: 1, hs: 400 }) * 60; };
     console.log('| unit (4★ W12, card +3) | dmg/min |'); console.log('|---|---|');
-    for (const st of [[0, 0, 0], [5, 5, 5], [10, 10, 10], [15, 15, 15], [20, 20, 20], [30, 30, 30], [40, 40, 40]]) console.log('| Lucky Slot ' + st.join('/') + ' | ' + (dps('cobac', st) / 1000).toFixed(0) + 'k |');
+    for (const st of [[0, 0, 0], [5, 5, 5], [7, 7, 7], [10, 10, 10], [14, 14, 14], [15, 15, 15], [20, 20, 20], [30, 30, 30], [40, 40, 40]]) console.log('| Lucky Slot ' + st.join('/') + ' | ' + (dps('cobac', st) / 1000).toFixed(0) + 'k |');
         for (const id of ['chuato', 'leviathan']) if (R(ctx, `!!SKILLS['${id}']`)) console.log('| ' + id + ' | ' + (dps(id) / 1000).toFixed(0) + 'k |');
   }
 }

@@ -6,7 +6,7 @@
 //    Điểm KHÔNG còn nhân theo sao (súng có tăng sao thường như mọi ụ: dmgU × (1 + 0,85·(sao−1))). Đang quay (mọi lượt) ụ không bắn.
 //    Cuộn đều (mỗi ô 1/3): 3 giống 1/9 · cặp 2/3 · khác hết 2/9 → mỗi lượt xong: JACKPOT 1/7 ≈ 14,3 %, cặp 6/7 ≈ 85,7 %; trung bình 1,29 lượt quay.
 //  · Ngăn quả là CỦA BÀN (B.cb = [cam, dưa, nho]) — dùng chung cho MỌI Lucky Slot đã quay xong, không mất khi ụ bị ghép đi.
-//    Mỗi điểm (cấp thẻ đầu, × "Fruit power" KY_NANG_CAP.cobac 100% → 130% LV17): cam +4,5% ST · dưa +3% tốc (giảm dần, trần +150%) · nho +15% ST chí mạng.
+//    Mỗi điểm (cấp thẻ đầu, × "Fruit power" KY_NANG_CAP.cobac 100% → 130% LV17): cam +5% ST · dưa +3,5% tốc (giảm dần, trần +150%) · nho +17% ST chí mạng (08/11: tăng từ 4,5 / 3 / 15%).
 //  · TẤT ĐỊNH: ô j của lượt k trong lần quay n = rngHat(hạt trận·7331 + bàn·977 + n·104729 + k·7919 + j·131 + 17) — không Math.random.
 //    Online: máy chủ bàn gửi gói 'cb' { o, q: [[a,b,c]…] (MỌI ô của MỌI lượt), s, st, n }; bàn con rối phát lại đúng chuỗi + nhận ngăn quả.
 //  · Hình (CHỈ trình bày, không đổi luật): khung 3 ô trên ô ụ, cuộn mờ chuyển động → dừng "cạch" từng ô → cặp: 2 ô sáng xanh;
@@ -22,7 +22,7 @@ const CB = {
   QUAY: 1.2, QUAY_LAI: 0.7, CACH: 0.35, NGHI: 0.45, // cuộn đầu 1,2 s · quay lại 0,7 s · các ô dừng cách 0,35 s · khác hết: dừng 0,45 s rồi quay lại
   SAU: [0.4, 0.9],   // sau ô cuối: cặp 0,4 s · jackpot 0,9 s (ăn mừng) rồi mới thành súng
   MAX_LUOT: 12,      // chặn vô hạn (xác suất 12 lượt khác hết liền ≈ (2/9)^12 ≈ 1e-8): lượt 12 ép ô 3 = ô 1
-  DMG: 0.045, TOC: 0.03, TOC_TRAN: 1.5, CDMG: 0.15, // mỗi điểm ngăn (cấp thẻ đầu) — 08/11: điểm kiểu cũ / điểm 3 ô ≈ 1,2–1,6 (tools/thap-sim-co-bac.js diem) → mỗi điểm ×1,5 cũ (3% / 2% / 10%)
+  DMG: 0.05, TOC: 0.035, TOC_TRAN: 1.5, CDMG: 0.17, // mỗi điểm ngăn (cấp thẻ đầu) — 08/11 người dùng "Lucky Slot yếu" (+25–30%): ST gốc 50→58, mỗi điểm 4,5→5% / 3→3,5% / 15→17% (ST/phút 4★ W12: 7/7/7 102k→~125k, 14/14/14 179k→~231k · Hive Queen ~75k); trước đó: điểm kiểu cũ / điểm 3 ô ≈ 1,2–1,6 (tools/thap-sim-co-bac.js diem) → mỗi điểm ×1,5 cũ (3% / 2% / 10%)
   MOC: [10, 25, 50, 100], // mốc màu số ngăn trên khay (DOTPHA.MAU: vàng / lam / tím / trắng)
   he(B) { const v = typeof knThe === 'function' ? knThe(B, 'cobac') : null; return (v || 100) / 100; },
   st(B) { if (!B.cb) B.cb = [0, 0, 0]; return B.cb; },
@@ -91,7 +91,7 @@ const CB = {
 // SKILLS.cobac — Lucky Slot (Đỏ TC): bắn xu vàng 1 phát/s vào quái đầu · không kỹ năng chủ động (kỹ năng = máy xèng 3 ô + ngăn quả)
 // =====================================================================================================
 SKILLS.cobac = {
-  vai: 'tc', dmg: 50, toc: 1.0, crit: 0.15, nham: 'dau', khongNang: true, // 08/11 người dùng: KHÔNG nâng cấp bằng mana trong trận (ngăn quả đã mạnh vô hạn theo thời gian) — ẩn giá, AI bỏ qua, nangCap từ chối // 50 × Đỏ 2.7 — cân bằng 08/11 (3 ô): xem GAMEPLAY.md + tools/thap-sim-co-bac.js
+  vai: 'tc', dmg: 58, toc: 1.0, crit: 0.15, nham: 'dau', khongNang: true, // 08/11 người dùng: KHÔNG nâng cấp bằng mana trong trận (ngăn quả đã mạnh vô hạn theo thời gian) — ẩn giá, AI bỏ qua, nangCap từ chối // 58 × Đỏ 2.7 (08/11 người dùng "yếu": 50 → 58) — cân bằng 08/11 (3 ô): xem GAMEPLAY.md + tools/thap-sim-co-bac.js
   mo: (T) => {
     const B = T && G.ban && G.ban[T.ban], a = (B && B.cb) || [0, 0, 0], p = (k) => Math.round(CB.gt(B || { cb: a }, k) * 100), h = CB.he(B);
     return 'Spins 3 fruit reels when it appears (summon or merge). A pair = +1 point to that fruit; 3 of a kind = JACKPOT: +2 to all fruits. No match = spin again. Points are shared by all Lucky Slots. Orange = damage, Watermelon = speed, Grape = crit damage. Raising its star in place (like Merge King) doesn\'t spin again.'
@@ -138,7 +138,7 @@ if (typeof NHIP !== 'undefined') NHIP.cobac = () => '1 coin/s · reels ~2s';
 //   cặp: 2 ô sáng (cb_cap) + "+1" · khác hết: ô tối đỏ + biểu tượng quay lại (cb_lai) · JACKPOT: 3 ô sáng + bùng nổ cb_jp + dải fx_cb_no + 3 quả toé.
 //   Âm: tiếng cuộn mỗi lượt, "cạch" mỗi ô, chuông cặp, "hụt" khi khác hết, jackpot. Thiếu PNG → vẽ dự phòng.
 // =====================================================================================================
-CB.K3 = { w: 320, h: 203, o: [[14.7, 43.3, 20.6, 33.0], [39.7, 43.3, 20.9, 33.0], [65.0, 43.3, 20.6, 33.0]] }; // ô kính trong cb_khung3 (% — tools/thap-cat-xeng3.py in ra)
+CB.K3 = { k: 0.98, w: 320, h: 203, o: [[14.7, 43.3, 20.6, 33.0], [39.7, 43.3, 20.9, 33.0], [65.0, 43.3, 20.6, 33.0]] }; // ô kính trong cb_khung3 (% — tools/thap-cat-xeng3.py in ra)
 CB.am = function (o, k, f) { if (o.am[k]) return; o.am[k] = 1; if (!CB.coTieng(o.B)) return; try { f(); } catch (e) { } };
 HU.cbQuay = {
   cap(G, o) {
@@ -166,8 +166,8 @@ HU.cbQuay = {
     const tat = o.lc.het + (o.r.jp ? 0.15 : 0); // khung mờ đi sau khi thành súng
     const hien = t < 0.1 ? t / 0.1 : t > tat ? Math.max(0, 1 - (t - tat) / 0.25) : 1;
     if (hien <= 0) return;
-    // khung (rộng 1,5 ô, đặt trên đầu ụ)
-    const F = C * 1.5, Fh = F * CB.K3.h / CB.K3.w, x = c.x, y = c.y - C * 0.12, fx0 = x - F / 2, fy0 = y - Fh / 2;
+    // khung GỌN TRONG 1 Ô (người dùng 08/11: "đầu roll-let to hơn khung 1 ô" — trước rộng 1,5 ô lấn sang ô kề): rộng CB.K3.k × cạnh ô, giữa ô
+    const F = C * CB.K3.k, Fh = F * CB.K3.h / CB.K3.w, x = c.x, y = c.y - C * 0.04, fx0 = x - F / 2, fy0 = y - Fh / 2;
     const nay = xong && cuoi && o.r.jp ? 1 + 0.08 * Math.sin(Math.min(1, sau / 0.5) * Math.PI) : 1; // jackpot: khung nảy
     ctx.save(); ctx.globalAlpha = hien;
     if (nay !== 1) { ctx.translate(x, y); ctx.scale(nay, nay); ctx.translate(-x, -y); }
@@ -207,7 +207,7 @@ HU.cbQuay = {
     // cặp: icon quả + "+1" bay lên
     if (!o.r.jp) {
       const p = Math.min(1, sau / 0.7), a = p < 0.7 ? 1 : (1 - p) / 0.3; if (a <= 0) return;
-      const yy = fy0 - C * 0.05 - p * C * 0.35, s = C * 0.34;
+      const yy = fy0 - C * 0.3 - p * C * 0.3, s = C * 0.34; // khung đã gọn 1 ô → "+1" xuất phát TRÊN huy hiệu sao (không bị sao che)
       ctx.save(); ctx.globalAlpha = a * hien; R.anhGiua(ctx, CB.IC[o.r.f], x - s * 0.45, yy, s);
       ctx.font = '900 ' + Math.round(C * 0.3) + 'px ' + (typeof FONT !== 'undefined' ? FONT.display : 'sans-serif'); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
       ctx.lineWidth = Math.max(2, C * 0.06); ctx.strokeStyle = '#2a0008'; ctx.strokeText('+1', x - s * 0.05, yy); ctx.fillStyle = '#fff'; ctx.fillText('+1', x - s * 0.05, yy); // vetay-ok: text

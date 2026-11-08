@@ -74,7 +74,7 @@ console.log('4 · số mỗi điểm + tốc giảm dần + chung cho mọi Luck
 tran(DECK);
 R('B.cb = [10, 10, 10]; var A = dat(6, "cobac", 3), C = dat(8, "cobac", 3); A.cbS = 3; C.cbS = 3; A.cbQuay = 0; C.cbQuay = 0; mocBuf(B);');
 { const d = R('CB.gt(B, "dmg")'), t = R('CB.gt(B, "toc")'), c = R('CB.gt(B, "cdmg")'), DM = R('CB.DMG'), CD = R('CB.CDMG'), TO = R('CB.TOC');
-  ok(Math.abs(d - 10 * DM) < 1e-9 && Math.abs(c - 10 * CD) < 1e-9 && DM >= 0.04 && CD >= 0.14, 'cam 10 → +' + (d * 100).toFixed(0) + '% ST · nho 10 → +' + (c * 100).toFixed(0) + '% ST chí mạng (mỗi điểm ≈ ×1,5 cũ)', d + ' / ' + c);
+  ok(Math.abs(d - 10 * DM) < 1e-9 && Math.abs(c - 10 * CD) < 1e-9 && Math.abs(DM - 0.05) < 1e-9 && Math.abs(CD - 0.17) < 1e-9 && Math.abs(TO - 0.035) < 1e-9 && R('SKILLS.cobac.dmg') === 58, 'cam 10 → +' + (d * 100).toFixed(0) + '% ST · nho 10 → +' + (c * 100).toFixed(0) + '% ST chí mạng (08/11 tăng: ST gốc 58, mỗi điểm 5% / 3,5% / 17%)', d + ' / ' + c);
   ok(Math.abs(t - 1.5 * (1 - Math.exp(-10 * TO / 1.5))) < 1e-9 && t < 10 * TO, 'dưa 10 → +' + (t * 100).toFixed(1) + '% tốc (giảm dần)', t); }
 ok(R('B.cb[1] = 1000; CB.gt(B, "toc") <= 1.5 + 1e-9 && CB.gt(B, "toc") > 1.49'), 'dưa 1000 → tiến tới trần +150%', R('CB.gt(B, "toc")'));
 ok(R('B.cb[0] = 999; B.cb[2] = 999; Math.abs(CB.gt(B, "dmg") - 999 * CB.DMG) < 1e-9 && Math.abs(CB.gt(B, "cdmg") - 999 * CB.CDMG) < 1e-9'), 'cam / nho KHÔNG trần (999 điểm vẫn tuyến tính — người dùng 08/11)');

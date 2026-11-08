@@ -904,6 +904,14 @@ const REN = {
     const C0 = S / 0.98, gd = !o.ghost && T.gd && laGrow(T.id) ? T.gd : 0;
     this.datDauEp(o.ghost ? null : T);
     if (!o.ghost) VX.duoiDau(ctx, T, S, al, this); // hào quang dạng thức tỉnh + vòng tiến độ grow-up (dưới đầu súng)
+    // LỚP VÒNG DƯỚI ĐẦU SÚNG (người dùng 08/11: "vòng green quay không được phép che ụ, ụ cần ưu tiên đè hình ảnh"):
+    // vòng xanh nạp chiêu + vẽ thêm của kỹ năng (vòng/hào quang/vật bay quanh ụ, vòng nạp ụ có dạng) vẽ TRƯỚC đầu súng → đầu luôn nằm trên.
+    // Ngoại lệ skT.veThemTren (vd mũi tên La Bàn) vẽ sau đầu như cũ. Huy hiệu sao / số / icon nhỏ vẫn ở lớp trên (lớp huy hiệu).
+    if (!o.ghost && !laGrow(T.id) && (typeof MV !== 'undefined' ? MV.coNap(T) : T.nap > 0.02 && (T.id === 'overlord' || T.id === 'wallgen' || T.id === 'blackhole' || T.id === 'mana' || skT.napMau))) { // luật chung MV.coNap (motvong.js)
+      ctx.save(); PX.vongHoi(ctx, T, T.nap, S * 0.41, al, this.t, !!skT.chuDong); ctx.restore(); ctx.globalAlpha = al;
+    }
+    const veThem = () => { if (skT.veThem && !o.ghost) { ctx.save(); skT.veThem(ctx, T, S, al, this, B); ctx.restore(); ctx.globalAlpha = al; ctx.globalCompositeOperation = 'source-over'; } };
+    if (!skT.veThemTren) veThem();
     const D = C0 * this.dauK(T.id, gd);
     // đầu súng VẼ RIÊNG (Sói Máy: đầu sói nhìn thẳng → xoay theo hướng bắn · Hydra: số đầu = số sao) — false = ảnh chưa tải → đầu cũ
     const tuVe = !o.ghost && !!skT.veDau && skT.veDau(ctx, T, S, al, this, da);
@@ -951,13 +959,9 @@ const REN = {
       ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (0.18 - T.cd) * 3;
       this.anhGiua(ctx, this.cham1('#fff27a'), Math.cos(T.goc) * D * 0.4, Math.sin(T.goc) * D * 0.4, S * 0.5); ctx.restore(); ctx.globalAlpha = al;
     }
-    // nạp năng lượng / hồi chiêu kỹ năng: VÒNG XANH LÁ đầy dần từ 12 giờ theo chiều kim đồng hồ (PX.vongHoi — cùng kiểu mọi chế độ)
-    // vẽ SAU đầu súng (không bị đầu che), TRƯỚC huy hiệu sao (huy hiệu luôn nằm trên)
-    if (!o.ghost && !laGrow(T.id) && (typeof MV !== 'undefined' ? MV.coNap(T) : T.nap > 0.02 && (T.id === 'overlord' || T.id === 'wallgen' || T.id === 'blackhole' || T.id === 'mana' || skT.napMau))) { // luật chung MV.coNap (motvong.js)
-      ctx.save(); PX.vongHoi(ctx, T, T.nap, S * 0.41, al, this.t, !!skT.chuDong); ctx.restore(); ctx.globalAlpha = al;
-    }
-    // vẽ thêm riêng của kỹ năng (quả cầu, đồng hồ bom, hào quang, dây liên kết…) — toạ độ quanh tâm ụ
-    if (skT.veThem && !o.ghost) { ctx.save(); skT.veThem(ctx, T, S, al, this, B); ctx.restore(); ctx.globalAlpha = al; ctx.globalCompositeOperation = 'source-over'; }
+    // nạp năng lượng / hồi chiêu (VÒNG XANH LÁ, PX.vongHoi) + vẽ thêm của kỹ năng: đã vẽ DƯỚI đầu súng (veVong ở trên, 08/11);
+    // chỉ ụ đánh dấu veThemTren (lớp cố định phải nằm trên đầu: mũi tên La Bàn) mới vẽ ở đây
+    if (skT.veThemTren) veThem();
     // bản sao của Copycat: quầng TÍM (màu ảo ảnh của đầu Copycat) rõ hơn + huy hiệu nho/saochep ở góc trên-trái (nhandien.js) → không nhầm với ụ thật
     if (T.banSao && !o.ghost) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * 0.22; this.anhGiua(ctx, this.cham1('#a35cff'), 0, 0, S * 1.05); /* VFX P3 */ ctx.restore(); ctx.globalAlpha = al; }
     const xich = T.st.kep > 0 && !o.ghost ? this.co('vong_xich', S * 0.9) : null; // vòng xích ChatGPT (S4), xoay chậm
