@@ -198,7 +198,7 @@ def lam(id, trum):
     if trum:
         cp = os.path.join(ART, 'raw_trum2_%s_chieu_v2.png' % id)
         if not os.path.exists(cp): cp = os.path.join(ART, 'raw_trum2_%s_chieu.png' % id)
-        if CHAN_VIEN[0]: CHAN_VIEN[0] = 1  # dải chiêu: còn túi nền thật giữa vòng xoáy
+        if CHAN_VIEN[0] and not cp.endswith('_v2.png'): CHAN_VIEN[0] = 1  # dải chiêu cũ: còn túi nền thật giữa vòng xoáy (bản _v2 mad_crown 08/11 không có túi kín → giữ 2: mảng hồng-tím trong thân thạch không bị khoét)
         ch = o_luoi(cp)
         # khớp thân (08/11 sửa lệch): khung chiêu 8 (trung tính) ↔ khung đi trung tính (1 hoặc 8) bằng KHỚP MẶT NẠ alpha
         #  (dò tỉ lệ + tịnh tiến cho IoU lớn nhất). Cách cũ (tâm lõi ăn mòn + diện tích) lệch tới 15% ô ở janus/prism/jammer/patcher

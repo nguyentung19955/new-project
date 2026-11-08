@@ -3519,3 +3519,11 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - `CM.veMui` (comoi.js): mũi tên hướng (`duong_mui`) vẽ ở LỚP CỐ ĐỊNH sau đầu súng (không xoay) → mũi đỏ luôn nằm dưới. N / E / W ở vành ngoài 0,43 S (ngoài tầm mũi đầu súng ~0,41 S); S ngay trên tấm đáy ô (0,2 S) để tấm không che. Lót bóng tối + quầng xanh nhẹ; nạp sẵn `duong_mui` khi bộ bài có Pháo.
 - Tấm đáy ô khi có tiến độ TRUE NORTH: bỏ chữ hướng (cờ `jpGon`, jackpot.js) → chỉ "★ 2/3" (NSWE có stack: "+n ★ 2/3") → không tràn ô hẹp.
 - Ảnh soát: `docs/demo-hop-tuong/tuvan/la-ban-to-hop/mui-ten-khong-che.png` (15 tổ hợp × đầu N/E/S/W/45°, 390×844 + 844×390, 4 cỡ khác).
+
+## claude/demo-hop-tuong — Mad Crown: vẽ lại dải tung chiêu cùng thiết kế dải đi (08/11)
+- Lỗi: dải chiêu cũ `trum_mad_crown_atk_16.png` có mũ hề + chuông + cổ áo bèo, xúc xắc → lúc tung chiêu trùm như "thay đồ". Người dùng duyệt vẽ lại.
+- Ảnh mới ChatGPT (gửi kèm dải đi làm mẫu thiết kế, dải chiêu cũ chỉ làm mẫu nhịp): lưới 4×2, nền magenta; slime hồng + ngọc vàng + vương miện y dải đi, KHÔNG tay chân, KHÔNG mắt. Nhịp: 1–2 lấy đà (dẹt, ngọc sáng) · 3–5 ngọc nạp/xung, vương miện lắc, vòng năng lượng hồng-vàng nổ giữa thân · 6–7 hồi · 8 = tư thế đứng.
+- Nguồn `docs/demo-hop-tuong/thap-art/raw_trum2_mad_crown_chieu_v2.png` (tool tự ưu tiên `_v2`); cắt `python3 tools/thap-cat-trum2.py mad_crown --chi-atk`. Tool: bản `_v2` giữ chế độ tách nền thân hồng (không coi mảng hồng-tím trong thân thạch là túi nền) — trước đó thùy trái bị khoét thủng.
+- Khớp thân dải đi ↔ chiêu: IoU 0,979 (cũ 0,806), lệch tâm 0,3 % ô (11 trùm kia 0–0,3 %).
+- Ảnh trước/sau (đi → chiêu → hồi, chết giữa chiêu; 844×390 + 390×844): `docs/demo-hop-tuong/tuvan/trum-anim/mad_crown-v2.jpg`.
+- Test: thap-kt-trum-don (solo 264 tình huống) xanh · thap-kt-vfx-p0 xanh · thap-kt-anim ĐỎ sẵn từ trước (roster 92/93, 30/60 FPS, đạn canon xa nòng — ụ, không liên quan trùm; dải chiêu cũ cũng đỏ y vậy).
