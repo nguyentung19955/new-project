@@ -279,7 +279,8 @@ const ONS = {
       const deck = B1.deck; B1.deck = [d.id]; // ụ ra = đúng ụ bạn kia nhận được (pick trong bộ 1 phần tử)
       G._pdEp = Array.isArray(d.pd) ? d.pd : null; // Pandora: đúng phép máy bạn đã quay
       G._hfEp = d.hf != null ? d.hf : null; // Hero Foundry: đúng ô anh hùng máy bạn đã chọn
-      try { ghep(B1, a, b, !cl); } finally { B1.deck = deck; G._pdEp = null; G._hfEp = null; }
+      G._tdS = d.s | 0; // Wild Link: đúng sao máy bạn (có +1★ cấp thẻ hay không) — kỹ năng khi ghép / mốc sao chạy đúng
+      try { ghep(B1, a, b, !cl); } finally { B1.deck = deck; G._pdEp = null; G._hfEp = null; G._tdS = 0; }
     }
     const T = B1.t[d.b];
     if (!T || T.id !== d.id || T.sao !== d.s) { if (G.rosterMap[d.id]) B1.t[d.b] = taoU(B1, d.id, d.s, d.b); }

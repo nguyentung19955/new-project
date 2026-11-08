@@ -41,5 +41,5 @@ window.ANIM_U = {
   blackhole: 'portal', dichchuyen: 'portal', pandora: 'portal',
   khoathoigian: 'chrono', ngaithoigian: 'chrono', bomhen: 'chrono',
   tienhoa: 'evolver', hopbi: 'evolver', vughep: 'evolver', sinhdoi: 'evolver', saochep: 'evolver', nhanban: 'evolver', loren: 'evolver',
-  khoisinh: 'evolver', xuonganh: 'evolver', luutru: 'evolver', mimic: 'evolver',
+  khoisinh: 'evolver', xuonganh: 'evolver', luutru: 'evolver', mimic: 'evolver', tudo: 'evolver',
 };

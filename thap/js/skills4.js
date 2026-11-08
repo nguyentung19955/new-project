@@ -287,7 +287,7 @@ SKILLS.loren = {
   capNhat(G, B, T) { return true; },
   ghepDB: {
     haiChieu: false, cungLoai: true,
-    hopLe: (a, b) => b.ban === a.ban && !b.st.da && (b.id === 'loren' ? SKILLS.loren.dang(a) === SKILLS.loren.dang(b) : b.id !== 'mimic'),
+    hopLe: (a, b) => b.ban === a.ban && !b.st.da && (b.id === 'loren' ? SKILLS.loren.dang(a) === SKILLS.loren.dang(b) : b.id !== 'mimic' && b.id !== 'tudo'), // Mimic / Wild Link nhận Anvil = ghép thường (không buff)
     laGhep: (a, b) => b.id === 'loren', // Anvil + Anvil = ghép thật (Archive +1) · buff lên ụ khác: không
     lam(G, B, a, b) { // a = Anvil kéo, b = đích
       const S = SKILLS.loren, ca = B.o[a.o], cb = B.o[b.o];
@@ -370,7 +370,7 @@ thucHienChieu = function (E, B) { G._trumDang = true; try { return _thucHienChie
 const GUONG_CHEP = new Set(['nhanmana', 'drone', 'loa', 'nhanban', 'kepha', 'sinhdoi', 'orbital', 'khoathoigian', 'pandora', 'nhieusong']);
 const _ghepGuong = ghep;
 ghep = function (B, a, b, ep) {
-  const ids = a && b && laGhepThat(a, b, ep) ? [...new Set([a.id, b.id])].filter(id => GUONG_CHEP.has(id)) : [], saoA = a ? a.sao : 1; // chỉ ghép thật (Merge King +★ / Copycat / Teleporter: không chép)
+  const ids = a && b && laGhepThat(a, b, ep) ? [...new Set([a.id, b.id])].filter(id => GUONG_CHEP.has(id)) : [], saoA = a ? (b && laTuDo(a, b) ? saoGhep(a, b) : a.sao) : 1; // (Wild Link: sao trung bình) // chỉ ghép thật (Merge King +★ / Copycat / Teleporter: không chép)
   const r = _ghepGuong(B, a, b, ep);
   if (r && ids.length && G.che === 'coop') {
     const D = banKhac(G.ban[b.ban]), M = SKILLS.guongcong.san(D);

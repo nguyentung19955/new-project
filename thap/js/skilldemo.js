@@ -173,6 +173,10 @@ const SD_K = {
   vughep: { kieu: 'gDB', ke: [[8, 'canon', 's'], [12, 'vughep', 's'], [13, 'lien', 's']], keo: [[2.5, 7, 8], [4.6, 12, 13]],
     truoc: (T, B) => { if (T) T.vang = false; const K = B.t[12]; if (K) K.vang = true; }, // vang = kết quả gieo khi xuất hiện (knThe 'vughep' %): clip cho xem cả 2 ca, chú thích nói xác suất
     c: [[0.2, 'Drag onto a same-star turret'], [2.5, 'Target gets +1★, keeps its type', { ev: 'sao', cham: 0.6 }], [3.6, (T) => Math.round(knThe(G.ban[T.ban], 'vughep')) + '% chance a Merge King is Golden'], [4.6, 'Golden King: target +2★', { ev: 'sao', cham: 0.6 }]], dai: 9 },
+  // Wild Link (game.js laTuDo): ô 7 (s★) kéo lên Twin Maker KHÁC sao ở ô 8 ((s+1)★) → ụ ngẫu nhiên ⌈trung bình⌉ = (s+1)★ + Twin Maker gọi thêm 1 ụ cùng sao đó
+  tudo: { kieu: 'ghep', ke: [[8, 'sinhdoi', (s) => Math.min(7, s + 1)]], keo: [2.5, 7, 8],
+    c: [[0.2, 'Merges with ANY turret, any ★'], [1.2, (T) => T.sao + '★ + ' + Math.min(7, T.sao + 1) + '★ → ' + Math.ceil((2 * T.sao + 1) / 2) + '★ (average, rounded up)', { cham: 0.5 }],
+      [2.5, 'A real merge: Twin Maker summons a twin', { ev: 'moi', cham: 0.6 }], [4.4, (T) => Math.round(tdThuong(G.ban[T.ban]) * 100) + '% chance: +1★ result'], [6.0, 'Works on Stone, Frozen and any special turret']], dai: 8.4 },
   sinhdoi: { kieu: 'ghep', c: [[0.2, 'Merge two Twin Makers'], [2.5, 'Merge = a same-star twin', { ev: 'moi', cham: 0.6 }], [4.2, (T) => Math.round(knThe(G.ban[T.ban], 'sinhdoi') || 10) + '% chance the twin is +1★']] },
   hasao: { kieu: 'ht', ke: [[2, 'lien', 's'], [6, 'canon', 's'], [8, 'lien', 's'], [12, 'sungluc', 4]],
     them: [[4.0, (B, D, T) => { if (!T) return; T.da5Dau = 1; T.w5 = -1; const N = B.t[12]; if (N && N.sao < 5) nangSao(B, N, 5 - N.sao); }]], // ô 12 luôn 4★ → lên 5★ thật = lần 5★ đầu của wave
@@ -353,6 +357,7 @@ const SD_MO = {
   sungluc: (T) => 'Damage ' + Math.round(dmgU(T)) + ' per shot',
   nam: (T) => 'Damage ' + Math.round(dmgU(T)) + ' per punch',
   bomhen: (T) => 'Blast: +' + +(SKILLS.bomhen.yw(T) * 100).toFixed(2) + '% damage taken ' + SKILLS.bomhen.yeuDai(T) + 's',
+  tudo: (T) => 'Any turret · star = average, rounded up · ' + Math.round(tdThuong(G.ban[T.ban]) * 100) + '%: +1★',
   mimic: (T) => 'New turret: +' + Math.round(knThe(G.ban[T.ban], 'mimic')) + '% attack, 8s',
   dichchuyen: () => 'Swap with a same-star turret',
   epxung: (T) => '+' + +knThe(G.ban[T.ban], 'epxung').toFixed(1) + '% fire rate per drag',
@@ -401,7 +406,7 @@ function sdKieu(id) {
   const sk = SKILLS[id];
   if (sk.hoTro && SUP_LOAI[id] && sk.vai === 'ht') return 'ht';
   if (sk.ghepDB) return 'gDB';
-  if (id === 'mimic' || sk.ghep) return 'ghep';
+  if (id === 'mimic' || id === 'tudo' || sk.ghep) return 'ghep';
   if (!sk.dmg) return 'phu';
   return 'tc';
 }

@@ -61,7 +61,7 @@ const TEXT = {
   },
   // 64 ụ: name = tên hiển thị, skill = mô tả ngắn. portrait (tuỳ chọn) = đường dẫn ảnh thẻ thay thế (mặc định assets/nho/<id>.png)
   turret: {
-    canon:      { name: 'Compass Cannon', skill: 'Gets 1 random direction (N, S, W or E). Merge two Compasses to combine their directions (N + S = NS). Result star = average of the two, rounded up. Each direction fires 1 homing rocket. Full NSWE + NSWE adds a damage stack' },
+    canon:      { name: 'Compass Cannon', skill: 'Gets 1 random direction (N, S, W or E). Merge two Compasses to combine their directions (N + S = NS). Result star = average of the two, rounded up. Each direction fires 1 homing rocket. Full NSWE only merges with NSWE: adds a damage stack' },
     xucxac:     { name: 'Dice Gun',      skill: 'Each shot deals random damage: 3% to 300%. A crit always deals 300%. Tip: add crit chance' },
     lien:       { name: 'Gatling',       skill: 'Shoots very fast at the first enemy. Each ★ makes it shoot faster. Tip: put a Radar next to it' },
     phun:       { name: 'Scatter',       skill: 'Shoots very fast at random enemies. Good against groups. Each ★ makes it shoot faster' },
@@ -114,7 +114,7 @@ const TEXT = {
     vughep:     { name: 'Merge King',    skill: 'Drag it onto a same-star turret: that turret +1★ and keeps its type. 10% of Merge Kings are GOLDEN: +2★. Merge King + Merge King = Merge King +1★' },
     sinhdoi:    { name: 'Twin Maker',    skill: 'Merge 2 Twin Makers: you also get a random turret of the same ★ (10%: one ★ higher)' },
     hasao:      { name: 'Star Breaker',  skill: 'Support: Attack Neighbours (4 sides) deal more damage. First 5★ each wave: Solo: your weakest Attack turret +8% fire rate. Co-op: your ally\'s weakest +8%. PvP: the rival\'s first 5★ −8% fire rate' },
-    saochep:    { name: 'Copycat',       skill: 'Drag it onto a same-star turret: it becomes a copy with 70% damage. Works on Frozen turrets too, but not on Stone. Keeps Awakened and Gold' },
+    saochep:    { name: 'Copycat',       skill: 'Drag it onto a same-star turret: it becomes a copy with 70% damage. Works on Frozen turrets too, but not on Stone. Keeps Awakened and Gold. Merging into a copy keeps it a copy; merging a copy into a real one makes it real' },
     ngoisao:    { name: 'Star Cannon',   skill: 'Counts all ★ on your board now. Every 10★: it shoots faster. Every 50★: more damage. If your stars go down, the bonus goes down' },
     soi:        { name: 'Werewolf',     skill: 'Wolf gun. Normal: one barrel, a shot every 1.8s. Each Summon or Merge has a 30% chance to come out AWAKENED: the mouth opens 3 barrels, a 3-shot volley every 1.2s that always crits' },
     tienhoa:    { name: 'Evolver',       skill: 'Does not shoot. An egg that hatches into a random turret +1★ after 10s + 2s per ★. A 6★ egg burns into a 7★ egg that never hatches: tap it for +20 mana' },
@@ -158,6 +158,8 @@ const TEXT = {
     nguyenrua:    { name: 'Hex Saboteur',   skill: 'Merge 2 Hex Saboteurs: a hex flies out. PvP: a rival turret may lose 1★. Co-op: an ally turret may get +1★. Solo: the first enemy is slowed and takes more damage' },
     thanhdia:     { name: 'Sanctum',        skill: 'Support: when it arrives, it cleans and shields its Neighbours (4 sides). Attack Neighbours get +damage. Shields come back over time' },
     // ụ cờ bạc Đỏ (jackpot.js, 08/11)
+    // ụ ghép tự do Tím (game.js laTuDo, 08/11)
+    tudo:         { name: 'Wild Link',      skill: 'Merges with ANY turret: any type, any star. Result: a random turret, star = average of the two, rounded up (3 + 4 stars = 4 stars, no bonus star). Counts as a real merge (triggers Twin Maker etc.). Works on Stone and Frozen turrets too: the result is unlocked' },
     cobac:        { name: 'Lucky Slot',     skill: 'Spins 3 fruit reels when it appears (summon or merge). A pair = +1 point to that fruit; 3 of a kind = JACKPOT: +2 to all fruits. No match = spin again. Points are shared by all Lucky Slots. Orange = damage, Watermelon = speed, Grape = crit damage. Raising its star in place (like Merge King) doesn\'t spin again.' },
     bienmau:      { name: 'Prism Thief',    skill: 'Each one has 1 colour: red kills, gold gives mana, blue freezes, green crits. Put 4 different colours side by side and swipe through all 4: they FUSE into one 4-colour Spectrum Prism with all 4 effects. Fuse it again to make it stronger, no limit' },
   },
@@ -168,7 +170,7 @@ const TEXT = {
 const PILOTS = new Set(['canon', 'xucxac', 'lien', 'phun', 'sungluc', 'bang', 'doc', 'mana', 'tia', 'set', 'maychem', 'phagiap', 'bua', 'nam', 'bomhen', 'nhanmana', 'kiembang', 'mimic', 'chimang', 'dichchuyen', 'radar', 'drone', 'tron', 'nangluong', 'laser', 'lanhgia', 'mortar', 'khuech', 'vungdoc', 'loa', 'hutmana', 'min', 'cuongno', 'baotuyet', 'nhanban', 'lienket', 'kepha', 'taylo', 'khien', 'hopbi', 'nangsao', 'tuthan', 'xaotron', 'epxung', 'no5', 'bao', 'anhsang', 'aten', 'dongbo', 'railgun', 'vughep', 'sinhdoi', 'hasao', 'saochep', 'ngoisao', 'soi', 'tienhoa', 'cauvong', 'wallgen', 'orbital', 'blackhole', 'overlord', 'lophanung', 'haoquang',
   'nayda', 'combo', 'khoathoigian', 'hydra', 'cuuvi', 'pandora', 'luoicheo', 'ngaithoigian',
   'nemesis', 'docton', 'thaukinh', 'nhieusong', 'santhuong', 'nhatthuc', 'loren', 'guongcong', 'marionette',
-  'chuato', 'leviathan', 'khoisinh', 'ronglua', 'mauhut', 'nguyenrua', 'thanhdia', 'bienmau', 'cobac']);
+  'chuato', 'leviathan', 'khoisinh', 'ronglua', 'mauhut', 'nguyenrua', 'thanhdia', 'bienmau', 'cobac', 'tudo']);
 // ?ucu=1: nạp lại BỘ ĐẦU CŨ (trước bộ u2) — ảnh <ten>_v1.png (danh sách DAU_V1 + số cỡ ART_V1 trong artscale.js)
 window.UCU = /[?&]ucu=1(&|$)/.test(location.search);
 let _dauV1 = null;

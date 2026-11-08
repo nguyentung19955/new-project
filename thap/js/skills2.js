@@ -786,6 +786,14 @@ SKILLS.sinhdoi = { // Máy Sinh Đôi (Berit): khi GHÉP THƯỜNG gọi thêm 1
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'dan_tia', co: 17, sp: 580 }); },
   ghep(G, B, a, b, ra) { sinhDoi(B, a.sao, b.o); },
 };
+SKILLS.tudo = { // WILD LINK / Khớp Nối Vạn Năng (Tím, Đặc biệt — 08/11 người dùng): ghép với BẤT KỲ ụ (mọi loại, mọi sao); luật ở game.js (laTuDo / saoGhep / ghep)
+  // · Kết quả = ụ ngẫu nhiên trong bộ bài, sao = ⌈(sao 2 ụ)/2⌉ (không +1★) · cấp thẻ: xác suất +1★ (KY_NANG_CAP.tudo 10% → 28%)
+  // · GHÉP THẬT: bộ đếm ghép, Archive, Star Breaker, kỹ năng khi ghép (Twin Maker gọi thêm ụ ở sao trung bình…) chạy 1 lần như ghép thường
+  // · Không có dạng ngẫu nhiên lúc sinh; bắn nhẹ như Mimic / Twin Maker (Đặc biệt nhóm ghép có bắn — data.js vai 'db')
+  vai: 'db', dmg: 8.5, toc: 1.2, nham: 'dau', napMau: '#c77dff',
+  mo: (T) => 'Merges with ANY turret (any type, any star): a random turret, star = average of the two, rounded up (no bonus star) · ' + Math.round(tdThuong(T && G.ban[T.ban]) * 100) + '%: +1★ · counts as a real merge (triggers Twin Maker etc.) · works on Stone and Frozen too (the result is unlocked) · Compass Cannon, Prism Thief or Lucky Slot also become a random turret (their stacks are lost)',
+  ban(G, B, T, E) { banNhe(B, T, E, { img: 'tia_lua', co: 15, mau: '#d9a8ff', sp: 480 }); },
+};
 SKILLS.hasao = { // Súng Hạ Sao (Giltine) — HỖ TRỢ (đợt vai trò): ụ Tấn công kề +sát thương; ghép ra ụ cạnh nó → bùng tốc 5 s;
   // PVP: lần đầu mỗi wave 1 ụ đối thủ lên 5★ → ụ đó −8% tốc 6 s · CO-OP: ụ sao thấp nhất của đồng đội +8% tốc 6 s · SOLO: ụ thấp nhất của mình
   vai: 'ht', dmg: 0, toc: 0, chiTC: true, napMau: '#ff4b3e',
@@ -817,7 +825,7 @@ SKILLS.hasao = { // Súng Hạ Sao (Giltine) — HỖ TRỢ (đợt vai trò): �
 };
 SKILLS.saochep = { // Máy Sao Chép (Shamash): kéo lên ụ CÙNG SAO → thành bản sao của ụ đó (70% chỉ số ở cấp đầu → 94% thẻ max, KY_NANG_CAP.saochep)
   vai: 'db', dmg: 13.33, toc: 1.2, nham: 'dau',
-  mo: (T) => 'Drag onto same-star turret (frozen too, NOT stone): becomes a copy at ' + Math.round(heSaoChep(T && G.ban[T.ban]) * 100) + '% damage · random traits (colour, direction, Gold, Awakened, slot spin…) roll anew · keeps the Copycat\'s own buffs', // 08/11: bỏ 'the copy is never stone' (đá không chép được nữa)
+  mo: (T) => 'Drag onto same-star turret (frozen too, NOT stone): becomes a copy at ' + Math.round(heSaoChep(T && G.ban[T.ban]) * 100) + '% damage · random traits (colour, direction, Gold, Awakened, slot spin…) roll anew · keeps the Copycat\'s own buffs · merging into a copy keeps it a copy; merging a copy into a real one makes it real', // 08/11: bỏ 'the copy is never stone' (đá không chép được nữa)
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'tia_lua', co: 16, mau: '#ffe46b', sp: 480 }); },
   ghepDB: {
     // 08/11 người dùng chốt: KHÔNG chép ô ĐÁ (hoá đá) — ô BĂNG vẫn chép được

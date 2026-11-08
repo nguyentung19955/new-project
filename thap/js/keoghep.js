@@ -13,7 +13,9 @@ const KG = {
   CHON_S: 4, // chế độ chạm–chạm: ụ được chọn giữ 4 s
   LO_S: 1.0, // tấm kết quả hiện ~1 s
   ANH: ['khung_chon', 'sup_ring', 'h2_vong_do', 'nhan_kn', 'h2_sao', 'h2_sao_sang', 'h2_vfx_ghep'],
-  TXT: { tip: 'Random type, +1★', tipDB: 'Special merge', tipSao: (n) => 'Same turret, +' + n + '★', tipKN: 'Skill, not a merge', tapTip: 'Tap a glowing turret to merge', tipPM: 'Release: FUSE into 1 mask', huy: 'Cancelled' },
+  TXT: { tip: 'Random type, +1★', tipDB: 'Special merge', tipSao: (n) => 'Same turret, +' + n + '★', tipKN: 'Skill, not a merge',
+    // Wild Link (game.js saoGhep): luôn hiện (không tính 3 lần mẹo) — sao kết quả, cảnh báo nếu THẤP hơn ụ cao, xác suất +1★ cấp thẻ
+    tipTD: (a, b) => { const n = saoGhep(a, b), m = Math.max(a.sao, b.sao), p = Math.round(tdThuong(G.ban[b.ban]) * 100); return 'Wild merge: random ' + n + '★' + (n < m ? ' (−' + (m - n) + '★)' : '') + (n < LUAT.saoMax && p > 0 ? ' · ' + p + '%: ' + (n + 1) + '★' : ''); }, tapTip: 'Tap a glowing turret to merge', tipPM: 'Release: FUSE into 1 mask', huy: 'Cancelled' },
   lo: [], // tấm kết quả đang hiện: { B, o, T, t0 }
   _tip: null,
 
@@ -96,7 +98,7 @@ const KG = {
   // chữ mẹo khi rê src lên hover (đã hợp lệ): ghép thường "Random type, +1★" · ghép đặc biệt thật "Special merge" ·
   //   kỹ năng kéo thả KHÔNG phải ghép (08/11, game.js laGhepThat): Merge King "Same turret, +n★", Copycat / Teleporter / Overclock… "Skill, not a merge"
   chuMeo(src, hover) {
-    const db = ghepDBHop(src, hover); if (!db) return this.TXT.tip;
+    const db = ghepDBHop(src, hover); if (!db) return laTuDo(src, hover) ? this.TXT.tipTD(src, hover) : this.TXT.tip;
     if (laGhepThat(src, hover)) return this.TXT.tipDB;
     return db.sk.ghepDB.nangTaiCho && db.sk.ghepDB.xemSao ? this.TXT.tipSao(Math.max(1, db.sk.ghepDB.xemSao(db.a, db.b) - db.b.sao)) : this.TXT.tipKN;
   },

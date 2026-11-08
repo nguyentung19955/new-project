@@ -369,7 +369,7 @@ SKILLS.bienmau = {
     }
     const N = taoU(B, 'bienmau', sao, L.o);
     N.pm = this.mau(L); N.pms = 0; N.pf = n; N.pmk = k; N.goc = -Math.PI / 2;
-    N.banSao = ds.every(X => X.banSao); N.epxung = Math.max(...ds.map(X => X.epxung || 0)); N.aurora = Math.max(...ds.map(X => X.aurora || 0));
+    giuBanSao(N, L); // bản sao theo ô ĐÍCH = ô cuối đường vuốt / mặt nạ được thả vào (game.js) N.epxung = Math.max(...ds.map(X => X.epxung || 0)); N.aurora = Math.max(...ds.map(X => X.aurora || 0));
     const t = this.tran(N); for (let q = 0; q < 4; q++) k[q] = Math.min(t, k[q]);
     for (const X of ds) if (B.t[X.o] === X) B.t[X.o] = null;
     B.t[L.o] = N; N.sang = 1;
