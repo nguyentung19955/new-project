@@ -166,7 +166,7 @@ function upKhac(id) {
   if (typeof sk.tam === 'number') so.push('Only hits enemies close to it: place it next to the path.');
   if (sk.ghep || sk.ghepDB) so.push('Joker King can force a merge before you are ready.');
   if (sk.hoTro && SUP_LOAI[id]) so.push('Freezer and Janus Cube can lock it: keep a Cleanser or Shield Gen.');
-  if (G.rosterMap[id] && G.rosterMap[id].bac === 'do') so.push('Nightmare snipes your highest-star turret: −1★.');
+  if (G.rosterMap[id] && G.rosterMap[id].bac === 'do') so.push('Nightmare snipes a random turret: −1★.');
   if (!so.length) so.push('Octopus Eyes burns turrets: −1★ unless cleansed.');
   if (!tot.length) tot.push('Most waves');
   return { tot, so: so.slice(0, 2) };

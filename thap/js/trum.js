@@ -55,7 +55,7 @@ const TRUM_KN = {
       const r = rngTrum(E); // tất định (online lockstep) — game.js
       ds = ds.filter(T => !biKhoa(T)); // ụ khoá (băng) không nhận Câm mới — rà cộng hưởng 07/11, người dùng chốt
       const ht = tronTrum(ds.filter(T => SKILLS[T.id] && SKILLS[T.id].vai === 'ht' && !(T.st.cam > 0)), r);
-      const khac = tronTrum(ds.filter(T => !ht.includes(T) && !(T.st.cam > 0)), r).sort((a, b) => b.sao - a.sao);
+      const khac = tronTrum(ds.filter(T => !ht.includes(T) && !(T.st.cam > 0)), r); // phần còn lại: ngẫu nhiên đều (bỏ ưu tiên sao cao — 08/11); ưu tiên Hỗ trợ giữ (bản sắc trùm)
       return ht.concat(khac).slice(0, TRM.JAM_N);
     },
     lam(E, B, muc) {

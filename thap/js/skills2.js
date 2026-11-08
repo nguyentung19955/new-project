@@ -884,12 +884,16 @@ SKILLS.soi = { // Sói Máy (Werewolf) — mỗi lần TRIỆU HỒI / GHÉP ra 
   //   (người dùng duyệt 08/11 — CHATGPT-SPEC §10) chuyển từ cận chiến sang BẮN:
   //   THƯỜNG: 1 nòng, 1 viên 1.0D mỗi 1.8 s · THỨC TỈNH: há mồm 3 nòng, loạt 3 viên × 0.5D cách 0.1 s, loạt mỗi 1.2 s, LUÔN chí mạng.
   //   Tốc bắn (buff/cấp thẻ) rút khoảng nghỉ giữa 2 loạt, giữ khoảng 0.1 s giữa 3 viên. D = dmgU (sát thương 1 phát của ụ).
-  //   D = 55: giữ ~DPS bản thường cũ (17 × 1.8/s ≈ 31/s → 55 / 1.8 s ≈ 31/s); thức tỉnh ≈ 2.25× bản thường (chưa tính chí mạng).
-  vai: 'tc', dmg: 55, toc: 1 / 1.8, nham: 'dau',
+  //   ĐÁNH LAN (người dùng 08/11 "Were wolf thêm hiệu ứng đánh lan"): mỗi viên trúng còn gây LAN_K × sát thương viên đó lên quái khác trong
+  //     bán kính LAN_R ô quanh mục tiêu (thường 40% · 0.6 ô; thức tỉnh 50% · 0.8 ô). Lan chỉ chí mạng khi viên chính chí mạng (thức tỉnh: luôn).
+  //     Không Math.random: quyết định chí mạng của lan lấy từ viên chính (móc khiCrit). Vòng sóng vuốt ở điểm trúng: HU.soiLan (chỉ hình).
+  //   D = 52 (trước 55, −5% đơn mục tiêu): 1 quái lân cận → +32% (thường) / +42% (thức tỉnh) so với bản cũ; 2 quái → +70% / +89%.
+  vai: 'tc', dmg: 52, toc: 1 / 1.8, nham: 'dau',
   KY: 1.8, KY_TT: 1.2, CACH: 0.1, // giây: nghỉ bản thường · nghỉ loạt thức tỉnh · cách giữa 3 viên
+  LAN_K: 0.4, LAN_K_TT: 0.5, LAN_R: 0.6, LAN_R_TT: 0.8, // đánh lan: hệ số sát thương · bán kính (ô = min(B.cw, B.ch))
   tiLe: (B) => Math.min(0.5, knThe(B, 'soi') / 100),
   sinh(G, T) { T.thuc = rngSinh(T, 6271)() < this.tiLe(G.ban[T.ban]); T.loat = 0; if (T.thuc) setTimeout(() => { SND.thucTinh(); }, 250); },
-  mo: (T) => (T && T.thuc ? 'AWAKENED: 3-barrel volley every 1.2s (3 shots × 50% damage, 0.1s apart) · always crits' : 'NORMAL: one barrel, 1 shot every 1.8s · ' + Math.round(SKILLS.soi.tiLe(T && G.ban[T.ban]) * 100) + '% of summons/merges come out AWAKENED (3 barrels, always crit)') + (ms(T, 3) ? ' · +10% crit' : '') + (ms(T, 5) ? ' · +25% damage' : '') + (ms(T, 7) ? ' · howl: neighbours +25% fire rate' : ''),
+  mo: (T) => (T && T.thuc ? 'AWAKENED: 3-barrel volley every 1.2s (3 shots × 50% damage, 0.1s apart) · always crits · splash 50% to enemies within 0.8 tile' : 'NORMAL: one barrel, 1 shot every 1.8s · splash 40% to enemies within 0.6 tile (crits only if the shot crits) · ' + Math.round(SKILLS.soi.tiLe(T && G.ban[T.ban]) * 100) + '% of summons/merges come out AWAKENED (3 barrels, always crit)') + (ms(T, 3) ? ' · +10% crit' : '') + (ms(T, 5) ? ' · +25% damage' : '') + (ms(T, 7) ? ' · howl: neighbours +25% fire rate' : ''),
   luonCrit: (T) => !!T.thuc,
   capNhat(G, B, T, dt) { // tự quản nhịp bắn (loạt 3 viên) → luật thuần theo dt, tất định
     if (ms(T, 3)) T.buf.crit += 0.10; // 3★ KEEN FANGS
@@ -916,8 +920,17 @@ SKILLS.soi = { // Sói Máy (Werewolf) — mỗi lần TRIỆU HỒI / GHÉP ra 
   },
   mot(G, B, T, E, k) { // 1 viên đạn (bản thức tỉnh: đỏ, to hơn; luôn chí mạng qua luonCrit)
     giat(T, T.thuc ? 0.45 : 0.9); chopNong(T, T.thuc ? 20 : 24); SND.set();
-    const dmg = dmgU(T) * k, tt = !!T.thuc;
-    danThang(B, T, E, 'tia_lua', 600, tt ? 20 : 22, (G, d, M) => { if (M) trung(M, dmg, { B, mau: tt ? '#ff4b3e' : '#c8ff6b' }); FX.tiaLua(d.x, d.y, 3, tt ? '#ff4b3e' : '#c8ff6b', 140, 7); });
+    const dmg = dmgU(T) * k, tt = !!T.thuc, mau = tt ? '#ff4b3e' : '#c8ff6b';
+    danThang(B, T, E, 'tia_lua', 600, tt ? 20 : 22, (G, d, M) => {
+      if (M) { const song = !M.chet; T._sc = false; trung(M, dmg, { B, T, mau }); if (song) this.lan(G, B, T, M, dmg, tt || !!T._sc, mau); }
+      FX.tiaLua(d.x, d.y, 3, mau, 140, 7);
+    });
+  },
+  khiCrit(G, T) { T._sc = true; }, // viên chính vừa chí mạng → lan cũng chí mạng
+  lan(G, B, T, M, dmg, crit, mau) { // đánh lan quanh mục tiêu M (không gồm M); phu: không âm thanh / móc hỗ trợ / tiervfx
+    const tt = !!T.thuc, r = Math.min(B.cw, B.ch) * (tt ? this.LAN_R_TT : this.LAN_R), x = M.x, y = M.y, d = dmg * (tt ? this.LAN_K_TT : this.LAN_K);
+    for (const Q of dsMucTieu(B)) if (Q !== M && !Q.chet && Math.hypot(Q.x - x, Q.y - y) <= r + Q.d.co * 0.25) trung(Q, d, { B, T, crit, phu: true, mau });
+    G.hu.push({ k: 'soiLan', t: 0, song: tt ? 0.34 : 0.3, x, y, r, goc: T.goc || 0, tt });
   },
   hoTro(G, T, N) { if (ms(T, 7)) N.buf.toc += 0.25; }, // 7★ ALPHA HOWL
   // đầu sói (tờ ChatGPT raw_gc_soi_*: mặt nhìn THẲNG, nòng hướng XUỐNG ảnh) → xoay theo hướng bắn: góc ảnh = T.goc − 90°
@@ -1334,6 +1347,23 @@ HU.cauSang = { // quả cầu ánh sáng bay tới ô được gọi ụ
     ctx.globalCompositeOperation = 'lighter';
     R.anhGiua(ctx, R.cham1('#fff6c0'), x, y, 30); R.anhGiua(ctx, 'tia_lua', x, y, 22, o.t * 8, 1);
     ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+  },
+};
+HU.soiLan = { // Sói Máy — ĐÁNH LAN: sóng xung tròn + 3 vết vuốt chéo, VẼ GIỮA điểm trúng (bán kính = vùng lan thật, FX không cắt khung)
+  ve(ctx, o, R) {
+    const u = Math.min(1, o.t / o.song), e = 1 - (1 - u) * (1 - u), mau = o.tt ? '#ff4b3e' : '#c8ff6b', r = o.r;
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round';
+    ctx.globalAlpha = 0.9 * (1 - u); ctx.strokeStyle = mau; ctx.lineWidth = Math.max(1.2, (o.tt ? 4 : 3) * (1 - u));
+    ctx.beginPath(); ctx.arc(o.x, o.y, r * (0.3 + 0.7 * e), 0, Math.PI * 2); ctx.stroke();
+    ctx.globalAlpha = 0.35 * (1 - u); ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(o.x, o.y, r * (0.15 + 0.5 * e), 0, Math.PI * 2); ctx.stroke();
+    ctx.translate(o.x, o.y); ctx.rotate(o.goc + 0.7);
+    const L = r * 0.62 * Math.min(1, u * 5), gap = r * 0.24;
+    ctx.globalAlpha = 1 - u;
+    for (let k = -1; k <= 1; k++) {
+      ctx.lineWidth = (o.tt ? 3.4 : 2.6) * (1 - u * 0.5); ctx.strokeStyle = k ? mau : '#ffffff';
+      ctx.beginPath(); ctx.moveTo(-L, k * gap - L * 0.18); ctx.quadraticCurveTo(0, k * gap + L * 0.14, L, k * gap - L * 0.18); ctx.stroke();
+    }
+    ctx.restore();
   },
 };
 HU.vuot = { // vết cào của Sói Máy

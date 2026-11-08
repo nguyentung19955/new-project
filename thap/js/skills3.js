@@ -237,18 +237,19 @@ SKILLS.hydra = {
       trung(G, d, M) { if (M) trung(M, dmg, { B, mau: '#7dffc4' }); FX.tiaLua(d.x, d.y, 2, '#7dffc4', 110, 6); } });
   },
   // VƯƠNG MIỆN ĐẦU RẮN (người dùng 08/11: "hydra làm không đâu vào với đâu" — đầu/cổ dài chọc sang ô bên):
-  // n đầu (= sao) mọc từ THÂN TRÒN giữa ô, xoè đối xứng quanh hướng LÊN theo góc cố định; mỗi đầu chỉ ngoảnh tối đa ±LECH
-  // về mục tiêu riêng (T.hdG — luật giữ nguyên), cổ ngắn (ảnh cắt còn sọ + 1 đốt cổ), mọi điểm nằm trong ô (đầu mút ≤ 0.47 cỡ ô).
+  // n đầu (= sao) mọc từ THÂN TRÒN giữa ô, xoè đối xứng theo góc cố định; cổ ngắn (ảnh cắt còn sọ + 1 đốt cổ), mọi điểm nằm trong ô (đầu mút ≤ 0.47 cỡ ô).
+  // Người dùng 08/11: "đầu hydra cố định và không lắc lắc khi có 2 đầu, chỉ cần xoay tròn theo hướng là được" → các đầu KHÔNG ngoảnh/giật riêng;
+  // cả vương miện xoay LIỀN KHỐI quanh tâm ô theo T.goc (xoayDau, mượt như đầu súng thường), đầu giữa hướng về mục tiêu (luật chọn mục tiêu giữ nguyên).
   XOE: [[0], [0], [-28, 28], [-48, 0, 48], [-66, -22, 22, 66], [-92, -46, 0, 46, 92], [-115, -69, -23, 23, 69, 115], [-135, -90, -45, 0, 45, 90, 135]],
   // [dài ảnh (cắt) / ô, bán kính gốc cổ / ô, bán kính thân / ô]
   CO: [null, [0.42, 0.02, 0.12], [0.39, 0.05, 0.12], [0.36, 0.08, 0.13], [0.34, 0.1, 0.13], [0.32, 0.12, 0.14], [0.3, 0.14, 0.14], [0.29, 0.15, 0.15]],
   CAT: 0.6, MIENG: 0.4, // phần ảnh giữ (từ đỉnh) · miệng há ở 0.4 chiều cao ảnh gốc tính từ đỉnh
-  LECH: (n) => (n <= 4 ? 0.52 : 0.4), // ±30° (1–4 đầu) · ±23° (5–7 đầu)
-  goc0(T, i, n) { return -Math.PI / 2 + (this.XOE[n] || [0])[i] * Math.PI / 180; }, // hướng nghỉ của đầu i (cố định theo ô)
-  gocDauI(T, i, n) { const g0 = this.goc0(T, i, n), g = (T.hdG && T.hdG[i] != null) ? T.hdG[i] : g0, L = this.LECH(n); return g0 + Math.max(-L, Math.min(L, gocLech(g0, g))); },
+  goc0(T, i, n) { return -Math.PI / 2 + (this.XOE[n] || [0])[i] * Math.PI / 180; }, // hướng đầu i khi vương miện quay LÊN
+  xoay(T) { return (typeof T.goc === 'number' ? T.goc : -Math.PI / 2) + Math.PI / 2; }, // góc xoay cả vương miện (đầu giữa → T.goc)
+  gocDauI(T, i, n) { return this.goc0(T, i, n) + this.xoay(T); }, // đầu cố định trong vương miện, chỉ xoay theo khối
   mieng(T, i, n) {
-    const c = tamU(T), B = G.ban[T.ban], S = B ? Math.min(B.cw, B.ch) * 0.98 : 60, k = this.CO[n] || this.CO[1], g0 = this.goc0(T, i, n), g = this.gocDauI(T, i, n);
-    const bx = c.x + Math.cos(g0) * S * k[1], by = c.y + Math.sin(g0) * S * k[1], L = S * k[0] * (1 - this.MIENG / this.CAT);
+    const c = tamU(T), B = G.ban[T.ban], S = B ? Math.min(B.cw, B.ch) * 0.98 : 60, k = this.CO[n] || this.CO[1], g = this.gocDauI(T, i, n);
+    const bx = c.x + Math.cos(g) * S * k[1], by = c.y + Math.sin(g) * S * k[1], L = S * k[0] * (1 - this.MIENG / this.CAT);
     return [bx + Math.cos(g) * L, by + Math.sin(g) * L];
   },
   _than: {},
@@ -270,17 +271,20 @@ SKILLS.hydra = {
   },
   veDau(ctx, T, S, al, R, da) {
     const a = R.img('hydra_dau'); if (!a) return false;
-    const n = Math.max(1, Math.min(7, T.sao | 0)), k = this.CO[n], H = S * k[0], h = H / this.CAT, w = h * a.width / a.height, t = R.t || 0;
+    const n = Math.max(1, Math.min(7, T.sao | 0)), k = this.CO[n], H = S * k[0], h = H / this.CAT, w = h * a.width / a.height;
     const thu = []; for (let i = 0; i < n; i++) thu.push(i); thu.sort((p, q) => Math.abs(q - (n - 1) / 2) - Math.abs(p - (n - 1) / 2)); // đầu giữa vẽ sau cùng (nằm trên)
+    let m = 0; if (T.hdM && !da) for (let i = 0; i < n; i++) m = Math.max(m, T.hdM[i] || 0);
+    const xv = this.xoay(T), lui = S * 0.015 * Math.min(1, m / 0.12); // nhịp giật rất nhẹ của CẢ khối (không lắc từng đầu)
+    ctx.save(); ctx.rotate(xv); ctx.translate(0, lui); // cả vương miện xoay liền khối quanh tâm ô
     for (const i of thu) {
-      const ha = T.hdM && T.hdM[i] > 0, ten = ha && R.img('hydra_dau_ha') ? 'hydra_dau_ha' : 'hydra_dau', im = R.co(ten, h, da ? 'xam' : ''); if (!im) return false;
-      const g0 = this.goc0(T, i, n), g = this.gocDauI(T, i, n) + (da ? 0 : Math.sin(t * 1.6 + i * 1.3 + (T.o || 0)) * 0.035); // thở nhẹ ±2°
-      const lui = ha ? S * 0.05 * Math.min(1, T.hdM[i] / 0.12) : 0; // giật lùi khi vừa phun
-      ctx.save(); ctx.globalAlpha = al; ctx.translate(Math.cos(g0) * S * k[1], Math.sin(g0) * S * k[1]); ctx.rotate(g + Math.PI / 2); ctx.translate(0, lui);
+      const ha = T.hdM && T.hdM[i] > 0, ten = ha && R.img('hydra_dau_ha') ? 'hydra_dau_ha' : 'hydra_dau', im = R.co(ten, h, da ? 'xam' : ''); if (!im) { ctx.restore(); return false; }
+      const g0 = this.goc0(T, i, n);
+      ctx.save(); ctx.globalAlpha = al; ctx.translate(Math.cos(g0) * S * k[1], Math.sin(g0) * S * k[1]); ctx.rotate(g0 + Math.PI / 2);
       ctx.drawImage(im, 0, 0, im.width, im.height * this.CAT, -w / 2, -H, w, H);
       if (T.hyA > 0 && !da) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * 0.2; ctx.drawImage(im, 0, 0, im.width, im.height * this.CAT, -w / 2, -H, w, H); }
       ctx.restore();
     }
+    ctx.restore();
     ctx.save(); ctx.globalAlpha = al; this.veThan(ctx, S * k[2], da); ctx.restore(); // thân che gốc cổ → cổ ngắn, gọn
     return true;
   },

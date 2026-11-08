@@ -45,7 +45,7 @@ const TEXT = {
     freezer:    { name: 'FREEZER',      skill: 'DEEP FREEZE', desc: 'Freezes 3 random turrets for 6 s (+1 every 20 waves, max 5; co-op: split across both boards)', descN: (n) => 'Freezes ' + n + ' random turrets for 6 s' },
     janus:      { name: 'JANUS CUBE',   skill: 'PETRIFY',     desc: 'Turns 1 turret to stone (stone only merges with same-star stone → a higher stone)' },
     joker_king: { name: 'JOKER KING',   skill: 'FORCE MERGE', desc: 'Throws a Mimic onto 1 turret and forces a same-star merge' },
-    nightmare:  { name: 'NIGHTMARE',    skill: 'SNIPE',       desc: 'Snipes your highest-star turret: −1★ (1★ explodes)' },
+    nightmare:  { name: 'NIGHTMARE',    skill: 'SNIPE',       desc: 'Snipes a random turret: −1★ (1★ explodes)' },
     octopus:    { name: 'OCTOPUS EYES', skill: 'BURN',        desc: 'Burns 3 turrets for 6 s: −1★ when the fire ends unless cleansed (1★ is destroyed)' },
   },
   // kỹ năng Ma vương (Archfiend)
@@ -116,7 +116,7 @@ const TEXT = {
     hasao:      { name: 'Star Breaker',  skill: 'Support: Attack Neighbours (4 sides) deal more damage. First 5★ each wave: Solo: your weakest Attack turret +8% fire rate. Co-op: your ally\'s weakest +8%. PvP: the rival\'s first 5★ −8% fire rate' },
     saochep:    { name: 'Copycat',       skill: 'Drag it onto a same-star turret: it becomes a copy with 70% damage. Works on Frozen turrets too, but not on Stone. Random traits roll anew; the Copycat\'s own buffs are lost. Special same-type merges (Compass, Anvil, Merge King, Prism fusion) follow the target: into a copy stays a copy. A normal merge always makes a new real turret' },
     ngoisao:    { name: 'Star Cannon',   skill: 'Counts all ★ on your board now. Every 10★: it shoots faster. Every 50★: more damage. If your stars go down, the bonus goes down' },
-    soi:        { name: 'Werewolf',     skill: 'Wolf gun. Normal: one barrel, a shot every 1.8s. Each Summon or Merge has a 30% chance to come out AWAKENED: the mouth opens 3 barrels, a 3-shot volley every 1.2s that always crits' },
+    soi:        { name: 'Werewolf',     skill: 'Wolf gun. Normal: one barrel, a shot every 1.8s. Every hit splashes 40% damage to enemies within 0.6 tile. Each Summon or Merge has a 30% chance to come out AWAKENED: the mouth opens 3 barrels, a 3-shot volley every 1.2s that always crits, splash 50% within 0.8 tile' },
     tienhoa:    { name: 'Evolver',       skill: 'Does not shoot. An egg that hatches into a random turret +1★ after 10s + 2s per ★. A 6★ egg burns into a 7★ egg that never hatches: tap it for +20 mana' },
     cauvong:    { name: 'Rainbow',       skill: 'Support: paints a rainbow on the path. Solo: enemies on it take more damage. Co-op: the same, on your path. PvP: paints the rival\'s path; enemies there take less damage' },
     wallgen:    { name: 'Wall Projector', skill: 'Puts a wall on the path. The wall stops enemies, then explodes. Merge 2 Wall Projectors: a GOLDEN WALL (holds 6s, ×6 blast)' },

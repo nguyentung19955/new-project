@@ -10,7 +10,7 @@ const VT = {
   TONG: 4.0,          // giây — tự đóng (≥ 3 s đọc kịp; chạm CONTINUE / bất kỳ đâu để vào ngay)
   SO_TRUM: 3,         // số trùm xem trước
   NGUY: { mad_crown: 'Scrambles 3 turrets', freezer: 'Freezes 3–5 random turrets', janus: 'Petrifies 1 turret',
-    joker_king: 'Forces a merge', nightmare: 'Snipes your top turret', octopus: 'Burns 3 turrets' },
+    joker_king: 'Forces a merge', nightmare: 'Snipes a random turret', octopus: 'Burns 3 turrets' },
   CHU: { boss: 'BOSSES THIS MATCH', wave: 'WAVE', you: 'YOUR DECK', ally: 'ALLY DECK', rival: 'RIVAL DECK', bossPvp: 'SAME WAVES & BOSSES FOR BOTH', allyLane: 'Ally lane', cmd: 'CMDR', tap: 'TAP TO START' },
   el: null, mo: false,
 
