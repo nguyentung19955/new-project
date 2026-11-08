@@ -74,7 +74,7 @@ if (nhom('1 · ghepDB × biến thể nguồn/đích')) {
         const hlThuc = R('hl(a, b)');
         // mong đợi hopLeGhep: khoá nguồn → không (trừ đá+đá cùng sao cùng loại — không có trong ma trận này);
         // khoá đích → chỉ quaKhoa; còn lại: hopLe của kỹ năng hoặc ghép thường (cùng loại cùng sao <7 / Mimic)
-        const thuong = !khoaA && !khoaB && s < 7 && ((S === X && S !== 'loren') || X === 'mimic'); // Twin Anvil + Twin Anvil: chỉ ghép đặc biệt cùng dạng (08/11)
+        const thuong = !khoaA && !khoaB && s < 7 && ((S === X && S !== 'loren' && S !== 'canon') || X === 'mimic'); // Twin Anvil + Twin Anvil: chỉ ghép đặc biệt cùng dạng (08/11) · Pháo La Bàn + Pháo La Bàn: chỉ gộp hướng (08/11 tổ hợp hướng)
         const daDa = kn === 'da' && kd === 'da' && s < 7 && !R(`biKhoa(a) && (a.st.bang > 0)`); // đá + đá cùng sao: ghép thành khối đá +1★ (luật DCDW)
         const mongHL = daDa ? true : khoaA ? false : khoaB ? (!!sk.quaKhoa && hopLeDB) : (hopLeDB || thuong);
         if (hlThuc !== mongHL) { loi.push(X + ': hopLeGhep=' + hlThuc + ' (mong ' + mongHL + ')'); continue; }
@@ -442,13 +442,12 @@ if (nhom('10 · jackpot')) {
   cr(4, 3, 'da'); ca('[JP] CHAIN REACTOR × 1 mắt xích hoá đá', 'chuỗi đứt → không kích', R('jL.some(X => X.jp && X.jp.reactor)'), !R('jL.some(X => X.jp && X.jp.reactor)'));
   // 5 BLOOD ECLIPSE — BỎ 08/11 (Blood Circuit làm lại)
   // 6 TRUE NORTH
-  const tn = (ds) => { tran(['canon', 'lien', 'tia', 'set', 'bao']); nap(); R('var jK = dat(14, "canon", 3); jK.huong = 1;');
-    ds.forEach(([ha, sa, hb, sb], i) => R(`{ const a = dat(${i * 2}, 'canon', 1), b = dat(${i * 2 + 1}, 'canon', 1); a.huong = ${ha}; a.so = ${sa}; b.huong = ${hb}; b.so = ${sb}; ghep(B, a, b); }`)); buoc(0.05); };
-  tn([[0, 1, 0, 1], [0, 1, 0, 1], [0, 3, 0, 3]]); ca('[JP] TRUE NORTH 3 ghép cùng mũi tên, số 6', 'mọi Pháo La Bàn nhận 12 s', jp('jK', 'truenorth'), jp('jK', 'truenorth'));
-  tn([[0, 1, 0, 1], [0, 1, 2, 5], [0, 3, 0, 3]]); ca('[JP] TRUE NORTH có ghép ngược xen giữa', 'không kích', jp('jK', 'truenorth'), !jp('jK', 'truenorth'));
-  tn([[0, 1, 0, 1], [0, 1, 0, 1], [0, 2, 0, 2]]); ca('[JP] TRUE NORTH số kết quả 4 (< 6)', 'không kích', jp('jK', 'truenorth'), !jp('jK', 'truenorth'));
-  // 7 GRAND CHORUS — BỎ 08/11 (Quantum Choir làm lại thành Harmony)
-  // 8 SIX SEALS
+  // 08/11 tổ hợp hướng: 3 lần ghép Pháo La Bàn trong 45 s, lần thứ 3 ra NSWE → kích · lần 3 chưa đủ NSWE → không · quá 45 s → không
+  const tn = (ds, cho) => { tran(['canon', 'lien', 'tia', 'set', 'bao']); nap(); R('var jK = dat(14, "canon", 3); jK.hb = 1;');
+    ds.forEach(([ha, hb], i) => { R(`{ const a = dat(${i * 2}, 'canon', 1), b = dat(${i * 2 + 1}, 'canon', 1); a.hb = ${ha}; b.hb = ${hb}; ghep(B, a, b); }`); if (cho && i === 0) buoc(cho); }); buoc(0.05); };
+  tn([[1, 4], [1, 2], [3, 12]]); ca('[JP] TRUE NORTH 3 ghép, lần 3 ra NSWE', 'mọi Pháo La Bàn nhận 12 s', jp('jK', 'truenorth'), jp('jK', 'truenorth'));
+  tn([[1, 4], [1, 2], [1, 6]]); ca('[JP] TRUE NORTH lần 3 chưa đủ NSWE (NES)', 'không kích', jp('jK', 'truenorth'), !jp('jK', 'truenorth'));
+  tn([[1, 4], [1, 2], [3, 12]], 46); ca('[JP] TRUE NORTH quá 45 s giữa lần 1 và 3', 'không kích', jp('jK', 'truenorth'), !jp('jK', 'truenorth'));
   const ss = (hat) => { tran(['pandora', 'lien', 'canon', 'tia', 'set']); nap(); R('deckX()'); R(`G.hat = ${hat}; var jA = dat(14, 'lien', 5); var jD0 = D ? dat(14, 'lien', 5, '', D) : null; var mo = [];`);
     for (let i = 0; i < 6; i++) { R(`B.mana = 0; ghep(B, dat(0, 'pandora', 1), dat(1, 'pandora', 1)); mo.push(B._pd.slice());`); buoc(1); } };
   ss(11); const ss1 = R('mo.map(x => x.join("+")).join(" ")');

@@ -1,5 +1,5 @@
 // TURRET MERGE — CƠ CHẾ MỚI ĐỢT 1 (docs/demo-hop-tuong/tuvan/co-che-moi/DE-XUAT.md, người dùng chốt 07/11): phần HIỂN THỊ
-//   A. Pháo La Bàn (canon): huy hiệu MŨI TÊN + SỐ ở đáy ô (tấm đếm DEMKN — chung mọi bàn: SOLO, CO-OP cả bàn đồng đội, PVP cả bàn đối thủ,
+//   A. Pháo La Bàn (canon): (08/11 tổ hợp hướng) huy hiệu LA BÀN + chữ hướng / stack ở đáy ô + mũi tên sáng trên bệ (vẽ ở cuối tệp); (cũ) huy hiệu MŨI TÊN + SỐ ở đáy ô (tấm đếm DEMKN — chung mọi bàn: SOLO, CO-OP cả bàn đồng đội, PVP cả bàn đối thủ,
 //      ONLINE, Test range, hướng dẫn); lúc kéo Pháo lên Pháo: tấm của ô đích hiện SỐ SẼ RA (chữ vàng) — không chữ nổi, không vòng mới.
 //      Sóng nổ bù (ghép ngược hướng) chạy dọc làn · vệt xuyên của đạn.
 //   B. Lửa Thập Tự (lualien): vệt lửa chạy dọc HÀNG / CỘT từ ô ghép tới từng Relay nhận lửa (tờ p2_ember; tờ riêng cm_vetlua khi về).
@@ -34,14 +34,14 @@ const CM = {
 
 // ===================================================== A. PHÁO LA BÀN — huy hiệu mũi tên + số =====================================================
 if (typeof DEMKN !== 'undefined') Object.assign(DEMKN.DS, {
+  // Pháo La Bàn (tổ hợp hướng 08/11): icon la bàn (canon_phu) + chữ hướng (N / NS / NSW / NSWE) · NSWE có stack → '+n' (màu bậc đột phá qua DEMKN.lay)
+  //   đang kéo Pháo lên ô này (ghép được): tấm ô đích hiện KẾT QUẢ sẽ ra (chữ vàng)
   canon(T, B) {
-    const S = SKILLS.canon, src = typeof KG !== 'undefined' && KG.nguon ? KG.nguon() : null;
-    if (src && src !== T && src.id === 'canon' && src.ban === T.ban && KG.dich() === T && hopLeGhep(src, T)) { // đang kéo Pháo lên ô này: số sẽ ra
-      const kq = S.ketQua(src, T), m = CM.mui(S.huong(T));
-      return { m: [{ ic: m.ic, xoay: m.xoay, s: kq.so + '' }], sang: true, mau: kq.kieu === 'tru' ? '#ff8a5a' : null };
+    const S = SKILLS.canon, src = typeof KG !== 'undefined' && KG.nguon ? KG.nguon() : null, nhan = (hb, n) => (hb === S.DU && n > 0 ? '+' + n : S.ten(hb));
+    if (src && src !== T && src.id === 'canon' && src.ban === T.ban && KG.dich() === T && hopLeGhep(src, T)) {
+      const kq = S.hopNhat(src, T); if (kq) return { m: [{ ic: 'canon_phu', s: nhan(kq.hb, kq.chong) }], sang: true };
     }
-    const m = CM.mui(S.huong(T));
-    return { m: [{ ic: m.ic, xoay: m.xoay, s: S.so(T) + '' }], sang: S.so(T) >= 10 };
+    return { m: [{ ic: 'canon_phu', s: nhan(S.hb(T), S.chong(T)) }], sang: S.du(T) };
   },
   drone(T, B) { // chỉ khi đang kéo Drone lên Drone: số drone sẽ phóng (theo quãng kéo)
     const src = typeof KG !== 'undefined' && KG.nguon ? KG.nguon() : null;
@@ -49,7 +49,7 @@ if (typeof DEMKN !== 'undefined') Object.assign(DEMKN.DS, {
     return { m: [{ ic: 'ic_bom', s: '×' + SKILLS.drone.so(src.sao, SKILLS.drone.quang(src.o, T.o)) }], sang: true };
   },
 });
-if (typeof MV !== 'undefined' && MV.TAG) MV.TAG.canon = ['arrow and number (merge power)', 'mũi tên và số (sức ghép)'];
+if (typeof MV !== 'undefined' && MV.TAG) MV.TAG.canon = ['directions (N S W E) and stacks', 'hướng (N S W E) và stack'];
 
 // sóng nổ bù: dải sóng chạy dọc làn từ lõi về cổng (tờ cm_songno; chưa có → tờ nổ p3_canon trượt theo đường)
 HU.cmSong = {
@@ -105,7 +105,7 @@ if (typeof batDau === 'function') {
     try {
       if (typeof REN !== 'undefined' && REN.img) {
         const co = new Set(); for (const B of G.ban) for (const id of B.deck || []) co.add(id);
-        if (co.has('canon')) { REN.img('mui_tiep'); for (const t of ['cm_songno', 'cm_mui_0', 'cm_mui_1', 'cm_mui_2', 'cm_mui_3']) if (CM.M[t] || CM.M.cm_mui) REN.img(t); }
+        if (co.has('canon')) { REN.img('canon_phu'); REN.img('mui_tiep'); if (window.LABAN_DE) for (let m = 1; m <= 15; m++) REN.img('canon_de_' + m); }
         if (co.has('lualien') && CM.M.cm_vetlua) REN.img('cm_vetlua');
         if (co.has('drone')) { REN.img('ic_bom'); if (CM.M.cm_daykeo) REN.img('cm_daykeo'); }
       }
@@ -114,3 +114,33 @@ if (typeof batDau === 'function') {
   };
 }
 window.CM = CM;
+
+// ===================================================== A2. PHÁO LA BÀN — mũi tên sáng trên bệ theo tổ hợp hướng =====================================================
+// Dự phòng khi chưa có 15 bệ ChatGPT canon_de_<mặt nạ> (window.LABAN_DE = false): trên bệ canon_de, hướng ĐANG CÓ = quầng xanh + mũi tên duong_mui
+// chĩa ra ngoài ở mũi gai la bàn; hướng KHÔNG có = ngọc tối (chấm đen PNG). Chỉ đặt ảnh PNG (QUY-TAC-HINH 3), dựng vào ảnh đệm thân ụ (render.js than) → 0 chi phí mỗi khung.
+// Bit: 1 N · 2 E · 4 S · 8 W. Trả false khi ảnh chưa tải (than không giữ đệm).
+window.LABAN_DE = true; // tools/thap-cat-laban.py đổi thành true sau khi cắt đủ canon_de_1..15
+CM.veDe = function (x, R, m, SD, da) {
+  if (!R.img('fx_cham_trang')) return false;
+  for (let h = 0; h < 4; h++) {
+    const g = [-Math.PI / 2, 0, Math.PI / 2, Math.PI][h], c = Math.cos(g), s = Math.sin(g), on = !!(m & (1 << h)) && !da, rg = SD * 0.373;
+    if (!on) { R.anhGiua(x, R.cham1('#000000'), c * rg, s * rg, SD * 0.17, 0, 0.62); x.globalAlpha = 1; continue; }
+    x.save(); x.globalCompositeOperation = 'lighter';
+    R.anhGiua(x, R.cham1('#3fd8ff'), c * rg, s * rg, SD * 0.34, 0, 0.75); R.anhGiua(x, R.cham1('#ffffff'), c * rg, s * rg, SD * 0.12, 0, 0.8);
+    x.restore(); x.globalAlpha = 1;
+  }
+  return true;
+};
+// mũi tên chevron (duong_mui) vẽ TRÊN đầu súng (SKILLS.canon.veThem) — đầu xoay không che mất hướng; S lùi vào trong vì tấm đếm đáy ô che mép dưới
+CM.veMui = function (ctx, T, S, al, R) {
+  if (T.st.da) return; // vẽ cả khi đã có bệ ảnh theo tổ hợp: đầu súng (xoay) + tấm đếm đáy ô che gai N / S của bệ
+  const mui = R.img('duong_mui'); if (!mui) return;
+  const m = SKILLS.canon.hb(T), SD = S * 0.714 * ((R.DE_RIENG && R.DE_RIENG.canon) || 1), w = SD * 0.26, hh = w * mui.height / mui.width;
+  for (let h = 0; h < 4; h++) {
+    if (!(m & (1 << h))) continue;
+    const g = [-Math.PI / 2, 0, Math.PI / 2, Math.PI][h], r = SD * (h === 2 ? 0.3 : 0.44);
+    ctx.save(); ctx.globalAlpha = al; ctx.translate(Math.cos(g) * r, Math.sin(g) * r); ctx.rotate(g); ctx.drawImage(mui, -w / 2, -hh / 2, w, hh); ctx.restore();
+  }
+  ctx.globalAlpha = al;
+};
+SKILLS.canon.veThem = function (ctx, T, S, al, R) { CM.veMui(ctx, T, S, al, R); };

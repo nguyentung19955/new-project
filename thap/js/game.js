@@ -171,6 +171,7 @@ function hopLeGhep(a, b) {
   if (a.st.bang > 0 || b.st.bang > 0) return false;
   if (a.sao !== b.sao || a.sao >= LUAT.saoMax) return false;
   if (a.st.da || b.st.da) return a.st.da && b.st.da; // đá chỉ ghép với đá cùng sao
+  if (a.id === 'canon' && b.id === 'canon') return false; // Pháo La Bàn: chỉ ghép tổ hợp hướng (ghepDB) — hợp không thêm hướng → không ghép
   if (a.id === 'loren' && b.id === 'loren') return false; // Twin Anvil: chỉ ghép đặc biệt cùng dạng (khác dạng = không ghép được)
   if (a.id === b.id) return true;
   return a.id === 'mimic' || b.id === 'mimic'; // MIMIC ghép với BẤT KỲ ụ cùng sao
@@ -808,6 +809,7 @@ function banDan(o) {
 function capNhatDan(d, dt) {
   d.t += dt;
   TVX.dan(d, dt);
+  if (d.dd) return danDuoi(d, dt); // tên lửa đuổi (Pháo La Bàn)
   if (d.cong) {
     // đạn cầu vồng (pháo, cối): bay theo parabol tới điểm rơi (bám mục tiêu nếu còn sống)
     if (d.muc && !d.muc.chet) { d.px += (d.muc.x - d.px) * Math.min(1, dt * 6); d.py += (d.muc.y - d.py) * Math.min(1, dt * 6); }
@@ -830,17 +832,37 @@ function capNhatDan(d, dt) {
   return d.t > 3;
 }
 
+// TÊN LỬA ĐUỔI (Pháo La Bàn): bay thẳng theo hướng phóng d.dd.g 0,12 s rồi rẽ dần về mục tiêu (tốc độ rẽ + tốc độ bay tăng theo thời gian)
+//   mục tiêu chết → bám quái gần nhất (hoà: uid nhỏ) · không còn quái → nổ tại chỗ sau 0,6 s · chỉ dùng dt + vị trí quái → tất định (online lockstep)
+function danDuoi(d, dt) {
+  const v = d.dd;
+  if (!d.muc || d.muc.chet) {
+    let m = null, best = 1e18;
+    for (const E of dsMucTieu(d.B)) { if (E.chet) continue; const q = (E.x - d.x) ** 2 + (E.y - d.y) ** 2; if (q < best || (q === best && m && E.uid < m.uid)) { best = q; m = E; } }
+    d.muc = m;
+  }
+  const sp = d.sp * (1 + Math.min(1.6, d.t * 2.2)), b = sp * dt;
+  if (d.muc) {
+    const dx = d.muc.x - d.x, dy = d.muc.y - d.y, l = Math.hypot(dx, dy);
+    if (l <= b + 6) { d.x = d.muc.x; d.y = d.muc.y; d.goc = v.g; d.trung(G, d, d.muc); return true; }
+    if (d.t > 0.12) { const xoay = (6 + d.t * 16) * dt, lech = gocLech(v.g, Math.atan2(dy, dx)); v.g += Math.max(-xoay, Math.min(xoay, lech)); }
+  } else if (d.t > 0.6) { d.trung(G, d, null); return true; }
+  d.x += Math.cos(v.g) * b; d.y += Math.sin(v.g) * b; d.goc = v.g; d.px = d.x; d.py = d.y;
+  if (d.duoi === 'tenlua' && Math.random() < dt * 40) FX.hat1('khoi', d.x - Math.cos(v.g) * 8, d.y - Math.sin(v.g) * 8, 0, -4, 0.3, 6); // vfx: khói đuôi (không ảnh hưởng luật)
+  if (d.t > 3.5) { d.trung(G, d, null); return true; }
+  return false;
+}
+
 // ---------- AI (đồng đội / đối thủ; ?auto=1 cho bàn mình khi kiểm thử) ----------
-// AI chọn cặp ghép KHÔN hơn cho ụ có cơ chế vị trí (co-che-moi): Pháo La Bàn — ưu tiên CÙNG mũi tên (cộng số), rồi vuông góc kéo số nhỏ
-// vào số lớn, ngược hướng sau cùng (vẫn có sóng nổ) · Drone Kéo Xa — cặp xa nhau nhất. Cặp khác: giữ nguyên lựa chọn cũ.
+// AI chọn cặp ghép KHÔN hơn cho ụ có cơ chế vị trí (co-che-moi): Pháo La Bàn — cặp ra NHIỀU hướng nhất (NSWE + NSWE = stack), sao cao · Drone Kéo Xa — cặp xa nhau nhất. Cặp khác: giữ nguyên lựa chọn cũ.
 function aiCapTot(ts, a, b, hl) {
   if (a.id !== b.id || (a.id !== 'canon' && a.id !== 'drone')) return [a, b];
   let best = [a, b], bv = -1e9;
   for (const x of ts) for (const y of ts) {
-    if (x === y || x.id !== a.id || y.id !== a.id || x.sao !== a.sao || !hl(x, y)) continue;
+    if (x === y || x.id !== a.id || y.id !== a.id || (a.id !== 'canon' && x.sao !== a.sao) || !hl(x, y)) continue;
     let v;
     if (a.id === 'drone') v = SKILLS.drone.quang(x.o, y.o) * 10 - x.o * 0.01;
-    else { const S = SKILLS.canon, k = S.ketQua(x, y); v = (k.kieu === 'cong' ? 1000 : k.kieu === 'giu' ? 500 : 0) + k.so * 10 + k.song * 3 - x.o * 0.01; }
+    else { const S = SKILLS.canon, k = S.hopNhat(x, y); if (!k) continue; v = S.dem(k.hb) * 100 + k.chong * 300 + k.sao * 20 - x.o * 0.01; } // nhiều hướng / stack / sao cao trước
     if (v > bv) { bv = v; best = [x, y]; }
   }
   return best;

@@ -31,7 +31,7 @@ const JP = {
   HE_CUA: 60,                             // Chromatic Heist: ĐỎ → VÀNG → XANH trong 60 s
   CR_NHOM: 4, CR_CUA: 5, CR_DON: 3, CR_U: 3, CR_MOI: 6, CR_K: 2.5, // Chain Reactor
   BE_VAMP: 6, BE_CUA: 25, BE_XUNG: 3, BE_K: 3, // Blood Eclipse
-  TN_CUA: 45, TN_LAN: 3, TN_SO: 6, TN_K: 6, // True North
+  TN_CUA: 45, TN_LAN: 3, TN_K: 6, // True North (08/11: lần ghép thứ 3 phải ra NSWE)
   GC_U: 6, GC_TC: 3, GC_GIU: 10, GC_SAO: 3, // Grand Chorus (đội hình ≥ 3★ — mô phỏng: 1★ kích ngay wave 2)
   RV_MANA: 100,                           // Royal Vault
   LD_LAN: 12, LD_PHAT: 6, LD_SAO: 3,      // Loaded Dice (Pháo ≥ 3★ — mô phỏng: 1★ kích từ wave 1, 20 lần/trận)
@@ -126,25 +126,22 @@ HU.jpXung = { // 3 xung máu xuyên cả làn của mình (0,5 / 1,5 / 2,5 s), m
   ve() { },
 };
 
-// ---------- 6) TRUE NORTH — Pháo La Bàn: 3 lần ghép CÙNG mũi tên trong 45 s, không ghép ngược xen giữa, số kết quả ≥ 6 → mọi Pháo La Bàn +110% / +45% / +70 12 s + 1 phát xuyên × 600%.
+// ---------- 6) TRUE NORTH — Pháo La Bàn (08/11 tổ hợp hướng): 3 lần ghép Pháo La Bàn trong 45 s, lần thứ 3 (trở đi) ra NSWE (đủ 4 hướng hoặc thêm stack)
+//      → mọi Pháo La Bàn +110% / +45% / +70 12 s + 1 phát xuyên × 600% về phía quái đầu. (Cũ: 3 ghép cùng mũi tên, số ≥ 6.)
 if (SKILLS.canon && SKILLS.canon.ghepDB) {
   const S = SKILLS.canon, lam = S.ghepDB.lam;
   S.ghepDB.lam = function (G, B, a, b) {
-    const kq = a && b ? S.ketQua(a, b) : null;
     const r = lam.apply(this, arguments);
-    if (kq && kq.kieu === 'tru') B.jpTN = null; // ghép ngược hướng xen giữa → mất chuỗi
-    else if (kq && kq.kieu === 'cong') {
-      let o = B.jpTN; if (!o || G.t - o.t0 > JP.TN_CUA) o = { t0: G.t, n: 0 };
-      o.n++; B.jpTN = o;
-      if (o.n >= JP.TN_LAN && S.so(b) >= JP.TN_SO && JP.kich(B, 'truenorth', B.t.filter(X => X && X.id === 'canon'), b)) {
-        B.jpTN = null;
-        const E = S.mucTieu(B, b, S.huong(b)) || quaiDau(B);
-        if (E) { // phát xuyên vàng: mọi quái trên đường thẳng từ ụ qua mục tiêu (kéo dài tới 600 px)
-          const c = B.o[b.o], vx = E.x - c.x, vy = E.y - c.y, L = Math.hypot(vx, vy) || 1, ux = vx / L, uy = vy / L, dmg = JP.goc(b) * JP.TN_K, ds = [];
-          for (const M of dsMucTieu(B)) { if (M.chet) continue; const u = (M.x - c.x) * ux + (M.y - c.y) * uy; if (u < 0 || u > 600) continue; const px = c.x + ux * u - M.x, py = c.y + uy * u - M.y; if (px * px + py * py <= (18 + M.d.co * 0.25) ** 2) ds.push(M); }
-          ds.sort((p, q) => p.uid - q.uid); for (const M of ds) trung(M, dmg, { B, T: b, phu: true, mau: '#ffb35a' });
-          G.hu.push({ k: 'tiaTia', t: 0, song: 0.3, x0: c.x, y0: c.y, x1: c.x + ux * 600, y1: c.y + uy * 600, mau: '#ffd23f' });
-        }
+    let o = B.jpTN; if (!o || G.t - o.t0 > JP.TN_CUA) o = { t0: G.t, n: 0 };
+    o.n++; B.jpTN = o;
+    if (o.n >= JP.TN_LAN && S.du(b) && JP.kich(B, 'truenorth', B.t.filter(X => X && X.id === 'canon'), b)) {
+      B.jpTN = null;
+      const E = quaiDau(B);
+      if (E) { // phát xuyên vàng: mọi quái trên đường thẳng từ ụ qua mục tiêu (kéo dài tới 600 px)
+        const c = B.o[b.o], vx = E.x - c.x, vy = E.y - c.y, L = Math.hypot(vx, vy) || 1, ux = vx / L, uy = vy / L, dmg = JP.goc(b) * JP.TN_K, ds = [];
+        for (const M of dsMucTieu(B)) { if (M.chet) continue; const u = (M.x - c.x) * ux + (M.y - c.y) * uy; if (u < 0 || u > 600) continue; const px = c.x + ux * u - M.x, py = c.y + uy * u - M.y; if (px * px + py * py <= (18 + M.d.co * 0.25) ** 2) ds.push(M); }
+        ds.sort((p, q) => p.uid - q.uid); for (const M of ds) trung(M, dmg, { B, T: b, phu: true, mau: '#ffb35a' });
+        G.hu.push({ k: 'tiaTia', t: 0, song: 0.3, x0: c.x, y0: c.y, x1: c.x + ux * 600, y1: c.y + uy * 600, mau: '#ffd23f' });
       }
     }
     return r;
@@ -284,7 +281,7 @@ HU.jpVe = { // mọi bàn (solo / co-op / pvp / online): ụ đang có jackpot �
 JP.CHU = {
   orbital: (d) => 'ORBITAL CASCADE: 2 Orbital merges (2+ stars) inside one awakening → every Orbital +' + d.p + '% damage, +' + d.t + '% fire rate, +' + d.c + '% crit dmg ' + d.s + 's + 4 bombs ×180% each (45s cooldown)',
   lienket: (d) => 'CHAIN REACTOR: a chain of 4+ where 3 links each land 3 hits within 5s → the chain +' + d.p + '% damage, +' + d.t + '% fire rate, +' + d.c + '% crit dmg ' + d.s + 's, every 6th hit fires a bolt ×250% (40s cooldown)',
-  canon: (d) => 'TRUE NORTH: 3 same-arrow merges within 45s (no opposite merge between), number 6+ → every Compass Cannon +' + d.p + '% damage, +' + d.t + '% fire rate, +' + d.c + '% crit dmg ' + d.s + 's + 1 piercing shot ×600%',
+  canon: (d) => 'TRUE NORTH: 3 Compass merges within 45s, the 3rd makes NSWE → every Compass Cannon +' + d.p + '% damage, +' + d.t + '% fire rate, +' + d.c + '% crit dmg ' + d.s + 's + 1 piercing shot ×600%',
   radar: (d) => 'PERFECT FREQUENCY (3+ stars): 4 Attack neighbours of 3+ types held 8s → those 4 +' + d.p + '% damage, +' + d.t + '% fire rate, +' + d.c + '% crit dmg ' + d.s + 's (50s cooldown)',
 };
 {

@@ -30,7 +30,7 @@ const TT = [
   ['lo', 'Lò Scrap Forge (điểm ăn)', 'T.lo'],
   ['lc', 'Lửa Ember Relay', 'T.lc'],
   ['kho', 'Điểm lưu Fusion Archive', 'T.kho'],
-  ['cmSo', 'Mũi tên + số Pháo La Bàn (co-che-moi A)', 'T.huong + T.so'],
+  ['cmSo', 'Tổ hợp hướng + stack Pháo La Bàn (08/11)', 'T.hb + T.cmC'],
 ];
 // ---------------------------------------------------------------- SỰ KIỆN (B)
 const SK = [
@@ -139,15 +139,15 @@ function trongTrang(arg) {
     vang: T => { T.vang = true; }, thuc: T => { T.thuc = true; }, orbThuc: T => { T.thucT = 20; },
     epxung: T => { T.epxung = 0.65; }, aurora: T => { T.aurora = 8; }, khien: T => { T.khien = 1; },
     tocT: T => { T.tocT = 6; T.tocV = 0.2; }, giam: T => { T.giamT = 6; T.giamV = 0.08; }, kep: T => { T.st.kep = 5; },
-    lua: T => { T.st.lua = 5; }, hex: T => { T.hexT = 2; }, lo: T => { T.lo = 5; }, lc: T => { T.lc = 3; }, kho: T => { T.kho = 33; }, cmSo: T => { T.huong = 2; T.so = 4; },
+    lua: T => { T.st.lua = 5; }, hex: T => { T.hexT = 2; }, lo: T => { T.lo = 5; }, lc: T => { T.lc = 3; }, kho: T => { T.kho = 33; }, cmSo: T => { T.hb = 15; T.cmC = 4; },
   };
   const CO = {
     banSao: T => !!T.banSao, da: T => !!T.st.da, bang: T => T.st.bang > 0, vang: T => !!T.vang, thuc: T => !!T.thuc, orbThuc: T => T.thucT > 0,
     epxung: T => T.epxung > 0.6, aurora: T => T.aurora > 0, khien: T => T.khien > 0, tocT: T => T.tocT > 0 && T.tocV >= 0.2, giam: T => T.giamT > 0,
-    kep: T => T.st.kep > 0, lua: T => T.st.lua > 0, hex: T => T.hexT > 0, lo: T => T.lo >= 5, lc: T => T.lc >= 3, kho: T => T.kho >= 33, cmSo: T => T.id === 'canon' && T.huong === 2 && T.so >= 2,
+    kep: T => T.st.kep > 0, lua: T => T.st.lua > 0, hex: T => T.hexT > 0, lo: T => T.lo >= 5, lc: T => T.lc >= 3, kho: T => T.kho >= 33, cmSo: T => T.id === 'canon' && T.hb === 15 && T.cmC >= 4,
   };
   const xoa = () => { for (const X of G.ban) for (let i = 0; i < 15; i++) X.t[i] = null; G.quai = []; B.khien = 0; if (D) D.khien = 0; B.hero = []; G.bay.length = 0; };
-  const dat = (X, o, id, sao) => { const T = sinhU(taoU(X, id, sao, o)); T.vxA = null; if (T.id === 'vughep') T.vang = false; if (T.id === 'soi') T.thuc = false; if (T.id === 'canon') { T.huong = 0; T.so = 1; } X.t[o] = T; return T; }; // Pháo La Bàn: mũi tên ↑ số 1 cố định (đối chứng tất định)
+  const dat = (X, o, id, sao) => { const T = sinhU(taoU(X, id, sao, o)); T.vxA = null; if (T.id === 'vughep') T.vang = false; if (T.id === 'soi') T.thuc = false; if (T.id === 'canon') { T.hb = 1; T.cmC = 0; } X.t[o] = T; return T; }; // Pháo La Bàn: mũi tên ↑ số 1 cố định (đối chứng tất định)
   const fakeE = (trum, T) => ({ trum, x: 200, y: 200, kho: 0, d: { v: 1, co: 40 }, v0: 1, bao: { muc: [T.uid], muc2: [] }, rng: rngHat(77) });
   // mỗi sự kiện: (X = ụ có/không trạng thái, ở ô 7 bàn B — xaoPVP: bàn D) → { kq: ụ kết quả hoặc null, xay: có xảy ra }
   const EV = {
@@ -233,12 +233,11 @@ function trongTrang(arg) {
     const h5 = evo(5, X => haSao(B, X, 'kt')), h7 = evo(7, X => haSao(B, X, 'kt')), len = evo(3, X => { X.sao = 4; });
     them.evo = { h5, h7, len, ok: h5.id === 'tienhoa' && h5.sao === 4 && h5.tuoi < 0.05 && h7.sao === 6 && !h7.xit && h7.tuoi < 0.05 && len.sao === 4 && len.tuoi > 11 }; }
   // co-che-moi: Pháo La Bàn (cùng / vuông / ngược hướng), Lửa Thập Tự (cả hàng + cột, giữ lửa qua ghép), Drone Kéo Xa (quãng kéo)
-  { xoa(); const P = (o, h, n, s) => { const T = dat(B, o, 'canon', s || 2); T.huong = h; T.so = n; return T; };
-    let a = P(0, 1, 2), b = P(1, 1, 3); ghep(B, a, b); const c1 = [B.t[1] === b, b.sao, b.so, b.huong, !B.t[0]];
-    a = P(2, 0, 4, 3); ghep(B, a, b); const c2 = [b.sao, b.so, b.huong];
-    for (let i = 0; i < 4; i++) { const E = sinhQuai('bo', 0, 80 + i * 40, 1); E.vao = 1; } const h0 = G.quai.map(E => E.hp);
-    B._dsT = -1; a = P(3, 3, 7, 4); ghep(B, a, b); const c3 = [b.sao, b.so, b.huong, G.quai.every((E, i) => E.hp < h0[i])];
-    const C = dat(B, 9, 'saochep', 5); ghep(B, C, b); const k = B.t[9]; const c4 = [k && k.id, k && k.banSao, k && k.so, k && k.huong];
+  { xoa(); const P = (o, hb, n, s) => { const T = dat(B, o, 'canon', s || 2); T.hb = hb; T.cmC = n || 0; return T; }; // 08/11 tổ hợp hướng: hợp hướng, sao = trung bình làm tròn lên
+    let a = P(0, 1, 0, 2), b = P(1, 4, 0, 3); ghep(B, a, b); const c1 = [B.t[1] === b, b.sao, b.hb, b.cmC, !B.t[0]];
+    a = P(2, 1, 0, 5); const c2 = [hopLeGhep(a, b)]; a = P(2, 10, 0, 4); ghep(B, a, b); c2.push(b.sao, b.hb);
+    a = P(3, 15, 2, 1); ghep(B, a, b); const c3 = [b.sao, b.hb, b.cmC];
+    const C = dat(B, 9, 'saochep', 3); ghep(B, C, b); const k = B.t[9]; const c4 = [k && k.id, k && k.banSao, k && k.hb, k && k.cmC];
     them.cm = JSON.stringify([c1, c2, c3, c4]); G.quai = []; xoa(); }
   { xoa(); B.deck = ['lualien']; const R = (o, n) => { const T = dat(B, o, 'lualien', 3); T.lc = n; return T; };
     const r0 = R(0, 0), r4 = R(4, 0), r12 = R(12, 0), r10 = R(10, 0), a = R(6, 5), b = R(2, 2); ghep(B, a, b);
@@ -280,7 +279,7 @@ function trongTrang(arg) {
   }
   if (Math.abs(them.orbital - them.heso) > 0.002) LOI.push('✗ bom Orbital của bản sao ×' + them.orbital + ' ≠ ×' + them.heso);
   if (!them.evo.ok) LOI.push('✗ Evolver mất sao phải đếm lại từ đầu (5★→4★, 7★ xịt→6★), lên sao giữ thời gian: ' + JSON.stringify(them.evo));
-  if (them.cm !== JSON.stringify([[true, 3, 5, 1, true], [4, 5, 1], [5, 1, 1, true], ['canon', true, 1, 1]])) LOI.push('✗ Pháo La Bàn: luật ghép sai ' + them.cm + ' (cần cùng hướng 2+3=5 · vuông góc giữ 5 · ngược 5−7→1 + sóng nổ trúng mọi quái · Copycat giữ mũi tên + số)');
+  if (them.cm !== JSON.stringify([[true, 3, 5, 0, true], [false, 4, 15], [3, 15, 3], ['canon', true, 15, 3]])) LOI.push('✗ Pháo La Bàn: luật ghép sai ' + them.cm + ' (cần N2★+S3★ = NS 3★ · NS+N không ghép · NS+WE 4★ = NSWE 4★ · NSWE(2)+NSWE 1★ → 3★ stack 3 · Copycat giữ tổ hợp + stack)');
   if (them.lc !== JSON.stringify([6, 1, 1, 1, 0])) LOI.push('✗ Lửa Thập Tự: ' + them.lc + ' (cần ụ ra giữ max 5 rồi +1 = 6; ô 0 & 4 cùng hàng, ô 12 cùng cột +1; ô 10 không cùng hàng/cột = 0)');
   if (them.dr !== JSON.stringify([7, 2])) LOI.push('✗ Drone Kéo Xa: ' + them.dr + ' (cần góc → góc 6 ô + 3★/3 = 7 drone; kề 1 ô = 2)');
   if (!them.capLoai) LOI.push('✗ Hộp Bí Ẩn (bản sao) mở ra: sức mạnh không theo cấp của LOẠI kết quả × % sao chép');

@@ -35,7 +35,7 @@ const HO_MOI = {
   bang: 'freezes the lead enemy (no damage)', kiembang: 'spreads slow + shatters slowed ×5', lanhgia: 'spreads slow through neighbours’ shots',
   baotuyet: 'slows ALL + brief freeze', lophanung: 'slow aura that makes neighbours hit slowed enemies harder',
   doc: 'marks enemies: +12% damage taken', vungdoc: 'poison POOLS hit every enemy on them', aten: 'cashes in poison ×4; kills explode',
-  canon: 'arrow + number: same-arrow merges add up', xucxac: 'gambles damage 3–300%', mortar: 'CLUSTER shells split into bomblets', no5: 'every 5th shot: 3 exploding bolts',
+  canon: 'merge to combine directions: 1 homing rocket per direction', xucxac: 'gambles damage 3–300%', mortar: 'CLUSTER shells split into bomblets', no5: 'every 5th shot: 3 exploding bolts',
   orbital: 'merging awakens EVERY Orbital on the board: area salvos (no normal shots)',
   set: 'chain lightning', laser: 'beam that ramps up ×4', bao: 'instant hits that ARC to a 2nd enemy', railgun: 'piercing rail + BINGO lines',
   overlord: 'thunder blast + aftershock arcs (Mythic finisher, no active)',
@@ -71,7 +71,7 @@ function hoTT(id) {
 // ===================================================== 2) MỐC SAO 3★/5★/7★ =====================================================
 // Ụ có mốc RIÊNG (cơ chế cài trong skills*.js bằng ms(T,n)); ụ khác dùng mốc CHUNG theo loại (cài ở đây + game.js)
 const MOC_RIENG = {
-  canon:     { 5: ['TRUE NORTH', 'Each number counts ×1.5'], 7: ['FOUR WINDS', '+30% damage; every 8s a shell toward all 4 arrows'] },
+  canon:     { 5: ['TRUE NORTH', '+20% damage; each stack counts ×1.5'], 7: ['FOUR WINDS', '+30% damage; every 8s a rocket toward all 4 directions'] },
   bang:      { 3: ['LONG FREEZE', 'Freeze +0.5s'], 5: ['QUICK FROST', 'Freezes every 4.5s'], 7: ['DOUBLE FREEZE', 'Freezes 2 lead enemies'] },
   kiembang:  { 3: ['SHATTER ×6', 'Slowed enemies take ×6'], 5: ['SPLINTERS', 'Shatter splashes 40% around'], 7: ['GLACIER', 'Slowed enemies take ×8'] },
   baotuyet:  { 3: ['SQUALL', 'Pulses 1.5s sooner'], 5: ['ICE SHARDS', 'Pulse damage ×3'], 7: ['WHITEOUT', 'Pulse freezes small enemies 1s'] },

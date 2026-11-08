@@ -114,8 +114,8 @@ const HD = {
   // tìm cặp ghép hợp lệ (cùng ụ, cùng sao) trên bàn người chơi
   timCap(B) {
     const ts = B.t.filter(T => T && !T.st.bang && !T.st.da);
-    let cl = null; // Pháo La Bàn ghép GIỮ LOẠI (cộng số) — bước này dạy ghép thường (ra ụ ngẫu nhiên) → ưu tiên cặp khác
-    for (const a of ts) for (const c of ts) if (a !== c && a.id === c.id && a.sao === c.sao && a.sao < LUAT.saoMax) { if (a.id !== 'canon') return [a, c]; cl = cl || [a, c]; }
+    let cl = null; // Pháo La Bàn ghép GIỮ LOẠI (gộp hướng; trùng hướng không ghép được) — bước này dạy ghép thường (ra ụ ngẫu nhiên) → ưu tiên cặp khác
+    for (const a of ts) for (const c of ts) if (a !== c && a.id === c.id && a.sao === c.sao && a.sao < LUAT.saoMax) { if (a.id !== 'canon') return [a, c]; if (!cl && hopLeGhep(a, c)) cl = [a, c]; }
     return cl;
   },
 

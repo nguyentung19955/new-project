@@ -85,12 +85,12 @@ function sdHexTrung(B, T, o) {
   const p = SKILLS.nguyenrua.p(T);
   for (let n = 1; n < 400; n++) { const r = SK7.rng(B, o, n, 2); r(); if (r() < p) { B.hexN = n - 1; return; } }
 }
-// Pháo La Bàn: trận đã vẽ mũi tên (chevron) theo hướng; clip thêm SỐ TO ở góc trên-trái mỗi Pháo (ụ đang kéo: số theo ngón tay)
+// Pháo La Bàn: chữ HƯỚNG TO (N / NS / NSWE…) + stack ở góc trên-trái mỗi Pháo (ụ đang kéo: chữ theo ngón tay)
 function sdLaBan(x, B) {
   const S = SKILLS.canon, g = UI.keo && UI.keo.sd ? UI.keo : null;
   for (const T of B.t) if (T && T.id === 'canon') {
     const keo = g && g.T === T, c = keo ? { x: g.x, y: g.y } : B.o[T.o];
-    sdChu(x, String(S.so(T)), c.x - B.cw * 0.33, c.y - B.ch * 0.28, '#ffe46b', 24);
+    sdChu(x, S.ten(S.hb(T)) + (S.chong(T) ? ' +' + S.chong(T) : ''), c.x - B.cw * 0.3, c.y - B.ch * 0.28, '#7fe8ff', 22);
   }
 }
 // Lửa Thập Tự: số lửa TO (ảnh glyph/lualien + số) ở góc trên-trái mỗi Relay; 2.5–5 s sau ghép ở ô 8: mũi tên chạy ra dọc hàng + cột,
@@ -117,13 +117,13 @@ const sdHop = (s) => { const lo = Math.max(s >= 7 ? 5 : s >= 5 ? 3 : 1, Math.min
 // Hero Foundry: % tốc của ô anh hùng vừa dập (giá trị thật trong B.hero — tính theo sao Foundry ghép, không theo ụ ra)
 function sdHero(T) { const B = G.ban[T.ban] || G.ban[0], h = B && B.hero && B.hero[B.hero.length - 1]; return h ? h.v : SKILLS.xuonganh.v(T); }
 const SD_K = {
-  // Pháo La Bàn: ô 7 (→2) kéo vào ô 8 (→1): cùng mũi tên → →3 · rồi ô 13 (←1) kéo vào ô 8: ngược hướng → →2 + sóng nổ dọc làn
-  //   nhãn mũi tên + số TO dưới mỗi Pháo (sdLaBan) để người chơi thấy phép cộng / trừ; ụ chính ≤ 5★ để lần ghép thứ 2 (ô 13 = sao+1) luôn hợp lệ
-  canon: { kieu: 'ghep', saoMax: 5, q: Q.nhom(6, 175, 26, 9), ke: [[8, 'canon', 's'], [13, 'canon', (s) => Math.min(7, s + 1)]], keo: [[2.6, 7, 8], [5.6, 13, 8]],
-    truoc: (T, B) => { if (T) { T.huong = 1; T.so = 2; } if (B.t[8]) { B.t[8].huong = 1; B.t[8].so = 1; } if (B.t[13]) { B.t[13].huong = 3; B.t[13].so = 1; } },
+  // Pháo La Bàn (tổ hợp hướng 08/11): ô 7 (N) kéo vào ô 8 (S) → NS bắn 2 tên lửa · rồi ô 13 (WE) kéo vào ô 8 → NSWE bắn 4 tên lửa
+  //   chữ hướng TO trên mỗi Pháo (sdLaBan); cùng sao → sao kết quả = trung bình làm tròn lên (giữ nguyên sao)
+  canon: { kieu: 'ghep', saoMax: 5, q: Q.nhom(6, 175, 26, 9), ke: [[8, 'canon', 's'], [13, 'canon', 's']], keo: [[2.6, 7, 8], [5.6, 13, 8]],
+    truoc: (T, B) => { if (T) { T.hb = 1; T.cmC = 0; } if (B.t[8]) { B.t[8].hb = 4; B.t[8].cmC = 0; } if (B.t[13]) { B.t[13].hb = 10; B.t[13].cmC = 0; } },
     ve: (x, B) => sdLaBan(x, B),
-    c: [[0.2, 'Each Cannon: an arrow + a big number'], [1.4, 'Drag it onto a same-star Cannon'], [2.6, 'Same arrow: 2 + 1 = 3', { cham: 0.6 }], [4.0, (T) => 'Number 3 = 3 × ' + Math.round(SKILLS.canon.moiSo(T) * 100) + '% = +' + Math.round(SKILLS.canon.moiSo(T) * 300) + '% damage'],
-      [5.6, 'Opposite arrow: 3 − 1 = 2', { cham: 0.7 }], [6.5, 'Opposite arrow also fires a shockwave']], dai: 9.4 },
+    c: [[0.2, 'Each Compass has a direction: N, S, W or E'], [1.4, 'Drag one Compass onto another'], [2.6, 'N + S = NS: 2 homing rockets', { cham: 0.6 }], [4.0, 'Star = average of the two, rounded up'],
+      [5.6, 'NS + WE = NSWE: 4 rockets', { cham: 0.7 }], [6.8, (T) => 'NSWE + NSWE: +1 stack = +' + Math.round(SKILLS.canon.moiChong(T) * 100) + '% damage']], dai: 9.4 },
   xucxac: { q: Q.hang(3, 170, 50, 6), may: [5, 5.8], c: [[0.2, 'Each shot: random 3–300% damage'], [1.5, 'Look at the damage numbers', { ev: 'hit', cham: 0.4 }], [4.8, 'A crit always does 300%', { ev: 'hit', cham: 0.5 }]] },
   lien: { q: Q.dong(7, 0.55, 3), c: [[0.2, 'Shoots very fast at the first enemy'], [2.4, (T, s) => s >= 3 ? 'More ★ = shoots faster' : 'More ★ = shoots faster', { cham: 0.4 }]] },
   phun: { q: Q.nhom(6, 185, 24, 6), c: [[0.2, 'Shoots fast at random enemies'], [1.6, 'Every enemy gets hit', { ev: 'hit', cham: 0.4 }]] },
@@ -351,7 +351,7 @@ const SD_MO = {
   mortar: (T) => 'Damage ' + Math.round(dmgU(T)) + ', 46 px splash',
   no5: (T) => 'Damage ' + Math.round(dmgU(T)) + ' per shot',
   lualien: (T) => 'Each flame +2% damage, max ' + SKILLS.lualien.tran(T),
-  canon: (T) => 'Each number +' + Math.round(SKILLS.canon.moiSo(T) * 100) + '% damage',
+  canon: (T) => 'Each stack +' + Math.round(SKILLS.canon.moiChong(T) * 100) + '% damage',
   drone: (T) => '1 drone per cell, +' + Math.floor(T.sao / 3) + ' bonus',
   hopca: () => '+25% damage per Harmony, max 4',
   luutru: (T) => '+1% damage per charge, max ' + SKILLS.luutru.tran(T),
@@ -394,7 +394,7 @@ function sdKichBan(id) {
       else them(8, r.ban || 'lien', r.saoBan || 's');
       r.keo = k === 'gDB' && r.keoNguoc ? [2.5, 8, 7] : [2.5, 7, 8];
     }
-    them(2, 'lien', 2); them(6, 'canon', 1);
+    them(2, 'lien', 2); them(6, id === 'canon' ? 'tia' : 'canon', 1); // clip Pháo La Bàn: ụ đệm khác loại (Pháo đệm làm rối chữ hướng)
     r.q = r.q || Q.hang(4, 180, 40, 8);
   } else if (k === 'phu') {
     if (!r.ke.length) { r.ke.push([6, 'lien', 's']); r.ke.push([8, 'canon', 's']); }

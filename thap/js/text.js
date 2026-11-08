@@ -56,7 +56,7 @@ const TEXT = {
   },
   // 64 ụ: name = tên hiển thị, skill = mô tả ngắn. portrait (tuỳ chọn) = đường dẫn ảnh thẻ thay thế (mặc định assets/nho/<id>.png)
   turret: {
-    canon:      { name: 'Compass Cannon', skill: 'Each Cannon has an arrow and a number. Each number = +15% damage. Drag a Cannon onto a same-star Cannon: target +1★. Same arrow: numbers add up. Opposite arrow: numbers subtract + shockwave. Side arrow: number stays' },
+    canon:      { name: 'Compass Cannon', skill: 'Gets 1 random direction (N, S, W or E). Merge two Compasses to combine their directions (N + S = NS). Result star = average of the two, rounded up. Each direction fires 1 homing rocket. Full NSWE + NSWE adds a damage stack' },
     xucxac:     { name: 'Dice Gun',      skill: 'Each shot deals random damage: 3% to 300%. A crit always deals 300%. Tip: add crit chance' },
     lien:       { name: 'Gatling',       skill: 'Shoots very fast at the first enemy. Each ★ makes it shoot faster. Tip: put a Radar next to it' },
     phun:       { name: 'Scatter',       skill: 'Shoots very fast at random enemies. Good against groups. Each ★ makes it shoot faster' },

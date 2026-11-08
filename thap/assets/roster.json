@@ -4,9 +4,9 @@
   "ten": "Compass Cannon",
   "bac": "vang",
   "dcdw": "Joan of Arc",
-  "kyNang": "Arrow + number: same-arrow merges add numbers, opposite merges subtract + shockwave; each number +damage",
+  "kyNang": "Merge to combine directions (N, S, W, E); each direction fires 1 homing rocket; NSWE + NSWE adds a damage stack",
   "ten_vi": "Pháo La Bàn",
-  "kyNang_vi": "Mũi tên + số: ghép cùng hướng cộng số, ngược hướng trừ số + sóng nổ; mỗi số +sát thương"
+  "kyNang_vi": "Ghép để gộp hướng (N, S, W, E); mỗi hướng bắn 1 tên lửa đuổi; NSWE + NSWE thêm 1 stack sát thương"
  },
  {
   "id": "xucxac",

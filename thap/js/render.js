@@ -1019,11 +1019,14 @@ const REN = {
   than(T, S, da, bong) {
     const km = 0; // (vòng màu khoá đã bỏ)
     // bệ riêng đã tải xong → dùng; đang tải / lỗi → bệ chung (không chờ)
-    const kR = this.DE_RIENG[T.id], tenR = kR ? T.id + '_de' : null;
-    const rieng = tenR && this.img(tenR) ? tenR : null, ten = rieng || 'de_chung';
+    const kR = this.DE_RIENG[T.id]; let tenR = kR ? T.id + '_de' : null;
+    // Pháo La Bàn: bệ theo TỔ HỢP HƯỚNG canon_de_<mặt nạ 1–15> (ảnh ChatGPT, khi window.LABAN_DE) · chưa có → bệ thường + mũi tên sáng (CM.veDe)
+    const lb = T.id === 'canon' && typeof SKILLS !== 'undefined' && SKILLS.canon && SKILLS.canon.hb ? SKILLS.canon.hb(T) : 0;
+    if (lb && window.LABAN_DE && this.img('canon_de_' + lb)) tenR = 'canon_de_' + lb;
+    const rieng = tenR && this.img(tenR) ? tenR : null, ten = rieng || 'de_chung', lbVe = lb && rieng === 'canon_de' && typeof CM !== 'undefined' && CM.veDe ? lb : 0;
     // VIỀN BẬC (người dùng 07/11 18:25): viền kim loại ôm hình bóng bệ, màu = bậc (Trắng bạc · Xanh · Tím · Vàng · Đỏ); đầu ụ giữ màu riêng
     const vb = rieng && this.VIEN_ON ? this.vienBac(T.id, T.bac, da) : null, vCho = vb === 0; // 0 = ảnh viền đang tải → vẽ tạm không viền, không giữ cache
-    const k = this.s * this.dpr, n = Math.round(S * 1.5 * k), key = 'than|' + (rieng || '') + '|' + T.bac + '|' + (da ? 1 : 0) + '|' + n + (bong ? '|b' : '') + '|' + km;
+    const k = this.s * this.dpr, n = Math.round(S * 1.5 * k), key = 'than|' + (rieng || '') + '|' + T.bac + '|' + (da ? 1 : 0) + '|' + n + (bong ? '|b' : '') + '|' + km + (lbVe ? '|lb' + lbVe : '');
     let c = vCho ? null : this.cGet(key); if (c) return c;
     let de = da ? this.banXam(ten) : this.img(ten);
     if (!de && !(this.anh[ten] && this.anh[ten]._loi)) return null; // còn đang tải
@@ -1033,13 +1036,15 @@ const REN = {
     const q = n / (S * 1.5); x.scale(q, q); x.translate(S * 0.75, S * 0.75);
     const SB = S * 0.714, SD = rieng ? SB * kR : SB;
     const dw = de.naturalWidth || de.width;
-    de = this.mip(de, SD * q);
+    de = this.mip(de, (rieng && lb && rieng !== 'canon_de' ? SD * dw / 177 : SD) * q);
     if (bong) { x.globalAlpha = 0.7; x.drawImage(this.cham1('#000000'), 2 - SB * 0.62, SB * 0.06 + 3 - SB * 0.62, SB * 1.24, SB * 1.24); x.globalAlpha = 1; } // bóng = PNG tô đen
     if (vb) { const SV = SD * vb.width / (vb.dw || dw); x.drawImage(this.mip(vb, SV * q), -SV / 2, -SV / 2, SV, SV); } // viền cùng tâm bệ, khung = bệ + 12 px mỗi phía
-    x.drawImage(de, -SD / 2, -SD / 2, SD, SD);
+    const SDv = rieng && lb && rieng !== 'canon_de' ? SD * dw / 177 : SD; // bệ tổ hợp Pháo La Bàn: khung 211 = canon_de 177 + 17 px mỗi phía (mũi gai sáng), cùng tâm
+    x.drawImage(de, -SDv / 2, -SDv / 2, SDv, SDv);
+    const lbCho = !!lbVe && !CM.veDe(x, this, lbVe, SD, da); // mũi tên sáng theo hướng (ảnh PNG) — ảnh chưa tải: vẽ tạm, chưa giữ đệm
     // (bỏ vòng màu khoá vẽ code quanh bệ — QUY-TAC-HINH 1/4; nhận diện = biểu tượng vai trò PNG góc ô)
     // (BỎ vòng bậc tier_ring_<bac> quanh bệ — người dùng 2026-11-06: đầu ụ đã thể hiện bậc; mọi chế độ / bóng kéo / bảng kết quả đều qua hàm này)
-    return vCho ? c : this.cSet(key, c);
+    return vCho || lbCho ? c : this.cSet(key, c);
   },
   // VIỀN BẬC: <id>_vien.png (trắng, vát sẵn — tools/thap-cat-umod.py) tô màu bậc 1 lần (multiply giữ vát kim loại) → giữ trong REN.anh như DOTPHA.tenVong.
   // Vàng/Đỏ: thêm ánh kim nhẹ (cộng sáng chính ảnh viền). Ụ xám (da): viền bạc. Trả: ảnh đã tô · 0 đang tải · null không có viền (bệ chung / lỗi tải).
