@@ -173,7 +173,9 @@
       a._chuaGiai = true;
       // giải mã xong giữa trận → chép sang canvas trong hàng nóng luôn (không đợi lần vẽ đầu = đúng lúc ra chiêu)
       const xong = () => { a._chuaGiai = false; if (trongTran() || (G.ban && G.ban.length)) xep('cp|' + ten, () => REN.img(ten)); };
-      a.addEventListener('load', () => { a.decode().then(xong, xong); }, { once: true });
+      // decode() treo (Safari iOS: ảnh lớn / trang vừa quay lại từ nền) → _chuaGiai kẹt mãi, REN.img trả null tới khi mở lại app
+      // (người dùng 08/11: "chơi tướng mới phải thoát ra vào lại mới load được") → quá 1,5 s thì thôi đợi, chép thẳng (img gốc)
+      a.addEventListener('load', () => { a._tVe = now(); let x = false; const x1 = () => { if (!x) { x = true; xong(); } }; try { a.decode().then(x1, x1); } catch (e) { x1(); } setTimeout(x1, 1500); }, { once: true });
       a.addEventListener('error', () => { a._chuaGiai = false; }, { once: true });
     }
     return a;
@@ -182,7 +184,8 @@
   REN.img = function (ten) {
     const a = this.anh[ten];
     if (!a || a._cv) return imgGoc.apply(this, arguments);
-    if (a._chuaGiai) return null;
+    if (a._chuaGiai && !(a._tVe && now() - a._tVe > 1500)) return null;
+    a._chuaGiai = false;
     if (!(a.complete && a.naturalWidth && !a._loi)) return imgGoc.apply(this, arguments);
     // lần đầu dùng: chép ảnh đã giải mã sang canvas (ảnh lớn: vài ms) — tính vào ngân sách khung; hết ngân sách → chép trong hàng nóng
     if (this.hetNgan()) { NS.thongKe.hoan++; xep('cp|' + ten, () => imgGoc.call(this, ten)); return null; }

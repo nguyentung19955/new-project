@@ -632,3 +632,6 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 
 ## claude/demo-hop-tuong — sửa chạm trứng cháy (08/11)
 - Chạm trứng cháy 7★ (Evolver) luôn tái chế +20 mana — kể cả trứng bị băng/đá/câm (`chamSan`, game.js) và ngón tay rung ≤ 10 px vẫn là chạm (ui.js); ụ có ▶ chạm = dùng chiêu, không mở dải; dải xem Evolver ghi rõ giây nở / trứng cháy chạm +20 mana.
+
+## claude/demo-hop-tuong — sửa lỗi "chơi tướng mới phải thoát ra vào lại mới load được" (08/11)
+- Bản mới: trang cũ (mạng chậm > 3,5 s → SW trả index cũ / app nằm nền) giờ tự nạp lại sang bản mới ở menu (kiểm ver.json lúc mở + khi app quay lại + 3 phút/lần; bấm PLAY khi đã biết có bản mới → nạp lại thay vì vào trận bằng bản cũ; nạp bằng `?r=` để SW không trả lại index cũ, tối đa 2 lần/bản/phiên — không lặp); sw.js lưu index mạng đúng cách (waitUntil gọi ngay); nongskill.js: decode() treo quá 1,5 s thì vẫn vẽ ảnh (trước: ảnh ụ kẹt "chưa giải mã" tới khi mở lại app).

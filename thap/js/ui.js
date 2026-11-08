@@ -171,6 +171,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     if (typeof mvCo === 'function' && !mvCo(this.mv) && !(G.debug && G.debug.af === this.mv)) this.mv = 'hero'; // chỉ huy chưa mở → REINFORCE (08/11; ?af= kiểm thử bỏ qua)
     SND.mo();
     try { localStorage.setItem('turret_bo', JSON.stringify({ chon: this.chon, mv: this.mv, che: this.che })); } catch (e) { }
+    if (typeof TAI !== 'undefined' && TAI.verMoi && !TAI.trongOnl()) { TAI.napLaiMoi(); return; } // đã có bản mới trên máy chủ: nạp lại (bộ bài đã lưu) thay vì vào trận bằng bản cũ thiếu ảnh ụ mới
     batDau(this.che, this.chon, this.mv);
   },
   vaoTran() {
