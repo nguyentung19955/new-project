@@ -237,6 +237,13 @@ if (nhom('5 · bộ đếm × ghép / mất sao')) {
     const got = R(`N && N.id === '${id}' ? N.${k} || 0 : -1`);
     ca(id + ' + ' + id + ' → ' + id + ': giữ ' + k, 'giữ max (' + v + ')', got, got >= v);
   }
+  // Ember Relay (luật 08/11): ghép 2 Ember CÙNG SAO = cả 2 rời bàn → lửa mỗi ụ cộng cho Ember cùng hàng/cột với ô CỦA NÓ (cộng dồn); ụ ra = A + C;
+  //   ở lại (trừ sao / hoá đá / Copycat chép nó) → không truyền
+  tran(['lualien', 'mimic']);
+  R(`B.deck = ['lualien']; var a = dat(0, 'lualien', 2), b = dat(1, 'lualien', 2), x = dat(3, 'lualien', 3), y = dat(6, 'lualien', 1); a.lc = 4; b.lc = 1; x.lc = 2; y.lc = 5; var N = ghep(B, a, b);`);
+  ca('Ember + Ember (ô 0 → ô 1) × Ember ô 3 (chung hàng cả 2) + ô 6 (cột ô 1)', 'ụ ra 5 · ô 3 = 2 + 4 + 1 = 7 · ô 6 = 5 + 1 = 6', R('[N.lc, x.lc, y.lc].join()'), R('[N.lc, x.lc, y.lc].join()') === '5,7,6');
+  R(`haSao(B, x); capNhatBan(B, 1/30); var cp = dat(10, 'saochep', 1); ghep(B, cp, y); capNhatBan(B, 1/30);`);
+  ca('Ember bị trừ sao / bị Copycat chép', 'ở lại, không truyền (ụ ra giữ 5)', R('[N.lc, x.lc].join()'), R('[N.lc, x.lc].join()') === '5,7');
   // Evolver: thẻ "losing a star restarts the countdown" × trùm hạ sao
   tran(['tienhoa', 'lien']); R(`var T = dat(3, 'tienhoa', 4); T.egg = 15; capNhatBan(B, 1/30); haSao(B, T); capNhatBan(B, 1/30);`);
   ca('Evolver × trùm −1★', 'đếm ngược lại từ đầu (egg ≈ 0)', R('T.egg.toFixed(2)'), R('T.egg') < 0.5);

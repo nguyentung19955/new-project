@@ -21,7 +21,7 @@ const CANH = [
   { ten: 'halo', id: 'haoquang', sao: 3, n: 30, buoc: 0.11, lam: 'T.nap = 1; SKILLS.haoquang.chuDong(G, B, T)', tam: 'T', co: 300 },
   { ten: 'genesis', id: 'khoisinh', sao: 3, n: 24, buoc: 0.05, lam: 'T.nap = 1; B.t[0] = null; B.t[4] = null; SKILLS.khoisinh.chuDong(G, B, T)', tam: 'T', co: 360 },
   { ten: 'herotile', id: 'xuonganh', sao: 3, n: 26, buoc: 0.06, lam: 'const a = sinhU(taoU(B, "xuonganh", 3, 6)); SKILLS.xuonganh.ghep(G, B, a, T, T)', tam: 'hu:vm1Fx', co: 220 },
-  { ten: 'ember', id: 'lualien', sao: 3, n: 22, buoc: 0.04, lam: 'B.t[8] = sinhU(taoU(B, "lualien", 3, 8)); B.t[2] = sinhU(taoU(B, "lualien", 3, 2)); const a = sinhU(taoU(B, "lualien", 3, 6)); SKILLS.lualien.ghep(G, B, a, T, T)', tam: 'T', co: 220 },
+  { ten: 'ember', id: 'lualien', sao: 3, n: 22, buoc: 0.04, lam: 'B.t[8] = sinhU(taoU(B, "lualien", 3, 8)); B.t[2] = sinhU(taoU(B, "lualien", 3, 2)); const a = sinhU(taoU(B, "lualien", 3, 6)); a.lc = 5; LUA_ROI.truyen(B, [[a, 6], [T, T.o]])', tam: 'T', co: 220 },
   { ten: 'copycat', id: 'saochep', sao: 3, n: 22, buoc: 0.04, lam: 'B.t[8] = sinhU(taoU(B, "canon", 3, 8)); SKILLS.saochep.ghepDB.lam(G, B, T, B.t[8])', tam: 'T', co: 200 },
 ];
 (async () => {

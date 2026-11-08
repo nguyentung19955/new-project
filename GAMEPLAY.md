@@ -3721,3 +3721,14 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - Ghép ra loại khác / Mimic vẫn ra ụ thật. Online: gói 'gh' / 'pm' / ảnh chụp mang cờ 'c' (đã có, test khứ hồi).
 - Chữ Copycat thêm: "merging into a copy keeps it a copy; merging a copy into a real one makes it real" (+ tiếng Việt trong vi.json → ngonngu-vi.js).
 - Nguyên tắc tương tác chung cho mọi phiên sau: `docs/demo-hop-tuong/tuvan/conghuong/NGUYEN-TAC.md`. Test mới: `tools/thap-kt-ban-sao-giu.js`.
+
+## claude/demo-hop-tuong — Ember Relay: sửa luật truyền lửa theo người dùng (08/11)
+
+- Người dùng: "ember phải cùng sao mới merge được 2 ụ ember, lửa truyền cho các ember cùng hàng cột = lửa ember A + ember C + ember được truyền"; "ember vì 1 lý do nào mà biến mất thì sẽ truyền lửa, còn vẫn ở đó như hoá đá, biến đổi thành 1 tướng khác do skill của ụ hoặc boss, hoặc đóng băng thì không truyền lửa"; "Cả bị súng bắn trừ sao cũng vậy".
+- **Luật chung (`LUA_ROI`, `vangmoi1.js`):** Ember RỜI BÀN vì bất kỳ lý do gì (bị ghép mất — Ember+Ember, Mimic, ghép đặc biệt; Blood Circuit nuốt; bán/xoá; trùm phá; trừ sao ở 1★ làm vỡ) → lửa của nó **cộng** vào mọi Ember khác cùng hàng + cột với ô **của chính nó** (trần của ụ nhận). Ember chung đường với cả A và C nhận A + C; mỗi Ember rời bàn chỉ góp 1 lần. Bỏ luật cũ `max(cũ, A + B)` (spec ChatGPT).
+- **Không truyền (Ember vẫn ở đó):** hoá đá, đóng băng, bị biến thành ụ khác tại chỗ (trùm / kỹ năng / Joker King), Teleporter đổi chỗ, bị bắn trừ sao (giữ lửa).
+- Móc ở mức bàn: so ảnh chụp Ember trước/sau mỗi `capNhatBan` và mỗi `ghep` (không theo từng kỹ năng → ụ đa năng mới tự áp dụng). Không nhận: Ember cũng rời trong cùng lượt, ụ đứng ở ô Ember vừa rời (ụ ra của ghép), Ember mới xuất hiện cùng lượt, ô đá.
+- Ghép Ember chỉ khi cùng sao (luật ghép thường, thêm chặn trong `SKILLS.lualien.ghep`). Ụ ra là Ember: giữ như cũ = max(★, A + C) — còn hỏi người dùng.
+- Online: bàn con rối không tự truyền; số lửa theo cờ ô `r` từ máy chủ bàn (2 máy cùng số), "+N" qua `LUA_VET.conRoi`.
+- Hiệu ứng: vệt lửa từ ô của MỖI Ember rời bàn; "+N" = lửa thật cộng thêm (gộp nhiều nguồn). Chữ: `mo()`, `text.js`, `ROSTER_EMBED` (lualien), họ kỹ năng, clip hướng dẫn (ô 7 → ô 8: ô 6 +4, ô 3/13 +1) + `vi.json` → `thap-vi-dung.py`.
+- Test: `thap-kt-vang-g2` (các đường rời bàn / ở lại), `thap-kt-vang-moi`, `thap-kt-cong-huong-luat`, `thap-kt-matran`, `thap-kt-p2`. Ảnh xem: 390×844 ghép 2 Ember nuôi 2 Ember (+9 hàng, +3 cột).

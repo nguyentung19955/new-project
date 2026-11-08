@@ -32,7 +32,7 @@ console.log('Ember Relay (lualien)');
 tran(['lualien', 'lien', 'canon', 'bang', 'tia']);
 R(`var a = dat(0, 'lualien', 1), b = dat(1, 'lualien', 1), n1 = dat(2, 'lualien', 2), n2 = dat(6, 'lualien', 3), xa = dat(3, 'lualien', 2), kc = dat(7, 'lien', 1); a.lc = 2; b.lc = 3; n1.lc = 1; n2.lc = 9; xa.lc = 0;`);
 R(`B.deck = ['lien']; var ra = ghep(B, a, b);`);
-ok(R('n1.lc === 5 && xa.lc === 5 && n2.lc === 9'), 'ghép ô 1: Relay cùng hàng (ô 2, ô 3) = 2 + 3 = 5 · Relay cùng cột giữ 9 (lấy max)');
+ok(R('n1.lc === 6 && xa.lc === 5 && n2.lc === 12'), 'ghép 0 → 1: cùng hàng (ô 2, ô 3) +2 +3 → 6, 5 · ô 6 (cột của ô 1) 9 + 3 = 12 (cộng dồn, luật 08/11)', R('[n1.lc, xa.lc, n2.lc]'));
 ok(!R('kc.lc'), 'ụ khác loại không nhận lửa');
 R('n1.lc = 10; capNhatBan(B, 1/30)');
 ok(Math.abs(R('n1.buf.dmg') - (0.2 + R('DOTPHA.thuong(1, "lualien").dmg'))) < 1e-6 && Math.abs(R('n1.buf.crit') - 0.012) < 1e-6, '10 lửa: +20% ST, +1.2 điểm % chí mạng (đột phá I)');

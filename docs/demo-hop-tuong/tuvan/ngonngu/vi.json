@@ -5243,5 +5243,16 @@
 "Merges with any turret; star = average of the two.": "Ghép với bất kỳ ụ nào; sao = trung bình 2 ụ.",
 "Merges with any turret; star = average of the two": "Ghép với bất kỳ ụ nào; sao = trung bình 2 ụ",
 "It counts as a merge: merge counters, Fusion Archive, Star Breaker and merge skills all work. @ also summons a turret at the average star.": "Tính là một lần ghép: bộ đếm ghép, Fusion Archive, Star Breaker và kỹ năng khi ghép đều chạy. @ cũng gọi thêm 1 ụ ở sao trung bình.",
-"A real merge: @ summons a twin": "Ghép thật: @ gọi thêm 1 ụ song sinh"
+"A real merge: @ summons a twin": "Ghép thật: @ gọi thêm 1 ụ song sinh",
+"when an Ember leaves the board for any reason, its flames pass to Embers in its row and column": "Lửa Thập Tự rời bàn vì bất kỳ lý do gì thì lửa của nó cộng cho Lửa Thập Tự cùng hàng và cột",
+"Embers that stay (stone, frozen, transformed, lost a star) keep their flames": "ụ vẫn ở lại (hoá đá, đóng băng, bị biến hình, bị trừ sao) giữ nguyên lửa",
+"When an Ember leaves the board for any reason (merged, sold, destroyed), its flames pass to every Ember in its row and column. Embers that stay (stone, frozen, transformed, lost a star) keep their flames. Each flame: +#% damage, +#% crit. Max # flames (more at card LV#/#/#). Breakthrough at # / # / # / # flames": "Lửa Thập Tự rời bàn vì bất kỳ lý do gì (bị ghép, bán, bị phá) thì lửa của nó cộng cho mọi Lửa Thập Tự cùng hàng và cột. Ụ vẫn ở lại (hoá đá, đóng băng, bị biến hình, bị trừ sao) giữ nguyên lửa. Mỗi lửa: +#% sát thương, +#% chí mạng. Tối đa # lửa (thêm ở thẻ LV#/#/#). Đột phá ở # / # / # / # lửa",
+"When an Ember leaves the board for any reason (merged, sold, destroyed), its flames pass to every Ember in its row and column. Embers that stay (stone, frozen, transformed, lost a star) keep their flames. Each flame: +#% damage, +#% crit. Max # flames (more at card LV#/#/#). Breakthrough at # / # / # / # flames.": "Lửa Thập Tự rời bàn vì bất kỳ lý do gì (bị ghép, bán, bị phá) thì lửa của nó cộng cho mọi Lửa Thập Tự cùng hàng và cột. Ụ vẫn ở lại (hoá đá, đóng băng, bị biến hình, bị trừ sao) giữ nguyên lửa. Mỗi lửa: +#% sát thương, +#% chí mạng. Tối đa # lửa (thêm ở thẻ LV#/#/#). Đột phá ở # / # / # / # lửa.",
+"When an Ember leaves the board for any reason, its flames pass to Embers in its row and column (max #). Stone, frozen, transformed or star-lowered Embers do not pass. Each flame +#% damage, +#% crit": "Lửa Thập Tự rời bàn vì bất kỳ lý do gì thì lửa của nó cộng cho mọi Lửa Thập Tự cùng hàng và cột (tối đa #). Hoá đá, đóng băng, bị biến hình hoặc bị trừ sao thì không truyền. Mỗi lửa +#% ST, +#% chí mạng",
+"an Ember leaving the board passes its flames along its row and column: +damage & crit": "Lửa Thập Tự rời bàn truyền lửa theo hàng và cột của nó: +sát thương & chí mạng",
+"An Ember leaving the board passes its flames along its row and column: +damage & crit": "Lửa Thập Tự rời bàn truyền lửa theo hàng và cột của nó: +sát thương & chí mạng",
+"An Ember leaving the board passes its flames along its row and column: +damage & crit.": "Lửa Thập Tự rời bàn truyền lửa theo hàng và cột của nó: +sát thương & chí mạng.",
+"Both leave: flames go along their row + column": "Cả 2 rời bàn: lửa truyền theo hàng + cột của từng ụ",
+"Merge two same-star Embers": "Ghép 2 Lửa Thập Tự cùng sao",
+"Not in that row or column: nothing": "Không cùng hàng, cột: không nhận"
 }

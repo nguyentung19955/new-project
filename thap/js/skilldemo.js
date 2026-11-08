@@ -94,20 +94,20 @@ function sdLaBan(x, B) {
   }
 }
 // Lửa Thập Tự: số lửa TO (ảnh glyph/lualien + số) ở góc trên-trái mỗi Relay; 2.5–5 s sau ghép ở ô 8: mũi tên chạy ra dọc hàng + cột,
-// "+1" xanh trên Relay vừa nhận lửa (so với SD.lcCu chụp lúc 2.4 s), "✗" đỏ trên Relay lệch hàng/cột (ô 11)
+// "+N" xanh trên Relay vừa nhận lửa (N = lửa thật cộng thêm, so với SD.lcCu chụp lúc 2.4 s), "✗" đỏ trên Relay lệch hàng/cột (ô 11)
 function sdLuaLien(x, B) {
   const t = SD.t, o0 = 8, c0 = o0 % 5, h0 = (o0 / 5) | 0;
   for (const T of B.t) if (T && T.id === 'lualien') {
     const c = B.o[T.o], lx = c.x - B.cw * 0.36, ly = c.y - B.ch * 0.28;
     sdVe(x, 'glyph/lualien', lx, ly, 18); sdChu(x, String(T.lc || 0), lx + 9, ly + 1, '#ffb35a', 22, 'left');
-    if (t > 2.5 && t < 5.4 && SD.lcCu && SD.lcCu[T.o] != null && (T.lc || 0) > SD.lcCu[T.o]) { const u = clamp((t - 2.5) / 0.4, 0, 1); x.globalAlpha = Math.min(1, (5.4 - t) * 2); sdChu(x, '+1', c.x + B.cw * 0.22, c.y - B.ch * 0.36 - 8 * u, '#7dffb0', 19); x.globalAlpha = 1; }
+    if (t > 2.5 && t < 5.4 && SD.lcCu && SD.lcCu[T.o] != null && (T.lc || 0) > SD.lcCu[T.o]) { const u = clamp((t - 2.5) / 0.4, 0, 1); x.globalAlpha = Math.min(1, (5.4 - t) * 2); sdChu(x, '+' + ((T.lc || 0) - SD.lcCu[T.o]), c.x + B.cw * 0.22, c.y - B.ch * 0.36 - 8 * u, '#7dffb0', 19); x.globalAlpha = 1; }
     if (t > 3.9 && t < 5.4 && T.o % 5 !== c0 && ((T.o / 5) | 0) !== h0) { sdChu(x, '✗', c.x, c.y, '#ff6b6b', 34); }
   }
   if (t > 2.5 && t < 4.6) { // mũi tên dọc hàng + cột (ảnh duong_mui), nhấp nháy chạy ra ngoài
     const k = (t - 2.5) * 3;
-    for (let i = 0; i < 15; i++) {
-      const c = i % 5, h = (i / 5) | 0; if (i === o0 || (c !== c0 && h !== h0)) continue;
-      const d = Math.abs(c - c0) + Math.abs(h - h0), r = c === c0 ? (h > h0 ? Math.PI / 2 : -Math.PI / 2) : (c > c0 ? 0 : Math.PI);
+    for (const o1 of [7, o0]) for (let i = 0; i < 15; i++) { // từ CẢ 2 ô Ember rời bàn (7 và 8), mỗi ô theo hàng/cột của nó
+      const c1 = o1 % 5, h1 = (o1 / 5) | 0, c = i % 5, h = (i / 5) | 0; if (i === o1 || i === 7 || i === o0 || (c !== c1 && h !== h1)) continue;
+      const d = Math.abs(c - c1) + Math.abs(h - h1), r = c === c1 ? (h > h1 ? Math.PI / 2 : -Math.PI / 2) : (c > c1 ? 0 : Math.PI);
       const a = B.o[i]; x.globalAlpha = clamp(k - d + 1, 0, 1) * 0.9; sdVe(x, 'duong_mui', a.x - Math.cos(r) * B.cw * 0.5, a.y - Math.sin(r) * B.ch * 0.5, 26, 17, r); x.globalAlpha = 1;
     }
   }
@@ -231,14 +231,15 @@ const SD_K = {
   khuech: { c: [[0.2, 'Buffs Attack turrets around it'], [2.0, (T) => 'Same enemy again: up to +' + Math.round(HOTRO.hd(T, 'amp', SKILLS.khuech.buoc(T) * SKILLS.khuech.max(T)) * 100) + '% damage', { cham: 0.4 }]] },
   tuthan: { q: Q.nho().concat(Q.dong(6, 0.6, 2, 'nho', 1.5)), may: [2.2, 3.6, 'ke'], c: [[0.2, 'Neighbours may kill at once'], [2.2, 'Low-HP enemies die at once', { ev: 'kill', cham: 0.6 }]] },
   // ---------- vàng mới (vangmoi1.js / skills7.js) ----------
-  // Lửa Thập Tự: ghép Relay ở ô 8 → MỌI Relay cùng hàng (ô 6) và cùng cột (ô 3, 13) +1 lửa; ô 11 không cùng hàng/cột → không nhận.
-  //   ụ ra (bộ bài chỉ Relay) giữ số lửa lớn nhất của 2 nguyên liệu (3) rồi +1; ô 13 có 7 lửa → đủ 8.
-  //   sdLuaLien: số lửa TO dưới mỗi Relay, lúc ghép mũi tên chạy dọc hàng + cột từ ô 8, "+1" trên ụ nhận, "✗" trên ô 11 (lệch hàng/cột)
+  // Lửa Thập Tự (luật 08/11 — Ember RỜI BÀN truyền lửa theo hàng/cột của CHÍNH nó): kéo Ember ô 7 (3 lửa) vào ô 8 (1 lửa), cùng sao → cả 2 rời bàn:
+  //   ô 6 (chung hàng với cả 7 và 8) 1 → 1 + 3 + 1 = 5 · ô 3, 13 (cột của ô 8) +1: 1 → 2, 7 → 8 · ô 11 không chung đường → không nhận.
+  //   Ụ ra ở ô 8 (bộ bài chỉ Relay) không nhận, = max(★, 3 + 1) = 4.
+  //   sdLuaLien: số lửa TO dưới mỗi Relay, lúc ghép mũi tên chạy dọc hàng + cột từ ô 8, "+N" trên ụ nhận, "✗" trên ô 11 (lệch hàng/cột)
   lualien: { kieu: 'ghep', ke: [[8, 'lualien', 's'], [6, 'lualien', 's'], [3, 'lualien', 's'], [13, 'lualien', 's'], [11, 'lualien', 's']], keo: [2.5, 7, 8], so: { o: 13, k: 'dmg' },
     truoc: (T, B) => { B.deck = ['lualien']; if (T) T.lc = 3; if (B.t[8]) B.t[8].lc = 1; if (B.t[13]) B.t[13].lc = 7; for (const o of [3, 6, 11]) if (B.t[o]) B.t[o].lc = 1; },
     them: [[2.4, (B) => { SD.lcCu = {}; for (const X of B.t) if (X && X.id === 'lualien') SD.lcCu[X.o] = X.lc || 0; }]],
     ve: (x, B) => sdLuaLien(x, B),
-    c: [[0.2, 'Number = flames on each Relay'], [1.3, 'Merge two Ember Relays'], [2.5, 'Same Row + Column: both flames added', { cham: 0.6 }], [3.9, 'Already more flames? It keeps them'], [5.0, 'Each flame: +2% damage, +0.12% crit'], [6.2, 'Max 70 flames (more at LV11+)']], dai: 9 },
+    c: [[0.2, 'Number = flames on each Relay'], [1.3, 'Merge two same-star Embers'], [2.5, 'Both leave: flames go along their row + column', { cham: 0.6 }], [3.9, 'Not in that row or column: nothing'], [5.0, 'Each flame: +2% damage, +0.12% crit'], [6.2, 'Max 70 flames (more at LV11+)']], dai: 9 },
   // Quantum Choir: thêm ụ cùng sao (trùng) và khác sao (không tính) — chỉ số sát thương trước → sau
   hopca: { q: Q.hang(4, 180, 40, 8), ke: [[6, 'lien', 's'], [8, 'canon', (s) => s > 1 ? s - 1 : 2]],
     them: [[2.0, (B, D, T) => { if (T) sdThem(B, [[2, 'set', T.sao], [12, 'bang', T.sao]], T, 'dmg'); }], [4.0, (B, D, T) => { if (T) sdThem(B, [[3, 'sungluc', T.sao > 1 ? T.sao - 1 : 2]], T, 'dmg'); }]],
