@@ -173,11 +173,7 @@ const TVF = {
       }
       if (E.kho > 0) { const s = REN.img('h2_sao'); for (let i = 0; i < Math.min(5, E.kho); i++) PX.ve(ctx, s, x - (Math.min(5, E.kho) - 1) * 5 + i * 10, yb - 9, 9, 9, 0, 0.95); }
       if (E.trum === 'twin_core' && !E.con && E.hp < E.max * 0.3) PX.ve(ctx, REN.img('fx_st_giapvo'), x, y, co * 0.8, co * 0.8, 0, 0.55 + 0.2 * Math.sin(t * 4));
-      const p = G.duong[E.p];
-      if (p && E.s > p.len * 0.7) { // gần lối ra: E.tim trái tim sẽ mất
-        const im = REN.img('ui_tim'), a = 0.75 + 0.25 * Math.sin(t * 4);
-        for (let i = 0; i < E.tim; i++) PX.ve(ctx, im, x - 35 - 6 - i * 9, yb + 2, 9, 9, 0, a);
-      }
+      // (bỏ 2 trái tim "sẽ mất nếu lọt" cạnh thanh máu trùm — người dùng 08/11: không cần; số tim còn lại đã có trên thanh trên + vòng lõi)
     }
     ctx.globalAlpha = 1;
   },

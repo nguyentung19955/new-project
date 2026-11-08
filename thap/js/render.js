@@ -833,7 +833,7 @@ const REN = {
         const w = Math.max(18, co * 0.55), yy = y - co * 0.42;
         this.thanhAnh(ctx, x - w / 2, yy, w, 3.5, E.hp / E.max, E.docT > 0 ? '#7cff4a' : (E.cham > 0 && !E.d.khangCham ? '#6fd8ff' : '#ff4a4a'));
       }
-      if (lanh) { ctx.globalAlpha = 0.85 * al; const k = this.kyHieu('cham', 8); ctx.drawImage(k, x - Math.max(18, co * 0.55) / 2 - 10, y - co * 0.42 - 3, 8, 8); ctx.globalAlpha = al; }
+      // (bỏ bông tuyết cạnh thanh máu — người dùng 08/11; bị chậm vẫn thấy: thanh máu xanh băng + viền băng trên thân)
       if (E.trum && !E.chet) {
         const w = 70, yy = y - co * 0.55;
         this.thanhAnh(ctx, x - w / 2, yy - 1, w, 6, E.hp / E.max, TRUM[E.trum].mau);
