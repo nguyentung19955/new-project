@@ -25,7 +25,7 @@ window.ANIM_NHOM = {
 // 93 ụ → nhóm (id nội bộ: tên hiển thị)
 window.ANIM_U = {
   canon: 'cannon', xucxac: 'cannon', maychem: 'cannon', nam: 'cannon', no5: 'cannon', aten: 'cannon', nayda: 'cannon',
-  docton: 'cannon', hydra: 'cannon', cuuvi: 'cannon', soi: 'cannon', cuongno: 'cannon', bienmau: 'cannon', nangluong: 'cannon',
+  cobac: 'cannon', docton: 'cannon', hydra: 'cannon', cuuvi: 'cannon', soi: 'cannon', cuongno: 'cannon', bienmau: 'cannon', nangluong: 'cannon',
   railgun: 'nang', mortar: 'nang', ngoisao: 'nang', tia: 'nang', overlord: 'nang', ronglua: 'nang', leviathan: 'nang', wallgen: 'nang',
   sungluc: 'revolver', nemesis: 'revolver', combo: 'revolver', xaotron: 'revolver',
   lien: 'gatling', phun: 'gatling', bao: 'gatling', hutmana: 'gatling',

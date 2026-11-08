@@ -191,6 +191,7 @@ const ONS = {
         case 'gh': this.apGhep(B1, d); break;
         case 'nc': if (d && B1.lv[d.id] != null) { B1.lv[d.id] = d.lv; for (const T of B1.t) if (T && T.id === d.id) T.lvSang = 1; } break;
         case 'mv': { const mv = B1.mv; mv.cd = 0; B1.mana = Math.max(B1.mana, mv.gia); CH_HOP(B1); if (d && d.m != null) B1.mana = d.m; break; }
+        case 'cb': this.apCB(B1, d); break; // Lucky Slot: kết quả quay xèng của bạn (jackpot.js CB)
         case 'pm': if (d && Array.isArray(d.o) && SKILLS.bienmau && SKILLS.bienmau.mach) SKILLS.bienmau.mach(B1, d.o, true); break; // Prism Thief: CHROMATIC CIRCUIT của bạn
         case 'cd': { const T = d && B1.t[d.o]; const sk = T && SKILLS[T.id]; if (sk && sk.chuDong) { T.nap = 1; T.st.bang = 0; T.st.da = false; this._cd = 1; try { sk.chuDong(G, B1, T); } finally { this._cd = 0; } } break; }
         case 'w': if (!this.host && d) { this.hostWave = Math.max(this.hostWave, d.n); if (G.wave < d.n) { G.cho = 0; wavMoi(); } } break;
@@ -225,6 +226,7 @@ const ONS = {
     if (T.id === 'bienmau') f += 'q' + ((T.pm | 0) & 3) + ';' + (T.pms ? 'u' + T.pms + ';' : ''); // Prism Thief: màu + cộng dồn
     if (T.id === 'mauhut') { if (T.mau) f += 'B' + T.mau + ';'; if (T.mh) f += 'M' + T.mh.o + ';C' + Math.max(0, Math.round(T.mh.con * 10)) + ';'; if (T.rite && T.rite.het > G.t) f += 'R' + T.rite.o + ';T' + Math.round((T.rite.het - G.t) * 10) + ';'; } // Mạch Máu: máu / dấu / Rite
     if (T.id === 'tienhoa' && T.chay) f += 'X'; // trứng cháy
+    if (T.id === 'cobac' && T.cbS) f += 'z' + T.cbS + ';'; // Lucky Slot: sao đã quay (bàn con rối không tự quay)
     return [T.id, T.sao, f];
   },
   datO(B, o, s) {
@@ -250,6 +252,15 @@ const ONS = {
       if (/R\d+;/.test(c)) { const o = so('R'), X = B.t[o], h = heDB(B, 'mauhut'); T.rite = X ? { o, uid: X.uid, het: G.t + so('T') / 10, dmg: SKILLS.mauhut.DMG * h, toc: SKILLS.mauhut.TOC * h } : null; } else T.rite = null;
     }
     if (T.id === 'tienhoa') T.chay = c.includes('X');
+    if (T.id === 'cobac') T.cbS = so('z');
+  },
+  // Lucky Slot: máy bạn đã quay → bàn con rối phát lại cuộn xèng đúng quả + nhận ngăn quả của máy bạn (không tự rút)
+  apCB(B1, d) {
+    if (!d || typeof CB === 'undefined') return;
+    const T = B1.t[d.o];
+    if (T && T.id === 'cobac' && (T.cbS | 0) < d.s) CB.quay(B1, T, { f: d.f, s: d.s, n: d.n });
+    if (Array.isArray(d.st) && d.st.length === 3) B1.cb = d.st.map(x => Math.max(0, x | 0));
+    if (d.n) B1.cbN = Math.max(B1.cbN | 0, d.n | 0);
   },
   apGhep(B1, d) {
     if (!d) return;
@@ -286,7 +297,7 @@ const ONS = {
   // ---------------------------------------------------------------- ảnh chụp bàn (mỗi 1 s) + mã băm
   oCua(B) { return B.t.map(T => T ? T.id + ':' + T.sao : ''); },
   bam(c) { let h = 2166136261; const s = c.join('|'); for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36); },
-  anhBan(B) { const c = this.oCua(B); return { c, h: this.bam(c), f: B.t.map(T => (T && this.oTT(T)[2]) || ''), lv: B.lv, m: Math.round(B.mana), g: B.gia, mv: [B.mv.gia, Math.round(B.mv.cd * 10) / 10] }; },
+  anhBan(B) { const c = this.oCua(B), v = { c, h: this.bam(c), f: B.t.map(T => (T && this.oTT(T)[2]) || ''), lv: B.lv, m: Math.round(B.mana), g: B.gia, mv: [B.mv.gia, Math.round(B.mv.cd * 10) / 10] }; if (B.cb) { v.cb = B.cb.slice(); v.cbN = B.cbN | 0; } return v; }, // cb: ngăn quả Lucky Slot
   chupAnh() {
     if (!this.on || !G.ban.length || this._an || this._choDB) return; // đang ẩn / chờ đồng bộ lại: không ghi đè ảnh cũ bằng bàn lạc hậu
     const v = Object.assign({ w: G.wave, tk: Math.round(G.t * 60), ht: G.ban[0].tim }, this.anhBan(G.ban[0]));
@@ -330,6 +341,7 @@ const ONS = {
     if (v.lv) for (const k in v.lv) if (B.lv[k] != null) B.lv[k] = v.lv[k];
     if (v.m != null) B.mana = v.m;
     if (v.g != null) B.gia = v.g;
+    if (Array.isArray(v.cb) && v.cb.length === 3) { const a = B.cb || [0, 0, 0]; B.cb = v.cb.map((x, i) => Math.max(a[i] | 0, x | 0)); B.cbN = Math.max(B.cbN | 0, v.cbN | 0); } // ngăn quả Lucky Slot theo máy bạn (chỉ tăng: ảnh chụp cũ không kéo lùi gói 'cb' mới)
     if (Array.isArray(v.mv)) { B.mv.gia = v.mv[0]; B.mv.cd = v.mv[1]; }
   },
 

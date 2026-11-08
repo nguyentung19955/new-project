@@ -255,7 +255,7 @@ function dungMV(B) {
 //   Mimic, số Pháo La Bàn, sát thương có điều kiện của hỗ trợ → CỘNG trong nhóm trước, rồi các nhóm mới nhân nhau (ST × tốc × chí mạng). Không trần (tỉ lệ chí mạng ≤ 100%).
 //   Hệ số nhân RIÊNG có chủ ý: RAGE ×2, suy yếu quái, bản sao Copycat −%, mốc sao 5★/7★, Pháo Đồng Bộ PVP. CONG_GOP = false chỉ để ĐO kiểu nhân cũ (tools/thap-sim-jackpot.js).
 var CONG_GOP = true;
-const heJP = (T, k) => (!CONG_GOP && typeof JP !== 'undefined' ? 1 + JP.gt(T, k) : 1); // kiểu cũ (đo): jackpot nhân riêng
+const heJP = () => 1; // (jackpot thời hạn cũ đã bỏ 08/11 — giữ tên cho kiểu đo CONG_GOP=false)
 function dmgU(T, them) {
   const sk = SKILLS[T.id], B = G.ban[T.ban];
   let d = (sk.dmg || 0) * TIERS[T.bac].hs * (1 + 0.85 * (T.sao - 1)) * hsLv(B, T.id);
@@ -331,7 +331,7 @@ function trung(E, dmg, o) {
   let crit = o.crit != null ? o.crit : Math.random() < critU(T);
   if (sk && sk.luonCrit && sk.luonCrit(T)) crit = true;
   if (T && T._critChac && !o.phu && o.crit == null) { crit = true; T._critChac = false; } // Crit Antenna 7★: đòn chắc chắn chí mạng (đòn đã tự quyết chí mạng — Dice Gun / tia Laser / chém — không bị ép)
-  if (crit) { dmg *= (2 + ((T && T.buf && T.buf.cdmg) || 0)) * (T && !CONG_GOP && typeof JP !== 'undefined' ? 1 + JP.gt(T, 'cdmg') / 2 : 1); if (T && T.buf && T.buf.xuyen > 0 && !o.phu && typeof xuyenCrit === 'function') xuyenCrit(E, dmg, T, o); } // Focus Lens: +sát thương chí mạng, chí mạng xuyên
+  if (crit) { dmg *= (2 + ((T && T.buf && T.buf.cdmg) || 0)); if (T && T.buf && T.buf.xuyen > 0 && !o.phu && typeof xuyenCrit === 'function') xuyenCrit(E, dmg, T, o); } // Focus Lens: +sát thương chí mạng, chí mạng xuyên
   if (!o.phu && !o.im) { if (crit) SND.crit(); else SND.trung(); }
   const vu = HOTRO.vuln(E); if (vu) dmg *= 1 + vu;     // suy yếu quái: mọi nguồn cộng lại, trần 25% (hotro.js)
   if (E.giapT > 0) dmg *= 0.75;                    // giáp đối thủ (PVP)

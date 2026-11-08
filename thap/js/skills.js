@@ -25,7 +25,7 @@ function danThang(B, T, E, img, sp, co, trungFn, duoi) {
 //      Ngoại lệ: NSWE + NSWE → giữ NSWE, CỘNG DỒN (stack) = stack 2 bên + 1, KHÔNG TRẦN. Kết quả luôn là ụ THẬT (không phải bản sao).
 //  · Bắn: mỗi hướng đang có 1 TÊN LỬA ĐUỔI — phóng ra đúng hướng la bàn rồi rẽ đuổi quái xa nhất về phía hướng đó (hết quái → quái gần nhất).
 //      Sát thương mỗi quả theo số hướng k: ×1.0 / ×1.1 / ×1.0 / ×0.9 (tổng 1.0 / 2.2 / 3.0 / 3.6 lần 1 phát), nổ lan nhỏ ở điểm trúng.
-//      Mỗi stack +50% sát thương (cấp thẻ 50% → 70%, cùng nhóm cộng gộp ST). 5★ TRUE NORTH: +20% ST, mỗi stack tính ×1.5 · 7★ FOUR WINDS: +30% ST, mỗi 8 s 1 loạt 4 hướng.
+//      Mỗi stack +50% sát thương (cấp thẻ 50% → 70%, cùng nhóm cộng gộp ST). 5★ POLE STAR (08/11 đổi tên từ TRUE NORTH): +20% ST, mỗi stack tính ×1.5 · 7★ FOUR WINDS: +30% ST, mỗi 8 s 1 loạt 4 hướng.
 //  · Mimic + Pháo / ghép thường khác → ụ ngẫu nhiên (mất tổ hợp). Merge King +★: giữ tổ hợp + stack. Copycat chép: giữ tổ hợp + stack. Đá: chỉ ghép đá cùng sao (ra đá ngẫu nhiên).
 //  · (Bỏ: số, ghép cùng/ngược mũi tên, sóng nổ bù, đạn xuyên — luật 07/11.)
 SKILLS.canon = {
@@ -50,7 +50,7 @@ SKILLS.canon = {
   },
   moiChong: (T) => (knThe(T && G.ban[T.ban], 'canon') || 50) / 100,
   chongHieu(T) { return this.chong(T) * (ms(T, 5) ? 1.5 : 1); },
-  them(T) { return this.moiChong(T) * this.chongHieu(T) + (ms(T, 5) ? this.TP5 : 0); }, // +% ST riêng (stack + TRUE NORTH) — nhóm ST cộng gộp
+  them(T) { return this.moiChong(T) * this.chongHieu(T) + (ms(T, 5) ? this.TP5 : 0); }, // +% ST riêng (stack + POLE STAR 5★) — nhóm ST cộng gộp
   rng(B, o) {
     B._cmN = (B._cmN || 0) + 1;
     const hat = (typeof ONS !== 'undefined' && ONS.on ? ONS.seed : G.hat) || 1;
@@ -226,7 +226,7 @@ SKILLS.mana = { // Máy Mana (Syrinx): không bắn; sinh mana mỗi 7 s
 // ============ XANH ============
 SKILLS.radar = { // Radar (Kirinus): HỖ TRỢ — +tốc bắn cho 4 ô thẳng (hotro.js: 12% 1★ → 28% 7★, trần chung 45%)
   vai: 'ht', dmg: 0, toc: 0,
-  them: (T) => 0.12 * HOTRO.k(T),
+  them: (T) => 0.13 * HOTRO.k(T), // 08/11 0.12 → 0.13 (+8%) bù jackpot PERFECT FREQUENCY đã bỏ (KY_NANG_CAP.radar hiển thị 19.5%)
   mo: (T) => '+' + Math.round(Math.min(SKILLS.radar.them(T), HOTRO.tran(T, 'toc')) * 100) + '% fire rate to N/E/S/W neighbours' + (ms(T, 5) ? ' · +4% crit' : '') + (ms(T, 7) ? ' · OVERDRIVE every 8s: +25% for 2s' : ''),
   hoTro(G, T, N, ra) { ra.toc = this.them(T) + (T.odCon > 0 ? 0.25 : 0); if (T.odCon > 0) ra.capOD = 0.15; if (ms(T, 5)) ra.crit = 0.04; }, // 7★ OVERDRIVE: +25% trong 2 s — trần tốc +15% trong lúc OVERDRIVE (BAO-CAO gioi-han Mức 3)
   capNhat(G, B, T, dt) {
@@ -318,7 +318,7 @@ SKILLS.orbital = { // Vệ Tinh (Mafdet) — ĐẶC BIỆT: KHÔNG bắn thườ
   dai: (B) => knThe(B, 'orbital') || 23,                                    // giây thức tỉnh (cấp thẻ)
   soBom: (T) => 2 + Math.ceil(T.sao / 2) + (ms(T, 7) ? 1 : 0),              // 1★ 3 · 3★ 4 · 5★ 5 · 7★ 7 (JUSTICE RAIN +1)
   nhip: (T) => 1.8 / (ms(T, 3) ? 1.2 : 1),                                  // 3★ QUICK HANDS: loạt nhanh 20%
-  bomDmg: (B, T) => 30 * TIERS.vang.hs * (1 + 0.85 * (T.sao - 1)) * hsLv(B, 'orbital') * (ms(T, 5) ? 1.25 : 1) * (ms(T, 7) ? 1.3 : 1) * (B && B.cuong > 0 ? 2 : 1) * 0.9 * (T.banSao ? heSaoChep(B) : 1), // bản sao Copycat: bom cũng theo % sao chép (MA-TRAN.md)
+  bomDmg: (B, T) => 30 * TIERS.vang.hs * (1 + 0.85 * (T.sao - 1)) * hsLv(B, 'orbital') * (ms(T, 5) ? 1.25 : 1) * (ms(T, 7) ? 1.3 : 1) * (B && B.cuong > 0 ? 2 : 1) * 0.9 * 1.12 * (T.banSao ? heSaoChep(B) : 1), // bản sao Copycat: bom cũng theo % sao chép (MA-TRAN.md) // ×1.12: 08/11 bù jackpot ORBITAL CASCADE đã bỏ
   mo: (T) => (T.thucT > 0 ? 'AWAKENED ' + Math.ceil(T.thucT) + 's · ' : '') + 'merging Orbitals awakens EVERY Orbital on the board for ' + SKILLS.orbital.dai(G.ban[T.ban]) + 's: salvo of ' + SKILLS.orbital.soBom(T) + ' bombs every ' + SKILLS.orbital.nhip(T).toFixed(1) + 's (' + Math.round(SKILLS.orbital.bomDmg(G.ban[T.ban], T)) + ' area damage each)',
   gocDau: (T, t) => -Math.PI / 2 + Math.sin(t * (T.thucT > 0 ? 2.2 : 0.6) + (T.pha || 0)) * 0.5,
   sangDau: (T) => (T.thucT > 0 ? 0.3 + 0.12 * Math.sin(G.t * 9) : T.gd === 2 ? 0.1 : 0), // dạng thức tỉnh = ảnh dạng 3 + đầu sáng rực
