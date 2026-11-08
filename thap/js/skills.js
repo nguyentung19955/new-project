@@ -26,7 +26,7 @@ function danThang(B, T, E, img, sp, co, trungFn, duoi) {
 //  · Bắn: mỗi hướng đang có 1 TÊN LỬA ĐUỔI — phóng ra đúng hướng la bàn rồi rẽ đuổi quái xa nhất về phía hướng đó (hết quái → quái gần nhất).
 //      Sát thương mỗi quả theo số hướng k: ×1.0 / ×1.1 / ×1.0 / ×0.9 (tổng 1.0 / 2.2 / 3.0 / 3.6 lần 1 phát), nổ lan nhỏ ở điểm trúng.
 //      Mỗi stack +50% sát thương (cấp thẻ 50% → 70%, cùng nhóm cộng gộp ST). 5★ POLE STAR (08/11 đổi tên từ TRUE NORTH): +20% ST, mỗi stack tính ×1.5 · 7★ FOUR WINDS: +30% ST, mỗi 8 s 1 loạt 4 hướng.
-//  · Mimic + Pháo / ghép thường khác → ụ ngẫu nhiên (mất tổ hợp). Merge King +★: giữ tổ hợp + stack. Copycat chép: giữ tổ hợp + stack. Đá: chỉ ghép đá cùng sao (ra đá ngẫu nhiên).
+//  · Mimic + Pháo / ghép thường khác → ụ ngẫu nhiên (mất tổ hợp). Merge King +★: giữ tổ hợp + stack. Copycat chép (08/11): bản sao là lần xuất hiện mới → 1 hướng ngẫu nhiên MỚI, 0 stack (không chép NSWE). Đá: chỉ ghép đá cùng sao (ra đá ngẫu nhiên).
 //  · (Bỏ: số, ghép cùng/ngược mũi tên, sóng nổ bù, đạn xuyên — luật 07/11.)
 SKILLS.canon = {
   vai: 'tc', dmg: 20, toc: 0.55, nham: 'dau', // bậc VÀNG (07/11 20:10): 20 × Vàng ×2.6

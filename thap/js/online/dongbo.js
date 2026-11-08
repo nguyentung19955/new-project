@@ -212,6 +212,7 @@ const ONS = {
     const T = taoU(B1, d.id, d.s || 1, d.o); B1.t[d.o] = T;
     if (d.id === 'canon') { T.hb = ((d.hu | 0) & 15) || 1; T.cmC = 0; } // Pháo La Bàn: hướng bốc trên máy chủ bàn (mặt nạ bit)
     if (d.vg) T.vang = true; if (d.th) T.thuc = true; // dạng quay lúc sinh (Merge King vàng / Sói thức tỉnh) theo máy bạn
+    if (typeof d.fl === 'string') this.datO(B1, d.o, [d.id, T.sao, d.fl]); // gói mới: đủ cờ ô (màu Prism, dạng Anvil, hướng La Bàn…) — không để bàn con rối ra 1 dạng cố định
     VX.trieu(T);
   },
   // trạng thái 1 ô gửi qua mạng: [id, sao, cờ] — cờ: g vàng · w thức tỉnh · c bản sao · S đá · e<ép xung> · l<lò>
@@ -285,6 +286,7 @@ const ONS = {
     if (B1.t[d.b] && d.bs != null) B1.t[d.b].banSao = !!d.bs; // bản sao Copycat: −50% + huy hiệu, như máy bạn kia
     if (B1.t[d.b] && d.hn && B1.t[d.b].id === 'canon') { B1.t[d.b].hb = (d.hn[0] & 15) || 1; B1.t[d.b].cmC = Math.max(0, d.hn[1] | 0); } // Pháo La Bàn: tổ hợp hướng + stack theo máy bạn kia
     if (B1.t[d.b] && d.da != null) B1.t[d.b].st.da = !!d.da; // ô ĐÁ: Merge King lên đá giữ đá · đá + đá ra đá (theo đúng máy bạn kia)
+    if (typeof d.fl === 'string' && B1.t[d.b] && B1.t[d.b].id === d.id) this.datO(B1, d.b, [d.id, B1.t[d.b].sao, d.fl]); // dạng quay lúc sinh của ụ kết quả theo máy bạn
     if (B1.t[d.a] && d.a !== d.b && !d.giuA) B1.t[d.a] = null;
     // Twin Maker: ụ sinh đôi đúng ô/loại/sao của máy bạn kia (bàn con rối không tự bốc — sinhDoi() trả null cho B.net)
     if (d.tw && d.tw.o != null && G.rosterMap[d.tw.id]) {
@@ -292,6 +294,7 @@ const ONS = {
       if (X && d.tw.o === d.a && !(X.id === d.tw.id && X.sao === d.tw.s)) B1.t[d.tw.o] = null; // ô ụ kéo vừa trống bên kia
       if (!B1.t[d.tw.o]) sinhDoi(B1, d.tw.s, d.b, { o: d.tw.o, id: d.tw.id });
       const X2 = B1.t[d.tw.o]; if (X2 && d.tw.f != null) { if (X2.id === 'vughep') X2.vang = /g/.test(d.tw.f); if (X2.id === 'soi') X2.thuc = /w/.test(d.tw.f); } // dạng quay lúc sinh của ụ sinh đôi
+      if (X2 && typeof d.tw.fl === 'string' && X2.id === d.tw.id) this.datO(B1, d.tw.o, [X2.id, X2.sao, d.tw.fl]); // gói mới: đủ cờ (màu Prism, hướng La Bàn, dạng Anvil…)
     }
   },
   // ---------------------------------------------------------------- ảnh chụp bàn (mỗi 1 s) + mã băm
@@ -464,7 +467,7 @@ const ONS = {
     g('trieu', (goc) => function (B, mienPhi, idEp) {
       if (self.on && B && B.net) return null; // bàn con rối chỉ nhận ụ từ hành động 'tr' của bạn kia (kể cả ụ do chỉ huy / kỹ năng gọi)
       const T = goc.apply(this, arguments);
-      if (self.on && T && B === G.ban[0]) { const v = { o: T.o, id: T.id, s: T.sao, f: mienPhi ? 1 : 0 }; if (T.vang) v.vg = 1; if (T.thuc) v.th = 1; if (T.id === 'canon') v.hu = T.hb | 0; self.gui('tr', v); }
+      if (self.on && T && B === G.ban[0]) { const v = { o: T.o, id: T.id, s: T.sao, f: mienPhi ? 1 : 0 }; if (T.vang) v.vg = 1; if (T.thuc) v.th = 1; if (T.id === 'canon') v.hu = T.hb | 0; v.fl = self.oTT(T)[2]; self.gui('tr', v); } // fl: MỌI dạng quay lúc sinh (màu Prism, dạng Anvil…) theo máy chủ bàn
       return T;
     });
     g('ghep', (goc) => function (B, a, b, ep) {
@@ -476,6 +479,7 @@ const ONS = {
         const T = G.ban[0].t[bo] || r, v = { a: ao, b: bo, id: T.id, s: T.sao, giuA: G.ban[0].t[ao] ? 1 : 0, vg: T.vang ? 1 : 0, th: T.thuc ? 1 : 0, bs: T.banSao ? 1 : 0, da: T.st && T.st.da ? 1 : 0 };
         if (db) { v.db = 1; v.sa = self.oTT(G.ban[0].t[ao]); v.sb = self.oTT(G.ban[0].t[bo]); } // trạng thái đúng của CẢ 2 ô sau ghép đặc biệt
         if (T.id === 'canon') v.hn = [T.hb | 0, T.cmC | 0]; // Pháo La Bàn: tổ hợp hướng + stack
+        if (!db) v.fl = self.oTT(T)[2]; // ụ kết quả ghép thường: đủ cờ dạng quay lúc sinh (màu Prism, dạng Anvil…)
         const pd = G.ban[0]._pd; if (pd) v.pd = pd; // Pandora: phép đã quay
         const hf = G.ban[0]._hf; if (hf != null) v.hf = hf; // Hero Foundry: ô anh hùng
         const tw = G.ban[0]._tw; if (tw) v.tw = tw; // Twin Maker: ụ sinh đôi (ô/loại/sao) — bạn kia tạo y hệt, không bốc lại

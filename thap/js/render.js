@@ -902,7 +902,7 @@ const REN = {
     } // fx_vong_lv chưa tải: không vẽ vòng code
     // đầu súng
     const C0 = S / 0.98, gd = !o.ghost && T.gd && laGrow(T.id) ? T.gd : 0;
-    this.datDauEp(o.ghost ? null : T);
+    this.datDauEp(o.ghost && !(skT.dauGhost && skT.dauGhost(T)) ? null : T); // ghost: đầu thường, trừ đầu riêng khai dauGhost (mặt nạ Prism khi cầm kéo)
     if (!o.ghost) VX.duoiDau(ctx, T, S, al, this); // hào quang dạng thức tỉnh + vòng tiến độ grow-up (dưới đầu súng)
     // LỚP VÒNG DƯỚI ĐẦU SÚNG (người dùng 08/11: "vòng green quay không được phép che ụ, ụ cần ưu tiên đè hình ảnh"):
     // vòng xanh nạp chiêu + vẽ thêm của kỹ năng (vòng/hào quang/vật bay quanh ụ, vòng nạp ụ có dạng) vẽ TRƯỚC đầu súng → đầu luôn nằm trên.
