@@ -90,7 +90,8 @@ SKILLS.canon = {
     const dmg = this.dmgMoi(T, k, kk);
     banDan({ img: 'ten_laban', x, y, muc: E, px: E.x, py: E.y, sp: 230, co: 26, B, T, duoi: 'tenlua', dd: { g, h },
       trung(G, d) {
-        noLan(d.x, d.y, rb, dmg, B); FX.no('no_phao', d.x, d.y, rb * 2.4, 0.45); FX.vong1(d.x, d.y, 4, rb, '#7fe8ff', 0.3, 3); FX.tiaLua(d.x, d.y, 6, '#ffd070', 180); SND.no(0.25);
+        noLan(d.x, d.y, rb, dmg, B); const [x, y] = epKhungTL(B, d.x, d.y); // ST tại vị trí thật · hình nổ ép trong hộp bàn + đường (hết quái / quá 3,5 s nổ giữa trời)
+        FX.no('no_phao', x, y, rb * 2.4, 0.45); FX.vong1(x, y, 4, rb, '#7fe8ff', 0.3, 3); FX.tiaLua(x, y, 6, '#ffd070', 180); SND.no(0.25);
       } });
   },
   ghepDB: {
@@ -581,7 +582,7 @@ HU.rail = { // SALVO BATTERY (id railgun, tên cũ Railgun): LUẬT GIỮ NGUYÊ
       { const E = T.muc, L = E && !E.chet ? Math.max(60, Math.hypot(E.x - x, E.y - y)) : 240; o.xr = x + Math.cos(o.goc) * L; o.yr = y + Math.sin(o.goc) * L; } // không trúng ai: rơi xuống đường ngắm
       for (let k = o.n; k < o.hit.length; k++) this.no(o, k, o.hit[k].x, o.hit[k].y); // xuyên nhiều quái hơn số tên lửa: quái dư vẫn có nổ
     }
-    if (o.da) while (o.cham < o.n && o.t >= this.tToi(o, o.cham)) { const [x, y] = this.diem(o, o.cham); this.no(o, o.cham++, x, y); }
+    if (o.da) while (o.cham < o.n && o.t >= this.tToi(o, o.cham)) { const [x, y] = epKhungTL(o.B, ...this.diem(o, o.cham)); this.no(o, o.cham++, x, y); } // nổ (hình) tại điểm rơi đã ép trong hộp — ST trừ ở trên, không đổi
     if (!o.da) { const E = T.muc; if (E && !E.chet) { const c = tamU(T); o.goc = Math.atan2(E.y - c.y, E.x - c.x); } }
     return false;
   },
@@ -593,10 +594,10 @@ HU.rail = { // SALVO BATTERY (id railgun, tên cũ Railgun): LUẬT GIỮ NGUYÊ
     for (let i = 0; i < o.n; i++) {
       const s = o.s[i], t0 = this.tPhong(o, i), t1 = this.tToi(o, i);
       if (!s || t < t0 || t >= t1) continue;
-      const u = (t - t0) / (t1 - t0), [ex, ey] = this.diem(o, i);
+      const u = (t - t0) / (t1 - t0), [ex, ey] = epKhungTL(o.B, ...this.diem(o, i));
       const dx = ex - s[0], dy = ey - s[1], L = Math.hypot(dx, dy) || 1, nx = -dy / L, ny = dx / L;
       const lat = this.lat(T, i), amp = Math.min(26, Math.max(6, L * 0.12)) * (lat < 0 ? -1 : 1) * (0.7 + Math.abs(lat) * 2); // nòng ngoài cong rộng hơn
-      const p = (v) => { const e = v * (0.55 + 0.45 * v), b = Math.sin(Math.PI * e) * amp; return [s[0] + dx * e + nx * b, s[1] + dy * e + ny * b]; }; // tăng tốc nhẹ + vòng cung
+      const p = (v) => { const e = v * (0.55 + 0.45 * v), b = Math.sin(Math.PI * e) * amp; return epKhungTL(o.B, s[0] + dx * e + nx * b, s[1] + dy * e + ny * b); }; // tăng tốc nhẹ + vòng cung · ép trong hộp bàn + đường (chỉ hình)
       const [x, y] = p(u), [x2, y2] = p(Math.min(1, u + 0.04)), g = Math.atan2(y2 - y, x2 - x);
       const al = Math.min(1, u / 0.08);
       if (!(ten && FXU.veNeo(ctx, ten, x, y, w, g, al))) R.anhGiua(ctx, 'dan_phao', x, y, w * 0.5, g, al);

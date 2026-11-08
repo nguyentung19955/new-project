@@ -3674,3 +3674,5 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 ## claude/demo-hop-tuong — Bỏ vòng sáng khoanh ụ cùng loại khi chạm thẻ khay trận (08/11)
 
 - Chạm thẻ ở khay trận không còn vẽ vòng `sup_ring` (tròn xanh-trắng có vạch) quanh mọi ụ cùng loại trên bàn (`ND.veSoi` không vẽ gì); chạm thẻ vẫn nâng cấp bằng mana như cũ. Vệt hàng/cột Salvo dưới đầu ụ giữ nguyên.
+## claude/demo-hop-tuong — tên lửa không bay ra ngoài bàn (08/11)
+- "sao tên lửa lại bắn lên tận ngoài thế này": Pháo La Bàn (tên lửa đuổi, khói, hạt, nổ khi hết quái) + Salvo Battery (đường bay, điểm rơi) chỉ VẼ trong hộp bàn + đường (mép đường + 10 px, `epKhungTL` game.js, render.js noiSuy) — luật bay/ST/thời điểm trúng giữ nguyên (mô phỏng tất định so trước/sau trùng hash). Ảnh: `docs/demo-hop-tuong/tuvan/ten-lua/truoc-sau.jpg`.

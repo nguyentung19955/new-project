@@ -623,6 +623,10 @@ const REN = {
     for (const d of G.dan) {
       d.__x = d.x; d.__y = d.y; d.__z = d.z;
       if (d._x !== undefined) { d.x = d._x + (d.x - d._x) * a; d.y = d._y + (d.y - d._y) * a; if (d.z !== undefined) d.z = d._z + (d.z - d._z) * a; }
+      if (d.dd && typeof epKhungTL === 'function') { // tên lửa đuổi La Bàn: VẼ trong hộp bàn + đường (luật bay giữ nguyên — game.js epKhungTL)
+        [d.x, d.y] = epKhungTL(d.B, d.x, d.y);
+        if (d._x !== undefined) { d.__px = d._x; d.__py = d._y; [d._x, d._y] = epKhungTL(d.B, d._x, d._y); }
+      }
     }
     for (const B of G.ban) for (const T of B.t) if (T) {
       T.__g = T.goc; T.__rx = T.rx;
@@ -638,7 +642,7 @@ const REN = {
   },
   traLai() {
     for (const E of G.quai) { E.x = E.__x; E.y = E.__y; E.gv = E.__g; E.tChet = E.__c; }
-    for (const d of G.dan) { d.x = d.__x; d.y = d.__y; d.z = d.__z; }
+    for (const d of G.dan) { d.x = d.__x; d.y = d.__y; d.z = d.__z; if (d.__px !== undefined) { d._x = d.__px; d._y = d.__py; d.__px = undefined; } }
     for (const B of G.ban) for (const T of B.t) if (T) { T.goc = T.__g; T.rx = T.__rx; if (T.anim && T.anim.__t !== undefined) T.anim.t = T.anim.__t; }
     for (const o of G.hu) {
       o.t = o.__t;
