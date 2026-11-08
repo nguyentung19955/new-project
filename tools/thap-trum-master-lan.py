@@ -238,5 +238,6 @@ def leech():
 
 
 VIEC = {'hive': hive, 'jammer': jammer, 'patcher': patcher, 'leech': leech}
-for id_ in (sys.argv[1:] or VIEC):
+# 08/11: jammer đã gen lại 3 lớp (tools/thap-trum-master-jammer.py) — chỉ chạy jammer() cũ khi gọi rõ tên (ghi đè ảnh mới!)
+for id_ in (sys.argv[1:] or [k for k in VIEC if k != 'jammer']):
     print(id_); VIEC[id_]()

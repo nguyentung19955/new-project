@@ -2,6 +2,7 @@
 // Bước mô phỏng THỦ CÔNG (capNhat + REN.ve, dt cố định) → khung tất định, không phụ thuộc máy chậm.
 // Chạy (gốc repo): python3 -m http.server 8796 &  NODE_PATH=/opt/npm-tools/node_modules node tools/thap-chup-trumcode.js [BASE]
 //   CHI=hive,prism  · FPS=20 (khung GIF/giây) · OUT=thư mục ra
+//   CU_THU=thư_mục → bên TRƯỚC là bản code cũ (không ?trumanim=0): mọi tệp thap/js|assets có trong thư mục đó (cùng tên) thay cho bản đang có
 // Ra: OUT/<id>_truoc-sau.gif (trái: dải khung cũ ?trumanim=0 · phải: code) + OUT/<id>_tomtat.jpg (bảng khung) — cần python3 + Pillow.
 'use strict';
 const { chromium } = require('playwright');
@@ -19,7 +20,14 @@ async function chup(b, id, cu) {
   const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
   const p = await ctx.newPage(); const loi = [];
   p.on('pageerror', e => loi.push(e.message));
-  await p.goto(BASE + '?mode=solo&deck=canon,bang,tia,set,khien&mana=0&notut=1&seed=12345&af=hero' + (cu ? '&trumanim=0' : ''), { waitUntil: 'load', timeout: 90000 });
+  const CU_THU = process.env.CU_THU;
+  if (cu && CU_THU) await p.route(/\/thap\/(js|assets)\/[^/?]+(\?.*)?$/, (r) => {
+    const ten = new URL(r.request().url()).pathname.split('/').pop(), f = path.join(CU_THU, ten);
+    if (fs.existsSync(f)) return r.fulfill({ body: fs.readFileSync(f), contentType: ten.endsWith('.js') ? 'application/javascript' : 'image/png' });
+    if (/^trum_jammer_m_vanh/.test(ten)) return r.fulfill({ status: 404, body: '' }); // bản cũ chưa có
+    return r.continue();
+  });
+  await p.goto(BASE + '?mode=solo&deck=canon,bang,tia,set,khien&mana=0&notut=1&seed=12345&af=hero' + (cu && !CU_THU ? '&trumanim=0' : ''), { waitUntil: 'load', timeout: 90000 });
   await p.waitForFunction(() => typeof G !== 'undefined' && G.ban && G.ban[0] && typeof REN !== 'undefined', null, { timeout: 60000 });
   await sleep(4500);
   await p.waitForFunction(() => !G.dung, null, { timeout: 20000 }).catch(() => {}); await sleep(2000);
