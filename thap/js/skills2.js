@@ -829,12 +829,12 @@ SKILLS.hasao = { // Súng Hạ Sao (Giltine) — HỖ TRỢ (đợt vai trò): �
 };
 SKILLS.saochep = { // Máy Sao Chép (Shamash): kéo lên ụ CÙNG SAO → thành bản sao của ụ đó (70% chỉ số ở cấp đầu → 94% thẻ max, KY_NANG_CAP.saochep)
   vai: 'db', dmg: 13.33, toc: 1.2, nham: 'dau',
-  mo: (T) => 'Drag onto same-star turret (frozen too, NOT stone): becomes a copy at ' + Math.round(heSaoChep(T && G.ban[T.ban]) * 100) + '% damage · random traits (colour, direction, Gold, Awakened, slot spin…) roll anew · the Copycat\'s own buffs (Overclock, Anvil, Aurora, shield) are lost · special same-type merges (Compass, Anvil, Merge King, Prism fusion) follow the target: into a copy stays a copy · a normal merge always makes a new real turret', // 08/11: bỏ 'the copy is never stone' (đá không chép được nữa)
+  mo: (T) => 'Drag onto a same-star turret (stone too, NOT frozen): becomes a copy at ' + Math.round(heSaoChep(T && G.ban[T.ban]) * 100) + '% damage · random traits (colour, direction, Gold, Awakened, slot spin…) roll anew · the Copycat\'s own buffs (Overclock, Anvil, Aurora, shield) are lost · special same-type merges (Compass, Anvil, Merge King, Prism fusion) follow the target: into a copy stays a copy · a normal merge always makes a new real turret', // 08/11 (lần 2): chép cả ô ĐÁ, KHÔNG chép ô BĂNG
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'tia_lua', co: 16, mau: '#ffe46b', sp: 480 }); },
   ghepDB: {
-    // 08/11 người dùng chốt: KHÔNG chép ô ĐÁ (hoá đá) — ô BĂNG vẫn chép được
-    hopLe: (a, b) => a.sao === b.sao && b.id !== 'saochep' && b.ban === a.ban && !(b.st && b.st.da),
-    // (cũ 06/11: chép cả ô ĐÁ — đã bỏ) chép ô BĂNG cùng sao: bản sao là ụ THƯỜNG đúng loại thật dưới lớp đá/băng (không thành đá), ô đá/băng giữ nguyên
+    // 08/11 người dùng chốt lại: "copy cả đá nhé, không cho copy băng thôi" — chép được ô ĐÁ, KHÔNG chép ô BĂNG
+    hopLe: (a, b) => a.sao === b.sao && b.id !== 'saochep' && b.ban === a.ban && !(b.st && b.st.bang > 0),
+    // chép ô ĐÁ cùng sao: bản sao là ụ THƯỜNG đúng loại thật dưới lớp đá (không thành đá), ô đá giữ nguyên
     // (DCDW: không nguồn nào cấm Shamash chép đá; Frey còn biến hình được ô đá — docs/demo-hop-tuong/tuvan/copycat-da/DCDW.md)
     quaKhoa: true,
     lam(G, B, a, b) {
