@@ -480,7 +480,7 @@ const UP = {
       : this.o('Damage', s1.dmg != null ? s1.dmg : '—', dd('dmg')) + this.oToc(s1.toc, dd('toc')) +
         this.o('Range', tam) + this.o('Target', sk ? upNham(id) : '—')) + '</div>');
     // kỹ năng 1 dòng + Test range
-    P.push(this.theKN(SUP_LOAI[id] ? 'Support skill' : 'Skill', upSC(r.kyNang || '') + '.', grow ? ' · 3 forms' : ''));
+    P.push(this.theKN(SUP_LOAI[id] ? 'Support skill' : 'Skill', upSC(r.kyNang || '') + '.', grow ? ' · ' + ((GROW[id] && GROW[id].hinh) ? GROW[id].hinh.length : 3) + ' forms' : ''));
     if (sk) P.push(this.hangTest());
     return P.join('');
   },
@@ -569,6 +569,11 @@ const UP = {
       ? '<img class="dau nho s' + (k + 1) + ' loc" src="' + iconOf(id) + '" alt="">'
       : '<img class="de" src="assets/de_chung.webp?v=5b0cfbfb" alt=""><img class="dau s' + (k + 1) + (anh ? '' : ' loc') + '" src="assets/' + anhTen(id + '_nong' + (anh ? '_s' + (k + 1) : '')) + '.png" alt="" onerror="this.onerror=null;this.src=\'' + iconOf(id) + '\'">';
     const g = GROW[id], anh = !!(window.STAGE_K && STAGE_K[id]);
+    // dạng HÌNH riêng (Rồng Máy 4 dạng — skills5.js GROW.ronglua.hinh): icon dựng sẵn nho/<ảnh> mỗi dạng; ảnh lỗi → icon thẻ
+    if (g.hinh) return '<div class="up-gd up-gd4">' + g.hinh.map((h, k) =>
+      '<div class="up-gd1" style="--g:' + (h.mau || g.mau) + '"><div class="anh"><img class="dau nho" src="assets/' + h.anh + '.png" alt="" onerror="this.onerror=null;this.src=\'' + iconOf(id) + '\'"></div>' +
+      '<b>' + upEsc(upSC(h.sao)) + ' · ' + upEsc(upSC(h.ten)) + '</b><span>' + upEsc(upSC(h.mo)) + '</span></div>').join('<img class="up-mt" src="assets/mui_tiep.png" alt="›">') + '</div>' +
+      '<p class="up-phu">' + upEsc(upSC(g.dk)) + '.</p>';
     // điều kiện chia theo dạng nếu chuỗi tách được thành 3 phần
     let ph = String(g.dk).split(/\s+\/\s+|\s+·\s+/);
     if (ph.length === 2) ph = ['Starting form'].concat(ph);

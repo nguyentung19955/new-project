@@ -725,7 +725,7 @@ HU.gDauGio = { ve(ctx, o, R) { const E = o.E, x = E && !E.chet ? E.x : o.x, y = 
   const im = gCo('fx_ngaithoigian_hieu') ? REN.img('fx_ngaithoigian_hieu') : PX.mau('fx_st_tua', '#ffd86a'); if (!im) return; ctx.globalCompositeOperation = 'lighter'; PX.ve(ctx, im, x, y, r * 2.3, r * 2.3 * im.height / im.width, u * 6, 1 - u); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; } };
 
 // ---- RỒNG MÁY (Wyrm Engine, skills5.js): nón lửa CAM → nón lửa XANH (+30% quái to) → nón TRẮNG viền xanh dài hơn + vệt cháy 4 s ----
-ATK.ronglua = ['Orange flame cone, burns 3s', 'BLUE flame cone: +30% vs big enemies, sparks at the cone edge', 'WHITE flame with blue rim: longer cone, burning trail stays 4s'];
+ATK.ronglua = ['HATCHLING ENGINE: orange flame puffs, burns 3s', 'WINGED WYRM / ARMORED DRAGON: flame cone + HEART JET on the front enemy (BLUE flame +30% vs big from 5★)', 'INFERNO DRAGON: WHITE flame, longer cone, jet hits the 2 front enemies, trail 4s'];
 // ---- LƯỚI CỘNG HƯỞNG (hỗ trợ chéo): dạng 2 ụ chéo trúng có vòng ngọc lam · dạng 3 cứ phát thứ 3 của ụ chéo bắn thêm 1 đạn vọng ngọc lam ----
 ATK.luoicheo = ['Diagonal damage buff (no shot)', 'HUMMING: buffed diagonal turrets’ hits flash a teal spark ring', 'RESONANCE: every 3rd shot of each diagonal turret adds a teal echo bolt (visual, no damage)'];
 P.luoicheo = () => {

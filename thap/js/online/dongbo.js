@@ -227,6 +227,7 @@ const ONS = {
     if (T.id === 'bienmau') f += 'q' + ((T.pm | 0) & 3) + ';' + (T.pms ? 'u' + T.pms + ';' : ''); // Prism Thief: màu + cộng dồn
     if (T.id === 'mauhut') { if (T.mau) f += 'B' + T.mau + ';'; if (T.mh) f += 'M' + T.mh.o + ';C' + Math.max(0, Math.round(T.mh.con * 10)) + ';'; if (T.rite && T.rite.het > G.t) f += 'R' + T.rite.o + ';T' + Math.round((T.rite.het - G.t) * 10) + ';'; } // Mạch Máu: máu / dấu / Rite
     if (T.id === 'tienhoa' && T.chay) f += 'X'; // trứng cháy
+    if (T.id === 'ronglua' && T.nhiet > 0) f += 'H' + Math.round(T.nhiet * 100) + ';'; // Rồng Máy: nhiệt lò (×100, giữ 2 số lẻ)
     if (T.id === 'cobac' && T.cbS) f += 'z' + T.cbS + ';'; // Lucky Slot: sao đã quay (bàn con rối không tự quay)
     return [T.id, T.sao, f];
   },
@@ -253,6 +254,7 @@ const ONS = {
       if (/R\d+;/.test(c)) { const o = so('R'), X = B.t[o], h = heDB(B, 'mauhut'); T.rite = X ? { o, uid: X.uid, het: G.t + so('T') / 10, dmg: SKILLS.mauhut.DMG * h, toc: SKILLS.mauhut.TOC * h } : null; } else T.rite = null;
     }
     if (T.id === 'tienhoa') T.chay = c.includes('X');
+    if (T.id === 'ronglua') T.nhiet = so('H') / 100;
     if (T.id === 'cobac') T.cbS = so('z');
   },
   // Lucky Slot: máy bạn đã quay → bàn con rối phát lại máy xèng 3 ô đúng chuỗi + nhận ngăn quả của máy bạn (không tự rút)
