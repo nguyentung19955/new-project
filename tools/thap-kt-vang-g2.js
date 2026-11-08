@@ -1,6 +1,6 @@
 // TURRET MERGE — KIỂM ĐỢT LÀM LẠI TƯỚNG VÀNG 08/11 (nhóm A, người dùng duyệt TOM-TAT: docs/demo-hop-tuong/tuvan/ghi-chu-nguoi-dung/)
 //   Cấp thẻ 10–17 theo vai trò · Ember Relay (max, trần 70) · Quantum Choir HARMONY · Fusion Archive (1 điểm / ghép thật, mốc) · Twin Anvil · Prism Thief
-//   (4 màu, Chromatic Circuit) · Blood Circuit (đánh dấu → nuốt → Máu → Blood Rite) · Salvo Battery (bingo dở dang) · Trứng Evolver · Hero Foundry 25 s.
+//   (4 màu, Chromatic Circuit) · Blood Circuit (đánh dấu → nuốt → Máu → mạnh hơn / đổi dạng) · Salvo Battery (bingo dở dang) · Trứng Evolver · Hero Foundry 25 s.
 //   Phần 1: luật thuần (vm, không giao diện) — số theo CHATGPT-SPEC B5. Phần 2 (PW=1): chạy thật Playwright + chụp ảnh 844×390 và 390×844.
 //   node tools/thap-kt-vang-g2.js        (✓/✗, mã thoát 1 nếu lỗi)
 //   PW=1 node tools/thap-kt-vang-g2.js  (cần python3 -m http.server 8765 ở gốc repo; ảnh: tools/shots-vang-g2/ — không commit)
@@ -161,18 +161,26 @@ R(`G.quai.length = 0; B.t.fill(null); var V = dat(7, 'bienmau', 1, T => { T.pm =
 R(`for (let i = 0; i < 30; i++) { if (B.pmMt == null || G.t - B.pmMt >= 1) { B.pmMt = G.t; B.pmMv = 0; } if ((B.pmMv || 0) + 2 <= SKILLS.bienmau.manaTran(B)) { B.pmMv += 2; B.mana += 2; } }`);
 ok(R('B.mana') === 6, 'trần mana Prism vàng: 6 mana / giây cả bàn (không có mặt nạ)');
 
-console.log('Blood Circuit (mauhut)');
+console.log('Blood Circuit (mauhut) — ụ Tấn công theo Máu (09/11)');
 tran(['mauhut', 'lien', 'tienhoa', 'loren', 'dongbo']);
 R(`var M = dat(7, 'mauhut', 2), T4 = dat(8, 'lien', 4);`);
+ok(R("SKILLS.mauhut.vai") === 'tc' && !R("SKILLS.mauhut.chuDong") && !R("SKILLS.mauhut.napMau") && (R('M.mau') || 0) === 0, 'vai Tấn công, bỏ Blood Rite + vòng nạp, ụ mới 0 Máu');
 ok(R('hopLeGhep(M, T4)') && !R(`hopLeGhep(M, dat(2, 'lien', 7))`) && !R(`hopLeGhep(M, dat(3, 'tienhoa', 2))`) && !R(`hopLeGhep(M, dat(4, 'loren', 2))`) && !R(`hopLeGhep(M, dat(9, 'dongbo', 2))`), 'không nuốt 7★ / Trứng / Twin Anvil / Hỗ trợ');
-R('B.t[2] = null; B.t[3] = null; B.t[4] = null; B.t[9] = null;'); R(`ghep(B, M, T4);`); ok(gan(R('M.mh.con'), 17), 'B5-7: đánh dấu 4★ → 17 s, cả 2 vẫn trên bàn'); ok(R('B.t[8] === T4 && B.t[7] === M'), 'đánh dấu không di chuyển ụ');
+R('B.t[2] = null; B.t[3] = null; B.t[4] = null; B.t[9] = null;'); R(`ghep(B, M, T4);`); ok(gan(R('M.mh.con'), 17), 'đánh dấu 4★ → 17 s (LV9), cả 2 vẫn trên bàn'); ok(R('B.t[8] === T4 && B.t[7] === M'), 'đánh dấu không di chuyển ụ');
 R(`M.mh.con = 10; T4.sao = 5; cn();`); ok(gan(R('M.mh.con'), 13 - 1 / 30, 1e-3), 'mục tiêu +1★ → +3 s');
+R(`T4.st.bang = 2; var c0 = M.mh.con; cn(); cn();`); ok(gan(R('M.mh.con'), R('c0')), 'mục tiêu đóng băng: dừng đếm'); R('T4.st.bang = 0;');
 R(`M.mh.con = 0.01; cn();`); ok(!R('B.t[8]') && R('M.mau') === 25, 'nuốt 5★ → +25 Máu, ô trống');
-R(`B.t[2] = null; dat(6, 'lien', 2); var r = SKILLS.mauhut.chuDong(G, B, M); cn();`);
-ok(R('r') && R('M.mau') === 15 && gan(R('B.t[6].buf.dmg'), 0.30) && gan(R('B.t[6].buf.toc'), 0.15), 'Blood Rite: tiêu 10 Máu → ụ Tấn công kề +30% ST +15% tốc');
-R(`SKILLS.mauhut.chuDong(G, B, M);`); ok(R('M.mau') === 5, 'Rite lần 2 (B5-7: 25 Máu → 2 Rite, còn 5)');
-R(`G.t += 21; cn();`); ok(gan(R('B.t[6].buf.dmg'), 0, 1e-9), 'Rite hết sau 20 s');
-R(`var Z = dat(12, 'canon', 2); ghep(B, M, Z); B.t[12] = null; dat(12, 'lien', 2); cn();`); ok(!R('M.mh'), 'mục tiêu biến mất / đổi loại → huỷ dấu, không thưởng');
+R(`cn();`); ok(gan(R('M.buf.dmg'), 25 * 0.05 + 0.15, 1e-6) && gan(R('M.buf.toc'), 25 * 0.006) && gan(R('M.buf.crit'), 25 * 0.002) && gan(R('M.buf.cdmg'), 25 * 0.03), '25 Máu (dạng 2): +140% ST, +15% tốc, +5% chí mạng, +75% ST chí mạng cho CHÍNH nó');
+ok(R('[0, 19, 20, 49, 50, 99, 100, 199, 200, 999].map(n => SKILLS.mauhut.dang({ mau: n })).join()') === '0,0,1,1,2,2,3,3,4,4', 'mốc dạng 20 / 50 / 100 / 200, không trần');
+R(`M.mau = 5000; cn();`); ok(R('critU(M)') === 1, 'Máu rất cao: chí mạng ≤ 100%');
+R(`M.mau = 100; M.mhN = 0; G.quai.length = 0; var nv = 0; var _hu = G.hu.push.bind(G.hu); G.hu.push = (o) => { if (o && o.k === 'mhNova') nv++; return _hu(o); };
+  for (let i = 0; i < 6; i++) { const E = sinhQuai(Object.keys(QUAI)[0], 0, 100, 1000); E.vao = 1; SKILLS.mauhut.ban(G, B, M, E); for (let k = 0; k < 90 && G.dan.length; k++) G.dan = G.dan.filter(d => !capNhatDan(d, 1 / 30)); }`);
+ok(R('nv') === 1 && R('M.mhN') === 6, '100 Máu: phát thứ 6 nổ nova máu (1 lần / 6 phát)', R('[nv, M.mhN]'));
+R('B.capThe.mauhut = 8;'); ok(gan(R('SKILLS.mauhut.tg(4, B)'), 11.56, 1e-6), 'LV17: thời gian nuốt −32% (4★: 17 s → 11.56 s)'); R('B.capThe.mauhut = 0;');
+R(`B.t.fill(null); var M2 = dat(0, 'mauhut', 3), M3 = dat(1, 'mauhut', 3); M2.mau = 60; M3.mau = 40; B.deck = ['mauhut']; var ra = ghep(B, M2, M3);`);
+ok(!R('ra') || (R('ra.mau') || 0) === 0, 'ghép thường 2 Mạch Máu → ụ mới 0 Máu');
+R(`B.t.fill(null); var M4 = dat(0, 'mauhut', 3); M4.mau = 30; M4.sao = 4; cn();`); ok(R('M4.mau') === 30, 'nâng sao tại chỗ giữ Máu');
+R(`var Z = dat(12, 'canon', 2); ghep(B, M4, Z); B.t[12] = null; dat(12, 'lien', 2); cn();`); ok(!R('M4.mh'), 'mục tiêu biến mất / đổi loại → huỷ dấu, không thưởng');
 
 console.log('Salvo Battery (railgun)');
 tran(['railgun', 'lien', 'canon', 'bang', 'tia']);

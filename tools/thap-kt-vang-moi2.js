@@ -199,7 +199,7 @@ const MOI = ['mauhut', 'nguyenrua', 'thanhdia', 'bienmau'];
     for (const id of ['mauhut', 'nguyenrua', 'thanhdia', 'bienmau']) { const d = THEBAI.doc(); d.c[id] = { lv: 9, n: 0 }; UP.mo(id); const el = document.querySelector('.tb-cap-giua'); out[id] = el ? [...el.querySelectorAll('small:not(.tb-vi)')].map(x => x.textContent).join(' · ') : ''; try { UP.dong && UP.dong(); } catch (e) { } }
     return out;
   });
-  ok(/Blood Rite \+30% → \+30\.9%/.test(r.mauhut) && /Hex 35% → 37%/.test(r.nguyenrua) && /\+23% → \+23\.9%/.test(r.thanhdia) && r.bienmau !== undefined, 'trang ụ: hàng CARD LV "now → next" cho 4 ụ', JSON.stringify(r));
+  ok(/Devour time 0% → [-−]4%/.test(r.mauhut) && /Hex 35% → 37%/.test(r.nguyenrua) && /\+23% → \+23\.9%/.test(r.thanhdia) && r.bienmau !== undefined, 'trang ụ: hàng CARD LV "now → next" cho 4 ụ', JSON.stringify(r));
   if (SHOTS) {
     await p.evaluate(() => { const b = document.querySelector('[data-act="hm-bst"]'); if (b) b.click(); });
     await sleep(1200);

@@ -16,7 +16,7 @@ const SK7 = {
 };
 // % kỹ năng theo cấp thẻ — bảng chung KY_NANG_CAP (data.js; trang ụ tự hiện 'Vamp +6% → +6.5%', online theo cấp trong chuỗi bộ bài)
 Object.assign(KY_NANG_CAP, {
-  mauhut: { ten: 'Blood Rite', base: 30, buoc: 0.9, max: 37.2, dv: '%', tien: '+', dmg: true }, // 08/11: Rite +30% ST × (1 + 3%/cấp)     // +% sát thương mỗi VAMP
+  mauhut: { ten: 'Devour time', base: 0, buoc: -4, max: -32, dv: '%', dmg: true }, // 09/11: thời gian nuốt −4% mỗi cấp thẻ (LV9 0% → LV17 −32%)
   nguyenrua: { ten: 'Hex', base: 35, buoc: 2, max: 47, dv: '%', dmg: true },              // xác suất nguyền ở 1★ (+5%/sao, trần 80%)
   thanhdia: { ten: 'Dmg buff', base: 23, buoc: 0.92, max: 30.36, /* ×HOTRO.BAC.vang 2.3 (đo bậc 06/11) */ dv: '%', tien: '+', ht: 1 }, // buff sát thương 1★ (×HOTRO.K theo sao)
    // +% sát thương mỗi COMBO
@@ -44,47 +44,49 @@ function fx7(id, x, y, w, song) {
 }
 
 // =====================================================================================================
-// P6 · BLOOD CIRCUIT (mauhut) — Vàng ĐB. LÀM LẠI 08/11 (người dùng duyệt TOM-TAT mục 8, CHATGPT-SPEC A1 §7):
-//      KÉO lên 1 ụ của mình → ĐÁNH DẤU (không di chuyển; cả 2 vẫn chạy bình thường). Sau 5 + 3 × sao (giây) mục tiêu bị NUỐT (ô trống) và Mạch Máu
-//      nhận 5 × sao MÁU (riêng ụ, không trần). Mục tiêu +1★ → +3 s, −1★ → −3 s (còn ≥ 1 s). Mục tiêu hoá đá: dừng; mục tiêu bị ghép / đổi loại / mất:
-//      huỷ (không thưởng). Mạch Máu bị băng/đá: dừng. Mỗi Mạch Máu đánh dấu 1 ụ (kéo lần nữa = đổi dấu).
-//      KHÔNG nuốt: ụ 7★, Trứng (Evolver), Twin Anvil, Lõi Khởi Sinh, ụ Hỗ trợ, Mạch Máu khác. Đánh dấu / nuốt KHÔNG phải ghép (Archive không tính).
-//      CHẠM Mạch Máu khi có ≥ 10 Máu → BLOOD RITE: tiêu 10 Máu, ụ Tấn công KỀ mạnh nhất +30% ST +15% tốc 20 s (× 1 + 3%/cấp thẻ; 1 buff/lúc, làm mới không cộng).
-//      Online: dấu / máu / Rite theo cờ ô ('M…' 'C…' 'B…' 'R…' dongbo.js) · chạm = gói 'cd' (chuDong) · bàn con rối không tự nuốt (chờ ảnh chụp bàn).
+// P6 · BLOOD CIRCUIT (mauhut) — Vàng TẤN CÔNG. LÀM LẠI 09/11 (người dùng: "đổi thành ụ attack, càng nhiều máu thì blood càng mạnh, các mốc máu hiện
+//      ngay ở góc bên phải của ụ, đổi trạng thái ụ khi đạt số máu quy định … càng tăng cao level gacha thì càng ít thời gian khi muốn nuốt"):
+//      BẮN đạn máu vào quái đầu. MÁU (riêng từng ụ, KHÔNG trần) tăng sát thương, tốc bắn, tỉ lệ / ST chí mạng của CHÍNH nó (chí mạng ≤ 100%, critU).
+//      Ụ mới (gọi ra / ghép thường / Copycat) = 0 Máu. Nâng sao tại chỗ giữ Máu.
+//      KÉO lên 1 ụ của mình → ĐÁNH DẤU (không di chuyển). Sau (5 + 3 × sao) × (1 − 4% × cấp thẻ trên LV9) giây mục tiêu bị NUỐT → +5 × sao Máu.
+//      Mục tiêu +1★ → +3 s, −1★ → −3 s · mục tiêu đá / băng: dừng đếm · mục tiêu bị ghép / đổi loại / mất: huỷ. Mỗi Mạch Máu đánh dấu 1 ụ.
+//      KHÔNG nuốt: ụ 7★, Trứng, Twin Anvil, Lõi Khởi Sinh, ụ Hỗ trợ, Mạch Máu khác. Đánh dấu / nuốt KHÔNG phải ghép. BỎ Blood Rite + vòng nạp xanh.
+//      DẠNG theo mốc Máu 20 / 50 / 100 (4 hình: assets/mauhut_f<2..4>_*.png, chưa có ảnh → hình cũ) + mốc 200 BLOOD MOON (nova dày hơn):
+//        dạng càng cao đạn càng to / đỏ; từ 100 Máu mỗi phát thứ 6 (200 Máu: thứ 4) nổ NOVA máu quanh điểm trúng.
+//      Số Máu: góc TRÊN-PHẢI ô, màu theo mốc. Online: 'B' Máu · 'P' dạng · 'Q' đếm phát · 'M'/'C' dấu (dongbo.js); bàn con rối không tự nuốt.
 // =====================================================================================================
 SKILLS.mauhut = {
-  vai: 'db', dmg: 17, toc: 0.9, nham: 'dau', napMau: '#d0103a', chuDongMoiSao: true,
-  GIA: 10, SONG: 20, DMG: 0.30, TOC: 0.15,
+  vai: 'tc', dmg: 17, toc: 0.9, nham: 'dau', napMau: null,
+  MOC: [20, 50, 100, 200],
+  TEN: ['BLOOD CIRCUIT', 'BLOOD HUNTER', 'CRIMSON ENGINE', 'SANGUINE SOVEREIGN', 'BLOOD MOON'],
+  MAU: ['#f6e3e6', '#ff7080', '#ff2a4a', '#ffd23f', '#ff8af0'], // màu số Máu theo mốc
+  DMG: 0.05, TOC: 0.006, CRIT: 0.002, CDMG: 0.03,               // mỗi 1 Máu
+  DANG_DMG: [0, 0.15, 0.4, 0.6, 0.9],                            // thưởng thêm khi đạt mốc (không cộng dồn, lấy bậc hiện tại)
+  NOVA: [0, 0, 0, 6, 4], NOVA_K: 1.2, NOVA_R: 55,                // nova máu: mỗi phát thứ N, ×1.2 ST quanh điểm trúng (cân bằng 09/11: tools sim)
   CAM: ['tienhoa', 'loren', 'khoisinh', 'mauhut'],
   camAn: (b) => !b || b.sao >= 7 || SKILLS.mauhut.CAM.includes(b.id) || !!(SKILLS[b.id] && SKILLS[b.id].vai === 'ht'),
-  tg: (sao) => 5 + 3 * sao,
-  he: (T) => heDB(G.ban[T.ban], 'mauhut'),
+  // thời gian nuốt: cấp thẻ −4% / cấp (KY_NANG_CAP.mauhut: 0 → −32% ở LV17)
+  kTg: (B) => 1 + (knThe(B, 'mauhut') || 0) / 100,
+  tg(sao, B) { return Math.round((5 + 3 * sao) * this.kTg(B || (typeof G !== 'undefined' && G.ban && G.ban[0])) * 100) / 100; },
+  dang(T) { const n = (T && T.mau) || 0, M = this.MOC; return n >= M[3] ? 4 : n >= M[2] ? 3 : n >= M[1] ? 2 : n >= M[0] ? 1 : 0; },
+  hinh(T) { return Math.min(3, this.dang(T)); }, // 0..3 = dạng 1..4 (Blood Moon dùng hình dạng 4)
   mo(T) {
-    const B = G.ban[T.ban], m = T.mh, X = m && B && B.t[m.o], h = this.he(T);
-    return 'Blood ' + (T.mau || 0) + (m && X ? ' · eating ' + (TEXT.turret[X.id] ? TEXT.turret[X.id].name : X.id) + ' ' + X.sao + '★ in ' + Math.ceil(m.con) + 's' : '') +
-      ' · drag onto one of your turrets to MARK it: both keep working, after 5s + 3s per ★ it is eaten and gives 5 Blood per ★ · target gains a ★: +3s, loses a ★: −3s · cannot eat 7★, eggs, Twin Anvil, Genesis Core or Support turrets · tap with 10+ Blood: BLOOD RITE — the best touching Attack turret gets +' + Math.round(this.DMG * h * 100) + '% damage and +' + Math.round(this.TOC * h * 100) + '% fire rate for 20s';
-  },
-  // Rite: ụ Tấn công kề mạnh nhất (sao cao nhất, hoà: ô nhỏ hơn), không đá/băng
-  dichRite(B, T) { let m = null; for (const X of keCan(B, T.o)) if (X && SKILLS[X.id] && SKILLS[X.id].vai === 'tc' && !biKhoa(X) && (!m || X.sao > m.sao || (X.sao === m.sao && X.o < m.o))) m = X; return m; },
-  aiNen(G, B, T) { return (T.mau || 0) >= this.GIA && !!this.dichRite(B, T); },
-  chuDong(G, B, T) {
-    if ((T.mau || 0) < this.GIA) return false;
-    const X = this.dichRite(B, T), c = B.o[T.o];
-    if (!X) { if (c) FX.chu1(c.x, c.y - 24, 'NO ATTACK NEIGHBOUR', '#ff9a9a', 11); return false; }
-    const h = heDB(B, 'mauhut');
-    T.mau -= this.GIA; T.nap = Math.min(1, T.mau / this.GIA);
-    T.rite = { o: X.o, uid: X.uid, het: G.t + this.SONG, dmg: this.DMG * h, toc: this.TOC * h };
-    const q = B.o[X.o]; tiaPhep(c.x, c.y, q.x, q.y, '#ff3a5a'); X.sang = 1; fx7('mauhut', q.x, q.y, 90, 0.4);
-    FX.chu1(q.x, q.y - 28, 'BLOOD RITE', '#ff5a7a', 13, 'to'); SND.nang(2);
-    return true;
+    const B = G.ban[T.ban], m = T.mh, X = m && B && B.t[m.o], n = T.mau || 0, d = this.dang(T), nx = this.MOC.find(v => v > n);
+    return 'Blood ' + n + ' (' + this.TEN[d] + ') → +' + Math.round(n * this.DMG * 100 + this.DANG_DMG[d] * 100) + '% damage, +' + +(n * this.TOC * 100).toFixed(1) + '% fire rate, +' +
+      +(n * this.CRIT * 100).toFixed(1) + '% crit chance, +' + Math.round(n * this.CDMG * 100) + '% crit damage' + (nx ? ' · next form at ' + nx + ' Blood' : '') +
+      (m && X ? ' · eating ' + (TEXT.turret[X.id] ? TEXT.turret[X.id].name : X.id) + ' ' + X.sao + '★ in ' + Math.ceil(m.con) + 's' : '') +
+      ' · drag onto one of your turrets to MARK it: after ' + this.tg(1, B) + 's + ' + Math.round(3 * this.kTg(B) * 10) / 10 + 's per ★ it is eaten and gives 5 Blood per ★' +
+      ' · each Blood: +5% damage, +0.6% fire rate, +0.2% crit (max 100%), +3% crit damage, no limit · new forms at 20 / 50 / 100 Blood: bigger bolts, more damage · 100 Blood: every 6th shot is a blood nova (200 Blood: every 4th)' +
+      ' · cannot eat 7★, eggs, Twin Anvil, Genesis Core or Support turrets · a frozen or stone target pauses the timer · new Blood Circuits start with 0 Blood';
   },
   capNhat(G, B, T, dt) {
-    T.nap = Math.min(1, (T.mau || 0) / this.GIA);
+    const n = T.mau || 0, d = this.dang(T);
+    if (n) { T.buf.dmg += n * this.DMG + this.DANG_DMG[d]; T.buf.toc += n * this.TOC; T.buf.crit += n * this.CRIT; T.buf.cdmg = (T.buf.cdmg || 0) + n * this.CDMG; }
     const m = T.mh; if (!m) return false;
     const X = B.t[m.o];
     if (!X || X.uid !== m.uid || X.id !== m.id || X === T) { T.mh = null; return false; } // mục tiêu bị ghép / đổi loại / mất: huỷ
-    if (X.sao !== m.sao) { m.con = X.sao > m.sao ? m.con + 3 * (X.sao - m.sao) : Math.max(Math.min(1, m.con), m.con - 3 * (m.sao - X.sao)); m.sao = X.sao; }
-    if (biKhoa(X)) return false; // mục tiêu hoá đá / ĐÓNG BĂNG: dừng đếm, tan băng thì đếm tiếp (09/11 Q6 = A)
+    if (X.sao !== m.sao) { m.con = X.sao > m.sao ? m.con + 3 * (X.sao - m.sao) : Math.max(Math.min(1, m.con), m.con - 3 * (m.sao - X.sao)); m.sao = X.sao; m.tong = Math.max(m.tong, m.con); }
+    if (biKhoa(X)) return false; // mục tiêu hoá đá / ĐÓNG BĂNG: dừng đếm
     m.con -= dt;
     if (m.con > 0) return false;
     if (B.net && typeof ONS !== 'undefined' && ONS.on) { m.con = 0; return false; } // bàn con rối: chờ ảnh chụp bàn của bạn
@@ -92,57 +94,98 @@ SKILLS.mauhut = {
     B.t[X.o] = null; T.mh = null;
     T.mau = (T.mau || 0) + 5 * X.sao; T.sang = 1;
     G.bay.push({ id: X.id, sao: X.sao, x0: c.x, y0: c.y, x1: ct.x, y1: ct.y, t: 0, bac: X.bac });
-    fx7('mauhut', c.x, c.y, 100, 0.45); FX.chu1(ct.x, ct.y - 30, '+' + 5 * X.sao + ' BLOOD', '#ff5a7a', 14, 'to'); SND.no(0.3);
+    fx7('mauhut', c.x, c.y, 100, 0.45); SND.no(0.3);
+    if (G.hu) G.hu.push({ k: 'mhPop', t: 0, song: 1.1, B, T, so: '+' + 5 * X.sao });
     return false;
   },
+  // đạn máu theo dạng (ảnh ChatGPT fx_mauhut_b1–b3, chưa có → đạn tia cũ tô đỏ) · nova: mỗi phát thứ N (đếm T.mhN — tất định, gửi online)
+  DAN: ['fx_mauhut_b1', 'fx_mauhut_b1', 'fx_mauhut_b2', 'fx_mauhut_b3', 'fx_mauhut_b3'],
+  CO: [16, 19, 23, 28, 32],
   ban(G, B, T, E) {
-    giat(T, 0.7); const [x, y] = dauNong(T); SND.tia();
-    const dmg = dmgU(T);
-    const dm = danThang(B, T, E, SK7.anh('mauhut', 'dan', 'dan_tia'), 600, 16, (G, d, M) => { if (M) trung(M, dmg, { B, mau: '#ff4a6a' }); }); if (dm.img === 'dan_tia') dm.mau = '#ff3a5a';
-    FX.no('chop_nong', x, y, 18, 0.08, T.goc);
+    const d = this.dang(T); giat(T, 0.6 + 0.1 * d); const [x, y] = dauNong(T); SND.tia();
+    const dmg = dmgU(T), N = this.NOVA[d]; T.mhN = ((T.mhN | 0) + 1) % 1000000;
+    const nova = N > 0 && T.mhN % N === 0, S = this;
+    const anh = REN.img && REN.img(this.DAN[d]) ? this.DAN[d] : SK7.anh('mauhut', 'dan', 'dan_tia');
+    const dm = danThang(B, T, E, anh, 600 + 40 * d, anh === this.DAN[d] ? this.CO[d] * 1.7 : this.CO[d], (G, q, M) => {
+      if (M) trung(M, dmg, { B, mau: '#ff4a6a' });
+      if (nova) { noLan(q.x, q.y, S.NOVA_R, dmg * S.NOVA_K, B, { B, T, phu: true, mau: '#ff3a5a' }); G.hu.push({ k: 'mhNova', t: 0, song: 0.5, x: q.x, y: q.y, r: S.NOVA_R * (d >= 4 ? 1.25 : 1) }); }
+    });
+    if (anh === 'dan_tia') dm.mau = '#ff3a5a';
+    FX.no('chop_nong', x, y, 18 + 3 * d, 0.08, T.goc);
   },
+  // HÌNH 4 DẠNG: đầu + bệ riêng theo mốc Máu (render.js dauAnh / deAnh) — ảnh chưa tải → hình dạng 1 (dự phòng)
+  dauAnh(T) { const f = this.hinh(T); return f && window.MAUHUT_DANG && MAUHUT_DANG['f' + (f + 1)] ? 'mauhut_f' + (f + 1) + '_nong' : null; },
+  dauAnhK(T) { const M = window.MAUHUT_DANG && MAUHUT_DANG['f' + (this.hinh(T) + 1)]; return M ? M.K : 0.8; },
+  deAnh(T) { const f = this.hinh(T), M = f && window.MAUHUT_DANG && MAUHUT_DANG['f' + (f + 1)]; return M ? ['mauhut_f' + (f + 1) + '_de', M.DE] : null; },
   ghepDB: {
     hopLe: (a, b) => b.ban === a.ban && a !== b && !b.st.da && !SKILLS.mauhut.camAn(b),
     laGhep: () => false, // đánh dấu không phải ghép
     lam(G, B, a, b) { // a = Mạch Máu (kéo), b = mục tiêu: chỉ ĐÁNH DẤU (không ai bị đổi chỗ)
-      a.mh = { o: b.o, uid: b.uid, id: b.id, sao: b.sao, con: SKILLS.mauhut.tg(b.sao), tong: SKILLS.mauhut.tg(b.sao) };
-      const ca = B.o[a.o], cb = B.o[b.o]; tiaPhep(ca.x, ca.y, cb.x, cb.y, '#d0103a');
-      FX.chu1(cb.x, cb.y - 26, 'MARKED ' + Math.round(a.mh.con) + 's', '#ff7a8a', 12, 'to'); a.sang = 1;
+      const t = SKILLS.mauhut.tg(b.sao, B);
+      a.mh = { o: b.o, uid: b.uid, id: b.id, sao: b.sao, con: t, tong: t };
+      const ca = B.o[a.o], cb = B.o[b.o]; tiaPhep(ca.x, ca.y, cb.x, cb.y, '#d0103a'); a.sang = 1;
       SND.dat();
       return a;
     },
   },
   ghep() { },
-  sangDau: (T) => Math.min(0.3, (T.mau || 0) / 60),
+  sangDau: (T) => Math.min(0.3, (T.mau || 0) / 400),
 };
-// Blood Rite: áp lên ụ được chọn mỗi khung (buff có thời hạn → hình giữ tới hết)
-{
-  const _mocBufMH = mocBuf;
-  mocBuf = function (B) {
-    const r = _mocBufMH.apply(this, arguments);
-    if (B && B.t) for (const T of B.t) {
-      if (!T || T.id !== 'mauhut' || !T.rite) continue;
-      if (T.rite.het <= G.t) { T.rite = null; continue; }
-      const X = B.t[T.rite.o]; if (!X || X.uid !== T.rite.uid || biKhoa(X)) continue;
-      X.buf.dmg += T.rite.dmg; X.buf.toc += T.rite.toc;
-    }
-    return r;
-  };
-}
-// hình: dấu máu nhỏ nhấp nháy trên mục tiêu đang bị đánh dấu + giọt máu nhỏ trên ụ đang có Blood Rite (PNG mauhut_phu, không vòng)
+// hình: dấu máu nhỏ trên mục tiêu đang bị đánh dấu (PNG mauhut_phu, không vòng) · loé biến hình khi lên dạng · "+N" Máu nổi nhẹ ở góc số
 HU.mhVe = {
   cap(G, o) { return G.ban.indexOf(o.B) < 0; },
   ve(ctx, o) {
-    const B = o.B, im = REN.img('mauhut_phu'); if (!B || !im) return;
-    const t = typeof REN.t === 'number' ? REN.t : G.t, C = Math.min(B.cw, B.ch);
+    const B = o.B; if (!B) return;
+    const im = REN.img('mauhut_phu'), t = typeof REN.t === 'number' ? REN.t : G.t, C = Math.min(B.cw, B.ch), S = SKILLS.mauhut;
     for (const T of B.t) {
       if (!T || T.id !== 'mauhut') continue;
-      if (T.mh) { const X = B.t[T.mh.o]; if (X && X.uid === T.mh.uid) { const c = B.o[X.o], k = 1 - Math.max(0, T.mh.con) / (T.mh.tong || 1); PX.ve(ctx, im, c.x, c.y - C * 0.32 + Math.sin(t * 5) * 2, C * (0.22 + 0.12 * k), C * (0.22 + 0.12 * k), 0, 0.7 + 0.3 * Math.sin(t * 8)); } }
-      if (T.rite && T.rite.het > G.t) { const X = B.t[T.rite.o]; if (X && X.uid === T.rite.uid) { const c = B.o[X.o]; PX.ve(ctx, im, c.x - C * 0.3, c.y + C * 0.18 + Math.sin(t * 3) * 2, C * 0.2, C * 0.2, 0, 0.95); } }
+      const d = T.mhD != null && B.net ? T.mhD : S.dang(T);
+      if (T._dVe != null && d > T._dVe) { const c = B.o[T.o]; if (c) G.hu.push({ k: 'mhBien', t: 0, song: 0.9, x: c.x, y: c.y, w: C * 1.6, d }); if (typeof FX !== 'undefined' && FX.lac && !B.net) FX.lac(3); SND.nang && SND.nang(2); }
+      T._dVe = d;
+      if (im && T.mh) { const X = B.t[T.mh.o]; if (X && X.uid === T.mh.uid) { const c = B.o[X.o], k = 1 - Math.max(0, T.mh.con) / (T.mh.tong || 1); PX.ve(ctx, im, c.x + C * 0.3, c.y + C * 0.28 + Math.sin(t * 5) * 1.5, C * (0.18 + 0.1 * k), C * (0.18 + 0.1 * k), 0, 0.75 + 0.25 * Math.sin(t * 8)); } }
     }
   },
 };
-
+HU.mhBien = { // biến hình: dải xung máu ChatGPT (fx_mauhut_sk) to + nova máu (fx_mauhut_nova) — chỉ hình
+  ve(ctx, o, R) {
+    const u = o.t / o.song; ctx.globalCompositeOperation = 'lighter';
+    fx7Ve(ctx, R, 'mauhut', u * 15, o.x, o.y, o.w * (0.8 + 0.5 * u), 1 - u * u);
+    const nv = R.img('fx_mauhut_nova'); if (nv) PX.ve(ctx, nv, o.x, o.y, o.w * (0.4 + 0.9 * u), o.w * (0.4 + 0.9 * u), 0, (1 - u) * 0.9);
+    ctx.globalCompositeOperation = 'source-over';
+  },
+};
+HU.mhNova = { // nova máu tại điểm trúng (bán kính = vùng sát thương thật)
+  ve(ctx, o, R) {
+    const u = o.t / o.song, nv = R.img('fx_mauhut_nova'), w = o.r * 2 * (0.55 + 0.5 * u);
+    ctx.globalCompositeOperation = 'lighter';
+    if (nv) PX.ve(ctx, nv, o.x, o.y, w, w, 0, 1 - u * u); else fx7Ve(ctx, R, 'mauhut', u * 15, o.x, o.y, w, 1 - u);
+    ctx.globalCompositeOperation = 'source-over';
+  },
+};
+HU.mhPop = { // "+N" Máu nổi lên từ góc số rồi tan (chữ số — QUY-TAC-HINH 3)
+  cap(G, o) { return !o.T || o.B.t[o.T.o] !== o.T; },
+  ve(ctx, o) {
+    const c = o.B.o[o.T.o]; if (!c) return; const C = Math.min(o.B.cw, o.B.ch), u = o.t / o.song;
+    ctx.save(); ctx.globalAlpha = 1 - u * u; ctx.font = '900 ' + Math.round(C * 0.2) + 'px ' + FONT.display; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.lineWidth = 3; ctx.strokeStyle = '#000'; ctx.lineJoin = 'round';
+    const x = c.x + C * 0.48, y = c.y - C * 0.5 - u * C * 0.25;
+    ctx.strokeText(o.so, x, y); ctx.fillStyle = '#ff6a7a'; ctx.fillText(o.so, x, y); ctx.restore();
+  },
+};
+// SỐ MÁU ở góc TRÊN-PHẢI ô (màu theo mốc) — lớp huy hiệu (vẽ sau đạn/hiệu ứng) → mọi bàn / mọi chế độ / Test range
+const MH_SO = {
+  ve(ctx, h) {
+    const T = h.T, B = h.B; if (!T || T.id !== 'mauhut' || !B || !(h.hs > 0.5) || T.st.da) return;
+    const S = SKILLS.mauhut, n = T.mau || 0, d = T.mhD != null && B.net ? T.mhD : S.dang(T), sz = h.C * 0.24;
+    const xr = h.sx + h.d / 2 + 0.5, y = h.sy - h.d * 0.05, s = String(n);
+    ctx.save(); ctx.globalAlpha = h.al; ctx.font = '900 ' + sz.toFixed(1) + 'px ' + FONT.display; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    const w = ctx.measureText(s).width, ic = REN.img(window.MAUHUT_DANG && MAUHUT_DANG['f' + (S.hinh(T) + 1)] && S.hinh(T) ? 'mauhut_f' + (S.hinh(T) + 1) + '_phu' : 'mauhut_phu') || REN.img('mauhut_phu');
+    if (ic) PX.ve(ctx, ic, xr - w - sz * 0.42, y, sz * 0.8, sz * 0.8, 0, h.al);
+    ctx.lineWidth = Math.max(2, sz * 0.22); ctx.strokeStyle = '#000'; ctx.lineJoin = 'round'; ctx.strokeText(s, xr, y);
+    ctx.fillStyle = S.MAU[d]; ctx.fillText(s, xr, y);
+    ctx.restore();
+  },
+};
 // =====================================================================================================
 // P3 · HEX SABOTEUR (nguyenrua) — Vàng ĐB: GHÉP 2 Hex Saboteur → nguyền 1 ụ ngẫu nhiên (RNG gieo hạt) sau 1.5 s:
 //      PVP: thử −1★ ụ đối thủ (1★: tê liệt 2.5 s, không xoá); khiên / Mirror Gate kiểm tra LÚC TRÚNG (Mirror Gate phản lại).
@@ -463,13 +506,15 @@ aiBan = function (B, dt) {
     const p = SKILLS.bienmau.timMach(B); if (p) { B.aiT = 0.6; SKILLS.bienmau.mach(B, p); return; }
     const M = B.t.filter(X => X && SKILLS.bienmau.n(X) > 0 && !biKhoa(X)); if (M.length >= 2) { B.aiT = 0.6; ghep(B, M[0], M[1]); return; }
   }
-  // bàn đầy, không còn cặp ghép thường → Mạch Máu (chưa đánh dấu) đánh dấu ụ sao thấp nhất được phép (nuốt dọn chỗ)
-  if (B.aiT - dt <= 0 && oTrong(B).length === 0) {
-    const ts = B.t.filter(Boolean), M = ts.filter(X => X.id === 'mauhut' && !biKhoa(X) && !X.mh);
-    const coCap = ts.some(a => ts.some(b => a !== b && a.id !== 'mauhut' && b.id !== 'mauhut' && hopLeGhep(a, b)));
-    if (M.length && !coCap) {
-      const a = M[0], dau = new Set(ts.filter(X => X.id === 'mauhut' && X.mh).map(X => X.mh.o)), ds = ts.filter(b => b !== a && !dau.has(b.o) && hopLeGhep(a, b)).sort((x, y) => x.sao - y.sao || x.o - y.o);
-      if (ds[0]) { B.aiT = 0.6; ghep(B, a, ds[0]); return; }
+  // Mạch Máu (chưa đánh dấu): bàn còn ≤ 2 ô trống → đánh dấu ụ "lẻ" sao thấp (không có cặp ghép thường), bàn đầy không còn cặp → ụ sao thấp nhất
+  if (B.aiT - dt <= 0 && oTrong(B).length <= 2) {
+    const ts = B.t.filter(Boolean), M = ts.filter(X => X.id === 'mauhut' && !biKhoa(X) && !X.mh).sort((x, y) => (y.mau || 0) - (x.mau || 0) || x.o - y.o);
+    if (M.length) {
+      const a = M[0], dau = new Set(ts.filter(X => X.id === 'mauhut' && X.mh).map(X => X.mh.o));
+      const le = (b) => !ts.some(c => c !== b && c.id !== 'mauhut' && hopLeGhep(b, c));
+      const ds = ts.filter(b => b !== a && !dau.has(b.o) && hopLeGhep(a, b)).sort((x, y) => (le(y) - le(x)) || x.sao - y.sao || x.o - y.o);
+      const coCap = ts.some(p => ts.some(q => p !== q && p.id !== 'mauhut' && q.id !== 'mauhut' && hopLeGhep(p, q)));
+      const b = ds[0]; if (b && ((le(b) && b.sao <= 4) || (!oTrong(B).length && !coCap))) { B.aiT = 0.6; ghep(B, a, b); return; }
     }
   }
   return _aiBan7(B, dt);
@@ -479,7 +524,7 @@ batDau = function () {
   const r = _batDau7.apply(this, arguments);
   try {
     for (const B of G.ban) for (const id of B.deck) if (SK7.FX.has(id)) REN.img('fx_' + id + '_sk');
-    for (const B of G.ban) { if (B.deck.includes('mauhut')) { G.hu.push({ k: 'mhVe', t: 0, B }); REN.img('mauhut_phu'); } if (B.deck.includes('bienmau')) for (const a of [...SKILLS.bienmau.ANH, ...SKILLS.bienmau.HOP, 'fx_bienmau_hop']) REN.img(a); }
+    for (const B of G.ban) { if (B.deck.includes('mauhut')) { G.hu.push({ k: 'mhVe', t: 0, B }); for (const a of ['mauhut_phu', 'fx_mauhut_nova', ...SKILLS.mauhut.DAN, ...[2, 3, 4].flatMap(f => ['mauhut_f' + f + '_nong', 'mauhut_f' + f + '_de', 'mauhut_f' + f + '_vien', 'mauhut_f' + f + '_phu'])]) REN.img(a); } if (B.deck.includes('bienmau')) for (const a of [...SKILLS.bienmau.ANH, ...SKILLS.bienmau.HOP, 'fx_bienmau_hop']) REN.img(a); }
   } catch (e) { }
   return r;
 };
@@ -487,7 +532,7 @@ const _deckNN7 = deckNgauNhien;
 deckNgauNhien = function (tru) { return _deckNN7([...(tru || []), ...SK7.CHUA_ANH]); };
 if (typeof DC !== 'undefined' && DC.ngauNhien) { /* dkcham.js nạp sau — xem cuối file */ }
 
-themHo('star', 3, 'mauhut', 'marks a turret, eats it for Blood, Blood Rite buffs a neighbour');
+themHo('star', 3, 'mauhut', 'eats your turrets for Blood: more Blood = more damage, new forms at 20/50/100');
 themHo('guard', 3, 'nguyenrua', 'merge hexes a rival turret −1★ (co-op: ally +1★)');
 themHo('guard', 3, 'thanhdia', 'cleanses + shields neighbours on arrival, damage aura');
 themHo('crit', 3, 'bienmau', '4 colours; swipe 4 different colours to FUSE a Spectrum Prism');
@@ -517,6 +562,8 @@ function pmVeVet(ctx) {
   ctx.restore(); ctx.globalAlpha = 1;
 }
 window.addEventListener('DOMContentLoaded', () => {
+  if (typeof ND !== 'undefined' && ND.veHuyHieu && !ND._mh) { const v0 = ND.veHuyHieu; ND._mh = 1; ND.veHuyHieu = function (ctx, h) { const r = v0.apply(this, arguments); try { MH_SO.ve(ctx, h); } catch (e) { } return r; }; }
+  if (typeof MV !== 'undefined' && MV.TAG) MV.TAG.mauhut = ['Blood (top-right; colour = form: 20 / 50 / 100 / 200)', 'Máu (góc trên-phải; màu = dạng: 20 / 50 / 100 / 200)'];
   if (typeof MV !== 'undefined' && MV.TAG) MV.TAG.bienmau = ['stacks · ×fusions on a Spectrum Prism', 'cộng dồn · ×số hợp thể của mặt nạ 4 màu'];
   if (typeof GF !== 'undefined' && GF.veCam && !GF._pmVet) { const g0 = GF.veCam; GF._pmVet = 1; GF.veCam = function (ctx) { try { pmVeVet(ctx); } catch (e) { } return g0.apply(this, arguments); }; }
   if (typeof DC !== 'undefined' && DC.ngauNhien && !DC._sk7) { // RANDOM lấp ổ trống (dkcham.js) dùng G.roster thẳng → lọc ụ chưa có hình

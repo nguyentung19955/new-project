@@ -621,3 +621,11 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 ## claude/demo-hop-tuong — Copycat chép cả ô ĐÁ, KHÔNG chép ô BĂNG (08/11, chốt lại)
 
 - Người dùng: "copy cả đá nhé, không cho copy băng thôi" — Copycat kéo lên ô đá cùng sao ra bản sao thường đúng loại thật (ô đá giữ nguyên); ô đóng băng không chép được (`SKILLS.saochep.ghepDB.hopLe` chặn `b.st.bang > 0`); chữ kỹ năng EN/VI, roster cập nhật; test `tools/thap-kt-copycat-da.js`, `tools/thap-kt-conghuong.js`.
+
+## claude/demo-hop-tuong — Mạch Máu (Blood Circuit) thành ụ TẤN CÔNG theo Máu (09/11)
+- `mauhut` (skills7.js): vai 'tc', bắn đạn máu vào quái đầu. Máu riêng từng ụ, KHÔNG trần; mỗi Máu +5% ST, +0.6% tốc, +0.2% chí mạng (≤100%), +3% ST chí mạng cho CHÍNH nó. Ụ mới (gọi ra / ghép thường / Copycat) = 0 Máu; nâng sao tại chỗ giữ Máu.
+- Giữ đánh dấu → nuốt (+5 Máu/★), danh sách cấm, mục tiêu băng/đá dừng đếm. Cấp thẻ: thời gian nuốt −4%/cấp (LV17 −32%, trang ụ "Devour time"). BỎ Blood Rite + vòng nạp xanh; dấu = icon tim nhỏ ở mục tiêu + tấm "Ns" đáy ô.
+- Mốc 20 / 50 / 100 / 200: 4 dạng (hình ChatGPT `raw_mod_mauhut_f2–f4` → `tools/thap-cat-mauhut.py` → `mauhut_f<n>_*`, `MAUHUT_DANG` trong artscale.js; chưa tải ảnh → hình cũ), thưởng dạng +15/+40/+60/+90% ST, đạn to dần (`fx_mauhut_b1–b3`), từ 100 Máu mỗi phát thứ 6 nổ NOVA máu ×1.2 ST bán kính 55 (200: thứ 4, `fx_mauhut_nova`); lên dạng: loé biến hình. Số Máu ở góc TRÊN-PHẢI ô, màu theo mốc.
+- Online: cờ ô 'B' Máu · 'P' dạng · 'Q' đếm phát (nova tất định) · 'M'/'C' dấu. AI: còn ≤ 2 ô trống → đánh dấu ụ lẻ (không có cặp ghép) ≤4★ sao thấp; bàn đầy hết cặp → ụ sao thấp nhất.
+- Cân bằng (sim 30 s, wave 20, 4★/7★ DPS): Blood 20: 438/1325 · 50: 1227/3683 · 100: 5691/15658 · 200: chạm trần sim (20520) — so Ember 50: 2038/7020, Ember 70: 4521/10434, Compass NSWE st3: 7352/20437, Prism hợp thể 2 đầy: 2047/5358.
+- Test: Blood trong `tools/thap-kt-vang-g2.js` (đạt; ca Ember Wild Link lỗi sẵn từ trước), `thap-kt-vang-moi2.js` đổi kỳ vọng dòng CARD LV.

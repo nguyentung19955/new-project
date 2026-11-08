@@ -876,10 +876,10 @@
   "ten": "Blood Circuit",
   "bac": "vang",
   "dcdw": "Strigoi",
-  "kyNang": "Marks a turret and eats it after 5s + 3s per ★ for Blood; tap with 10 Blood: Blood Rite +30% damage +15% fire rate to a neighbour",
+  "kyNang": "Eats your turrets for Blood (5 per ★): more Blood = more damage, fire rate and crit; new forms at 20 / 50 / 100 Blood",
   "ten_vi": "Mạch Máu",
-  "kyNang_vi": "Đánh dấu 1 ụ, nuốt sau 5 s + 3 s mỗi sao để lấy Máu; chạm khi đủ 10 Máu: Blood Rite +30% ST +15% tốc cho ụ kề",
-  "vai": "db",
+  "kyNang_vi": "Nuốt ụ của mình lấy Máu (5 mỗi sao): càng nhiều Máu càng mạnh (sát thương, tốc bắn, chí mạng); đổi dạng ở 20 / 50 / 100 Máu",
+  "vai": "tc",
   "ho": "star",
   "moi": "VANG-2"
  },

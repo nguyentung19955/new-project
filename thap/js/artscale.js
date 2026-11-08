@@ -31,3 +31,5 @@ if (!window.UCU && window.DE_RIENG) {
 }
 // Rồng Máy 4 dạng (tools/thap-cat-rong-may.py): đầu ronglua_f<n>_nong (cỡ ô × K), bệ _de (bệ chung × DE), cánh _canh [x, y, cỡ, gốcX, gốcY]
 window.RONG_DANG = {"f1": {"K": 0.9794, "DE": 0.9367, "tip": 0.971, "canh": [0.1872, -0.2575, 0.2648, 0.161, -0.1675]}, "f2": {"K": 0.9765, "DE": 0.602, "tip": 0.987, "canh": [0.1697, -0.22, 0.3795, 0.1406, -0.0504]}, "f3": {"K": 0.9763, "DE": 0.7377, "tip": 0.991, "canh": [0.1326, -0.2866, 0.4039, 0.1124, -0.1127]}, "f4": {"K": 0.9766, "DE": 0.6528, "tip": 0.991, "canh": [0.1313, -0.2516, 0.4741, 0.0692, -0.0749]}};
+// claude/demo-hop-tuong 09/11 (tools/thap-cat-mauhut.py): 3 dạng mới Mạch Máu theo mốc Máu — đầu mauhut_f<n>_nong (cỡ ô × K), bệ _de (× DE), huy hiệu _phu
+window.MAUHUT_DANG = {"f2": {"K": 0.7726, "DE": 1.012, "tip": 0.961, "PHU": 0.5852}, "f3": {"K": 0.7121, "DE": 1.0103, "tip": 0.989, "PHU": 0.4799}, "f4": {"K": 0.6534, "DE": 1.0099, "tip": 0.9, "PHU": 0.3541}};

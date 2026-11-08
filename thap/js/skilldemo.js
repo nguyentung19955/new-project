@@ -252,10 +252,10 @@ const SD_K = {
   xuonganh: { kieu: 'ghep', ke: [[2, 'lien', 's'], [3, 'set', 's'], [6, 'canon', 's'], [12, 'sungluc', 's']],
     them: [[3.2, (B) => { const o = B._hf, N = o != null && B.t[o]; if (N) SD.soDoi = { o, a: Math.round(tocU(N) / (1 + (B.hero && B.hero[0] ? B.hero[0].toc : 0)) * 100) / 100, b: sdSo(N, 'toc'), ic: 'ic_toc', t0: performance.now() }; }]],
     c: [[0.2, 'Merge two Hero Foundries'], [2.5, 'That cell becomes a Hero tile', { cham: 0.6 }], [4.0, (T) => 'Hero tile: +' + Math.round(SKILLS.xuonganh.TOC * SKILLS.xuonganh.he(T) * 100) + '% fire rate for 25s']] },
-  // Blood Circuit: kéo lên ụ CÙNG sao (+1 Vamp) rồi lên ụ KHÁC sao (tốn 2 Vamp → xung máu); không bao giờ tự lên sao
-  mauhut: { kieu: 'gDB', ke: [[8, 'lien', 's'], [3, 'mauhut', 's'], [2, 'lien', (s) => s > 1 ? s - 1 : 2]], keo: [[2.5, 7, 8]], truoc: (T) => { if (T) { T.mau = 5; T.mh = null; T.rite = null; } },
-    them: [[3.0, (B, D, T) => { if (T && T.mh) T.mh.con = Math.min(T.mh.con, 1.4); }], [6.0, (B, D, T) => { if (T && B.t[T.o] === T) { T.mau = Math.max(T.mau || 0, 10); SKILLS.mauhut.chuDong(G, B, T); } }]],
-    c: [[0.2, 'Drag onto one of your turrets'], [2.5, 'Marked: both keep working', { cham: 0.5 }], [4.4, 'Eaten: +5 Blood per ★', { cham: 0.6 }], [6.0, 'Tap with 10 Blood: Blood Rite', { cham: 0.6 }], [7.2, 'Neighbour: +30% damage, +15% fire rate']], dai: 9 },
+  // Blood Circuit (09/11 ụ Tấn công): kéo lên ụ của mình → đánh dấu → nuốt (+5 Máu mỗi ★) → đủ 20 Máu đổi dạng; 6 s: 100 Máu = dạng cuối, nova máu
+  mauhut: { kieu: 'gDB', q: Q.hang(4, 175, 40, 10), ke: [[8, 'lien', 's'], [3, 'mauhut', 's'], [2, 'lien', (s) => s > 1 ? s - 1 : 2]], keo: [[2.5, 7, 8]], truoc: (T) => { if (T) { T.mau = 15; T.mh = null; } },
+    them: [[3.0, (B, D, T) => { if (T && T.mh) T.mh.con = Math.min(T.mh.con, 1.4); }], [6.4, (B, D, T) => { if (T && B.t[T.o] === T) T.mau = Math.max(T.mau || 0, 100); }]],
+    c: [[0.2, 'Drag onto one of your turrets'], [2.5, 'Marked: it will be eaten', { cham: 0.5 }], [4.4, 'Eaten: +5 Blood per ★', { cham: 0.6 }], [5.2, '20 Blood: a stronger form'], [6.6, '100 Blood: final form, blood nova', { ev: 'hit', cham: 0.5 }], [8.0, 'More Blood = more damage, no limit']], dai: 10 },
   // Hex Saboteur: PvP thu nhỏ — lượt nguyền chọn sẵn để cú gieo thật trúng (ca may mắn), chú thích nói đúng xác suất
   nguyenrua: { kieu: 'ghep', doi: [[4, 'canon', 3], [9, 'tia', 4], [14, 'set', 3]], truoc: (T, B) => sdHexTrung(B, T, 8),
     c: [[0.2, 'Merge two Hex Saboteurs'], [2.5, 'A hex flies at a rival turret', { cham: 0.6 }], [4.0, (T) => Math.round(SKILLS.nguyenrua.p(T) * 100) + '% chance: the rival turret loses 1★', { ev: 'sao', cham: 0.6 }], [5.2, 'Co-op: an ally turret gets +1★']] },
@@ -388,7 +388,7 @@ const SD_MO = {
   hopca: () => '+25% damage per Harmony, max 4',
   luutru: (T) => '+1% damage per charge, max ' + SKILLS.luutru.tran(T),
   xuonganh: (T) => 'Hero tile: +' + Math.round(SKILLS.xuonganh.TOC * SKILLS.xuonganh.he(T) * 100) + '% fire rate, 25s',
-  mauhut: () => 'Eat a turret: 5 Blood per ★',
+  mauhut: (T) => 'Blood ' + (T.mau || 0) + ': +' + Math.round((T.mau || 0) * SKILLS.mauhut.DMG * 100) + '% damage, no limit',
   nguyenrua: (T) => 'Hex chance ' + Math.round(SKILLS.nguyenrua.p(T) * 100) + '%, 8s team cooldown',
   bienmau: (T) => (SKILLS.bienmau.n(T) ? 'Spectrum prism · fusion ' + SKILLS.bienmau.n(T) : SKILLS.bienmau.TEN[SKILLS.bienmau.mau(T)] + ' prism') + ' · stacks max ' + SKILLS.bienmau.tran(T),
 };
