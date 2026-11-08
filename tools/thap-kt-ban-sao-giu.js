@@ -2,7 +2,9 @@
 //   + chốt: "ghép ụ xịn vào ụ copy thì giữ ụ copy, còn ngược lại thì ưu tiên ụ xịn" — kéo cái nào vào cái nào là chiến thuật).
 //   Luật: ghép CÙNG LOẠI ra đúng loại đó → kết quả lấy cờ bản sao của Ụ ĐÍCH (game.js giuBanSao): thật→copy = copy · copy→thật = thật.
 //     La Bàn + La Bàn · hợp thể Prism (ô cuối đường vuốt / mặt nạ đích) · Twin Anvil + Twin Anvil · Merge King + Merge King
-//     · ghép thường X + X ra lại X (Ember Relay, Leviathan, GIU_CONG_DON…) · đổi ụ ngoài bộ (ktDeck) giữ cờ của chính ụ.
+//     · đổi ụ ngoài bộ (ktDeck) giữ cờ của chính ụ.
+//   SỬA 09/11 (người dùng: "A + A ra A khác với A + A ra ụ ngẫu nhiên, dù ngẫu nhiên ra A cũng không thể coi là cùng 1 ụ"): GHÉP THƯỜNG X + X bốc trúng
+//     lại X (Ember, Leviathan, Evolver, Rồng…) = ụ MỚI THẬT trong mọi chiều — không theo ô đích.
 //   Giữ nguyên thân (đã đúng, kiểm hồi quy): Merge King +★ lên bản sao · Teleporter đổi chỗ · Overclock · biến tại chỗ (chuyenU: Hộp / Evolver nở)
 //     · nâng sao tại chỗ · đóng băng / hoá đá / tẩy.
 //   Ghép ra ụ KHÁC loại (ngẫu nhiên khác loại, Mimic) = ụ mới, KHÔNG phải bản sao.
@@ -47,17 +49,20 @@ const DUONG = {
   'Merge King + Merge King': (ca, cb) => `dat(0, 'vughep', 3, { vang: false, ${C(ca)} }); dat(1, 'vughep', 3, { vang: false, ${C(cb)} }); ghep(B, B.t[0], B.t[1]); [1, 'vughep']`,
   'Ember Relay + Ember Relay': (ca, cb) => `B.deck = ['lualien']; dat(0, 'lualien', 3, { lc: 2, ${C(ca)} }); dat(1, 'lualien', 3, { lc: 3, ${C(cb)} }); ghep(B, B.t[0], B.t[1]); [1, 'lualien']`,
   'Leviathan + Leviathan': (ca, cb) => `B.deck = ['leviathan']; dat(0, 'leviathan', 3, { ${C(ca)} }); dat(1, 'leviathan', 3, { ${C(cb)} }); ghep(B, B.t[0], B.t[1]); [1, 'leviathan']`,
-  'Evolver + Evolver (GIU_CONG_DON)': (ca, cb) => `B.deck = ['tienhoa']; dat(0, 'tienhoa', 3, { egg: 1, ${C(ca)} }); dat(1, 'tienhoa', 3, { egg: 2, ${C(cb)} }); ghep(B, B.t[0], B.t[1]); [1, 'tienhoa']`,
+  'Evolver + Evolver': (ca, cb) => `B.deck = ['tienhoa']; dat(0, 'tienhoa', 3, { egg: 1, ${C(ca)} }); dat(1, 'tienhoa', 3, { egg: 2, ${C(cb)} }); ghep(B, B.t[0], B.t[1]); [1, 'tienhoa']`,
   'ghép thường X + X ra lại X': (ca, cb) => `B.deck = ['lien']; dat(0, 'lien', 3, { ${C(ca)} }); dat(1, 'lien', 3, { ${C(cb)} }); ghep(B, B.t[0], B.t[1]); [1, 'lien']`,
 };
-console.log('1 · ghép CÙNG LOẠI ra cùng loại: kết quả theo cờ bản sao của Ụ ĐÍCH');
+// ghép THƯỜNG (bốc ngẫu nhiên trúng lại đúng loại) → luôn ụ mới THẬT (sửa 09/11)
+const THUONG = new Set(['Ember Relay + Ember Relay', 'Leviathan + Leviathan', 'Evolver + Evolver', 'ghép thường X + X ra lại X']);
+console.log('1 · ghép ĐẶC BIỆT cùng loại: theo cờ bản sao của Ụ ĐÍCH · ghép THƯỜNG ra lại đúng loại: luôn ụ mới THẬT');
 for (const [ten, f] of Object.entries(DUONG)) {
-  const R = NAP(moiTruong(false), 4242), sai = [];
-  for (const [ca, cb, mong] of [[0, 0, false], [0, 1, true], [1, 0, false], [1, 1, true]]) {
+  const R = NAP(moiTruong(false), 4242), sai = [], th = THUONG.has(ten);
+  for (const [ca, cb, mong0] of [[0, 0, false], [0, 1, true], [1, 0, false], [1, 1, true]]) {
+    const mong = th ? false : mong0;
     const [o, id] = R(`xoa(); ${f(ca, cb)}`), T = R(`B.t[${o}] && [B.t[${o}].id, !!B.t[${o}].banSao, !B.t[0]]`);
     if (!T || T[0] !== id || T[1] !== mong || !T[2]) sai.push((ca ? 'copy' : 'real') + '+' + (cb ? 'copy' : 'real') + '=' + JSON.stringify(T));
   }
-  ok(!sai.length, ten + ': thật→thật = thật · thật→copy = COPY · copy→thật = THẬT · copy→copy = copy', sai.join(' | '));
+  ok(!sai.length, ten + (th ? ': ghép THƯỜNG → mọi chiều ra ụ mới THẬT (kể cả copy + copy)' : ': thật→thật = thật · thật→copy = COPY · copy→thật = THẬT · copy→copy = copy'), sai.join(' | '));
 }
 { // vuốt hợp thể 4 Prism: mặt nạ ra ở ô CUỐI → theo cờ bản sao ô cuối
   const R = NAP(moiTruong(false), 4243), sai = [];
@@ -115,7 +120,7 @@ console.log('4 · ONLINE: máy chủ bàn → gói thật → bàn con rối gi�
   const lech = []; let n = 0;
   for (const [ten, f] of Object.entries(DUONG)) for (const [ca, cb] of [[0, 1], [1, 0], [0, 0], [1, 1]]) {
     RH(`xoa(); var _r = (() => { ${f(ca, cb).replace(/ghep\(B, B\.t\[0\], B\.t\[1\]\); \[1, '\w+'\]$/, '')} })();`); dongBo(); RH('ghep(B, B.t[0], B.t[1]);'); phat(); n++;
-    const [h, p] = so(1); if (h !== p || h.endsWith('c') !== !!cb) lech.push(ten + ' ' + ca + cb + ': ' + h + '/' + p);
+    const [h, p] = so(1); if (h !== p || h.endsWith('c') !== (!!cb && !THUONG.has(ten))) lech.push(ten + ' ' + ca + cb + ': ' + h + '/' + p);
   }
   for (const k of [1, 3]) { RH(`xoa(); for (let q = 0; q < 4; q++) dat(q, 'bienmau', 3, { pm: q, pms: 0, banSao: q === ${k} });`); dongBo(); RH('SKILLS.bienmau.mach(B, [0, 1, 2, 3]);'); phat(); n++;
     const [h, p] = so(3); if (h !== p || h.endsWith('c') !== (k === 3)) lech.push('Prism vuốt copy@' + k + ': ' + h + '/' + p); }

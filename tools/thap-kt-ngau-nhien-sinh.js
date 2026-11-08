@@ -77,8 +77,8 @@ console.log('2 · Copycat chép: La Bàn NSWE + stack → 1 hướng mới 0 sta
   ok(R('B.t[0].id === "canon" && B.t[0].banSao && [1,2,4,8].includes(B.t[0].hb) && B.t[0].cmC === 0 && X.hb === 15 && X.cmC === 7'), 'NSWE stack 7 → bản sao 1 hướng, 0 stack; gốc giữ nguyên', R('JSON.stringify([B.t[0].hb, B.t[0].cmC])'));
   const mau = new Set(); for (let i = 0; i < 40; i++) mau.add(R('(() => { xoa(); const X = dat(1, "bienmau", 2, { pm: 2, pms: 9 }), C = dat(0, "saochep", 2); ghep(B, C, X); return B.t[0].pm + "/" + B.t[0].pms; })()'));
   ok(mau.size === 4 && [...mau].every(x => /\/0$/.test(x)), 'Prism LAM 9 cộng dồn → bản sao ra đủ 4 màu, 0 cộng dồn', [...mau].join(','));
-  R('xoa(); var A = dat(1, "lien", 2), C = dat(0, "saochep", 2, { aurora: 5, epxung: 0.3 }); ghep(B, C, A);');
-  ok(R('B.t[0].aurora === 5 && Math.abs(B.t[0].epxung - 0.3) < 1e-9'), 'buff KHÔNG ngẫu nhiên trên thân Copycat (Aurora, Overclock) vẫn giữ');
+  R('xoa(); var A = dat(1, "lien", 2), C = dat(0, "saochep", 2, { aurora: 5, epxung: 0.3, khien: 1, anv: { k: "dmg", v: 0.2 } }); ghep(B, C, A);');
+  ok(R('!(B.t[0].aurora > 0) && !B.t[0].epxung && !B.t[0].anv && !(B.t[0].khien > 0)'), 'buff trên thân Copycat (Aurora, Overclock, Anvil, khiên) MẤT — Copycat là biến hình (09/11 Q4 = B)');
   ok(!/Math\.random/.test(R('SKILLS.vughep.sinh.toString() + SKILLS.soi.sinh.toString() + SKILLS.canon.sinh.toString() + SKILLS.bienmau.sinh.toString() + SKILLS.loren.sinh.toString()')), 'mọi hook quay lúc sinh dùng rngHat (không Math.random)');
   ok(/roll anew/.test(R('SKILLS.saochep.mo(null)')), 'chữ kỹ năng Copycat: "random traits … roll anew"', R('SKILLS.saochep.mo(null)'));
 }

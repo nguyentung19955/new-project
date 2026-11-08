@@ -87,16 +87,16 @@ function luat(s, e, r) {
     if (['ghepKeo', 'ghepDich', 'ghepMimic', 'twin', 'cloner', 'mauhut', 'forge', 'joker', 'copyLen', 'xaoPVP'].includes(e)) return e === 'xaoPVP' ? L('chan', 'khiên chặn phá của đối thủ') : L('mat', e === 'copyLen' ? 'bản sao lấy khiên của thân Copycat' : e === 'forge' ? 'ụ bị ăn' : 'ụ mới');
     if (['onlCung', 'onlKhac'].includes(e)) return L('na', 'khiên chạy y hệt 2 máy');
     if (e === 'mkKeo') return L('mat', 'Merge King biến mất');
-    return L('giu', ['hopMo', 'tienHoa', 'xaoTron', 'xaoCoop'].includes(e) ? 'biến tại chỗ giữ khiên' : 'cùng thân');
+    if (['hopMo', 'tienHoa', 'xaoTron', 'xaoCoop', 'copyKeo'].includes(e)) return L('mat', 'biến hình = ụ mới: khiên trên thân mất (09/11 Q4 = B)');
+    return L('giu', 'cùng thân');
   }
-  if (s === 'vang' && (e === 'ghepKeo' || e === 'ghepDich')) return L('giu', 'Merge King + Merge King = 1 Merge King +1★, giữ vàng');
+  if (s === 'vang' && (e === 'ghepKeo' || e === 'ghepDich')) return e === 'ghepDich' ? L('giu', 'MK + MK: MK đích giữ dạng của nó (vàng)') : L('mat', 'MK vàng kéo vào MK thường: đích +2★, GIỮ dạng thường (09/11 Q3 = A)');
+  if (s === 'lo' && (e === 'ghepKeo' || e === 'ghepDich')) return L('giu', 'Anvil + Anvil cùng dạng (ghép đặc biệt): cộng dồn vào ụ đích (AUDIT F19 — ghép thường Anvil+Anvil đã bị chặn)');
   if (s === 'cmSo') { // Pháo La Bàn: ghép Pháo vào Pháo = ụ ĐÍCH +1★ giữ mũi tên của đích; số theo cùng/vuông/ngược hướng
-    if (e === 'ghepDich') return L('giu', 'ụ đích giữ mũi tên (ngược hướng: số trừ, tối thiểu 1 + sóng nổ)');
-    if (e === 'ghepKeo') return L('mat', 'ụ kéo mất; đích giữ mũi tên của đích');
+    if (e === 'ghepDich' || e === 'ghepKeo') return L('chan', 'Pháo NSWE + Pháo chưa đủ hướng: không ghép (fde39a0a — chỉ cấm cặp này)');
     if (e === 'copyLen') return L('ngau', 'bản sao = lần xuất hiện mới: 1 hướng ngẫu nhiên, 0 stack (08/11)');
   }
-  // ghép 2 ụ CÙNG LOẠI ra đúng loại đó: giữ max cộng dồn Overclock (BAO-CAO gioi-han §4 mục 6, game.js GIU_CONG_DON)
-  if (s === 'epxung' && (e === 'ghepKeo' || e === 'ghepDich') && r && r.id === (LOAI_TT[s] || 'lien')) return L('giu', 'ghép cùng loại ra cùng loại: giữ Ép Xung lớn nhất');
+  // (09/11 Q1 = A: bỏ "ghép cùng loại ra cùng loại giữ Ép Xung lớn nhất" — ụ ra là ụ MỚI)
   // ghép = ụ MỚI; Blood Circuit / Forge / Twin / Cloner cũng là ụ mới
   if (['ghepKeo', 'ghepDich', 'ghepMimic', 'twin', 'cloner', 'mauhut', 'forge', 'joker'].includes(e)) return L('mat', e === 'forge' ? 'ụ bị ăn' : e === 'joker' ? 'bị ép GHÉP → ụ mới' : 'ghép ra ụ mới');
   if (e === 'mkKeo') return L('mat', 'Merge King biến mất, ụ đích không nhận gì');
@@ -118,7 +118,7 @@ function luat(s, e, r) {
   // buff/debuff tạm + bộ đếm riêng
   if (s === 'hex' && (e === 'hopMo' || e === 'tienHoa')) return L('chan', 'tê liệt: đồng hồ dừng (như băng) tới khi hết 2.5 s');
   if (e === 'copyLen') return L('mat', 'thân mới: không chép buff/bộ đếm của ụ gốc');
-  if (e === 'copyKeo') return ['aurora', 'epxung'].includes(s) ? L('giu', 'buff trên thân Copycat đi theo bản sao (DCDW)') : L('mat', 'thân mới');
+  if (e === 'copyKeo') return L('mat', 'Copycat cũng là biến hình: buff trên thân Copycat mất (09/11 Q4 = B)');
   if (['hopMo', 'tienHoa', 'xaoTron', 'xaoCoop', 'xaoPVP', 'madCrown'].includes(e)) return L('mat', 'biến hình: buff/đếm của thân cũ hết');
   if (e === 'eve') return s === 'lua' ? L('mat', 'được tẩy') : L('giu', 'không phải hiệu ứng xấu Eve tẩy');
   if (e === 'sanctum') return ['kep', 'lua', 'giam', 'hex'].includes(s) ? L('mat', 'được tẩy') : L('giu', 'không xấu');
@@ -151,11 +151,11 @@ function trongTrang(arg) {
   const fakeE = (trum, T) => ({ trum, x: 200, y: 200, kho: 0, d: { v: 1, co: 40 }, v0: 1, bao: { muc: [T.uid], muc2: [] }, rng: rngHat(77) });
   // mỗi sự kiện: (X = ụ có/không trạng thái, ở ô 7 bàn B — xaoPVP: bàn D) → { kq: ụ kết quả hoặc null, xay: có xảy ra }
   const EV = {
-    ghepKeo(X) { const P = dat(B, 8, X.id, X.sao); const r = ghep(B, X, P); return { kq: B.t[8], xay: !!r }; },
-    ghepDich(X) { const P = dat(B, 8, X.id, X.sao); const r = ghep(B, P, X); return { kq: B.t[7], xay: !!r }; },
+    ghepKeo(X) { const P = dat(B, 8, X.id, X.sao); if (X.id === 'loren') P.dang = X.dang; const r = ghep(B, X, P); return { kq: B.t[8], xay: !!r }; },
+    ghepDich(X) { const P = dat(B, 8, X.id, X.sao); if (X.id === 'loren') P.dang = X.dang; const r = ghep(B, P, X); return { kq: B.t[7], xay: !!r }; },
     ghepMimic(X) { const P = dat(B, 8, 'mimic', X.sao); const r = ghep(B, X, P); return { kq: B.t[8], xay: !!r }; },
     twin(X) { const P = dat(B, 8, 'sinhdoi', X.sao); B._tw = null; const r = ghep(B, X, P); const tw = B._tw; return { kq: tw ? B.t[tw.o] : null, xay: !!(r && tw) }; },
-    cloner(X) { const P = dat(B, 8, 'nhanban', X.sao); const truoc = B.t.map(Boolean); const r = ghep(B, X, P); const o = B.t.findIndex((T, i) => T && !truoc[i] && i !== 8); return { kq: o >= 0 ? B.t[o] : null, xay: !!(r && o >= 0) }; },
+    cloner(X) { const P = dat(B, 8, 'nhanban', X.sao); const truoc = new Set(B.t.filter(Boolean)); const r = ghep(B, X, P); const o = B.t.findIndex((T, i) => T && !truoc.has(T) && i !== 8); /* ụ clone có thể rơi vào ô 7 vừa trống */ return { kq: o >= 0 ? B.t[o] : null, xay: !!(r && o >= 0) }; },
     mkLen(X) { const M = dat(B, 8, 'vughep', X.sao); const s0 = X.sao; ghep(B, M, X); return { kq: B.t[7], xay: !!B.t[7] && B.t[7].sao === s0 + 1 }; },
     mkKeo(X) { const P = dat(B, 8, 'canon', X.sao); ghep(B, X, P); return { kq: B.t[8], xay: !B.t[7] && B.t[8].sao > X.sao }; },
     teleLen(X) { const P = dat(B, 8, 'dichchuyen', X.sao); ghep(B, P, X); return { kq: B.t[8], xay: B.t[8] === X }; },
@@ -279,8 +279,8 @@ function trongTrang(arg) {
   }
   if (Math.abs(them.orbital - them.heso) > 0.002) LOI.push('✗ bom Orbital của bản sao ×' + them.orbital + ' ≠ ×' + them.heso);
   if (!them.evo.ok) LOI.push('✗ Evolver mất sao phải đếm lại từ đầu (5★→4★, 7★ xịt→6★), lên sao giữ thời gian: ' + JSON.stringify(them.evo));
-  if (them.cm !== JSON.stringify([[true, 3, 5, 0, true], [false, 4, 15], [3, 15, 3], ['canon', true, true, 0]])) LOI.push('✗ Pháo La Bàn: luật ghép sai ' + them.cm + ' (cần N2★+S3★ = NS 3★ · NS+N không ghép · NS+WE 4★ = NSWE 4★ · NSWE(2)+NSWE 1★ → 3★ stack 3 · Copycat chép = 1 hướng ngẫu nhiên mới, 0 stack)');
-  if (them.lc !== JSON.stringify([7, 7, 7, 7, 0])) LOI.push('✗ Lửa Thập Tự: ' + them.lc + ' (luật 08/11: ghép 2 Ember → lửa cả 2 truyền theo hàng/cột Ô GHÉP — ghép ô 6 (5) vào ô 2 (2): ụ ra = 5 + 2 = 7; ô 0, 4 (hàng ô 2), ô 12 (cột ô 2) +7; ô 10 không chung đường = 0)');
+  if (them.cm !== JSON.stringify([[true, 3, 5, 0, true], [true, 4, 15], [3, 15, 3], ['canon', true, true, 0]])) LOI.push('✗ Pháo La Bàn: luật ghép sai ' + them.cm + ' (cần N2★+S3★ = NS 3★ · NS+N ghép được (tập con, fde39a0a) · NS+WE 4★ = NSWE 4★ · NSWE(2)+NSWE 1★ → 3★ stack 3 · Copycat chép = 1 hướng ngẫu nhiên mới, 0 stack)');
+  if (them.lc !== JSON.stringify([4, 7, 7, 7, 0])) LOI.push('✗ Lửa Thập Tự: ' + them.lc + ' (luật 08/11: ghép 2 Ember → lửa cả 2 truyền theo hàng/cột Ô GHÉP — ghép ô 6 (5) vào ô 2 (2): ụ ra = Ember MỚI 4★ → 4 lửa (09/11 Q1 = A); ô 0, 4 (hàng ô 2), ô 12 (cột ô 2) +7; ô 10 không chung đường = 0)');
   if (them.dr !== JSON.stringify([7, 2])) LOI.push('✗ Drone Kéo Xa: ' + them.dr + ' (cần góc → góc 6 ô + 3★/3 = 7 drone; kề 1 ô = 2)');
   if (!them.capLoai) LOI.push('✗ Hộp Bí Ẩn (bản sao) mở ra: sức mạnh không theo cấp của LOẠI kết quả × % sao chép');
   for (const e of errs) LOI.push('✗ ' + e);

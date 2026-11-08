@@ -64,11 +64,11 @@ ok(R('xa.lc') === 1, 'Ember ngoài hàng/cột của A và C không đổi');
 }
 { // ụ ra là Ember: giữ như cũ max(★, A + C), không nhận thêm từ hàng/cột · khác sao không ghép được
   R(`B.t.fill(null); var A = dat(0, 'lualien', 2, T => T.lc = 5), C = dat(1, 'lualien', 2, T => T.lc = 3), y = dat(2, 'lualien', 1, T => T.lc = 1); B.deck = ['lualien']; var ra = ghep(B, A, C);`);
-  ok(R('ra.id') === 'lualien' && R('ra.lc') === 8 && R('B.t[1] === ra') && R('y.lc') === 9, 'Ember + Ember ra Ember: ụ ra = 5 + 3 = 8 (không tự nhận) · ô 2 = 1 + 5 + 3 = 9', R('[ra.lc, y.lc]'));
+  ok(R('ra.id') === 'lualien' && R('ra.lc') === 3 && R('B.t[1] === ra') && R('y.lc') === 9, 'Ember + Ember ra Ember: ụ ra = Ember MỚI 3★ → 3 lửa (09/11 Q1 = A, không lấy A + C) · ô 2 = 1 + 5 + 3 = 9', R('[ra.lc, y.lc]'));
   R(`B.t.fill(null); var A = dat(0, 'lualien', 2, T => T.lc = 5), C = dat(1, 'lualien', 3, T => T.lc = 3), y = dat(2, 'lualien', 1, T => T.lc = 1); var r = ghep(B, A, C);`);
   ok(!R('hopLeGhep(A, C)') && R('r') === null && R('B.t[0] === A && B.t[1] === C') && R('y.lc') === 1, '2 Ember KHÁC SAO: không ghép, không truyền lửa');
-  R(`B.t.fill(null); var A = dat(0, 'lualien', 2, T => T.lc = 5), C = dat(1, 'lualien', 2, T => T.lc = 3), y = dat(2, 'lualien', 1, T => T.lc = 1); SKILLS.lualien.ghep(G, B, A, C, null);`);
-  ok(R('y.lc') === 1, 'kỹ năng KHI GHÉP không tự truyền (chỉ móc rời bàn truyền) — không cộng 2 lần');
+  R(`B.t.fill(null); var A = dat(0, 'lualien', 2, T => T.lc = 5), C = dat(1, 'lualien', 2, T => T.lc = 3), y = dat(2, 'lualien', 1, T => T.lc = 1); `);
+  ok(R('y.lc') === 1 && R('typeof SKILLS.lualien.ghep') === 'undefined', 'Ember không còn kỹ năng KHI GHÉP (chỉ móc rời bàn truyền) — không cộng 2 lần, ụ ra không lấy A + C');
 }
 { // KHÔNG TRẦN (08/11)
   R(`B.t.fill(null); var A = dat(0, 'lualien', 2, T => T.lc = 30), C = dat(1, 'lualien', 2, T => T.lc = 20), y = dat(2, 'lualien', 1, T => T.lc = 60); B.deck = ['lien']; ghep(B, A, C);`);
@@ -141,7 +141,7 @@ R(`var d2 = dat(1, 'loren', 1, T => { T.dang = 'toc'; T.lo = 14; }); ghep(B, d2,
 ok(R('L.anv.k') === 'toc' && gan(R('L.anv.v'), 0.3472) && gan(R('L.buf.dmg'), 0, 1e-9), 'LV17 rèn tốc 14 → +34.72% tốc; chỉ 1 loại buff / ụ (thay buff ST)');
 R(`L.st.da = true; cn();`); ok(gan(R('L.buf.toc'), 0, 1e-9), 'ụ hoá đá: buff tắt'); R('L.st.da = false');
 R(`B.t.fill(null); B.capThe = {}; var p1 = dat(5, 'lien', 2, T => T.anv = { k: 'dmg', v: 0.42 }), p2 = dat(6, 'lien', 2, T => T.anv = { k: 'dmg', v: 0.27 }); B.deck = ['canon']; var con = ghep(B, p1, p2);`);
-ok(R('con && con.anv && con.anv.v') === 0.42, 'B5-4: 2 ụ có buff ghép → ụ con lấy +42% (không cộng 69%)');
+ok(R('con') && !R('con.anv'), 'B5-4 (09/11 Q2 = A): 2 ụ có buff Anvil ghép THƯỜNG → ụ con là ụ MỚI, không mang buff');
 R(`B.t.fill(null); var e1 = dat(0, 'loren', 2, T => { T.dang = 'dmg'; }), e2 = dat(1, 'loren', 2, T => { T.dang = 'toc'; });`);
 ok(!R('hopLeGhep(e1, e2)'), 'khác dạng: không ghép được');
 R(`e2.dang = 'dmg'; e1.lo = 13; e2.lo = 2; e2.sao = 5; G.hat = 1;`); ok(R('hopLeGhep(e1, e2)'), 'cùng dạng, khác sao: ghép được');

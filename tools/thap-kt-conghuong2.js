@@ -52,7 +52,7 @@ const ok = (dk, ten, chi) => { if (dk) console.log('  ✓ ' + ten); else { conso
   });
   ok(r.g === 12 && r.g0 === 0, 'Copycat chép Merge King: giữ đúng vàng / không vàng', JSON.stringify(r));
   ok(r.w === 12 && r.w0 === 0, 'Copycat chép Sói: giữ đúng thức tỉnh (DCDW: Shamash chép Werewolf thức tỉnh)', JSON.stringify(r));
-  ok(r.au && r.au.bs && r.au.au && r.au.ep === 0.65, 'Copycat có buff Aurora + Ép Xung → bản sao giữ buff', JSON.stringify(r.au));
+  ok(r.au && r.au.bs && !r.au.au && !r.au.ep, 'Copycat có buff Aurora + Ép Xung → bản sao MẤT buff (09/11 Q4 = B: biến hình = ụ mới)', JSON.stringify(r.au));
   // 2 đá không tính bingo / chuỗi; Teleporter hoàn thành bingo
   await dung([[0, 'railgun', 2], [1, 'railgun', 2], [2, 'railgun', 2, 'da'], [3, 'railgun', 2], [4, 'railgun', 2]]);
   r = await ev(() => SKILLS.railgun.bingo(G.ban[0], G.ban[0].t[0]));

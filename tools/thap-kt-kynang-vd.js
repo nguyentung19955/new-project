@@ -488,7 +488,7 @@ const K = { 1: 1, 3: 1.45, 5: 1.9, 7: 2.35 };
   const v = X(`(() => { KT_ban(); const a = KT_dat(0, 'vughep', 6), b = KT_dat(1, 'hydra', 6); a.vang = false; ghep(G.ban[0], a, b); return [b.sao, GROW.hydra.gd(b).s]; })()`);
   kt('(Special merges)', 'Merge King on a 6★ Hydra → 7★ FUSED HEAD', v.join(' · stage '), v[0] === 7 && v[1] === 3);
   const k = X(`(() => { KT_ban(); const a = KT_dat(0, 'cuuvi', 3), b = KT_dat(1, 'cuuvi', 3); a.duoi = 6; b.duoi = 2; const r = ghep(G.ban[0], a, b); return r.id === 'cuuvi' ? r.duoi : 'n/a'; })()`);
-  kt('(Special merges)', 'Nine-Tail × Nine-Tail into a Nine-Tail keeps the higher tail count', String(k), k === 6 || k === 'n/a');
+  kt('(Special merges)', 'Nine-Tail × Nine-Tail into a Nine-Tail: a NEW turret, tails 0 (09/11 Q1 = A)', String(k), k === 0 || k === 'n/a');
   const st = X(`(() => { KT_ban(); const T = KT_dat(0, 'vughep', 7); const b = KT_dat(1, 'canon', 7); return hopLeGhep(T, b); })()`);
   kt('(Special merges)', 'Merge King cannot push a 7★ past the cap', String(st), st === false);
 }

@@ -92,7 +92,7 @@ if (nhom('1 · ghepDB × biến thể nguồn/đích')) {
           if (!kq.n || !kq.n.cung) sai('Merge King phải giữ CÙNG THÂN đích');
           else { if (kq.n.sao !== Math.min(7, b0.sao + n)) sai('sao ' + kq.n.sao + ' ≠ ' + Math.min(7, b0.sao + n) + (n === 2 ? ' (vàng +2★)' : ''));
             if (kq.n.da !== b0.da || kq.n.bang !== b0.bang || kq.n.lua !== b0.lua || kq.n.banSao !== b0.banSao || kq.n.thuc !== b0.thuc) sai('mất trạng thái đích (cùng thân phải GIỮ)');
-            if (X === 'vughep' && kq.n.vang !== (b0.vang || R('!!a.vang'))) sai('MK+MK: vàng phải giữ nếu 1 trong 2 vàng'); }
+            if (X === 'vughep' && kq.n.vang !== !!b0.vang) sai('MK+MK: đích giữ DẠNG của nó (09/11 Q3 = A — MK vàng kéo vào MK thường không biến đích thành vàng)'); }
           if (kq.m) sai('ô Merge King kéo phải trống');
         }
         if (S === 'dichchuyen') { if (!kq.m || !kq.m.cungB || !kq.n || !kq.n.cung === false) { if (!(kq.m && kq.m.cungB)) sai('Teleporter: đích phải sang ô nguồn (cùng thân)'); }
@@ -230,20 +230,21 @@ if (nhom('5 · bộ đếm × ghép / mất sao')) {
   tran(['luutru', 'dichchuyen', 'lien', 'canon', 'tia']);
   R(`var K = dat(14, 'luutru', 3); K.kho = 0; var t1 = dat(0, 'dichchuyen', 2), l1 = dat(1, 'lien', 2); for (let i = 0; i < 20; i++) ghep(B, t1, B.t[t1.o === 0 ? 1 : 0]);`);
   ca('Teleporter đổi chỗ qua lại 20 lần × Fusion Archive', '0 điểm (không có ghép nào)', R('K.kho'), R('K.kho') === 0);
-  // giữ bộ đếm lớn nhất khi ghép cùng loại ra cùng loại (GIU_CONG_DON + hook riêng)
-  for (const [id, k, v] of [['hopbi', 'tuoi', 20], ['tienhoa', 'egg', 9], ['cuuvi', 'duoi', 5], ['lualien', 'lc', 4]]) { // (Twin Anvil: ghép đặc biệt riêng — tools/thap-kt-vang-g2.js)
+  // 09/11 người dùng Q1 = A: ghép THƯỜNG ra ụ TRÙNG loại = ụ MỚI → cộng dồn riêng ụ về số lúc sinh (bỏ GIU_CONG_DON "giữ số lớn hơn").
+  //   Ember Relay cũng vậy (09/11): ụ ra = Ember mới, lửa = ★ (2★ ghép → 3★ → 3 lửa < 4). (Twin Anvil: ghép đặc biệt riêng — tools/thap-kt-vang-g2.js)
+  for (const [id, k, v, mong] of [['hopbi', 'tuoi', 20, 0], ['tienhoa', 'egg', 9, 0], ['cuuvi', 'duoi', 5, 0], ['leviathan', 'vuc', 11, 0], ['ronglua', 'nhiet', 40, 0], ['lualien', 'lc', 4, 0]]) {
     tran([id]);
-    R(`B.deck = ['${id}']; var a = dat(0, '${id}', 2), b = dat(1, '${id}', 2); a.${k} = ${v}; b.${k} = 1; var r = ghep(B, a, b); var N = B.t[1];`);
-    const got = R(`N && N.id === '${id}' ? N.${k} || 0 : -1`);
-    ca(id + ' + ' + id + ' → ' + id + ': giữ ' + k, 'giữ max (' + v + ')', got, got >= v);
+    R(`B.deck = ['${id}']; var a = dat(0, '${id}', 2), b = dat(1, '${id}', 2); a.${k} = ${v}; b.${k} = 1; a.epxung = 0.5; var r = ghep(B, a, b); var N = B.t[1];`);
+    const got = R(`N && N.id === '${id}' ? N.${k} || 0 : -1`), ep = R('N ? N.epxung || 0 : -1');
+    ca(id + ' + ' + id + ' → ' + id + ': ' + k + ' + Ép Xung', mong ? 'luật riêng: A + C = ' + mong + ', Ép Xung 0' : 'ụ MỚI: ' + k + ' 0, Ép Xung 0 (Q1 = A)', got + ' / ' + ep, (mong ? got === mong : got < (k === 'lc' ? v : 1)) && ep === 0);
   }
   // Ember Relay (luật 08/11): ghép 2 Ember CÙNG SAO → lửa A + C cộng cho mọi Ember khác cùng hàng/cột với Ô GHÉP (ô đích); ụ ra = A + C;
   //   ở lại (trừ sao / hoá đá / Copycat chép nó) → không truyền
   tran(['lualien', 'mimic']);
   R(`B.deck = ['lualien']; var a = dat(0, 'lualien', 2), b = dat(1, 'lualien', 2), x = dat(3, 'lualien', 3), y = dat(6, 'lualien', 1); a.lc = 4; b.lc = 1; x.lc = 2; y.lc = 5; var N = ghep(B, a, b);`);
-  ca('Ember + Ember (ô 0 → ô 1) × Ember ô 3 (chung hàng cả 2) + ô 6 (cột ô 1)', 'ụ ra 5 · ô 3 = 2 + 4 + 1 = 7 · ô 6 (cột ô ghép) = 5 + 4 + 1 = 10', R('[N.lc, x.lc, y.lc].join()'), R('[N.lc, x.lc, y.lc].join()') === '5,7,10');
+  ca('Ember + Ember (ô 0 → ô 1) × Ember ô 3 (chung hàng cả 2) + ô 6 (cột ô 1)', 'ụ ra = Ember MỚI 3★ → 3 lửa (09/11 Q1 = A) · ô 3 = 2 + 4 + 1 = 7 · ô 6 (cột ô ghép) = 5 + 4 + 1 = 10', R('[N.lc, x.lc, y.lc].join()'), R('[N.lc, x.lc, y.lc].join()') === '3,7,10');
   R(`haSao(B, x); capNhatBan(B, 1/30); var cp = dat(10, 'saochep', 1); ghep(B, cp, y); capNhatBan(B, 1/30);`);
-  ca('Ember bị trừ sao / bị Copycat chép', 'ở lại, không truyền (ụ ra giữ 5)', R('[N.lc, x.lc].join()'), R('[N.lc, x.lc].join()') === '5,7');
+  ca('Ember bị trừ sao / bị Copycat chép', 'ở lại, không truyền (ụ ra giữ 3)', R('[N.lc, x.lc].join()'), R('[N.lc, x.lc].join()') === '3,7');
   // Evolver: thẻ "losing a star restarts the countdown" × trùm hạ sao
   tran(['tienhoa', 'lien']); R(`var T = dat(3, 'tienhoa', 4); T.egg = 15; capNhatBan(B, 1/30); haSao(B, T); capNhatBan(B, 1/30);`);
   ca('Evolver × trùm −1★', 'đếm ngược lại từ đầu (egg ≈ 0)', R('T.egg.toFixed(2)'), R('T.egg') < 0.5);
@@ -460,7 +461,7 @@ if (nhom('10 · jackpot')) {
     HU.xoay.cap(G, { E: EQ, T: LA, B, t: 9, song: 1, da: false }, 0);`); buoc(0.05);
   ca('[ABYSS riêng] Leviathan A nuốt', 'chỉ A +1 (11), B vẫn 0', R('LA.vuc') + '/' + R('LB.vuc'), R('LA.vuc') === 11 && R('LB.vuc') === 0);
   R('var LC = dat(2, "leviathan", 1);'); buoc(0.05); ca('[ABYSS riêng] Leviathan mới triệu hồi', 'bắt đầu 0', R('LC.vuc'), R('LC.vuc') === 0);
-  R('B.deck = ["leviathan"]; LB.vuc = 4; var LR = ghep(B, LA, LB);'); buoc(0.05); ca('[ABYSS riêng] ghép 2 Leviathan ra Leviathan', 'giữ số LỚN HƠN (11), không cộng', R('LR.id') + ' ' + R('LR.vuc'), R('LR.id') === 'leviathan' && R('LR.vuc') === 11);
+  R('B.deck = ["leviathan"]; LB.vuc = 4; var LR = ghep(B, LA, LB);'); buoc(0.05); ca('[ABYSS riêng] ghép 2 Leviathan ra Leviathan', 'ụ MỚI → 0 (09/11 Q1 = A)', R('LR.id') + ' ' + R('LR.vuc'), R('LR.id') === 'leviathan' && R('LR.vuc') === 0);
   R('B.deck = ["lien"]; var LD = dat(3, "leviathan", 2); LD.vuc = 30; var LE = dat(4, "leviathan", 2); LE.vuc = 5; var LF = ghep(B, LD, LE); var LG = dat(5, "leviathan", 1);'); buoc(0.05);
   ca('[ABYSS riêng] ghép Leviathan ra ụ khác rồi triệu hồi Leviathan mới', 'điểm mất, Leviathan mới 0', R('LF.id') + ' / mới ' + R('LG.vuc'), R('LF.id') !== 'leviathan' && R('LG.vuc') === 0);
   // CỘNG GỘP: ngăn quả Lucky Slot vào CHUNG nhóm với buff khác (không nhân riêng)

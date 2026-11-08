@@ -56,10 +56,12 @@ function luat() {
     const a = KB.dat(5, 'lien', 2), b = KB.dat(6, 'lien', 2); ghep(B, a, b); const hang = T.nhiet;            // ô 6 cùng hàng 1 với ô 7 → +5 × 3★
     const c = KB.dat(0, 'tia', 1), d = KB.dat(2, 'tia', 1); ghep(B, c, d); const cot = T.nhiet - hang;   // ô 2 cùng cột với ô 7 → +5 × 2★
     const e = KB.dat(10, 'set', 1), f = KB.dat(14, 'set', 1); ghep(B, e, f); const khac = T.nhiet - hang - cot; // ô 14: khác hàng, khác cột
-    // Rồng là nguyên liệu: không tự nạp; Rồng + Rồng ra Rồng: giữ nhiệt lớn hơn (GIU_CONG_DON)
-    return { hang, cot, khac, giu: GIU_CONG_DON.ronglua }; })()`);
+    // Rồng là nguyên liệu: không tự nạp; Rồng + Rồng ra Rồng = ụ MỚI, nhiệt 0 (09/11 Q1 = A) · Rồng BĂNG cùng hàng không nhận (Q5 = A)
+    B.deck = ['ronglua']; const r1 = KB.dat(11, 'ronglua', 2), r2 = KB.dat(12, 'ronglua', 2); r1.nhiet = 80; r2.nhiet = 30; const R3 = ghep(B, r1, r2);
+    const Z = KB.dat(3, 'ronglua', 2); Z.nhiet = 0; Z.st.bang = 5; const g1 = KB.dat(8, 'tia', 1), g2 = KB.dat(4, 'tia', 1); B.deck = ['tia']; ghep(B, g1, g2);
+    return { hang, cot, khac, giu: R3 && R3.id === 'ronglua' ? R3.nhiet : 'khác', bang: Z.nhiet }; })()`);
   kt('ghép thật cùng HÀNG +5×★ ụ ra, cùng CỘT +5×★, chỗ khác 0', r.hang === 15 && r.cot === 10 && r.khac === 0, JSON.stringify(r));
-  kt('Rồng + Rồng ra Rồng giữ nhiệt lớn hơn', JSON.stringify(r.giu) === '["nhiet"]', JSON.stringify(r.giu));
+  kt('Rồng + Rồng ra Rồng = ụ mới, nhiệt 0 (Q1 = A) · Rồng đang BĂNG cùng cột không nhận nhiệt ghép (Q5 = A)', (r.giu === 0 || r.giu === 'khác') && r.bang === 0, JSON.stringify(r));
 
   // Dive đốt hết nhiệt
   r = R(ctx, `(() => { const B = KB.moi(); const T = KB.dat(7, 'ronglua', 4); T.nhiet = 150; T.nap = 1;
