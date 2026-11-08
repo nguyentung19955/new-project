@@ -191,6 +191,7 @@ const ONS = {
         case 'gh': this.apGhep(B1, d); break;
         case 'nc': if (d && B1.lv[d.id] != null && !(SKILLS[d.id] && SKILLS[d.id].khongNang)) { B1.lv[d.id] = d.lv; for (const T of B1.t) if (T && T.id === d.id) T.lvSang = 1; } break;
         case 'mv': { const mv = B1.mv; mv.cd = 0; B1.mana = Math.max(B1.mana, mv.gia); CH_HOP(B1, d && d.o != null ? d.o : undefined); if (d && d.m != null) B1.mana = d.m; break; }
+        case 'hy': if (typeof hydraKich === 'function') { this._cd = 1; try { hydraKich(B1); } finally { this._cd = 0; } if (d && d.m != null) B1.mana = d.m; if (d && d.g != null) B1.hyGia = d.g; } break; // Hydra: kích hoạt chung của bạn
         case 'cb': this.apCB(B1, d); break; // Lucky Slot: kết quả quay xèng của bạn (jackpot.js CB)
         case 'pm': if (d && Array.isArray(d.o) && SKILLS.bienmau && SKILLS.bienmau.mach) SKILLS.bienmau.mach(B1, d.o, true, d.r); break; // Prism Thief: HỢP THỂ (đường vuốt + cờ ô kết quả) của bạn
         case 'cd': { const T = d && B1.t[d.o]; const sk = T && SKILLS[T.id]; if (sk && sk.chuDong) { T.nap = 1; this._cd = 1; /* AUDIT F17: không tự gỡ đá/băng trên bàn con rối — chờ ảnh chụp */ try { sk.chuDong(G, B1, T); } finally { this._cd = 0; } } break; }
@@ -318,7 +319,7 @@ const ONS = {
   // ---------------------------------------------------------------- ảnh chụp bàn (mỗi 1 s) + mã băm
   oCua(B) { return B.t.map(T => T ? T.id + ':' + T.sao : ''); },
   bam(c) { let h = 2166136261; const s = c.join('|'); for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36); },
-  anhBan(B) { const c = this.oCua(B), v = { c, h: this.bam(c), f: B.t.map(T => (T && this.oTT(T)[2]) || ''), lv: B.lv, m: Math.round(B.mana), g: B.gia, mv: [B.mv.gia, Math.round(B.mv.cd * 10) / 10] }; if (B.cb) { v.cb = B.cb.slice(); v.cbN = B.cbN | 0; } return v; }, // cb: ngăn quả Lucky Slot
+  anhBan(B) { const c = this.oCua(B), v = { c, h: this.bam(c), f: B.t.map(T => (T && this.oTT(T)[2]) || ''), lv: B.lv, m: Math.round(B.mana), g: B.gia, mv: [B.mv.gia, Math.round(B.mv.cd * 10) / 10] }; if (B.hyGia) v.hy = B.hyGia; if (B.cb) { v.cb = B.cb.slice(); v.cbN = B.cbN | 0; } return v; }, // cb: ngăn quả Lucky Slot
   chupAnh() {
     if (!this.on || !G.ban.length || this._an || this._choDB) return; // đang ẩn / chờ đồng bộ lại: không ghi đè ảnh cũ bằng bàn lạc hậu
     const v = Object.assign({ w: G.wave, tk: Math.round(G.t * 60), ht: G.ban[0].tim }, this.anhBan(G.ban[0]));
@@ -369,6 +370,7 @@ const ONS = {
     if (v.g != null) B.gia = v.g;
     if (Array.isArray(v.cb) && v.cb.length === 3) { const a = B.cb || [0, 0, 0]; B.cb = v.cb.map((x, i) => Math.max(a[i] | 0, x | 0)); B.cbN = Math.max(B.cbN | 0, v.cbN | 0); } // ngăn quả Lucky Slot theo máy bạn (chỉ tăng: ảnh chụp cũ không kéo lùi gói 'cb' mới)
     if (Array.isArray(v.mv)) { B.mv.gia = v.mv[0]; B.mv.cd = v.mv[1]; }
+    if (v.hy) B.hyGia = v.hy; // Hydra: giá kích hoạt chung kế tiếp
   },
 
   // ---------------------------------------------------------------- tim chung (host giữ)
@@ -514,6 +516,11 @@ const ONS = {
     g('nangCap', (goc) => function (B, id) {
       const r = goc.apply(this, arguments);
       if (self.on && r && B === G.ban[0]) self.gui('nc', { id, lv: B.lv[id] });
+      return r;
+    });
+    g('hydraKich', (goc) => function (B) { // Hydra: chạm thẻ khay = kích hoạt mọi Hydra 3★+ (gói 'hy': mana sau + giá kế)
+      const r = goc.apply(this, arguments);
+      if (self.on && r && B === G.ban[0] && !self._cd) self.gui('hy', { m: B.mana, g: B.hyGia });
       return r;
     });
     g('dungMV', (goc) => {

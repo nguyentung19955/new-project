@@ -185,25 +185,28 @@ HU.khoa = { // ô thời gian lục giác trong suốt quanh quái + đồng h�
 // =====================================================================================================
 // G2 · HYDRA (hydra) — Vàng TC (người dùng duyệt 08/11 — CHATGPT-SPEC §11): SỐ ĐẦU = SỐ SAO, bắn nối tiếp từng đầu.
 //      1–6★: loạt s viên, cách 0.18 s, mỗi viên (0.35 + 0.08×sao)D; nghỉ max(1.6, 2.2 − 0.1×sao) s. 7★: 7 viên cách 0.15 s, nghỉ 1.6 s.
-//      KHÔNG có POWER-UP mana trong trận (khongNang) — mana dùng cho kỹ năng CHẠM (3★+): giá 10 + 5×sao, hồi 20 s,
-//      kéo dài 4 + 0.5×sao + 0.25×(cấp thẻ − 9) s: 3–6★ khoảng cách viên ÷2; 7★ SÚNG MÁY 10 viên/s × 0.45D (LV9 7.5 s → LV17 9.5 s).
+//      KHÔNG có POWER-UP mana trong trận (khongNang) — mana dùng cho KÍCH HOẠT CHUNG (người dùng 08/11: "khi ấn vào tướng bên dưới
+//      thì kích hoạt toàn bộ, tốn mana tăng dần mỗi lần bấm"): chạm THẺ Hydra ở khay dưới → MỌI Hydra 3★+ trên bàn cùng bật kỹ năng;
+//      giá 40 mana, GẤP ĐÔI sau mỗi lần dùng trong trận (40 → 80 → 160 → 320…, như REINFORCE); không hồi chiêu riêng — chỉ chặn khi
+//      mọi Hydra đủ sao đang chạy kỹ năng. Mỗi Hydra kéo dài 4 + 0.5×sao + 0.25×(cấp thẻ − 9) s: 3–6★ khoảng cách viên ÷2;
+//      7★ SÚNG MÁY 10 viên/s × 0.45D (LV9 7.5 s → LV17 9.5 s). Chạm ụ Hydra trên sân không còn dùng kỹ năng.
 //      Bỏ tia hợp đầu 7★. Mỗi đầu tự chọn mục tiêu (quái gần lối ra, xoay vòng). D = 40 (giữ ~DPS 6★ cũ).
 // =====================================================================================================
 SKILLS.hydra = {
-  vai: 'tc', dmg: 40, toc: 1, nham: 'dau', napMau: '#2ee89a', khongNang: true,
-  cd: 20,
-  gia: (T) => 10 + 5 * T.sao,
+  vai: 'tc', dmg: 40, toc: 1, nham: 'dau', khongNang: true, theKich: true, _onl: true, // _onl: dongbo.js không bọc chuDong (gói 'hy' riêng)
+  GIA0: 40, HE_SO: 2,
+  gia: (T) => hydraGia(T ? G.ban[T.ban] : null),
   dai: (T) => 4 + 0.5 * T.sao + 0.25 * capThe9(G.ban[T.ban], 'hydra'),
   vien: (T) => (T.sao >= 7 ? 0.91 : 0.35 + 0.08 * T.sao),
   cach: (T) => (T.sao >= 7 ? 0.15 : 0.18),
   nghi: (T) => (T.sao >= 7 ? 1.6 : Math.max(1.6, 2.2 - 0.1 * T.sao)),
-  mo: (T) => (T.sao > 1 ? T.sao + ' heads: a chain of ' + T.sao + ' shots (' + Math.round(SKILLS.hydra.vien(T) * 100) + '% each, ' + SKILLS.hydra.cach(T) + 's apart), rest ' : '1 head: 1 shot (' + Math.round(SKILLS.hydra.vien(T) * 100) + '% damage), rest ') + SKILLS.hydra.nghi(T).toFixed(1) + 's · no mana power-up · ' + (T.sao >= 3 ? 'TAP (' + SKILLS.hydra.gia(T) + ' mana, cooldown 20s): ' + (T.sao >= 7 ? 'MACHINE GUN 10 shots/s × 45%' : 'shots twice as fast') + ' for ' + SKILLS.hydra.dai(T).toFixed(2) + 's' : 'tap skill unlocks at 3★'),
+  mo: (T) => (T.sao > 1 ? T.sao + ' heads: a chain of ' + T.sao + ' shots (' + Math.round(SKILLS.hydra.vien(T) * 100) + '% each, ' + SKILLS.hydra.cach(T) + 's apart), rest ' : '1 head: 1 shot (' + Math.round(SKILLS.hydra.vien(T) * 100) + '% damage), rest ') + SKILLS.hydra.nghi(T).toFixed(1) + 's · no mana power-up · ' + (T.sao >= 3 ? 'TAP THE HYDRA CARD (' + SKILLS.hydra.gia(T) + ' mana, x2 each use): ALL Hydras 3★+ ' + (T.sao >= 7 ? '— this one: MACHINE GUN 10 shots/s × 45%' : '— this one: shots twice as fast') + ' for ' + SKILLS.hydra.dai(T).toFixed(2) + 's' : 'card skill works from 3★'),
   sinh(G, T) { T.hq = 0; T.hqT = 0; T.hyA = 0; T.hdG = []; T.hdM = []; },
   capNhat(G, B, T, dt) {
     if (!T.hdG) this.sinh(G, T);
     const n = Math.min(7, T.sao), ds = quaiTheoDau(B), k = nhipU(T);
     const E = ds[0] || null; T.muc = E; xoayDau(T, E, dt);
-    if (T.sao >= 3) { T.nap = Math.min(1, T.nap + dt / this.cd); } else T.nap = 0;
+    T.nap = 0; // không nạp riêng từng ụ — kỹ năng bật chung từ thẻ khay (hydraKich)
     for (let i = 0; i < n; i++) { const Q = ds.length ? ds[i % ds.length] : null, c = tamU(T); const g = Q ? Math.atan2(Q.y - c.y, Q.x - c.x) : T.goc; T.hdG[i] = T.hdG[i] == null ? g : T.hdG[i] + gocLech(T.hdG[i], g) * Math.min(1, dt * 14); T.hdM[i] = Math.max(0, (T.hdM[i] || 0) - dt); }
     if (T.hyA > 0) { // KỸ NĂNG CHẠM đang chạy
       T.hyA = Math.max(0, T.hyA - dt);
@@ -233,39 +236,78 @@ SKILLS.hydra = {
     banDan({ img: typeof REN !== 'undefined' && REN.img && REN.img('fx_hydra_vien') ? 'fx_hydra_vien' : 'g_kim_ngoc', x, y, muc: Q, px: Q.x, py: Q.y, sp: 700, co: 22, B, T,
       trung(G, d, M) { if (M) trung(M, dmg, { B, mau: '#7dffc4' }); FX.tiaLua(d.x, d.y, 2, '#7dffc4', 110, 6); } });
   },
-  // đầu thứ i: gốc cổ quanh tâm ụ (xoè theo hướng chung), miệng ở cuối cổ theo hướng riêng của đầu
-  goc0(T, i, n) { return T.goc + (n > 1 ? (i / (n - 1) - 0.5) * Math.min(2.6, 0.55 * (n - 1)) : 0); },
-  dauCo(n) { return n <= 1 ? 0.78 : n <= 3 ? 0.7 : n <= 5 ? 0.62 : 0.56; }, // chiều dài đầu / cỡ ô
+  // VƯƠNG MIỆN ĐẦU RẮN (người dùng 08/11: "hydra làm không đâu vào với đâu" — đầu/cổ dài chọc sang ô bên):
+  // n đầu (= sao) mọc từ THÂN TRÒN giữa ô, xoè đối xứng quanh hướng LÊN theo góc cố định; mỗi đầu chỉ ngoảnh tối đa ±LECH
+  // về mục tiêu riêng (T.hdG — luật giữ nguyên), cổ ngắn (ảnh cắt còn sọ + 1 đốt cổ), mọi điểm nằm trong ô (đầu mút ≤ 0.47 cỡ ô).
+  XOE: [[0], [0], [-28, 28], [-48, 0, 48], [-66, -22, 22, 66], [-92, -46, 0, 46, 92], [-115, -69, -23, 23, 69, 115], [-135, -90, -45, 0, 45, 90, 135]],
+  // [dài ảnh (cắt) / ô, bán kính gốc cổ / ô, bán kính thân / ô]
+  CO: [null, [0.42, 0.02, 0.12], [0.39, 0.05, 0.12], [0.36, 0.08, 0.13], [0.34, 0.1, 0.13], [0.32, 0.12, 0.14], [0.3, 0.14, 0.14], [0.29, 0.15, 0.15]],
+  CAT: 0.6, MIENG: 0.4, // phần ảnh giữ (từ đỉnh) · miệng há ở 0.4 chiều cao ảnh gốc tính từ đỉnh
+  LECH: (n) => (n <= 4 ? 0.52 : 0.4), // ±30° (1–4 đầu) · ±23° (5–7 đầu)
+  goc0(T, i, n) { return -Math.PI / 2 + (this.XOE[n] || [0])[i] * Math.PI / 180; }, // hướng nghỉ của đầu i (cố định theo ô)
+  gocDauI(T, i, n) { const g0 = this.goc0(T, i, n), g = (T.hdG && T.hdG[i] != null) ? T.hdG[i] : g0, L = this.LECH(n); return g0 + Math.max(-L, Math.min(L, gocLech(g0, g))); },
   mieng(T, i, n) {
-    const c = tamU(T), S = (G.ban[T.ban] && G.ban[T.ban].cw) || 60, g0 = this.goc0(T, i, n), g = (T.hdG && T.hdG[i] != null) ? T.hdG[i] : T.goc;
-    const bx = c.x + Math.cos(g0) * S * 0.1, by = c.y + Math.sin(g0) * S * 0.1, L = S * this.dauCo(n) * 0.8;
+    const c = tamU(T), B = G.ban[T.ban], S = B ? Math.min(B.cw, B.ch) * 0.98 : 60, k = this.CO[n] || this.CO[1], g0 = this.goc0(T, i, n), g = this.gocDauI(T, i, n);
+    const bx = c.x + Math.cos(g0) * S * k[1], by = c.y + Math.sin(g0) * S * k[1], L = S * k[0] * (1 - this.MIENG / this.CAT);
     return [bx + Math.cos(g) * L, by + Math.sin(g) * L];
   },
-  aiNen: (G, B, T) => dsMucTieu(B).filter(E => !E.chet).length >= 5 || G.quai.some(E => E.trum && !E.chet && banDuocQuai(B, E)),
-  chuDong(G, B, T) {
-    if (T.nap < 1 || T.sao < 3 || T.hyA > 0) return false;
-    if (!traMana(B, T, this.gia(T))) return false;
-    T.nap = 0; T.napDay = 0; T.sang = 1; T.hyA = this.dai(T); T.hq = 0; T.hqT = 0;
-    nhanU(T, T.sao >= 7 ? 'MACHINE GUN!' : 'FRENZY!', '#2ee89a', true); SND.lien();
-    return true;
+  _than: {},
+  veThan(ctx, r, da) { // thân tròn giữa ô: vảy ngọc lục bảo + viền vàng + ngọc giữa (dựng sẵn theo cỡ)
+    const key = Math.round(r * 4) + (da ? 'x' : ''); let c = this._than[key];
+    if (!c) {
+      const d = Math.ceil(r * 2 * 2) + 4; c = document.createElement('canvas'); c.width = c.height = d; const q = c.getContext('2d'), m = d / 2, R = r * 2;
+      const gr = q.createRadialGradient(m - R * 0.3, m - R * 0.35, R * 0.1, m, m, R);
+      gr.addColorStop(0, da ? '#8a8a8a' : '#3fbf7f'); gr.addColorStop(0.6, da ? '#4a4a4a' : '#11603c'); gr.addColorStop(1, da ? '#262626' : '#06301d');
+      q.fillStyle = gr; q.beginPath(); q.arc(m, m, R * 0.94, 0, Math.PI * 2); q.fill();
+      q.strokeStyle = da ? '#9a9a9a' : '#f2c84b'; q.lineWidth = Math.max(1.5, R * 0.13); q.beginPath(); q.arc(m, m, R * 0.88, 0, Math.PI * 2); q.stroke();
+      q.strokeStyle = da ? '#555' : '#8a5a12'; q.lineWidth = Math.max(1, R * 0.04); q.beginPath(); q.arc(m, m, R * 0.97, 0, Math.PI * 2); q.stroke();
+      const gg = q.createRadialGradient(m - R * 0.1, m - R * 0.12, 0, m, m, R * 0.36);
+      gg.addColorStop(0, '#ffffff'); gg.addColorStop(0.35, da ? '#cfcfcf' : '#9dffd0'); gg.addColorStop(1, da ? '#5a5a5a' : '#13a865');
+      q.fillStyle = gg; q.beginPath(); q.arc(m, m, R * 0.34, 0, Math.PI * 2); q.fill();
+      this._than[key] = c;
+    }
+    ctx.drawImage(c, -c.width / 4, -c.height / 4, c.width / 2, c.height / 2);
   },
-  // ĐẦU RẮN (tờ ChatGPT raw_gc_hydra_dau: đầu nhìn THẲNG LÊN) — vẽ s đầu, mỗi đầu xoay theo mục tiêu riêng (góc ảnh = góc + 90°); vừa bắn → đầu HÁ
   veDau(ctx, T, S, al, R, da) {
     const a = R.img('hydra_dau'); if (!a) return false;
-    const n = Math.min(7, T.sao), h = S * this.dauCo(n), w = h * a.width / a.height;
+    const n = Math.max(1, Math.min(7, T.sao | 0)), k = this.CO[n], H = S * k[0], h = H / this.CAT, w = h * a.width / a.height, t = R.t || 0;
     const thu = []; for (let i = 0; i < n; i++) thu.push(i); thu.sort((p, q) => Math.abs(q - (n - 1) / 2) - Math.abs(p - (n - 1) / 2)); // đầu giữa vẽ sau cùng (nằm trên)
     for (const i of thu) {
       const ha = T.hdM && T.hdM[i] > 0, ten = ha && R.img('hydra_dau_ha') ? 'hydra_dau_ha' : 'hydra_dau', im = R.co(ten, h, da ? 'xam' : ''); if (!im) return false;
-      const g0 = this.goc0(T, i, n), g = (T.hdG && T.hdG[i] != null) ? T.hdG[i] : T.goc, hh = ten === 'hydra_dau_ha' ? h * 0.98 : h;
-      ctx.save(); ctx.globalAlpha = al; ctx.translate(Math.cos(g0) * S * 0.1, Math.sin(g0) * S * 0.1); ctx.rotate(g + Math.PI / 2);
-      ctx.drawImage(im, -w / 2, -hh * 0.8, w, hh);
-      if (T.hyA > 0 && !da) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * 0.35; ctx.drawImage(im, -w / 2, -hh * 0.8, w, hh); }
+      const g0 = this.goc0(T, i, n), g = this.gocDauI(T, i, n) + (da ? 0 : Math.sin(t * 1.6 + i * 1.3 + (T.o || 0)) * 0.035); // thở nhẹ ±2°
+      const lui = ha ? S * 0.05 * Math.min(1, T.hdM[i] / 0.12) : 0; // giật lùi khi vừa phun
+      ctx.save(); ctx.globalAlpha = al; ctx.translate(Math.cos(g0) * S * k[1], Math.sin(g0) * S * k[1]); ctx.rotate(g + Math.PI / 2); ctx.translate(0, lui);
+      ctx.drawImage(im, 0, 0, im.width, im.height * this.CAT, -w / 2, -H, w, H);
+      if (T.hyA > 0 && !da) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * 0.2; ctx.drawImage(im, 0, 0, im.width, im.height * this.CAT, -w / 2, -H, w, H); }
       ctx.restore();
     }
+    ctx.save(); ctx.globalAlpha = al; this.veThan(ctx, S * k[2], da); ctx.restore(); // thân che gốc cổ → cổ ngắn, gọn
     return true;
+  },
+  veDauGhost: true, // bản cầm kéo cũng vẽ vương miện đầu (giống trên sân)
+  aiNen: (G, B, T) => dsMucTieu(B).filter(E => !E.chet).length >= 5 || G.quai.some(E => E.trum && !E.chet && banDuocQuai(B, E)),
+  chuDong(G, B, T) { return hydraKich(B); }, // bí danh (demo / trang ụ): = chạm thẻ khay
+  batMot(T) { // bật kỹ năng cho 1 ụ (gọi từ hydraKich)
+    T.nap = 0; T.napDay = 0; T.sang = 1; T.hyA = this.dai(T); T.hq = 0; T.hqT = 0;
+    nhanU(T, T.sao >= 7 ? 'MACHINE GUN!' : 'FRENZY!', '#2ee89a', true);
   },
   sangDau: (T) => (T.hyA > 0 ? 0.25 : 0),
 };
+// KÍCH HOẠT CHUNG HYDRA (thẻ khay): giá theo bàn (B.hyGia, mặc định 40, ×2 mỗi lần) · ụ đủ điều kiện = Hydra 3★+, không đá/băng/khoá, chưa chạy kỹ năng
+function hydraGia(B) { return (B && B.hyGia) || SKILLS.hydra.GIA0; }
+function hydraDs(B) { return B ? B.t.filter(T => T && T.id === 'hydra' && T.sao >= 3 && !T.st.da && !T.st.bang && !(typeof biKhoa === 'function' && biKhoa(T)) && !(T.hyA > 0)) : []; }
+function hydraCo(B) { return !!B && !G.ketThuc && !G.dung && hydraDs(B).length > 0 && (B.mana >= hydraGia(B) || (typeof ONS !== 'undefined' && ONS._cd)); }
+function hydraKich(B) {
+  if (!B || G.ketThuc) return false;
+  const ds = hydraDs(B), gia = hydraGia(B); if (!ds.length) return false;
+  if (!traMana(B, null, gia)) return false;
+  B.hyGia = gia * SKILLS.hydra.HE_SO; B.hyLan = (B.hyLan || 0) + 1;
+  for (const T of ds) SKILLS.hydra.batMot(T);
+  if (!B.ai) SND.lien();
+  return true;
+}
+// AI: dùng khi đông quái / có trùm, giá còn rẻ hoặc dư mana
+function hydraAINen(B) { const g = hydraGia(B); return hydraCo(B) && B.mana >= g && (g <= 160 || B.mana >= g * 2) && SKILLS.hydra.aiNen(G, B, null); }
 HU.hydraTia = { // tia hợp đầu: lõi trắng + quầng xanh ngọc + vạch rung, mờ dần
   ve(ctx, o, R) {
     const u = o.t / o.song, w = 30 * (1 - u * 0.6);
@@ -607,7 +649,7 @@ function themHo(ho, bac, id, moi) { const F = HO[ho]; if (!F.bac[bac].includes(i
 themHo('energy', 2, 'nayda', 'bounces that grow STRONGER each hop');
 themHo('summon', 2, 'combo', 'every same-type merge powers up the whole line forever');
 themHo('trap', 2, 'khoathoigian', 'time-locks the lead enemy, stored damage bursts');
-themHo('rapid', 3, 'hydra', 'one head per star, chained shots + mana MACHINE GUN (tap)');
+themHo('rapid', 3, 'hydra', 'one head per star, chained shots + tap the card: all Hydras fire faster');
 themHo('blast', 3, 'cuuvi', 'kills grow tails → 9 homing foxfires');
 themHo('joker', 3, 'pandora', 'merge opens 1 of 6 vault effects');
 themHo('joker', 3, 'tudo', 'merges with ANY turret; star = average of the two'); // Wild Link (08/11) — VÀNG (08/11 người dùng: xứng đáng tướng vàng hơn)
@@ -616,13 +658,13 @@ themHo('trap', 4, 'ngaithoigian', 'everything slows with age + REWIND (active)')
 
 Object.assign(MOC_RIENG, { // (luoicheo: mốc 5★/7★ ở phattrien.js — 'Diagonal +15% fire rate' cũ sai số, code = +5%×HOTRO.K)
   cuuvi: { 5: ['TWIN TAILS', '20% of kills grow 2 tails'], 7: ['NINE-TAIL', 'White-blue foxfires blast 40 px; restarts at 3 tails'] },
-  hydra: { 3: ['FRENZY', 'Unlocks the active skill (tap, costs mana): shots twice as fast'], 7: ['MACHINE GUN', 'Tap skill: 10 shots/s for 7.5s (longer with card level)'] },
+  hydra: { 3: ['FRENZY', 'Joins the card skill (tap the Hydra card, costs mana): shots twice as fast'], 7: ['MACHINE GUN', 'Card skill: 10 shots/s for 7.5s (longer with card level)'] },
   pandora: { /* 3★ = mốc chung QUICK HANDS +20% (bản riêng cũ cùng chữ chặn mốc chung → không áp) */ 5: ['LUCKY SPIN', 'Merging 5★s rolls twice, keeps the better'], 7: ['OPEN VAULT', 'Merging 6★s (into 7★) fires 2 effects'] },
   ngaithoigian: { 3: ['REWIND', 'Unlocks the active skill (tap when full; auto-fires if left full)'], 7: ['TIME RESTORED', 'Rewind restores 1 heart once (Co-op: 1 shared heart; also saves 1 leak)'] },
 });
 
 Object.assign(GROW, {
-  hydra: { mau: '#2ee89a', ten: ['HATCHLING', 'MANY HEADS', 'SEVEN HEADS'], dk: '1–3★ / 4–6★ (more heads) / 7★: seven heads, tap skill = machine gun',
+  hydra: { mau: '#2ee89a', ten: ['HATCHLING', 'MANY HEADS', 'SEVEN HEADS'], dk: '1–3★ / 4–6★ (more heads) / 7★: seven heads, card skill = machine gun',
     gd: (T) => ({ s: T.sao >= 7 ? 3 : T.sao >= 4 ? 2 : 1, p: (T.sao - 1) / 6, v: [0.5] }) },
   cuuvi: { mau: '#ffa020', lap: true, ten: ['KIT', 'BLAZING TAILS', 'NINE-TAIL'], dk: 'Tails 0–4 / 5–8 (fire glow) · 7★: white-blue foxfires, blast 40 px',
     gd: (T) => ({ s: T.sao >= 7 ? 3 : (T.duoi || 0) >= 5 ? 2 : 1, p: T.sao >= 7 ? 1 : (T.duoi || 0) / 9, v: [5 / 9] }) },

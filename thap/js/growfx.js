@@ -631,7 +631,7 @@ HU.gSong = { ve(ctx, o, R) { const u = o.t / o.song, im = gCo('fx_dongbo_dacbiet
   for (let i = 0; i < 3; i++) { const r = 6 + i * 6 + u * 14; PX.ve(ctx, im, o.x + Math.cos(o.goc) * r, o.y + Math.sin(o.goc) * r, r * 1.6, r * 1.6 * im.height / im.width, o.goc, (1 - u) * (0.9 - i * 0.22)); } ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; } };
 
 // ---- HYDRA: kim ngọc bay (1–3★) → quạt kim tức thì so le 40 ms + dấu ấn lục giác (4–6★) → 7★ HỢP ĐẦU: tia xuyên khổng lồ + phù văn dọc tia ----
-ATK.hydra = ['1–3 heads: a chain of emerald shots, 0.18s apart', '4–6 heads: a longer chain, each head picks its own target', '7 heads: 7-shot chain; tap skill = MACHINE GUN 10 shots/s'];
+ATK.hydra = ['1–3 heads: a chain of emerald shots, 0.18s apart', '4–6 heads: a longer chain, each head picks its own target', '7 heads: 7-shot chain; tap the card = MACHINE GUN 10 shots/s'];
 P.hydra = () => {
   const sk = SKILLS.hydra;
   sk.ban = function (G, B, T, E) {

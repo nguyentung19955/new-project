@@ -129,7 +129,7 @@ const TEXT = {
     nayda:        { name: 'Ricochet',       skill: 'A disc hits 1 enemy, then bounces to more. Bounces = its ★. Each bounce hits harder' },
     combo:        { name: 'Combo Core',     skill: 'Merge 2 Combo Cores: EVERY Combo Core gets +damage for good (Stacks, no cap). Breakthrough at 5 / 10 / 20 / 40 combos. Co-op: half of your ally\'s combos count too' },
     khoathoigian: { name: 'Chrono Lock',    skill: 'Locks the first enemy in time. Damage it takes is saved. When the lock ends, the saved damage bursts out' },
-    hydra:        { name: 'Hydra',          skill: '1 head per ★. The heads fire a chain of shots, then rest. No mana power-up: from 3★, tap (10 + 5 mana per ★, cooldown 20s) to fire twice as fast; at 7★ it becomes a MACHINE GUN (10 shots/s for 7.5s, longer with card level)' },
+    hydra:        { name: 'Hydra',          skill: '1 head per ★. The heads fire a chain of shots, then rest. No mana power-up. Tap the Hydra card: ALL Hydras of 3★ or more fire twice as fast; 7★ ones become a MACHINE GUN (10 shots/s for 7.5s, longer with card level). Cost: 40 mana, doubles each use' },
     cuuvi:        { name: 'Nine-Tail',      skill: 'Each kill grows a fire tail. At 9 tails it fires 9 foxfires that chase enemies. Breakthrough at 1 / 3 / 6 / 10 foxfire attacks' },
     pandora:      { name: 'Pandora Vault',  skill: 'Merge 2 Pandora Vaults: the vault opens 1 of 6 big effects (mana, Freeze all, +1★, bombs, shields, frenzy). Co-op: some effects also help your ally' },
     luoicheo:     { name: 'Resonance Grid', skill: 'Support: buffs the 4 DIAGONAL cells (corners), not the 4 sides. All 4 diagonals filled = RESONANCE (bigger bonus)' },

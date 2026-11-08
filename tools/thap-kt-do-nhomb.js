@@ -65,17 +65,39 @@ async function luat(b) {
     const n = []; const m = SKILLS.hydra.mot; SKILLS.hydra.mot = function (G, B, X, Q, i, he) { n.push([+G.t.toFixed(3), i, +he.toFixed(3)]); return m.apply(this, arguments); };
     KB.buoc(0.3); n.length = 0; KB.buoc(2.4 * 4 + 0.01);
     const thuong = n.slice(); B.mana = 100; const nc = nangCap(B, 'hydra');
-    T.nap = 1; const ok = SKILLS.hydra.chuDong(G, B, T), mana = B.mana, dai = T.hyA;
-    const T7 = KB.dat(12, 'hydra', 7); T7.nap = 1; B.mana = 44; const thieu = SKILLS.hydra.chuDong(G, B, T7); B.mana = 45; const du = SKILLS.hydra.chuDong(G, B, T7);
+    // 08/11: KÍCH HOẠT CHUNG từ thẻ khay — mọi Hydra 3★+ cùng bật; 40 mana, ×2 mỗi lần
+    const T7 = KB.dat(12, 'hydra', 7), T1 = KB.dat(2, 'hydra', 1);
+    B.mana = 39; const thieu = hydraKich(B), giaDau = hydraGia(B);
+    B.mana = 40; const ok = hydraKich(B), mana = B.mana, dai = T.hyA, dai7 = T7.hyA, mot1 = T1.hyA || 0, gia2 = hydraGia(B);
+    B.mana = 500; const lai = hydraKich(B); // mọi Hydra đủ sao đang chạy → không bật, không trừ
+    const manaLai = B.mana, coNap = T.nap; B.mana = 0;
     n.length = 0; KB.buoc(8); const may = n.filter(x => x[2] === 0.45).length;
+    B.mana = 80; const lan2 = hydraKich(B), mana2 = B.mana, gia3 = hydraGia(B);
+    const goi = SKILLS.hydra.chuDong(G, B, T); // bí danh: chạm ụ/demo = cùng hành động (đang chạy → false)
     SKILLS.hydra.mot = m;
-    return { thuong: thuong.slice(0, 7), soThuong: thuong.length, nc, ok, mana, dai, thieu, du, mana7: B.mana, may, nap: T7.nap, cd: SKILLS.hydra.cd };
+    // hình: mọi đầu nằm trong ô, ngoảnh tối đa ±LECH quanh hướng nghỉ, miệng (điểm phát đạn) trong ô
+    const Y = SKILLS.hydra, a = REN.img('hydra_dau'), hinh = [];
+    for (let s = 1; s <= 7; s++) {
+      const X = KB.dat(7, 'hydra', s), c = tamU(X), S = Math.min(B.cw, B.ch) * 0.98, k = Y.CO[s], H = S * k[0], w = H / Y.CAT * (a ? a.width / a.height : 0.455);
+      let xa = 0, lech = 0, mi = 0;
+      for (let i = 0; i < s; i++) for (const gx of [0, Math.PI / 2, Math.PI, -Math.PI / 2, 2.5]) {
+        X.hdG[i] = gx; const g = Y.gocDauI(X, i, s), g0 = Y.goc0(X, i, s); lech = Math.max(lech, Math.abs(gocLech(g0, g)));
+        const [mx, my] = Y.mieng(X, i, s); mi = Math.max(mi, Math.hypot(mx - c.x, my - c.y) / S);
+      }
+      xa = k[1] + Math.hypot(k[0], w / S / 2);
+      hinh.push({ s, xa: +xa.toFixed(3), lech: +lech.toFixed(3), mi: +mi.toFixed(3), L: Y.LECH(s) });
+    }
+    return { thuong: thuong.slice(0, 7), soThuong: thuong.length, nc, thieu, giaDau, ok, mana, dai, dai7, mot1, gia2, lai, manaLai, coNap, may, lan2, mana2, gia3, goi, hinh };
   });
   const c0 = r.thuong.slice(r.thuong.findIndex(x => x[1] === 0)); const cach = c0.length > 3 ? [+(c0[1][0] - c0[0][0]).toFixed(2), +(c0[2][0] - c0[1][0]).toFixed(2), +(c0[3][0] - c0[2][0]).toFixed(2)] : [];
   kt('3★: 3 đầu bắn nối tiếp cách 0.18 s, mỗi viên 0.59D, nghỉ 1.9 s', c0.length >= 6 && Math.abs(cach[0] - 0.18) < 0.02 && Math.abs(cach[1] - 0.18) < 0.02 && Math.abs(cach[2] - 1.9) < 0.05 && c0.every(x => x[2] === 0.59) && c0[0][1] === 0 && c0[1][1] === 1 && c0[2][1] === 2, JSON.stringify(r));
   kt('không có POWER-UP mana trong trận (nangCap = false)', r.nc === false, JSON.stringify(r));
-  kt('chạm 3★: tốn 10 + 5×3 = 25 mana, kéo dài 4 + 1.5 = 5.5 s (LV9)', r.ok && r.mana === 75 && Math.abs(r.dai - 5.5) < 1e-6, JSON.stringify(r));
-  kt('7★: 44 mana không đủ, 45 mana dùng được → SÚNG MÁY 10 viên/s × 0.45D trong 7.5 s (≈75 viên), hồi 20 s', r.thieu === false && r.du === true && r.mana7 === 0 && r.may >= 72 && r.may <= 77 && r.cd === 20, JSON.stringify(r));
+  kt('thẻ khay: 39 mana không đủ (giá đầu 40)', r.thieu === false && r.giaDau === 40, JSON.stringify(r));
+  kt('thẻ khay 40 mana: MỌI Hydra 3★+ cùng bật (3★ 5.5 s, 7★ 7.5 s), 1★ không; giá kế 80', r.ok && r.mana === 0 && Math.abs(r.dai - 5.5) < 1e-6 && Math.abs(r.dai7 - 7.5) < 1e-6 && r.mot1 === 0 && r.gia2 === 80, JSON.stringify(r));
+  kt('đang chạy hết → chạm lại không bật, không trừ mana; ụ không tự nạp', r.lai === false && r.manaLai === 500 && r.coNap === 0, JSON.stringify(r));
+  kt('7★: SÚNG MÁY 10 viên/s × 0.45D trong 7.5 s (≈75 viên)', r.may >= 72 && r.may <= 77, JSON.stringify(r));
+  kt('lần 2: 80 mana → bật, giá kế 160 (gấp đôi mỗi lần)', r.lan2 === true && r.mana2 === 0 && r.gia3 === 160 && r.goi === false, JSON.stringify(r));
+  kt('hình vương miện: đầu mút ≤ 0.48 ô, ngoảnh ≤ ±LECH, miệng trong ô', r.hinh.every(h => h.xa <= 0.48 && h.lech <= h.L + 1e-6 && h.mi <= 0.45), JSON.stringify(r.hinh));
 
   console.log('— Nemesis');
   r = await R(() => {
@@ -245,9 +267,13 @@ async function chup(b) {
         for (let i = 0; i < 16; i++) { const E = sinhQuai(i % 5 === 0 ? 'khong_lo' : 'bo', p0, P.len * (0.05 + i * 0.055), 80); E.vao = 1; }
       }, dat);
       await p.waitForTimeout(4200);
+      const the = await p.evaluate(() => { const d = document.querySelector('#bo-the .the[data-id="hydra"]'), g = d && d.querySelector('.gia b'); return { gia: g && g.textContent, tat: d && d.classList.contains('hy-tat'), hien: g && getComputedStyle(g.parentElement).visibility !== 'hidden' }; });
+      kt(`thẻ khay Hydra ${w}×${h}: hiện giá kích hoạt 40, sáng khi đủ mana + có Hydra 3★+`, the.gia === '40' && the.tat === false && the.hien, JSON.stringify(the));
       const f1 = path.join(OUT, `tran_${w}x${h}_${ten}.png`); await p.screenshot({ path: f1 }); ds.push(f1);
       await p.evaluate(() => { const B = G.ban[0]; for (const o of [4, 7, 10]) { const T = B.t[o]; if (T && SKILLS[T.id].chuDong) { T.nap = 1; SKILLS[T.id].chuDong(G, B, T); } } });
       await p.waitForTimeout(900);
+      const the2 = await p.evaluate(() => { const d = document.querySelector('#bo-the .the[data-id="hydra"]'); return { gia: d.querySelector('.gia b').textContent, tat: d.classList.contains('hy-tat') }; });
+      kt(`thẻ khay Hydra ${w}×${h}: sau khi bật → giá 80, xám (mọi Hydra đang chạy)`, the2.gia === '80' && the2.tat === true, JSON.stringify(the2));
       const f2 = path.join(OUT, `tran_${w}x${h}_${ten}_chudong.png`); await p.screenshot({ path: f2 }); ds.push(f2);
     }
     // bảng thông tin ụ (chạm Hydra 7★)
