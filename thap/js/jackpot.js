@@ -1,284 +1,188 @@
-// TURRET MERGE — KHUNG JACKPOT + 10 CƠ CHẾ ĐẶC BIỆT (tư vấn ChatGPT 07/11, người dùng duyệt 18:44 — docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md)
-//  · Jackpot = cú bùng NGẮN (8–15 s) do làm được việc khó; thưởng chỉ cho ụ NHẬN (không cả bàn). Mỗi jackpot hồi chiêu riêng, phải kiếm lại điều kiện.
-//  · CỘNG GỘP (người dùng duyệt): +% sát thương / +% tốc / +% ST chí mạng của jackpot vào CHUNG nhóm với hỗ trợ, cộng dồn, đột phá (T.buf.dmg / toc / cdmg),
-//    rồi mới nhân nhóm với nhau (ST × tốc × chí mạng). Không trần (tỉ lệ chí mạng ≤ 100%). RAGE ×2 / suy yếu quái / bản sao −% vẫn là hệ số nhân riêng.
-//  · TẤT ĐỊNH: điều kiện chỉ đọc trạng thái bàn + G.t (không Math.random); túi Pandora xáo bằng rngHat(hạt trận + bàn + chu kỳ).
-//    Hiệu ứng hình (nổ ≤ 0,45 s, lấp lánh trạng thái) KHÔNG đổi luật. Online: bàn con rối tự suy ra từ các lần ghép phát lại (chỉ hình);
-//    Pandora gửi kèm dấu ROYAL VAULT trong gói ghép (B._pd chứa 6).
-//  · Ụ ĐÁ / BĂNG: không góp vào điều kiện, không nhận thưởng. Bản sao Copycat: là ụ mới — KHÔNG chép tiến độ / thưởng jackpot đang chạy.
-//  · PVP / CO-OP: chỉ bàn của chính mình (không đụng bàn đối thủ / đồng đội).
-//  · Nhật ký đo nhịp: G.jpLog [{ t, w, ban, id }] (tools/thap-sim-jackpot.js).
-// Nạp SAU skills7.js (index.html). Ụ thiếu (công cụ không nạp skills7) → bỏ qua cơ chế đó.
+// TURRET MERGE — Ụ CỜ BẠC "LUCKY SLOT" (cobac, ĐỎ, Tấn công) + JACKPOT (08/11 người dùng: jackpot CHỈ là cơ chế của 1 ụ cờ bạc này;
+//   mọi jackpot cũ — Orbital Cascade, Chain Reactor, Six Seals/Royal Vault, Loaded Dice, Perfect Frequency, True North… — đã BỎ, bù bằng chỉ số, xem GAMEPLAY.md).
+//  · Mỗi lần ụ XUẤT HIỆN (triệu hồi / ghép / bản sao / trùm biến) và mỗi lần SAO TĂNG (T.sao > sao đã quay) → QUAY máy xèng 1,0 s (trong lúc quay ụ không bắn),
+//    ra 1 trong 3 quả: CAM (+sát thương) · DƯA HẤU (+tốc bắn) · NHO (+sát thương chí mạng) → cộng SỐ SAO hiện tại vào ngăn quả đó.
+//    10% JACKPOT: cả 3 quả nổ tung → MỖI ngăn +2 × số sao.
+//  · Ngăn quả là CỦA BÀN (B.cb = [cam, dưa, nho]) — dùng chung, áp cho MỌI Lucky Slot trên bàn đã quay xong (đã thành súng), không mất khi ụ bị ghép đi.
+//    Mỗi điểm (cấp thẻ đầu, × "Fruit power" KY_NANG_CAP.cobac 100% → 130% LV17): cam +3% ST · dưa +2% tốc (giảm dần, trần +150%) · nho +10% ST chí mạng.
+//    Không trần (trừ tốc). Tỉ lệ chí mạng KHÔNG đổi theo ngăn (ụ có sẵn +15% chí mạng gốc). Cộng vào CHUNG nhóm buff (T.buf) như mọi nguồn.
+//  · TẤT ĐỊNH: kết quả quay = rngHat(hạt trận × … + bàn + lần quay thứ n) — không Math.random. Online: máy chủ bàn quay rồi gửi gói 'cb' { o, f, s, st, n };
+//    bàn con rối (B.net) KHÔNG tự quay, chỉ phát lại hình + nhận ngăn quả; ảnh chụp bàn mang cb + cờ 'z<sao đã quay>' để sửa lệch.
+//  · Hình (CHỈ trình bày, không đổi luật): khung cuộn máy xèng trên ô 1,0 s → dừng ở quả trúng; jackpot: 3 quả bay toé + dải nổ fx_cb_no.
+//    Khay trận: dưới chân dung thẻ Lucky Slot hiện 3 icon quả + số ngăn (nháy khi tăng, màu theo mốc 10/25/50/100 như đột phá).
+// Nạp SAU skills7.js (index.html).
 'use strict';
 
-const JP = {
-  // id → ụ, độ khó, thưởng (+% ST, +% tốc, +ST chí mạng), giây, hồi chiêu (giây, tính từ lúc HẾT tác dụng trừ khi hoiTuLuc)
-  DS: {
-    masterwork: { u: 'loren', ten: 'MASTERWORK', kho: 5, dmg: 2.4, toc: 0.85, cdmg: 1.5, song: 15, hoi: 90, hoiTuLuc: true, mau: '#ffd23f' },
-    cascade: { u: 'orbital', ten: 'ORBITAL CASCADE', kho: 3, dmg: 1.0, toc: 0.45, cdmg: 0.6, song: 10, hoi: 45, hoiTuLuc: true, mau: '#9fe6ff' },
-    heist: { u: 'bienmau', ten: 'CHROMATIC HEIST', kho: 4, dmg: 1.6, toc: 0.65, cdmg: 1.2, song: 10, hoi: 30, mau: '#ffffff' },
-    reactor: { u: 'lienket', ten: 'CHAIN REACTOR', kho: 4, dmg: 1.5, toc: 0.6, cdmg: 0.9, song: 12, hoi: 40, mau: '#d9a8ff' },
-    eclipse: { u: 'mauhut', ten: 'BLOOD ECLIPSE', kho: 4, dmg: 1.8, toc: 0.7, cdmg: 1.1, song: 11, hoi: 30, mau: '#ff4a6a' },
-    chorus: { u: 'hopca', ten: 'GRAND CHORUS', kho: 4, dmg: 1.6, toc: 0.6, cdmg: 1.1, song: 12, hoi: 50, mau: '#d9b8ff' },
-    royal: { u: 'pandora', ten: 'ROYAL VAULT', kho: 5, dmg: 2.2, toc: 0.85, cdmg: 1.5, song: 15, hoi: 0, mau: '#ffe46b' },
-    loaded: { u: 'xucxac', ten: 'LOADED DICE', kho: 3, dmg: 0, toc: 0.7, cdmg: 0.8, song: 8, hoi: 30, mau: '#ffd23f' },
-    frequency: { u: 'radar', ten: 'PERFECT FREQUENCY', kho: 4, dmg: 0.85, toc: 0.5, cdmg: 0.9, song: 10, hoi: 50, mau: '#ffb43a' },
+const CB = {
+  QUA: ['cam', 'dua', 'nho'], TEN: ['ORANGE', 'WATERMELON', 'GRAPE'], MAU: ['#ffa21a', '#ff4a6a', '#b45cff'],
+  IC: ['cb_cam', 'cb_dua', 'cb_nho'],
+  JP: 0.10,          // tỉ lệ JACKPOT mỗi lần quay
+  JP_K: 2,           // jackpot: mỗi ngăn +JP_K × sao
+  QUAY: 1.0,         // giây quay (ụ không bắn)
+  DMG: 0.03, TOC: 0.02, TOC_TRAN: 1.5, CDMG: 0.10, // mỗi điểm ngăn (cấp thẻ đầu)
+  MOC: [10, 25, 50, 100], // mốc màu số ngăn trên khay (DOTPHA.MAU: vàng / lam / tím / trắng)
+  he(B) { const v = typeof knThe === 'function' ? knThe(B, 'cobac') : null; return (v || 100) / 100; },
+  st(B) { if (!B.cb) B.cb = [0, 0, 0]; return B.cb; },
+  // +% theo ngăn của bàn B: k = 'dmg' | 'toc' | 'cdmg'
+  gt(B, k) {
+    if (!B || !B.cb) return 0; const h = this.he(B), a = B.cb;
+    if (k === 'dmg') return a[0] * this.DMG * h;
+    if (k === 'cdmg') return a[2] * this.CDMG * h;
+    return this.TOC_TRAN * (1 - Math.exp(-a[1] * this.TOC * h / this.TOC_TRAN)); // tốc: giảm dần, tiến tới +150%
   },
-  // số phụ (LV9)
-  MW_CUA: 75, MW_TRUM: 8,                 // Masterwork: cửa sổ 75 s cho đủ 1★+2★+3★ · đòn đầu vào mỗi trùm +800% D9
-  OC_BOM: 4, OC_K: 1.8, OC_SAO: 2,        // Orbital Cascade: 4 bom × 180% mỗi Vệ Tinh · chỉ ghép Vệ Tinh ≥ 2★ mới tính (mô phỏng: 1★ kích từ wave 6)
-  HE_CUA: 60,                             // Chromatic Heist: ĐỎ → VÀNG → XANH trong 60 s
-  CR_NHOM: 4, CR_CUA: 5, CR_DON: 3, CR_U: 3, CR_MOI: 6, CR_K: 2.5, // Chain Reactor
-  BE_VAMP: 6, BE_CUA: 25, BE_XUNG: 3, BE_K: 3, // Blood Eclipse
-  // (08/11 người dùng: BỎ hẳn jackpot TRUE NORTH của Pháo La Bàn — bù bằng sát thương tên lửa +15%, skills.js MOI)
-  GC_U: 6, GC_TC: 3, GC_GIU: 10, GC_SAO: 3, // Grand Chorus (đội hình ≥ 3★ — mô phỏng: 1★ kích ngay wave 2)
-  RV_MANA: 100,                           // Royal Vault
-  LD_LAN: 12, LD_PHAT: 6, LD_SAO: 3,      // Loaded Dice (Pháo ≥ 3★ — mô phỏng: 1★ kích từ wave 1, 20 lần/trận)
-  PF_GIU: 8, PF_LOAI: 3, PF_SAO: 3,       // Perfect Frequency (Radar ≥ 3★ — mô phỏng: kích từ wave 6)
-  dang: (T, id) => !!(T && T.jp && T.jp[id] && T.jp[id].het > G.t),
-  gt(T, k) { let v = 0; if (T && T.jp) for (const id in T.jp) { const e = T.jp[id]; if (e.het > G.t) v += e[k] || 0; } return v; }, // tổng +% của jackpot đang chạy trên ụ (nhóm k)
-  khoa: (T) => !T || biKhoa(T),
-  laTC: (T) => !!(T && SKILLS[T.id] && SKILLS[T.id].vai === 'tc'),
-  // ụ Tấn công sao cao nhất (hoà: ô nhỏ nhất), không đá/băng
-  tcCao(B) { let m = null; for (const X of B.t) if (X && this.laTC(X) && !this.khoa(X) && (!m || X.sao > m.sao)) m = X; return m; },
-  goc(T) { const B = G.ban[T.ban]; return hsU(T.id, T.sao, B) * (B && B.cuong > 0 ? 2 : 1); }, // D9: sát thương 1 phát không buff (RAGE ×2 vẫn áp — luật "mọi nguồn")
-  cd(B, k) { return ((B.jpCd || {})[k]) || 0; },
-  // KÍCH HOẠT: ds = ụ nhận · nguon = ụ châm ngòi (chỗ hiện tên) · k = khoá hồi chiêu (mặc định id)
-  kich(B, id, ds, nguon, k) {
-    const d = this.DS[id]; k = k || id;
-    if (G.t < this.cd(B, k)) return false;
-    ds = (ds || []).filter(X => X && B.t[X.o] === X && !this.khoa(X));
-    if (!ds.length) return false;
-    for (const X of ds) { X.jp = X.jp || {}; X.jp[id] = { het: G.t + d.song, t0: G.t, dmg: d.dmg, toc: d.toc, cdmg: d.cdmg, k }; }
-    (B.jpCd || (B.jpCd = {}))[k] = G.t + (d.hoiTuLuc ? d.hoi : d.song + d.hoi);
-    (G.jpLog || (G.jpLog = [])).push({ t: Math.round(G.t * 10) / 10, w: G.wave, ban: B.i, id });
-    this.hien(B, id, ds, nguon || ds[0]);
-    return true;
+  laSung: (T) => !!(T && T.id === 'cobac' && T.cbS > 0 && !(T.cbQuay > 0)),
+  hat() { return ((typeof ONS !== 'undefined' && ONS.on ? ONS.seed : G.hat) || 1) | 0; },
+  // kết quả lần quay thứ n của bàn B: 0 cam · 1 dưa · 2 nho · 3 JACKPOT
+  rut(B, n) { if (G._cbEp && G._cbEp.length) return G._cbEp.shift(); /* clip hướng dẫn (skilldemo) ép kết quả */ const r = rngHat(this.hat() * 7331 + (B.i | 0) * 977 + n * 104729); return r() < this.JP ? 3 : Math.min(2, Math.floor(r() * 3)); },
+  // QUAY (luật). ep = { f, s } khi phát lại gói mạng (bàn con rối)
+  quay(B, T, ep) {
+    const n = ep && ep.n ? ep.n : (B.cbN | 0) + 1; B.cbN = n;
+    const s = ep ? ep.s : T.sao, f = ep ? ep.f : this.rut(B, n), a = this.st(B);
+    T.cbS = Math.max(T.cbS | 0, s); T.cbQuay = this.QUAY; T.cbKq = f;
+    if (f === 3) for (let i = 0; i < 3; i++) a[i] += s * this.JP_K; else a[f] += s;
+    (G.cbLog || (G.cbLog = [])).push({ t: Math.round(G.t * 100) / 100, ban: B.i, o: T.o, s, f });
+    if (!ep && typeof ONS !== 'undefined' && ONS.on && B === G.ban[0]) ONS.gui('cb', { o: T.o, f, s, st: a.slice(), n });
+    try { this.hien(B, T, f, s); } catch (e) { }
+    return f;
   },
-  // kết thúc sớm (Loaded Dice hết 6 phát, Radar bị khoá) — hồi chiêu tính từ lúc này
-  tat(B, X, id) { const e = X && X.jp && X.jp[id]; if (!e || e.het <= G.t) return; const d = this.DS[id]; e.het = G.t; if (!d.hoiTuLuc) B.jpCd[e.k] = Math.min(B.jpCd[e.k] || 0, G.t + d.hoi); },
-  // ---- trình bày (không đổi luật): nổ fx_awaken tô màu ≤ 0,42 s trên ụ nhận (tối đa 4) + tên 1 lần ở ụ châm ngòi ----
-  hien(B, id, ds, nguon) {
-    const d = this.DS[id];
-    try {
-      for (const X of ds.slice(0, 4)) { const c = B.o[X.o]; if (c) G.hu.push({ k: 'jpNo', t: 0, song: 0.42, x: c.x, y: c.y, w: Math.min(B.cw, B.ch) * 1.5, mau: d.mau }); }
-      const c = nguon && B.o[nguon.o]; if (c && typeof FX !== 'undefined') FX.chu1(c.x, c.y - Math.min(B.cw, B.ch) * 0.55, d.ten, d.mau, 13, 'to');
-      if (!G.hu.some(o => o.k === 'jpVe')) G.hu.push({ k: 'jpVe', t: 0, song: 1e12 });
-      if ((!B.ai || G.che === 'pvp') && typeof SND !== 'undefined' && SND.thucTinh) { if (SND.jackpot) SND.jackpot(); else SND.thucTinh(); } // v4: âm jackpot riêng
-    } catch (e) { }
+  // ---- trình bày ----
+  hien(B, T, f, s) {
+    if (typeof G === 'undefined' || !G.hu) return;
+    G.hu.push({ k: 'cbQuay', t: 0, song: this.QUAY + (f === 3 ? 1.1 : 0.55), B, T, o: T.o, f, s, da: false, v: (B.cb || [0, 0, 0]).slice() });
+    if ((!B.ai || G.che === 'pvp') && typeof SND !== 'undefined' && SND.quay) SND.quay();
   },
-  // tiến độ cho tấm đếm (DEMKN): [n, N] hoặc null
-  tienDo(T, B) {
-    const P = (x, n, N) => (x ? [n, N] : null);
-    switch (T.id) {
-      case 'loren': { const g = T.mw || {}, n = [1, 2, 3].filter(s => g[s] != null && G.t - g[s] <= this.MW_CUA).length; return P(n > 0, n, 3); }
-      case 'orbital': { const o = B.jpOrb; return P(o && o.n > 0 && G.t - o.t0 < SKILLS.orbital.dai(B), o && o.n, 2); }
-      case 'bienmau': { const o = B.jpPr; return P(o && o.n > 0 && G.t - o.t0 <= this.HE_CUA, o && o.n, 3); }
-      case 'mauhut': { const o = B.jpBE; return P(o && G.t - o.t <= this.BE_CUA, 1, 2); }
-      case 'hopca': { const o = B.jpGC && B.jpGC[T.sao]; return P(o && !o.xong, o && Math.min(this.GC_GIU, Math.floor(G.t - o.t0)), this.GC_GIU); }
-      case 'pandora': { const n = 6 - ((B.pdTui && B.pdTui.length) || 6); return P(B.pdTui && n > 0, n, 6); }
-      case 'xucxac': { const s = new Set((T.ldH || []).filter(b => b >= 0)); return P(s.size > 0 && G.t >= this.cd(B, 'loaded' + T.uid), s.size, 3); }
-      case 'radar': return P(T.pfT > 0, Math.floor(T.pfT || 0), this.PF_GIU);
-    }
-    return null;
+  // số ngăn đang HIỆN (chờ cuộn dừng mới nhảy số) — chỉ hình
+  hienSo(B) { if (!B) return [0, 0, 0]; if (!B.cbV || !(G.hu && G.hu.some(o => o.k === 'cbQuay' && o.B === B && !o.da))) B.cbV = (B.cb || [0, 0, 0]).slice(); return B.cbV; },
+  mauSo(n) { let b = 0; for (const x of this.MOC) if (n >= x) b++; return b ? (typeof DOTPHA !== 'undefined' ? DOTPHA.MAU[b] : ['', '#ffd84a', '#7fc8ff', '#d9a0ff', '#ffffff'][b]) : '#ffffff'; },
+};
+
+// =====================================================================================================
+// SKILLS.cobac — Lucky Slot (Đỏ TC): bắn xu vàng 1 phát/s vào quái đầu · không kỹ năng chủ động (kỹ năng = máy xèng + ngăn quả)
+// =====================================================================================================
+SKILLS.cobac = {
+  vai: 'tc', dmg: 50, toc: 1.0, crit: 0.15, nham: 'dau', // 50 × Đỏ 2.7: 4★ wave 12 (sim 60 s, cấp thẻ +3) ≈ 40k/phút không ngăn · ≈ 60k với 10/10/10 · ≈ 95k 20/20/20 (wave 12 ước 10–15/ngăn, thường có 2–3 Lucky Slot) — Hive Queen ≈ 88k, Leviathan ≈ 170k cùng kịch bản
+  mo: (T) => {
+    const B = T && G.ban && G.ban[T.ban], a = (B && B.cb) || [0, 0, 0], p = (k) => Math.round(CB.gt(B || { cb: a }, k) * 100), h = CB.he(B);
+    return 'Spins a fruit slot when it appears or gains a star. Orange = damage, Watermelon = speed, Grape = crit damage. Adds its stars to that fruit\'s stack for ALL Lucky Slots. 10% JACKPOT: all three get 2× stars!'
+      + ' · Per stack: +' + +(CB.DMG * h * 100).toFixed(1) + '% damage, +' + +(CB.TOC * h * 100).toFixed(1) + '% speed (less as it grows, max +150%), +' + +(CB.CDMG * h * 100).toFixed(1) + '% crit damage'
+      + ' · Now: Orange ' + a[0] + ' (+' + p('dmg') + '%), Watermelon ' + a[1] + ' (+' + p('toc') + '%), Grape ' + a[2] + ' (+' + p('cdmg') + '%)';
+  },
+  sinh(G, T) { T.cbS = 0; T.cbQuay = 0; },
+  capNhat(G, B, T, dt) {
+    const conRoi = B.net && typeof ONS !== 'undefined' && ONS.on; // bàn con rối: chờ gói 'cb' của máy bạn
+    if (!conRoi && T.sao > (T.cbS | 0)) CB.quay(B, T);
+    if (T.cbQuay > 0) { T.cbQuay = Math.max(0, T.cbQuay - dt); xoayDau(T, quaiDau(B), dt); return true; } // đang quay: không bắn
+    return false;
+  },
+  ban(G, B, T, E) {
+    const anh = typeof REN !== 'undefined' && REN.img && REN.img('cb_xu') ? 'cb_xu' : 'tia_lua';
+    banNhe(B, T, E, { img: anh, co: 17, mau: '#ffd23f', sp: 520 });
   },
 };
 
-// ---------- 1) MASTERWORK (Scrap Forge) — BỎ 08/11: Lò Rèn làm lại thành Twin Anvil (skills4.js), không còn ăn 1–3★.
+// đăng ký: họ JOKER (Đỏ), 3 giai đoạn lớn lên (vòng sáng quanh đầu, không ảnh riêng), nhịp hiển thị
+if (typeof themHo === 'function') themHo('joker', 4, 'cobac', 'fruit slot spins: shared Orange/Watermelon/Grape stacks + 10% JACKPOT');
+if (typeof GROW !== 'undefined') GROW.cobac = { mau: '#ffb43a', khongAnh: true, ten: ['SLOT', 'HIGH ROLLER', 'GRAND CASINO'], dk: '1–3★ / 4–6★ / 7★ · every star gained = one more spin',
+  gd: (T) => ({ s: T.sao >= 7 ? 3 : T.sao >= 4 ? 2 : 1, p: (T.sao - 1) / 6, v: [0.5] }) };
+if (typeof NHIP !== 'undefined') NHIP.cobac = () => '1 coin/s · spins 1s';
 
-// ---------- 2) ORBITAL CASCADE — 2 lần ghép Vệ Tinh + Vệ Tinh trong CÙNG cửa sổ thức tỉnh 23 s (ghép thêm không kéo dài hạn) → mọi Vệ Tinh +100% / +45% / +60 10 s + 4 bom × 180%. 45 s.
-if (SKILLS.orbital) {
-  const S = SKILLS.orbital, gh = S.ghep, bom = S.bomDmg, nh = S.nhip;
-  S.bomDmg = function (B, T) { return bom.apply(this, arguments) * (1 + JP.gt(T, 'dmg')); }; // Vệ Tinh không dùng T.buf: chỉ phần jackpot
-  S.nhip = function (T) { return nh.apply(this, arguments) / (1 + JP.gt(T, 'toc')); };
-  S.ghep = function (G, B, a, b, ra) {
-    const cung = a && b && a.id === 'orbital' && b.id === 'orbital' && a.sao >= JP.OC_SAO, r = gh.apply(this, arguments), dai = S.dai(B);
-    let o = B.jpOrb;
-    if (!o || G.t - o.t0 >= dai) o = B.jpOrb = { t0: G.t, n: 0 };
-    if (cung) o.n++;
-    if (o.n >= 2) {
-      const ds = B.t.filter(X => X && X.id === 'orbital' && !JP.khoa(X));
-      if (JP.kich(B, 'cascade', ds, B.t[b.o] || ra)) {
-        B.jpOrb = null;
-        const qs = dsMucTieu(B).filter(E => !E.chet).sort((p, q) => q.hp - p.hp || p.uid - q.uid);
-        if (qs.length) for (const X of ds) for (let i = 0; i < JP.OC_BOM; i++) { const E = qs[i % qs.length]; G.hu.push({ k: 'vetinh', t: -0.25 - i * 0.1, song: 0.6, E, x: E.x, y: E.y, dmg: bom.call(S, B, X) * JP.OC_K, r: 34, B, da: false, vang: 1 }); }
-      }
-    }
-    return r;
-  };
-}
-
-// ---------- 3) CHROMATIC HEIST — BỎ 08/11: Prism Thief làm lại, combo mới = CHROMATIC CIRCUIT (vuốt 4 màu, skills7.js).
-
-// ---------- 5) BLOOD ECLIPSE — BỎ 08/11: Blood Circuit làm lại (đánh dấu → nuốt → Máu → Blood Rite, skills7.js). HU.jpXung giữ cho bản cũ đang chạy.
-HU.jpXung = { // 3 xung máu xuyên cả làn của mình (0,5 / 1,5 / 2,5 s), mỗi quái trúng 1 lần mỗi xung — xét theo uid (tất định)
-  cap(G, o) {
-    while (o.n < JP.BE_XUNG && o.t >= 0.5 + o.n) {
-      o.n++; const B = o.B, T = o.T; if (!B || !T) return true;
-      const dmg = JP.goc(T) * JP.BE_K, ds = dsMucTieu(B).filter(E => !E.chet).sort((p, q) => p.uid - q.uid);
-      for (const E of ds) trung(E, dmg, { B, T, phu: true, mau: '#ff4a6a' });
-      for (const E of ds.slice(0, 6)) FX.no('no_phao', E.x, E.y, 40, 0.25);
-    }
-    return o.t >= o.song;
-  },
-  ve() { },
-};
-
-
-// ---------- 8) SIX SEALS — Pandora: túi xáo 6 phép (mỗi chu kỳ ra đủ 6, không lặp; thứ tự theo hạt giống) · lần mở thứ 6 thêm ROYAL VAULT:
-//      ụ Tấn công sao cao nhất +220% / +85% / +150 15 s + 100 mana. 6★ / 7★ rút thêm từ cùng túi (mỗi lần rút mở 1 dấu ấn).
-JP.layTui = function (B) {
-  if (!B.pdTui || !B.pdTui.length) {
-    B.pdChu = (B.pdChu || 0) + 1;
-    const hat = (typeof ONS !== 'undefined' && ONS.on ? ONS.seed : G.hat) || 1, r = rngHat(hat * 4219 + B.i * 131 + B.pdChu * 7919), a = [0, 1, 2, 3, 4, 5];
-    for (let i = 5; i > 0; i--) { const j = Math.floor(r() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; }
-    B.pdTui = a;
-  }
-  const i = B.pdTui.shift();
-  return { i, het: B.pdTui.length === 0 };
-};
-JP.royal = function (B, c) {
-  const X = JP.tcCao(B);
-  B.mana += JP.RV_MANA; B.manaNay = (B.manaNay || 0) + JP.RV_MANA;
-  if (c && typeof FX !== 'undefined') FX.chu1(c.x, c.y - 30, '+' + JP.RV_MANA, '#58D9AD', 16, 'mana');
-  if (X) JP.kich(B, 'royal', [X], X);
-};
-
-// ---------- 9) ĐỘT PHÁ theo độ khó: vangmoi1.js DOTPHA.KHO / BANG (bảng GPT: khó 3 = mốc cũ; khó 2 −20%; khó 4 / 5 cao hơn)
-
-// ---------- 10a) LOADED DICE — Pháo May Rủi: 12 phát liên tiếp có đủ 3 dải (3–100 / 101–200 / 201–300%, phát chí mạng không tính) → 6 phát kế đúng 300%, +70% tốc, +80 STCM (≤ 8 s). Hồi 30 s.
-JP.xucxac = function (B, T, roll, crit) { // gọi từ SKILLS.xucxac.ban SAU khi quay (skills2.js) — roll đã ép 300 khi đang LOADED
-  if (JP.dang(T, 'loaded')) { T.ldN = (T.ldN || 0) - 1; if (T.ldN <= 0) JP.tat(B, T, 'loaded'); return; }
-  if (G.t < JP.cd(B, 'loaded' + T.uid) || T.sao < JP.LD_SAO) { T.ldH = []; return; }
-  const h = T.ldH || (T.ldH = []);
-  h.push(crit ? -1 : roll <= 100 ? 0 : roll <= 200 ? 1 : 2); if (h.length > JP.LD_LAN) h.shift();
-  if (h.includes(0) && h.includes(1) && h.includes(2) && JP.kich(B, 'loaded', [T], T, 'loaded' + T.uid)) { T.ldH = []; T.ldN = JP.LD_PHAT; }
-};
-
-// ---------- mỗi bước bàn: CHAIN REACTOR (4) · GRAND CHORUS (7) · PERFECT FREQUENCY (10b) · Radar bị khoá → tắt sớm
-JP.tick = function (B, dt) {
-  if (!B || !B.t) return;
-  // 4) CHAIN REACTOR — nhóm ≥ 4 Chain Link nối thẳng; trong 5 s có ≥ 3 ụ khác nhau MỖI ụ trúng 3 đòn trực tiếp → cả nhóm +150% / +60% / +90 12 s; mỗi 6 đòn: tia sét × 250%. Hồi 40 s / nhóm.
-  if (SKILLS.lienket) {
-    const da = new Set();
-    for (const T of B.t) {
-      if (!T || T.id !== 'lienket' || JP.khoa(T) || da.has(T)) continue;
-      const nh = [T], q = [T]; da.add(T);
-      while (q.length) { const X = q.pop(); for (const N of keCan(B, X.o)) if (N && N.id === 'lienket' && !JP.khoa(N) && !da.has(N)) { da.add(N); nh.push(N); q.push(N); } }
-      if (nh.length < JP.CR_NHOM) continue;
-      const du = nh.filter(X => X.crH && X.crH.length >= JP.CR_DON && G.t - X.crH[X.crH.length - JP.CR_DON] <= JP.CR_CUA).length;
-      if (du >= JP.CR_U && nh.every(X => !(X.crCd > G.t))) {
-        nh.sort((p, q2) => p.o - q2.o);
-        if (JP.kich(B, 'reactor', nh, nh[0], 'reactor' + nh[0].uid)) { const d = JP.DS.reactor; for (const X of nh) { X.crCd = G.t + d.song + d.hoi; X.crH = []; } }
-      }
-    }
-  }
-  // 7) GRAND CHORUS — BỎ 08/11: Quantum Choir làm lại thành HARMONY (ụ kề cùng sao, vangmoi1.js).
-  // 10b) PERFECT FREQUENCY — Radar có đủ 4 ô thẳng là ụ Tấn công, ≥ 3 loại, giữ liên tục 8 s → 4 ụ đó +85% / +50% / +90 10 s. Radar bị khoá/câm → tắt sớm. Hồi 50 s / Radar.
-  if (SKILLS.radar) for (const T of B.t) {
-    if (!T || T.id !== 'radar') continue;
-    const khoa = JP.khoa(T) || T.st.cam > 0;
-    if (T.pfDs && khoa) { for (const X of T.pfDs) JP.tat(B, X, 'frequency'); T.pfDs = null; }
-    const ke = keCan(B, T.o);
-    const ok = !khoa && T.sao >= JP.PF_SAO && ke.length === 4 && ke.every(N => N && JP.laTC(N) && !JP.khoa(N)) && new Set(ke.map(N => N.id)).size >= JP.PF_LOAI;
-    T.pfT = ok && G.t >= JP.cd(B, 'frequency' + T.uid) ? (T.pfT || 0) + dt : 0;
-    if (T.pfT >= JP.PF_GIU && JP.kich(B, 'frequency', ke, T, 'frequency' + T.uid)) { T.pfT = 0; T.pfDs = ke; }
-  }
-};
-
-// ---------- móc chung ----------
+// buff ngăn quả → CHUNG nhóm cộng (đặt sau khi buff được đặt lại mỗi khung, như mốc sao / jackpot cũ)
 {
-  // thưởng jackpot đang chạy → CHUNG nhóm cộng với mọi nguồn (đặt sau khi buff được đặt lại mỗi khung, cùng chỗ mốc sao chung / ô anh hùng)
-  const _mocBufJP = mocBuf;
+  const _mocBufCB = mocBuf;
   mocBuf = function (B) {
-    const r = _mocBufJP.apply(this, arguments);
-    if (B && B.t) for (const T of B.t) if (T && T.jp) {
-      for (const id in T.jp) {
-        const e = T.jp[id]; if (e.het <= G.t) { delete T.jp[id]; continue; }
-        if (CONG_GOP) { T.buf.dmg += e.dmg; T.buf.toc += e.toc; T.buf.cdmg = (T.buf.cdmg || 0) + e.cdmg; } // (CONG_GOP=false: chỉ để ĐO kiểu cũ — game.js nhân riêng)
-      }
+    const r = _mocBufCB.apply(this, arguments);
+    if (B && B.t && B.cb) {
+      const d = CB.gt(B, 'dmg'), t = CB.gt(B, 'toc'), c = CB.gt(B, 'cdmg');
+      for (const T of B.t) if (CB.laSung(T)) { T.buf.dmg += d; T.buf.toc += t; T.buf.cdmg = (T.buf.cdmg || 0) + c; }
     }
     return r;
   };
-  const _capNhatBanJP = capNhatBan;
-  capNhatBan = function (B, dt) { const r = _capNhatBanJP.apply(this, arguments); try { JP.tick(B, dt); } catch (e) { if (G.debug && G.debug.nem) throw e; } return r; };
-  // trúng đòn: Masterwork +800% D9 đòn đầu vào mỗi trùm · Chain Reactor ghi đòn trực tiếp + tia sét mỗi 6 đòn
-  const _trungJP = trung;
-  trung = function (E, dmg, o) {
-    const T = o && o.T !== undefined ? o.T : G.dangBan, truc = !!(T && T.id === 'lienket');
-    if (T && !(o && o.phu) && E && !E.chet && T.jp && JP.dang(T, 'masterwork') && E.trum) {
-      const e = T.jp.masterwork, s = e.trum || (e.trum = []);
-      if (!s.includes(E.uid)) { s.push(E.uid); dmg += JP.goc(T) * JP.MW_TRUM; }
-    }
-    const r = _trungJP.apply(this, [E, dmg, o]);
-    if (truc && T.id === 'lienket' && !(o && o.phu)) {
-      const h = T.crH || (T.crH = []); h.push(G.t); if (h.length > JP.CR_DON) h.shift();
-      if (JP.dang(T, 'reactor')) {
-        const B = G.ban[T.ban]; B.crN = (B.crN || 0) + 1;
-        if (B.crN % JP.CR_MOI === 0) {
-          let Q = null, best = 1e9; for (const X of dsMucTieu(B)) if (X !== E && !X.chet) { const d = Math.hypot(X.x - E.x, X.y - E.y) + X.uid * 1e-6; if (d < best) { best = d; Q = X; } }
-          if (Q) { trung(Q, JP.goc(T) * JP.CR_K, { B, T, phu: true, mau: '#d9a8ff' }); G.hu.push({ k: 'set', t: 0, song: 0.22, x: E.x, y: E.y, ds: [{ Q, x: Q.x, y: Q.y }], seed: (E.uid * 97) % 999 }); }
-        }
-      }
-    }
-    return r;
-  };
-  const _batDauJP = batDau;
-  batDau = function () { G.jpLog = []; return _batDauJP.apply(this, arguments); };
+  const _batDauCB = batDau;
+  batDau = function () { G.cbLog = []; return _batDauCB.apply(this, arguments); };
 }
 
-// ---------- hình (CHỈ trình bày): nổ kích hoạt + 1 lấp lánh trạng thái ở góc ô khi jackpot đang chạy ----------
-HU.jpNo = { // fx_awaken (dải 6 khung) tô màu jackpot, phóng 0,8 → 1,25 ô trong 0,42 s rồi tắt
-  cap(G, o, dt) { return o.t >= o.song; },
-  ve(ctx, o) {
-    const im = typeof REN !== 'undefined' && REN.toMau ? REN.toMau('fx_awaken', o.mau) : null; if (!im || !im.width) return;
-    const p = Math.min(1, o.t / o.song), n = 6, fw = im.width / n, fh = im.height, f = Math.min(n - 1, Math.floor(p * n)), w = o.w * (0.8 + 0.45 * p);
-    ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = p < 0.7 ? 1 : (1 - p) / 0.3;
-    ctx.drawImage(im, f * fw, 0, fw, fh, o.x - w / 2, o.y - w / 2, w, w); ctx.restore(); ctx.globalAlpha = 1;
+// =====================================================================================================
+// HÌNH (chỉ trình bày): cuộn máy xèng trên ô → dừng ở quả trúng → nảy + chớp; JACKPOT: 3 quả bay toé + dải nổ fx_cb_no (8 khung)
+// =====================================================================================================
+HU.cbQuay = {
+  cap(G, o) {
+    if (!o.da && o.t >= CB.QUAY) {
+      o.da = true; const B = o.B, c = B && B.o[o.o];
+      if (B) B.cbV = (B.cb || o.v).slice(); // số trên khay nhảy lúc cuộn dừng
+      if (c && typeof FX !== 'undefined') {
+        if (o.f === 3) { FX.vong1(c.x, c.y, 10, 70, '#ffd23f', 0.4, 5); if ((!B.ai || G.che === 'pvp') && typeof SND !== 'undefined') { if (SND.jackpot) SND.jackpot(); else if (SND.thucTinh) SND.thucTinh(); } }
+        else { FX.vong1(c.x, c.y, 8, 40, CB.MAU[o.f], 0.3, 3); if ((!B.ai || G.che === 'pvp') && typeof SND !== 'undefined' && SND.ghep) SND.ghep(Math.min(7, o.s + 1), B.ai); }
+      }
+    }
+    return o.t >= o.song || !o.B;
   },
-};
-HU.jpVe = { // mọi bàn (solo / co-op / pvp / online): ụ đang có jackpot → 1 lấp lánh PNG (fx_tia_sao tô màu) ở góc trên-trái ô, mờ dần 2 s cuối
-  cap(G, o) { return false; },
-  ve(ctx, o) {
-    if (typeof PX === 'undefined') return;
-    ctx.save(); ctx.globalCompositeOperation = 'lighter';
-    for (const B of G.ban) if (B && B.t) for (const T of B.t) {
-      if (!T || !T.jp) continue; let e = null, id0 = null;
-      for (const id in T.jp) if (T.jp[id].het > G.t && (!e || T.jp[id].het > e.het)) { e = T.jp[id]; id0 = id; }
-      if (!e) continue;
-      const c = B.o[T.o]; if (!c) continue;
-      const s = Math.min(B.cw, B.ch), con = e.het - G.t, a = Math.min(1, con / 2) * (0.75 + 0.25 * Math.sin(G.t * 5 + T.o));
-      PX.sao(ctx, c.x - s * 0.33, c.y - s * 0.33, s * 0.4, JP.DS[id0].mau, a, G.t * 0.8); // góc TRÊN-TRÁI (trên-phải là huy hiệu sao)
+  ve(ctx, o, R) {
+    const B = o.B, c = B && B.o[o.o]; if (!c || !R) return;
+    const C = Math.min(B.cw, B.ch), x = c.x, y = c.y - C * 0.05;
+    const tq = Math.min(1, o.t / CB.QUAY), sau = Math.max(0, o.t - CB.QUAY);
+    const hien = o.t < 0.08 ? o.t / 0.08 : sau > 0 ? Math.max(0, 1 - Math.max(0, sau - (o.f === 3 ? 0.7 : 0.3)) / 0.25) : 1;
+    if (hien <= 0) return;
+    ctx.save(); ctx.globalAlpha = hien;
+    // khung cửa sổ máy xèng (PNG cb_khung 256×181, ô kính tối x 19–80 %, y 31–79 %) — chưa tải → tấm tối viền vàng
+    const kh = R.img && R.img('cb_khung'), F = C * 1.05, Fh = F * 181 / 256, fx0 = x - F / 2, fy0 = y - Fh / 2;
+    const ix = fx0 + F * 0.19, iy = fy0 + Fh * 0.31, iw = F * 0.61, ih = Fh * 0.48;
+    if (kh) ctx.drawImage(kh, fx0, fy0, F, Fh);
+    else { ctx.fillStyle = 'rgba(60,4,12,0.92)'; ctx.strokeStyle = '#ffd23f'; ctx.lineWidth = Math.max(1, C * 0.04); ctx.beginPath(); ctx.rect(ix - 3, iy - 3, iw + 6, ih + 6); ctx.fill(); ctx.stroke(); } // vetay-ok: dự phòng khi chưa tải PNG
+    // cuộn: quả trượt dọc trong ô kính, chậm dần (ease-out bậc 3), dừng đúng quả trúng (jackpot: dừng ở cam rồi bung cả 3)
+    const kq = o.f === 3 ? 0 : o.f, e = 1 - Math.pow(1 - tq, 3), pos = (9 + kq) * e, qh = ih * 1.05, cy = iy + ih / 2;
+    ctx.save(); ctx.beginPath(); ctx.rect(ix, iy, iw, ih); ctx.clip();
+    for (let k = -1; k <= 1; k++) {
+      const i = Math.floor(pos) + k, d = (pos - Math.floor(pos)) - k, qi = ((i % 3) + 3) % 3, yy = cy + d * qh;
+      ctx.globalAlpha = hien * (tq < 1 ? 1 : (k === 0 ? 1 : 0.3));
+      if (R.img && R.img(CB.IC[qi])) R.anhGiua(ctx, CB.IC[qi], x, yy, ih * 0.95); else { ctx.fillStyle = CB.MAU[qi]; ctx.beginPath(); ctx.arc(x, yy, ih * 0.36, 0, 6.283); ctx.fill(); } // vetay-ok: dự phòng
+    }
+    ctx.restore(); ctx.globalAlpha = hien;
+    // dừng: nảy + quầng màu quả
+    if (sau > 0 && o.f !== 3) {
+      const p = Math.min(1, sau / 0.3); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = hien * (1 - p) * 0.9;
+      R.anhGiua(ctx, R.cham1(CB.MAU[o.f]), x, y, C * (0.9 + 0.6 * p)); ctx.globalCompositeOperation = 'source-over';
     }
     ctx.restore(); ctx.globalAlpha = 1;
+    // JACKPOT: dải nổ + 3 quả toé ra 3 hướng
+    if (o.f === 3 && sau > 0) {
+      const p = Math.min(1, sau / 0.9);
+      const no = R.img && R.img('fx_cb_no');
+      if (no && no.width) { const n = 8, fw = no.width / n, f = Math.min(n - 1, Math.floor(p * n)), s = C * (1.5 + 0.8 * p); ctx.save(); ctx.globalAlpha = p < 0.75 ? 1 : (1 - p) / 0.25; ctx.drawImage(no, f * fw, 0, fw, no.height, x - s / 2, y - s / 2, s, s); ctx.restore(); } // dải đã tách alpha theo độ sáng (thap-cat-co-bac.py)
+      else { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = (1 - p); R.anhGiua(ctx, R.cham1('#ffd23f'), x, y, C * (1 + 1.6 * p)); ctx.restore(); }
+      if (R.img && R.img('cb_no_ic')) { const k = p < 0.15 ? p / 0.15 : 1, sz = C * (0.7 + 0.25 * k) * (p > 0.75 ? 1 - (p - 0.75) / 0.25 : 1); if (sz > 0) { ctx.save(); ctx.translate(x, y); ctx.rotate(p * 0.6); ctx.globalAlpha = Math.min(1, k); R.anhGiua(ctx, 'cb_no_ic', 0, 0, sz); ctx.restore(); } } // huy hiệu nổ JACKPOT
+      for (let i = 0; i < 3; i++) {
+        const a = -Math.PI / 2 + (i - 1) * 1.1, r = C * (0.15 + 0.75 * Math.sqrt(p)), qx = x + Math.cos(a) * r, qy = y + Math.sin(a) * r - C * 0.2 * Math.sin(p * Math.PI);
+        ctx.save(); ctx.globalAlpha = p < 0.7 ? 1 : (1 - p) / 0.3;
+        if (R.img && R.img(CB.IC[i])) R.anhGiua(ctx, CB.IC[i], qx, qy, C * 0.5 * (1 + 0.3 * Math.sin(p * Math.PI))); else { ctx.fillStyle = CB.MAU[i]; ctx.beginPath(); ctx.arc(qx, qy, C * 0.16, 0, 6.283); ctx.fill(); } // vetay-ok: dự phòng
+        ctx.restore();
+      }
+      ctx.globalAlpha = 1;
+    }
   },
 };
 
-// ---------- chữ thẻ (EN; bản Việt: docs/demo-hop-tuong/tuvan/ngonngu/vi.json) — số lấy từ JP.DS (khớp luật) ----------
-JP.CHU = {
-  orbital: (d) => 'ORBITAL CASCADE: 2 Orbital merges (2+ stars) inside one awakening → every Orbital +' + d.p + '% damage, +' + d.t + '% fire rate, +' + d.c + '% crit dmg ' + d.s + 's + 4 bombs ×180% each (45s cooldown)',
-  lienket: (d) => 'CHAIN REACTOR: a chain of 4+ where 3 links each land 3 hits within 5s → the chain +' + d.p + '% damage, +' + d.t + '% fire rate, +' + d.c + '% crit dmg ' + d.s + 's, every 6th hit fires a bolt ×250% (40s cooldown)',
-  radar: (d) => 'PERFECT FREQUENCY (3+ stars): 4 Attack neighbours of 3+ types held 8s → those 4 +' + d.p + '% damage, +' + d.t + '% fire rate, +' + d.c + '% crit dmg ' + d.s + 's (50s cooldown)',
+// ---------- khay trận: 3 icon quả + số ngăn dưới chân dung thẻ Lucky Slot (#bo-the .the[data-id=cobac]) + dải thẻ bàn kia ----------
+CB.khay = function () {
+  if (typeof document === 'undefined' || !G.ban || !G.ban.length) return;
+  const gan = (d, B) => {
+    let s = d._cb; if (!s || !s.isConnected) {
+      s = d.querySelector(':scope > .cb-qua');
+      if (!s) { s = document.createElement('span'); s.className = 'cb-qua'; s.innerHTML = CB.IC.map((ic, i) => '<i class="cb-q cb-q' + i + '"><img src="' + (typeof anhUrl === 'function' ? anhUrl(ic) : 'assets/' + ic + '.png') + '" alt="" draggable="false"><b>0</b></i>').join(''); d.appendChild(s); }
+      d._cb = s; s._v = [-1, -1, -1];
+    }
+    const v = CB.hienSo(B), q = s.children;
+    for (let i = 0; i < 3; i++) if (s._v[i] !== v[i]) {
+      const b = q[i].lastChild, tang = s._v[i] >= 0 && v[i] > s._v[i];
+      b.textContent = v[i]; b.style.color = CB.mauSo(v[i]); s._v[i] = v[i];
+      if (tang) { q[i].classList.remove('cb-nhay'); void q[i].offsetWidth; q[i].classList.add('cb-nhay'); }
+    }
+  };
+  document.querySelectorAll('#bo-the .the[data-id="cobac"]').forEach(d => gan(d, G.ban[0]));
+  const D = G.ban[1], dp = document.getElementById('dp-dai');
+  if (D && dp && !dp.hidden) dp.querySelectorAll('.dp-the[data-id="cobac"]').forEach(d => gan(d, D));
 };
-{
-  const ID = { loren: 'masterwork', orbital: 'cascade', bienmau: 'heist', lienket: 'reactor', mauhut: 'eclipse', hopca: 'chorus', radar: 'frequency' };
-  for (const u in JP.CHU) {
-    const sk = SKILLS[u]; if (!sk || !sk.mo) continue;
-    const mo = sk.mo, d0 = JP.DS[ID[u]], d = { p: Math.round(d0.dmg * 100), t: Math.round(d0.toc * 100), c: Math.round(d0.cdmg * 100), s: d0.song };
-    sk.mo = function (T) { const s = mo.apply(this, arguments); return s + ' · ' + JP.CHU[u](d); };
-  }
-}
-
-// ---------- tấm đếm (DEMKN): thêm tiến độ jackpot (icon sao + n/N) ----------
 if (typeof addEventListener === 'function') addEventListener('DOMContentLoaded', () => {
-  if (typeof DEMKN === 'undefined') return;
-  for (const id of ['orbital', 'pandora', 'xucxac', 'radar']) {
-    const f = DEMKN.DS[id];
-    DEMKN.DS[id] = function (T, B) {
-      const v = f ? f.apply(this, arguments) : null, p = JP.tienDo(T, B);
-      if (!p) return v;
-      const m = (v && v.m ? v.m.slice(0, 1) : []).concat([{ ic: 'ic_sao', s: p[0] + '/' + p[1] }]);
-      return Object.assign({}, v || {}, { m });
-    };
-  }
+  if (typeof UI !== 'undefined' && UI.capNhat) { const g = UI.capNhat; UI.capNhat = function () { const r = g.apply(this, arguments); try { CB.khay(); } catch (e) { console.error('CB.khay', e); } return r; }; }
+  if (typeof REN !== 'undefined' && REN.img) for (const t of CB.IC.concat(['cb_khung', 'fx_cb_no', 'cb_xu', 'cb_no_ic'])) { if (REN.CO_DINH) REN.CO_DINH.add(t); try { REN.img(t); } catch (e) { } }
 });
+window.CB = CB;

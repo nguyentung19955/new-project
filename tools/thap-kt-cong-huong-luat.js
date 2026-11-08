@@ -416,60 +416,36 @@ if (nhom('9 · luật người dùng chốt')) {
 }
 
 // =====================================================================================================
-// 10 · JACKPOT (thap/js/jackpot.js, tư vấn ChatGPT 07/11): kích / không kích · ụ đá-băng · bản sao Copycat không chép · PVP chỉ bàn mình · cộng gộp
+// 10 · JACKPOT CŨ ĐÃ BỎ (08/11 người dùng: jackpot chỉ còn là cơ chế của Lucky Slot — tools/thap-kt-co-bac.js):
+//      Orbital Cascade / Chain Reactor / True North / Six Seals→Royal Vault / Loaded Dice / Perfect Frequency không còn kích · Six Seals (túi xáo) giữ · cộng gộp
 // =====================================================================================================
 if (nhom('10 · jackpot')) {
-  const jp = (x, id) => R(`!!(${x} && ${x}.jp && ${x}.jp.${id} && ${x}.jp.${id}.het > G.t)`);
-  const nap = () => R(`var deckX = (BB) => { (BB || B).deck = ['lien', 'canon', 'tia', 'set', 'bao']; }; var mauT = (T, c) => { T.tuoi = 9 + 3 * c - (T.uid % 3) + 0.1; };
-    var chep = (X) => { const C = dat(14, 'saochep', X.sao); ghep(B, C, X); return B.t[14]; };`);
-  // 1 MASTERWORK — BỎ 08/11 (Scrap Forge làm lại thành Twin Anvil)
-  // 2 ORBITAL CASCADE
-  const oc = (cho, khoa) => { tran(['orbital', 'lien', 'canon', 'tia', 'set']); nap(); R('deckX()');
-    R(`var jO = dat(5, 'orbital', 3${khoa ? ", '" + khoa + "'" : ''}); var jO2 = dat(6, 'orbital', 3); ghep(B, dat(0, 'orbital', 2), dat(1, 'orbital', 2));`); if (cho) buoc(cho); R(`ghep(B, dat(2, 'orbital', 2), dat(3, 'orbital', 2));`); buoc(0.1); };
-  oc(); ca('[JP] ORBITAL CASCADE 2 ghép trong 1 lần thức tỉnh', 'mọi Vệ Tinh nhận 10 s, bom ×' + 1.8, 'jp=' + jp('jO', 'cascade') + ' bom=' + R('G.hu.filter(h => h.k === "vetinh").length'), jp('jO', 'cascade') && jp('jO2', 'cascade'));
-  ca('[JP] ORBITAL CASCADE × bản sao Copycat', 'bản sao không chép', '', (R('chep(jO)'), !jp('B.t[14]', 'cascade')));
-  oc(24); ca('[JP] ORBITAL CASCADE ghép lần 2 sau 23 s', 'không kích', jp('jO', 'cascade'), !jp('jO', 'cascade'));
-  oc(0, 'bang'); ca('[JP] ORBITAL CASCADE × Vệ Tinh băng', 'Vệ Tinh băng không nhận, Vệ Tinh thường nhận', jp('jO', 'cascade') + '/' + jp('jO2', 'cascade'), !jp('jO', 'cascade') && jp('jO2', 'cascade'));
-  // 3 CHROMATIC HEIST — BỎ 08/11 (Prism Thief: Chromatic Circuit — tools/thap-kt-vang-g2.js)
-  // 4 CHAIN REACTOR (đòn trực tiếp qua trung thật)
-  const cr = (n, soU, khoa) => { tran(['lienket', 'lien', 'canon', 'tia', 'set']); nap();
-    R(`var jL = []; for (let i = 0; i < ${n}; i++) jL.push(dat(i, 'lienket', 3, i === 1 ? '${khoa || ''}' : '')); var jE1 = sinhQuai('bo', G.duong.findIndex(p => p.ban === 0), 50); jE1.vao = 1; jE1.hp = jE1.max = 1e9;
-      for (let i = 0; i < ${soU}; i++) for (let k = 0; k < 3; k++) trung(jE1, 1, { B, T: jL[i], crit: false });`); buoc(0.05); };
-  cr(4, 3); ca('[JP] CHAIN REACTOR nhóm 4, 3 ụ × 3 đòn', 'cả nhóm nhận 12 s', R('jL.filter(X => X.jp && X.jp.reactor).length'), R('jL.every(X => X.jp && X.jp.reactor)'));
-  { R('var h0 = jE1.hp; for (let k = 0; k < 6; k++) trung(jE1, 1, { B, T: jL[0], crit: false });'); const jQ = R('(() => { const E2 = sinhQuai("bo", jE1.p, 80); E2.vao = 1; E2.hp = E2.max = 1e9; B._ds = null; for (let k = 0; k < 6; k++) trung(jE1, 1, { B, T: jL[0], crit: false }); return E2.max - E2.hp; })()');
-    ca('[JP] CHAIN REACTOR tia sét mỗi 6 đòn', 'quái khác nhận 250% D9', jQ.toFixed(1), jQ > 0); }
-  cr(4, 2); ca('[JP] CHAIN REACTOR chỉ 2 ụ đủ đòn', 'không kích', R('jL.some(X => X.jp && X.jp.reactor)'), !R('jL.some(X => X.jp && X.jp.reactor)'));
-  cr(4, 3, 'da'); ca('[JP] CHAIN REACTOR × 1 mắt xích hoá đá', 'chuỗi đứt → không kích', R('jL.some(X => X.jp && X.jp.reactor)'), !R('jL.some(X => X.jp && X.jp.reactor)'));
-  // 5 BLOOD ECLIPSE — BỎ 08/11 (Blood Circuit làm lại)
-  // 6 TRUE NORTH — BỎ 08/11
-  const tn = (ds, cho) => { tran(['canon', 'lien', 'tia', 'set', 'bao']); nap(); R('var jK = dat(14, "canon", 3); jK.hb = 1;');
-    ds.forEach(([ha, hb], i) => { R(`{ const a = dat(${i * 2}, 'canon', 1), b = dat(${i * 2 + 1}, 'canon', 1); a.hb = ${ha}; b.hb = ${hb}; ghep(B, a, b); }`); if (cho && i === 0) buoc(cho); }); buoc(0.05); };
-  // 08/11 (người dùng): BỎ hẳn jackpot TRUE NORTH — 3 ghép, lần 3 ra NSWE không còn kích gì (bù: tên lửa +15% ST, skills.js MOI)
-  tn([[1, 4], [1, 2], [3, 12]]); ca('[JP] TRUE NORTH đã bỏ: 3 ghép, lần 3 ra NSWE', 'không có jackpot nào trên Pháo La Bàn', R('JSON.stringify(jK.jp || {})'), !R('jK.jp && Object.keys(jK.jp).length') && !R("'truenorth' in JP.DS"));
-  const ss = (hat) => { tran(['pandora', 'lien', 'canon', 'tia', 'set']); nap(); R('deckX()'); R(`G.hat = ${hat}; var jA = dat(14, 'lien', 5); var jD0 = D ? dat(14, 'lien', 5, '', D) : null; var mo = [];`);
+  const coJP = (x) => R(`!!(${x} && ${x}.jp && Object.keys(${x}.jp).length)`);
+  const nap = () => R(`var deckX = (BB) => { (BB || B).deck = ['lien', 'canon', 'tia', 'set', 'bao']; };`);
+  ca('[JP] khung jackpot cũ', 'không còn JP', R("typeof JP"), R("typeof JP === 'undefined'"));
+  tran(['orbital', 'lien', 'canon', 'tia', 'set']); nap(); R('deckX()');
+  R(`var jO = dat(5, 'orbital', 3); ghep(B, dat(0, 'orbital', 2), dat(1, 'orbital', 2)); ghep(B, dat(2, 'orbital', 2), dat(3, 'orbital', 2));`); buoc(0.05);
+  ca('[JP] ORBITAL CASCADE đã bỏ: 2 ghép trong 1 lần thức tỉnh', 'không có jackpot', coJP('jO'), !coJP('jO'));
+  tran(['lienket', 'lien', 'canon', 'tia', 'set']); nap();
+  R(`var jL = []; for (let i = 0; i < 4; i++) jL.push(dat(i, 'lienket', 3)); var jE1 = sinhQuai('bo', G.duong.findIndex(p => p.ban === 0), 50); jE1.vao = 1; jE1.hp = jE1.max = 1e9;
+    for (let i = 0; i < 4; i++) for (let k = 0; k < 3; k++) trung(jE1, 1, { B, T: jL[i], crit: false });`); buoc(0.05);
+  ca('[JP] CHAIN REACTOR đã bỏ: nhóm 4 × 3 đòn', 'không có jackpot', R('jL.some(X => X.jp)'), !R('jL.some(X => X.jp)'));
+  const tn = (ds) => { tran(['canon', 'lien', 'tia', 'set', 'bao']); nap(); R('var jK = dat(14, "canon", 3); jK.hb = 1;');
+    ds.forEach(([ha, hb], i) => { R(`{ const a = dat(${i * 2}, 'canon', 1), b = dat(${i * 2 + 1}, 'canon', 1); a.hb = ${ha}; b.hb = ${hb}; ghep(B, a, b); }`); }); buoc(0.05); };
+  tn([[1, 4], [1, 2], [3, 12]]); ca('[JP] TRUE NORTH đã bỏ: 3 ghép, lần 3 ra NSWE', 'không có jackpot nào trên Pháo La Bàn', R('JSON.stringify(jK.jp || {})'), !coJP('jK'));
+  const ss = (hat) => { tran(['pandora', 'lien', 'canon', 'tia', 'set']); nap(); R('deckX()'); R(`G.hat = ${hat}; var jA = dat(14, 'lien', 5); var mo = [];`);
     for (let i = 0; i < 6; i++) { R(`B.mana = 0; ghep(B, dat(0, 'pandora', 1), dat(1, 'pandora', 1)); mo.push(B._pd.slice());`); buoc(1); } };
   ss(11); const ss1 = R('mo.map(x => x.join("+")).join(" ")');
-  ca('[JP] SIX SEALS 6 lần mở', 'đủ 6 phép không lặp, lần 6 có ROYAL VAULT (+100 mana, ụ Tấn công cao nhất nhận)', ss1 + ' mana=' + R('B.mana') + ' jp=' + jp('jA', 'royal'),
-    new Set(R('mo.map(x => x[0])')).size === 6 && R('mo[5].includes(6)') && !R('mo.slice(0, 5).some(x => x.includes(6))') && jp('jA', 'royal') && R('B.mana') >= 100);
+  ca('[JP] SIX SEALS 6 lần mở (ROYAL VAULT đã bỏ)', 'đủ 6 phép không lặp, không có dấu 6, ụ Tấn công không nhận jackpot', ss1 + ' jp=' + coJP('jA'),
+    new Set(R('mo.map(x => x[0])')).size === 6 && !R('mo.some(x => x.includes(6))') && !coJP('jA'));
   ss(11); ca('[JP] SIX SEALS tất định (cùng hạt → cùng thứ tự)', 'giống lần trước', R('mo.map(x => x.join("+")).join(" ")'), R('mo.map(x => x.join("+")).join(" ")') === ss1);
-  tran(['pandora', 'lien', 'canon', 'tia', 'set']); nap(); R('deckX()'); R('var jA = dat(14, "lien", 5); G._pdEp = [2, 6]; ghep(B, dat(0, "pandora", 1), dat(1, "pandora", 1)); G._pdEp = null;'); buoc(1);
-  ca('[JP] SIX SEALS bàn con rối online (gói pd có 6)', 'mở đúng phép 2 + ROYAL VAULT', jp('jA', 'royal'), jp('jA', 'royal'));
+  tran(['xucxac', 'lien']); nap(); R('var X = dat(0, "xucxac", 3); var Ex = sinhQuai("bo", G.duong.findIndex(p => p.ban === 0), 50); Ex.vao = 1; Ex.hp = Ex.max = 1e9; Ex.d = Object.assign({}, Ex.d, { v: 0 });'); buoc(20);
+  ca('[JP] LOADED DICE đã bỏ: Pháo May Rủi bắn 20 s', 'không có jackpot', coJP('X'), !coJP('X') && !R('/LOADED/.test(SKILLS.xucxac.mo())'));
+  tran(['radar', 'lien', 'canon', 'tia', 'set']); nap(); R(`var jRD = dat(7, 'radar', 3); var jK4 = ['lien', 'canon', 'tia', 'lien'].map((id, i) => dat([2, 6, 8, 12][i], id, 3));`); buoc(9);
+  ca('[JP] PERFECT FREQUENCY đã bỏ: 4 ụ Tấn công 3 loại giữ 9 s', 'không có jackpot', R('jK4.some(X => X.jp)'), !R('jK4.some(X => X.jp)'));
   // 9 ĐỘT PHÁ theo độ khó (08/11: Choir / Forge bỏ đột phá — Harmony / Twin Anvil làm lại)
   { const b = R('JSON.stringify(DOTPHA.thuong(4, "lualien"))'), c = R('JSON.stringify(DOTPHA.thuong(4, "cuuvi"))');
     ca('[JP] ĐỘT PHÁ IV theo độ khó', 'Ember (3) < Nine-Tail (4)', b + ' ' + c, R('DOTPHA.thuong(4,"lualien").cdmg < DOTPHA.thuong(4,"cuuvi").cdmg && DOTPHA.thuong(4,"lualien").cdmg === 0.8')); }
-  // 10a LOADED DICE
-  tran(['xucxac', 'lien']); nap(); R('var X = dat(0, "xucxac", 3); JP.xucxac(B, X, 50, false); JP.xucxac(B, X, 300, true); JP.xucxac(B, X, 150, false);');
-  ca('[JP] LOADED DICE chưa đủ 3 dải (chí mạng không tính)', 'chưa kích', jp('X', 'loaded'), !jp('X', 'loaded'));
-  R('JP.xucxac(B, X, 250, false);'); ca('[JP] LOADED DICE đủ 3 dải', 'kích, 6 phát', jp('X', 'loaded') + ' n=' + R('X.ldN'), jp('X', 'loaded') && R('X.ldN') === 6);
-  R('for (let i = 0; i < 6; i++) JP.xucxac(B, X, 300, false);'); ca('[JP] LOADED DICE hết 6 phát', 'tắt sớm, hồi 30 s', jp('X', 'loaded'), !jp('X', 'loaded') && R('JP.cd(B, "loaded" + X.uid) - G.t') > 29);
-  tran(['xucxac', 'lien']); nap(); R('var X = dat(0, "xucxac", 3); for (let i = 0; i < 12; i++) JP.xucxac(B, X, 300, true);'); ca('[JP] LOADED DICE 12 phát toàn chí mạng', 'không kích', jp('X', 'loaded'), !jp('X', 'loaded'));
-  // 10b PERFECT FREQUENCY
-  const pf = (ke, t, khoa) => { tran(['radar', 'lien', 'canon', 'tia', 'set'], khoa === 'pvp' ? 'pvp' : ''); nap(); R(`var jRD = dat(7, 'radar', 3${khoa === 'bang' ? ", 'bang'" : ''}); var jK4 = ${JSON.stringify(ke)}.map((id, i) => dat([2, 6, 8, 12][i], id, 2)); var jD0 = D ? dat(6, 'lien', 2, '', D) : null;`); buoc(t); };
-  pf(['lien', 'canon', 'tia', 'lien'], 8.2); ca('[JP] PERFECT FREQUENCY 4 ụ Tấn công 3 loại giữ 8 s', '4 ụ nhận 10 s', R('jK4.filter(X => X.jp && X.jp.frequency).length'), R('jK4.every(X => X.jp && X.jp.frequency)'));
-  R('jRD.st.bang = 5;'); buoc(0.05); ca('[JP] PERFECT FREQUENCY × Radar bị đóng băng giữa chừng', 'tắt sớm', R('jK4.some(X => X.jp && X.jp.frequency && X.jp.frequency.het > G.t)'), !R('jK4.some(X => X.jp && X.jp.frequency && X.jp.frequency.het > G.t)'));
-  pf(['lien', 'lien', 'tia', 'lien'], 8.2); ca('[JP] PERFECT FREQUENCY chỉ 2 loại', 'không kích', R('jK4.some(X => X.jp)'), !R('jK4.some(X => X.jp)'));
-  pf(['lien', 'canon', 'tia', 'lien'], 8.2, 'bang'); ca('[JP] PERFECT FREQUENCY × Radar băng', 'không kích', R('jK4.some(X => X.jp)'), !R('jK4.some(X => X.jp)'));
-  pf(['lien', 'canon', 'tia', 'lien'], 8.2, 'pvp'); ca('[JP] PERFECT FREQUENCY PVP', 'chỉ bàn mình', 'mình=' + R('jK4.every(X => X.jp && X.jp.frequency)') + ' đối thủ=' + R('!!(jD0.jp)'), R('jK4.every(X => X.jp && X.jp.frequency)') && !R('!!jD0.jp'));
   // CỘNG DỒN DO HÀNH ĐỘNG = RIÊNG TỪNG Ụ (người dùng 18:57): Leviathan nuốt → chỉ ụ đó +ABYSS; ụ mới 0; ghép 2 Leviathan ra Leviathan giữ số lớn hơn
   tran(['leviathan', 'lien']); nap(); R(`var LA = dat(0, 'leviathan', 3), LB = dat(1, 'leviathan', 3); LA.vuc = 10; var EQ = sinhQuai('bo', G.duong.findIndex(p => p.ban === 0), 50); EQ.vao = 1;
     HU.xoay.cap(G, { E: EQ, T: LA, B, t: 9, song: 1, da: false }, 0);`); buoc(0.05);
@@ -478,11 +454,11 @@ if (nhom('10 · jackpot')) {
   R('B.deck = ["leviathan"]; LB.vuc = 4; var LR = ghep(B, LA, LB);'); buoc(0.05); ca('[ABYSS riêng] ghép 2 Leviathan ra Leviathan', 'giữ số LỚN HƠN (11), không cộng', R('LR.id') + ' ' + R('LR.vuc'), R('LR.id') === 'leviathan' && R('LR.vuc') === 11);
   R('B.deck = ["lien"]; var LD = dat(3, "leviathan", 2); LD.vuc = 30; var LE = dat(4, "leviathan", 2); LE.vuc = 5; var LF = ghep(B, LD, LE); var LG = dat(5, "leviathan", 1);'); buoc(0.05);
   ca('[ABYSS riêng] ghép Leviathan ra ụ khác rồi triệu hồi Leviathan mới', 'điểm mất, Leviathan mới 0', R('LF.id') + ' / mới ' + R('LG.vuc'), R('LF.id') !== 'leviathan' && R('LG.vuc') === 0);
-  // CỘNG GỘP: jackpot vào CHUNG nhóm với buff khác (không nhân riêng)
-  tran(['lien', 'radar']); nap(); R('var X = dat(0, "lien", 3); buoc0 = 0;'); buoc(0.05);
-  { const d0 = R('dmgU(X)'), t0 = R('tocU(X)'); R('X.aurora = 8; X.jp = { masterwork: { het: G.t + 9, dmg: 2.4, toc: 0.85, cdmg: 1.5, k: "x" } };'); buoc(1 / 30);
+  // CỘNG GỘP: ngăn quả Lucky Slot vào CHUNG nhóm với buff khác (không nhân riêng)
+  tran(['cobac', 'radar']); nap(); R('var X = dat(0, "cobac", 3); X.cbS = 3; X.cbQuay = 0;'); buoc(0.05);
+  { const d0 = R('dmgU(X)'), b0 = R('X.buf.dmg'); R('X.aurora = 8; B.cb = [80, 0, 0];'); buoc(1 / 30);
     const d1 = R('dmgU(X)'), mi = R('knThe(B, "mimic") / 100'), b = R('X.buf.dmg');
-    ca('[JP] cộng gộp: Mimic + jackpot + buff khác cùng nhóm sát thương', 'dmg = gốc × (1 + tổng)', (d1 / d0).toFixed(3) + ' vs ' + (1 + b + mi).toFixed(3) + '/' + (1 + b - 2.4).toFixed(3), Math.abs(d1 / d0 - (1 + b + mi) / (1 + b - 2.4)) < 1e-6); }
+    ca('[JP] cộng gộp: Mimic + ngăn quả Lucky Slot + buff khác cùng nhóm sát thương', 'dmg = gốc × (1 + tổng)', (d1 / d0).toFixed(3) + ' vs ' + ((1 + b + mi) / (1 + b0)).toFixed(3), b - b0 > 2.3 && Math.abs(d1 / d0 - (1 + b + mi) / (1 + b0)) < 0.01); }
 }
 
 // ===== jKẾT =====

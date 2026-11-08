@@ -367,27 +367,36 @@ const PANDORA = [
   { k: 'mana', ten: 'MANA RAIN', mau: '#58D9AD' }, { k: 'dong', ten: 'FREEZE', mau: '#78D9F5' }, { k: 'sao', ten: 'STAR GIFT', mau: '#ffe46b' },
   { k: 'bom', ten: 'VAULT BOMBS', mau: '#ff7654' }, { k: 'khien', ten: 'SHIELD ×3', mau: '#73A9FF' }, { k: 'cuong', ten: 'FRENZY', mau: '#FFB547' },
 ];
+// SIX SEALS: túi xáo 6 phép (mỗi chu kỳ ra đủ 6, không lặp; thứ tự theo hạt giống trận + bàn + chu kỳ) — chuyển từ jackpot.js (08/11)
+function pandoraTui(B) {
+  if (!B.pdTui || !B.pdTui.length) {
+    B.pdChu = (B.pdChu || 0) + 1;
+    const hat = (typeof ONS !== 'undefined' && ONS.on ? ONS.seed : G.hat) || 1, r = rngHat(hat * 4219 + B.i * 131 + B.pdChu * 7919), a = [0, 1, 2, 3, 4, 5];
+    for (let i = 5; i > 0; i--) { const j = Math.floor(r() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; }
+    B.pdTui = a;
+  }
+  return B.pdTui.shift();
+}
 const PANDORA_TOT = ['sao', 'cuong', 'bom', 'mana', 'dong', 'khien']; // 6★: quay 2 lần → giữ cái đứng trước trong danh sách này
 SKILLS.pandora = {
   vai: 'db', dmg: 10, toc: 0.9, nham: 'dau',
-  mo: (T) => 'On merge: opens the vault — 1 of 6 (mana rain · freeze all · +1★ gift · 5 bombs · 5 shields · frenzy)' + ' · SIX SEALS: every 6 openings give all 6 once; the 6th adds ROYAL VAULT: best Attack turret +220% damage, +85% fire rate, +150% crit dmg 15s + 100 mana' + (T.sao >= 7 ? ' · OPEN: its 7★ merge fired 2 effects' : T.sao >= 5 ? ' · merging into 6★ rolls twice (keeps the better), into 7★ fires 2 effects' : ''),
+  mo: (T) => 'On merge: opens the vault — 1 of 6 (mana rain · freeze all · +1★ gift · 5 bombs · 5 shields · frenzy)' + ' · SIX SEALS: every 6 openings give all 6 once' + (T.sao >= 7 ? ' · OPEN: its 7★ merge fired 2 effects' : T.sao >= 5 ? ' · merging into 6★ rolls twice (keeps the better), into 7★ fires 2 effects' : ''),
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'tia_lua', co: 15, mau: '#ffd86a', sp: 480 }); },
   ghep(G, B, a, b, ra) {
-    // SIX SEALS (jackpot.js, 07/11): rút từ TÚI XÁO 6 phép (mỗi chu kỳ đủ 6, không lặp, hạt giống trận) — lần mở thứ 6 thêm ROYAL VAULT
-    let royal = false;
-    const sao = Math.min(7, a.sao + 1), lay = typeof JP !== 'undefined' ? () => { const r = JP.layTui(B); if (r.het) royal = true; return r.i; } : () => rint(6);
+    // SIX SEALS (07/11): rút từ TÚI XÁO 6 phép (mỗi chu kỳ đủ 6, không lặp, hạt giống trận). 08/11: bỏ ROYAL VAULT (jackpot chỉ còn ở Lucky Slot) — bù: mưa mana 25 → 30 ×★, bom hộp +20%
+    const sao = Math.min(7, a.sao + 1), lay = () => pandoraTui(B);
     let ds;
-    if (G._pdEp) { ds = G._pdEp.filter(i => i < 6); royal = G._pdEp.includes(6); } // online: bàn con rối mở ĐÚNG phép máy bạn đã quay (gói 'gh' d.pd; 6 = ROYAL VAULT)
+    if (G._pdEp) { ds = G._pdEp.filter(i => i < 6); } // online: bàn con rối mở ĐÚNG phép máy bạn đã quay (gói 'gh' d.pd)
     else if (sao >= 7) { const x = lay(); let y = lay(); while (y === x) y = lay(); ds = [x, y]; }
     else if (sao >= 6) { const x = lay(), y = lay(); ds = [PANDORA_TOT.indexOf(PANDORA[x].k) <= PANDORA_TOT.indexOf(PANDORA[y].k) ? x : y]; }
     else ds = [lay()];
-    B._pd = ds.slice(); if (royal) B._pd.push(6);
-    G.hu.push({ k: 'pandora', t: 0, song: 1.5, B, o: b.o, T: ra, chon: ds, sao, da: false, royal });
+    B._pd = ds.slice();
+    G.hu.push({ k: 'pandora', t: 0, song: 1.5, B, o: b.o, T: ra, chon: ds, sao, da: false });
     if (!B.ai || G.che !== 'coop') SND.quay();
   },
   lam(G, B, k, sao, c) {
     const D = G.che === 'coop' ? banKhac(B) : null, cacBan = D ? [B, D] : [B];
-    if (k === 'mana') { const n = 25 * sao; /* 10 → 25 ×★ (đo bậc 06/11) */ B.mana += n; B.manaNay += n; FX.chu1(c.x, c.y - 30, '+' + n, '#58D9AD', 18, 'mana'); for (let i = 0; i < 14; i++) FX.hat1('lua', c.x + rnd(-30, 30), c.y - rnd(30, 60), rnd(-10, 10), rnd(40, 90), 0.6, 7, '#58D9AD'); if (!B.ai) SND.mana(); }
+    if (k === 'mana') { const n = 30 * sao; /* 10 → 25 ×★ (đo bậc 06/11) → 30 (08/11 bù ROYAL VAULT) */ B.mana += n; B.manaNay += n; FX.chu1(c.x, c.y - 30, '+' + n, '#58D9AD', 18, 'mana'); for (let i = 0; i < 14; i++) FX.hat1('lua', c.x + rnd(-30, 30), c.y - rnd(30, 60), rnd(-10, 10), rnd(40, 90), 0.6, 7, '#58D9AD'); if (!B.ai) SND.mana(); }
     if (k === 'dong') {
       for (const E of dsMucTieu(B)) if (!E.chet) { E.chan = Math.max(E.chan || 0, E.trum ? 0.8 : 2.5); /* 1.5 → 2.5 s (đo bậc 06/11) */ FX.no('bang_vo', E.x, E.y, 44, 0.3); }
       FX.sang(0.18, '#bff4ff'); SND.bang();
@@ -395,7 +404,7 @@ SKILLS.pandora = {
     }
     if (k === 'sao') for (const X of cacBan) { const ds = X.t.filter(N => N && N.sao < LUAT.saoMax && !N.st.da); if (ds.length) { const N = pick(ds), n = X.o[N.o]; tiaPhep(c.x, c.y, n.x, n.y, '#ffe46b'); nangSao(X, N, 1, X === B ? 'VAULT STAR' : 'ALLY STAR'); } }
     if (k === 'bom') {
-      const dmg = hsU('pandora', sao, B) * (3 + sao) * (B.cuong > 0 ? 2 : 1), ds = quaiTheoDau(B).slice(0, 5); /* 3 → 5 bom (đo bậc 06/11) */ // chỉ huy RAGE ×2 cũng áp lên bom hộp
+      const dmg = hsU('pandora', sao, B) * (3 + sao) * 1.2 * (B.cuong > 0 ? 2 : 1), /* ×1.2: 08/11 bù ROYAL VAULT */ ds = quaiTheoDau(B).slice(0, 5); /* 3 → 5 bom (đo bậc 06/11) */ // chỉ huy RAGE ×2 cũng áp lên bom hộp
       for (const E of ds) banDan({ img: 'dan_phao', x: c.x, y: c.y, muc: E, px: E.x, py: E.y, sp: 300, co: 18, cong: 60, B, T: null, duoi: true,
         trung(G, d) { noLan(d.x, d.y, 30, dmg, B, { phu: true, mau: '#ff7654' }); FX.no('no_phao', d.x, d.y, 70, 0.4); FX.vong1(d.x, d.y, 4, 30, '#ffb35a', 0.3, 3); SND.no(0.5); } });
     }
@@ -422,7 +431,6 @@ HU.pandora = { // vòng quay 6 biểu tượng trên ô ụ vừa ghép (0.8 s, 
     if (!o.da && o.t >= 0.8) {
       o.da = true; const c = o.B.o[o.o];
       for (const i of o.chon) this.lam(o, PANDORA[i], c);
-      if (o.royal && typeof JP !== 'undefined') JP.royal(o.B, c); // SIX SEALS: dấu ấn thứ 6 → ROYAL VAULT
     }
     return false;
   },
@@ -601,7 +609,7 @@ themHo('summon', 2, 'combo', 'every same-type merge powers up the whole line for
 themHo('trap', 2, 'khoathoigian', 'time-locks the lead enemy, stored damage bursts');
 themHo('rapid', 3, 'hydra', 'one head per star, chained shots + mana MACHINE GUN (tap)');
 themHo('blast', 3, 'cuuvi', 'kills grow tails → 9 homing foxfires');
-themHo('joker', 3, 'pandora', 'merge spins a 6-way jackpot');
+themHo('joker', 3, 'pandora', 'merge opens 1 of 6 vault effects');
 themHo('amp', 3, 'luoicheo', 'DIAGONAL support; full grid = RESONANCE');
 themHo('trap', 4, 'ngaithoigian', 'everything slows with age + REWIND (active)');
 

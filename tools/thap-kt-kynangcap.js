@@ -1,7 +1,7 @@
 // TURRET MERGE — kiểm KỸ NĂNG THEO CẤP THẺ (kiểu DCDW: cấp thẻ tăng chính giá trị kỹ năng) — docs/demo-hop-tuong/tuvan/kynang_cap/DCDW.md
 //  · bảng KY_NANG_CAP (data.js): Copycat 50% → 92% (+7%/cấp, cấp 9 → 15), cấp đầu = y như trước
 //  · trận: bản sao Copycat = dmgU(ụ gốc) × % (theo cấp thẻ COPYCAT của bàn đó); cấp thẻ của ụ gốc vẫn áp vào chỉ số ụ gốc
-//  · hỗ trợ: Radar +18% → +25.2% (1★), Overclock +90% → +112.5%, Merge King vàng 10% → 22% (số sau đo bậc 06/11)
+//  · hỗ trợ: Radar +19.5% → +27.3% (1★, 08/11 +8% bù jackpot PERFECT FREQUENCY), Overclock +90% → +112.5%, Merge King vàng 10% → 22% (số sau đo bậc 06/11)
 //  · online: cấp đọc từ chuỗi bộ bài ('#…') → 2 máy cùng số · trang ụ: hàng CARD LV hiện 'Copy 70% → 74%'
 // Chạy: python3 -m http.server 8765 (gốc repo) · NODE_PATH=/opt/npm-tools/node_modules node tools/thap-kt-kynangcap.js  (SHOTS=thư mục: chụp trang ụ)
 const { chromium } = require('playwright');
@@ -71,13 +71,13 @@ const gan = (a, b) => Math.abs(a - b) < 1e-6;
     for (let i = 0; i < 4000; i++) if (sinhU(taoU(B, 'vughep', 1, 3)).vang) v++; Math.random = r0; o.vang = v / 4000;
     return o;
   });
-  ok(gan(r.r0, 0.18) && gan(r.r6, 0.216) && gan(r.r12, 0.252), 'Radar 1★: +18% (cấp đầu, ×bậc Xanh 1.5) → +21.6% → +25.2% (cấp 15)', JSON.stringify(r));
+  ok(gan(r.r0, 0.195) && gan(r.r6, 0.234) && gan(r.r12, 0.273), 'Radar 1★: +19.5% (cấp đầu, ×bậc Xanh 1.5) → +23.4% → +27.3% (cấp 15)', JSON.stringify(r));
   ok(gan(r.ep, 1.125), 'Overclock max: +112.5% tốc bắn', String(r.ep));
   ok(Math.abs(r.vang - 0.22) < 0.025, 'Merge King max: ~22% ra bản vàng', String(r.vang));
 
   // 4. online: cấp gửi trong chuỗi bộ bài → giải mã ra đúng mức → cùng % sao chép
   r = await p.evaluate(() => { const deck = ['saochep', 'canon', 'radar', 'epxung', 'vughep']; const m = THEBAI.giaiMa(['saochep', 'canon', '#' + [3, 0, 7, 2, 6].map(x => x.toString(36)).join('')], deck); return { m, pc: heSaoChep({ capThe: m }), rd: knThe({ capThe: m }, 'radar') }; });
-  ok(r.m && r.m.saochep === 3 && gan(r.pc, 0.82) && gan(r.rd, 22.2), 'online: chuỗi bộ bài "#30726" → Copycat 82%, Radar +22.2% (2 máy cùng số)', JSON.stringify(r));
+  ok(r.m && r.m.saochep === 3 && gan(r.pc, 0.82) && gan(r.rd, 24.05), 'online: chuỗi bộ bài "#30726" → Copycat 82%, Radar +24.05% (2 máy cùng số)', JSON.stringify(r));
 
   // 5. trang ụ (từ màn chính, ngoài trận): hàng CARD LV
   const p2 = await ctx.newPage(); p2.on('pageerror', e => errs.push('pageerror ' + e.message));
@@ -99,7 +99,7 @@ const gan = (a, b) => Math.abs(a - b) < 1e-6;
   ok(/Copy 82% → 86%/.test(t2), 'trang ụ Copycat LV12: "Copy 82% → 86%"', t2);
   ok(/Copy 94%/.test(t3) && /max/i.test(t3), 'trang ụ Copycat LV17 (tối đa): "Copy 94% · max"', t3);
   const t4 = await trang('radar', 3, 'radar_lv3'), t5 = await trang('radar', 9, 'radar_lv9'), t6 = await trang('radar', 15, 'radar_lv15');
-  ok(/Rate buff \+18% → \+18\.6%/.test(t4) && /\+21\.6% → \+22\.2%/.test(t5) && /\+25\.2%/.test(t6), 'trang ụ Radar: "Rate buff +18% → +18.6%" … "+25.2% max"', [t4, t5, t6].join(' | '));
+  ok(/Rate buff \+19\.5% → \+20\.2%/.test(t4) && /\+23\.4% → \+24\.1%/.test(t5) && /\+27\.3%/.test(t6), 'trang ụ Radar: "Rate buff +19.5% → +20.2%" … "+27.3% max"', [t4, t5, t6].join(' | '));
   for (const [id, ds] of [['epxung', [6, 10, 15]], ['vughep', [9, 12, 15]], ['dongbo', [9, 12, 15]]]) for (const lv of ds) await trang(id, lv, id + '_lv' + lv);
   await p2.evaluate(() => { localStorage.removeItem('turret_the'); });
   ok(!errs.length, 'không lỗi trang', errs.slice(0, 3).join(' | '));

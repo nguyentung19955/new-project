@@ -76,7 +76,7 @@ const TEXT = {
     mimic:      { name: 'Mimic',         skill: 'Merges with ANY turret of the same ★. The new turret gets +attack for 8s. Tip: use it to fix a bad board' },
     chimang:    { name: 'Crit Antenna',  skill: 'Support: Neighbours (4 sides) get more crit chance (+6.8% at 1★, +22.5% at 7★). A crit deals double damage' },
     dichchuyen: { name: 'Teleporter',    skill: 'Drag it onto a same-star turret: the two swap places. Works on Stone and Frozen turrets too. Tip: move a melee turret next to the path' },
-    radar:      { name: 'Radar',         skill: 'Support: Neighbours (4 sides) shoot faster (+18% at 1★, +42% at 7★)' },
+    radar:      { name: 'Radar',         skill: 'Support: Neighbours (4 sides) shoot faster (+19.5% at 1★, +45% at 7★)' },
     drone:      { name: 'Drone Bay',     skill: 'Merge 2 Drone Bays: bomb drones fly out. 1 drone for each cell you drag, +1 per 3★ (max 8). Tip: drag from far away (corner to corner = 7)' },
     tron:       { name: 'Fusion Mixer',       skill: 'Support: Attack Neighbours (4 sides) shoot faster. More different Attack turrets in its Row and Column = bigger bonus' },
     nangluong:  { name: 'Energy Cannon', skill: 'The more mana you have, the more damage it deals (+100% per 120 mana, max +500%). Tip: save mana' },
@@ -152,6 +152,8 @@ const TEXT = {
     mauhut:       { name: 'Blood Circuit',  skill: 'Special: drag onto one of your turrets to MARK it. After 5s + 3s per ★ it is eaten: +5 Blood per ★. Tap with 10 Blood: BLOOD RITE, a touching Attack turret gets +30% damage and +15% fire rate for 20s' },
     nguyenrua:    { name: 'Hex Saboteur',   skill: 'Merge 2 Hex Saboteurs: a hex flies out. PvP: a rival turret may lose 1★. Co-op: an ally turret may get +1★. Solo: the first enemy is slowed and takes more damage' },
     thanhdia:     { name: 'Sanctum',        skill: 'Support: when it arrives, it cleans and shields its Neighbours (4 sides). Attack Neighbours get +damage. Shields come back over time' },
+    // ụ cờ bạc Đỏ (jackpot.js, 08/11)
+    cobac:        { name: 'Lucky Slot',     skill: 'Spins a fruit slot when it appears or gains a star. Orange = damage, Watermelon = speed, Grape = crit damage. Adds its stars to that fruit\'s stack for ALL Lucky Slots on your board. 10% JACKPOT: all three get 2× stars!' },
     bienmau:      { name: 'Prism Thief',    skill: 'Each one has 1 colour: red kills, gold gives mana, blue freezes, green crits. Put 4 different colours side by side and swipe through all 4: CHROMATIC CIRCUIT' },
   },
 };
@@ -161,7 +163,7 @@ const TEXT = {
 const PILOTS = new Set(['canon', 'xucxac', 'lien', 'phun', 'sungluc', 'bang', 'doc', 'mana', 'tia', 'set', 'maychem', 'phagiap', 'bua', 'nam', 'bomhen', 'nhanmana', 'kiembang', 'mimic', 'chimang', 'dichchuyen', 'radar', 'drone', 'tron', 'nangluong', 'laser', 'lanhgia', 'mortar', 'khuech', 'vungdoc', 'loa', 'hutmana', 'min', 'cuongno', 'baotuyet', 'nhanban', 'lienket', 'kepha', 'taylo', 'khien', 'hopbi', 'nangsao', 'tuthan', 'xaotron', 'epxung', 'no5', 'bao', 'anhsang', 'aten', 'dongbo', 'railgun', 'vughep', 'sinhdoi', 'hasao', 'saochep', 'ngoisao', 'soi', 'tienhoa', 'cauvong', 'wallgen', 'orbital', 'blackhole', 'overlord', 'lophanung', 'haoquang',
   'nayda', 'combo', 'khoathoigian', 'hydra', 'cuuvi', 'pandora', 'luoicheo', 'ngaithoigian',
   'nemesis', 'docton', 'thaukinh', 'nhieusong', 'santhuong', 'nhatthuc', 'loren', 'guongcong', 'marionette',
-  'chuato', 'leviathan', 'khoisinh', 'ronglua', 'mauhut', 'nguyenrua', 'thanhdia', 'bienmau']);
+  'chuato', 'leviathan', 'khoisinh', 'ronglua', 'mauhut', 'nguyenrua', 'thanhdia', 'bienmau', 'cobac']);
 // ?ucu=1: nạp lại BỘ ĐẦU CŨ (trước bộ u2) — ảnh <ten>_v1.png (danh sách DAU_V1 + số cỡ ART_V1 trong artscale.js)
 window.UCU = /[?&]ucu=1(&|$)/.test(location.search);
 let _dauV1 = null;

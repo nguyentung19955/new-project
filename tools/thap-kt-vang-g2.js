@@ -65,7 +65,7 @@ R(`dat(12, 'set', 2, T => T.st.bang = 99); cn();`); ok(R('SKILLS.hopca.hoa(B, h)
 R(`B.t[8] = null; dat(8, 'lien', 2, T => T.st.da = true); cn();`); ok(R('SKILLS.hopca.hoa(B, h)') === 3, 'ô đá không tính');
 R(`B.t[8] = null; dat(8, 'lien', 2); cn();`); ok(R('SKILLS.hopca.hoa(B, h)') === 4 && gan(R('h.buf.cdmg'), 0.32 + 0.5), '4 Harmony: +50% ST chí mạng thêm');
 R(`B.t.fill(null); var h7 = dat(7, 'hopca', 7); cn();`); ok(gan(R('h7.buf.toc') - R('(function(){ const b = h7.buf.toc; h7.buf.toc = 0; mocBuf(B); const m = h7.buf.toc; h7.buf.toc = b; return m; })()'), 0.25), '7★: +25% tốc (ngoài mốc sao chung)');
-ok(!R('JP.CHU.hopca') && !R('DOTPHA.NGUONG.hopca'), 'bỏ GRAND CHORUS và đột phá cũ');
+ok(R("typeof JP === 'undefined'") && !R('DOTPHA.NGUONG.hopca'), 'bỏ GRAND CHORUS (khung jackpot cũ đã bỏ 08/11) và đột phá cũ');
 
 console.log('Fusion Archive (luutru)');
 tran(['luutru', 'lien', 'canon', 'vughep', 'saochep']);

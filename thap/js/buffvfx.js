@@ -42,7 +42,7 @@ const BVX = {
     out.dmg = (b.dmg || 0) + (b.dkHien || 0) + (T.aurora > 0 ? knThe(G.ban[T.ban], 'mimic') / 100 : 0); // dkHien: sát thương có điều kiện từ hỗ trợ (hotro.js — lộ / chậm / cầu vồng / liên tiếp)
     out.toc = (b.toc || 0) - moc + (T.epxung || 0);
     out.crit = (b.crit || 0) + (b.cdmg || 0) * 0.3;
-    if (T.jp && typeof JP !== 'undefined') { out.dmg -= JP.gt(T, 'dmg'); out.toc -= JP.gt(T, 'toc'); out.crit -= JP.gt(T, 'cdmg') * 0.3; } // jackpot đang chạy: KHÔNG thêm hào quang buff (cue = nổ ≤ 0,42 s + 1 lấp lánh — jackpot.js, ≤ 3 dấu hiệu/ụ)
+    if (typeof CB !== 'undefined' && CB.laSung(T)) { const B0 = G.ban[T.ban]; out.dmg -= CB.gt(B0, 'dmg'); out.toc -= CB.gt(B0, 'toc'); out.crit -= CB.gt(B0, 'cdmg') * 0.3; } // ngăn quả Lucky Slot (vĩnh viễn): KHÔNG thêm hào quang buff (khay thẻ đã hiện số)
     out.cham = b.cham || 0; out.chet = b.chet || 0;
     if (B && B.cuong > 0 && SKILLS[T.id] && SKILLS[T.id].dmg) out.max = 1; // Rage ×2 sát thương: chỉ ụ có sát thương
     if (T.khien > 0 || (B && B.khien > 0)) out.khien = 1;

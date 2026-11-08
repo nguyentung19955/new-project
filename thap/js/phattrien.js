@@ -71,7 +71,7 @@ function hoTT(id) {
 // ===================================================== 2) MỐC SAO 3★/5★/7★ =====================================================
 // Ụ có mốc RIÊNG (cơ chế cài trong skills*.js bằng ms(T,n)); ụ khác dùng mốc CHUNG theo loại (cài ở đây + game.js)
 const MOC_RIENG = {
-  canon:     { 5: ['TRUE NORTH', '+20% damage; each stack counts ×1.5'], 7: ['FOUR WINDS', '+30% damage; every 8s a rocket toward all 4 directions'] },
+  canon:     { 5: ['POLE STAR', '+20% damage; each stack counts ×1.5'], 7: ['FOUR WINDS', '+30% damage; every 8s a rocket toward all 4 directions'] },
   bang:      { 3: ['LONG FREEZE', 'Freeze +0.5s'], 5: ['QUICK FROST', 'Freezes every 4.5s'], 7: ['DOUBLE FREEZE', 'Freezes 2 lead enemies'] },
   kiembang:  { 3: ['SHATTER ×6', 'Slowed enemies take ×6'], 5: ['SPLINTERS', 'Shatter splashes 40% around'], 7: ['GLACIER', 'Slowed enemies take ×8'] },
   baotuyet:  { 3: ['SQUALL', 'Pulses 1.5s sooner'], 5: ['ICE SHARDS', 'Pulse damage ×3'], 7: ['WHITEOUT', 'Pulse freezes small enemies 1s'] },
@@ -103,7 +103,7 @@ const MOC_RIENG = {
   cuongno:   { 3: ['HOT BLOOD', 'Rage lasts 8s'], 5: ['BLOODLUST', 'Frenzy lasts 7s'], 7: ['RAMPAGE', 'Frenzy: +25% crit'] },
   soi:       { 3: ['KEEN FANGS', '+10% crit chance'], 5: ['FERAL', '+25% damage'], 7: ['ALPHA HOWL', 'Neighbours +25% fire rate'] },
   mana:      { 3: ['FAST FLOW', 'Mana every 6s'], 5: ['OVERFLOW', '+25% mana'], 7: ['WELLSPRING', 'Mana every 5s'] },
-  hopbi:     { 3: ['QUICK OPEN', 'Opens 12s sooner'], 5: ['LUCKY BOX', 'Result at least 3★'], 7: ['JACKPOT', 'Result at least 5★'] },
+  hopbi:     { 3: ['QUICK OPEN', 'Opens 12s sooner'], 5: ['LUCKY BOX', 'Result at least 3★'], 7: ['TOP PRIZE', 'Result at least 5★'] },
   tienhoa:   { 7: ['BURNT EGG', 'A 6★ egg burns into a 7★ egg: no hatch, tap it to recycle for +20 mana'] },
 };
 // loại để chọn mốc chung

@@ -12,3 +12,15 @@
   border: 0 solid transparent; border-image: url(../assets/h2_tag.png) 0 23.1 fill / 0 3px / 0 stretch; }
 #dp-dai .dp-the .dp-dem img { width: 7px; height: 7px; display: block; }
 #dp-dai .dp-the { overflow: visible; }
+/* LUCKY SLOT (jackpot.js CB.khay): 3 icon quả (cam / dưa hấu / nho) + số ngăn ở nửa dưới chân dung thẻ khay trận — nền mờ tối để đọc được trên ảnh; số nháy khi tăng, màu theo mốc 10/25/50/100 */
+#bo-the .the > .cb-qua { position: absolute; z-index: 6; left: 9%; right: 9%; top: calc(var(--khh, 74px) * .838 * .5); height: calc(var(--khh, 74px) * .838 * .42);
+  display: flex; justify-content: space-between; align-items: stretch; gap: 1px; pointer-events: none; border-radius: 4px; background: linear-gradient(180deg, rgba(10, 4, 6, 0), rgba(10, 4, 6, .78) 30%, rgba(10, 4, 6, .86)); }
+.cb-qua .cb-q { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; font-style: normal; }
+.cb-qua .cb-q img { width: 82%; max-width: 17px; aspect-ratio: 1; object-fit: contain; display: block; filter: drop-shadow(0 1px 0 #000); }
+.cb-qua .cb-q b { font: 900 12px/1 var(--f-display); color: #fff; letter-spacing: -1px; position: relative; z-index: 1; text-shadow: 0 1px 0 #000, 1px 0 0 #000, -1px 0 0 #000, 0 -1px 0 #000; margin-top: -6px; white-space: nowrap; }
+.cb-qua .cb-q.cb-nhay img, .cb-qua .cb-q.cb-nhay b { animation: cbNhay .6s ease-out; }
+@keyframes cbNhay { 0% { transform: scale(1); filter: brightness(1) } 25% { transform: scale(1.45); filter: brightness(2.2) drop-shadow(0 0 3px #ffd23f) } 100% { transform: scale(1); filter: brightness(1) } }
+#dp-dai .dp-the > .cb-qua { position: absolute; z-index: 3; left: 0; right: 0; bottom: 0; height: 45%; display: flex; pointer-events: none; background: rgba(10, 4, 6, .8); border-radius: 2px; }
+#dp-dai .dp-the > .cb-qua .cb-q b { font-size: 6px; }
+#dp-dai .dp-the > .cb-qua .cb-q img { max-width: 7px; }
+@media (prefers-reduced-motion: reduce) { .cb-qua .cb-q.cb-nhay img, .cb-qua .cb-q.cb-nhay b { animation: none; } }

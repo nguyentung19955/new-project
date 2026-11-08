@@ -35,9 +35,9 @@ function statThuc(T) {
   if (T.tocT > 0) { tuToc -= T.tocV; ds.push({ k: 'toc', ic: 'tam', txt: pc(T.tocV) + ' rate · speed boost ' + Math.ceil(T.tocT) + 's' }); }
   if (typeof mocChung === 'function' && mocChung(T, 3) && loaiMoc(T.id) !== 'ht') { tuToc -= 0.2; ds.push({ k: 'toc', ic: 'toc', txt: '+20% rate · 3★ milestone' }); }
   if (T.epxung > 0) ds.push({ k: 'toc', ic: 'toc', txt: pc(T.epxung) + ' rate · Overclock' });
-  // jackpot đang chạy (jackpot.js): cùng nhóm cộng — tách khỏi phần 'tự có'
+  // ngăn quả Lucky Slot (jackpot.js CB): cùng nhóm cộng — tách khỏi phần 'tự có'
   let jpD = 0;
-  if (T.jp && typeof JP !== 'undefined') for (const id in T.jp) { const e = T.jp[id]; if (e.het <= G.t) continue; jpD += e.dmg; tuToc -= e.toc; ds.push({ k: 'dmg', ic: 'dmg', txt: '+' + Math.round(e.dmg * 100) + '% · +' + Math.round(e.toc * 100) + '% rate · ' + JP.DS[id].ten + ' ' + Math.ceil(e.het - G.t) + 's' }); }
+  if (typeof CB !== 'undefined' && CB.laSung(T)) { const a = B.cb, d = CB.gt(B, 'dmg'), t = CB.gt(B, 'toc'), c = CB.gt(B, 'cdmg'); jpD += d; tuToc -= t; if (d) ds.push({ k: 'dmg', ic: 'dmg', txt: pc(d) + ' · Orange ×' + a[0] }); if (t) ds.push({ k: 'toc', ic: 'toc', txt: pc(t) + ' rate · Watermelon ×' + a[1] }); if (c) ds.push({ k: 'crit', ic: 'crit', txt: pc(c) + ' crit dmg · Grape ×' + a[2] }); }
   const tuDmg = T.buf.dmg - tong.dmg - jpD, tuCrit = T.buf.crit - tong.crit;
   if (Math.abs(tuDmg) > 0.0005) ds.push({ k: 'dmg', ic: 'dmg', txt: pc(tuDmg) + ' · ' + tuTen });
   if (Math.abs(tuToc) > 0.0005) ds.push({ k: 'toc', ic: 'toc', txt: pc(tuToc) + ' rate · ' + tuTen });
