@@ -56,34 +56,23 @@ const MOI = ['mauhut', 'nguyenrua', 'thanhdia', 'bienmau'];
   await p.evaluate(`window.DUNG = ${DUNG.toString()}`);
   console.log('— SOLO');
   r = await p.evaluate(() => ['mauhut', 'nguyenrua', 'thanhdia', 'bienmau'].map(id => [id, !!SKILLS[id], G.rosterMap[id] && G.rosterMap[id].bac, THEBAI.the(id).lv, !!KY_NANG_CAP[id], TEXT.turret[id] && TEXT.turret[id].name]));
-  ok(r.every(x => x[1] && x[2] === 'vang' && x[3] === 9 && x[4] && x[5]), '4 ụ: SKILLS + bậc vàng + thẻ LV9 + KY_NANG_CAP + tên', JSON.stringify(r));
+  ok(r.every(x => x[1] && x[2] === 'vang' && x[3] === 9 && (x[4] || x[0] === 'bienmau') && x[5]), '4 ụ: SKILLS + bậc vàng + thẻ LV9 + KY_NANG_CAP (Prism 08/11: trần cộng dồn riêng) + tên', JSON.stringify(r));
   // Blood Circuit
+  // 08/11: Blood Circuit làm lại — ĐÁNH DẤU (không di chuyển) → nuốt → Máu; luật đầy đủ ở tools/thap-kt-vang-g2.js
   r = await p.evaluate(() => {
-    DUNG([[0, 'mauhut', 2], [1, 'canon', 5], [2, 'mauhut', 3], [3, 'canon', 3, 'da'], [5, 'mauhut', 6], [6, 'bienmau', 1], [10, 'mauhut', 7], [11, 'thanhdia', 7]]);
+    DUNG([[0, 'mauhut', 2], [1, 'canon', 5], [2, 'mauhut', 3], [3, 'canon', 3, 'da'], [5, 'mauhut', 6], [6, 'bienmau', 7]]);
     const B = G.ban[0], out = {};
     out.hop = [hopLeGhep(B.t[0], B.t[1]), hopLeGhep(B.t[2], B.t[3]), hopLeGhep(B.t[5], B.t[6]), hopLeGhep(B.t[1], B.t[0])];
-    B.vamp = 0; ghep(B, B.t[0], B.t[1]); out.a = [B.t[0], B.t[1] && B.t[1].sao, B.vamp];
-    B.vamp = 3; ghep(B, B.t[5], B.t[6]); out.b = [B.t[5], B.t[6] && B.t[6].sao, B.vamp];
-    B.vamp = 9; ghep(B, B.t[10], B.t[11]); out.c = [B.t[11] && B.t[11].sao, B.vamp]; // 7★ cùng sao: +2 → trần 10
-    // tất định: cùng (seed, ô, lần) → cùng ụ ra
-    const ra = []; for (let k = 0; k < 2; k++) { DUNG([[0, 'mauhut', 2], [1, 'canon', 2]]); B.mhN = 5; ghep(B, B.t[0], B.t[1]); ra.push(B.t[1].id); }
-    out.det = ra;
-    // cùng sao: +1 VAMP và sát thương Blood Circuit tăng 6%/VAMP
-    DUNG([[0, 'mauhut', 3], [1, 'canon', 3], [2, 'mauhut', 3]]); B.vamp = 0; capNhatBan(B, 0.01); const d0 = dmgU(B.t[2]);
-    ghep(B, B.t[0], B.t[1]); capNhatBan(B, 0.01); out.cung = [B.vamp, +(dmgU(B.t[2]) / d0).toFixed(3)];
+    ghep(B, B.t[0], B.t[1]); out.a = [B.t[0] && B.t[0].id, B.t[1] && B.t[1].sao, B.t[0] && B.t[0].mh && B.t[0].mh.o];
     return out;
   });
-  ok(r.hop[0] && !r.hop[1] && r.hop[2] && !r.hop[3], 'Blood Circuit: hợp lệ lên ụ khác sao/loại; không lên ô đá; chỉ ụ KÉO là Blood Circuit', JSON.stringify(r.hop));
-  ok(r.a[0] === null && r.a[1] === 5 && r.a[2] === 0, 'Blood Circuit 2★ → ụ 5★: ra đúng 5★ (không tự lên sao), không VAMP (0 VAMP → không xung)', JSON.stringify(r.a));
-  ok(r.b[0] === null && r.b[1] === 6 && r.b[2] === 1, 'khác sao có 3 VAMP: tốn 2 (còn 1), ra 6★', JSON.stringify(r.b));
-  ok(r.c[0] === 7 && r.c[1] === 10, '7★ cùng sao: +2 VAMP, trần 10, ra 7★', JSON.stringify(r.c));
-  ok(r.det[0] === r.det[1], 'Blood Circuit tất định: cùng hạt → cùng ụ ra', JSON.stringify(r.det));
-  ok(r.cung[0] === 1 && Math.abs(r.cung[1] - 1.06) < 0.002, 'cùng sao: +1 VAMP → Blood Circuit +6% sát thương (LV9)', JSON.stringify(r.cung));
+  ok(r.hop[0] && !r.hop[1] && !r.hop[2] && !r.hop[3], 'Blood Circuit: đánh dấu được ụ khác sao/loại; không ô đá, không 7★; chỉ ụ KÉO là Blood Circuit', JSON.stringify(r.hop));
+  ok(r.a[0] === 'mauhut' && r.a[1] === 5 && r.a[2] === 1, 'Blood Circuit kéo lên ụ 5★: chỉ đánh dấu (2 ụ giữ nguyên chỗ, sao)', JSON.stringify(r.a));
   // cấp thẻ
-  r = await p.evaluate(() => { const B = G.ban[0]; DUNG([[0, 'mauhut', 1], [1, 'nguyenrua', 1], [2, 'bienmau', 1], [3, 'thanhdia', 1]]); const k0 = [SKILLS.mauhut.pv(B.t[0]), SKILLS.nguyenrua.p(B.t[1]), SKILLS.bienmau.pc(B.t[2]), SKILLS.thanhdia.k(B.t[3])];
-    B.capThe = Object.assign({}, B.capThe, { mauhut: 6, nguyenrua: 6, bienmau: 6, thanhdia: 6 }); const k6 = [SKILLS.mauhut.pv(B.t[0]), SKILLS.nguyenrua.p(B.t[1]), SKILLS.bienmau.pc(B.t[2]), SKILLS.thanhdia.k(B.t[3])];
+  r = await p.evaluate(() => { const B = G.ban[0]; DUNG([[0, 'mauhut', 1], [1, 'nguyenrua', 1], [2, 'bienmau', 1], [3, 'thanhdia', 1]]); const k0 = [knThe(B, 'mauhut') / 100, SKILLS.nguyenrua.p(B.t[1]), SKILLS.bienmau.tran(B.t[2]), SKILLS.thanhdia.k(B.t[3])];
+    B.capThe = Object.assign({}, B.capThe, { mauhut: 6, nguyenrua: 6, bienmau: 6, thanhdia: 6 }); const k6 = [knThe(B, 'mauhut') / 100, SKILLS.nguyenrua.p(B.t[1]), SKILLS.bienmau.tran(B.t[2]), SKILLS.thanhdia.k(B.t[3])];
     B.t[1].sao = 7; const p7 = SKILLS.nguyenrua.p(B.t[1]); B.capThe = {}; return { k0, k6, p7 }; });
-  ok(r.k0.map(x => +x.toFixed(3)).join() === '0.06,0.35,0.06,0.23' && r.k6.map(x => +x.toFixed(3)).join() === '0.09,0.47,0.09,0.327' && Math.abs(r.p7 - 0.77) < 1e-9, 'cấp thẻ LV9 → LV15: Vamp 6→9%, Hex 35→47% (7★ 77%), Combo 6→9%, Sanctum +23→32.7% (×bậc Vàng)', JSON.stringify(r));
+  ok(r.k0[0] === 0.3 && r.k0[2] === 10 && r.k6[2] === 16 && +r.k0[1].toFixed(3) === 0.35 && Math.abs(r.p7 - 0.77) < 1e-9 && r.k6[3] > r.k0[3], 'cấp thẻ: Blood Rite 30%, Hex 35% (7★ 77%), Prism trần 10 → 16 (LV15), Sanctum tăng', JSON.stringify(r)); 
   // Sanctum
   r = await p.evaluate(() => {
     DUNG([[6, 'canon', 2, 'bang'], [8, 'canon', 2, 'da'], [2, 'lien', 2], [12, 'lien', 3], [3, 'canon', 2]]); const B = G.ban[0];
@@ -96,16 +85,12 @@ const MOI = ['mauhut', 'nguyenrua', 'thanhdia', 'bienmau'];
   ok(r.dm > 0.09 && r.d3 === 0, 'Sanctum: ụ Tấn công kề +sát thương; ô không kề không có khiên (1★)', JSON.stringify([r.dm, r.d3]));
   ok(!r.cheo && r.k5 === 1, 'Sanctum 5★: tẩy + khiên cả ô CHÉO', JSON.stringify(r));
   // Prism Thief
-  r = await p.evaluate(() => {
-    const B = G.ban[0], out = [];
-    for (const cung of [true, false]) {
-      DUNG([[0, 'bienmau', 2], [1, 'bienmau', 2], [5, 'bienmau', 2]]); B.prism = 0;
-      const a = B.t[0], c = B.t[1]; a.tuoi = 0; c.tuoi = cung ? 0 : 3; if (a.uid % 3 !== c.uid % 3) c.tuoi += ((a.uid % 3) - (c.uid % 3)) * 1.0;
-      out.push([SKILLS.bienmau.mau(a), SKILLS.bienmau.mau(c), (ghep(B, a, c), B.prism)]);
-    }
-    capNhatBan(B, 0.01); return out;
+  r = await p.evaluate(() => { // 08/11 Prism Thief: màu cố định + CHROMATIC CIRCUIT (vuốt 4 màu)
+    DUNG([[0, 'bienmau', 2, '', ], [1, 'bienmau', 2], [2, 'bienmau', 2], [3, 'bienmau', 2]]); const B = G.ban[0]; B.pmCd = 0;
+    [0, 1, 2, 3].forEach(q => { B.t[q].pm = q; B.t[q].pms = 1; });
+    const mau0 = B.t[0].pm; capNhatBan(B, 1.5); return { giu: B.t[0].pm === mau0, ok: SKILLS.bienmau.mach(B, [0, 1, 2, 3]), cd: Math.round(B.pmCd - G.t) };
   });
-  ok(r[0][0] === r[0][1] && r[0][2] === 1 && r[1][0] !== r[1][1] && r[1][2] === 0, 'Prism Thief: ghép CÙNG màu → COMBO +1; khác màu → không', JSON.stringify(r));
+  ok(r.giu && r.ok && r.cd === 25, 'Prism Thief: màu không đổi theo thời gian · vuốt 4 màu → CHROMATIC CIRCUIT, hồi 25 s', JSON.stringify(r));
   // Hex solo
   r = await p.evaluate(() => { DUNG([[0, 'nguyenrua', 2], [1, 'nguyenrua', 2]]); const B = G.ban[0]; B.hexCd = 0; const E = sinhQuai('bo', 0, G.duong[0].len * 0.3, 1); E.vao = 1; E.hp = E.max = 1e9; ghep(B, B.t[0], B.t[1]); const c1 = G.hu.filter(o => o.k === 'hexBay').length; B.t[2] = sinhU(taoU(B, 'nguyenrua', 2, 2)); B.t[3] = sinhU(taoU(B, 'nguyenrua', 2, 3)); ghep(B, B.t[2], B.t[3]); return { c1, c2: G.hu.filter(o => o.k === 'hexBay').length, cd: B.hexCd - G.t }; });
   ok(r.c1 === 1 && r.cd > 7, 'Hex SOLO: ghép → 1 âm thoa bay, hồi chung 8 s', JSON.stringify(r));
@@ -121,9 +106,10 @@ const MOI = ['mauhut', 'nguyenrua', 'thanhdia', 'bienmau'];
     DUNG(ds); const B = G.ban[0]; B.ai = true; B.aiT = 0; const n0 = B.t.filter(Boolean).length; aiBan(B, 0.1); B.ai = false;
     return { n0, n1: B.t.filter(Boolean).length, con: !!B.t.find(T => T && T.id === 'mauhut') };
   });
-  ok(r.n1 === r.n0 - 1 && !r.con, 'AI: bàn đầy không cặp ghép → dùng Blood Circuit', JSON.stringify(r));
-  r = await p.evaluate(() => { DUNG([[0, 'mauhut', 2], [1, 'bienmau', 2]]); const B = G.ban[0]; B.vamp = 4; B.prism = 3; const f = [ONS.oTT(B.t[0])[2], ONS.oTT(B.t[1])[2]]; B.vamp = 0; B.prism = 0; ONS.datO(B, 0, ['mauhut', 2, f[0]]); ONS.datO(B, 1, ['bienmau', 2, f[1]]); return { f, v: B.vamp, p: B.prism }; });
-  ok(r.f[0] === 'v4;' && r.f[1] === 'p3;' && r.v === 4 && r.p === 3, 'online: cờ ô mang VAMP / COMBO, datO dựng lại đúng', JSON.stringify(r));
+  ok(r.n1 === r.n0 && r.con, 'AI: bàn đầy không cặp ghép → Blood Circuit ĐÁNH DẤU ụ sao thấp (08/11: nuốt sau vài giây)', JSON.stringify(r));
+  r = await p.evaluate(() => { DUNG([[0, 'mauhut', 2], [1, 'bienmau', 2], [2, 'lien', 2]]); const B = G.ban[0]; const M = B.t[0], P = B.t[1]; M.mau = 4; P.pm = 3; P.pms = 2; ghep(B, M, B.t[2]);
+    const f = [ONS.oTT(M)[2], ONS.oTT(P)[2]]; M.mau = 0; M.mh = null; P.pm = 0; P.pms = 0; ONS.datO(B, 0, ['mauhut', 2, f[0]]); ONS.datO(B, 1, ['bienmau', 2, f[1]]); return { f, mau: M.mau, mh: M.mh && M.mh.o, pm: P.pm, pms: P.pms }; });
+  ok(r.mau === 4 && r.mh === 2 && r.pm === 3 && r.pms === 2, 'online: cờ ô mang Máu / dấu (Mạch Máu) và màu / cộng dồn (Prism), datO dựng lại đúng', JSON.stringify(r));
 
   // dải khung SOLO
   if (SHOTS) {
@@ -157,7 +143,7 @@ const MOI = ['mauhut', 'nguyenrua', 'thanhdia', 'bienmau'];
     ghep(B, B.t[0], B.t[1]); for (let t = 0; t < 1.6; t += 1 / 30) capNhat(1 / 30); out.khien = [D.t[7].sao, D.t[7].khien];
     // Mirror Gate sẵn sàng → phản (ụ mình bị kẹp), ụ đối thủ giữ sao
     DUNG([[0, 'nguyenrua', 6], [1, 'nguyenrua', 6], [2, 'canon', 4]], 0); DUNG([[7, 'canon', 5], [8, 'guongcong', 3]], 1); D.t[8].nap = 1; B.hexCd = 0;
-    ghep(B, B.t[0], B.t[1]); for (let t = 0; t < 1.6; t += 1 / 30) capNhat(1 / 30); out.guong = [D.t[7].sao, D.t[8].nap, B.t.some(T => T && T.st.kep > 0)];
+    const dk0 = B.deck; B.deck = ['canon']; ghep(B, B.t[0], B.t[1]); B.deck = dk0; /* ụ ra cố định (ra Sanctum thì nó tẩy luôn kẹp — kết quả phụ thuộc may rủi) */ for (let t = 0; t < 1.6; t += 1 / 30) capNhat(1 / 30); out.guong = [D.t[7].sao, D.t[8].nap, B.t.some(T => T && T.st.kep > 0)];
     // hồi chung: ghép lần 2 trong 8 s bị bỏ
     DUNG([[0, 'nguyenrua', 2], [1, 'nguyenrua', 2], [2, 'nguyenrua', 2], [3, 'nguyenrua', 2]], 0); DUNG([[7, 'canon', 5]], 1); B.hexCd = 0; G.hu.length = 0;
     ghep(B, B.t[0], B.t[1]); ghep(B, B.t[2], B.t[3]); out.cd = G.hu.filter(o => o.k === 'hexBay').length;
@@ -213,7 +199,7 @@ const MOI = ['mauhut', 'nguyenrua', 'thanhdia', 'bienmau'];
     for (const id of ['mauhut', 'nguyenrua', 'thanhdia', 'bienmau']) { const d = THEBAI.doc(); d.c[id] = { lv: 9, n: 0 }; UP.mo(id); const el = document.querySelector('.tb-cap-giua'); out[id] = el ? [...el.querySelectorAll('small:not(.tb-vi)')].map(x => x.textContent).join(' · ') : ''; try { UP.dong && UP.dong(); } catch (e) { } }
     return out;
   });
-  ok(/Vamp \+6% → \+6\.5%/.test(r.mauhut) && /Hex 35% → 37%/.test(r.nguyenrua) && /\+23% → \+24\.6%/.test(r.thanhdia) && /Combo \+6% → \+6\.5%/.test(r.bienmau), 'trang ụ: hàng CARD LV "now → next" cho 4 ụ', JSON.stringify(r));
+  ok(/Blood Rite \+30% → \+30\.9%/.test(r.mauhut) && /Hex 35% → 37%/.test(r.nguyenrua) && /\+23% → \+23\.9%/.test(r.thanhdia) && r.bienmau !== undefined, 'trang ụ: hàng CARD LV "now → next" cho 4 ụ', JSON.stringify(r));
   if (SHOTS) {
     await p.evaluate(() => { const b = document.querySelector('[data-act="hm-bst"]'); if (b) b.click(); });
     await sleep(1200);

@@ -24,8 +24,8 @@ const gan = (a, b) => Math.abs(a - b) < 1e-6;
   // 1. bảng thuần
   let r = await p.evaluate(() => [0, 1, 2, 3, 4, 5, 6, 9].map(k => knGt(KY_NANG_CAP.saochep, k)));
   ok(JSON.stringify(r) === JSON.stringify([70, 74, 78, 82, 86, 90, 94, 94]), 'Copycat: % sao chép 70 → 74 → … → 94 (kẹp ở cấp 15; đo bậc 06/11: 50 → 70)', JSON.stringify(r));
-  r = await p.evaluate(() => { const ds = []; for (const id in KY_NANG_CAP) { const e = KY_NANG_CAP[id], bac = G.rosterMap[id] && G.rosterMap[id].bac; if (!bac || !SKILLS[id]) { ds.push(id + ':thiếu'); continue; } const n = THE.lvMax - THE.lvDau[bac]; if (Math.abs(knGt(e, n) - e.max) > 1e-6 || Math.abs(knGt(e, n - 1) - e.max) < 1e-6) ds.push(id); } return ds; });
-  ok(!r.length, 'mọi mục bảng: chạm max đúng ở cấp 15 (không phí cấp, không vượt)', r.join(','));
+  r = await p.evaluate(() => { const ds = []; for (const id in KY_NANG_CAP) { const e = KY_NANG_CAP[id], bac = G.rosterMap[id] && G.rosterMap[id].bac; if (!bac || !SKILLS[id]) { ds.push(id + ':thiếu'); continue; } const n = THE.lvMax - THE.lvDau[bac], n2 = (THE.maxLv ? THE.maxLv(bac) : THE.lvMax) - THE.lvDau[bac], tron = (m) => Math.abs(knGt(e, m) - e.max) < 1e-6 && Math.abs(knGt(e, m - 1) - e.max) > 1e-6; if (!tron(n) && !tron(n2)) ds.push(id); /* 08/11: thẻ Vàng/Đỏ lên LV17 — bảng chạm max ở LV15 (cũ) hoặc ở cấp tối đa mới */ } return ds; });
+  ok(!r.length, 'mọi mục bảng: chạm max đúng ở cấp 15 hoặc cấp tối đa của bậc (không vượt)', r.join(','));
 
   // 2. bản sao trong trận theo cấp thẻ Copycat
   r = await p.evaluate(() => {
@@ -94,10 +94,10 @@ const gan = (a, b) => Math.abs(a - b) < 1e-6;
     await p2.evaluate(() => { try { UP.dong && UP.dong(); } catch (e) { } }); await p2.waitForTimeout(400);
     return t;
   };
-  const t1 = await trang('saochep', 9, 'saochep_lv9'), t2 = await trang('saochep', 12, 'saochep_lv12'), t3 = await trang('saochep', 15, 'saochep_lv15');
+  const t1 = await trang('saochep', 9, 'saochep_lv9'), t2 = await trang('saochep', 12, 'saochep_lv12'), t3 = await trang('saochep', 17, 'saochep_lv17'); // 08/11: thẻ Vàng tối đa LV17
   ok(/Copy 70% → 74%/.test(t1), 'trang ụ Copycat LV9: "Copy 70% → 74%"', t1);
   ok(/Copy 82% → 86%/.test(t2), 'trang ụ Copycat LV12: "Copy 82% → 86%"', t2);
-  ok(/Copy 94%/.test(t3) && /max/.test(t3), 'trang ụ Copycat LV15: "Copy 94% · max"', t3);
+  ok(/Copy 94%/.test(t3) && /max/i.test(t3), 'trang ụ Copycat LV17 (tối đa): "Copy 94% · max"', t3);
   const t4 = await trang('radar', 3, 'radar_lv3'), t5 = await trang('radar', 9, 'radar_lv9'), t6 = await trang('radar', 15, 'radar_lv15');
   ok(/Rate buff \+18% → \+18\.6%/.test(t4) && /\+21\.6% → \+22\.2%/.test(t5) && /\+25\.2%/.test(t6), 'trang ụ Radar: "Rate buff +18% → +18.6%" … "+25.2% max"', [t4, t5, t6].join(' | '));
   for (const [id, ds] of [['epxung', [6, 10, 15]], ['vughep', [9, 12, 15]], ['dongbo', [9, 12, 15]]]) for (const lv of ds) await trang(id, lv, id + '_lv' + lv);

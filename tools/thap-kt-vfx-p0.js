@@ -208,7 +208,7 @@ const ok = (dk, ten, chi) => { if (dk) console.log('  ✓ ' + ten); else { conso
     const capC = B.capThe; B.capThe = {};
     const ham = { // hàm số kỹ năng THẬT (đơn vị như KY_NANG_CAP)
       bang: (T) => SKILLS.bang.dai(T), doc: (T) => { const E = { yeu: 0 }; return knThe(B, 'doc'); }, bomhen: (T) => SKILLS.bomhen.yw(T) * 100, khien: (T) => SKILLS.khien.ky(T),
-      hopbi: (T) => SKILLS.hopbi.can(T), tienhoa: (T) => SKILLS.tienhoa.can(T) / (14 + 5 * T.sao) * 100, haoquang: (T) => SKILLS.haoquang.tg(T),
+      hopbi: (T) => SKILLS.hopbi.can(T), tienhoa: (T) => SKILLS.tienhoa.can(T) / SKILLS.tienhoa.goc(T.sao) * 100, // 08/11 Trứng: (10 + 2×★) s haoquang: (T) => SKILLS.haoquang.tg(T),
       loren: (T) => SKILLS.loren.moi(T) * 100, khoisinh: (T) => SKILLS.khoisinh.g(T) / (12 / (1 + 0.03 * capThe9(B, 'khoisinh'))) * 100, // 08/11: chu kỳ 12 s ÷ cấp thẻ, power-up −3%/bước
     };
     if (!G.rosterMap.haoquang) delete ham.haoquang; // 08/11: Hào Quang Thánh đã bỏ
@@ -326,7 +326,7 @@ const ok = (dk, ten, chi) => { if (dk) console.log('  ✓ ' + ten); else { conso
   // 13. roster.json (nguồn dữ liệu chính) đồng bộ vai trò code; tên Jammer
   r = await p.evaluate(() => { const loi = []; for (const id in G.rosterMap) { const v = G.rosterMap[id].vai, sk = SKILLS[id]; if (sk && v && v !== sk.vai) loi.push(id + ' roster ' + v + ' ≠ code ' + sk.vai); } if (G.rosterMap.kepha && G.rosterMap.kepha.ten !== 'Jammer') loi.push('kepha tên ' + G.rosterMap.kepha.ten); return loi; });
   const rj = JSON.parse(require('fs').readFileSync(require('path').join(__dirname, '../thap/assets/roster.json'), 'utf8'));
-  for (const x of rj) { if (x.id === 'kepha' && x.ten !== 'Jammer') r.push('roster.json kepha ' + x.ten); if (x.id === 'loren' && /vĩnh viễn|permanent/i.test(x.kyNang + x.kyNang_vi)) r.push('roster.json Scrap Forge còn "vĩnh viễn"'); }
+  for (const x of rj) { if (x.id === 'kepha' && x.ten !== 'Jammer') r.push('roster.json kepha ' + x.ten); if (x.id === 'loren' && !/Twin Anvil/.test(x.ten)) r.push('roster.json loren chưa đổi tên Twin Anvil'); /* 08/11: buff Twin Anvil vĩnh viễn là luật mới */ }
   ok(!r.length, 'roster: vai trò = code (Mirror Gate Hỗ trợ, Scrap Forge Đặc biệt), tên Jammer, Scrap Forge không "vĩnh viễn"', r.join(' ; '));
 
   if (SHOTS) {

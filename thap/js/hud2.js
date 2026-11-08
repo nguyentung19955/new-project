@@ -10,7 +10,7 @@ const HUD2 = {
   ANH_DOM: ['h2_rail', 'h2_lcd', 'h2_ngoc', 'h2_trieu_cho', 'h2_trieu_san', 'h2_trieu_an', 'h2_trieu_tat', 'h2_phim_dung_cho', 'h2_phim_dung_an', 'h2_phim_toc_cho', 'h2_phim_toc_an',
     'h2_tag', 'h2_ic_chong', 'h2_chip', 'h2_chip_tat', 'h2_ic_tim', 'seg_sang', 'seg_trum', 'loi_khuc_day', 'h2_khay_doi', 'h2_den_doi', 'h2_thanh', 'h2_tam_mong'],
   ANH_S10: ['nut_lon_thep', 'nut_lon_vang', 'nut_lon_xanh', 'nut_nho', 'khung_chon', 'nut_cong', 'khung_tt', 'ic_lui', 'ic_phat', 'h2_phim_dung_cho'],
-  ANH_CV: ['h2_sao', 'h2_sao_sang', 'h2_loi_0', 'h2_loi_1', 'h2_loi_2', 'h2_loi_chop', 'loi_vong_trai_sang', 'loi_vong_giua_sang', 'loi_vong_phai_sang', 'loi_vong_trai_tat', 'loi_vong_giua_tat', 'loi_vong_phai_tat', 'loi_vong_no', 'nhan_kn'],
+  ANH_CV: ['hh_sao1', 'hh_sao2', 'hh_sao3', 'hh_sao4', 'hh_sao5', 'hh_sao6', 'hh_sao7', 'h2_sao', 'h2_sao_sang', 'h2_loi_0', 'h2_loi_1', 'h2_loi_2', 'h2_loi_chop', 'loi_vong_trai_sang', 'loi_vong_giua_sang', 'loi_vong_phai_sang', 'loi_vong_trai_tat', 'loi_vong_giua_tat', 'loi_vong_phai_tat', 'loi_vong_no', 'nhan_kn'],
   VAI: { tc: 'h2_vai_tc', ht: 'h2_vai_ht', db: 'h2_vai_db' },
   bat: false, giam: false, _du: null, _theDu: {}, _tim: -1, _vfx: 0,
 
@@ -165,6 +165,17 @@ const HUD2 = {
   if (typeof REN !== 'undefined') {
     const hhGoc = REN.huyHieu;
     REN.huyHieu = function (n, d) {
+      // 08/11 (người dùng): huy hiệu = SỐ NGÔI SAO (hh_sao1…6: 1–4 một hàng, 5 = 3+2, 6 = 3+3) · 7★ = 1 sao đỏ to (hh_sao7). Chưa tải → khiên số cũ (dự phòng)
+      const sa = this.img('hh_sao' + Math.max(1, Math.min(7, n | 0)));
+      if (sa) {
+        const E = 1.7, k = this.s * this.dpr, N = Math.max(8, Math.round(d * E * k)), key = 'hh5|' + n + '|' + N;
+        let c = this.cGet(key); if (c) return c;
+        c = document.createElement('canvas'); c.width = c.height = N;
+        const x = this.c2d(c), q = N / (d * E), mw = d * 1.66 * q, mh = d * (n >= 7 ? 1.2 : n === 1 ? 0.95 : n <= 4 ? 0.62 : 1.0) * q;
+        const sc = Math.min(mw / sa.width, mh / sa.height), w = sa.width * sc, h = sa.height * sc;
+        this.veNho(x, sa, 0, 0, sa.width, sa.height, Math.round(N / 2 - w / 2), Math.round(N / 2 - h / 2), Math.round(w), Math.round(h));
+        return this.cSet(key, c);
+      }
       const anh = this.img(n >= 7 ? 'h2_sao_sang' : 'h2_sao');
       if (!anh) return hhGoc.apply(this, arguments);
       // P0-04: SAO TRÊN BÀN = khiên to cùng cỡ mọi cấp (7★ chỉ thêm viền sáng ngoài), số to; ô vẽ 1.7d (REN.veHuyHieu bên dưới)
@@ -185,7 +196,7 @@ const HUD2 = {
       return this.cSet(key, c);
     };
     const vhGoc = REN.veHuyHieu;
-    REN.veHuyHieu = function (ctx, x, y, n, d) { if (!this.img(n >= 7 ? 'h2_sao_sang' : 'h2_sao')) return vhGoc.apply(this, arguments); const c = this.huyHieu(n, d); if (c) ctx.drawImage(c, x - d * 0.85, y - d * 0.85, d * 1.7, d * 1.7); };
+    REN.veHuyHieu = function (ctx, x, y, n, d) { if (!this.img('hh_sao' + Math.max(1, Math.min(7, n | 0))) && !this.img(n >= 7 ? 'h2_sao_sang' : 'h2_sao')) return vhGoc.apply(this, arguments); const c = this.huyHieu(n, d); if (c) ctx.drawImage(c, x - d * 0.85, y - d * 0.85, d * 1.7, d * 1.7); };
   }
 
   // 11 · lõi: 3 ảnh trạng thái (nguyên / mẻ / nguy) thay vết nứt vẽ code; chớp đỏ = ảnh viền đỏ

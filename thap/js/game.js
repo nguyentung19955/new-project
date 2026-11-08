@@ -171,6 +171,7 @@ function hopLeGhep(a, b) {
   if (a.st.bang > 0 || b.st.bang > 0) return false;
   if (a.sao !== b.sao || a.sao >= LUAT.saoMax) return false;
   if (a.st.da || b.st.da) return a.st.da && b.st.da; // đá chỉ ghép với đá cùng sao
+  if (a.id === 'loren' && b.id === 'loren') return false; // Twin Anvil: chỉ ghép đặc biệt cùng dạng (khác dạng = không ghép được)
   if (a.id === b.id) return true;
   return a.id === 'mimic' || b.id === 'mimic'; // MIMIC ghép với BẤT KỲ ụ cùng sao
 }
@@ -183,7 +184,7 @@ function ghepDacBiet(a, b) {
   if (sb && sb.ghepDB && sb.ghepDB.haiChieu && sb.ghepDB.hopLe(b, a)) return { sk: sb, a: b, b: a, dao: true };
   return null;
 }
-const GIU_CONG_DON = { loren: ['lo'], hopbi: ['tuoi'], tienhoa: ['tuoi'], leviathan: ['vuc'] }; // cộng dồn giữ khi ghép cùng loại ra cùng loại
+const GIU_CONG_DON = { hopbi: ['tuoi'], tienhoa: ['egg'], leviathan: ['vuc'] }; // cộng dồn giữ khi ghép cùng loại ra cùng loại
 // ghép a (kéo) vào b → ở ô b ra ụ NGẪU NHIÊN trong bộ bài, +1 sao (luật DCDW / Random Dice)
 function ghep(B, a, b, ep) {
   if (!ep && !hopLeGhep(a, b)) return null;
@@ -216,6 +217,8 @@ function ghep(B, a, b, ep) {
     if (a.epxung || b.epxung) ra.epxung = Math.max(a.epxung || 0, b.epxung || 0, ra.epxung || 0);
   }
   const kq = B2.t[b.o] || ra;
+  // buff Twin Anvil (skills4.js) theo ụ con khi ghép thường: lấy buff MẠNH hơn của 2 nguyên liệu (không cộng, không nhân đôi)
+  if (!daDa && (a.anv || b.anv) && kq === ra) { const x = a.anv, y = b.anv; ra.anv = !x ? y : !y ? x : (y.v > x.v ? y : x); }
   // (+1★ hiện bằng con dấu sao ảnh trong phát lại ghép — ghepfx.js)
   if (kq === ra) mocMoi(ra, b.sao, VX.TRE_LO + 0.12);
   SND.ghep(kq.sao, B2.ai);
@@ -268,6 +271,7 @@ function tocU(T) {
   const sk = SKILLS[T.id];
   let r = sk.toc || 1;
   if (sk.tocSao) r *= 1 + sk.tocSao * (T.sao - 1);
+  if (typeof tocThe === 'function') r *= tocThe(G.ban[T.ban], T.id); // cấp thẻ Tấn công VÀNG/ĐỎ +2%/cấp
   r *= Math.max(0.1, 1 + T.buf.toc + T.epxung); // QA Tím: nhiều Súng Bão kề nhau không làm tốc bắn âm
   r *= heJP(T, 'toc');
   if (T.st.kep > 0) r *= 0.6; // bị Kẹp Phá của đối thủ

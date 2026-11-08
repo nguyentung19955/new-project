@@ -10,17 +10,20 @@
 const THE = {
   lvDau: { trang: 1, xanh: 3, tim: 6, vang: 9, do: 11 },
   lvMax: 15,
-  pct: { trang: 0.04, xanh: 0.05, tim: 0.07, vang: 0.10, do: 0.15 }, // +sát thương mỗi cấp trên cấp đầu (MAX ≈ +56–63% mọi bậc)
+  // 08/11 (người dùng duyệt, CHATGPT-SPEC A0): thẻ VÀNG / ĐỎ lên tới LV17 (2 cấp mới cần thêm bản sao + vàng ở cuối bảng); bậc khác vẫn tối đa 15
+  lvMaxBac: { vang: 17, do: 17 },
+  maxLv(bac) { return (this.lvMaxBac && this.lvMaxBac[bac]) || this.lvMax; },
+  pct: { trang: 0.04, xanh: 0.05, tim: 0.07, vang: 0.05, do: 0.05 }, // VÀNG/ĐỎ (08/11): theo VAI TRÒ — Tấn công +5% ST +2% tốc · Hỗ trợ +4% · Đặc biệt/Khống chế +3% mỗi cấp (CAP_VD trong data.js) // +sát thương mỗi cấp trên cấp đầu (MAX ≈ +56–63% mọi bậc)
   // bản sao cần cho lần lên cấp thứ k+1 (k = số cấp đã lên kể từ cấp đầu)
   saoCan: {
     trang: [2, 4, 8, 15, 25, 40, 60, 90, 130, 180, 240, 320, 420, 550],
     xanh: [2, 4, 7, 12, 20, 32, 48, 70, 100, 140, 190, 250],
     tim: [2, 3, 5, 8, 12, 18, 26, 36, 50],
-    vang: [1, 2, 3, 5, 8, 12],
-    do: [1, 2, 3, 5],
+    vang: [1, 2, 3, 5, 8, 12, 18, 26],
+    do: [1, 2, 3, 5, 8, 12],
   },
   // vàng cho cấp L → L+1 (theo cấp TUYỆT ĐỐI như DCDW/Random Dice: thẻ hiếm khởi đầu cao nên lên cấp đắt ngay)
-  vangCan: [0, 20, 50, 100, 200, 400, 800, 1500, 2500, 4000, 6000, 9000, 13000, 18000, 25000],
+  vangCan: [0, 20, 50, 100, 200, 400, 800, 1500, 2500, 4000, 6000, 9000, 13000, 18000, 25000, 35000, 50000],
   // túi thưởng: tỉ lệ độ hiếm mỗi lượt rút + số bản sao mỗi lượt
   // (06/11 người dùng: đỏ + vàng phải cày như DCDW — xem tuvan/shop/KINH-TE.md) trước 55/28/12/4,5/0,5
   tiLe: [['trang', 58], ['xanh', 29], ['tim', 11], ['vang', 1.8], ['do', 0.2]],
@@ -50,8 +53,8 @@ const THEBAI = {
   // trạng thái 1 thẻ: lv (tuyệt đối), n (bản sao đang có), can (bản sao cần), vang (vàng cần), max
   the(id) {
     const d = this.doc(), b = this.bac(id), dau = THE.lvDau[b], o = d.c[id] || {};
-    const lv = Math.max(dau, Math.min(THE.lvMax, (o.lv | 0) || dau)), n = Math.max(0, o.n | 0), k = lv - dau;
-    const max = lv >= THE.lvMax || k >= THE.saoCan[b].length;
+    const lvM = THE.maxLv(b), lv = Math.max(dau, Math.min(lvM, (o.lv | 0) || dau)), n = Math.max(0, o.n | 0), k = lv - dau;
+    const max = lv >= lvM || k >= THE.saoCan[b].length;
     return { id, bac: b, lv, dau, n, k, max, can: max ? 0 : THE.saoCan[b][k], vang: max ? 0 : THE.vangCan[lv], pct: k * THE.pct[b], pctSau: (k + 1) * THE.pct[b] };
   },
   coThe(t) { return !t.max && t.n >= t.can; },          // đủ bản sao (thanh xanh đầy — như DCDW)
@@ -69,7 +72,7 @@ const THEBAI = {
   capMay(deck) {
     const ds = (typeof UI !== 'undefined' && UI.chon && UI.chon.length) ? UI.chon : [];
     const tb = ds.length ? Math.floor(ds.reduce((a, id) => a + this.bonus(id), 0) / ds.length) : 0;
-    const m = {}; for (const id of deck || []) m[id] = Math.min(tb, THE.lvMax - THE.lvDau[this.bac(id)]); return m;
+    const m = {}; for (const id of deck || []) m[id] = Math.min(tb, THE.maxLv(this.bac(id)) - THE.lvDau[this.bac(id)]); return m;
   },
   capBan(i, deck, def) {
     if (typeof G !== 'undefined' && G.debug && G.debug.cap2 && i === 1) return Object.assign({}, G.debug.cap2);

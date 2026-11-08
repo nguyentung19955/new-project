@@ -1603,6 +1603,7 @@ Mục để các session sau ghi **hình mới** phát sinh ngoài danh sách tr
 | nhánh | mã dự kiến | cỡ | mô tả | ghi chú |
 |---|---|---|---|---|
 | claude/demo-hop-tuong | (không áp dụng pixel) | — | DEMO riêng `demo/` đổi sang bối cảnh cyberpunk theo người dùng: hình vẽ procedural bằng canvas (glow) trong `demo/js/render.js`, ảnh thay thế gen ChatGPT theo `docs/demo-hop-tuong/PROMPT-CHATGPT.md`; không dùng/không sửa pixel game chính | |
+| claude/demo-hop-tuong | (thap/ — game TURRET MERGE không dùng hệ pixel, chưa có bản pixel) | 3× hiển thị | ảnh mới đợt làm lại tướng Vàng 08/11: `hh_sao1–7` (huy hiệu sao), `lua_t1–4` (icon lửa Ember), `bienmau_m_do/vang/lam/luc` (mặt nạ Prism), `trung_1/2/3/no/chay7/vo` (trứng Evolver), `kho_icon/bay/no/chong` (viên lưu Archive), `loren_*` + `lorentoc_nong` (Twin Anvil), `railgun_*` (Salvo Battery) | code giữ đường vẽ cũ khi ảnh chưa tải (khiên số, đầu ụ cũ) |
 | claude/duong-di-moi | `nen/cau-tre`, `nen/cau-da` | 16×16 / 32×32 | cầu tre / cầu đá chỗ đường cắt nhau | 9 dạng đường mới |
 | claude/duong-di-moi | `nen/mieng-hang-ngam` | 32×32 | miệng hang ngầm (quái chui xuống / trồi lên) |  |
 | claude/duong-di-moi | `nen/thanh-xoan-oc` | 48×48 | thành giữa xoắn ốc Cổ Loa |  |

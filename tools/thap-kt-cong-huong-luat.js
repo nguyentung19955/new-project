@@ -74,7 +74,7 @@ if (nhom('1 · ghepDB × biến thể nguồn/đích')) {
         const hlThuc = R('hl(a, b)');
         // mong đợi hopLeGhep: khoá nguồn → không (trừ đá+đá cùng sao cùng loại — không có trong ma trận này);
         // khoá đích → chỉ quaKhoa; còn lại: hopLe của kỹ năng hoặc ghép thường (cùng loại cùng sao <7 / Mimic)
-        const thuong = !khoaA && !khoaB && s < 7 && (S === X || X === 'mimic');
+        const thuong = !khoaA && !khoaB && s < 7 && ((S === X && S !== 'loren') || X === 'mimic'); // Twin Anvil + Twin Anvil: chỉ ghép đặc biệt cùng dạng (08/11)
         const daDa = kn === 'da' && kd === 'da' && s < 7 && !R(`biKhoa(a) && (a.st.bang > 0)`); // đá + đá cùng sao: ghép thành khối đá +1★ (luật DCDW)
         const mongHL = daDa ? true : khoaA ? false : khoaB ? (!!sk.quaKhoa && hopLeDB) : (hopLeDB || thuong);
         if (hlThuc !== mongHL) { loi.push(X + ': hopLeGhep=' + hlThuc + ' (mong ' + mongHL + ')'); continue; }
@@ -102,8 +102,10 @@ if (nhom('1 · ghepDB × biến thể nguồn/đích')) {
             if (b0.id === 'soi' && kq.m.thuc !== b0.thuc) sai('Copycat: không giữ dạng THỨC TỈNH'); }
           if (!kq.n || !kq.n.cung) sai('Copycat: ụ gốc phải giữ nguyên'); }
         if (S === 'epxung' && !dao) { if (!R(`!!SKILLS['${X}'].dmg`)) sai('Overclock lên ụ KHÔNG bắn (thẻ: "same-star shooting turret")'); else if (!kq.n || !kq.n.cung || !(kq.n.ep > b0.ep)) sai('Overclock: đích phải +tốc cùng thân'); }
-        if (S === 'loren' && !dao) { if (b0.sao > 3 || b0.da) sai('Forge ăn ụ >3★ / đá'); if (kq.n) sai('Forge: ụ bị ăn phải mất'); if (!kq.m || !(kq.m.lo > b0.lo)) sai('Forge: lò phải tăng'); }
-        if (S === 'mauhut') { if (!kq.n || kq.n.cung || kq.m) sai('Blood Circuit: 2 ụ → 1 ụ mới ở ô đích'); else if (kq.n.sao !== Math.max(b0.sao, kd === 's7' ? 7 : 3)) sai('Blood Circuit: sao ' + kq.n.sao + ' ≠ sao cao hơn'); }
+        // Twin Anvil (08/11): lên Anvil cùng dạng → ụ kéo mất, đích giữ thân, cộng dồn không giảm · lên ụ khác → Anvil mất, đích giữ thân + có buff (anv)
+        if (S === 'loren' && !dao) { const anv = R('!!(B.t[8] && B.t[8].anv)'); if (kq.m) sai('Anvil: ụ kéo phải mất'); if (!kq.n || !kq.n.cung) sai('Anvil: đích phải giữ thân'); else if (b0.id !== 'loren' && !anv) sai('Anvil: đích phải có buff'); if (b0.da) sai('Anvil lên ô đá'); }
+        // Blood Circuit (08/11): chỉ ĐÁNH DẤU — 2 ụ giữ nguyên chỗ/thân; không đánh dấu 7★ / Trứng / Anvil / Lõi Khởi Sinh / Hỗ trợ / đá
+        if (S === 'mauhut') { if (!kq.n || !kq.n.cung || !kq.m) sai('Blood Circuit: 2 ụ phải giữ nguyên'); else if (!R('a.mh && a.mh.o === 8')) sai('Blood Circuit: phải đánh dấu đích'); if (b0.sao >= 7 || b0.da) sai('Blood Circuit đánh dấu 7★ / đá'); }
       }
       ca(S + ' [' + tn + '] → đích [' + td + ']', 'theo luật ghép đặc biệt (xem đầu nhóm)', loi.slice(0, 4).join(' | ') + (loi.length > 4 ? ' …+' + (loi.length - 4) : ''), !loi.length);
     }
@@ -197,9 +199,7 @@ if (nhom('3b · RAGE × sát thương tính sẵn lúc ghép (drone, nổ Blood 
   const droneDmg = (rage) => { tran(['drone', 'lien', 'canon', 'tia', 'set']); R(`B.cuong = ${rage ? 10 : 0}; { const a = dat(0, 'drone', 3), b = dat(14, 'drone', 3); ghep(B, a, b); }`); return R(`(G.hu.find(h => h.k === 'drone') || {}).dmg || 0`); };
   const d0 = droneDmg(0), d1 = droneDmg(1);
   ca('RAGE × Drone: bom drone phóng khi ghép', '×2 (bom phóng trong lúc RAGE)', '×' + (d1 / d0).toFixed(2), Math.abs(d1 / d0 - 2) < 0.05);
-  const mhDmg = (rage) => { tran(['mauhut', 'lien', 'canon', 'tia', 'set']); R(`B.cuong = ${rage ? 10 : 0}; B.vamp = 6; { const a = dat(0, 'mauhut', 5), b = dat(7, 'lien', 2); const c = B.o[7]; sinhQuai('bo', 0, 100, 50); const E = G.quai[G.quai.length - 1]; E.vao = 1; E.x = c.x; E.y = c.y; E.hp = E.max = 1e9; _log = []; ghep(B, a, b); }`); return R('_log[0] || 0'); };
-  const m0 = mhDmg(0), m1 = mhDmg(1);
-  ca('RAGE × Blood Circuit: nổ khi hiến khác sao', '×2', m0 ? '×' + (m1 / m0).toFixed(2) : 'không nổ', m0 > 0 && Math.abs(m1 / m0 - 2) < 0.05);
+  // (08/11: Blood Circuit không còn nổ khi hiến — làm lại thành đánh dấu / nuốt / Blood Rite)
 }
 
 // =====================================================================================================
@@ -210,16 +210,17 @@ if (nhom('3b · RAGE × sát thương tính sẵn lúc ghép (drone, nổ Blood 
 if (nhom('5 · bộ đếm × ghép / mất sao')) {
   const kieu = [
     ['ghép thường', `dat(0,'lien',2); dat(1,'lien',2); ghep(B, B.t[0], B.t[1]);`, 1],
-    ['Merge King nâng sao', `dat(0,'vughep',2,'thuong'); dat(1,'lien',2); ghep(B, B.t[0], B.t[1]);`, 1],
-    ['Blood Circuit hiến', `dat(0,'mauhut',2); dat(1,'lien',2); ghep(B, B.t[0], B.t[1]);`, 1],
+    ['Merge King nâng sao', `dat(0,'vughep',2,'thuong'); dat(1,'lien',2); ghep(B, B.t[0], B.t[1]);`, 0], // 08/11 người dùng: tăng sao KHÔNG phải ghép
+    ['Blood Circuit đánh dấu', `dat(0,'mauhut',2); dat(1,'lien',2); ghep(B, B.t[0], B.t[1]);`, 0],
+    ['Twin Anvil + Twin Anvil', `dat(0,'loren',2); dat(1,'loren',3); B.t[0].dang = B.t[1].dang = 'dmg'; ghep(B, B.t[0], B.t[1]);`, 1],
     ['Teleporter đổi chỗ', `dat(0,'dichchuyen',2); dat(1,'lien',2); ghep(B, B.t[0], B.t[1]);`, 0],
     ['Copycat chép', `dat(0,'saochep',2); dat(1,'lien',2); ghep(B, B.t[0], B.t[1]);`, 0],
     ['Overclock', `dat(0,'epxung',2); dat(1,'lien',2); ghep(B, B.t[0], B.t[1]);`, 0],
-    ['Scrap Forge ăn', `dat(0,'loren',2); dat(1,'lien',2); ghep(B, B.t[0], B.t[1]);`, 0],
+    ['Twin Anvil buff', `dat(0,'loren',2); dat(1,'lien',2); ghep(B, B.t[0], B.t[1]);`, 0],
   ];
   for (const [ten, js, n] of kieu) {
     tran(['luutru', 'lien', 'vughep', 'dichchuyen', 'saochep']);
-    R(`var K = dat(14, 'luutru', 3); K.kho = 5; var N0 = B.ghepN || 0;`); R(js);
+    R(`B.deck = ['lien']; var K = dat(14, 'luutru', 3); K.kho = 5; var N0 = B.ghepN || 0;`); R(js);
     const d = R('K.kho - 5');
     ca('Fusion Archive × ' + ten, n ? '+1 điểm (ghép thật)' : 'không đổi (không phải ghép — luật Star Breaker)', '+' + d, d === n);
   }
@@ -228,18 +229,18 @@ if (nhom('5 · bộ đếm × ghép / mất sao')) {
   R(`var K = dat(14, 'luutru', 3); K.kho = 0; var t1 = dat(0, 'dichchuyen', 2), l1 = dat(1, 'lien', 2); for (let i = 0; i < 20; i++) ghep(B, t1, B.t[t1.o === 0 ? 1 : 0]);`);
   ca('Teleporter đổi chỗ qua lại 20 lần × Fusion Archive', '0 điểm (không có ghép nào)', R('K.kho'), R('K.kho') === 0);
   // giữ bộ đếm lớn nhất khi ghép cùng loại ra cùng loại (GIU_CONG_DON + hook riêng)
-  for (const [id, k, v] of [['loren', 'lo', 7], ['hopbi', 'tuoi', 20], ['tienhoa', 'tuoi', 9], ['cuuvi', 'duoi', 5], ['lualien', 'lc', 4]]) {
+  for (const [id, k, v] of [['hopbi', 'tuoi', 20], ['tienhoa', 'egg', 9], ['cuuvi', 'duoi', 5], ['lualien', 'lc', 4]]) { // (Twin Anvil: ghép đặc biệt riêng — tools/thap-kt-vang-g2.js)
     tran([id]);
     R(`B.deck = ['${id}']; var a = dat(0, '${id}', 2), b = dat(1, '${id}', 2); a.${k} = ${v}; b.${k} = 1; var r = ghep(B, a, b); var N = B.t[1];`);
     const got = R(`N && N.id === '${id}' ? N.${k} || 0 : -1`);
     ca(id + ' + ' + id + ' → ' + id + ': giữ ' + k, 'giữ max (' + v + ')', got, got >= v);
   }
   // Evolver: thẻ "losing a star restarts the countdown" × trùm hạ sao
-  tran(['tienhoa', 'lien']); R(`var T = dat(3, 'tienhoa', 4); T.tuoi = 20; capNhatBan(B, 1/30); haSao(B, T); capNhatBan(B, 1/30);`);
-  ca('Evolver × trùm −1★', 'đếm ngược lại từ đầu (tuoi ≈ 0)', R('T.tuoi.toFixed(2)'), R('T.tuoi') < 0.5);
+  tran(['tienhoa', 'lien']); R(`var T = dat(3, 'tienhoa', 4); T.egg = 15; capNhatBan(B, 1/30); haSao(B, T); capNhatBan(B, 1/30);`);
+  ca('Evolver × trùm −1★', 'đếm ngược lại từ đầu (egg ≈ 0)', R('T.egg.toFixed(2)'), R('T.egg') < 0.5);
   // Merge King nâng sao Evolver: thẻ "higher stars take longer" nhưng tăng sao giữ thời gian đã chờ
-  tran(['tienhoa', 'vughep']); R(`var T = dat(3, 'tienhoa', 3); T.tuoi = 20; capNhatBan(B, 1/30); var t0 = T.tuoi; var M = dat(4, 'vughep', 3, 'thuong'); ghep(B, M, T); capNhatBan(B, 1/30);`);
-  ca('Evolver × Merge King +1★', 'giữ thời gian đã chờ', R('T.tuoi.toFixed(2)'), R('T.tuoi >= t0 - 0.1'));
+  tran(['tienhoa', 'vughep']); R(`var T = dat(3, 'tienhoa', 3); T.egg = 10; capNhatBan(B, 1/30); var t0 = T.egg; var M = dat(4, 'vughep', 3, 'thuong'); ghep(B, M, T); capNhatBan(B, 1/30);`);
+  ca('Evolver × Merge King +1★', 'giữ thời gian đã chờ', R('T.egg.toFixed(2)'), R('T.egg >= t0 - 0.1'));
 }
 
 // =====================================================================================================
@@ -315,13 +316,13 @@ if (nhom('8 · ca từ ChatGPT')) {
   ca('[GPT#4] Merge King VÀNG → ụ 6★', '7★ (không 8★)', R('X.sao'), R('X.sao') === 7);
   // GPT#5 / #13: ụ CÂM (Static Jammer) không ghép — kể cả Teleporter / Merge King kéo lên nó, và nó kéo đi
   for (const [ten, js] of [['Teleporter → ụ câm', `var a = dat(0, 'dichchuyen', 3), b = dat(1, 'lien', 3); b.st.kep = 6; b.st.cam = 6;`], ['Merge King → ụ câm', `var a = dat(0, 'vughep', 3, 'thuong'), b = dat(1, 'lien', 3); b.st.kep = 6; b.st.cam = 6;`],
-    ['Merge King câm kéo đi', `var a = dat(0, 'vughep', 3, 'thuong'), b = dat(1, 'lien', 3); a.st.kep = 6; a.st.cam = 6;`], ['Scrap Forge câm ăn', `var a = dat(0, 'loren', 3), b = dat(1, 'lien', 2); b.sao = 3; a.st.kep = 6; a.st.cam = 6;`], ['ghép thường với ụ câm', `var a = dat(0, 'lien', 3), b = dat(1, 'lien', 3); b.st.kep = 6; b.st.cam = 6;`]]) {
+    ['Merge King câm kéo đi', `var a = dat(0, 'vughep', 3, 'thuong'), b = dat(1, 'lien', 3); a.st.kep = 6; a.st.cam = 6;`], ['Twin Anvil câm buff', `var a = dat(0, 'loren', 3), b = dat(1, 'lien', 2); b.sao = 3; a.st.kep = 6; a.st.cam = 6;`], ['ghép thường với ụ câm', `var a = dat(0, 'lien', 3), b = dat(1, 'lien', 3); b.st.kep = 6; b.st.cam = 6;`]]) {
     tran(['vughep', 'dichchuyen', 'loren', 'lien', 'canon']); R(js); const t0 = anh(); const h = R('hl(a, b)'); R('ghep(B, a, b)');
     ca('[GPT#13] ' + ten, 'không ghép, không tốn gì ("no merge")', 'hopLe=' + h + ' · ' + (anh() === t0 ? 'bàn không đổi' : 'bàn đổi'), !h && anh() === t0);
   }
   // GPT#8: Forge ăn Combo Core → không COMBO; ăn Mimic → không ghép
-  tran(['loren', 'combo', 'mimic', 'luutru', 'lien']); R(`B.combo = 0; var K = dat(14, 'luutru', 3); K.kho = 0; var F = dat(0, 'loren', 3); dat(1, 'combo', 2); ghep(B, F, B.t[1]);`);
-  ca('[GPT#8] Scrap Forge ăn Combo Core', 'lò +, COMBO 0, Archive 0', 'lo=' + R('F.lo') + ' combo=' + R('B.combo') + ' kho=' + R('K.kho'), R('F.lo') > 0 && R('B.combo') === 0 && R('K.kho') === 0);
+  tran(['loren', 'combo', 'mimic', 'luutru', 'lien']); R(`B.combo = 0; var K = dat(14, 'luutru', 3); K.kho = 0; var F = dat(0, 'loren', 3); var C = dat(1, 'combo', 2); ghep(B, F, C);`);
+  ca('[GPT#8] Twin Anvil buff lên Combo Core (08/11)', 'Combo nhận buff, COMBO 0, Archive 0', 'anv=' + R('!!C.anv') + ' combo=' + R('B.combo') + ' kho=' + R('K.kho'), R('!!C.anv') && R('B.combo') === 0 && R('K.kho') === 0);
   // GPT#11: ụ hỗ trợ bị băng → buff ụ kề tắt; tan băng → bật lại
   tran(['radar', 'lien']); R(`var S = dat(7, 'radar', 3), X = dat(8, 'lien', 3); capNhatBan(B, 1/30); var b1 = X.buf.toc; S.st.bang = 0.05; capNhatBan(B, 1/30); var b2 = X.buf.toc; S.st.bang = 0; capNhatBan(B, 1/30); var b3 = X.buf.toc;`);
   ca('[GPT#11] Radar bị băng rồi tan', 'buff tắt khi băng, bật lại đúng 1 lần', [R('b1'), R('b2'), R('b3')].map(x => x.toFixed(2)).join(' → '), R('b1') > 0 && R('b2') < R('b1') && Math.abs(R('b3') - R('b1')) < 1e-9);
@@ -370,13 +371,13 @@ if (nhom('8 · ca từ ChatGPT')) {
 // 9 · LUẬT NGƯỜI DÙNG CHỐT 07/11 (CAN-HOI.md #1 #3 #6 #7 #8 #10 = B)
 // =====================================================================================================
 if (nhom('9 · luật người dùng chốt')) {
-  // #1 Mimic + Scrap Forge = ghép thường (2 chiều), Forge vẫn ăn ụ khác
-  for (const [ten, js] of [['Mimic kéo lên Forge', `var a = dat(0, 'mimic', 2), b = dat(1, 'loren', 2);`], ['Forge kéo lên Mimic', `var a = dat(0, 'loren', 2), b = dat(1, 'mimic', 2);`]]) {
-    tran(['loren', 'mimic', 'lien', 'canon', 'tia']); R(js + ' var F = [a, b].find(T => T.id === "loren"); F.lo = 4; var r = ghep(B, a, b);');
-    ca('[#1] ' + ten, 'ghép thường: ra ụ mới 3★ ở ô đích, không +lò', R('B.t[1] && B.t[1].id + B.t[1].sao') + ' ô0=' + R('!!B.t[0]') + ' lo=' + R('F.lo'), R('B.t[1] && B.t[1].sao') === 3 && !R('B.t[0]') && R('F.lo') === 4);
+  // #1 Mimic + Twin Anvil = ghép thường (2 chiều) — Anvil không buff lên Mimic (08/11 giữ luật cũ)
+  for (const [ten, js] of [['Mimic kéo lên Anvil', `var a = dat(0, 'mimic', 2), b = dat(1, 'loren', 2);`], ['Anvil kéo lên Mimic', `var a = dat(0, 'loren', 2), b = dat(1, 'mimic', 2);`]]) {
+    tran(['loren', 'mimic', 'lien', 'canon', 'tia']); R(js + ' var r = ghep(B, a, b);');
+    ca('[#1] ' + ten, 'ghép thường: ra ụ mới 3★ ở ô đích', R('B.t[1] && B.t[1].id + B.t[1].sao') + ' ô0=' + R('!!B.t[0]'), R('B.t[1] && B.t[1].sao') === 3 && !R('B.t[0]'));
   }
-  tran(['loren', 'lien']); R(`var F = dat(0, 'loren', 3); F.lo = 0; dat(1, 'lien', 2); ghep(B, B.t[1], F);`);
-  ca('[#1] ụ thường kéo lên Forge', 'Forge vẫn ăn (+lò)', R('F.lo'), R('F.lo') > 0);
+  tran(['loren', 'lien']); R(`var F = dat(0, 'loren', 3); dat(1, 'lien', 3); var h = hl(B.t[1], F);`);
+  ca('[#1] ụ thường kéo lên Anvil (08/11)', 'không ghép được (chỉ Anvil kéo đi)', R('h'), !R('h'));
   // #6 Mirror phản Kẹp → ụ đối thủ có khiên / Holy Shield bị chặn; không phản dây chuyền
   for (const [ten, js, mongKep] of [['đối thủ không phòng thủ', '', true], ['ụ đối thủ có khiên', 'R0.khien = 1;', false], ['đối thủ Holy Shield', 'D.khien = 8;', false], ['đối thủ cũng có Mirror sạc', 'const M2 = dat(14, "guongcong", 3, "", D); M2.nap = 1;', true]]) {
     tran(['kepha', 'guongcong', 'lien', 'canon', 'tia'], 'pvp');
@@ -421,21 +422,7 @@ if (nhom('10 · jackpot')) {
   const jp = (x, id) => R(`!!(${x} && ${x}.jp && ${x}.jp.${id} && ${x}.jp.${id}.het > G.t)`);
   const nap = () => R(`var deckX = (BB) => { (BB || B).deck = ['lien', 'canon', 'tia', 'set', 'bao']; }; var mauT = (T, c) => { T.tuoi = 9 + 3 * c - (T.uid % 3) + 0.1; };
     var chep = (X) => { const C = dat(14, 'saochep', X.sao); ghep(B, C, X); return B.t[14]; };`);
-  // 1 MASTERWORK
-  const mw = (dsSao, opt) => { tran(['loren', 'lien', 'canon', 'tia', 'set'], opt && opt.che); nap();
-    R(`var X = dat(0, 'lien', 5${opt && opt.khoa ? ", '" + opt.khoa + "'" : ''}); var Y = dat(1, 'lien', 4); var jF = dat(7, 'loren', 3); var jD0 = D ? dat(0, 'lien', 6, '', D) : null;`);
-    dsSao.forEach((s, i) => { R(`ghep(B, jF, dat(${10 + i}, 'canon', ${s}));`); if (opt && opt.cho && i === 0) buoc(opt.cho); }); buoc(0.1); };
-  mw([1, 2, 3]); ca('[JP] MASTERWORK ăn 1★+2★+3★', 'ụ Tấn công sao cao nhất (5★) nhận 15 s, ST cộng ≥ +240%', 'jp=' + jp('X', 'masterwork') + ' buf=' + R('X.buf.dmg.toFixed(2)'), jp('X', 'masterwork') && !jp('Y', 'masterwork') && R('X.buf.dmg') >= 2.4);
-  const c1 = R('chep(X)'); ca('[JP] MASTERWORK × bản sao Copycat', 'bản sao không chép thưởng', jp('B.t[14]', 'masterwork'), !jp('B.t[14]', 'masterwork'));
-  R('var jEB = sinhTrum("crown", G.duong.findIndex(p => p.ban === 0)); jEB.vao = 1; jEB.hp = jEB.max = 1e9;');
-  { const g = R('JP.goc(X)'); R('var h0 = jEB.hp; trung(jEB, 1, { B, T: X, crit: false }); var d1 = h0 - jEB.hp; h0 = jEB.hp; trung(jEB, 1, { B, T: X, crit: false }); var d2 = h0 - jEB.hp;');
-    ca('[JP] MASTERWORK đòn đầu vào trùm', '+800% D9 đúng 1 lần mỗi trùm', R('d1.toFixed(1)') + ' / ' + R('d2.toFixed(1)'), Math.abs(R('d1') - R('d2') - 8 * g) < 1); }
-  mw([1, 2, 2]); ca('[JP] MASTERWORK thiếu bậc 3★', 'không kích', jp('X', 'masterwork'), !jp('X', 'masterwork'));
-  mw([1, 2, 3], { cho: 76 }); ca('[JP] MASTERWORK quá 75 s', 'không kích (1★ hết hạn)', jp('X', 'masterwork'), !jp('X', 'masterwork'));
-  mw([1, 2, 3], { khoa: 'bang' }); ca('[JP] MASTERWORK × ụ cao nhất đang băng', 'bỏ ụ băng, ụ 4★ nhận', 'băng=' + jp('X', 'masterwork') + ' 4★=' + jp('Y', 'masterwork'), !jp('X', 'masterwork') && jp('Y', 'masterwork'));
-  mw([1, 2, 3], { khoa: 'da' }); ca('[JP] MASTERWORK × ụ cao nhất hoá đá', 'bỏ ụ đá, ụ 4★ nhận', 'đá=' + jp('X', 'masterwork') + ' 4★=' + jp('Y', 'masterwork'), !jp('X', 'masterwork') && jp('Y', 'masterwork'));
-  mw([1, 2, 3], { che: 'pvp' }); ca('[JP] MASTERWORK PVP', 'chỉ bàn mình (ụ 6★ đối thủ không nhận)', 'mình=' + jp('X', 'masterwork') + ' đối thủ=' + jp('jD0', 'masterwork'), jp('X', 'masterwork') && !jp('jD0', 'masterwork'));
-  R('ghep(B, jF, dat(10, "canon", 1)); ghep(B, jF, dat(11, "canon", 2)); ghep(B, jF, dat(12, "canon", 3));'); ca('[JP] MASTERWORK hồi 90 s', 'lần 2 ngay sau không kích lại (log 1 lần)', R('G.jpLog.length'), R('G.jpLog.filter(l => l.id === "masterwork").length') === 1);
+  // 1 MASTERWORK — BỎ 08/11 (Scrap Forge làm lại thành Twin Anvil)
   // 2 ORBITAL CASCADE
   const oc = (cho, khoa) => { tran(['orbital', 'lien', 'canon', 'tia', 'set']); nap(); R('deckX()');
     R(`var jO = dat(5, 'orbital', 3${khoa ? ", '" + khoa + "'" : ''}); var jO2 = dat(6, 'orbital', 3); ghep(B, dat(0, 'orbital', 2), dat(1, 'orbital', 2));`); if (cho) buoc(cho); R(`ghep(B, dat(2, 'orbital', 2), dat(3, 'orbital', 2));`); buoc(0.1); };
@@ -443,13 +430,7 @@ if (nhom('10 · jackpot')) {
   ca('[JP] ORBITAL CASCADE × bản sao Copycat', 'bản sao không chép', '', (R('chep(jO)'), !jp('B.t[14]', 'cascade')));
   oc(24); ca('[JP] ORBITAL CASCADE ghép lần 2 sau 23 s', 'không kích', jp('jO', 'cascade'), !jp('jO', 'cascade'));
   oc(0, 'bang'); ca('[JP] ORBITAL CASCADE × Vệ Tinh băng', 'Vệ Tinh băng không nhận, Vệ Tinh thường nhận', jp('jO', 'cascade') + '/' + jp('jO2', 'cascade'), !jp('jO', 'cascade') && jp('jO2', 'cascade'));
-  // 3 CHROMATIC HEIST
-  const he = (thuTu, khoa) => { tran(['bienmau', 'lien', 'canon', 'tia', 'set']); nap(); R('deckX()'); R(`var jP = dat(9, 'bienmau', 4${khoa ? ", '" + khoa + "'" : ''}); var jP2 = dat(13, 'bienmau', 4);`);
-    thuTu.forEach((c, i) => R(`{ const a = dat(${i * 2}, 'bienmau', 2), b = dat(${i * 2 + 1}, 'bienmau', 2); mauT(a, ${c}); mauT(b, ${c}); ghep(B, a, b); }`)); buoc(0.05); };
-  he([0, 1, 2]); ca('[JP] CHROMATIC HEIST ĐỎ → VÀNG → XANH', 'mọi Prism nhận jLĂNG jKÍNH TRẮNG', jp('jP', 'heist'), jp('jP', 'heist') && jp('jP2', 'heist'));
-  ca('[JP] CHROMATIC HEIST × bản sao Copycat', 'không chép', '', (R('chep(jP)'), !jp('B.t[14]', 'heist')));
-  he([0, 2, 1]); ca('[JP] CHROMATIC HEIST sai thứ tự', 'không kích', jp('jP', 'heist'), !jp('jP', 'heist'));
-  he([0, 1, 2], 'da'); ca('[JP] CHROMATIC HEIST × Prism hoá đá', 'Prism đá không nhận', jp('jP', 'heist') + '/' + jp('jP2', 'heist'), !jp('jP', 'heist') && jp('jP2', 'heist'));
+  // 3 CHROMATIC HEIST — BỎ 08/11 (Prism Thief: Chromatic Circuit — tools/thap-kt-vang-g2.js)
   // 4 CHAIN REACTOR (đòn trực tiếp qua trung thật)
   const cr = (n, soU, khoa) => { tran(['lienket', 'lien', 'canon', 'tia', 'set']); nap();
     R(`var jL = []; for (let i = 0; i < ${n}; i++) jL.push(dat(i, 'lienket', 3, i === 1 ? '${khoa || ''}' : '')); var jE1 = sinhQuai('bo', G.duong.findIndex(p => p.ban === 0), 50); jE1.vao = 1; jE1.hp = jE1.max = 1e9;
@@ -459,28 +440,14 @@ if (nhom('10 · jackpot')) {
     ca('[JP] CHAIN REACTOR tia sét mỗi 6 đòn', 'quái khác nhận 250% D9', jQ.toFixed(1), jQ > 0); }
   cr(4, 2); ca('[JP] CHAIN REACTOR chỉ 2 ụ đủ đòn', 'không kích', R('jL.some(X => X.jp && X.jp.reactor)'), !R('jL.some(X => X.jp && X.jp.reactor)'));
   cr(4, 3, 'da'); ca('[JP] CHAIN REACTOR × 1 mắt xích hoá đá', 'chuỗi đứt → không kích', R('jL.some(X => X.jp && X.jp.reactor)'), !R('jL.some(X => X.jp && X.jp.reactor)'));
-  // 5 BLOOD ECLIPSE
-  const be = (v, cho) => { tran(['mauhut', 'lien', 'canon', 'tia', 'set']); nap(); R('deckX()'); R(`B.vamp = ${v}; var jM = dat(2, 'mauhut', 3); ghep(B, dat(0, 'mauhut', 3), dat(5, 'lien', 1));`); if (cho) buoc(cho); R(`ghep(B, dat(1, 'mauhut', 3), dat(6, 'lien', 2));`); buoc(0.05); };
-  be(6); ca('[JP] BLOOD ECLIPSE 6 VAMP + 2 lần hiến khác sao', 'Blood Circuit còn lại nhận, tiêu hết 6 VAMP', 'jp=' + jp('jM', 'eclipse') + ' vamp=' + R('B.vamp'), jp('jM', 'eclipse') && R('B.vamp') === 0);
-  be(4); ca('[JP] BLOOD ECLIPSE chỉ 4 VAMP', 'không kích', jp('jM', 'eclipse'), !jp('jM', 'eclipse'));
-  be(6, 26); ca('[JP] BLOOD ECLIPSE lần 2 sau 25 s', 'không kích', jp('jM', 'eclipse'), !jp('jM', 'eclipse'));
+  // 5 BLOOD ECLIPSE — BỎ 08/11 (Blood Circuit làm lại)
   // 6 TRUE NORTH
   const tn = (ds) => { tran(['canon', 'lien', 'tia', 'set', 'bao']); nap(); R('var jK = dat(14, "canon", 3); jK.huong = 1;');
     ds.forEach(([ha, sa, hb, sb], i) => R(`{ const a = dat(${i * 2}, 'canon', 1), b = dat(${i * 2 + 1}, 'canon', 1); a.huong = ${ha}; a.so = ${sa}; b.huong = ${hb}; b.so = ${sb}; ghep(B, a, b); }`)); buoc(0.05); };
   tn([[0, 1, 0, 1], [0, 1, 0, 1], [0, 3, 0, 3]]); ca('[JP] TRUE NORTH 3 ghép cùng mũi tên, số 6', 'mọi Pháo La Bàn nhận 12 s', jp('jK', 'truenorth'), jp('jK', 'truenorth'));
   tn([[0, 1, 0, 1], [0, 1, 2, 5], [0, 3, 0, 3]]); ca('[JP] TRUE NORTH có ghép ngược xen giữa', 'không kích', jp('jK', 'truenorth'), !jp('jK', 'truenorth'));
   tn([[0, 1, 0, 1], [0, 1, 0, 1], [0, 2, 0, 2]]); ca('[JP] TRUE NORTH số kết quả 4 (< 6)', 'không kích', jp('jK', 'truenorth'), !jp('jK', 'truenorth'));
-  // 7 GRAND CHORUS
-  const gc = (ids, t, khoa) => { tran(['hopca', 'lien', 'canon', 'tia', 'radar']); nap(); R(`var jQ = dat(0, 'hopca', 3); ${JSON.stringify(ids)}.forEach((id, i) => dat(i + 1, id, 3, i === 0 ? '${khoa || ''}' : ''));`); buoc(t); };
-  gc(['lien', 'canon', 'tia', 'lien', 'canon'], 10.2); ca('[JP] GRAND CHORUS 6 ụ 3★ (3 loại Tấn công) giữ 10 s', 'Choir nhận 12 s', jp('jQ', 'chorus'), jp('jQ', 'chorus'));
-  ca('[JP] GRAND CHORUS × bản sao Copycat', 'không chép', '', (R('chep(jQ)'), !jp('B.t[14]', 'chorus')));
-  gc(['lien', 'canon', 'tia', 'lien', 'canon'], 9); ca('[JP] GRAND CHORUS giữ 9 s', 'chưa kích', jp('jQ', 'chorus'), !jp('jQ', 'chorus'));
-  gc(['lien', 'canon', 'radar', 'lien', 'canon'], 10.2); ca('[JP] GRAND CHORUS chỉ 2 loại Tấn công khác Choir (+ hỗ trợ)', 'Choir tính là loại thứ 3 → kích', jp('jQ', 'chorus'), jp('jQ', 'chorus'));
-  gc(['lien', 'lien', 'radar', 'lien', 'radar'], 10.2); ca('[JP] GRAND CHORUS 6 ụ nhưng 2 loại Tấn công', 'không kích (chặn lỗ 12 ụ 1★)', jp('jQ', 'chorus'), !jp('jQ', 'chorus'));
-  gc(['lien', 'canon', 'tia', 'lien', 'canon'], 10.2, 'da'); ca('[JP] GRAND CHORUS × 1 ụ hoá đá (còn 5)', 'không kích', jp('jQ', 'chorus'), !jp('jQ', 'chorus'));
-  tran(['hopca', 'lien', 'canon', 'tia', 'radar']); nap(); R(`var jQ = dat(0, 'hopca', 2); ['lien', 'canon', 'tia', 'lien', 'canon'].forEach((id, i) => dat(i + 1, id, 2));`); buoc(10.2);
-  ca('[JP] GRAND CHORUS đội hình 2★', 'không kích (cần ≥ 3★ — chặn 1★/2★ sớm)', jp('jQ', 'chorus'), !jp('jQ', 'chorus'));
-  tran(['xucxac', 'lien']); nap(); R('var X = dat(0, "xucxac", 2); JP.xucxac(B, X, 50, false); JP.xucxac(B, X, 150, false); JP.xucxac(B, X, 250, false);'); ca('[JP] LOADED DICE Pháo 2★', 'không kích (cần ≥ 3★)', jp('X', 'loaded'), !jp('X', 'loaded'));
+  // 7 GRAND CHORUS — BỎ 08/11 (Quantum Choir làm lại thành Harmony)
   // 8 SIX SEALS
   const ss = (hat) => { tran(['pandora', 'lien', 'canon', 'tia', 'set']); nap(); R('deckX()'); R(`G.hat = ${hat}; var jA = dat(14, 'lien', 5); var jD0 = D ? dat(14, 'lien', 5, '', D) : null; var mo = [];`);
     for (let i = 0; i < 6; i++) { R(`B.mana = 0; ghep(B, dat(0, 'pandora', 1), dat(1, 'pandora', 1)); mo.push(B._pd.slice());`); buoc(1); } };
@@ -490,9 +457,9 @@ if (nhom('10 · jackpot')) {
   ss(11); ca('[JP] SIX SEALS tất định (cùng hạt → cùng thứ tự)', 'giống lần trước', R('mo.map(x => x.join("+")).join(" ")'), R('mo.map(x => x.join("+")).join(" ")') === ss1);
   tran(['pandora', 'lien', 'canon', 'tia', 'set']); nap(); R('deckX()'); R('var jA = dat(14, "lien", 5); G._pdEp = [2, 6]; ghep(B, dat(0, "pandora", 1), dat(1, "pandora", 1)); G._pdEp = null;'); buoc(1);
   ca('[JP] SIX SEALS bàn con rối online (gói pd có 6)', 'mở đúng phép 2 + ROYAL VAULT', jp('jA', 'royal'), jp('jA', 'royal'));
-  // 9 ĐỘT PHÁ theo độ khó
-  { const a = R('JSON.stringify(DOTPHA.thuong(4, "hopca"))'), b = R('JSON.stringify(DOTPHA.thuong(4, "lualien"))'), c = R('JSON.stringify(DOTPHA.thuong(4, "loren"))');
-    ca('[JP] ĐỘT PHÁ IV theo độ khó', 'Choir (khó 2) < Ember (3) < Forge (4)', a + ' ' + b + ' ' + c, R('DOTPHA.thuong(4,"hopca").dmg < DOTPHA.thuong(4,"lualien").dmg && DOTPHA.thuong(4,"lualien").cdmg < DOTPHA.thuong(4,"loren").cdmg && DOTPHA.thuong(4,"lualien").cdmg === 0.8')); }
+  // 9 ĐỘT PHÁ theo độ khó (08/11: Choir / Forge bỏ đột phá — Harmony / Twin Anvil làm lại)
+  { const b = R('JSON.stringify(DOTPHA.thuong(4, "lualien"))'), c = R('JSON.stringify(DOTPHA.thuong(4, "cuuvi"))');
+    ca('[JP] ĐỘT PHÁ IV theo độ khó', 'Ember (3) < Nine-Tail (4)', b + ' ' + c, R('DOTPHA.thuong(4,"lualien").cdmg < DOTPHA.thuong(4,"cuuvi").cdmg && DOTPHA.thuong(4,"lualien").cdmg === 0.8')); }
   // 10a LOADED DICE
   tran(['xucxac', 'lien']); nap(); R('var X = dat(0, "xucxac", 3); JP.xucxac(B, X, 50, false); JP.xucxac(B, X, 300, true); JP.xucxac(B, X, 150, false);');
   ca('[JP] LOADED DICE chưa đủ 3 dải (chí mạng không tính)', 'chưa kích', jp('X', 'loaded'), !jp('X', 'loaded'));

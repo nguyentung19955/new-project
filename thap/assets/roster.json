@@ -442,12 +442,12 @@
  },
  {
   "id": "railgun",
-  "ten": "Railgun",
+  "ten": "Salvo Battery",
   "bac": "vang",
   "dcdw": "Removal Tee",
-  "kyNang": "Bingo: a full ROW of Railguns +200% damage, a full COLUMN of Railguns +150% fire rate (stones don't count)",
-  "ten_vi": "Railgun",
-  "kyNang_vi": "Bingo: đủ HÀNG NGANG toàn Railgun +200% sát thương, đủ CỘT DỌC toàn Railgun +150% tốc bắn (ô đá không tính)"
+  "kyNang": "Bingo: Salvo Batteries in a row add damage (3/5 +25%, 4/5 +65%, 5/5 +200%); in a column add fire rate (2/3 +35%, 3/3 +150%). Stones break the line",
+  "ten_vi": "Pháo Loạt Salvo",
+  "kyNang_vi": "Bingo: nhiều Salvo cùng hàng +ST (3/5 +25%, 4/5 +65%, 5/5 +200%); cùng cột +tốc bắn (2/3 +35%, 3/3 +150%). Ô đá làm đứt hàng"
  },
  {
   "id": "vughep",
@@ -508,9 +508,9 @@
   "ten": "Evolver",
   "bac": "vang",
   "dcdw": "Moa",
-  "kyNang": "Time bomb counts down, then becomes a random turret +1★ (higher stars take longer; at 7★ it fizzles — no skill)",
-  "ten_vi": "Hộp Tiến Hoá",
-  "kyNang_vi": "Bom hẹn giờ đếm ngược rồi biến thành ụ ngẫu nhiên +1 sao (sao cao chờ lâu hơn; 7★ thì bom xịt — không còn tác dụng)"
+  "kyNang": "Egg: hatches into a random turret +1★ after 10s + 2s per ★. 6★ burns into a 7★ egg: tap it for +20 mana",
+  "ten_vi": "Trứng Tiến Hoá",
+  "kyNang_vi": "Trứng: nở thành ụ ngẫu nhiên +1★ sau 10 s + 2 s mỗi sao. 6★ cháy thành trứng 7★: chạm để lấy +20 mana"
  },
  {
   "id": "cauvong",
@@ -745,12 +745,12 @@
  },
  {
   "id": "loren",
-  "ten": "Scrap Forge",
+  "ten": "Twin Anvil",
   "bac": "vang",
   "dcdw": "Original (Scrap Forge)",
-  "kyNang": "Special (original): FEED it a 1–3★ turret — your best Attack turret gains damage while the Forge stays on the board (no cap). Only feeding counts, not other merges",
-  "ten_vi": "Lò Rèn Phế Liệu",
-  "kyNang_vi": "Đặc biệt (ụ riêng): cho ĂN ụ 1–3★ — ụ Tấn công mạnh nhất +sát thương khi Lò còn trên bàn (không trần). Chỉ tính lúc cho ăn, không tính ghép khác",
+  "kyNang": "Special: Damage or Speed type. Same-type Anvils forge stacks (max 14, can fail). Drag onto another turret: +3% damage or +2% fire rate per stack for good",
+  "ten_vi": "Đe Song Sinh",
+  "kyNang_vi": "Đặc biệt: dạng ST hoặc tốc. Ghép Anvil cùng dạng cộng dồn (tối đa 14, có thể hỏng). Kéo lên ụ khác: +3% ST hoặc +2% tốc mỗi cộng dồn, vĩnh viễn",
   "vai": "db",
   "ho": "star",
   "moi": "TUONG-MOI-20"
@@ -832,53 +832,53 @@
   "ten": "Ember Relay",
   "bac": "vang",
   "dcdw": "Kalaratri",
-  "kyNang": "Merging a Relay gives +1 flame to every Relay in the same row and column (no cap); each flame +damage & crit",
+  "kyNang": "Merging 2 Relays: every Relay in the row and column gets both flames added (max 70). Each flame +2% damage, +0.12% crit",
   "vai": "tc",
   "ho": "blast",
   "ten_vi": "Lửa Thập Tự",
-  "kyNang_vi": "Ghép → +1 lửa cho mọi Ember Relay cùng hàng và cùng cột (không trần); mỗi lửa +sát thương & chí mạng"
+  "kyNang_vi": "Ghép 2 Relay: mọi Relay cùng hàng và cột nhận tổng lửa 2 ụ (tối đa 70). Mỗi lửa +2% ST, +0,12% chí mạng"
  },
  {
   "id": "hopca",
   "ten": "Quantum Choir",
   "bac": "vang",
   "dcdw": "Cosmem",
-  "kyNang": "+damage for every other turret on your board with the same ★ (no cap); 7★ +fire rate",
+  "kyNang": "Harmony: each touching same-star turret +25% damage, +8% crit damage; 2/3/4 Harmony unlock a 2nd target, +30% fire rate, echo hits",
   "vai": "tc",
   "ho": "star",
   "ten_vi": "Hợp Xướng Lượng Tử",
-  "kyNang_vi": "+sát thương theo số ụ cùng sao trên bàn (không trần); 7★ +tốc bắn"
+  "kyNang_vi": "Hoà âm: mỗi ụ kề cùng sao +25% ST, +8% ST chí mạng; 2/3/4 hoà âm mở mục tiêu thứ 2, +30% tốc, đòn vang"
  },
  {
   "id": "luutru",
   "ten": "Fusion Archive",
   "bac": "vang",
   "dcdw": "Aurora",
-  "kyNang": "Every merge you make adds a permanent archive charge (+damage); Archive + Archive fires 3 pulses",
+  "kyNang": "Every real merge gives +1 charge to one random Archive: +1% damage each, rewards at 10/20/30/40",
   "vai": "tc",
   "ho": "summon",
   "ten_vi": "Kho Lưu Hợp Nhất",
-  "kyNang_vi": "Mỗi lần ghép +1 điểm lưu vĩnh viễn (+sát thương); Archive + Archive nổ 3 xung"
+  "kyNang_vi": "Mỗi lần ghép thật +1 điểm cho 1 Archive ngẫu nhiên: +1% ST mỗi điểm, thưởng mốc 10/20/30/40"
  },
  {
   "id": "xuonganh",
   "ten": "Hero Foundry",
   "bac": "vang",
   "dcdw": "Kintia",
-  "kyNang": "Merge 2 Foundries: a random cell becomes a HERO tile for 12s (+fire rate to the turret on it)",
+  "kyNang": "Merge 2 Foundries: that cell becomes a 25s HERO tile: +80% fire rate, +30% crit damage",
   "vai": "db",
   "ho": "amp",
   "ten_vi": "Xưởng Anh Hùng",
-  "kyNang_vi": "Ghép 2 Foundry: 1 ô ngẫu nhiên thành ô ANH HÙNG 12 s (+tốc bắn cho ụ trên ô)"
+  "kyNang_vi": "Ghép 2 Foundry: ô đó thành ô ANH HÙNG 25 s: +80% tốc bắn, +30% ST chí mạng"
  },
  {
   "id": "mauhut",
   "ten": "Blood Circuit",
   "bac": "vang",
   "dcdw": "Strigoi",
-  "kyNang": "Kéo lên BẤT KỲ ụ của mình: cả 2 thành 1 ụ ngẫu nhiên ở sao cao hơn; cùng sao = VAMP",
+  "kyNang": "Marks a turret and eats it after 5s + 3s per ★ for Blood; tap with 10 Blood: Blood Rite +30% damage +15% fire rate to a neighbour",
   "ten_vi": "Mạch Máu",
-  "kyNang_vi": "Kéo lên BẤT KỲ ụ của mình: cả 2 thành 1 ụ ngẫu nhiên ở sao cao hơn; cùng sao = VAMP",
+  "kyNang_vi": "Đánh dấu 1 ụ, nuốt sau 5 s + 3 s mỗi sao để lấy Máu; chạm khi đủ 10 Máu: Blood Rite +30% ST +15% tốc cho ụ kề",
   "vai": "db",
   "ho": "star",
   "moi": "VANG-2"
@@ -912,9 +912,9 @@
   "ten": "Prism Thief",
   "bac": "vang",
   "dcdw": "Lupin",
-  "kyNang": "Đạn đổi màu đỏ/vàng/xanh; ghép 2 ụ cùng màu → COMBO",
+  "kyNang": "One colour each: red kills, gold mana, blue freezes, green crits. Swipe 4 different colours: Chromatic Circuit",
   "ten_vi": "Siêu Trộm Lăng Kính",
-  "kyNang_vi": "Đạn đổi màu đỏ/vàng/xanh; ghép 2 ụ cùng màu → COMBO",
+  "kyNang_vi": "Mỗi ụ 1 màu: đỏ giết, vàng mana, lam đóng băng, lục chí mạng. Vuốt qua 4 màu khác nhau: Chromatic Circuit",
   "vai": "tc",
   "ho": "crit",
   "moi": "VANG-2"

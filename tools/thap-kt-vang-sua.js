@@ -128,11 +128,11 @@ async function moTran(b, mode, deck) {
     __xoa(); for (const o of [5, 6]) __dat(B, o, 'railgun', 2); out.hai = buf(B.t[5]);
     return out;
   });
-  ok(JSON.stringify(r.thieu) === '[0,0]', 'hàng 4 Railgun + 1 Cannon: KHÔNG bingo', JSON.stringify(r.thieu));
+  ok(JSON.stringify(r.thieu) === '[0.65,0]', 'hàng 4 Salvo + 1 Cannon: thưởng dở dang 4/5 +65% (08/11)', JSON.stringify(r.thieu));
   ok(JSON.stringify(r.hang) === '[2,0]', 'hàng đầy Railgun: +200% sát thương', JSON.stringify(r.hang));
   ok(JSON.stringify(r.cot) === '[0,1.5]', 'cột đầy Railgun: +150% tốc bắn', JSON.stringify(r.cot));
-  ok(JSON.stringify(r.cotMimic) === '[0,0]', 'cột có ụ khác loại (Mimic): không tính', JSON.stringify(r.cotMimic));
-  ok(JSON.stringify(r.da) === '[0,0]', 'ô đá không tính', JSON.stringify(r.da));
+  ok(JSON.stringify(r.cotMimic) === '[0,0.35]', 'cột có ụ khác loại (Mimic): Mimic không tính — 2/3 Salvo +35% (08/11)', JSON.stringify(r.cotMimic));
+  ok(JSON.stringify(r.da) === '[0.65,0]', 'ô đá không tính (4/5 → +65%)', JSON.stringify(r.da));
   ok(JSON.stringify(r.hai) === '[0,0]', 'hàng dở dang: không có thưởng lẻ', JSON.stringify(r.hai));
 
   console.log('— 6 Wall Projector · 7 Scrap Forge · 12 Mirror Gate');
@@ -149,7 +149,7 @@ async function moTran(b, mode, deck) {
     return { co: !!w, song: w && w.song, k: w && w.dmg / tt, no: w && w.no, loi, forge: TEXT.turret.loren.skill, gate: TEXT.turret.guongcong.skill, gateDc: R.dcdw || '' };
   });
   ok(r.co && r.song === 6 && r.k > 6 && r.no && !r.loi, 'ghép Máy Dựng Tường → TƯỜNG VÀNG 6 s, nổ > ×6 tường thường', JSON.stringify(r));
-  ok(/FEED/i.test(r.forge) && /only feeding/i.test(r.forge), 'Scrap Forge: chữ rõ "chỉ tính lúc cho ăn" (khác Fusion Archive)', r.forge);
+  ok(/SAME type/.test(r.forge) && /for good/i.test(r.forge), 'Twin Anvil (08/11): chữ rõ ghép cùng dạng + buff vĩnh viễn', r.forge);
   ok(!/Bari/i.test(r.gate + r.gateDc) && /original/i.test(r.gate + r.gateDc), 'Mirror Gate: ụ riêng, không gọi là Bari', r.gateDc + ' | ' + r.gate);
 
   console.log('— 8 Merge King · 9 Twin Maker');
@@ -178,27 +178,24 @@ async function moTran(b, mode, deck) {
     const buf = () => { T.buf.dmg = 0; T.buf.toc = 0; SKILLS.ngoisao.capNhat(G, B, T); return +T.buf.dmg.toFixed(2); };
     out.d50 = buf(); B.t[7] = null; out.d49 = buf(); __dat(B, 7, 'mana', 1); out.lai = buf();
     __xoa(); out.can = [1, 4, 6].map(s => SKILLS.tienhoa.can({ sao: s, id: 'tienhoa' }));
-    const E7 = __dat(B, 0, 'tienhoa', 7), m0 = B.mana; E7.tuoi = SKILLS.tienhoa.can(E7) + 1; SKILLS.tienhoa.capNhat(G, B, E7);
-    E7.tuoi += 500; SKILLS.tienhoa.capNhat(G, B, E7); // bom xịt: đếm dừng, không làm gì dù bao lâu
-    out.e7 = [B.t[0] && B.t[0].id, B.t[0] && B.t[0].sao, B.mana - m0, !!E7.xit, E7.tuoi, E7.nap];
-    // 7★ xịt bị giảm sao → hết xịt, đếm lại từ đầu (6★), hết giờ → biến đổi
-    haSao(B, E7, 'test'); SKILLS.tienhoa.capNhat(G, B, E7); out.ha = [E7.sao, !!E7.xit, E7.tuoi, Math.round(SKILLS.tienhoa.con(E7))];
-    E7.tuoi = SKILLS.tienhoa.can(E7) + 0.01; SKILLS.tienhoa.capNhat(G, B, E7); out.haBien = [B.t[0] && B.t[0].id, B.t[0] && B.t[0].sao];
-    // Copycat chép Evolver → cũng là Evolver (cùng bom đếm ngược / xịt ở 7★)
+    // 08/11 TRỨNG: 7★ = trứng cháy (không nở dù bao lâu, không tự cho mana); chạm (chuDong) = +20 mana
+    const E7 = __dat(B, 0, 'tienhoa', 7), m0 = B.mana; E7.egg = 999; SKILLS.tienhoa.capNhat(G, B, E7); SKILLS.tienhoa.capNhat(G, B, E7);
+    out.e7 = [B.t[0] && B.t[0].id, B.t[0] && B.t[0].sao, B.mana - m0, SKILLS.tienhoa.chay(E7), E7.egg, E7.nap];
+    haSao(B, E7, 'test'); SKILLS.tienhoa.capNhat(G, B, E7); out.ha = [E7.sao, SKILLS.tienhoa.chay(E7), B.t[0] === E7];
+    SKILLS.tienhoa.chuDong(G, B, E7); out.tai = [B.mana - m0, !B.t[0]];
     __xoa(); const Cp = __dat(B, 0, 'saochep', 7), Ev = __dat(B, 1, 'tienhoa', 7); const N = SKILLS.saochep.ghepDB.lam(G, B, Cp, Ev);
-    SKILLS.tienhoa.capNhat(G, B, N); out.chep = [N.id, !!N.banSao, !!N.xit];
-    out.txt = [SKILLS.tienhoa.mo({ sao: 7, id: 'tienhoa', tuoi: 0 }), TEXT.turret.tienhoa.skill, (typeof MOC_RIENG !== 'undefined' && MOC_RIENG.tienhoa && MOC_RIENG.tienhoa[7] || []).join(' ')].join(' | ');
-    __seed(7); let max = 0; for (let i = 0; i < 200; i++) { __xoa(); const E6 = __dat(B, 0, 'tienhoa', 6); E6.tuoi = 1e4; SKILLS.tienhoa.capNhat(G, B, E6); max = Math.max(max, B.t[0].sao); }
+    SKILLS.tienhoa.capNhat(G, B, N); out.chep = [N.id, !!N.banSao, SKILLS.tienhoa.chay(N)];
+    __seed(7); let max = 0; for (let i = 0; i < 50; i++) { __xoa(); const E5 = __dat(B, 0, 'tienhoa', 5); E5.egg = 1e4; SKILLS.tienhoa.capNhat(G, B, E5); max = Math.max(max, B.t[0].sao); }
     out.e6 = max;
     return out;
   });
   ok(r.d50 > 3 && r.d49 < 0.01 && r.lai === r.d50, 'Star Cannon: mốc 50★ theo tổng HIỆN TẠI — tụt còn 49★ mất thưởng, lên lại có lại', JSON.stringify(r));
   ok(r.can[0] < r.can[1] && r.can[1] < r.can[2], 'Evolver: sao cao chờ lâu hơn', JSON.stringify(r.can));
-  ok(r.e7[0] === 'tienhoa' && r.e7[1] === 7 && r.e7[2] === 0 && r.e7[3] && r.e7[4] === 0 && r.e7[5] === 0, 'Evolver 7★: bom XỊT — không đổi, không 8★, đếm dừng, KHÔNG hoàn mana / không tác dụng', JSON.stringify(r.e7));
-  ok(r.ha[0] === 6 && !r.ha[1] && r.ha[2] === 0 && r.ha[3] >= Math.round(r.can[2]) - 1 && r.haBien[0] && r.haBien[0] !== 'tienhoa' && r.haBien[1] === 7, 'Evolver 7★ xịt bị giảm sao → đếm lại từ đầu → biến đổi', JSON.stringify([r.ha, r.haBien]));
-  ok(r.chep[0] === 'tienhoa' && r.chep[1] && r.chep[2], 'Copycat chép Evolver 7★ → cũng xịt như Evolver', JSON.stringify(r.chep));
-  ok(!/salvage|refund|mana/i.test(r.txt), 'Evolver: chữ không còn "hoàn mana"', r.txt);
-  ok(r.e6 === 7, 'Evolver 6★ (5★ BREAKTHROUGH +2): tối đa 7★', String(r.e6));
+  ok(r.e7[0] === 'tienhoa' && r.e7[1] === 7 && r.e7[2] === 0 && r.e7[3] && r.e7[4] === 0, 'Trứng 7★: trứng CHÁY — không nở, không 8★, đếm dừng, không tự cho mana', JSON.stringify(r.e7));
+  ok(r.ha[0] === 6 && r.ha[1] && r.ha[2], 'Trứng cháy bị giảm sao: vẫn là trứng cháy (CHATGPT-SPEC B5-14)', JSON.stringify(r.ha));
+  ok(r.tai[0] === 20 && r.tai[1], 'chạm trứng cháy: tái chế +20 mana, ô trống', JSON.stringify(r.tai));
+  ok(r.chep[0] === 'tienhoa' && r.chep[1] && r.chep[2], 'Copycat chép trứng 7★ → cũng là trứng cháy', JSON.stringify(r.chep));
+  ok(r.e6 === 6, 'Trứng 5★ nở: đúng +1★ (không còn +2 BREAKTHROUGH)', String(r.e6));
   ok(!p.errs.length, 'solo: không lỗi trang', p.errs.slice(0, 3).join(' | '));
   await ctx.close();
 

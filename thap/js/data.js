@@ -175,11 +175,25 @@ function boCuc(che) {
 
 // HỆ SỐ SỨC MẠNH theo cấp: POWER-UP trong trận (B.lv 1..5) × CẤP THẺ ngoài trận (B.capThe[id] = số cấp đã lên trên cấp đầu của bậc)
 // — mọi công thức sát thương (dmgU, hsU, phaoDmg, statThuc) dùng chung hàm này → số hiển thị không lệch số đánh thật.
+// CẤP THẺ VÀNG / ĐỎ theo VAI TRÒ (08/11, người dùng duyệt — CHATGPT-SPEC A0): mỗi cấp trên cấp đầu Tấn công +5% ST & +2% tốc bắn,
+//   Hỗ trợ +4% giá trị cơ chế, Đặc biệt / Khống chế +3% (ST của đòn phụ nếu có). Cộng vào cùng nhóm, không nhân kép. Bậc khác: như cũ (THE.pct).
+const CAP_VD = { tc: { dmg: 0.05, toc: 0.02 }, ht: { dmg: 0.04, toc: 0, ht: 0.04 }, db: { dmg: 0.03, toc: 0, db: 0.03 } };
+function capVD(id) {
+  const r = typeof G !== 'undefined' && G.rosterMap && G.rosterMap[id];
+  if (!r || (r.bac !== 'vang' && r.bac !== 'do')) return null;
+  const sk = typeof SKILLS !== 'undefined' && SKILLS[id];
+  return CAP_VD[(sk && sk.vai) || 'tc'] || CAP_VD.db;
+}
 function hsThe(B, id) {
   const c = B && B.capThe && B.capThe[id]; if (!c) return 1;
+  const v = capVD(id); if (v) return 1 + c * v.dmg;
   const r = typeof G !== 'undefined' && G.rosterMap && G.rosterMap[id];
   return 1 + c * ((typeof THE !== 'undefined' && r && THE.pct[r.bac]) || 0.05);
 }
+// tốc bắn theo cấp thẻ (chỉ ụ Tấn công VÀNG / ĐỎ: +2% mỗi cấp) — tocU() nhân vào
+function tocThe(B, id) { const c = B && B.capThe && B.capThe[id]; if (!c) return 1; const v = capVD(id); return v && v.toc ? 1 + c * v.toc : 1; }
+// hệ số cơ chế Đặc biệt / Khống chế VÀNG / ĐỎ theo cấp thẻ: 1 + 0.03 × số cấp trên cấp đầu (vd. buff Blood Rite, ô anh hùng, Anvil)
+function heDB(B, id) { const c = (B && B.capThe && B.capThe[id]) | 0; return 1 + 0.03 * c; }
 // KỸ NĂNG THEO CẤP THẺ (kiểu DCDW: lên cấp làm mạnh CHÍNH kỹ năng của Child, không chỉ sát thương gốc) — docs/demo-hop-tuong/tuvan/kynang_cap/DCDW.md
 //  giá trị = base + buoc × (số cấp đã lên trên cấp đầu), kẹp ở max (buoc âm = giảm, max là sàn). base = giá trị ở CẤP ĐẦU (= y như trước bản này).
 //  06/11 đo bậc (tools/thap-sim-tier.js): base/buoc/max cập nhật theo số mới (hỗ trợ: giá trị 1★ THẬT gồm hệ số bậc HOTRO.BAC; Copycat 70%, Overclock 90%, Mana Doubler 44, Horn 4+2★, Box 58 s)
@@ -207,10 +221,10 @@ const KY_NANG_CAP = {
   hopbi: { ten: 'Opens in', base: 58, buoc: -1, max: 49, dv: 's', pu: -2 },
   // ụ KHÔNG gây sát thương (VFX P0 — REVIEW-VFX-93 IX): cấp thẻ nâng CHÍNH con số kỹ năng thay cho dòng '+damage' vô tác dụng
   bomhen: { ten: 'Weaken', base: 10, buoc: 0.25, max: 13.5, dv: '%', tien: '+', pu: 0.75 },     // quái quanh vụ nổ nhận thêm % sát thương (vào trần suy yếu 25%)
-  tienhoa: { ten: 'Fuse time', base: 100, buoc: -2, max: 88, dv: '%', pu: -3 },               // thời gian đếm ngược × giá trị/100
+  tienhoa: { ten: 'Hatch time', base: 100, buoc: -2.43, max: 80.6, dv: '%', pu: -3 },          // Trứng (08/11): thời gian nở ÷ (1 + 3%/cấp thẻ) (LV17 80.6%) · power-up −3%/bước
   haoquang: { ten: 'Barrier', base: 3, buoc: 0.125, max: 3.5, dv: 's', pu: 0.15 },             // thời gian rào bất tử (trước mốc sao)
-  loren: { ten: 'Per stack', base: 4, buoc: 0.25, max: 5.5, dv: '%', tien: '+', pu: 0.3 },      // +% sát thương mỗi cộng dồn lò (không trần; power-up +0.3%/cộng dồn)
-  khoisinh: { ten: 'Raise time', base: 100, buoc: -2, max: 92, dv: '%', pu: -3 },            // chu kỳ +1★ × giá trị/100
+  loren: { ten: 'Forge buff', base: 3, buoc: 0.09, max: 3.72, dv: '%', tien: '+', pu: 0.3 },      // Twin Anvil (08/11): buff rèn ST +3%/cộng dồn × (1 + 3%/cấp thẻ) (rèn tốc ×2/3) · power-up +0.3 điểm %/cộng dồn mỗi bước
+  khoisinh: { ten: 'Raise time', base: 94.3, buoc: -2.2834, max: 80.6, dv: '%', pu: -3 },          // Lõi Khởi Sinh (08/11, skills5.js g): 12 s ÷ (1 + 3% × (LV − 9)) — thẻ Đỏ bắt đầu LV11 = 94.3% → LV17 80.6% · power-up −3%/bước
   // hỗ trợ: giá trị buff chính ở 1★ (đường cong sao HOTRO.K nhân lên như cũ) — ≈ +40% ở cấp 15 · 07/11: hạ 1★ của ụ chạm trần sớm (BAO-CAO gioi-han §4 mục 2)
   radar: { ten: 'Rate buff', base: 18, buoc: 0.6, max: 25.2, dv: '%', tien: '+', ht: 1 },
   phagiap: { ten: 'Exposed', base: 13, buoc: 0.355, max: 17.964, dv: '%', tien: '+', ht: 1 },
@@ -223,11 +237,12 @@ const KY_NANG_CAP = {
   nangsao: { ten: 'Rate buff', base: 10, buoc: 0.5, max: 14.5, dv: '%', tien: '+', ht: 1 },
   tuthan: { ten: 'Execute', base: 12, buoc: 0.6, max: 17.4, dv: '%', ht: 1 },
   thaukinh: { ten: 'Crit dmg', base: 36, buoc: 1.548, max: 49.932, dv: '%', tien: '+', ht: 1 },
-  dongbo: { ten: 'Dmg buff', base: 17.25, buoc: 1.15, max: 24.15, dv: '%', tien: '+', ht: 1 },
-  hasao: { ten: 'Dmg buff', base: 23, buoc: 1.61, max: 32.66, dv: '%', tien: '+', ht: 1 },
-  cauvong: { ten: 'Trail dmg', base: 29.9, buoc: 2.07, max: 42.32, dv: '%', tien: '+', ht: 1 },
-  luoicheo: { ten: 'Dmg buff', base: 16.1, buoc: 1.107, max: 22.741, dv: '%', tien: '+', ht: 1 },
-  guongcong: { ten: 'Resist', base: 18.4, buoc: 1.227, max: 25.76, dv: '%', ht: 1 },
+  // Hỗ trợ VÀNG (08/11, cấp thẻ theo vai trò): +4% giá trị mỗi cấp (LV17 ×1.32)
+  dongbo: { ten: 'Dmg buff', base: 17.25, buoc: 0.69, max: 22.77, dv: '%', tien: '+', ht: 1 },
+  hasao: { ten: 'Dmg buff', base: 23, buoc: 0.92, max: 30.36, dv: '%', tien: '+', ht: 1 },
+  cauvong: { ten: 'Trail dmg', base: 29.9, buoc: 1.196, max: 39.468, dv: '%', tien: '+', ht: 1 },
+  luoicheo: { ten: 'Dmg buff', base: 16.1, buoc: 0.644, max: 21.252, dv: '%', tien: '+', ht: 1 },
+  guongcong: { ten: 'Resist', base: 18.4, buoc: 0.736, max: 24.288, dv: '%', ht: 1 },
   lophanung: { ten: 'Slowed dmg', base: 33.6, buoc: 3.36, max: 47.04, dv: '%', tien: '+', ht: 1 },
 };
 // FX = VÙNG TRÚNG (REVIEW-VFX-93 X · PHASE P0): phần ảnh THẤY ĐƯỢC chiếm bao nhiêu nửa khung (đo bằng tools/thap-kt-vfx-p0.js trên ảnh thật,

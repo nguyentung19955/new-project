@@ -21,7 +21,10 @@ const DEMKN = {
       return m.length ? { m, sang: b.ngang >= 5 || b.doc >= 3 } : null;
     },
     cuuvi(T) { const n = T.duoi || 0; return n > 0 ? { m: [{ ic: 'ic_chet', s: n + '/9' }], sang: n >= 8 } : null; },
-    loren(T) { const n = T.lo || 0; return n > 0 ? { m: [{ ic: 'ic_dmg', s: n + '' }], sang: n >= 15 } : null; }, // không trần: chỉ hiện số
+    tienhoa(T) { const S = SKILLS.tienhoa; if (S.chay(T)) return { m: [{ ic: 'ic_mana', s: '+' + S.MANA }], sang: true }; return { m: [{ ic: 'trung_1', s: Math.ceil(S.con(T)) + 's' }] }; }, // trứng: giây tới lúc nở · trứng cháy: chạm = +20 mana
+    mauhut(T) { const m = []; if (T.mh) m.push({ ic: 'mauhut_phu', s: Math.ceil(Math.max(0, T.mh.con)) + 's' }); if (T.mau) m.push({ ic: 'ic_dmg', s: T.mau + '' }); return m.length ? { m, sang: (T.mau || 0) >= 10 } : null; }, // Mạch Máu: giây còn tới lúc nuốt + Máu
+    bienmau(T) { const n = T.pms || 0; return n > 0 ? { m: [{ ic: SKILLS.bienmau.ANH[SKILLS.bienmau.mau(T)], s: n + '' }], sang: n >= SKILLS.bienmau.tran(T) } : null; }, // Prism: mặt nạ màu + cộng dồn
+    loren(T) { const n = Math.min(14, T.lo || 0); return n > 0 ? { m: [{ ic: T.dang === 'toc' ? 'ic_toc' : 'ic_dmg', s: n + '/14' }], sang: n >= 14 } : null; }, // Twin Anvil: icon dạng (ST / tốc) + cộng dồn
     // VỰC SÂU (ABYSS): icon xoáy vực riêng (không dùng ic_dmg chung) + chữ xanh biển sâu; không trần → luôn hiện số (≥100 chữ sáng hơn)
     leviathan(T) { const n = T.vuc || 0; return n > 0 ? { m: [{ ic: DEMKN.icVuc(), s: '' + n }], mau: n >= 100 ? '#b8f6ff' : '#5fe3ff' } : null; },
     nangluong(T, B) { const k = Math.round(SKILLS.nangluong.k(B) * 100); return k > 0 ? { m: [{ ic: 'ic_mana', s: '+' + k + '%' }], sang: k >= 500 } : null; },

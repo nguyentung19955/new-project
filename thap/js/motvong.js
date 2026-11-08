@@ -16,7 +16,7 @@ const MV = {
   // vẽ vòng xanh lúc này?
   coNap(T) {
     const sk = SKILLS[T.id]; if (!sk || sk.bomDem || (T.st && T.st.da) || !(T.nap > 0.02)) return false;
-    if (sk.chuDong) return T.sao >= 3;
+    if (sk.chuDong) return T.sao >= 3 || !!sk.chuDongMoiSao; // Mạch Máu / Trứng cháy: chạm được ở mọi sao
     return !!(sk.napMau || this.NAP_KHAC[T.id]);
   },
   tenChieu(id) { try { const m = mocCua(id).find(q => /active skill/i.test(q.mo || '')); return m ? m.ten : null; } catch (e) { return null; } },
@@ -59,7 +59,7 @@ const MV = {
   // ---------- icon CHẠM khi chiêu chủ động đầy (chỉ bàn mình chạm được) ----------
   veTay(ctx, h) {
     const T = h.T, sk = SKILLS[T.id], B = h.B || G.ban[T.ban];
-    if (!sk || !sk.chuDong || T.sao < 3 || !(T.nap >= 1) || T.st.da || T.st.bang > 0 || !B || B.ai || B !== G.ban[0]) return;
+    if (!sk || !sk.chuDong || (T.sao < 3 && !sk.chuDongMoiSao) || !(T.nap >= 1) || T.st.da || T.st.bang > 0 || !B || B.ai || B !== G.ban[0]) return;
     const im = (this.CO_TAY && REN.img(this.TAY)) || REN.img('ic_phat'); if (!im) return;
     const t = typeof REN.t === 'number' ? REN.t : G.t, nay = 1 + 0.08 * Math.sin(t * 6);
     REN.anhGiua(ctx, im, h.gx, h.gy + Math.sin(t * 6) * h.d * 0.05, h.d * 0.95 * nay, 0, h.al);
@@ -72,7 +72,7 @@ const MV = {
     lienket: ['linked turrets in the chain', 'số ụ nối chuỗi'],
     dongbo: ['synced same-star Attack turrets', 'số ụ tấn công cùng sao đang đồng bộ'],
     luoicheo: ['diagonal turrets (4 = RESONANCE)', 'số ụ ở ô chéo (4 = CỘNG HƯỞNG)'],
-    railgun: ['Railguns in its row / column', 'số Railgun cùng hàng / cột'],
+    railgun: ['Salvos in its row / column', 'số Salvo cùng hàng / cột'],
     cuuvi: ['tails (max 9)', 'số đuôi (tối đa 9)'],
     loren: ['forge stacks', 'cộng dồn lò rèn'],
     leviathan: ['ABYSS points (+4% damage each)', 'điểm ABYSS (+4% sát thương mỗi điểm)'],

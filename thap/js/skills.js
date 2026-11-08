@@ -297,14 +297,15 @@ SKILLS.railgun = { // Railgun (Removal Tee): BINGO — hàng ngang ĐẦY Railgu
     for (let i = 0; i < 3; i++) { const X = B.t[i * 5 + c]; if (X && X.id === 'railgun' && !X.st.da) doc++; }
     return { ngang, doc };
   },
-  // DCDW Removal Tee: chỉ tính HÀNG/CỘT ĐẦY toàn Railgun (cùng loại ụ; ô đá không tính) — không thưởng hàng dở dang.
-  //   HÀNG NGANG đủ 5 Railgun → +200% sát thương · CỘT DỌC đủ 3 Railgun → +150% tốc bắn (cả hai cùng lúc được)
+  // SALVO BATTERY (tên cũ Railgun — đổi tên + hình 08/11, người dùng duyệt TOM-TAT mục 10): giữ BINGO hàng/cột (ụ băng vẫn tính, ô đá phá chuỗi)
+  //   + thưởng DỞ DANG: HÀNG 3/5 +25% · 4/5 +65% · 5/5 +200% sát thương · CỘT 2/3 +35% · 3/3 +150% tốc bắn (mỗi Salvo trong hàng/cột đó; 1 hàng + 1 cột cùng lúc được)
   BINGO_DMG: 2.0, BINGO_TOC: 1.5,
-  mo(T) { const b = this.bingo(G.ban[T.ban], T); return 'BINGO counts Railguns only · full row ' + b.ngang + '/5 → +' + Math.round(this.BINGO_DMG * 100) + '% damage · full column ' + b.doc + '/3 → +' + Math.round(this.BINGO_TOC * 100) + '% fire rate'; },
+  HANG: [0, 0, 0, 0.25, 0.65, 2.0], COT: [0, 0, 0.35, 1.5],
+  mo(T) { const b = this.bingo(G.ban[T.ban], T); return 'Salvos in this row ' + b.ngang + '/5 → +' + Math.round(this.HANG[b.ngang] * 100) + '% damage · in this column ' + b.doc + '/3 → +' + Math.round(this.COT[b.doc] * 100) + '% fire rate · row 3/5 +25%, 4/5 +65%, 5/5 +200% damage · column 2/3 +35%, 3/3 +150% fire rate · only Salvo Batteries count, a stone breaks the line'; },
   capNhat(G, B, T) {
     const b = this.bingo(B, T);
-    if (b.ngang >= 5) T.buf.dmg += this.BINGO_DMG;
-    if (b.doc >= 3) T.buf.toc += this.BINGO_TOC;
+    T.buf.dmg += this.HANG[b.ngang] || 0;
+    T.buf.toc += this.COT[b.doc] || 0;
     T.bingo = b.ngang >= 5 || b.doc >= 3;
     return false;
   },

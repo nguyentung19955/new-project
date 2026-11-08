@@ -253,45 +253,75 @@ HU.non = { // sóng trăng hình nón (cung tròn đồng tâm, không méo)
 };
 
 // =====================================================================================================
-// G6 · SCRAP FORGE (loren) — Vàng TC: KÉO bất kỳ ụ 1–3★ khác loại thả lên Forge (hoặc kéo Forge lên nó) → ăn: +f cộng dồn LÒ (+4% sát thương/cộng dồn,
-//      KHÔNG trần — như Kalaratri DCDW, giữ khi ghép lên sao); ăn ụ 3★ = ×3. Búa nóng nổ 30 px; ≥40 cộng dồn: mỗi phát văng 1 mảnh sắt nóng vào 2 quái.
+// G6 · TWIN ANVIL (loren, tên cũ Scrap Forge) — Vàng ĐB. LÀM LẠI 08/11 (người dùng duyệt TOM-TAT mục 5, CHATGPT-SPEC A1 §5):
+//      Mỗi Anvil sinh ra mang 1 DẠNG ngẫu nhiên (50/50, hạt giống): RÈN SÁT THƯƠNG (búa) hoặc RÈN TỐC (bánh răng); cộng dồn ban đầu = số sao, tối đa 14.
+//      · Kéo Anvil lên Anvil CÙNG DẠNG (sao nào cũng được — khác dạng: không ghép được): tổng = min(14, A + B); tỉ lệ thành công
+//        = 100 × (1 − (tổng − 1) / 14) + 4 điểm % mỗi cấp thẻ trên LV9 (chỉ khi tổng ≥ 8), kẹp 0–100. Thành công: ụ đích giữ, sao = max 2 ụ, cộng dồn = tổng.
+//        Thất bại: MẤT ụ kéo, ụ đích giữ cộng dồn lớn hơn của 2 ụ, không lên sao. Cả 2 trường hợp = 1 lần GHÉP THẬT (Fusion Archive +1).
+//      · Kéo Anvil lên ụ KHÁC (không phải Anvil / Mimic): Anvil mất, ụ nhận buff VĨNH VIỄN: rèn ST +3% ST / cộng dồn, rèn tốc +2% tốc / cộng dồn
+//        (× 1 + 3%/cấp thẻ). MỖI ụ chỉ mang 1 loại buff: cùng loại giữ số lớn hơn, khác loại thì buff mới thay. Ghép thường 2 ụ có buff → ụ ra lấy
+//        buff mạnh hơn (không cộng). Giữ qua băng / hạ sao, tắt khi hoá đá. Không phải ghép (Archive không tính). Anvil không bắn.
+//      Online: dạng + cộng dồn + buff đi theo cờ ô (dongbo.js 'a…' / 'l…' / 'b…'); ghép đặc biệt chốt 2 ô theo máy bạn (gói 'gh' db).
 // =====================================================================================================
-SKILLS.loren = { // Lò Rèn Phế Liệu — ĐẶC BIỆT (ụ RIÊNG của mình, không phải Aurora/Jacheongbi DCDW; khác Fusion Archive = mạnh theo MỌI lần ghép): KHÔNG bắn; KÉO ụ 1–3★ khác loại thả lên (hoặc kéo Forge lên nó) → ăn: +f cộng dồn LÒ;
-  // mỗi cộng dồn = +4% sát thương VĨNH VIỄN cho ụ Tấn công mạnh nhất trên bàn (sao cao nhất), KHÔNG trần cộng dồn / trần ụ nhận; nhiều Forge cộng thẳng vào nhau
+SKILLS.loren = {
   vai: 'db', dmg: 0, toc: 0,
-  f: (T) => sao7(T, [1, 1, 2, 2, 3, 3, 4]),
-  moi: (T) => (knThe(G.ban[T.ban], 'loren') || 4) / 100, // +% sát thương mỗi cộng dồn theo cấp thẻ (KY_NANG_CAP.loren)
-  // giá trị THẬT ụ nhận được (không trần; power-up: +%/lò qua KY_NANG_CAP.pu) — chữ hiển thị dùng đúng số này
-  tong: (T) => SKILLS.loren.moi(T) * (T.lo || 0),
-  dich: (B) => B.t.filter(X => X && SKILLS[X.id] && SKILLS[X.id].vai === 'tc').sort((a, b) => b.sao - a.sao || (SKILLS[b.id].dmg * TIERS[b.bac].hs) - (SKILLS[a.id].dmg * TIERS[a.bac].hs) || a.o - b.o)[0] || null,
-  mo(T) { const X = this.dich(G.ban[T.ban]); return 'Forge ' + (T.lo || 0) + ' (+' + +(this.moi(T) * 100).toFixed(2) + '% each, no cap) → +' + Math.round(this.tong(T) * 100) + '% damage to your best Attack turret while this Forge stays on the board' + (X ? ' (' + (TEXT.turret[X.id] ? TEXT.turret[X.id].name : X.id) + ' ' + X.sao + '★)' : '') + ' · FEED it: drag a 1–3★ turret onto it: +' + this.f(T) + ' (3★ food ×3) · only feeding counts (other merges don\'t)'; },
-  gocDau: (T, t) => -Math.PI / 2, // VFX P3: bỏ đung đưa ảnh đầu
-  capNhat(G, B, T) {
-    const X = this.dich(B); T.forgeX = X;
-    if (X && T.lo) {
-      const v = this.tong(T); // không trần: nhiều Forge cộng thẳng vào ụ nhận
-      if (v > 0) { X.buf.dmg += v; X.nguon.push({ k: 'dmg', v, T }); }
-    }
-    return true;
+  MAX: 14, PCT: { dmg: 0.03, toc: 0.02 },
+  dang: (T) => (T.dang === 'toc' ? 'toc' : 'dmg'),
+  so: (T) => Math.min(14, T.lo != null ? T.lo : T.sao | 0), // cộng dồn (ụ mẫu trang chi tiết chưa sinh: = số sao)
+  n: (B) => ((B && B.capThe && B.capThe.loren) | 0), // số cấp thẻ trên LV9
+  // tỉ lệ thành công (0–100, 2 chữ số lẻ) — thuần
+  tiLe(tong, n) { const p = 100 * (1 - (tong - 1) / 14) + (tong >= 8 ? 4 * (n | 0) : 0); return Math.round(Math.max(0, Math.min(100, p)) * 100) / 100; },
+  // % mỗi cộng dồn (rèn ST): (3% + 0.3 điểm/bước power-up) × (1 + 3%/cấp thẻ) — rèn tốc = 2/3 của số này (2%/cộng dồn)
+  moi(T, B) { B = B || G.ban[T.ban]; return (this.PCT.dmg + 0.003 * (B ? knPU(B, 'loren') : 0)) * heDB(B, 'loren'); },
+  buff(T, B) { const lo = this.so(T), d = this.dang(T), m = this.moi(T, B) * (d === 'toc' ? this.PCT.toc / this.PCT.dmg : 1); return { k: d, v: Math.round(m * lo * 10000) / 10000 }; },
+  mo(T) {
+    const B = G.ban[T.ban], d = this.dang(T), lo = this.so(T), b = this.buff(T, B), n = this.n(B);
+    return (d === 'dmg' ? 'DAMAGE ANVIL' : 'SPEED ANVIL') + ' · stacks ' + lo + '/14 · drag onto another turret: it gets +' + +(b.v * 100).toFixed(1) + '% ' + (d === 'dmg' ? 'damage' : 'fire rate') + ' for good (' + (d === 'dmg' ? '3' : '2') + '% per stack; one buff type per turret) · drag onto an Anvil of the SAME type: stacks add up (max 14), two ' + lo + '-stack Anvils: ' + Math.min(14, lo * 2) + ' stacks, ' + this.tiLe(Math.min(14, lo * 2), n) + '% success — more stacks = more risk · fail: the dragged Anvil is lost, the target keeps the bigger stacks' + (n ? ' · +' + 4 * n + '% success when the total is 8+' : '');
   },
+  gocDau: (T, t) => -Math.PI / 2,
+  dauAnh: (T) => (T.dang === 'toc' ? 'lorentoc_nong' : null), // dạng tốc: đầu bánh răng (render.js REN.dauEp)
+  sinh(G, T) {
+    if (!T.dang) { const B = G.ban[T.ban]; const hat = (typeof ONS !== 'undefined' && ONS.on ? ONS.seed : G.hat) || 1; B._anN = ((B && B._anN) | 0) + 1; if (B) B._anN = B._anN; const r = rngHat((hat * 6007 + ((B && B.i) | 0) * 911 + (T.o | 0) * 131 + ((B && B._anN) | 0) * 7919) | 0); T.dang = r() < 0.5 ? 'dmg' : 'toc'; }
+    if (T.lo == null) T.lo = Math.min(this.MAX, T.sao | 0);
+  },
+  capNhat(G, B, T) { return true; },
   ghepDB: {
-    haiChieu: true,
-    hopLe: (a, b) => b.id !== 'loren' && b.id !== 'mimic' && b.sao <= 3 && b.ban === a.ban && !b.st.da, // Mimic + Forge = ghép thường (Mimic 'merges with any same-star turret' thắng) — rà cộng hưởng 07/11, người dùng chốt
-    lam(G, B, a, b) { // a = Forge, b = ụ bị ăn
-      const n = SKILLS.loren.f(a) * (b.sao >= 3 ? 3 : 1);
-      B.t[b.o] = null;
-      G.bay.push({ id: b.id, sao: b.sao, x0: B.o[b.o].x, y0: B.o[b.o].y, x1: B.o[a.o].x, y1: B.o[a.o].y, t: 0, bac: b.bac });
-      a.lo = (a.lo || 0) + n; a.sang = 1; a.anim = { k: 'no', t: 0.25 };
-      const c = B.o[a.o]; FX.chu1(c.x, c.y - 30, '+' + n + ' FORGE', '#ff6a1a', 15, 'to'); FX.tiaLua(c.x, c.y, 16, '#ff6a1a', 200, 10); FX.no('no_phao', c.x, c.y, 60, 0.35);
-      const X = SKILLS.loren.dich(B); if (X) { const cx = B.o[X.o]; tiaPhep(c.x, c.y, cx.x, cx.y, '#ff6a1a'); }
-      SND.dat(); SND.no(0.3);
-      return a;
+    haiChieu: false, cungLoai: true,
+    hopLe: (a, b) => b.ban === a.ban && !b.st.da && (b.id === 'loren' ? SKILLS.loren.dang(a) === SKILLS.loren.dang(b) : b.id !== 'mimic'),
+    laGhep: (a, b) => b.id === 'loren', // Anvil + Anvil = ghép thật (Archive +1) · buff lên ụ khác: không
+    lam(G, B, a, b) { // a = Anvil kéo, b = đích
+      const S = SKILLS.loren, ca = B.o[a.o], cb = B.o[b.o];
+      G.bay.push({ id: a.id, sao: a.sao, x0: ca.x, y0: ca.y, x1: cb.x, y1: cb.y, t: 0, bac: a.bac });
+      B.t[a.o] = null;
+      if (b.id === 'loren') {
+        const tong = Math.min(S.MAX, (a.lo || 0) + (b.lo || 0)), p = S.tiLe(tong, S.n(B));
+        const hat = (typeof ONS !== 'undefined' && ONS.on ? ONS.seed : G.hat) || 1; B._anR = (B._anR | 0) + 1;
+        const ok = rngHat((hat * 3301 + B.i * 613 + b.o * 97 + B._anR * 7919) | 0)() * 100 < p;
+        if (ok) { b.lo = tong; b.sao = Math.min(LUAT.saoMax, Math.max(a.sao, b.sao)); FX.chu1(cb.x, cb.y - 30, 'FORGED ' + tong, '#ffd23f', 15, 'to'); FX.no('no_phao', cb.x, cb.y, 60, 0.35); SND.nang(3); }
+        else { b.lo = Math.max(a.lo || 0, b.lo || 0); FX.chu1(cb.x, cb.y - 30, 'CRACKED', '#ff8a6a', 14, 'to'); SND.no(0.3); }
+        b.sang = 1; b.anim = { k: 'no', t: 0.25 }; B._anOk = ok;
+        return b;
+      }
+      const nb = S.buff(a, B);
+      if (!b.anv || b.anv.k !== nb.k || nb.v > b.anv.v) b.anv = nb; // 1 loại buff / ụ: khác loại → thay; cùng loại → giữ số lớn hơn
+      b.sang = 1; tiaPhep(ca.x, ca.y, cb.x, cb.y, nb.k === 'dmg' ? '#ff6a1a' : '#4fd8ff');
+      FX.chu1(cb.x, cb.y - 30, '+' + +(b.anv.v * 100).toFixed(0) + '% ' + (b.anv.k === 'dmg' ? 'DMG' : 'SPEED'), b.anv.k === 'dmg' ? '#ff9a5a' : '#8fe6ff', 14, 'to');
+      SND.dat();
+      return b;
     },
   },
-  ghep(G, B, a, b, ra) { if (ra.id === 'loren') ra.lo = Math.max(a.lo || 0, b.lo || 0); },
-  sangDau: (T) => Math.min(0.35, (T.lo || 0) / 30),
-  veThem(ctx, T, S, al, R) { const n = T.lo || 0; if (n >= 4) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (n >= 10 ? 0.38 : 0.18); /* VFX P3 */ R.anhGiua(ctx, R.cham1('#ff6a1a'), 0, 0, S * 0.9); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al; } },
+  sangDau: (T) => Math.min(0.35, (T.lo || 0) / 40),
 };
+{ const _bdAn = batDau; batDau = function () { const r = _bdAn.apply(this, arguments); try { if (typeof REN !== 'undefined' && REN.img && G.ban.some(B => B.deck.includes('loren'))) REN.img('lorentoc_nong'); } catch (e) { } return r; }; } // tải trước đầu Anvil dạng tốc
+// buff Anvil: áp mỗi khung sau khi buff đặt lại (đá: tắt, băng: giữ — ụ băng không bắn nên không đổi gì)
+{
+  const _mocBufAn = mocBuf;
+  mocBuf = function (B) {
+    const r = _mocBufAn.apply(this, arguments);
+    if (B && B.t) for (const T of B.t) if (T && T.anv && !T.st.da) { if (T.anv.k === 'dmg') T.buf.dmg += T.anv.v; else T.buf.toc += T.anv.v; }
+    return r;
+  };
+}
 
 // =====================================================================================================
 // G7 · MIRROR GATE (guongcong) — Vàng ĐB (hồi h s): PVP chặn + PHẢN hiệu ứng ghép của đối thủ lên bàn bạn (Clamp/Scramble/−1★/Jam → đối thủ bị Kẹp 4 s;
@@ -409,7 +439,7 @@ themHo('crit', 2, 'thaukinh', 'lends crit DAMAGE; crits pierce');
 themHo('guard', 2, 'nhieusong', 'merge jams rivals / frees an ally summon');
 themHo('mana', 2, 'santhuong', 'WANTED marks pay bonus mana on kill');
 themHo('frost', 3, 'nhatthuc', 'Day burn ⇄ Night slowing cone');
-themHo('star', 3, 'loren', 'eats 1–3★ turrets for forge stacks (kept while the Forge stays)');
+themHo('star', 3, 'loren', 'TWIN ANVIL: risky same-type forging, then a permanent damage or speed buff');
 themHo('guard', 3, 'guongcong', 'blocks & REFLECTS rival control');
 themHo('trap', 3, 'marionette', 'turns an enemy against its own wave');
 
@@ -418,15 +448,10 @@ Object.assign(MOC_RIENG, {
   thaukinh: { 5: ['DOUBLE PIERCE', 'Crits pierce 2 enemies'], 7: ['TRUE FOCUS', 'Pierce hits deal 65% (not 50%)'] },
   nhatthuc: { 7: ['TOTAL ECLIPSE', 'Each swap: both modes 1.5s + ×4 ring blast'] },
   marionette: { 7: ['TWIN PUPPETS', 'Controls 2 enemies at once (4★+: big enemies too)'] },
-  // Forge không bắn → mốc chung '+20% speed / +25% effect / +30% effect' không làm gì; sao thật sự đổi số cộng dồn mỗi lần ăn (f)
-  loren: { 3: ['HOT COALS', 'Each feed +2 stacks (3★ food ×3)'], 5: ['BELLOWS', 'Each feed +3 stacks'], 7: ['MOLTEN CORE', 'Each feed +4 stacks'] },
 });
 Object.assign(GROW, {
   nemesis: ttSao('#d01e3a', ['SCALES', 'SCYTHE', 'VERDICT'], '1–3★ / 4–6★ / 7★ · a VERDICT every 10 hits'),
   nhatthuc: ttSao('#ffcc33', ['DUSK', 'CORONA', 'TOTAL ECLIPSE'], '1–3★ / 4–6★ / 7★: both modes at once on every swap'),
   marionette: ttSao('#a01848', ['STRINGS', 'GOLDEN HAND', 'TWIN PUPPETS'], '1–3★ / 4–6★ (big enemies) / 7★ (2 puppets)'),
   guongcong: ttSao('#bff6ff', ['MIRROR', 'TWIN PANES', 'SHARD HALO'], '1–3★ / 4–6★ / 7★: reflects ×2'),
-  // (bỏ trần 07/11: dạng 3 từ 15 cộng dồn trở lên, số vẫn cộng tiếp; vòng tiến độ bão hoà ở 15)
-  loren: { mau: '#ff6a1a', khongAnh: true, ten: ['COLD FORGE', 'BELLOWS', 'MOLTEN CORE'], dk: 'Forge stacks 0–4 / 5–14 / 15+ (no cap: every stack keeps adding damage to your best Attack turret)',
-    gd: (T) => { const n = T.lo || 0; return { s: n >= 15 ? 3 : n >= 5 ? 2 : 1, p: Math.min(1, n / 15), v: [1 / 3, 1] }; } },
 });

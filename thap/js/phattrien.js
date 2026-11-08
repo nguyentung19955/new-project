@@ -104,7 +104,7 @@ const MOC_RIENG = {
   soi:       { 3: ['KEEN FANGS', '+10% crit chance'], 5: ['FERAL', '+25% damage'], 7: ['ALPHA HOWL', 'Neighbours +25% fire rate'] },
   mana:      { 3: ['FAST FLOW', 'Mana every 6s'], 5: ['OVERFLOW', '+25% mana'], 7: ['WELLSPRING', 'Mana every 5s'] },
   hopbi:     { 3: ['QUICK OPEN', 'Opens 12s sooner'], 5: ['LUCKY BOX', 'Result at least 3★'], 7: ['JACKPOT', 'Result at least 5★'] },
-  tienhoa:   { 3: ['FAST GROWTH', 'Countdown 20% shorter'], 5: ['BREAKTHROUGH', '25% chance of +2★ (never above 7★)'], 7: ['DUD', 'At 7★ the bomb fizzles: no skill, just a 7★ turret (losing a star restarts it)'] },
+  tienhoa:   { 7: ['BURNT EGG', 'A 6★ egg burns into a 7★ egg: no hatch, tap it to recycle for +20 mana'] },
 };
 // loại để chọn mốc chung
 const KHONG_DOI = new Set(['railgun', 'no5', 'bomhen']); // bắn có nhịp riêng → mốc 5★ chung = OVERCHARGE thay vì DOUBLE TAP
@@ -163,8 +163,9 @@ const GROW = {
     gd: (T) => ({ s: T.nap >= 0.8 ? 3 : T.nap >= 0.35 ? 2 : 1, p: T.nap, v: [0.35, 0.8] }) },
   hopbi: { mau: '#c77dff', ten: ['SEALED', 'UNSEALING', 'ABOUT TO OPEN'], dk: 'Timer 0–70% / 70–93% / 93–100%, then opens',
     gd: (T) => ({ s: T.nap >= 0.93 ? 3 : T.nap >= 0.7 ? 2 : 1, p: T.nap, v: [0.7, 0.93] }) },
-  tienhoa: { mau: '#ffd23f', ten: ['INCUBATING', 'FORGING', 'ASCENDING'], dk: 'Timer 0–60% / 60–90% / 90–100%, then evolves +1★',
-    gd: (T) => ({ s: T.nap >= 0.9 ? 3 : T.nap >= 0.6 ? 2 : 1, p: T.nap, v: [0.6, 0.9] }) },
+  // 08/11 TRỨNG: hình dạng = ảnh trứng theo sao (skills2.js dauAnh) → dạng grow giữ 1 (không hào quang dạng 2/3; trứng cháy không sáng rực)
+  tienhoa: { mau: '#9dff5a', ten: ['EGG', 'EGG', 'EGG'], dk: 'Egg: hatches after 10s + 2s per ★ (6★ burns into a 7★ egg)',
+    gd: (T) => ({ s: 1, p: Math.min(1, T.nap || 0), v: [0.6, 0.9] }) },
   lophanung: { mau: '#9fe6ff', lap: true, ten: ['IDLE CORE', 'HEATING', 'CRYO STORM READY'], dk: 'Active charge <50% / 50–99% / full (tap to FREEZE)',
     gd: (T) => ({ s: T.nap >= 1 || T.bungT > 0 ? 3 : T.nap >= 0.5 ? 2 : 1, p: T.nap, v: [0.5, 1] }) },
   soi: { mau: '#ff4b3e', ten: ['PUP', 'NORMAL', 'AWAKENED'], dk: 'Form is rolled on summon / merge: Normal, or Awakened by chance (30% at LV9, +1.5% per card level) — no growing',

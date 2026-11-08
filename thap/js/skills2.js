@@ -921,38 +921,66 @@ SKILLS.soi = { // Sói Máy (Werewolf) — mỗi lần TRIỆU HỒI / GHÉP ra 
   sangDau: (T) => (T.thuc ? 0.16 : 0), // VFX P3
   veThem(ctx, T, S, al, R) { if (T.thuc && (R.t * 7 + (T.pha || 0)) % 1 < 0.1) { const c = tamU(T); FX.hat1('than', c.x + ((T.uid * 37) % 28) - 14, c.y + 4, 0, -30, 0.6, 5, '#ff4b3e'); } }, // than đỏ: chỉ hình (không Math.random)
 };
-SKILLS.tienhoa = { // Hộp Tiến Hoá (Moa): BOM HẸN GIỜ đếm ngược → biến thành ụ ngẫu nhiên +1 sao — sao càng cao càng LÂU (14 + 5 s/★)
-  //   7★: không lên được nữa → bom XỊT (nổ hụt 1 lần, hiện xác bom ở giữa ụ), bộ đếm dừng, KHÔNG có tác dụng gì — chỉ là 1 ụ 7★
-  //   ụ 7★ xịt bị GIẢM sao (trùm hạ sao, ụ/skill khác…) → hết xịt, đếm ngược lại TỪ ĐẦU theo sao mới, biến đổi lại bình thường
-  //   MỌI lần mất sao (cả dưới 7★, vd 5★ → 4★) cũng đếm lại TỪ ĐẦU (KIEM.md mục IX 'Đã quyết' #3) — T.evoSao = sao lần trước; tăng sao giữ thời gian đã chờ
-  //   (luật thuần theo T.sao/T.tuoi → online tất định; con số đếm + xác bom chỉ là hình vẽ từ bộ đếm đó — growfx.js veEvoBom)
-  vai: 'db', dmg: 0, toc: 0, napMau: '#ffd23f', bomDem: true,
-  can: (T) => (14 + 5 * T.sao) * (ms(T, 3) ? 0.8 : 1) * (knThe(G.ban[T.ban], 'tienhoa') || 100) / 100, // × cấp thẻ (KY_NANG_CAP.tienhoa) // 3★ FAST GROWTH · 20+6★ → 14+5★ (đo bậc 06/11)
-  con: (T) => Math.max(0, SKILLS.tienhoa.can(T) - T.tuoi), // giây còn lại tới lúc biến đổi
-  mo: (T) => T.sao >= LUAT.saoMax
-    ? 'MAX 7★ — the bomb fizzled: cannot evolve, no skill (just a 7★ turret) · losing a star restarts the countdown'
-    : 'Evolves in ' + Math.ceil(SKILLS.tienhoa.con(T)) + 's → random ' + Math.min(7, T.sao + 1) + '★' + (ms(T, 5) ? ' (25%: ' + Math.min(7, T.sao + 2) + '★)' : '') + ' · higher stars take longer · losing a star restarts the countdown · 7★ fizzles',
-  gocDau: (T, t) => -Math.PI / 2 + t * (0.4 + T.nap * 3),
-  sangDau: (T) => T.nap * T.nap * 0.5,
-  capNhat(G, B, T) {
-    if (T.sao >= LUAT.saoMax) { // 7★: bom xịt — dừng đếm, nổ hụt 1 lần (chỉ hình, không sát thương), từ đó chỉ là ụ 7★ không tác dụng
-      if (!T.xit) { T.xit = true; T.xitV = typeof VX !== 'undefined' ? VX.t : 0; if (B && !B.ai && typeof SND !== 'undefined' && SND.no) SND.no(0.25); }
-      T.nap = 0; T.tuoi = 0; T.evoSao = T.sao;
+SKILLS.tienhoa = { // TRỨNG TIẾN HOÁ (Evolver, Moa) — LÀM LẠI 08/11 (người dùng duyệt TOM-TAT mục 14, CHATGPT-SPEC A1 §9): bỏ bom, thành QUẢ TRỨNG nở dần.
+  //   1–5★: nở sau (10 + 2 × sao) giây ÷ (1 + 3%/cấp thẻ) → 1 ụ NGẪU NHIÊN trong bộ bài (không phải Trứng) ở sao + 1 (biến hình, KHÔNG phải ghép).
+  //   6★: sau 22 s ÷ (1 + 3%/cấp) thành TRỨNG CHÁY 7★: không bắn, không nở, không lên được nữa (mất sao vẫn là trứng cháy).
+  //   Trứng nào lên 7★ (Vua Ghép, Lõi Khởi Sinh…) cũng là trứng cháy. CHẠM trứng cháy = tái chế: bỏ trứng, +20 mana (không đổi theo cấp).
+  //   Băng / đá: đồng hồ dừng (capNhatU không chạy). Mất sao: đếm lại từ đầu (luật cũ KIEM.md IX #3). Ngẫu nhiên: rngHat(hạt trận + bàn + ô + lần nở).
+  //   Online: bàn con rối không tự nở (chờ ảnh chụp bàn), trứng cháy theo cờ ô 'X' (dongbo.js), tái chế = gói 'cd'.
+  vai: 'db', dmg: 0, toc: 0, napMau: '#ffd23f', bomDem: true, chuDongMoiSao: true,
+  MANA: 20, ANH: ['trung_1', 'trung_1', 'trung_1', 'trung_2', 'trung_2', 'trung_3', 'trung_3'],
+  goc: (sao) => (sao >= 6 ? 22 : 10 + 2 * sao),
+  can: (T) => { const B = G.ban[T.ban]; return SKILLS.tienhoa.goc(T.sao) / heDB(B, 'tienhoa') * Math.max(0.7, 1 - 0.03 * (B ? knPU(B, 'tienhoa') : 0)); }, // ÷ cấp thẻ (+3%/cấp) · power-up trong trận −3%/bước
+  con: (T) => Math.max(0, SKILLS.tienhoa.can(T) - (T.egg || 0)), // giây còn lại tới lúc nở / cháy
+  chay: (T) => !!(T.chay || T.sao >= LUAT.saoMax),
+  mo: (T) => SKILLS.tienhoa.chay(T)
+    ? 'BURNT EGG: it never hatches and does not shoot · tap it to recycle it: +20 mana'
+    : T.sao >= 6
+      ? 'Egg 6★: in ' + Math.ceil(SKILLS.tienhoa.con(T)) + 's it burns into a 7★ egg that never hatches · tap a burnt egg to recycle it for +20 mana'
+      : 'Egg hatches in ' + Math.ceil(SKILLS.tienhoa.con(T)) + 's → a random turret from your deck at ' + (T.sao + 1) + '★ · time = 10s + 2s per ★ · frozen or stone: the timer stops · losing a ★ restarts it · a 6★ egg burns (7★, no hatch)',
+  dauAnh(T) { const S = SKILLS.tienhoa; if (S.chay(T)) return 'trung_chay7'; return S.con(T) < 0.5 ? 'trung_no' : S.ANH[Math.max(0, Math.min(6, T.sao - 1))]; },
+  dauAnhK: () => 0.8,
+  gocDau(T, t) { return REN.img && REN.img('trung_1') ? 0 : -Math.PI / 2 + t * (0.4 + T.nap * 3); },
+  sangDau: (T) => (SKILLS.tienhoa.chay(T) ? 0 : T.nap * T.nap * 0.35),
+  aiNen(G, B, T) { return SKILLS.tienhoa.chay(T); },
+  chuDong(G, B, T) { // tái chế trứng cháy: +20 mana, ô trống
+    if (!this.chay(T) || B.t[T.o] !== T) return false;
+    const c = B.o[T.o]; B.t[T.o] = null; B.mana += this.MANA;
+    G.hu.push({ k: 'trungVo', t: 0, song: 0.6, x: c.x, y: c.y, w: Math.min(B.cw, B.ch) * 0.7 });
+    FX.chu1(c.x, c.y - 26, '+' + this.MANA + ' MANA', '#7fdcff', 14, 'to'); SND.mana();
+    return true;
+  },
+  capNhat(G, B, T, dt) {
+    if (this.chay(T)) { T.chay = true; T.nap = 1; T.egg = 0; T.evoSao = T.sao; return true; }
+    if (T.evoSao != null && T.sao < T.evoSao) { T.egg = 0; } // mất sao → đếm lại từ đầu
+    T.evoSao = T.sao;
+    T.egg = (T.egg || 0) + dt;
+    T.nap = Math.min(0.99, T.egg / this.can(T));
+    if (T.egg < this.can(T)) return true;
+    if (B.net && typeof ONS !== 'undefined' && ONS.on) return true; // bàn con rối online: chờ ảnh chụp bàn của bạn
+    const c = B.o[T.o], w = Math.min(B.cw, B.ch) * 0.7;
+    if (T.sao >= 6) { // 6★ → trứng cháy 7★
+      const s0 = T.sao; T.sao = LUAT.saoMax; T.chay = true; T.egg = 0; T.nap = 1; T.sang = 1;
+      if (typeof mocMoi === 'function') mocMoi(T, s0, 0.1);
+      FX.chu1(c.x, c.y - 26, 'BURNT 7★', '#ff8a4a', 14, 'to'); FX.no('no_phao', c.x, c.y, 50, 0.35);
       return true;
     }
-    if (T.xit) { T.xit = false; T.xitV = null; T.tuoi = 0; T.nap = 0; } // bị giảm sao: hết xịt → đếm lại từ đầu
-    if (T.evoSao != null && T.sao < T.evoSao) { T.tuoi = 0; T.nap = 0; } // mất sao dưới 7★ → cũng đếm lại từ đầu
-    T.evoSao = T.sao;
-    T.nap = Math.min(1, T.tuoi / this.can(T));
-    if (T.nap >= 1) {
-      if (B.net && typeof ONS !== 'undefined' && ONS.on) return true; // bàn con rối online: chờ ảnh chụp bàn của bạn (không tự quay ụ khác máy bạn)
-      const ds = deckTru(B, ['tienhoa']);
-      const them = ms(T, 5) && Math.random() < 0.25 ? 2 : 1; // 5★ BREAKTHROUGH
-      const sao = Math.min(LUAT.saoMax, T.sao + them);
-      const N = chuyenU(B, T, pick(ds), sao, true);
-      VX.hen(0.5, () => nhanU(N, 'EVOLVE +' + (sao - T.sao) + '★ ' + (TEXT.turret[N.id] ? TEXT.turret[N.id].name.toUpperCase() : ''), '#ffd23f', true)); SND.ghep();
-    }
+    B._evN = (B._evN | 0) + 1;
+    const hat = (typeof ONS !== 'undefined' && ONS.on ? ONS.seed : G.hat) || 1, r = rngHat((hat * 8209 + B.i * 523 + T.o * 211 + B._evN * 7919) | 0);
+    const ds = deckTru(B, ['tienhoa']), sao = Math.min(LUAT.saoMax, T.sao + 1);
+    G.hu.push({ k: 'trungVo', t: 0, song: 0.6, x: c.x, y: c.y, w });
+    const N = chuyenU(B, T, ds[Math.floor(r() * ds.length)], sao, true);
+    VX.hen(0.5, () => nhanU(N, 'HATCH ' + sao + '★ ' + (TEXT.turret[N.id] ? TEXT.turret[N.id].name.toUpperCase() : ''), '#9dff5a', true)); SND.ghep();
     return true;
+  },
+};
+// tải trước ảnh trứng khi Evolver có trong bộ bài (khỏi hiện đầu cũ khung đầu)
+{ const _bdEgg = batDau; batDau = function () { const r = _bdEgg.apply(this, arguments); try { if (typeof REN !== 'undefined' && REN.img && G.ban.some(B => B.deck.includes('tienhoa'))) for (const k of ['trung_1', 'trung_2', 'trung_3', 'trung_no', 'trung_chay7', 'trung_vo']) REN.img(k); } catch (e) { } return r; }; }
+HU.trungVo = { // vỏ trứng (trung_no rồi trung_vo) bung ra lúc nở / tái chế — chỉ hình
+  cap(G, o, dt) { o.t += dt; return o.t >= o.song; },
+  ve(ctx, o) {
+    const p = o.t / o.song, a = REN.img(p < 0.4 ? 'trung_no' : 'trung_vo'); if (!a) return;
+    PX.ve(ctx, a, o.x, o.y - (p < 0.4 ? 0 : o.w * 0.2 * p), o.w * (p < 0.4 ? 1 : 0.9), o.w * (p < 0.4 ? 1 : 0.9) * a.height / a.width, 0, 1 - Math.max(0, p - 0.5) * 2);
   },
 };
 SKILLS.cauvong = { // Máy Cầu Vồng (Yuna) — HỖ TRỢ: mỗi 7 s vẽ vệt cầu vồng trên đường quái. Theo DCDW Yuna, NGƯỢC DẤU theo chế độ:

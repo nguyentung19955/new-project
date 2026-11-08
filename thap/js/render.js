@@ -591,8 +591,15 @@ const REN = {
   kDau(id) { const k = (window.HEAD_K || {})[id]; if (k) return k; const m = (window.ART_META || {})[id] || { s: 1 }; return 0.8 * m.s; },
   coDau(T) { const B = G.ban[T.ban]; return Math.min(B.cw, B.ch) * this.dauK(T.id, T.gd); },
   // tên ảnh + hệ số cỡ của đầu súng ở dạng gd (0 = đầu thường, 1..3 = dạng grow-up)
-  dauTen(id, gd) { return gd && STAGE_K[id] ? id + '_nong_s' + gd : id + '_nong'; },
-  dauK(id, gd) { return gd && STAGE_K[id] ? STAGE_K[id][gd - 1] : this.kDau(id); },
+  // REN._dauEp = [id, ảnh, K]: đầu RIÊNG theo trạng thái ụ đang vẽ (SKILLS[id].dauAnh(T) — Twin Anvil dạng tốc, mặt nạ Prism Thief, trứng Evolver); null = đầu thường
+  dauTen(id, gd) { if (this._dauEp && this._dauEp[0] === id) return this._dauEp[1]; return gd && STAGE_K[id] ? id + '_nong_s' + gd : id + '_nong'; },
+  dauK(id, gd) { if (this._dauEp && this._dauEp[0] === id) return this._dauEp[2]; return gd && STAGE_K[id] ? STAGE_K[id][gd - 1] : this.kDau(id); },
+  datDauEp(T) {
+    const sk = T && SKILLS[T.id], ten = sk && sk.dauAnh ? sk.dauAnh(T) : null;
+    if (!ten || !this.img(ten)) { this._dauEp = null; return; } // ảnh riêng chưa tải: vẽ đầu thường (dự phòng)
+    const k = sk.dauAnhK ? sk.dauAnhK(T) : ((window.HEAD_K || {})[ten.replace(/_nong$/, '')] || this.kDau(T.id));
+    this._dauEp = [T.id, ten, k];
+  },
   // vẽ 1 lớp đầu súng (đã xoay sẵn ở ctx): bien '' thường | 'trang' bóng trắng | 'den' bóng tối; sc = phóng ĐỀU
   veDauLop(ctx, id, gd, C, al, sc, da, bien) {
     const ten = this.dauTen(id, gd), D = C * this.dauK(id, gd) * (sc || 1);
@@ -895,6 +902,7 @@ const REN = {
     } // fx_vong_lv chưa tải: không vẽ vòng code
     // đầu súng
     const C0 = S / 0.98, gd = !o.ghost && T.gd && laGrow(T.id) ? T.gd : 0;
+    this.datDauEp(o.ghost ? null : T);
     if (!o.ghost) VX.duoiDau(ctx, T, S, al, this); // hào quang dạng thức tỉnh + vòng tiến độ grow-up (dưới đầu súng)
     const D = C0 * this.dauK(T.id, gd);
     // đầu súng VẼ RIÊNG (Sói Máy: đầu sói nhìn thẳng → xoay theo hướng bắn · Hydra: số đầu = số sao) — false = ảnh chưa tải → đầu cũ
@@ -975,6 +983,7 @@ const REN = {
       // buff: không còn ký hiệu nhỏ trên ô — hiện bằng hào quang ảnh quanh đầu súng (buffvfx.js), số chỉ ở bảng chạm
     }
     ctx.globalAlpha = 1;
+    this._dauEp = null;
     if (A) VX.sau(ctx, T, x, y, St, A);
   },
   // phần phụ <id>_phu (ô 4 của tấm module) vẽ tại trục, ctx ở tâm ụ (chưa xoay đầu): quay chậm ngược chiều;

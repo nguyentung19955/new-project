@@ -137,6 +137,7 @@ const EVO = {
   so: { evo_bom: [0, 0.035, 0.25], fx_bomhen_hieu: [-0.04, 0.06, 0.26] }, // ô số trên ảnh: [dx, dy, cỡ chữ] theo cỡ huy hiệu
 };
 function veEvoBom(ctx, T, S, al, R) {
+  if (REN.img && REN.img('trung_1')) return; // 08/11: Evolver = QUẢ TRỨNG (đầu ảnh trung_*, skills2.js) — bỏ bom; còn số giây ở bộ đếm đáy ô (DEMKN)
   const t = VX.t;
   ctx.save(); ctx.globalCompositeOperation = 'source-over';
   if (T.sao >= LUAT.saoMax) { // 7★ xịt: nổ hụt (0–1.1 s sau khi lên 7★) rồi xác bom cố định ở giữa

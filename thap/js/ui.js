@@ -470,12 +470,14 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       const B = G.ban[0], C = Math.min(B.cw, B.ch);
       // khung canvas đo 1 lần lúc chạm (pointermove KHÔNG đọc bố cục → không ép trình duyệt tính lại layout mỗi lần rê)
       this.keo = { T, x, y, x0: x, y0: y, dang: false, id: e.pointerId, lech: e.pointerType === 'mouse' ? 0 : Math.round(C * 0.6), r: cv.getBoundingClientRect() };
+      if (T.id === 'bienmau') this.keo.duong = [T.o];
       if (typeof REN !== 'undefined' && REN.nongKeo && !laHoTro(T)) REN.nongKeo(T); // dựng sẵn bản nhấc + huy hiệu, rải theo khung
     });
     cv.addEventListener('pointermove', (e) => {
       const k = this.keo; if (!k || e.pointerId !== k.id) return;
       // chỉ ghi toạ độ mới nhất (trình duyệt đã gộp các lần rê trong 1 khung); vẽ theo ngón ở khung rAF kế tiếp
       const [x, y] = this.diemLogic(e, k.r); k.x = x; k.y = y;
+      if (k.duong) { const B = G.ban[0], C = Math.min(B.cw, B.ch); for (let i = 0; i < 15; i++) { const c = B.o[i]; if (Math.hypot(c.x - x, c.y - y) < C * 0.42) { if (k.duong[k.duong.length - 1] !== i) k.duong.push(i); break; } } } // Prism Thief: ô ngón tay đi qua (CHROMATIC CIRCUIT)
       if (!k.dang && Math.hypot(x - k.x0, y - k.y0) > 7) {
         if (k.T.st.bang > 0) { FX.chu1(x, y - 20, TEXT.fx.frozen, '#7fdcff', 12); this.keo = null; return; }
         k.dang = true; $('#tt').hidden = true; this.xemHT = null; this.chonGhep = null;
@@ -499,6 +501,14 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
         this.moTT(k.T.id, k.T);
         if (!k.T.st.bang && B.t.some(N => N && N !== k.T && hopLeGhep(k.T, N))) this.chonGhep = { T: k.T, t0: performance.now() };
         return;
+      }
+      // Prism Thief: vuốt qua 4 ô liền → CHROMATIC CIRCUIT (skills7.js) thay cho ghép; đi qua ≥ 3 ô Prism mà sai luật → báo lý do, không ghép
+      if (k.duong && typeof SKILLS.bienmau.kiemMach === 'function') {
+        const p = k.duong, soP = new Set(p.filter(o => B.t[o] && B.t[o].id === 'bienmau')).size;
+        if (p.length === 4 && SKILLS.bienmau.mach(B, p)) return;
+        if (soP >= 3) { const v = p.length === 4 ? SKILLS.bienmau.kiemMach(B, p) : { loi: 'path' }, c = B.o[p[p.length - 1]];
+          const chu = { path: 'SWIPE EXACTLY 4 CELLS', prism: '4 PRISM THIEVES NEEDED', colour: 'NEED 4 DIFFERENT COLOURS', cd: 'CIRCUIT READY IN ' + Math.ceil((B.pmCd || 0) - G.t) + 'S' }[v.loi] || '';
+          if (chu) FX.chu1(c.x, c.y - 22, chu, '#ff9a9a', 12); return; }
       }
       // kéo: chỉ ghép khi thả đúng lên ô HỢP LỆ; mọi chỗ khác = huỷ (không ghép)
       const [hx, hy] = this.diemKeo(k), D = this.uTai(hx, hy);
