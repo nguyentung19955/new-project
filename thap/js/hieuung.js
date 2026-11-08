@@ -337,13 +337,7 @@ const VX = {
         e.ids.forEach((id, i) => {
           const m = TIERS[G.rosterMap[id].bac].mau, ho = HO_CUA[id] ? HO[HO_CUA[id].ho].mau : m;
           this.vongPhu(ctx, c.x, c.y, S * (0.5 + 0.7 * this.eo(u / 0.5)) * (1 + i * 0.12), ho, (1 - u) * 0.9, tt * 2 * (i ? -1 : 1), true);
-          const v = (tt - 0.05 - i * 0.08) / 0.22; if (v <= 0) return;
-          ctx.globalCompositeOperation = 'source-over';
-          const ic = REN.img('nho/' + id), s = this.bo(v, 2.2), ox = (i - (e.ids.length - 1) / 2) * S * 0.62;
-          ctx.globalAlpha = (u > 0.75 ? (1 - u) / 0.25 : 1);
-          REN.anhGiua(ctx, 'h2_vong_xam', c.x + ox, c.y - S * 0.92, S * 0.8 * s); // khung tròn kim loại PNG (thay đĩa + viền code)
-          if (ic) REN.anhGiua(ctx, ic, c.x + ox, c.y - S * 0.92, S * 0.56 * s);
-          ctx.globalCompositeOperation = 'lighter';
+          // 08/11 người dùng: BỎ thông báo nổi hình tròn (khung h2_vong_xam + icon nho/<id>) trên đầu ụ khi kỹ năng khi-ghép kích hoạt — chỉ giữ vòng phù văn
         });
       } else if (e.k === 'hu') { // tiếng hú Sói thức tỉnh: 3 sóng âm tròn
         for (let i = 0; i < 3; i++) { const u = (tt - i * 0.12) / 0.45; if (u > 0 && u < 1) this.vong(ctx, c.x, c.y, S * (0.45 + 0.9 * this.eo(u)), 2.2 * (1 - u) + 0.4, '#ff4b3e', (1 - u) * 0.7); }
@@ -365,7 +359,7 @@ const VX = {
           this.vong(ctx, c2.x, c2.y, S * (0.36 + 0.5 * this.eo(uR)), 2.6 * (1 - uR) + 0.6, '#ffe46b', (1 - uR) * 0.8);
         }
         // biểu tượng sinh đôi (ảnh ChatGPT fx_sinhdoi_hieu) loé ~0,6 s trên ô ghép và ô mới
-        const gl = REN.img('fx_sinhdoi_hieu');
+        const gl = null; // 08/11 người dùng: BỎ biểu tượng sinh đôi nổi trên 2 ô (fx_sinhdoi_hieu) — giữ tia + vòng vàng
         if (gl) for (const [q, t1] of [[c, tt], [c2, tt - e.bay]]) {
           const v = t1 / 0.6; if (v <= 0 || v >= 1) continue;
           const sc = this.bo(Math.min(1, v / 0.3), 2), w = S * 0.5 * sc, h = w * gl.height / gl.width;
