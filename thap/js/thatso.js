@@ -88,7 +88,6 @@
     M('pandora', 5, 'LUCKY SPIN', 'A merge that makes 6★ rolls twice, keeps the better');
     M('pandora', 7, 'OPEN VAULT', 'Merging two 6★ into 7★ fires 2 effects once (7★ cannot merge again)');
     M('nguyenrua', 7, 'DOOM HEX', '7★ cannot merge again: hex off (best hex = merging two 6★: +25%)');
-    M('chuato', 5, 'QUICK BROOD', 'Every ★ adds a drone and hatches faster; from 4★ drones perch (+10% fire rate to neighbours)');
     M('leviathan', 5, 'DEEP MAW', 'From 4★ (DEEP ONE form): devours big enemies (×3 stacks)');
     M('khoisinh', 5, 'BLOOM', 'From 4★ (BLOSSOM form): neighbours +15% damage');
     M('ronglua', 5, 'BLUE FLAME', 'From 4★ (BLUE WYRM form): +30% vs big enemies and bosses');
@@ -112,7 +111,7 @@
 
   // ---------- 5. skill TỰ PHÁT: huy hiệu PNG trên ụ ----------
   // Cryo / Holy Halo / Chrono Throne (chữ ghi điều kiện) + 4 ụ đỏ nạp chung napChuDong (skills5.js: để đầy quá 6 s thì tự dùng khi đáng — mốc 3★ ghi 'auto-fires if left full')
-  const TU = ['lophanung', 'haoquang', 'ngaithoigian', 'chuato', 'leviathan', 'khoisinh', 'ronglua'];
+  const TU = ['lophanung', 'haoquang', 'ngaithoigian', 'chuato', 'leviathan', 'ronglua']; // Lõi Khởi Sinh: GENESIS tốn 30 mana → không tự phát (08/11)
   window.THATSO.TU = TU;
   for (const id of TU) {
     const sk = SKILLS[id]; if (!sk || !sk.capNhat || !sk.chuDong) continue;

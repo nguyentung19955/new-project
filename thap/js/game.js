@@ -223,6 +223,7 @@ function ghep(B, a, b, ep) {
 }
 function nangCap(B, id) {
   const lv = B.lv[id]; if (lv >= 5) return false;
+  if (SKILLS[id] && SKILLS[id].khongNang) return false; // Hydra: không có POWER-UP mana (mana dùng cho kỹ năng chạm)
   const gia = LUAT.giaNangCap[lv - 1];
   if (B.mana < gia) return false;
   B.mana -= gia; B.lv[id] = lv + 1;
@@ -860,7 +861,7 @@ function aiBan(B, dt) {
   // POWER-UP: mọi loại đều có ích (10 ụ không sát thương nâng chính số kỹ năng — KY_NANG_CAP.pu, KIEM.md mục IX 'Đã quyết' #1)
   //  ưu tiên cấp thấp nhất, rồi loại đang có NHIỀU ụ trên bàn (nâng thứ đang đứng trên bàn); loại không có ụ nào trên bàn để sau
   const dem = (id) => ts.reduce((n, T) => n + (T.id === id ? 1 : 0), 0);
-  const loai = B.deck.filter(id => B.lv[id] < 5).sort((a, b) => (dem(a) ? 0 : 1) - (dem(b) ? 0 : 1) || B.lv[a] - B.lv[b] || dem(b) - dem(a));
+  const loai = B.deck.filter(id => B.lv[id] < 5 && !(SKILLS[id] && SKILLS[id].khongNang)).sort((a, b) => (dem(a) ? 0 : 1) - (dem(b) ? 0 : 1) || B.lv[a] - B.lv[b] || dem(b) - dem(a));
   if (loai.length && B.mana >= LUAT.giaNangCap[B.lv[loai[0]] - 1] + (oTrong(B).length ? B.gia : 0)) nangCap(B, loai[0]);
 }
 

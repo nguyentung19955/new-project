@@ -391,10 +391,20 @@ SKILLS.wallgen = { // Máy Dựng Tường (Cleopatra): định kỳ dựng tư�
   },
 };
 // ============ ĐỎ ============
-SKILLS.blackhole = { // Hố Đen: hút quái lại rồi nghiền nát
-  vai: 'tc', dmg: 18, toc: 1,
-  mo: (T) => 'Black hole radius ' + (64 + 4 * T.sao) + ' px · crush ×8',
+// HỐ ĐEN (người dùng duyệt 08/11 — CHATGPT-SPEC §15): mỗi 10 − 0.5×(sao−1) s đặt 1 hố ở chỗ quái đông nhất, bán kính 64 + 4×sao px.
+//   CHỈ GIỮ CHÂN (không kéo lùi trên đường → online tất định): quái thường đứng yên 1.2 s, tinh anh (quái to) 0.6 s, trùm không bị giữ;
+//   hết giờ NGHIỀN (2.0 + 0.6×sao)D mọi quái trong bán kính (trùm 50%). Không có sát thương rút máu trong lúc giữ.
+//   CHỦ ĐỘNG (3★+) SINGULARITY COLLAPSE: 30 mana, hồi 40 s → hố KẾ TIẾP +24 px, giữ +1 s (trần 2 s), nghiền +3.0D, trùm mất thêm 0.5% máu tối đa (1 lần).
+//   D = 90 (giữ ~sát thương mỗi chu kỳ 1★ cũ: nghiền ×8 + rút máu 3 s của dmg 18).
+SKILLS.blackhole = {
+  vai: 'tc', dmg: 90, toc: 1, napMau: '#9a4bff',
+  cd: 40, GIA: 30,
+  ky: (T) => 10 - 0.5 * (T.sao - 1),
+  r: (T) => 64 + 4 * T.sao,
+  nghien: (T) => 2.0 + 0.6 * T.sao,
+  mo: (T) => 'Every ' + SKILLS.blackhole.ky(T).toFixed(1) + 's a black hole (radius ' + SKILLS.blackhole.r(T) + ' px) holds enemies in place 1.2s (elites 0.6s, bosses not held), then crushes for ' + Math.round(SKILLS.blackhole.nghien(T) * 100) + '% damage (bosses 50%)' + (T.sao >= 3 ? ' · TAP (30 mana, cooldown 40s): SINGULARITY COLLAPSE — next hole +24 px, holds 1s longer, +300% crush, bosses lose 0.5% max HP' + (T.bhA ? ' (READY)' : '') : ' · tap skill unlocks at 3★'),
   capNhat(G, B, T, dt) {
+    if (T.sao >= 3) T.nap = Math.min(1, (T.nap || 0) + dt / this.cd); else T.nap = 0;
     const ho = G.hu.find(o => o.k === 'hoden' && o.T === T);
     if (ho) { xoayDau(T, null, dt, ho.x, ho.y); return true; }
     const ds = dsMucTieu(B);
@@ -402,14 +412,25 @@ SKILLS.blackhole = { // Hố Đen: hút quái lại rồi nghiền nát
     let E = null, best = -1;
     for (const Q of ds) { let n = 0; for (const R of ds) if (Math.hypot(Q.x - R.x, Q.y - R.y) < 70) n++; if (n > best || (n === best && Q.s > E.s)) { best = n; E = Q; } }
     xoayDau(T, E, dt);
-    T.nap += dt * (1 + T.buf.toc) / Math.max(6, 10 - 0.5 * T.sao);
-    if (T.nap >= 1 && E) {
-      T.nap = 0; giat(T, 1.2); chopNong(T, 30);
-      G.hu.push({ k: 'hoden', t: 0, song: 3, p: E.p, s: E.s + 10, x: E.x, y: E.y, r: 64 + 4 * T.sao, T, B, dps: dmgU(T), dmg: dmgU(T) * 8, acc: 0 });
+    T.bhT = (T.bhT || 0) + dt * nhipU(T) / this.ky(T);
+    if (T.bhT >= 1 && E) {
+      T.bhT = 0; giat(T, 1.2); chopNong(T, 30);
+      const A = !!T.bhA; T.bhA = false;
+      const r = this.r(T) + (A ? 24 : 0), giu = A ? 2.0 : 1.2, dmg = dmgU(T) * (this.nghien(T) + (A ? 3.0 : 0));
+      G.hu.push({ k: 'hoden', t: 0, song: giu, p: E.p, s: E.s, x: E.x, y: E.y, r, T, B, dmg, giu, A, acc: 0 });
       SND.hoden();
-    }
+    } else if (T.bhT > 1) T.bhT = 1;
     return true;
   },
+  aiNen: (G, B, T) => dsMucTieu(B).filter(E => !E.chet).length >= 6 || G.quai.some(E => E.trum && !E.chet && banDuocQuai(B, E)),
+  chuDong(G, B, T) {
+    if (T.nap < 1 || T.sao < 3 || T.bhA) return false;
+    if (!traMana(B, T, this.GIA)) return false;
+    T.nap = 0; T.napDay = 0; T.sang = 1; T.bhA = true; T.bhT = Math.max(T.bhT || 0, 0.85); // hố kế tiếp tới sớm
+    nhanU(T, 'SINGULARITY!', '#c070ff', true);
+    return true;
+  },
+  veThem(ctx, T, S, al, R) { if (T.bhA && !MOT_VONG) { ctx.globalCompositeOperation = 'lighter'; PX.vong(ctx, 0, 0, S * 0.46, 2, '#c070ff', al * (0.55 + 0.25 * Math.sin(R.t * 6))); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al; } }, // vòng tím: chiêu đã nạp cho hố kế
 };
 SKILLS.overlord = { // Overlord (Jacheongbi): nạp chậm, đầy thì bắn siêu sấm nổ diện rộng
   vai: 'tc', dmg: 28, toc: 1,
@@ -591,22 +612,24 @@ HU.tuong = { // tường ánh sáng chặn đường rồi nổ · o.vang = TƯ�
     ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
   },
 };
-HU.hoden = { // hố đen: kéo quái về tâm, rút máu, cuối cùng nghiền
+HU.hoden = { // hố đen: GIỮ CHÂN quái trong bán kính (không kéo lùi), hết giờ nghiền
   cap(G, o, dt) {
-    o.acc += dt;
     for (const E of dsMucTieu(o.B)) {
-      const dd = Math.hypot(E.x - o.x, E.y - o.y);
-      if (dd > o.r) continue;
-      if (E.p === o.p) E.keo = clamp((o.s - E.s) * 2.2, -120, 120) * (E.trum ? 0.3 : 1) - E.d.v * (E.trum ? 0.3 : 0.85);
-      if (o.acc > 0.25) trung(E, o.dps * 0.25 * 2, { B: o.B, crit: false, im: true, mau: '#ff6ad5' });
-      if (Math.random() < dt * 6) FX.hat1('lua', E.x, E.y, (o.x - E.x) * 2, (o.y - E.y) * 2, 0.4, 7, '#c070ff');
+      if (E.chet || E.trum || (E.d && E.d.khangCham)) continue;
+      if (Math.hypot(E.x - o.x, E.y - o.y) > o.r) continue;
+      const giu = E.d.to ? o.giu * 0.5 : o.giu; // tinh anh: giữ nửa thời gian
+      if (o.t < giu) E.chan = Math.max(E.chan || 0, Math.min(dt * 1.5, giu - o.t + 1e-3));
     }
-    if (o.acc > 0.25) o.acc = 0;
-    if (Math.random() < dt * 40) { const a = Math.random() * 6.28, r = o.r * rnd(0.6, 1.1); FX.hat1('lua', o.x + Math.cos(a) * r, o.y + Math.sin(a) * r, -Math.cos(a + 0.9) * r * 2.2, -Math.sin(a + 0.9) * r * 2.2, 0.45, 7, pick(['#9a4bff', '#b04bff', '#ffffff'])); }
     if (o.t >= o.song - 0.02 && !o.no) {
-      o.no = true; noLan(o.x, o.y, o.r, o.dmg, o.B, { mau: '#ff6ad5' });
-      G.dangBan = o.T; FX.no('laser_trung', o.x, o.y, o.r * 3, 0.5); FX.lac(6); FX.sang(0.08, '#9a4bff'); /* (rà VFX 07/11) bỏ phủ tím toàn màn */ FX.vong1(o.x, o.y, o.r, 4, '#c070ff', 0.3, 5); // nổ nghiền = ảnh fx_blackhole_trung TÍM của ụ (trước: G.dangBan trống → nổ laser đỏ-hồng chung) SND.no(1);
+      o.no = true; G.dangBan = o.T;
+      for (const E of dsMucTieu(o.B)) {
+        if (E.chet || Math.hypot(E.x - o.x, E.y - o.y) > o.r + E.d.co * 0.25) continue;
+        trung(E, o.dmg * (E.trum ? 0.5 : 1), { B: o.B, mau: '#ff6ad5', phu: true });
+        if (o.A && E.trum && !E.chet) trung(E, E.max * 0.005, { B: o.B, crit: false, phu: true, im: true });
+      }
+      FX.no('laser_trung', o.x, o.y, o.r * 3, 0.5); FX.lac(6); FX.sang(0.08, '#9a4bff'); FX.vong1(o.x, o.y, o.r, 4, '#c070ff', 0.3, 5);
     }
+    return false;
   },
   ve(ctx, o, R) {
     const u = o.t / o.song, mo = Math.min(1, o.t / 0.3) * (u > 0.9 ? (1 - u) * 10 : 1), r = o.r * (0.55 + 0.1 * Math.sin(o.t * 9));

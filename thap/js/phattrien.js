@@ -27,7 +27,7 @@ const HO = {
   summon:    { ten: 'MERGE BONUS', mau: '#fff6c0', bac: [[], ['drone', 'loa'], ['nhanban', 'anhsang'], ['sinhdoi'], []], gap: { 0: 'new idea needed', 4: 'Hive Queen' } },
   star:      { ten: 'STAR',       mau: '#ffd23f', bac: [[], [], ['nangsao'], ['vughep', 'hasao', 'ngoisao'], []], gap: { 0: 'new idea needed', 1: 'new idea needed', 4: 'Genesis Core' } },
   joker:     { ten: 'JOKER',      mau: '#ff6ad5', bac: [[], ['mimic', 'tron', 'dichchuyen'], ['xaotron'], ['saochep'], []], gap: { 0: 'new idea needed', 4: 'new idea needed' } },
-  guard:     { ten: 'GUARD',      mau: '#9fe6ff', bac: [[], [], ['khien', 'taylo', 'kepha'], [], ['haoquang']], gap: { 0: 'new idea needed', 1: 'new idea needed', 3: 'Mirror Gate' } },
+  guard:     { ten: 'GUARD',      mau: '#9fe6ff', bac: [[], [], ['khien', 'taylo', 'kepha'], [], []], gap: { 0: 'new idea needed', 1: 'new idea needed', 3: 'Mirror Gate' } },
   transform: { ten: 'TRANSFORM',  mau: '#c77dff', bac: [[], [], ['hopbi'], ['tienhoa'], []], gap: { 0: 'new idea needed', 1: 'new idea needed', 4: 'new idea needed' } },
 };
 // cơ chế MỚI mà mỗi ụ thêm vào họ của nó (bậc sau không chỉ là bản to hơn của bậc trước)
@@ -44,7 +44,7 @@ const HO_MOI = {
   bua: 'neighbours’ crits hit harder and stagger', nam: 'melee ring blasts', chimang: 'gives crit to neighbours', cuongno: 'crits → RAGE → FRENZY', soi: 'chance to come out AWAKENED: every hit crits',
   phagiap: 'exposes the lead + toughest enemy for its neighbours', khuech: 'boosts neighbours’ damage', lienket: 'stronger per LINKED twin', dongbo: 'buffs EVERY same-star Attack turret on the board',
   cauvong: 'co-op: trail enemies take more · PVP: rival trail enemies take less',
-  bomhen: 'timed bomb that weakens a group', min: 'mines across the path', wallgen: 'walls block the path and explode; merge raises a GOLDEN wall', blackhole: 'pulls enemies together and crushes them',
+  bomhen: 'timed bomb that weakens a group', min: 'mines across the path', wallgen: 'walls block the path and explode; merge raises a GOLDEN wall', blackhole: 'holds a crowd in place and crushes it + SINGULARITY (tap, mana)',
   maychem: 'chance to execute small enemies', tuthan: 'neighbours execute low-HP enemies',
   mana: 'makes mana over time', hutmana: 'leech bolts: damage + capped mana', nhanmana: 'mana burst on merge',
   drone: 'merge launches bomb drones', loa: 'merge cuts Archfiend cooldown', nhanban: 'merge summons a free 1★ (2★ from 3★ merges)', anhsang: 'summons 1★ turrets over time',
@@ -207,7 +207,7 @@ function lanDoc(E, B) {
 const nhip3 = (T) => (T && T.id && mocChung(T, 3) ? 1.2 : 1); // mốc chung 3★ QUICK HANDS (+20% nạp) — số giây hiển thị = số thật
 const NHIP = {
   laser: () => 'continuous beam', overlord: (T) => 'charges ' + ((7 - 0.5 * (T.sao - 1)) / nhip3(T)).toFixed(1) + 's',
-  wallgen: (T) => 'wall every ' + (Math.max(5, 9 - 0.4 * T.sao) / nhip3(T)).toFixed(1) + 's', blackhole: (T) => 'hole every ' + (Math.max(6, 10 - 0.5 * T.sao) / nhip3(T)).toFixed(1) + 's',
+  wallgen: (T) => 'wall every ' + (Math.max(5, 9 - 0.4 * T.sao) / nhip3(T)).toFixed(1) + 's', blackhole: (T) => 'hole every ' + (SKILLS.blackhole.ky(T) / nhip3(T)).toFixed(1) + 's',
   vungdoc: (T) => 'pool every ' + SKILLS.vungdoc.ky(T).toFixed(1) + 's', min: (T) => 'mine every ' + (SKILLS.min.ky(T) / nhip3(T)).toFixed(1) + 's',
   baotuyet: (T) => 'pulse every ' + SKILLS.baotuyet.ky(T).toFixed(1) + 's', lophanung: () => 'aura 2.5 ticks/s',
 };

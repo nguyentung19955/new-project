@@ -121,3 +121,44 @@ const THEBAI = {
     return m._thuong;
   },
 };
+
+// ---------- THẺ ĐÃ BỎ (người dùng 08/11: bỏ Hào Quang Thánh 'haoquang' khỏi bộ bài + gacha) ----------
+// Không xoá mã kỹ năng (SKILLS.haoquang vẫn nạp, không ai gọi được) — chỉ lọc khỏi danh sách ụ lúc nạp (ui.js) → mọi chỗ dùng G.roster/rosterMap
+// (bộ bài, gacha, cửa hàng, bộ ngẫu nhiên, ảnh chụp bàn online — datO bỏ qua id lạ) tự không còn thấy nó.
+// BÙ cho người đã có thẻ: chuyển sang 1 thẻ Đỏ khác (tất định: thẻ Đỏ ĐẦU TIÊN theo thứ tự roster mà người chơi CHƯA có; có hết → thẻ Đỏ đầu tiên),
+//   giữ CẤP (lấy cấp lớn hơn) + CỘNG bản sao → không mất gì. Thẻ đích lưu ở d.doi để lần sau / máy khác (gộp hồ sơ Firebase) ra cùng thẻ.
+//   Bộ bài đã lưu (turret_bo, bộ mẫu turret_pre) có thẻ bỏ → thay bằng thẻ đích ở đúng ô.
+const THE_BO = ['haoquang'];
+Object.assign(THEBAI, {
+  BO: THE_BO,
+  laBo(id) { return THE_BO.includes(id); },
+  dsDo() { return (typeof G !== 'undefined' && G.roster || []).filter(r => r.bac === 'do' && !THE_BO.includes(r.id) && typeof SKILLS !== 'undefined' && SKILLS[r.id]).map(r => r.id); },
+  dich(d, id) { // thẻ đích của thẻ bỏ id trong dữ liệu d
+    d.doi = d.doi || {};
+    const cu = d.doi[id]; if (cu && !THE_BO.includes(cu) && this.dsDo().includes(cu)) return cu;
+    const ds = this.dsDo(); if (!ds.length) return null;
+    const co = (x) => { const o = d.c && d.c[x]; return !!(o && ((o.lv | 0) > 0 || (o.n | 0) > 0)); };
+    return (d.doi[id] = ds.find(x => !co(x)) || ds[0]);
+  },
+  // chuyển thẻ bỏ trong dữ liệu thẻ d (mặc định: bản đang dùng) + bộ bài đã lưu. Trả true nếu có đổi.
+  boThe(d) {
+    const minh = !d; d = d || this.doc(); let doi = false;
+    if (!this.dsDo().length) return false; // chưa nạp danh sách ụ
+    for (const id of THE_BO) {
+      const o = d.c && d.c[id];
+      if (o) { const t = this.dich(d, id); if (!t) continue; const x = d.c[t] || {}; d.c[t] = { lv: Math.max(x.lv | 0, o.lv | 0), n: (x.n | 0) + (o.n | 0) }; delete d.c[id]; doi = true; }
+    }
+    if (minh) {
+      if (doi) this.luu();
+      const thay = (ds) => Array.isArray(ds) ? ds.map(x => THE_BO.includes(x) ? this.dich(d, x) || x : x) : ds;
+      try { const l = JSON.parse(localStorage.getItem('turret_bo') || 'null'); if (l && Array.isArray(l.chon) && l.chon.some(x => THE_BO.includes(x))) { l.chon = thay(l.chon); localStorage.setItem('turret_bo', JSON.stringify(l)); this.luu(); } } catch (e) { }
+      try { const l = JSON.parse(localStorage.getItem('turret_pre') || 'null'); if (l && Array.isArray(l.ds) && l.ds.some(p => p && Array.isArray(p.o) && p.o.some(x => THE_BO.includes(x)))) { l.ds.forEach(p => { if (p && Array.isArray(p.o)) p.o = thay(p.o); }); localStorage.setItem('turret_pre', JSON.stringify(l)); this.luu(); } } catch (e) { }
+    }
+    return doi;
+  },
+  // bộ bài của NGƯỜI KHÁC (online, bản cũ còn gửi thẻ bỏ): thay bằng thẻ Đỏ đầu tiên chưa có trong bộ đó (tất định, 2 máy như nhau)
+  doiBo(deck) {
+    if (!Array.isArray(deck)) return deck;
+    return deck.map(x => { if (!THE_BO.includes(x)) return x; const t = this.dsDo().find(y => !deck.includes(y)); return t || x; });
+  },
+});

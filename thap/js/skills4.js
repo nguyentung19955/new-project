@@ -6,36 +6,47 @@ const giaiDoanSao = (T) => (T.sao >= 7 ? 3 : T.sao >= 4 ? 2 : 1);
 const ttSao = (mau, ten, dk) => ({ mau, khongAnh: true, ten, dk, gd: (T) => ({ s: giaiDoanSao(T), p: (T.sao - 1) / 6, v: [0.5] }) });
 
 // =====================================================================================================
-// G3 · NEMESIS — Vàng TC: bắn quái nhiều máu nhất, mỗi phát +p% máu tối đa (trùm: tối đa 0.8%); quái thường (không to/trùm)
-//      còn dưới x% → XỬ TỬ. Trùm: mỗi 10 phát trúng → PHÁN QUYẾT j% máu tối đa (≥2 s/lần). 7★: xử tử → lưỡi hái nhảy sang quái gần nhất.
+// G3 · NEMESIS — Vàng TC: bắn quái nhiều máu nhất, mỗi phát +p% máu tối đa (trùm tối đa 0.8%).
+//      PHÁN QUYẾT (người dùng duyệt 08/11 — CHATGPT-SPEC §12): cứ 10 phát TRÚNG TRỰC TIẾP của chính ụ này (nổ lan/DoT không tính),
+//      đếm quái THƯỜNG vs TINH ANH (quái to) + TRÙM: thường nhiều hơn → +4% tốc bắn vĩnh viễn (trần +40%);
+//      tinh anh/trùm nhiều hơn hoặc HOÀ 5–5 → +6% sát thương vĩnh viễn (trần +60%). Cấp thẻ: +0.2 / +0.3 điểm % mỗi cấp trên 9 (trần giữ nguyên).
+//      Riêng từng ụ (ghép/biến hình → mất). ĐÃ BỎ kết liễu máu thấp + phán quyết %máu trùm cũ.
 // =====================================================================================================
 SKILLS.nemesis = {
   vai: 'tc', dmg: 26, toc: 0.8, nham: 'mau',
+  TRAN_TOC: 0.40, TRAN_DMG: 0.60,
   p: (T) => sao7(T, [0.003, 0.004, 0.005, 0.006, 0.008, 0.01, 0.012]),
-  x: (T) => sao7(T, [0.08, 0.09, 0.1, 0.11, 0.12, 0.13, 0.15]),
-  j: (T) => sao7(T, [0.02, 0.025, 0.03, 0.035, 0.04, 0.05, 0.06]),
-  mo: (T) => '+' + (SKILLS.nemesis.p(T) * 100).toFixed(1) + '% max HP per hit' + (SKILLS.nemesis.p(T) > 0.008 ? ' (bosses 0.8%)' : '') + ' · executes normal enemies under ' + Math.round(SKILLS.nemesis.x(T) * 100) + '% · bosses: JUDGMENT ' + (SKILLS.nemesis.j(T) * 100).toFixed(1) + '% max HP every 10 hits' + (T.sao >= 7 ? ' · executions leap once' : ''),
+  buocToc: (T) => 0.04 + 0.002 * capThe9(G.ban[T.ban], 'nemesis'),
+  buocDmg: (T) => 0.06 + 0.003 * capThe9(G.ban[T.ban], 'nemesis'),
+  mo: (T) => '+' + (SKILLS.nemesis.p(T) * 100).toFixed(1) + '% max HP per hit' + (SKILLS.nemesis.p(T) > 0.008 ? ' (bosses 0.8%)' : '') + ' · VERDICT every 10 hits (' + ((T && T.nmDem) || 0) + '/10): more normal enemies → +' + +(SKILLS.nemesis.buocToc(T) * 100).toFixed(1) + '% fire rate (now +' + Math.round(((T && T.nmToc) || 0) * 100) + '%, cap 40%); more elites/bosses or a tie → +' + +(SKILLS.nemesis.buocDmg(T) * 100).toFixed(1) + '% damage (now +' + Math.round(((T && T.nmDmg) || 0) * 100) + '%, cap 60%)',
+  sinh(G, T) { T.nmDem = 0; T.nmN = 0; T.nmE = 0; T.nmToc = 0; T.nmDmg = 0; },
+  capNhat(G, B, T) { T.buf.toc += T.nmToc || 0; T.buf.dmg += T.nmDmg || 0; return false; },
   ban(G, B, T, E) {
     giat(T, 1.1); const [x, y] = chopNong(T, 28); SND.tia();
     G.hu.push({ k: 'tiaTia', t: 0, song: 0.22, x0: x, y0: y, x1: E.x, y1: E.y, mau: '#d01e3a' });
-    this.danh(G, B, T, E, true);
+    this.danh(G, B, T, E);
   },
-  danh(G, B, T, E, nhay) {
-    const phan = Math.min(E.trum ? 0.008 : 1, this.p(T)) * E.max;
+  danh(G, B, T, E) {
+    const phan = Math.min(E.trum ? 0.008 : 1, this.p(T)) * E.max, tinh = !!(E.trum || E.d.to); // phân loại LÚC TRÚNG
     trung(E, dmgU(T) + phan, { B, mau: '#c8d4e6' });
-    if (E.chet) return;
-    if (E.trum) {
-      T.demTrum = (T.demTrum || 0) + 1;
-      if (T.demTrum >= 10 && G.t - (E.phanT || -9) >= 2) { T.demTrum = 0; E.phanT = G.t; trung(E, E.max * this.j(T), { B, mau: '#ff3a5a', crit: false, phu: true }); G.hu.push({ k: 'chem', t: 0, song: 0.4, x: E.x, y: E.y }); FX.lac(4); nhanU(T, 'JUDGMENT!', '#ff3a5a', true); SND.no(0.8); }
-    } else if (!E.d.to && E.hp / E.max < this.x(T)) {
-      G.hu.push({ k: 'chem', t: 0, song: 0.4, x: E.x, y: E.y }); trung(E, E.hp + 1, { B, crit: false, phu: true, mau: '#ff3a5a' });
-      FX.chu1(E.x, E.y - 26, 'JUDGED', '#ff3a5a', 12, 'to'); VX.chem(E); SND.no(0.3);
-      if (nhay && T.sao >= 7) { let Q = null, best = 110; for (const X of dsMucTieu(B)) if (!X.chet && X !== E) { const d = Math.hypot(X.x - E.x, X.y - E.y); if (d < best) { best = d; Q = X; } }
-        if (Q) { G.hu.push({ k: 'tiaTia', t: 0, song: 0.25, x0: E.x, y0: E.y, x1: Q.x, y1: Q.y, mau: '#ff3a5a' }); this.danh(G, B, T, Q, false); } }
-    }
+    this.ghi(T, tinh);
+  },
+  ghi(T, tinh) { // sổ 10 đòn → phán quyết
+    if (tinh) T.nmE = (T.nmE || 0) + 1; else T.nmN = (T.nmN || 0) + 1;
+    T.nmDem = (T.nmDem || 0) + 1;
+    if (T.nmDem < 10) return;
+    const toc = T.nmN > T.nmE;
+    if (toc) T.nmToc = Math.min(this.TRAN_TOC, (T.nmToc || 0) + this.buocToc(T)); else T.nmDmg = Math.min(this.TRAN_DMG, (T.nmDmg || 0) + this.buocDmg(T));
+    T.nmDem = 0; T.nmN = 0; T.nmE = 0; T.nmPha = toc ? 1 : 2; T.nmPhaT = 1.2; // biểu tượng nhỏ (chỉ hình)
+    nhanU(T, toc ? 'VERDICT: SPEED' : 'VERDICT: DAMAGE', toc ? '#7fd8ff' : '#ff3a5a');
+  },
+  // thước 10 đòn: 10 chấm nhỏ trên cung dưới ụ (sáng dần theo số đòn) — tờ pixel ghi ở docs/pixel/DANH-SACH.md "Bổ sung"
+  veThem(ctx, T, S, al, R) {
+    const n = T.nmDem || 0; ctx.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < 10; i++) { const a = Math.PI * (0.75 - 0.0555 * i); R.anhGiua(ctx, R.cham1(i < n ? '#ff3a5a' : '#5a2030'), Math.cos(a) * S * 0.47, Math.sin(a) * S * 0.47, i < n ? 7 : 5, 0, al * (i < n ? 0.95 : 0.5)); } // cung dưới ụ, trái → phải
+    ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al;
   },
 };
-
 // =====================================================================================================
 // P4 · LONE ACE (docton) — Tím TC: 4 ô kề TRỐNG → ACE: tốc ×2, +a% chí mạng (7★: đạn xuyên 1 quái); ≥3 ụ kề → −30% tốc
 // =====================================================================================================
@@ -392,7 +403,7 @@ HU.roi = {
 const _batDau4 = batDau;
 batDau = function (che, deck, mv) { const r = _batDau4(che, deck, mv); G.hu.push({ k: 'truyNaVe', t: 0, song: 1e12 }); return r; };
 
-themHo('execute', 3, 'nemesis', '% max-HP hits, executes, boss JUDGMENT');
+themHo('execute', 3, 'nemesis', '% max-HP hits + VERDICT every 10 hits (speed or damage)');
 themHo('heavy', 2, 'docton', 'ALONE = ×2 fire rate + crit (position puzzle)');
 themHo('crit', 2, 'thaukinh', 'lends crit DAMAGE; crits pierce');
 themHo('guard', 2, 'nhieusong', 'merge jams rivals / frees an ally summon');
@@ -405,14 +416,13 @@ themHo('trap', 3, 'marionette', 'turns an enemy against its own wave');
 Object.assign(MOC_RIENG, {
   docton: { 7: ['DUELIST', 'ACE shots pierce 1 enemy'] },
   thaukinh: { 5: ['DOUBLE PIERCE', 'Crits pierce 2 enemies'], 7: ['TRUE FOCUS', 'Pierce hits deal 65% (not 50%)'] },
-  nemesis: { 7: ['REAPER LEAP', 'An execution leaps a hit to the nearest enemy'] },
   nhatthuc: { 7: ['TOTAL ECLIPSE', 'Each swap: both modes 1.5s + ×4 ring blast'] },
   marionette: { 7: ['TWIN PUPPETS', 'Controls 2 enemies at once (4★+: big enemies too)'] },
   // Forge không bắn → mốc chung '+20% speed / +25% effect / +30% effect' không làm gì; sao thật sự đổi số cộng dồn mỗi lần ăn (f)
   loren: { 3: ['HOT COALS', 'Each feed +2 stacks (3★ food ×3)'], 5: ['BELLOWS', 'Each feed +3 stacks'], 7: ['MOLTEN CORE', 'Each feed +4 stacks'] },
 });
 Object.assign(GROW, {
-  nemesis: ttSao('#d01e3a', ['SCALES', 'SCYTHE', 'VERDICT'], '1–3★ / 4–6★ / 7★: executions leap to a 2nd enemy'),
+  nemesis: ttSao('#d01e3a', ['SCALES', 'SCYTHE', 'VERDICT'], '1–3★ / 4–6★ / 7★ · a VERDICT every 10 hits'),
   nhatthuc: ttSao('#ffcc33', ['DUSK', 'CORONA', 'TOTAL ECLIPSE'], '1–3★ / 4–6★ / 7★: both modes at once on every swap'),
   marionette: ttSao('#a01848', ['STRINGS', 'GOLDEN HAND', 'TWIN PUPPETS'], '1–3★ / 4–6★ (big enemies) / 7★ (2 puppets)'),
   guongcong: ttSao('#bff6ff', ['MIRROR', 'TWIN PANES', 'SHARD HALO'], '1–3★ / 4–6★ / 7★: reflects ×2'),

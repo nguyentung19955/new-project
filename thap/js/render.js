@@ -897,7 +897,9 @@ const REN = {
     const C0 = S / 0.98, gd = !o.ghost && T.gd && laGrow(T.id) ? T.gd : 0;
     if (!o.ghost) VX.duoiDau(ctx, T, S, al, this); // hào quang dạng thức tỉnh + vòng tiến độ grow-up (dưới đầu súng)
     const D = C0 * this.dauK(T.id, gd);
-    const dau = this.co(this.dauTen(T.id, gd), D, da ? 'xam' : '');
+    // đầu súng VẼ RIÊNG (Sói Máy: đầu sói nhìn thẳng → xoay theo hướng bắn · Hydra: số đầu = số sao) — false = ảnh chưa tải → đầu cũ
+    const tuVe = !o.ghost && !!skT.veDau && skT.veDau(ctx, T, S, al, this, da);
+    const dau = tuVe ? null : this.co(this.dauTen(T.id, gd), D, da ? 'xam' : '');
     // animation hybrid (anim.js): thở / tụ lực / giật / hồi lò xo / xung hỗ trợ — hàm của thời gian sự kiện thật, không chặn phát bắn
     const AU = typeof AN !== 'undefined' && !o.ghost && !T.st.bang ? AN.u(T, D) : null;
     if (dau) {
@@ -935,7 +937,7 @@ const REN = {
         this.anhGiua(ctx, this.cham1(mau[k]), Math.cos(a) * S * 0.26, Math.sin(a) * S * 0.26, S * 0.45);
         ctx.restore(); ctx.globalAlpha = al;
       }
-    } else if (!o.ghost && typeof TAI !== 'undefined') TAI.veXoay(ctx, 0, 0, D * 0.55); // đầu súng đang tải: vòng xoay PNG nhỏ (không vẽ hình thay thế)
+    } else if (!tuVe && !o.ghost && typeof TAI !== 'undefined') TAI.veXoay(ctx, 0, 0, D * 0.55); // đầu súng đang tải: vòng xoay PNG nhỏ (không vẽ hình thay thế)
     // tesla: cuộn sáng ở đầu nòng trước khi phóng
     if (T.id === 'set' && T.cd < 0.18 && !da && !o.ghost) {
       ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (0.18 - T.cd) * 3;

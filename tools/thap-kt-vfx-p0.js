@@ -100,6 +100,7 @@ const ok = (dk, ten, chi) => { if (dk) console.log('  ✓ ' + ten); else { conso
   r = await p.evaluate(() => {
     const B = G.ban[0], out = {};
     const f = { bomhen: (T) => SKILLS.bomhen.yw(T), tienhoa: (T) => SKILLS.tienhoa.can(T), haoquang: (T) => SKILLS.haoquang.tg(T), loren: (T) => SKILLS.loren.moi(T), khoisinh: (T) => SKILLS.khoisinh.g(T) };
+    if (!G.rosterMap.haoquang) delete f.haoquang; // 08/11 người dùng: bỏ Hào Quang Thánh khỏi bộ bài (thebai.js THE_BO)
     for (const id in f) {
       const n = THE.lvMax - THE.lvDau[G.rosterMap[id].bac], v = [];
       for (const k of [0, n]) { B.capThe = Object.assign({}, B.capThe, { [id]: k }); for (let i = 0; i < 15; i++) B.t[i] = null; const T = sinhU(taoU(B, id, 3, 7)); B.t[7] = T; v.push(f[id](T)); }
@@ -107,7 +108,7 @@ const ok = (dk, ten, chi) => { if (dk) console.log('  ✓ ' + ten); else { conso
     }
     return out;
   });
-  ok(r.bomhen[1] > r.bomhen[0] && r.tienhoa[1] < r.tienhoa[0] && r.haoquang[1] > r.haoquang[0] && r.loren[1] > r.loren[0] && r.khoisinh[1] < r.khoisinh[0] && Math.abs(r.bomhen[0] - 0.11) < 1e-9 /* 10% + 0.5%/★ trên 1★ (3★) — BAO-CAO gioi-han Mức 3 */ && Math.abs(r.haoquang[0] - 3.5) < 1e-9,
+  ok(r.bomhen[1] > r.bomhen[0] && r.tienhoa[1] < r.tienhoa[0] && (!r.haoquang || r.haoquang[1] > r.haoquang[0]) && r.loren[1] > r.loren[0] && r.khoisinh[1] < r.khoisinh[0] && Math.abs(r.bomhen[0] - 0.11) < 1e-9 /* 10% + 0.5%/★ trên 1★ (3★) — BAO-CAO gioi-han Mức 3 */ && (!r.haoquang || Math.abs(r.haoquang[0] - 3.5) < 1e-9),
     'cấp thẻ nâng SỐ KỸ NĂNG THẬT: Time Bomb suy yếu, Evolver đếm, Holy Halo rào, Scrap Forge %/lò, Genesis chu kỳ (cấp đầu = như cũ)', JSON.stringify(r));
 
   // 4. 7★ ghép / mốc sao
@@ -208,8 +209,9 @@ const ok = (dk, ten, chi) => { if (dk) console.log('  ✓ ' + ten); else { conso
     const ham = { // hàm số kỹ năng THẬT (đơn vị như KY_NANG_CAP)
       bang: (T) => SKILLS.bang.dai(T), doc: (T) => { const E = { yeu: 0 }; return knThe(B, 'doc'); }, bomhen: (T) => SKILLS.bomhen.yw(T) * 100, khien: (T) => SKILLS.khien.ky(T),
       hopbi: (T) => SKILLS.hopbi.can(T), tienhoa: (T) => SKILLS.tienhoa.can(T) / (14 + 5 * T.sao) * 100, haoquang: (T) => SKILLS.haoquang.tg(T),
-      loren: (T) => SKILLS.loren.moi(T) * 100, khoisinh: (T) => SKILLS.khoisinh.g(T) / [30, 28, 26, 24, 22, 20, 16][T.sao - 1] * 100,
+      loren: (T) => SKILLS.loren.moi(T) * 100, khoisinh: (T) => SKILLS.khoisinh.g(T) / (12 / (1 + 0.03 * capThe9(B, 'khoisinh'))) * 100, // 08/11: chu kỳ 12 s ÷ cấp thẻ, power-up −3%/bước
     };
+    if (!G.rosterMap.haoquang) delete ham.haoquang; // 08/11: Hào Quang Thánh đã bỏ
     for (const id in ham) {
       B.lv[id] = 1; const a = ham[id](S(id, 2)); B.lv[id] = 5; const c = ham[id](S(id, 2)); B.lv[id] = 1;
       if (Math.abs((c - a) - 4 * CHOT[id]) > 0.11) loi.push(id + ' LV1→MAX đổi ' + (c - a).toFixed(3) + ' ≠ ' + 4 * CHOT[id]);
@@ -252,7 +254,8 @@ const ok = (dk, ten, chi) => { if (dk) console.log('  ✓ ' + ten); else { conso
   // 11. skill TỰ PHÁT bật huy hiệu cho cả Holy Halo, Chrono Throne và 4 ụ đỏ nạp chung (Hive Queen, Leviathan, Genesis, Wyrm)
   r = await p.evaluate(() => {
     const B = G.ban[0], loi = [];
-    for (const id of ['haoquang', 'ngaithoigian', 'chuato', 'leviathan', 'khoisinh', 'ronglua']) {
+    for (const id of ['haoquang', 'ngaithoigian', 'chuato', 'leviathan', 'ronglua']) { // Lõi Khởi Sinh bỏ khỏi danh sách tự phát 08/11 (GENESIS tốn mana)
+      if (!G.rosterMap[id]) continue; // Hào Quang Thánh đã bỏ (08/11)
       if (!THATSO.TU.includes(id) || !/_tuPhat/.test(SKILLS[id].capNhat.toString())) { loi.push(id + ' không trong THATSO.TU'); continue; }
       if (id === 'chuato') continue; // cần quái thật trên đường (bầy lao vào chỗ đông) — đã kiểm móc ở trên
       for (let i = 0; i < 15; i++) B.t[i] = null; const T = sinhU(taoU(B, id, 5, 7)); B.t[7] = T;
@@ -265,7 +268,7 @@ const ok = (dk, ten, chi) => { if (dk) console.log('  ✓ ' + ten); else { conso
     }
     return loi;
   });
-  ok(!r.length, 'skill TỰ PHÁT → huy hiệu: Holy Halo, Chrono Throne, Hive Queen, Leviathan, Genesis, Wyrm (chạm tay thì không)', r.join(' ; '));
+  ok(!r.length, 'skill TỰ PHÁT → huy hiệu: Holy Halo, Chrono Throne, Hive Queen, Leviathan, Wyrm (chạm tay thì không; Genesis tốn mana nên không tự phát)', r.join(' ; '));
 
   // 12. FX = VÙNG TRÚNG: đo ảnh THẬT (điểm sáng ≥ 60, phân vị 97 từ tâm khung) × cỡ code vẽ ↔ bán kính/nón trúng
   r = await p.evaluate(async () => {

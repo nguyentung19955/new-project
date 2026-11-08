@@ -869,30 +869,57 @@ SKILLS.ngoisao = { // Pháo Ngôi Sao (Darby): tổng ★ trên bàn — mỗi m
   },
   veThem(ctx, T, S, al, R) { if (T.boi || T.thucTinh) { ctx.globalAlpha = al * 0.8; veQuaCau(ctx, R, T.thucTinh ? 5 : 3, S * 0.5, R.t * 1.5, '#ffe46b', S * 0.18); } },
 };
-SKILLS.soi = { // Sói Máy (Werewolf) — DCDW Werewolf: mỗi lần TRIỆU HỒI / GHÉP ra Sói là 1 trong 2 bản (quay 1 lần, giữ suốt đời ụ):
-  //   BÌNH THƯỜNG (~70%) — cận chiến, chí mạng như thường · THỨC TỈNH (30% ở LV9, +1.5%/cấp thẻ → 39% LV15, trần 50%) — LUÔN chí mạng, cuồng nộ cận chiến (+40% tốc, vồ lan rộng).
-  //   Không còn lớn dần Pup → Hunter → Alpha theo mạng/sao (ảnh dạng 2 = bản thường, dạng 3 = bản thức tỉnh). Online: cờ 'w' (thuc) theo máy chủ bàn.
-  vai: 'tc', dmg: 17, toc: 1.8, nham: 'dau', tam: 108,
+SKILLS.soi = { // Sói Máy (Werewolf) — mỗi lần TRIỆU HỒI / GHÉP ra Sói là 1 trong 2 bản (quay 1 lần lúc sinh, giữ suốt đời ụ; online: cờ 'w' theo máy chủ bàn)
+  //   (người dùng duyệt 08/11 — CHATGPT-SPEC §10) chuyển từ cận chiến sang BẮN:
+  //   THƯỜNG: 1 nòng, 1 viên 1.0D mỗi 1.8 s · THỨC TỈNH: há mồm 3 nòng, loạt 3 viên × 0.5D cách 0.1 s, loạt mỗi 1.2 s, LUÔN chí mạng.
+  //   Tốc bắn (buff/cấp thẻ) rút khoảng nghỉ giữa 2 loạt, giữ khoảng 0.1 s giữa 3 viên. D = dmgU (sát thương 1 phát của ụ).
+  //   D = 55: giữ ~DPS bản thường cũ (17 × 1.8/s ≈ 31/s → 55 / 1.8 s ≈ 31/s); thức tỉnh ≈ 2.25× bản thường (chưa tính chí mạng).
+  vai: 'tc', dmg: 55, toc: 1 / 1.8, nham: 'dau',
+  KY: 1.8, KY_TT: 1.2, CACH: 0.1, // giây: nghỉ bản thường · nghỉ loạt thức tỉnh · cách giữa 3 viên
   tiLe: (B) => Math.min(0.5, knThe(B, 'soi') / 100),
-  sinh(G, T) { T.thuc = Math.random() < this.tiLe(G.ban[T.ban]); if (T.thuc) setTimeout(() => { SND.thucTinh(); }, 250); },
-  mo: (T) => 'Melee 108 px · ' + (T && T.thuc ? 'AWAKENED: always crits, +40% speed, wide frenzy swipes' : 'NORMAL form (' + Math.round(SKILLS.soi.tiLe(T && G.ban[T.ban]) * 100) + '% of summons/merges come out AWAKENED: always crit)') + (ms(T, 3) ? ' · +10% crit' : '') + (ms(T, 5) ? ' · +25% damage' : '') + (ms(T, 7) ? ' · howl: neighbours +25% fire rate' : ''),
+  sinh(G, T) { T.thuc = Math.random() < this.tiLe(G.ban[T.ban]); T.loat = 0; if (T.thuc) setTimeout(() => { SND.thucTinh(); }, 250); },
+  mo: (T) => (T && T.thuc ? 'AWAKENED: 3-barrel volley every 1.2s (3 shots × 50% damage, 0.1s apart) · always crits' : 'NORMAL: one barrel, 1 shot every 1.8s · ' + Math.round(SKILLS.soi.tiLe(T && G.ban[T.ban]) * 100) + '% of summons/merges come out AWAKENED (3 barrels, always crit)') + (ms(T, 3) ? ' · +10% crit' : '') + (ms(T, 5) ? ' · +25% damage' : '') + (ms(T, 7) ? ' · howl: neighbours +25% fire rate' : ''),
   luonCrit: (T) => !!T.thuc,
-  chonMuc(G, B, T) { return quaiDauTam(B, T, this.tam); },
-  capNhat(G, B, T, dt) {
+  capNhat(G, B, T, dt) { // tự quản nhịp bắn (loạt 3 viên) → luật thuần theo dt, tất định
     if (ms(T, 3)) T.buf.crit += 0.10; // 3★ KEEN FANGS
     if (ms(T, 5)) T.buf.dmg += 0.25;  // 5★ FERAL
-    if (T.thuc) { T.buf.toc += 0.4; T.huT = (T.huT || 0) - dt; if (T.huT <= 0) { T.huT = 7; if (typeof VX !== 'undefined') VX.hu(T); } } // thức tỉnh: cuồng nộ + tiếng hú định kỳ
-    return false;
+    if (T.thuc) { T.huT = (T.huT || 0) - dt; if (T.huT <= 0) { T.huT = 7; if (typeof VX !== 'undefined') VX.hu(T); } } // thức tỉnh: tiếng hú định kỳ (chỉ hình/tiếng)
+    const E = quaiDau(B); T.muc = E;
+    xoayDau(T, E, dt);
+    T.cd -= dt * nhipU(T) / (T.thuc ? this.KY_TT : this.KY); // nhịp loạt chạy cả trong lúc đang xả loạt (loạt mỗi 1.2 s tính từ đầu loạt)
+    if (T.loat > 0) { // đang giữa loạt thức tỉnh: viên kế sau 0.1 s (không phụ thuộc tốc bắn)
+      T.loatT -= dt;
+      if (T.loatT <= 1e-9) { const M = E || T.lmuc; if (M && !M.chet) this.mot(G, B, T, M, 0.5); T.loat--; T.loatT += this.CACH; }
+      if (T.cd < 0) T.cd = 0;
+      return true;
+    }
+    if (T.cd <= 0) {
+      if (E && Math.abs(gocLech(T.goc, Math.atan2(E.y - tamU(T).y, E.x - tamU(T).x))) < 0.3) {
+        T.cd += 1; if (T.cd < 0) T.cd = 0; T.banLan++;
+        if (T.thuc) { this.mot(G, B, T, E, 0.5); T.loat = 2; T.loatT = this.CACH; T.lmuc = E; } // viên 1 ngay, 2 viên sau mỗi 0.1 s
+        else this.mot(G, B, T, E, 1);
+        if (typeof TVX !== 'undefined') TVX.ban(T); mocBanXong(T);
+      } else T.cd = 0;
+    }
+    return true;
+  },
+  mot(G, B, T, E, k) { // 1 viên đạn (bản thức tỉnh: đỏ, to hơn; luôn chí mạng qua luonCrit)
+    giat(T, T.thuc ? 0.45 : 0.9); chopNong(T, T.thuc ? 20 : 24); SND.set();
+    const dmg = dmgU(T) * k, tt = !!T.thuc;
+    danThang(B, T, E, 'tia_lua', 600, tt ? 20 : 22, (G, d, M) => { if (M) trung(M, dmg, { B, mau: tt ? '#ff4b3e' : '#c8ff6b' }); FX.tiaLua(d.x, d.y, 3, tt ? '#ff4b3e' : '#c8ff6b', 140, 7); });
   },
   hoTro(G, T, N) { if (ms(T, 7)) N.buf.toc += 0.25; }, // 7★ ALPHA HOWL
-  ban(G, B, T, E) {
-    T.rv += 360; T.chop = 0.08; SND.dat();
-    trung(E, dmgU(T), { B });
-    noLan(E.x, E.y, T.thuc ? 32 : 22, dmgU(T) * (T.thuc ? 0.6 : 0.4), B, { phu: true });
-    G.hu.push({ k: 'vuot', t: 0, song: 0.22, x: E.x, y: E.y, goc: T.goc, mau: T.thuc ? '#ff4b3e' : '#ffe46b' });
+  // đầu sói (tờ ChatGPT raw_gc_soi_*: mặt nhìn THẲNG, nòng hướng XUỐNG ảnh) → xoay theo hướng bắn: góc ảnh = T.goc − 90°
+  veDau(ctx, T, S, al, R, da) {
+    const ten = T.thuc ? 'soi_dau_thuctinh' : 'soi_dau_thuong', a = R.img(ten); if (!a) return false;
+    const h = S * (T.thuc ? 0.92 : 0.88), w = h * a.width / a.height, im = R.co(ten, h, da ? 'xam' : ''); if (!im) return false;
+    ctx.save(); ctx.globalAlpha = al; ctx.rotate(T.goc - Math.PI / 2); ctx.translate(0, (T.rx || 0) + S * 0.1);
+    ctx.drawImage(im, -w / 2, -h / 2, w, h);
+    if (T.chop > 0 && !da) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * Math.min(0.45, T.chop * 3); ctx.drawImage(im, -w / 2, -h / 2, w, h); }
+    ctx.restore(); return true;
   },
   sangDau: (T) => (T.thuc ? 0.16 : 0), // VFX P3
-  veThem(ctx, T, S, al, R) { if (T.thuc && Math.random() < 0.1) { const c = tamU(T); FX.hat1('than', c.x + rnd(-14, 14), c.y + rnd(-6, 12), 0, -30, 0.6, 5, '#ff4b3e'); } },
+  veThem(ctx, T, S, al, R) { if (T.thuc && (R.t * 7 + (T.pha || 0)) % 1 < 0.1) { const c = tamU(T); FX.hat1('than', c.x + ((T.uid * 37) % 28) - 14, c.y + 4, 0, -30, 0.6, 5, '#ff4b3e'); } }, // than đỏ: chỉ hình (không Math.random)
 };
 SKILLS.tienhoa = { // Hộp Tiến Hoá (Moa): BOM HẸN GIỜ đếm ngược → biến thành ụ ngẫu nhiên +1 sao — sao càng cao càng LÂU (14 + 5 s/★)
   //   7★: không lên được nữa → bom XỊT (nổ hụt 1 lần, hiện xác bom ở giữa ụ), bộ đếm dừng, KHÔNG có tác dụng gì — chỉ là 1 ụ 7★

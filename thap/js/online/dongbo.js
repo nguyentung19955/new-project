@@ -44,7 +44,7 @@ const ONS = {
     G.tocDo = 1;
     UI.che = 'coop';
     this.on = true;
-    const hop = (d) => { d = (d || []).filter(id => SKILLS[id] && G.rosterMap[id]); return d.length === 5 ? d : (UI.chon.length === 5 ? UI.chon.slice() : deckNgauNhien()); };
+    const hop = (d) => { d = (typeof THEBAI !== 'undefined' && THEBAI.doiBo ? THEBAI.doiBo(d || []) : (d || [])).filter(id => SKILLS[id] && G.rosterMap[id]); return d.length === 5 ? d : (UI.chon.length === 5 ? UI.chon.slice() : deckNgauNhien()); };
     G.debug.deck2 = hop(o.deckBan);
     G.debug.cap2 = typeof THEBAI !== 'undefined' ? THEBAI.giaiMa(o.deckBan, G.debug.deck2) : null; // cấp thẻ của bạn (không có = bản cũ → cấp đầu)
     if (!G.debug.cap2) G.debug.cap2 = {};

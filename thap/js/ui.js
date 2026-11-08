@@ -22,10 +22,11 @@ const UI = {
       const ac = typeof AbortController !== 'undefined' ? new AbortController() : null, hen = ac && setTimeout(() => ac.abort(), 4000);
       const res = await fetch('assets/roster.json', { cache: 'no-cache', signal: ac ? ac.signal : undefined }); if (res.ok) r = await res.json(); clearTimeout(hen);
     } catch (e) { }
-    G.roster = applyText(r || window.ROSTER_EMBED || []);
+    G.roster = applyText(r || window.ROSTER_EMBED || []).filter(x => !(typeof THE_BO !== 'undefined' && THE_BO.includes(x.id))); // thẻ đã bỏ (Hào Quang Thánh) — thebai.js
     SND.nutNhan(); // nhãn nút NHẠC/SFX theo trạng thái đã lưu
     document.querySelectorAll('[data-t]').forEach(e => { const v = TEXT.ui[e.dataset.t]; if (typeof v === 'string') e.innerHTML = v; });
     G.rosterMap = {}; for (const x of G.roster) G.rosterMap[x.id] = x;
+    try { if (typeof THEBAI !== 'undefined' && THEBAI.boThe) THEBAI.boThe(); } catch (e) { } // bù thẻ đã bỏ + thay trong bộ bài đã lưu (trước khi đọc turret_bo)
     try { const l = JSON.parse(localStorage.getItem('turret_bo') || 'null'); if (l && l.chon) { this.chon = l.chon.filter(id => SKILLS[id] && G.rosterMap[id]); this.mv = MAVUONG[l.mv] ? l.mv : 'hero'; this.che = ['solo', 'coop', 'pvp'].includes(l.che) ? l.che : 'solo'; } } catch (e) { }
     this.veChon();
     document.addEventListener('click', (e) => this.bam(e));
@@ -238,7 +239,9 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       chu(elv, nlv); if (elv && elv._max !== (lv >= 5)) { elv._max = lv >= 5; elv.classList.toggle('lv-max', elv._max); } // '' / +1 / +2 / +3 / MAX (MAX vàng; ô giá ẩn khi tối đa)
       // số ụ loại này trên bàn: tấm đếm .dem-u (icon chồng ụ + số) — js/demkn.js
       const g = d._g || (d._g = d.querySelector('.gia b'));
-      if (lv >= 5) { chu(g, TEXT.ui.max); d.classList.add('max'); d.classList.remove('du', 'thieu'); }
+      const kn = !!(SKILLS[id] && SKILLS[id].khongNang), gp = g && g.parentElement; if (gp && (gp.style.visibility === 'hidden') !== kn) gp.style.visibility = kn ? 'hidden' : ''; // Hydra: không nâng bằng mana (ẩn ô giá)
+      if (kn) { chu(g, ''); d.classList.add('max'); d.classList.remove('du', 'thieu'); }
+      else if (lv >= 5) { chu(g, TEXT.ui.max); d.classList.add('max'); d.classList.remove('du', 'thieu'); }
       else { const gia = LUAT.giaNangCap[lv - 1]; chu(g, gia); d.classList.toggle('du', B.mana >= gia); d.classList.toggle('thieu', B.mana < gia); }
     });
     const mv = B.mv, md = MAVUONG[mv.id], te = $('#the-mv');

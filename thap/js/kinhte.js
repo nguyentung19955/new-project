@@ -328,7 +328,8 @@ const KT = {
     a.n = Math.max(s.n | 0, xa.n | 0) + 1;
     a.pid = s.pid; // hạt giống của máy này giữ nguyên (cửa hàng hôm nay không đổi giữa chừng)
     this.s = null; try { localStorage.setItem(this.KEY, JSON.stringify(a)); } catch (e) { }
-    THEBAI.d = dd; THEBAI.luu(); this.doc(); this.luu(true);
+    dd.doi = Object.assign({}, xd && xd.doi, d && d.doi, dd.doi); // thẻ đích bù thẻ đã bỏ: giữ lựa chọn đã có (thebai.js)
+    THEBAI.d = dd; try { if (THEBAI.boThe) THEBAI.boThe(); } catch (e) { } THEBAI.luu(); this.doc(); this.luu(true);
     try { if (typeof TBUI !== 'undefined') TBUI.capLuoi(); } catch (e) { }
   },
 };
