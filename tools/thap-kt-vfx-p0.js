@@ -304,18 +304,19 @@ const ok = (dk, ten, chi) => { if (dk) console.log('  ✓ ' + ten); else { conso
     HU.may.ve(ctx, { t: 1, song: 5, x: px, y: py, r: 44, goc: pg, _T: { id: 'vungdoc' }, T: undefined }, REN);
     REN.anhGiua = ag;
     if (vd && g) { gan(g.w / 2 * vd[3], 52, 0.06, 'Toxic Pool mép dọc đường'); if (Math.abs((g.goc || 0) - pg) > 1e-6) loi.push('Toxic Pool không xoay theo đường'); } else loi.push('Toxic Pool: không bắt được ảnh vũng (đã gắn tờ P3 vungdoc? → vfxp3.js: cỡ vẽ = (r + 8) × 2 / tỉ lệ ảnh đo, rồi sửa bước kiểm này)');
-    // Wyrm Engine 1★: dải fx_wyrm_lua2 (07/11 19:05, 8 khung) — mũi lửa = tầm, bề ngang lửa ở 70% = bề ngang nón trúng ở đó
-    const wy = await doc('fx_wyrm_lua2', 3, 5, 8); // khung lặp lúc phun đều (HU.nonLua: 3 + …% 3)
+    // Wyrm Engine 1★ TIA LỬA (08/11 thay nón): mép lửa = dải fx_wyrm_lua2 kéo mảnh — mũi lửa = đầu tia (≤ tầm tia), bề ngang lửa ở 70% = bề ngang trúng 2 × rong
+    const wy = await doc('fx_wyrm_lua2', 3, 5, 8); // khung lặp lúc phun đều (veTia: 3 + …% 3)
     for (let i = 0; i < 15; i++) B.t[i] = null; const W = sinhU(taoU(B, 'ronglua', 1, 7)); B.t[7] = W; W.phun = 0.3; W.goc = 0;
-    const sk = SIG.k; let sw = null; SIG.k = function (c, ten, f, x, y, w, o) { sw = { x, y, w, h: o.h, ax: o.ax }; return true; };
+    const Lt = SKILLS.ronglua.tamTia(W); RONG_TIA.set(W, { ds: [{ g: 0, L: Lt, ex: tamU(W).x + Lt * 0.8, ey: tamU(W).y }], t: G.t });
+    const sk = SIG.k; let sw = null; SIG.k = function (c, ten, f, x, y, w, o) { sw = { x, y, w, h: o.h, ax: o.ax, g: o.g }; return true; };
     for (let i = 0; i < 40 && !REN.img('fx_wyrm_lua2'); i++) await new Promise(ok => setTimeout(ok, 100));
     HU.nonLua.ve(ctx, { T: W }, REN); SIG.k = sk;
     if (wy && sw) {
-      const c0 = tamU(W), lech = Math.hypot(sw.x - c0.x, sw.y - c0.y), mui = lech + sw.w * (wy[1] - sw.ax), L = SKILLS.ronglua.tam(W);
-      gan(mui, L, 0.06, 'Wyrm mũi lửa');
-      const d7 = lech + sw.w * (0.7 * wy[1] - sw.ax), rong = 2 * d7 * Math.tan(SKILLS.ronglua.goc(W) / 2 + 0.08);
-      gan(sw.h * wy[2], rong, 0.12, 'Wyrm bề ngang lửa');
-    } else loi.push('Wyrm: không bắt được dải lửa');
+      const c0 = tamU(W), lech = Math.hypot(sw.x - c0.x, sw.y - c0.y), mui = lech + sw.w * (wy[1] - sw.ax);
+      gan(mui, Lt, 0.06, 'Wyrm mũi tia');
+      gan(sw.h * wy[2], 2 * SKILLS.ronglua.rong(W), 0.15, 'Wyrm bề ngang tia'); // ±12% lập loè
+      if (Math.abs(sw.g) > 1e-6) loi.push('Wyrm tia lệch hướng ' + sw.g);
+    } else loi.push('Wyrm: không bắt được dải lửa tia');
     // số đo ↔ hằng VUNG_ANH (đổi ảnh thì báo)
     const ss = [['p2_blackhole', bh && bh[0]], ['p2_cryo', cr && cr[0]], ['vungdoc', vd && vd[3]], ['wyrm2X', wy && wy[1]], ['wyrm2Y', wy && wy[2]]];
     for (const [k, v] of ss) if (v && Math.abs(VUNG_ANH[k] - v) > 0.04) loi.push('VUNG_ANH.' + k + ' = ' + VUNG_ANH[k] + ' nhưng ảnh đo ' + v.toFixed(3));

@@ -223,7 +223,7 @@ const SD_K = {
   // Rồng Máy LÒ PHẢN ỨNG: nhịp phun tích nhiệt → 2,4 s ghép thật cùng HÀNG (+5×★ nhiệt bay vào) → 5,2 s chạm: DRAGON DIVE đốt hết nhiệt
   ronglua: { q: Q.nhom(6, 190, 20, 12), cham: [5.2], truoc: (T) => { T.nap = 0.95; T.napDay = -99; T.nhiet = 80; },
     them: [[2.4, (B, D, T) => { if (!T) return; const o = T.o % 5 ? T.o - 1 : T.o + 1; SKILLS.ronglua.ghepHangCot(B, o, Math.max(3, T.sao), null, null); }]],
-    c: [[0.2, 'Every flame tick builds HEAT (+damage)'], [2.4, 'Merge in its row or column: +5 × ★ heat', { cham: 0.6 }], [5.2, 'Tap: DRAGON DIVE burns ALL heat', { cham: 0.7 }]], dai: 9.4 },
+    c: [[0.2, 'Every beam tick that hits builds HEAT (+damage)'], [2.4, 'Merge in its row or column: +5 × ★ heat', { cham: 0.6 }], [5.2, 'Tap: DRAGON DIVE burns ALL heat', { cham: 0.7 }]], dai: 9.4 },
   mana: { kieu: 'phu', mana: 1, manaDau: 0, truoc: (T) => { T.nap = 0.8; }, c: [[0.2, 'Does not shoot'], [1.2, (T) => 'Makes mana every ' + SKILLS.mana.ky(T) + 's', { ev: 'mana', cham: 0.6 }]] },
   chimang: { may: [2.0, 3.6, 'ke'], c: [[0.2, 'Gives 4 neighbours crit chance'], [2.0, 'Crits deal double damage', { cham: 0.5 }]] },
   radar: { c: [[0.2, 'Speeds up 4 turrets around it'], [2.0, (T) => 'Each gets +' + sdBuf(T) + ' fire rate', { cham: 0.4 }]] },
@@ -316,7 +316,7 @@ const SD_GD = {
   hydra: ['1–3 heads fire a chain of shots', '4–6 heads: a longer chain', '7 heads: tap for a machine gun'],
   cuuvi: ['Straight foxfire orb', 'Foxfire curls with flame trail', 'Blue foxfire bursts in rings'],
   ngaithoigian: ['Piercing clock-hand dart', 'Dart stamps a slowing clock', 'Pierces the line, then echoes'],
-  ronglua: ['Hatchling: short orange flame puffs', 'Wyrm / Armored: cone + HEART JET (blue flame from 5★)', 'Inferno: white flame, jet hits 2 enemies'],
+  ronglua: ['Hatchling: thin orange fire beam', 'Wyrm / Armored: thicker HEART CORE beam (blue flame from 5★)', 'Inferno: white twin beams'],
   luoicheo: ['Diagonal damage buff', 'Buffed hits spark teal rings', 'Every 3rd shot shows an echo (visual only)'],
   cobac: ['Slot gun: spins 3 reels on arrival', 'HIGH ROLLER: a bigger coin gun', 'GRAND CASINO: the full casino'],
   chuato: ['1–3 drones circle the hive', 'More drones: a stronger volley', '7 drones: the full brood'],
