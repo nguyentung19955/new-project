@@ -2,7 +2,7 @@
 
 Yêu cầu người dùng: *"Vì game này tư duy chiến thuật nhiều nên tôi muốn các cơ chế cộng hưởng ghép nối phá huỷ nó cần ăn khớp nhau"*. Đối chiếu với 10 nguyên tắc ở [NGUYEN-TAC.md](NGUYEN-TAC.md). Đợt này **chỉ rà + báo cáo**, không sửa code game.
 
-- **Mã đã rà:** `claude/demo-hop-tuong` @ `e16ed1ff` (chưa có: Copycat trạng thái mới, Ember relay khi rời bàn, ụ Tím wildcard, hoạt ảnh trùm — các session khác đang làm). Đọc `game.js` (hopLeGhep / ghepDacBiet / ghep / laGhepThat / haSao / trùm), `skills*.js`, `vangmoi1.js`, `chihuy*.js`, `trum.js`, `jackpot.js`, `online/dongbo.js`.
+- **Mã đã rà:** `claude/demo-hop-tuong` @ `e16ed1ff` (chưa có: Copycat trạng thái mới, Ember relay khi rời bàn, hoạt ảnh trùm — các session khác đang làm; Wild Link vào sau, rà riêng ở mục 7). Đọc `game.js` (hopLeGhep / ghepDacBiet / ghep / laGhepThat / haSao / trùm), `skills*.js`, `vangmoi1.js`, `chihuy*.js`, `trum.js`, `jackpot.js`, `online/dongbo.js`.
 - **Test đã chạy lại:** `thap-kt-cong-huong-luat` 404/404 · `thap-kt-matran` 428/429 (lỗi F19 do test cũ) · `thap-kt-sao-tai-cho` nhóm 1–4 37/37 (nhóm 5 trang thật hết giờ chờ ảnh — chỉ do bản xuất thiếu ảnh) · `thap-kt-ngau-nhien-sinh` xanh · `thap-kt-khong-ban` 25/25.
 - **Kiểm lúc chạy (Playwright `page.evaluate`, trận PVP, bàn dựng tay):** 22 ca — kết quả ghi ở cột "Hiện tại" (đánh dấu *đo*).
 - Mức: **P0** = phạm nguyên tắc / lệch online · **P1** = lệch giữa các ụ giống nhau, gây bất ngờ, hoặc phạm nguyên tắc nhưng trước đó người dùng đã chốt khác (→ câu hỏi mở) · **P2** = đánh bóng.
@@ -167,7 +167,7 @@ Cột: **Ghép ĐB** = loại `ghepDB` · **Khi ghép** = có `sk.ghep` · **Mó
 6. **Q6** Dấu Mạch Máu trên mục tiêu bị đóng băng: A = dừng đếm như đá · B = vẫn đếm và nuốt.
 7. **Q7** Ember Relay + Relay ghép (2 nguồn rời bàn): A = chỉ hiệu ứng ghép (không thêm relay rời bàn) · B = cả hai.
 8. **Q8** Joker biến Ember thành Mimic rồi ép ghép: A = không relay (ụ đã biến hình trước khi rời) · B = relay theo thân gốc.
-9. **Q9** Ụ Tím wildcard (chưa có trong code): A = ghép thật như Mimic (ụ ra ngẫu nhiên +1★, quay lại) · B = ghép theo ô đích (ra đúng loại ô đích +1★, giữ dạng/bản sao của đích như nguyên tắc 1).
+9. **Q9** Wild Link ăn được ụ ĐÁ/BĂNG (ra ụ thường, hết khoá) — tức là 1 đường "gỡ khoá bằng ghép" mà Mimic/ghép thường không có: A = giữ (đã chốt 08/11) · B = Wild Link cũng không ghép ụ khoá như mọi ghép thường.
 
 ## 6. Test kiểu ma trận đề xuất (chưa viết)
 `tools/thap-kt-nguyen-tac.js` — mỗi nguyên tắc 1 nhóm, sinh ca tự động từ danh sách 93 ụ (như mục 4):
@@ -178,3 +178,10 @@ Cột: **Ghép ĐB** = loại `ghepDB` · **Khi ghép** = có `sk.ghep` · **Mó
 - **Buff vĩnh viễn × biến hình:** {Ép Xung, Anvil, Aurora, khiên, chỉ huy} × {Copycat, Mad Crown, Hộp, Scrambler, trứng} (F8, F9).
 - **Online:** khứ hồi `oTT → datO` cho MỌI trường cộng dồn riêng của 93 ụ (danh sách lấy lúc chạy như mục 4) (F14); PVP Scrambler/Jammer 2 máy cùng hạt → cùng ô, cùng loại (F15).
 - **NT9:** chạy luật với `Math.random` bị thay bằng hàm ném lỗi (trừ trong FX) → in danh sách nơi gọi (F16).
+
+## 7. Bổ sung — Wild Link `tudo` (commit 01cbb21c, vào nhánh sau mốc rà)
+Đọc diff `e16ed1ff..0b356790`: Wild Link ghép với mọi loại / mọi sao / cả ụ đá-băng / La Bàn / mặt nạ Prism / Lucky Slot → ụ NGẪU NHIÊN mới, sao ⌈trung bình⌉, là ghép thật, loại ra bốc bằng RNG có hạt (online gửi `G._tdS`).
+- Khớp NT2 (ụ mới, quay lại, không mang stack La Bàn/Prism), NT5, NT9 (RNG có hạt).
+- **F6 áp cả cho Wild Link:** dòng `ra.anv = …` trong `ghep` vẫn chạy → ụ ra nhận buff Anvil của nguyên liệu.
+- **F16 lộ rõ hơn:** ghép Wild Link bốc loại bằng `rngHat`, ghép thường cùng hàm vẫn `pick(B2.deck)` (Math.random) → nên dùng chung 1 RNG có hạt cho mọi ụ ra khi ghép.
+- Ụ khoá: Wild Link là đường DUY NHẤT ghép ăn ụ đá/băng khác sao → thành gỡ khoá (Q9).
