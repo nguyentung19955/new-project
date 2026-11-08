@@ -149,3 +149,4 @@ CM.veMui = function (ctx, T, S, al, R) {
   ctx.globalAlpha = al;
 };
 SKILLS.canon.veThem = function (ctx, T, S, al, R) { CM.veMui(ctx, T, S, al, R); };
+SKILLS.canon.veThemTren = true; // lớp mũi tên cố định vẽ TRÊN đầu súng (render.js: veThem mặc định vẽ dưới đầu từ 08/11)
