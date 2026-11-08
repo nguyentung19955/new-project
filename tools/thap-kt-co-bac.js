@@ -1,5 +1,5 @@
 // TURRET MERGE — KIỂM Ụ CỜ BẠC "LUCKY SLOT" (cobac, Đỏ — thap/js/jackpot.js CB, người dùng 08/11) + BỎ JACKPOT các ụ khác
-//   Luật: xuất hiện / lên sao → quay 1,0 s (không bắn) ra CAM / DƯA / NHO (+sao vào ngăn quả của bàn) · 10% JACKPOT (cả 3 ngăn +2×sao)
+//   Luật: xuất hiện (1 lần duy nhất; lên sao tại chỗ KHÔNG quay lại — 08/11) → quay 1,0 s (không bắn) ra CAM / DƯA / NHO (+sao vào ngăn quả của bàn) · 10% JACKPOT (cả 3 ngăn +2×sao)
 //   · ngăn quả dùng chung cho mọi Lucky Slot trên bàn đã quay xong · tất định theo hạt (cùng hạt → cùng chuỗi) · ghép thường · gói online 'cb' khứ hồi
 //   · không còn jackpot nào khác (JP / T.jp / LOADED DICE / ROYAL VAULT …).
 //   Phần 1: luật thuần (vm). Phần 2 (Playwright): trận thật — cuộn xèng, jackpot, khay thẻ có 3 số, trang ụ, bộ sưu tập; ảnh 390×844 + 844×390.
@@ -48,9 +48,11 @@ R('var E = sinhQuai("bo", G.duong.findIndex(q => q.ban === 0), 300, 1e6); E.vao 
 buoc(0.8); ok(R('nb === 0'), 'trong 1,0 s quay: không bắn', R('nb'));
 buoc(2.5); ok(R('nb >= 1'), 'quay xong → bắn', R('nb'));
 R('SKILLS.cobac.ban = _b; nangSao(B, X, 1, "x");'); buoc(0.05);
-ok(R('G.cbLog.length === 2 && G.cbLog[1].s === 3 && X.cbS === 3'), 'lên sao tại chỗ → quay lại với sao mới', R('JSON.stringify(G.cbLog)'));
-R('X.sao = 2;'); buoc(0.05); R('X.sao = 3;'); buoc(0.05);
-ok(R('G.cbLog.length === 2'), 'mất sao rồi lên lại đúng sao cũ → không quay lại');
+ok(R('G.cbLog.length === 1 && X.cbS === 2 && X.sao === 3 && !(X.cbQuay > 0)'), 'lên sao tại chỗ (nangSao) → KHÔNG quay lại (08/11: không thay ụ)', R('JSON.stringify(G.cbLog)'));
+R('X.sao = 2;'); buoc(0.05); R('X.sao = 5;'); buoc(0.05);
+ok(R('G.cbLog.length === 1'), 'mất sao rồi lên sao tại chỗ → vẫn không quay lại');
+R('var c0 = JSON.stringify(B.cb), K = dat(3, "vughep", 5), n0 = G.cbLog.length; var gh = 0, _g = SKILLS.cobac.ghep; SKILLS.cobac.ghep = function () { gh++; }; var r = ghep(B, K, X); SKILLS.cobac.ghep = _g;'); buoc(1.2);
+ok(R('r === X && B.t[7] === X && X.sao === 6 && G.cbLog.length === n0 && JSON.stringify(B.cb) === c0 && X.cbS === 2 && !(X.cbQuay > 0) && gh === 0'), 'Merge King lên Lucky Slot: giữ ụ, +1★, KHÔNG quay, ngăn quả không đổi, không chạy móc ghép', R('JSON.stringify([r && r.id, X.sao, G.cbLog.length, B.cb, X.cbS, gh])'));
 
 console.log('3 · số mỗi điểm + tốc giảm dần + chung cho mọi Lucky Slot đã quay');
 tran(DECK);
@@ -112,7 +114,35 @@ console.log('7 · online: gói cb + ảnh chụp khứ hồi (bàn con rối kh�
   const anh = R('JSON.stringify(ONS.anhBan(B))');
   R('B1.cb = [0, 0, 0]; pm.cbS = 0; ONS.apAnh(B1, JSON.parse(' + JSON.stringify(anh) + '), false);');
   ok(R('B1.cb.join() === B.cb.join() && pm.cbS === 3'), 'ảnh chụp (cb + cờ z) sửa lệch bàn con rối', R('JSON.stringify([B1.cb, pm.cbS, ONS.oTT(m)])'));
+  R('nangSao(B, m, 1, "x"); nangSao(B1, pm, 1, "x");'); buoc(0.1);
+  ok(R('gui.length === 1 && m.cbS === 3 && pm.cbS === 3'), 'lên sao tại chỗ (online): máy chủ không quay / không gửi lại', R('JSON.stringify(gui.map(x => x[0]))'));
+  R('var nh = G.cbLog.length; ONS.apCB(B1, Object.assign({}, gui[0][1], { s: 4, n: 99 }));');
+  ok(R('G.cbLog.length === nh && pm.cbS === 3'), 'bàn con rối: ụ đã quay nhận gói cb sao cao hơn → KHÔNG quay lại');
+  R('var pm2 = dat(5, "cobac", 4, B1);'); buoc(0.1);
+  R('ONS.apCB(B1, { o: 5, f: 1, s: 4, st: B1.cb.map((x, i) => x + (i === 1 ? 4 : 0)), n: 50 });');
+  ok(R('pm2.cbS === 4 && pm2.cbKq === 1 && G.cbLog.length === nh + 1'), 'bàn con rối: ụ mới chưa quay → nhận đúng 1 lượt quay', R('JSON.stringify([pm2.cbS, pm2.cbKq])'));
   R('ONS.on = false;'); }
+
+console.log('8 · KHÔNG nâng cấp bằng mana trong trận (08/11 người dùng)');
+tran(DECK);
+R('B.mana = 5000; var mn = B.mana;');
+ok(R("SKILLS.cobac.khongNang === true && nangCap(B, 'cobac') === false && B.lv.cobac === 1 && B.mana === mn"), 'nangCap(cobac) từ chối, không trừ mana, cấp giữ 1');
+ok(R("nangCap(B, 'lien') === true && B.lv.lien === 2"), 'ụ khác vẫn nâng được');
+{ tran(['cobac'], 9, 'pvp'); R('var A2 = G.ban[1]; A2.deck = ["cobac"]; A2.lv = { cobac: 1 }; A2.ai = true; A2.mana = 1e6; G.cho = 0;'); buoc(20);
+  ok(R('A2.lv.cobac === 1'), 'AI không nâng Lucky Slot (bộ chỉ có cobac, mana đầy)', R('JSON.stringify(A2.lv)')); }
+tran(DECK); R('var Z = dat(6, "cobac", 3); B.lv.cobac = 4;'); buoc(0.05);
+ok(R('B.lv.cobac === 1'), 'lỡ có cấp (trận lưu cũ / gói cũ) → về cấp 1 (hệ số gốc)');
+ok(R("/no mana power-up/.test(SKILLS.cobac.mo(Z))"), 'chữ kỹ năng ghi rõ không nâng bằng mana');
+{ const src = fs.readFileSync(path.join(goc, 'js', 'online', 'dongbo.js'), 'utf8');
+  tran(DECK, 78, 'coop');
+  vm.runInContext(src.replace(/^'use strict';/m, '').replace(/^const ONS = /m, 'var ONS = '), ctx, { filename: 'dongbo.js' });
+  R('var B1 = G.ban[1]; B1.lv = { cobac: 1, lien: 1 };');
+  R('ONS.on = true; ONS.me = "a"; ONS.gui = () => {}; B1.net = true; var v = ONS.anhBan(B1); v.lv = { cobac: 5, lien: 3 }; ONS.apAnh(B1, v, true);');
+  ok(R('B1.lv.cobac === 1 && B1.lv.lien === 3'), 'online: ảnh chụp mang cấp Lucky Slot > 1 → vẫn cấp 1 (ụ khác nhận cấp)', R('JSON.stringify(B1.lv)'));
+  R('ONS.nhan({ u: "b", k: "nc", d: JSON.stringify({ id: "cobac", lv: 3 }) }); ONS.nhan({ u: "b", k: "nc", d: JSON.stringify({ id: "lien", lv: 4 }) });');
+  ok(R('B1.lv.cobac === 1 && B1.lv.lien === 4'), 'online: gói nâng cấp nc cho Lucky Slot bị bỏ qua', R('JSON.stringify(B1.lv)'));
+  R('ONS.on = false;');
+}
 
 if (loi) { console.log('\n✗ ' + loi + ' lỗi (phần luật)'); }
 else console.log('\n✓ phần luật đạt');
@@ -141,6 +171,9 @@ fs.mkdirSync(SHOTS, { recursive: true });
       let r = await p.evaluate(() => { const B = G.ban[0]; const el = document.querySelector('#bo-the .the[data-id="cobac"] .cb-qua'); return { cb: B.cb, so: el ? [...el.querySelectorAll('b')].map(b => +b.textContent) : null, hien: el ? el.getBoundingClientRect().height > 4 : false }; });
       ok(r.so && r.so.join() === r.cb.join() && r.hien, tag + ': khay thẻ hiện 3 số = ngăn quả', JSON.stringify(r));
       await p.screenshot({ path: path.join(SHOTS, tag + '-khay.png') });
+      // không nâng bằng mana: ô giá ẩn, bấm thẻ không trừ mana / không lên cấp
+      r = await p.evaluate(() => { const B = G.ban[0]; B.mana = 999; const d = document.querySelector('#bo-the .the[data-id="cobac"]'); const g = d.querySelector('.gia'); d.click(); return { an: getComputedStyle(g).visibility === 'hidden', lv: B.lv.cobac, mana: B.mana, nhan: (d.querySelector('.lv') || {}).textContent || '' }; });
+      ok(r.an && r.lv === 1 && r.mana >= 999 && !r.nhan, tag + ': thẻ Lucky Slot ẩn giá, bấm không nâng cấp', JSON.stringify(r));
       // JACKPOT
       await p.evaluate(() => { const B = G.ban[0]; G._cbEp = [3]; const T = sinhU(taoU(B, 'cobac', 4, 8)); B.t[8] = T; VX.trieu(T); });
       await p.waitForTimeout(1250); await p.screenshot({ path: path.join(SHOTS, tag + '-jackpot.png') });

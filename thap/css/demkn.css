@@ -19,6 +19,16 @@
 .cb-qua .cb-q img { width: 82%; max-width: 17px; aspect-ratio: 1; object-fit: contain; display: block; filter: drop-shadow(0 1px 0 #000); }
 .cb-qua .cb-q b { font: 900 12px/1 var(--f-display); color: #fff; letter-spacing: -1px; position: relative; z-index: 1; text-shadow: 0 1px 0 #000, 1px 0 0 #000, -1px 0 0 #000, 0 -1px 0 #000; margin-top: -6px; white-space: nowrap; }
 .cb-qua .cb-q.cb-nhay img, .cb-qua .cb-q.cb-nhay b { animation: cbNhay .6s ease-out; }
+/* 08/11 người dùng: Lucky Slot KHÔNG nâng bằng mana trong trận (khongNang) → ô giá ẩn; dải quả chiếm luôn chỗ ô giá, số to hơn (đọc được ở 844×390) */
+#bo-the .the[data-id="cobac"] > .cb-qua { left: 3%; right: 3%; height: calc(var(--khh, 74px) * .838 * .42 + 20px); gap: 0; }
+#bo-the .the[data-id="cobac"] > .cb-qua .cb-q img { max-width: 15px; }
+#bo-the .the[data-id="cobac"] > .cb-qua .cb-q b { font-size: 17px; margin-top: -2px; letter-spacing: -1.5px; }
+#bo-the .the[data-id="cobac"] > .cb-qua .cb-q.so3 b { font-size: 13px; letter-spacing: -1.5px; }
+/* màn ngang thấp (844×390, 667×375): khung logic bị thu ~½ → chữ cao hơn + ép ngang để 2 chữ số vẫn vừa cột */
+@media (orientation: landscape) and (max-height: 500px) {
+  #bo-the .the[data-id="cobac"] > .cb-qua .cb-q img { max-width: 13px; }
+  #bo-the .the[data-id="cobac"] > .cb-qua .cb-q b { font-size: 21px; letter-spacing: -.5px; transform: scaleX(.68); margin-top: -3px; }
+  #bo-the .the[data-id="cobac"] > .cb-qua .cb-q.so3 b { font-size: 15px; letter-spacing: -1px; transform: scaleX(.74); } }
 @keyframes cbNhay { 0% { transform: scale(1); filter: brightness(1) } 25% { transform: scale(1.45); filter: brightness(2.2) drop-shadow(0 0 3px #ffd23f) } 100% { transform: scale(1); filter: brightness(1) } }
 #dp-dai .dp-the > .cb-qua { position: absolute; z-index: 3; left: 0; right: 0; bottom: 0; height: 45%; display: flex; pointer-events: none; background: rgba(10, 4, 6, .8); border-radius: 2px; }
 #dp-dai .dp-the > .cb-qua .cb-q b { font-size: 6px; }

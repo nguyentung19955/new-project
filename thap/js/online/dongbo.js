@@ -189,7 +189,7 @@ const ONS = {
       switch (v.k) {
         case 'tr': this.apTrieu(B1, d); break;
         case 'gh': this.apGhep(B1, d); break;
-        case 'nc': if (d && B1.lv[d.id] != null) { B1.lv[d.id] = d.lv; for (const T of B1.t) if (T && T.id === d.id) T.lvSang = 1; } break;
+        case 'nc': if (d && B1.lv[d.id] != null && !(SKILLS[d.id] && SKILLS[d.id].khongNang)) { B1.lv[d.id] = d.lv; for (const T of B1.t) if (T && T.id === d.id) T.lvSang = 1; } break;
         case 'mv': { const mv = B1.mv; mv.cd = 0; B1.mana = Math.max(B1.mana, mv.gia); CH_HOP(B1); if (d && d.m != null) B1.mana = d.m; break; }
         case 'cb': this.apCB(B1, d); break; // Lucky Slot: kết quả quay xèng của bạn (jackpot.js CB)
         case 'pm': if (d && Array.isArray(d.o) && SKILLS.bienmau && SKILLS.bienmau.mach) SKILLS.bienmau.mach(B1, d.o, true); break; // Prism Thief: CHROMATIC CIRCUIT của bạn
@@ -258,7 +258,7 @@ const ONS = {
   apCB(B1, d) {
     if (!d || typeof CB === 'undefined') return;
     const T = B1.t[d.o];
-    if (T && T.id === 'cobac' && (T.cbS | 0) < d.s) CB.quay(B1, T, { f: d.f, s: d.s, n: d.n });
+    if (T && T.id === 'cobac' && !(T.cbS > 0)) CB.quay(B1, T, { f: d.f, s: d.s, n: d.n }); // chỉ 1 lần quay / ụ (lên sao tại chỗ không quay lại)
     if (Array.isArray(d.st) && d.st.length === 3) B1.cb = d.st.map(x => Math.max(0, x | 0));
     if (d.n) B1.cbN = Math.max(B1.cbN | 0, d.n | 0);
   },
@@ -338,7 +338,7 @@ const ONS = {
       if (sua && !khoiPhuc) this.lech++;
     }
     if (Array.isArray(v.f)) for (let i = 0; i < 15; i++) { const T = B.t[i]; if (T && !T.anim && v.c[i] === T.id + ':' + T.sao && (this.oTT(T)[2] || '') !== (v.f[i] || '')) this.datO(B, i, [T.id, T.sao, v.f[i]]); } // cờ ô (đá, bản sao, dạng…) theo máy bạn
-    if (v.lv) for (const k in v.lv) if (B.lv[k] != null) B.lv[k] = v.lv[k];
+    if (v.lv) for (const k in v.lv) if (B.lv[k] != null) B.lv[k] = SKILLS[k] && SKILLS[k].khongNang ? 1 : v.lv[k]; // ụ không nâng (Lucky Slot, Hydra): luôn cấp 1
     if (v.m != null) B.mana = v.m;
     if (v.g != null) B.gia = v.g;
     if (Array.isArray(v.cb) && v.cb.length === 3) { const a = B.cb || [0, 0, 0]; B.cb = v.cb.map((x, i) => Math.max(a[i] | 0, x | 0)); B.cbN = Math.max(B.cbN | 0, v.cbN | 0); } // ngăn quả Lucky Slot theo máy bạn (chỉ tăng: ảnh chụp cũ không kéo lùi gói 'cb' mới)
