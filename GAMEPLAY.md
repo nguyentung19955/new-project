@@ -650,3 +650,13 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
   - GÁNH HẬU KỲ `heHauKy(T)`: ụ Tấn công VÀNG +3.5%, ĐỎ +4% sát thương mỗi wave sau wave 20 (nhân riêng trong `dmgU` → gồm đòn kỹ năng/chủ động: hố đen, sấm Overlord, bầy Chúa Tổ, Rồng Lửa, Leviathan…). Wave 40: ×1.70 / ×1.80; wave 60: ×2.40 / ×2.60. Tất định theo `G.wave`, mọi chế độ. Bảng chỉ số thực hiện dòng "×N · sức mạnh hậu kỳ".
   - Đo bậc (`thap-sim-tier.js`, wave 20) không đổi (hệ số = 1 tới wave 20).
 - Wave trung bình (bot chơi tốt) trước → sau: Đỏ blackhole/overlord/chuato 46.8 → 58.0 · Đỏ ronglua/leviathan/overlord 56 → 70 (thắng) · Vàng canon/aten/railgun 35.7 → 42.3 · Vàng soi/nemesis/ngoisao 30.0 → 32.8 · Tím cuongno… 36.0 → 36.7. Bot thường (không cấp thẻ): Đỏ 39.7 → 46.5, ronglua 44.8 → 54.5.
+
+## claude/demo-hop-tuong — Buff hậu kỳ riêng 3 ụ Vàng yếu: Sói Máy, Nemesis, Pháo Ngôi Sao (09/11)
+- Người dùng chốt: không giảm bộ Rồng/Thuỷ Quái, không làm chỗ tiêu mana; tăng riêng bộ Vàng yếu Sói/Nemesis/Ngôi Sao. Chỉ sửa kỹ năng của chính 3 ụ (không đụng hệ số chung).
+- Nguyên nhân (bot chơi tốt, 24 hạt giống): bộ soi/nemesis/ngoisao/dongbo/vughep gãy ~wave 33–34 ở wave THƯỜNG (không phải trùm) — từ wave 30 có quái que tách → bầy quái nhỏ + quái bay lọt nguyên máu. Nemesis và Ngôi Sao đều đánh đơn mục tiêu; Ngôi Sao cần tổng ★ ≥ 50 mới có sát thương nhưng bàn thật chỉ ~35–50★; Sói là ụ dọn bầy duy nhất nhưng lan yếu (40% · 0.6 ô).
+- Sói Máy (`skills2.js`): sát thương 52 → 58; lan 40% · 0.6 ô → 70% · 1 ô; thức tỉnh 50% · 0.8 ô → 85% · 1.2 ô.
+- Pháo Ngôi Sao (`skills2.js` luat): mỗi mốc 10★ +15% tốc (trước 10%) VÀ +10% sát thương (mới); mỗi mốc 50★ +100% sát thương (trước 50%). Thưởng đúng mốc giữ nguyên.
+- Nemesis (`skills4.js`): % máu tối đa mỗi đòn 0.3–1.2% → 0.5–2% theo sao; trần với trùm 0.8% → 1.2% (`TRAN_TRUM`); trần phán quyết tốc 40% → 60%, sát thương 60% → 100%.
+- Mô tả cập nhật: text.js, roster.json/meta.js (kyNang + kyNang_vi), skilldemo.js, vi.json (+ câu mới cho Pháo Ngôi Sao) → ngonngu-vi.js.
+- Wave trung bình trước → sau: soi/nemesis/ngoisao/dongbo/vughep 32.2 → 41.2 (24 hạt; bộ Vàng canon 43.3) · soi/nemesis/ngoisao/thanhdia/saochep 32.8 → 36.1 · aten/railgun/soi 45.0 → 44.6 (không quá mạnh).
+- Ụ Vàng tấn công khác còn yếu (chỉ ghi, chưa sửa): bộ nhatthuc/lualien/hopca 31.2, luutru/mauhut/bienmau 24.6 (bộ 1 ụ tấn công: bienmau 15.8, luutru 17, hopca 19, lualien 20.8; hydra 15.8 do bot không dùng kỹ năng chạm).

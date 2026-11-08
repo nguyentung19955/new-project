@@ -853,12 +853,13 @@ SKILLS.ngoisao = { // Pháo Ngôi Sao (Darby): tổng ★ trên bàn — mỗi m
   tong: (B) => B.t.reduce((s, X) => s + (X ? X.sao : 0), 0),
   // LUẬT (thuần, tất định — online dùng chung): n = tổng ★ → { toc, dmg, moc: mốc kế tiếp (hoặc mốc đang đứng), loai: 'toc'|'dmg', dung: đúng mốc }
   //   mốc tốc = bội 10 không phải bội 50 · mốc sát thương = bội 50
-  //   toc = 0.10 × (số mốc tốc ≤ n) + (đúng mốc tốc ? 1.00 : 0) · dmg = 0.50 × (số mốc sát thương ≤ n) + (đúng mốc sát thương ? 3.50 : 0)
+  //   toc = 0.15 × (số mốc tốc ≤ n) + (đúng mốc tốc ? 1.00 : 0) · dmg = 0.10 × (mọi mốc 10 ≤ n) + 1.00 × (số mốc sát thương ≤ n) + (đúng mốc sát thương ? 3.50 : 0)
+  //   (09/11 gánh hậu kỳ, bot đo: bộ Sói/Nemesis/Ngôi Sao gãy ~wave 32): trước toc 0.10/mốc, dmg 0.50/mốc 50, không có dmg mỗi mốc 10
   luat(n) {
     n = Math.max(0, n | 0);
     const m10 = Math.floor(n / 10), m50 = Math.floor(n / 50), dung = n > 0 && n % 10 === 0;
     const moc = dung ? n : (m10 + 1) * 10, loai = moc % 50 === 0 ? 'dmg' : 'toc';
-    return { toc: 0.1 * (m10 - m50) + (dung && loai === 'toc' ? 1 : 0), dmg: 0.5 * m50 + (dung && loai === 'dmg' ? 3.5 : 0), moc, loai, dung };
+    return { toc: 0.15 * (m10 - m50) + (dung && loai === 'toc' ? 1 : 0), dmg: 0.1 * m10 + 1.0 * m50 + (dung && loai === 'dmg' ? 3.5 : 0), moc, loai, dung };
   },
   // bộ đếm kỹ năng = tổng ★ của MỌI ụ trên bàn của mình (không phải số Star Cannon) — hiện ở bảng chạm + tấm đếm trên bàn (demkn)
   demTT(T) { const n = this.tong(G.ban[T.ban]), L = this.luat(n), h = knHe(G.ban[T.ban], 'ngoisao'), pc = (x) => Math.round(x * h * 100);
@@ -888,12 +889,13 @@ SKILLS.soi = { // Sói Máy (Werewolf) — mỗi lần TRIỆU HỒI / GHÉP ra 
   //     bán kính LAN_R ô quanh mục tiêu (thường 40% · 0.6 ô; thức tỉnh 50% · 0.8 ô). Lan chỉ chí mạng khi viên chính chí mạng (thức tỉnh: luôn).
   //     Không Math.random: quyết định chí mạng của lan lấy từ viên chính (móc khiCrit). Vòng sóng vuốt ở điểm trúng: HU.soiLan (chỉ hình).
   //   D = 52 (trước 55, −5% đơn mục tiêu): 1 quái lân cận → +32% (thường) / +42% (thức tỉnh) so với bản cũ; 2 quái → +70% / +89%.
-  vai: 'tc', dmg: 52, toc: 1 / 1.8, nham: 'dau',
+  //   09/11 gánh hậu kỳ (wave 30+ toàn bầy quái tách → Sói là ụ dọn bầy của bộ): D 52 → 58, lan 40%/0.6 ô → 70%/1.0 ô (thức tỉnh 50%/0.8 → 85%/1.2)
+  vai: 'tc', dmg: 58, toc: 1 / 1.8, nham: 'dau',
   KY: 1.8, KY_TT: 1.2, CACH: 0.1, // giây: nghỉ bản thường · nghỉ loạt thức tỉnh · cách giữa 3 viên
-  LAN_K: 0.4, LAN_K_TT: 0.5, LAN_R: 0.6, LAN_R_TT: 0.8, // đánh lan: hệ số sát thương · bán kính (ô = min(B.cw, B.ch))
+  LAN_K: 0.7, LAN_K_TT: 0.85, LAN_R: 1.0, LAN_R_TT: 1.2, // đánh lan: hệ số sát thương · bán kính (ô = min(B.cw, B.ch))
   tiLe: (B) => Math.min(0.5, knThe(B, 'soi') / 100),
   sinh(G, T) { T.thuc = rngSinh(T, 6271)() < this.tiLe(G.ban[T.ban]); T.loat = 0; if (T.thuc) setTimeout(() => { SND.thucTinh(); }, 250); },
-  mo: (T) => (T && T.thuc ? 'AWAKENED: 3-barrel volley every 1.2s (3 shots × 50% damage, 0.1s apart) · always crits · splash 50% to enemies within 0.8 tile' : 'NORMAL: one barrel, 1 shot every 1.8s · splash 40% to enemies within 0.6 tile (crits only if the shot crits) · ' + Math.round(SKILLS.soi.tiLe(T && G.ban[T.ban]) * 100) + '% of summons/merges come out AWAKENED (3 barrels, always crit)') + (ms(T, 3) ? ' · +10% crit' : '') + (ms(T, 5) ? ' · +25% damage' : '') + (ms(T, 7) ? ' · howl: neighbours +25% fire rate' : ''),
+  mo: (T) => (T && T.thuc ? 'AWAKENED: 3-barrel volley every 1.2s (3 shots × 50% damage, 0.1s apart) · always crits · splash 85% to enemies within 1.2 tile' : 'NORMAL: one barrel, 1 shot every 1.8s · splash 70% to enemies within 1 tile (crits only if the shot crits) · ' + Math.round(SKILLS.soi.tiLe(T && G.ban[T.ban]) * 100) + '% of summons/merges come out AWAKENED (3 barrels, always crit)') + (ms(T, 3) ? ' · +10% crit' : '') + (ms(T, 5) ? ' · +25% damage' : '') + (ms(T, 7) ? ' · howl: neighbours +25% fire rate' : ''),
   luonCrit: (T) => !!T.thuc,
   capNhat(G, B, T, dt) { // tự quản nhịp bắn (loạt 3 viên) → luật thuần theo dt, tất định
     if (ms(T, 3)) T.buf.crit += 0.10; // 3★ KEEN FANGS
