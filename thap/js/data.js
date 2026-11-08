@@ -231,6 +231,7 @@ const KY_NANG_CAP = {
   canon: { ten: 'Per stack', base: 50, buoc: 2.5, max: 70, dv: '%', tien: '+', dmg: true }, // Pháo La Bàn (08/11 tổ hợp hướng): +% sát thương mỗi STACK (NSWE + NSWE) — 50% → 70% rải 8 cấp thẻ Vàng LV9→17 // (cũ: 'Per number' 15 → 21%) (LV8, phí 7 cấp)
   saochep: { ten: 'Copy', base: 70, buoc: 4, max: 94, dv: '%', dmg: true },          // bản sao = chỉ số ụ gốc × % này
   mimic: { ten: 'Merge buff', base: 50, buoc: 2, max: 74, dv: '%', tien: '+', dmg: true },
+  tudo: { ten: 'Bonus +1★', base: 10, buoc: 2, max: 28, dv: '%', dmg: true },          // Wild Link (Tím ĐB, 08/11): xác suất kết quả ghép tự do được +1★ trên sao trung bình (thẻ Tím 9 cấp: 10% → 28%)
   vughep: { ten: 'Gold +2★', base: 10, buoc: 2, max: 22, dv: '%', dmg: true },      // xác suất ra Merge King vàng
   epxung: { ten: 'Overclock', base: 90, buoc: 2.5, max: 112.5, dv: '%', tien: '+', dmg: true },
   ngoisao: { ten: 'Milestones', base: 100, buoc: 5, max: 130, dv: '%', dmg: true },  // mọi mốc ★ (tốc/sát thương) × giá trị/100

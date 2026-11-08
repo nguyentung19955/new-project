@@ -104,6 +104,16 @@ function upLuatGhep(id) {
     L.push(['Other merges', 'A Spectrum Prism does not merge normally (no Mimic, no random turret). Merge King raises its star and keeps the fusion. A Copycat copy is a new Prism with a new random colour.']);
     return L.concat([['Stone', 'If Janus Cube petrifies it, it cannot fuse until the stone is broken.']]);
   }
+  if (id === 'tudo') { // Wild Link: ghép tự do (game.js laTuDo / saoGhep) — 08/11
+    L.push(['Wild merge', 'Drag it onto ANY turret, or any turret onto it: any type, any star. The result is a random turret from your deck.']);
+    L.push(['Star', 'Result star = average of the two, rounded up (1★ + 2★ = 2★, 3★ + 4★ = 4★, 2★ + 6★ = 4★). No +1★. While you drag, the star badge shows the result; a −★ note means you lose stars.']);
+    L.push(['Bonus', Math.round(tdThuong(null) * 100) + '% chance the result gets +1★ (higher with card level).']);
+    L.push(['Real merge', 'It counts as a merge: merge counters, Fusion Archive, Star Breaker and merge skills all work. Twin Maker also summons a turret at the average star.']);
+    L.push(['Locked turrets', 'It also merges with Stone and Frozen turrets: the result is a normal, unlocked turret.']);
+    L.push(['Special turrets', 'Compass Cannon, Prism Thief (even a Spectrum mask) and Lucky Slot also give a random new turret: their directions, fusion or stacks are not kept. The new turret rolls its own random traits.']);
+    L.push(['Other skills', 'Merge King on it raises its star in place (not a merge). Copycat can copy it.']);
+    return L.concat([['Stone', 'If Wild Link itself is stone or frozen, it cannot use its skill: a stone Wild Link only merges with stone of the same star.']]);
+  }
   if (id === 'mimic') L.push(['Joker merge', 'Merges with any turret of the same star. The result gets +' + Math.round(knThe(null, 'mimic')) + '% damage for 8s.']);
   else if (sk.ghepDB) L.push([sk.ghepDB.laGhep ? 'Special merge' : 'Drag skill', upSC(mo1 || (TEXT.turret[id] || {}).skill) + '.']);
   if (sk.ghep) L.push(['Merge trigger', upSC((TEXT.turret[id] || {}).skill || mo1) + '.']);
@@ -770,7 +780,7 @@ if (UP_XEM) {
     kieu(id) {
       const sk = SKILLS[id];
       if (sk.hoTro && SUP_LOAI[id]) return 'ht';
-      if (id === 'mimic' || sk.ghepDB || sk.ghep) return 'ghep';
+      if (id === 'mimic' || id === 'tudo' || sk.ghepDB || sk.ghep) return 'ghep';
       if (sk.chuDong) return 'chu';
       if (!sk.dmg) return 'phu';
       return 'tc';
@@ -786,8 +796,8 @@ if (UP_XEM) {
         ke.forEach((o, i) => dat(o, i % 2 ? 'canon' : 'lien', Math.max(1, s - 1)));
       } else if (k === 'ghep') {
         const ms = Math.min(s, 6); this.T.sao = ms;
-        let p = (id === 'mimic' || SKILLS[id].ghepDB) ? 'lien' : id;
-        this.P = dat(8, p, ms);
+        let p = (id === 'mimic' || id === 'tudo' || SKILLS[id].ghepDB) ? 'lien' : id;
+        this.P = dat(8, p, id === 'tudo' ? Math.min(7, ms + 1) : ms); // Wild Link: bạn ghép KHÁC sao (+1★) — kết quả = sao cao hơn
         if (!hopLeGhep(this.T, this.P)) this.P = dat(8, id, ms);
         dat(2, 'lien', 2); dat(12, 'canon', 2);
       } else if (k === 'phu') { dat(6, 'lien', s); dat(8, 'canon', s); }

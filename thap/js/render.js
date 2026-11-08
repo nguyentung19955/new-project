@@ -1316,7 +1316,7 @@ const REN = {
 // đòn phát từ lõi (dauNong: ụ có gocDau). Ụ đã có gocDau riêng (hộp, cột, ăng-ten…) giữ nguyên.
 (function () {
   if (typeof SKILLS === 'undefined' || window.UCU) return;
-  const TB = ['nhanmana', 'thanhdia', 'cauvong', 'sinhdoi', 'hasao', 'tron', 'nhanban', 'epxung', 'xaotron', 'nangsao', 'vughep', 'saochep', 'pandora', 'mana', 'phagiap', 'bua', 'bomhen', 'mimic', 'dichchuyen', 'kepha', 'taylo', 'khien', 'khoathoigian', 'thaukinh', 'nhieusong', 'santhuong', 'dongbo', 'guongcong', 'marionette', 'xuonganh', 'mauhut', 'nguyenrua', 'lophanung', 'ngaithoigian', 'bang', 'radar', 'doc'];
+  const TB = ['tudo', 'nhanmana', 'thanhdia', 'cauvong', 'sinhdoi', 'hasao', 'tron', 'nhanban', 'epxung', 'xaotron', 'nangsao', 'vughep', 'saochep', 'pandora', 'mana', 'phagiap', 'bua', 'bomhen', 'mimic', 'dichchuyen', 'kepha', 'taylo', 'khien', 'khoathoigian', 'thaukinh', 'nhieusong', 'santhuong', 'dongbo', 'guongcong', 'marionette', 'xuonganh', 'mauhut', 'nguyenrua', 'lophanung', 'ngaithoigian', 'bang', 'radar', 'doc'];
   for (const id of TB) if (SKILLS[id] && !SKILLS[id].gocDau) SKILLS[id].gocDau = (T, t) => -Math.PI / 2 + (T.pha || 0) * 0.3 + t * 0.35;
 })();
 

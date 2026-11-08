@@ -175,8 +175,24 @@ function ghepDBHop(a, b) {
   if (!biKhoa(b)) return db;
   return !db.dao && db.sk.ghepDB.quaKhoa ? db : null; // đích bị khoá: chỉ kỹ năng quaKhoa của ụ KÉO
 }
+// WILD LINK (tudo, Tím Đặc biệt, 08/11 người dùng: "ghép với bất kỳ ụ nào, số sao = (ụ đó + ụ được ghép) / 2, kích hoạt được Twin"):
+//   ghép với MỌI loại, MỌI sao. Kết quả = ụ NGẪU NHIÊN trong bộ bài (như ghép thường; RNG hạt giống trận — tất định), sao = ⌈(sao 2 ụ)/2⌉, KHÔNG +1★;
+//   cấp thẻ Wild Link: xác suất +1★ (KY_NANG_CAP.tudo). Là GHÉP THẬT (đi đường ghép thường: Archive, MERGE SURGE, nhiệm vụ, kỹ năng khi ghép…).
+//   Kỹ năng KHI GHÉP của 2 nguyên liệu thấy cả 2 ở sao ⌈trung bình⌉ (2 sao bằng nhau = y như ghép thường) → Twin Maker gọi thêm ụ đúng sao đó.
+//   08/11 người dùng chốt thêm: ghép được cả ụ ĐÁ / BĂNG (kết quả = ụ thường, hết khoá) và Pháo La Bàn / Prism Thief (cả mặt nạ hợp thể) / Lucky Slot
+//   → ra 1 ụ NGẪU NHIÊN mới (không chạy luật tổ hợp/hợp thể riêng, không mang stack; ụ mới quay lại dạng ngẫu nhiên lúc sinh).
+//   Wild Link phải KHÔNG bị khoá; ụ KÉO bị khoá không dùng được (luật nguồn khoá giữ nguyên). Wild Link đá + đá cùng sao: luật đá thường (ra đá +1★).
+function tdW(a, b) { // Wild Link đang có hiệu lực trong cặp a (kéo) → b, hoặc null
+  if (!a || !b || a === b || biKhoa(a)) return null;
+  return a.id === 'tudo' ? a : b.id === 'tudo' && !biKhoa(b) ? b : null;
+}
+function laTuDo(a, b) { return !!tdW(a, b); }
+// sao kết quả ghép a → b (đường ghép thường): Wild Link ⌈trung bình⌉, còn lại +1★ (không tính xác suất +1★ cấp thẻ)
+function saoGhep(a, b) { return laTuDo(a, b) ? Math.max(1, Math.ceil((a.sao + b.sao) / 2)) : Math.min(LUAT.saoMax, b.sao + 1); }
+function tdThuong(B) { const v = knThe(B, 'tudo'); return (v == null ? 10 : v) / 100; } // xác suất +1★ của bàn B
 function hopLeGhep(a, b) {
   if (!a || !b || a === b) return false;
+  if (laTuDo(a, b) && !ghepDBHop(a, b)) return true; // Wild Link: mọi loại, mọi sao, cả đá / băng / Pháo La Bàn / mặt nạ Prism (không +1★)
   if (ghepDBHop(a, b)) return true; // ghép đặc biệt (có loại không cần cùng sao; Merge King / Teleporter được lên ô đá/băng)
   if ((a.id === 'bienmau' && a.pf > 0) || (b.id === 'bienmau' && b.pf > 0)) return false; // Prism Thief: mặt nạ HỢP THỂ không ghép thường (chỉ hợp thể / Merge King / Copycat) — skills7.js
   if (a.st.bang > 0 || b.st.bang > 0) return false;
@@ -214,9 +230,18 @@ function ghep(B, a, b, ep) {
   }
   // ĐÁ + ĐÁ (DCDW: "돌덩이끼리 합체 → 등급 높은 돌덩이"): ra khối ĐÁ +1★ (loại ngẫu nhiên nằm dưới lớp đá),
   // vẫn là đá cho tới khi được tẩy (Cleanser / Eve); 2 cục đá không có kỹ năng → không chạy kỹ năng KHI GHÉP, không buff Aurora
-  const daDa = !!(a.st.da && b.st.da);
+  const daDa = !!(a.st.da && b.st.da) && !laTuDo(a, b);
   const coMimic = !daDa && (a.id === 'mimic' || b.id === 'mimic');
-  const ra = sinhU(taoU(B2, pick(B2.deck), Math.min(LUAT.saoMax, b.sao + 1), b.o));
+  // Wild Link: loại bốc bằng RNG hạt giống (hạt trận + bàn + 2 ô + số lần) — online bàn con rối nhận đúng loại (deck 1 phần tử) + sao (G._tdS) qua gói 'gh'
+  const tuDo = !daDa && laTuDo(a, b), sTB = tuDo ? saoGhep(a, b) : 0;
+  let idRa = null, saoRa = Math.min(LUAT.saoMax, b.sao + 1);
+  if (tuDo) {
+    const r = rngHat((((typeof ONS !== 'undefined' && ONS.on ? ONS.seed : G.hat) || 1) | 0) * 4099 + B2.i * 977 + a.o * 131 + b.o * 17 + (B2.tdN = (B2.tdN | 0) + 1) * 7919);
+    idRa = B2.deck[Math.floor(r() * B2.deck.length)]; saoRa = sTB;
+    if (ep && G._tdS) saoRa = G._tdS; else if (!ep && saoRa < LUAT.saoMax && r() < tdThuong(B2)) saoRa++;
+    B2._td = { s: sTB, ra: saoRa }; // test / hình: sao trung bình + sao ra (có +1★ cấp thẻ hay không)
+  }
+  const ra = sinhU(taoU(B2, idRa || pick(B2.deck), saoRa, b.o));
   if (daDa) ra.st.da = true;
   B2.t[a.o] = null; B2.t[b.o] = ra;
   ra.goc = b.goc;
@@ -226,7 +251,9 @@ function ghep(B, a, b, ep) {
   // kỹ năng KHI GHÉP của 2 ụ nguyên liệu (mana, gọi ụ, khiên, phá đối thủ…) — nhãn chữ hiện lúc kết quả lộ ra
   const kh = [];
   G._treNhan = VX.TRE_LO;
-  for (const id of (daDa ? [] : new Set([a.id, b.id]))) { const sk = SKILLS[id]; if (sk && sk.ghep) { sk.ghep(G, B2, a, b, B2.t[b.o] || ra); kh.push(id); } }
+  // Wild Link khác sao: kỹ năng khi ghép thấy cả 2 nguyên liệu ở sao ⌈trung bình⌉ (bản nhìn qua prototype — chỉ đổi .sao, ô/loại/cờ giữ nguyên)
+  const ga = tuDo && a.sao !== sTB ? Object.assign(Object.create(a), { sao: sTB }) : a, gb = tuDo && b.sao !== sTB ? Object.assign(Object.create(b), { sao: sTB }) : b;
+  for (const id of (daDa ? [] : new Set([a.id, b.id]))) { const sk = SKILLS[id]; if (sk && sk.ghep) { sk.ghep(G, B2, ga, gb, B2.t[b.o] || ra); kh.push(id); } }
   G._treNhan = 0;
   if (kh.length) VX.kichHoat(B2, b.o, kh);
   // GHÉP 2 ụ CÙNG LOẠI ra ĐÚNG loại đó → giữ cộng dồn lớn nhất của 2 nguyên liệu (BAO-CAO gioi-han §4 mục 6): Scrap Forge (lò), Overclock (ép xung trên thân),
@@ -239,7 +266,7 @@ function ghep(B, a, b, ep) {
   // buff Twin Anvil (skills4.js) theo ụ con khi ghép thường: lấy buff MẠNH hơn của 2 nguyên liệu (không cộng, không nhân đôi)
   if (!daDa && (a.anv || b.anv) && kq === ra) { const x = a.anv, y = b.anv; ra.anv = !x ? y : !y ? x : (y.v > x.v ? y : x); }
   // (+1★ hiện bằng con dấu sao ảnh trong phát lại ghép — ghepfx.js)
-  if (kq === ra) mocMoi(ra, b.sao, VX.TRE_LO + 0.12);
+  if (kq === ra) mocMoi(ra, tuDo ? Math.max(a.sao, b.sao) : b.sao, VX.TRE_LO + 0.12);
   SND.ghep(kq.sao, B2.ai);
   return ra;
 }
@@ -919,7 +946,9 @@ function aiBan(B, dt) {
   // kỹ năng chủ động của ụ ĐỎ: AI tự dùng khi nạp đầy
   for (const T of ts) { const sk = SKILLS[T.id]; if (sk.chuDong && T.nap >= 1 && !biKhoa(T) && sk.aiNen(G, B, T)) { sk.chuDong(G, B, T); return; } }
   ts.sort((a, b) => a.sao - b.sao);
-  const hl = (a, b) => hopLeGhep(a, b) && !(biKhoa(b) && !biKhoa(a)) && (a.id === b.id || a.id === 'mimic' || b.id === 'mimic' || (a.sao === b.sao && a.id !== 'dichchuyen' && SKILLS[b.id].vai !== 'ht'));
+  // Wild Link (laTuDo): AI chỉ ghép khi 2 sao lệch ≤ 1 (kết quả = sao cao hơn → không mất sao); ưu tiên ụ có kỹ năng khi ghép (Twin Maker, Mana Doubler…)
+  const hl = (a, b) => hopLeGhep(a, b) && !(biKhoa(b) && !biKhoa(a)) && (laTuDo(a, b) ? Math.abs(a.sao - b.sao) <= 1 : (a.id === b.id || a.id === 'mimic' || b.id === 'mimic' || (a.sao === b.sao && a.id !== 'dichchuyen' && SKILLS[b.id].vai !== 'ht')));
+  if (oTrong(B).length <= 3) { let bt = null, bv = -1; for (const w of ts) if (w.id === 'tudo' && !biKhoa(w)) for (const x of ts) if (x !== w && hl(w, x)) { const v = (SKILLS[x.id].ghep ? 100 : 0) + saoGhep(w, x) * 10 + (x.sao <= w.sao ? 1 : 0); if (v > bv) { bv = v; bt = [w, x]; } } if (bt && SKILLS[bt[1].id].ghep) { ghep(B, bt[0], bt[1]); return; } }
   if (oTrong(B).length <= 3) for (const a of ts) for (const b of ts) if (a !== b && a.sao < 6 && hl(a, b) && (SKILLS[a.id].vai !== 'ht' || ts.filter(x => x.id === a.id).length > 2)) { const [x, y] = aiCapTot(ts, a, b, hl); ghep(B, x, y); return; }
   if (oTrong(B).length === 0) for (const a of ts) for (const b of ts) if (a !== b && hl(a, b)) { const [x, y] = aiCapTot(ts, a, b, hl); ghep(B, x, y); return; }
   // POWER-UP: mọi loại đều có ích (10 ụ không sát thương nâng chính số kỹ năng — KY_NANG_CAP.pu, KIEM.md mục IX 'Đã quyết' #1)

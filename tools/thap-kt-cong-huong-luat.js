@@ -76,7 +76,8 @@ if (nhom('1 · ghepDB × biến thể nguồn/đích')) {
         // khoá đích → chỉ quaKhoa; còn lại: hopLe của kỹ năng hoặc ghép thường (cùng loại cùng sao <7 / Mimic)
         const thuong = !khoaA && !khoaB && s < 7 && ((S === X && S !== 'loren' && S !== 'canon') || X === 'mimic'); // Twin Anvil + Twin Anvil: chỉ ghép đặc biệt cùng dạng (08/11) · Pháo La Bàn + Pháo La Bàn: chỉ gộp hướng (08/11 tổ hợp hướng)
         const daDa = kn === 'da' && kd === 'da' && s < 7 && !R(`biKhoa(a) && (a.st.bang > 0)`); // đá + đá cùng sao: ghép thành khối đá +1★ (luật DCDW)
-        const mongHL = daDa ? true : khoaA ? false : khoaB ? (!!sk.quaKhoa && hopLeDB) : (hopLeDB || thuong);
+        const tuDo = X === 'tudo' && !khoaA && !khoaB; // Wild Link (08/11): ghép tự do mọi loại / mọi sao (cả 7★) khi Wild Link đích không khoá
+        const mongHL = daDa ? true : khoaA ? false : khoaB ? (!!sk.quaKhoa && hopLeDB) : (hopLeDB || thuong || tuDo);
         if (hlThuc !== mongHL) { loi.push(X + ': hopLeGhep=' + hlThuc + ' (mong ' + mongHL + ')'); continue; }
         if (!hlThuc) continue;
         let r; try { r = R(`var _r = ghep(B, a, b); var _l = chk(); _l`); } catch (e) { loi.push(X + ': lỗi ' + e.message); continue; }

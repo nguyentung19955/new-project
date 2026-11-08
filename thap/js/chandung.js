@@ -28,7 +28,7 @@ const PO_NEO = {
   hydra: [7.5, 40.1, 49.9, 61.8], cuuvi: [7.4, 40, 50, 61.8], pandora: [7.3, 39.9, 50, 61.7], luoicheo: [7.3, 39.9, 50.1, 61.7], ngaithoigian: [7.4, 40, 50.1, 61.7], nemesis: [7.4, 40, 50.1, 61.7],
   docton: [7.3, 39.9, 50.1, 61.7], thaukinh: [7.3, 39.9, 49.9, 61.7], nhieusong: [7.3, 39.9, 50, 61.7], santhuong: [7.4, 40, 50.1, 61.7], nhatthuc: [7.4, 40.1, 50.1, 61.8],
   loren: [7.4, 40, 50, 61.7], guongcong: [7.4, 40, 50.1, 61.7], marionette: [7.5, 40.1, 50.1, 61.8], chuato: [7.3, 39.9, 50.1, 61.6], leviathan: [7.4, 40, 50.1, 61.8],
-  khoisinh: [7.3, 39.9, 49.9, 61.7], ronglua: [7.4, 40, 50.1, 61.7], af_hero: [4, 36, 50, 55], af_dahlia: [4, 35, 55, 55], af_eve: [4, 35, 55, 55], bienmau: [7.3, 39.9, 50, 61.7], hopca: [7.4, 40, 50.1, 61.8], lualien: [7.3, 39.9, 50.1, 61.7], luutru: [7.4, 40, 50.1, 61.7], mauhut: [1.1, 33.7, 49.9, 55.4], nguyenrua: [7.4, 40, 50.1, 61.7], thanhdia: [7.3, 39.9, 50, 61.6], xuonganh: [7.5, 40.1, 50.1, 61.8], cobac: [7.4, 40, 50, 61.7],};
+  khoisinh: [7.3, 39.9, 49.9, 61.7], ronglua: [7.4, 40, 50.1, 61.7], af_hero: [4, 36, 50, 55], af_dahlia: [4, 35, 55, 55], af_eve: [4, 35, 55, 55], bienmau: [7.3, 39.9, 50, 61.7], hopca: [7.4, 40, 50.1, 61.8], lualien: [7.3, 39.9, 50.1, 61.7], luutru: [7.4, 40, 50.1, 61.7], mauhut: [1.1, 33.7, 49.9, 55.4], nguyenrua: [7.4, 40, 50.1, 61.7], thanhdia: [7.3, 39.9, 50, 61.6], xuonganh: [7.5, 40.1, 50.1, 61.8], cobac: [7.4, 40, 50, 61.7], tudo: [7.3, 39.9, 50, 61.7],};
 // ảnh LỚN trang ụ / chỉ huy (assets/hero/hero_<id>.jpg|webp 1170×1020 — tools/thap-hero.py, hiện 1:1, KHÔNG phóng): mốc riêng vì khung cắt khác pilot_<id>.png
 const HERO_NEO = {
   canon: [15.5, 31, 54], xucxac: [17.3, 32.3, 57.9], lien: [10, 25, 40.8], phun: [15, 30, 39.5], sungluc: [22, 37, 52.6], bang: [16, 31, 50], doc: [12, 27, 53.9],
@@ -44,7 +44,7 @@ const HERO_NEO = {
   hydra: [13.4, 28.4, 39.5], cuuvi: [16.6, 31.6, 51.3], pandora: [10, 25, 61.1], luoicheo: [14.3, 29.3, 50], ngaithoigian: [24, 39, 50], nemesis: [15.1, 30.1, 50],
   docton: [10, 25, 46.1], thaukinh: [6, 21, 43.5], nhieusong: [23, 38, 40.8], santhuong: [19.6, 34.6, 60.5], nhatthuc: [21, 36, 46.1], loren: [11.3, 26.3, 47.4],
   guongcong: [15.6, 30.6, 46.1], marionette: [13, 28, 27.8], chuato: [13.9, 28.9, 50], leviathan: [12, 27, 46.1], khoisinh: [10, 25, 39.5], ronglua: [11.3, 26.3, 46.1],
-  af_hero: [0, 36, 50], af_dahlia: [0, 35, 55], af_eve: [5, 38, 55], af_tech: [1, 17.5, 57], af_tide: [0, 16, 55], af_twin: [7, 19.5, 52], af_hawk: [3.5, 17, 55], af_weaver: [0, 17, 52], bienmau: [14.3, 29.3, 47.4], hopca: [12, 27, 38.2], lualien: [14.3, 29.3, 46.1], luutru: [7.3, 22.3, 46.1], mauhut: [0.5, 15.5, 43.5], nguyenrua: [7, 22, 50], thanhdia: [5.5, 20.5, 47.4], xuonganh: [17.3, 32.3, 50], cobac: [27.7, 42.7, 49.3],};
+  af_hero: [0, 36, 50], af_dahlia: [0, 35, 55], af_eve: [5, 38, 55], af_tech: [1, 17.5, 57], af_tide: [0, 16, 55], af_twin: [7, 19.5, 52], af_hawk: [3.5, 17, 55], af_weaver: [0, 17, 52], bienmau: [14.3, 29.3, 47.4], hopca: [12, 27, 38.2], lualien: [14.3, 29.3, 46.1], luutru: [7.3, 22.3, 46.1], mauhut: [0.5, 15.5, 43.5], nguyenrua: [7, 22, 50], thanhdia: [5.5, 20.5, 47.4], xuonganh: [17.3, 32.3, 50], cobac: [27.7, 42.7, 49.3], tudo: [10.5, 25.5, 44.8],};
 // mốc của 1 ảnh: PO_NEO, hoặc suy từ FACE_BOX (khung đầu tóc→cằm: mắt ≈ giữa khung đầu)
 function poNeo(id) {
   if (id && id.startsWith('hero:')) return HERO_NEO[id.slice(5)] || null;
