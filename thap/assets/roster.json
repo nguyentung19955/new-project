@@ -499,9 +499,9 @@
   "ten": "Werewolf",
   "bac": "vang",
   "dcdw": "Werewolf",
-  "kyNang": "Wolf gun: Normal = 1 barrel, a shot every 1.8s; AWAKENED by chance (30%+) = 3 barrels, 3-shot volley every 1.2s, always crits",
+  "kyNang": "Wolf gun: Normal = 1 barrel, a shot every 1.8s, each hit splashes 40% within 0.6 tile; AWAKENED by chance (30%+) = 3 barrels, 3-shot volley every 1.2s, always crits, splash 50% within 0.8 tile",
   "ten_vi": "Sói Máy",
-  "kyNang_vi": "Súng sói: bản Thường 1 nòng, 1 phát mỗi 1.8 s; THỨC TỈNH theo xác suất (30%+) há 3 nòng, loạt 3 viên mỗi 1.2 s, luôn chí mạng"
+  "kyNang_vi": "Súng sói: bản Thường 1 nòng, 1 phát mỗi 1.8 s, mỗi đòn đánh lan 40% trong 0.6 ô; THỨC TỈNH theo xác suất (30%+) há 3 nòng, loạt 3 viên mỗi 1.2 s, luôn chí mạng, đánh lan 50% trong 0.8 ô"
  },
  {
   "id": "tienhoa",

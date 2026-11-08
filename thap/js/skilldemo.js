@@ -184,7 +184,7 @@ const SD_K = {
   saochep: { kieu: 'gDB', ban: 'tia', c: [[0.2, 'Drag onto a same-star turret'], [2.5, (T) => 'Becomes a copy with ' + Math.round(heSaoChep(G.ban[T.ban]) * 100) + '% power', { cham: 0.6 }]] },
   ngoisao: { q: Q.hang(3, 175, 50, 6), ke: [[2, 'lien', 3], [6, 'canon', 3], [8, 'set', 3], [12, 'bang', 3]], them: [[1.6, (B) => sdNgoiSao(B, 20)], [3.2, (B) => sdNgoiSao(B, 50)]], c: [[0.2, 'Counts every ★ on the board'], [1.6, 'Every 10★: faster fire', { cham: 0.5 }], [3.2, 'Every 50★: more damage']] },
   soi: { o: 2, q: Q.nhom(5, 175, 18, 6), ke: [[3, 'soi', 's']], truoc: (T, B) => { const g = SD.gd; if (T) { T.thuc = g === 3; T.gd = null; } const W = B && B.t[3]; if (W) { W.thuc = g ? g === 3 : true; W.gd = null; } }, // thuc = kết quả gieo tiLe khi xuất hiện: clip ép 1 Thường + 1 Thức tỉnh, chú thích nói xác suất thật
-    c: [[0.2, 'Each Werewolf is Normal or Awakened'], [1.6, 'Awakened: 3 barrels, always crits', { ev: 'hit', cham: 0.5 }], [3.4, (T) => 'Each summon or merge: ' + Math.round(SKILLS.soi.tiLe(G.ban[T.ban]) * 100) + '% chance to awaken']] },
+    c: [[0.2, 'Each Werewolf is Normal or Awakened'], [1.6, 'Awakened: 3 barrels, always crits, wider splash', { ev: 'hit', cham: 0.5 }], [3.4, (T) => 'Each summon or merge: ' + Math.round(SKILLS.soi.tiLe(G.ban[T.ban]) * 100) + '% chance to awaken']] },
   tienhoa: { kieu: 'phu', truoc: (T) => { if (T && !SKILLS.tienhoa.chay(T)) T.egg = SKILLS.tienhoa.can(T) - 4.2; }, c: [[0.2, (T, s) => s >= 7 ? 'A burnt egg never hatches' : 'The egg grows'], [4.3, (T, s) => s >= 7 ? 'Tap it: +20 mana' : s >= 6 ? 'It burns into a 7★ egg' : 'Hatches: a random turret +1★', { ev: 'moi', cham: 0.6 }]] }, // quả trứng (đầu ảnh trung_*, skills2.js)
   cauvong: { kieu: 'ht', q: Q.dong(6, 0.6, 9), truoc: (T) => { T.nap = 0.85; }, c: [[0.2, 'Paints a rainbow trail'], [1.6, 'Enemies on it take more damage', { cham: 0.5 }], [3.4, 'PvP: it paints the rival\'s path instead']] },
   wallgen: { kieu: 'ghep', q: Q.dong(6, 0.55, 12), ke: [[8, 'wallgen', 's']], keo: [4.6, 7, 8], truoc: (T) => { T.nap = 0.7; }, c: [[0.2, 'Puts a wall on the path'], [2.6, 'Wall stops enemies, then explodes', { cham: 0.6 }], [3.6, 'Merge two Wall Projectors'], [4.6, 'Merging: a Golden Wall, ×6 blast', { cham: 0.6 }]], dai: 11 },
@@ -307,7 +307,7 @@ const SD_GD = {
   hopbi: ['Weak card shard poke', 'Three spinning bolts at once', 'Stops shooting: about to open'],
   tienhoa: ['Small egg', 'Growing egg', 'About to hatch'],
   lophanung: ['Cold aura, no shots', 'Aura deepens, freeze charging', 'Ice storm ready: tap to freeze'],
-  soi: ['(no Pup stage)', 'Normal: one barrel, 1 shot every 1.8s', 'Awakened: 3-shot volley every 1.2s, always crits'],
+  soi: ['(no Pup stage)', 'Normal: one barrel, 1 shot every 1.8s, splash 40%', 'Awakened: 3-shot volley every 1.2s, always crits, splash 50%'],
   orbital: ['Standby: no shots', 'Uplink: 2+ Orbitals', 'Awake: drops bombs on enemies'],
   cuongno: ['Normal yellow tracers', 'Rage: hotter, faster rounds', 'Frenzy: twin rounds, fire bursts'],
   ngoisao: ['Small star shards', 'Star shards fly in pairs', 'Comets, and meteors every 5th'],

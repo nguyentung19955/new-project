@@ -611,3 +611,6 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 
 ## claude/demo-hop-tuong — Chiêu trùm nhắm ụ NGẪU NHIÊN (08/11)
 - Nightmare bắn tỉa 1 ụ ngẫu nhiên (bỏ "ụ nhiều sao nhất"); Jammer phần ngoài ụ Hỗ trợ chọn ngẫu nhiên (bỏ xếp sao); Mad Crown/Octopus/Janus/Joker chọn ngẫu nhiên trong ụ KHÔNG khoá (đủ số trúng); Star Leech giữ nhắm ụ mạnh nhất (bản sắc). RNG rngTrum có hạt — online tất định.
+
+## claude/demo-hop-tuong — Sói Máy: ĐÁNH LAN (08/11)
+- Sói Máy (`soi`, skills2.js): mỗi viên trúng lan 40% sát thương lên quái trong 0.6 ô (thức tỉnh 50% · 0.8 ô); lan chỉ chí mạng khi viên chính chí mạng; D 55 → 52 (đơn mục tiêu −5%, +1 quái lân cận +32%/+42%, +2 quái +70%/+89%); VFX `HU.soiLan` vòng sóng + 3 vết vuốt giữa điểm trúng; tất định (không Math.random).

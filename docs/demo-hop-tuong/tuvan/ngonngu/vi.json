@@ -5393,5 +5393,16 @@
 "TAP THE HYDRA CARD (# mana, x# each use): ALL Hydras #★+ — this one: shots twice as fast for #s": "CHẠM THẺ HYDRA (# mana, x# mỗi lần): MỌI Hydra #★+ — ụ này: bắn nhanh gấp đôi trong # s",
 "TAP THE HYDRA CARD (# mana, x# each use): ALL Hydras #★+ — this one: shots twice as fast for #s.": "CHẠM THẺ HYDRA (# mana, x# mỗi lần): MỌI Hydra #★+ — ụ này: bắn nhanh gấp đôi trong # s.",
 "card skill works from #★": "kỹ năng thẻ dùng được từ #★",
-"card skill works from #★.": "kỹ năng thẻ dùng được từ #★."
+"card skill works from #★.": "kỹ năng thẻ dùng được từ #★.",
+"splash #% to enemies within # tile (crits only if the shot crits)": "đánh lan #% lên quái trong # ô (chỉ chí mạng khi viên chính chí mạng)",
+"splash #% to enemies within # tile": "đánh lan #% lên quái trong # ô",
+"Every hit splashes #% damage to enemies within # tile": "Mỗi đòn trúng đánh lan #% sát thương lên quái trong # ô",
+"Every hit splashes #% damage to enemies within # tile.": "Mỗi đòn trúng đánh lan #% sát thương lên quái trong # ô.",
+"Each Summon or Merge has a #% chance to come out AWAKENED: the mouth opens # barrels, a #-shot volley every #s that always crits, splash #% within # tile": "Mỗi lần Triệu hồi hoặc Ghép có #% ra bản THỨC TỈNH: há mồm # nòng, loạt # viên mỗi # s, luôn chí mạng, đánh lan #% trong # ô",
+"Each Summon or Merge has a #% chance to come out awakened: the mouth opens # barrels, a #-shot volley every #s that always crits, splash #% within # tile": "Mỗi lần Triệu hồi hoặc Ghép có #% ra bản thức tỉnh: há mồm # nòng, loạt # viên mỗi # s, luôn chí mạng, đánh lan #% trong # ô",
+"Each Summon or Merge has a #% chance to come out awakened: the mouth opens # barrels, a #-shot volley every #s that always crits, splash #% within # tile.": "Mỗi lần Triệu hồi hoặc Ghép có #% ra bản thức tỉnh: há mồm # nòng, loạt # viên mỗi # s, luôn chí mạng, đánh lan #% trong # ô.",
+"Awakened: # barrels, always crits, wider splash": "Thức tỉnh: # nòng, luôn chí mạng, lan rộng hơn",
+"Normal: one barrel, # shot every #s, splash #%": "Bản thường: 1 nòng, # phát mỗi # s, đánh lan #%",
+"Awakened: #-shot volley every #s, always crits, splash #%": "Thức tỉnh: loạt # viên mỗi # s, luôn chí mạng, đánh lan #%",
+"Wolf gun. Normal: one barrel, a shot every #s. Every hit splashes #% damage to enemies within # tile. Each Summon or Merge has a #% chance to come out AWAKENED: the mouth opens # barrels, a #-shot volley every #s that always crits, splash #% within # tile": "Súng sói. Bản thường: 1 nòng, 1 phát mỗi # s. Mỗi đòn trúng đánh lan #% sát thương lên quái trong # ô. Mỗi lần Triệu hồi hoặc Ghép có #% ra bản THỨC TỈNH: há mồm # nòng, loạt # viên mỗi # s, luôn chí mạng, đánh lan #% trong # ô"
 }
