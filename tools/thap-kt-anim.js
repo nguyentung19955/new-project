@@ -27,7 +27,7 @@ const BASE = process.argv[2] || 'http://localhost:8765/thap/';
     const chay = (moi, N) => {
       const r0 = Math.random, rLuat = lcg(12345), rVe = lcg(999);
       Math.random = rLuat;
-      G.dung = true; G.t = 0; G.tocDo = 1; B.tim = 1e9; G.quai.length = 0; G.hang.length = 0; G.dan.length = 0; G.hu.length = 0; FX.reset(); AN._lac.length = 0; REN.t = 0;
+      G.dung = true; G.hat = 424242; G.uid = 1e6; for (const k of Object.keys(B)) if (/^_[a-zA-Z]+(N|R)$/.test(k) && typeof B[k] === 'number') B[k] = 0; G.t = 0; G.tocDo = 1; B.tim = 1e9; G.quai.length = 0; G.hang.length = 0; G.dan.length = 0; G.hu.length = 0; FX.reset(); AN._lac.length = 0; REN.t = 0;
       for (let o = 0; o < 15; o++) { B.t[o] = sinhU(taoU(B, ids[o], 4, o)); B.t[o].goc = -Math.PI / 2; }
       for (let i = 0; i < 24; i++) { const E = sinhQuai('bo', 0, p0.len * (0.12 + (i % 12) * 0.06), 4000); E.vao = 1;[E.x, E.y, E.goc] = viTri(p0, E.s); }
       const mau = [], banEv = [], dan = [];
