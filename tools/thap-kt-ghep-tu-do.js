@@ -47,8 +47,8 @@ for (const [sa, sb, kq] of CAP) {
   R(`var Wl = dat(7, 'tudo', ${sa}), X = dat(8, 'tia', ${sb}), h = hopLeGhep(Wl, X), r = ghep(B, Wl, X);`);
   ok(R(`h && r && B.t[8] === r && !B.t[7] && r.sao === ${kq} && saoGhep(dat(1, 'tudo', ${sa}), dat(2, 'lien', ${sb})) === ${kq} && _d.includes(r.id)`), `${sa}★ Wild + ${sb}★ Sniper → ${kq}★ ụ ngẫu nhiên trong bộ`, R('JSON.stringify([h, r && r.id, r && r.sao])'));
 }
-tran(DECK); R('var X = dat(3, "lien", 5), Wl = dat(4, "tudo", 2), r = ghep(B, X, Wl);');
-ok(R('r && B.t[4] === r && !B.t[3] && r.sao === 4'), 'chiều ngược: kéo ụ thường lên Wild Link cũng ghép (5★ + 2★ → 4★)', R('JSON.stringify([r && r.sao])'));
+tran(DECK); R('var X = dat(3, "lien", 5), Wl = dat(4, "tudo", 2), h = hopLeGhep(X, Wl), C3 = dat(5, "saochep", 3), Wc = dat(6, "tudo", 2), hc = hopLeGhep(C3, Wc);');
+ok(R('!h && !hc'), 'MỘT CHIỀU (08/11): kéo ụ thường / Copycat 3★ lên Wild Link 2★ KHÔNG ghép', R('JSON.stringify([h, hc])'));
 tran(DECK); R('var a = dat(0, "tudo", 3), b = dat(1, "tudo", 5);');
 ok(R('hopLeGhep(a, b) && ghep(B, a, b).sao >= 4'), 'Wild + Wild khác sao ghép được (3★ + 5★ → 4★)');
 
@@ -67,9 +67,9 @@ R('var Wf = dat(5, "tudo", 2); Wf.st.bang = 5; var Xf = dat(6, "lien", 2);'); ok
 
 tran(['tudo', 'canon', 'bienmau', 'cobac', 'lien']);
 R('var Cn = dat(0, "canon", 4); Cn.hb = 15; Cn.cmC = 3; var Wl = dat(1, "tudo", 4); var Pm = dat(2, "bienmau", 5); Pm.pf = 2; Pm.pm = 1; var W2 = dat(3, "tudo", 3); var Ls = dat(4, "cobac", 2); var W3 = dat(5, "tudo", 2);');
-ok(R('hopLeGhep(Wl, Cn) && hopLeGhep(Cn, Wl) && hopLeGhep(W2, Pm) && hopLeGhep(Pm, W2) && hopLeGhep(W3, Ls)'), 'Pháo La Bàn / mặt nạ Prism / Lucky Slot ghép được với Wild Link (2 chiều)');
-R('var n0 = (G.cbLog || []).length, rc = ghep(B, Cn, Wl), rp = ghep(B, W2, Pm), rl = ghep(B, W3, Ls);'); buoc(0.1);
-ok(R('rc && B.t[1] === rc && !B.t[0] && rc.sao === 4 && !(rc.id === "canon" && (rc.cmC | 0) > 0)'), 'La Bàn NSWE+3 stack + Wild → ụ ngẫu nhiên 4★, không mang stack', R('JSON.stringify([rc && rc.id, rc && rc.hb, rc && rc.cmC])'));
+ok(R('hopLeGhep(Wl, Cn) && !hopLeGhep(Cn, Wl) && hopLeGhep(W2, Pm) && !hopLeGhep(Pm, W2) && hopLeGhep(W3, Ls)'), 'Wild Link kéo lên La Bàn / mặt nạ Prism / Lucky Slot: ghép được (chiều ngược: không)');
+R('var n0 = (G.cbLog || []).length, rc = ghep(B, Wl, Cn), rp = ghep(B, W2, Pm), rl = ghep(B, W3, Ls);'); buoc(0.1);
+ok(R('rc && B.t[0] === rc && !B.t[1] && rc.sao === 4 && !(rc.id === "canon" && (rc.cmC | 0) > 0)'), 'La Bàn NSWE+3 stack + Wild → ụ ngẫu nhiên 4★, không mang stack', R('JSON.stringify([rc && rc.id, rc && rc.hb, rc && rc.cmC])'));
 ok(R('rp && B.t[2] === rp && rp.sao === 4 && !(rp.id === "bienmau" && rp.pf > 0)'), 'mặt nạ Prism + Wild → ụ ngẫu nhiên 4★, không mang hợp thể', R('JSON.stringify([rp && rp.id, rp && rp.pf])'));
 ok(R('rl && B.t[4] === rl && rl.sao === 2'), 'Lucky Slot + Wild → ụ ngẫu nhiên 2★');
 // dạng ngẫu nhiên lúc sinh quay lại: ép kết quả là Pháo La Bàn / Prism / Lucky Slot
@@ -83,8 +83,8 @@ tran(DECK);
 R('var ng = B.ghepN | 0, Wl = dat(7, "tudo", 3), T = dat(8, "sinhdoi", 4), th = laGhepThat(Wl, T); var nTw = 0, _sd = sinhDoi; sinhDoi = function (BB, s) { nTw++; G._swS = s; return _sd.apply(this, arguments); }; var r = ghep(B, Wl, T); sinhDoi = _sd;');
 ok(R('th && (B.ghepN | 0) === ng + 1'), 'laGhepThat = true, bộ đếm ghép +1', R('JSON.stringify([th, B.ghepN, ng])'));
 ok(R('nTw === 1 && G._swS === 4 && B.t.filter(X => X && X !== r).length === 1 && B.t.find(X => X && X !== r).sao >= 4'), 'Twin Maker 4★ + Wild 3★: kỹ năng chạy ĐÚNG 1 lần, gọi thêm ụ 4★ (⌈3,5⌉; 10%+: 5★)', R('JSON.stringify([nTw, G._swS, B.t.filter(Boolean).map(X => X.id + X.sao)])'));
-tran(DECK); R('var Wl = dat(7, "tudo", 2), T = dat(8, "sinhdoi", 2), n = 0, _g = SKILLS.sinhdoi.ghep; SKILLS.sinhdoi.ghep = function () { n++; return _g.apply(this, arguments); }; ghep(B, T, Wl); SKILLS.sinhdoi.ghep = _g;');
-ok(R('n === 1 && B.t.filter(Boolean).length === 2'), 'kéo Twin Maker lên Wild Link: cũng kích hoạt 1 lần');
+tran(DECK); R('var Wl = dat(7, "tudo", 2), T = dat(8, "sinhdoi", 2), n = 0, _g = SKILLS.sinhdoi.ghep; SKILLS.sinhdoi.ghep = function () { n++; return _g.apply(this, arguments); }; var hT = hopLeGhep(T, Wl); SKILLS.sinhdoi.ghep = _g;');
+ok(R('!hT'), 'kéo Twin Maker lên Wild Link: KHÔNG ghép (một chiều)');
 tran(['tudo', 'nhanmana', 'lien', 'tia', 'set']); R('var Wl = dat(0, "tudo", 1), M = dat(1, "nhanmana", 3), m0 = B.mana; ghep(B, Wl, M);');
 ok(R('B.mana - m0 === SKILLS.nhanmana.luong(2, B)'), 'Mana Doubler 3★ + Wild 1★: mana như ghép 2★ (sao trung bình)', R('JSON.stringify([B.mana - m0, SKILLS.nhanmana.luong(2, B)])'));
 tran(['tudo', 'luutru', 'lien', 'tia', 'set']); R('var A = dat(14, "luutru", 2); A.st.da = false; var ar0 = JSON.stringify([A.luu, A.ld, A.n]); var Wl = dat(0, "tudo", 1), X = dat(1, "lien", 5); ghep(B, Wl, X);');

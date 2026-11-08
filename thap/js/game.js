@@ -201,9 +201,9 @@ function ghepDBHop(a, b) {
 //   08/11 người dùng chốt thêm: ghép được cả ụ ĐÁ / BĂNG (kết quả = ụ thường, hết khoá) và Pháo La Bàn / Prism Thief (cả mặt nạ hợp thể) / Lucky Slot
 //   → ra 1 ụ NGẪU NHIÊN mới (không chạy luật tổ hợp/hợp thể riêng, không mang stack; ụ mới quay lại dạng ngẫu nhiên lúc sinh).
 //   Wild Link phải KHÔNG bị khoá; ụ KÉO bị khoá không dùng được (luật nguồn khoá giữ nguyên). Wild Link đá + đá cùng sao: luật đá thường (ra đá +1★).
-function tdW(a, b) { // Wild Link đang có hiệu lực trong cặp a (kéo) → b, hoặc null
+function tdW(a, b) { // Wild Link đang có hiệu lực khi chính nó là ụ KÉO (a), hoặc null
   if (!a || !b || a === b || biKhoa(a)) return null;
-  return a.id === 'tudo' ? a : b.id === 'tudo' && !biKhoa(b) ? b : null;
+  return a.id === 'tudo' ? a : null; // 08/11 người dùng: MỘT CHIỀU — chỉ Wild Link KÉO lên ụ khác; ụ khác (kể cả Copycat) thả lên Wild Link thì theo luật thường
 }
 function laTuDo(a, b) { return !!tdW(a, b); }
 // sao kết quả ghép a → b (đường ghép thường): Wild Link ⌈trung bình⌉, còn lại +1★ (không tính xác suất +1★ cấp thẻ)
