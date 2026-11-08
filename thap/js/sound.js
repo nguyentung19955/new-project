@@ -680,6 +680,16 @@ const SND = (() => {
     quay() { const v = V('quay', 2); if (!v) return; const t = v.t;
       let tt = t; for (let i = 0; i < 12; i++) { burst(v, tt, 0.01, 0.14, 'bandpass', 2600 - i * 60, 5); tone(v, 'square', 1300 - i * 30, 0, tt, 0.012, 0.03); tt += 0.035 + i * i * 0.0012; }
       fin(v); },
+    // ---- LUCKY SLOT 3 ô (jackpot.js): cuộn tích-tích đều trong d giây · "cạch" mỗi ô dừng (cao dần trái → phải) · chuông cặp · "hụt" khác hết ----
+    cbCuon(d) { const v = V('cbCuon', 1); if (!v) return; const t = v.t, n = Math.max(4, Math.round((d || 1.2) / 0.055));
+      for (let i = 0; i < n; i++) { const tt = t + i * 0.055; burst(v, tt, 0.008, 0.09, 'bandpass', 2800 + (i % 3) * 300, 6); tone(v, 'square', 1500 + (i % 3) * 120, 0, tt, 0.01, 0.018); }
+      fin(v); },
+    cbDung(j) { const v = V('cbDung', 2); if (!v) return; const t = v.t, f = [180, 200, 225][j | 0] || 180;
+      tone(v, 'sine', f, f * 0.5, t, 0.09, 0.32); burst(v, t, 0.03, 0.22, 'bandpass', 1400 + (j | 0) * 250, 3); tone(v, 'square', f * 6, 0, t, 0.02, 0.05); gui(v, 0.15); fin(v); },
+    cbCap(f) { const v = V('cbCap', 2); if (!v) return; const t = v.t, r = [659, 587, 784][f | 0] || 659;
+      [0, 4, 7, 12].forEach((s, i) => tone(v, 'triangle', r * Math.pow(2, s / 12), 0, t + i * 0.06, 0.22, 0.07)); tone(v, 'sine', r * 4, 0, t + 0.22, 0.4, 0.04); gui(v, 0.35); fin(v); },
+    cbHut() { const v = V('cbHut', 1); if (!v) return; const t = v.t;
+      tone(v, 'square', 330, 220, t, 0.16, 0.05); tone(v, 'square', 262, 175, t + 0.15, 0.22, 0.05); fin(v); },
     // tua băng ngược (REWIND): quét cao độ giảm + rè + chuông lớn
     tua() { const v = V('tua', 2); if (!v) return; const t = v.t;
       const f = loc(v, 'bandpass', 3000, 2); f.frequency.setValueAtTime(3500, t); f.frequency.exponentialRampToValueAtTime(400, t + 0.6); f.connect(v.out);
