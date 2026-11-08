@@ -53,7 +53,7 @@ async function chup(b, id, cu) {
       const E = window.__E;
       if (viec === 're') { E.s = window.__goc - 45; }
       if (viec === 'chieu') { // đặt ụ để trùm có mục tiêu, tung chiêu ngay
-        for (const B of G.ban) for (let i = 0; i < 15; i++) { B.t[i] = sinhU(taoU(B, B.deck[i % 4], 1, i)); B.t[i].vxA = null; B.t[i].cd = 1e9; B.t[i].hoi = 1e9; }
+        for (const B of G.ban) for (let i = 0; i < 15; i++) { B.t[i] = sinhU(taoU(B, B.deck[i % 4], 2, i)); B.t[i].vxA = null; B.t[i].cd = 1e9; B.t[i].hoi = 1e9; } // 2★: STAR LEECH chỉ nhắm ụ ≥2★
         E.knT = 0.01; E.bao = null;
       }
       if (E.khien) { E.khien.on = false; E.khien.be = 0; }
