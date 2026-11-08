@@ -310,7 +310,7 @@ SKILLS.cuuvi = {
     while (T.trumAcc >= E.max * 0.08) { T.trumAcc -= E.max * 0.08; n++; }
     if (n) this.them(T, n);
   },
-  ghep(G, B, a, b, ra) { if (ra.id === 'cuuvi') { ra.duoi = Math.max(a.id === 'cuuvi' ? a.duoi || 0 : 0, b.id === 'cuuvi' ? b.duoi || 0 : 0); if (ra.duoi >= 9) ra.duoi = 8; } },
+  // (09/11 Q1 = A: bỏ "ghép giữ số đuôi lớn hơn" — ghép thường ra Nine-Tail là ụ MỚI, đuôi / số lần xả về 0)
   ban(G, B, T, E) {
     const thuc = T.sao >= 7; giat(T, 0.6); chopNong(T, 22); SND.lien();
     const dmg = dmgU(T);
@@ -402,7 +402,7 @@ SKILLS.pandora = {
       FX.sang(0.18, '#bff4ff'); SND.bang();
       // PVP: không gửi quái sang đối thủ (2 bên cùng wave)
     }
-    if (k === 'sao') for (const X of cacBan) { const ds = X.t.filter(N => N && N.sao < LUAT.saoMax && !N.st.da); if (ds.length) { const r = rngHat((((typeof ONS !== 'undefined' && ONS.on ? ONS.seed : G.hat) || 1) * 4513 + (X === B ? 0 : 7919) + (B.ghepN | 0) * 104729 + sao * 31) | 0), N = ds[Math.floor(r() * ds.length)], /* tất định (online: 2 máy chọn cùng ô) — +★ TẠI CHỖ, không phải ghép */ n = X.o[N.o]; tiaPhep(c.x, c.y, n.x, n.y, '#ffe46b'); nangSao(X, N, 1, X === B ? 'VAULT STAR' : 'ALLY STAR'); } }
+    if (k === 'sao') for (const X of cacBan) { const ds = X.t.filter(nhanSaoTuDong); if (ds.length) { const r = rngHat((((typeof ONS !== 'undefined' && ONS.on ? ONS.seed : G.hat) || 1) * 4513 + (X === B ? 0 : 7919) + (B.ghepN | 0) * 104729 + sao * 31) | 0), N = ds[Math.floor(r() * ds.length)], /* tất định (online: 2 máy chọn cùng ô) — +★ TẠI CHỖ, không phải ghép */ n = X.o[N.o]; tiaPhep(c.x, c.y, n.x, n.y, '#ffe46b'); nangSao(X, N, 1, X === B ? 'VAULT STAR' : 'ALLY STAR'); } }
     if (k === 'bom') {
       const dmg = hsU('pandora', sao, B) * (3 + sao) * 1.2 * (B.cuong > 0 ? 2 : 1), /* ×1.2: 08/11 bù ROYAL VAULT */ ds = quaiTheoDau(B).slice(0, 5); /* 3 → 5 bom (đo bậc 06/11) */ // chỉ huy RAGE ×2 cũng áp lên bom hộp
       for (const E of ds) banDan({ img: 'dan_phao', x: c.x, y: c.y, muc: E, px: E.x, py: E.y, sp: 300, co: 18, cong: 60, B, T: null, duoi: true,
