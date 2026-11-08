@@ -3747,3 +3747,5 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - **NT9** `rngLuat(B, muối, ô)` (hạt trận + NGƯỜI chơi + bộ đếm) thay Math.random cho ụ ra ghép thường, ô/loại triệu hồi, Twin Maker offline, Hộp Bí Ẩn, Scrambler + Signal Jammer PVP (2 máy cùng ô, cùng loại). Còn Math.random chiến đấu (chí mạng, Dice Gun, hỗ trợ giết ngay/choáng, hồi chiêu đầu) — không đổi bàn.
 - **F14** cờ ô online mới: ABYSS, đuôi Nine-Tail, Nemesis, Genesis, Hive, khiên, Aurora, cháy, kẹp.
 - Chưa làm: F18 (chữ thẻ sao ghép cùng loại). Test mới `tools/thap-kt-nguyen-tac.js` (52 ca); sửa kỳ vọng cũ: `ban-sao-giu` (ghép thường X + X luôn thật), `cong-huong-luat`, `matran` (F19 + MK + Copycat/khiên + Pháo NSWE), `vang-g2` B5-4, `rong-may`, `ngau-nhien-sinh`, `conghuong2`, `kynang-vd` (Nine-Tail).
+
+- 08/11 (người dùng): ghép 2 Ember mà ngẫu nhiên ra Ember → Ember mới có **0 lửa** (không phải = ★). Sửa 1 dòng trong `ghep()` (game.js), áp cả bàn con rối online (apGhep gọi ghep).

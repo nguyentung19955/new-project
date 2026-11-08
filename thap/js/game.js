@@ -265,6 +265,7 @@ function ghep(B, a, b, ep) {
   if (daDa) ra.st.da = true;
   B2.t[a.o] = null; B2.t[b.o] = ra;
   ra.goc = b.goc;
+  if (ra.id === 'lualien' && a.id === 'lualien' && b.id === 'lualien') ra.lc = 0; // 08/11 người dùng: 2 Ember ghép ra Ember = Ember MỚI, 0 lửa (lửa A + C chỉ truyền cho Ember khác)
   if (coMimic) ra.aurora = 8; // Aurora: ghép xong được buff tấn công
   // hiệu ứng ghép (thời gian thực): ụ kéo bay vòng cung → nén → chớp → quay số thẻ → lộ kết quả bật nảy + sóng tròn + huy hiệu sao
   VX.ghep(B2, a, b, ra);
