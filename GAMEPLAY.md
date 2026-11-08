@@ -629,3 +629,6 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - Online: cờ ô 'B' Máu · 'P' dạng · 'Q' đếm phát (nova tất định) · 'M'/'C' dấu. AI: còn ≤ 2 ô trống → đánh dấu ụ lẻ (không có cặp ghép) ≤4★ sao thấp; bàn đầy hết cặp → ụ sao thấp nhất.
 - Cân bằng (sim 30 s, wave 20, 4★/7★ DPS): Blood 20: 438/1325 · 50: 1227/3683 · 100: 5691/15658 · 200: chạm trần sim (20520) — so Ember 50: 2038/7020, Ember 70: 4521/10434, Compass NSWE st3: 7352/20437, Prism hợp thể 2 đầy: 2047/5358.
 - Test: Blood trong `tools/thap-kt-vang-g2.js` (đạt; ca Ember Wild Link lỗi sẵn từ trước), `thap-kt-vang-moi2.js` đổi kỳ vọng dòng CARD LV.
+
+## claude/demo-hop-tuong — sửa chạm trứng cháy (08/11)
+- Chạm trứng cháy 7★ (Evolver) luôn tái chế +20 mana — kể cả trứng bị băng/đá/câm (`chamSan`, game.js) và ngón tay rung ≤ 10 px vẫn là chạm (ui.js); ụ có ▶ chạm = dùng chiêu, không mở dải; dải xem Evolver ghi rõ giây nở / trứng cháy chạm +20 mana.

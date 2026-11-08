@@ -187,6 +187,13 @@ function sinhDoi(B, sao, oNguon, ep) {
 // ụ bị KHOÁ (hoá đá / đóng băng) không tự dùng kỹ năng; nhưng ụ KHOẺ kéo lên nó vẫn dùng được kỹ năng chỉ đổi SAO hoặc CHỖ
 // (ghepDB.quaKhoa: Merge King +★, Teleporter đổi chỗ) — luật DCDW: Aurora King nâng sao ô đá → 2 ô đá cùng sao ghép với nhau.
 function biKhoa(T) { return !!(T && (T.st.da || T.st.bang > 0)); }
+// chạm ụ trên bàn mình = dùng chiêu (có ▶) thay vì mở dải thông tin: chiêu chủ động nạp đầy, không bị khoá.
+// Trứng cháy (Evolver): luôn chạm tái chế được — kể cả bị băng/đá/câm (trứng không bắn; trùm wave cao hay khoá ụ ngẫu nhiên).
+function chamSan(T) {
+  const sk = T && SKILLS[T.id]; if (!sk || !sk.chuDong) return false;
+  if (T.id === 'tienhoa') return sk.chay(T);
+  return T.nap >= 1 && !biKhoa(T);
+}
 function ghepDBHop(a, b) {
   if (!a || !b || a === b || biKhoa(a)) return null; // ụ kéo bị khoá: không dùng kỹ năng
   const db = ghepDacBiet(a, b);

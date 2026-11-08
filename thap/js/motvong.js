@@ -59,7 +59,7 @@ const MV = {
   // ---------- icon CHẠM khi chiêu chủ động đầy (chỉ bàn mình chạm được) ----------
   veTay(ctx, h) {
     const T = h.T, sk = SKILLS[T.id], B = h.B || G.ban[T.ban];
-    if (!sk || !sk.chuDong || (T.sao < 3 && !sk.chuDongMoiSao) || !(T.nap >= 1) || T.st.da || T.st.bang > 0 || !B || B.ai || B !== G.ban[0]) return;
+    if (!sk || !sk.chuDong || (T.sao < 3 && !sk.chuDongMoiSao) || !(typeof chamSan === 'function' ? chamSan(T) : T.nap >= 1 && !T.st.da && !(T.st.bang > 0)) || !B || B.ai || B !== G.ban[0]) return;
     const im = (this.CO_TAY && REN.img(this.TAY)) || REN.img('ic_phat'); if (!im) return;
     const t = typeof REN.t === 'number' ? REN.t : G.t, nay = 1 + 0.08 * Math.sin(t * 6);
     REN.anhGiua(ctx, im, h.gx, h.gy + Math.sin(t * 6) * h.d * 0.05, h.d * 0.95 * nay, 0, h.al);

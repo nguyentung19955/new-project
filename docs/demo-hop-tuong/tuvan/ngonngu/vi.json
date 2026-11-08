@@ -5435,5 +5435,7 @@
 "new forms at # / # / # Blood: bigger bolts, more damage": "đổi dạng ở # / # / # Máu: đạn to hơn, sát thương cao hơn",
 "# Blood: every #th shot is a blood nova (# Blood: every #th)": "# Máu: cứ phát thứ # là 1 nova máu (# Máu: mỗi phát thứ #)",
 "Blood # (SANGUINE SOVEREIGN) → +#% damage, +#% fire rate, +#% crit chance, +#% crit damage": "Máu # (SANGUINE SOVEREIGN) → +#% sát thương, +#% tốc bắn, +#% tỉ lệ chí mạng, +#% ST chí mạng",
-"each Blood: +#% damage, +#% fire rate, +#% crit (max #%), +#% crit damage, no limit": "mỗi Máu: +#% sát thương, +#% tốc bắn, +#% chí mạng (tối đa #%), +#% ST chí mạng, không giới hạn"
+"each Blood: +#% damage, +#% fire rate, +#% crit (max #%), +#% crit damage, no limit": "mỗi Máu: +#% sát thương, +#% tốc bắn, +#% chí mạng (tối đa #%), +#% ST chí mạng, không giới hạn",
+"Burnt egg: tap it for +# mana": "Trứng cháy: chạm để lấy +# mana",
+"Hatches in #s → +#★ turret · #★ burns: tap +# mana": "Nở sau # s → ụ +#★ · #★ cháy: chạm +# mana"
 }
