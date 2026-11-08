@@ -617,3 +617,7 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 
 ## claude/demo-hop-tuong — Trùm: không bị cắt ở làn mép, bỏ bóng 3 cánh Prism, chớp tung chiêu dịu (08/11)
 - Trùm làn sát mép canvas (x≈27 / x≈404) vẽ lùi vào trong cho trọn thân (chỉ hình, vị trí gameplay giữ nguyên; quaianim.js trumLech); vòng khiên Prism chỉ vẽ khi khiên bật (trumvfx.js); chớp tung chiêu = lớp sáng cộng ~42–50%/0,12 s thay phủ trắng đặc, chớp trúng đòn nhẹ hơn (0,45→0,3).
+
+## claude/demo-hop-tuong — Copycat chép cả ô ĐÁ, KHÔNG chép ô BĂNG (08/11, chốt lại)
+
+- Người dùng: "copy cả đá nhé, không cho copy băng thôi" — Copycat kéo lên ô đá cùng sao ra bản sao thường đúng loại thật (ô đá giữ nguyên); ô đóng băng không chép được (`SKILLS.saochep.ghepDB.hopLe` chặn `b.st.bang > 0`); chữ kỹ năng EN/VI, roster cập nhật; test `tools/thap-kt-copycat-da.js`, `tools/thap-kt-conghuong.js`.
