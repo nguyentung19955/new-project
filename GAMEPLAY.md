@@ -3681,6 +3681,7 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
   - Theo thời gian thực / quãng đường (không đếm khung) → 30/60 FPS, 1×/3× như nhau. Thanh máu, quầng báo chiêu, dấu trạng thái giữ chỗ cũ. Gameplay không đổi.
 - GIF trước | sau 390×844 (đi 1×, 3× + rẽ, chiêu, trúng, chết) + bảng khung + ảnh trong trận: `docs/demo-hop-tuong/tuvan/trum-anim-code/` (dựng lại: `tools/thap-chup-trumcode.js`, bước mô phỏng tay → tất định).
 - Test: thap-kt-trum-don XANH (1320 tình huống) · thap-kt-anim XANH · thap-kt-vfx-p0 XANH.
+- Thêm **freezer** (khối băng nhảy, dẻo 0,6: lõi bông tuyết bùng sáng + 2 cụm sương toả ở đất lúc chạm) và **joker_king** (hộp + NẮP rời `_m_nap`: lạch cạch khi chạm đất, lấy đà rung hé, tung chiêu bật mở lộ lò xo rồi sập) — ảnh cắt bằng `tools/thap-trum-master-nhay2.py`, GIF `trum-anim-code/{freezer,joker_king}_truoc-sau.gif`; test trum-don/anim/vfx-p0 XANH.
 
 ## claude/demo-hop-tuong — Bỏ vòng sáng khoanh ụ cùng loại khi chạm thẻ khay trận (08/11)
 

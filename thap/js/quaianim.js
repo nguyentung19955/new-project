@@ -31,7 +31,7 @@ const HUONG_HOA = 0.12;      // hoà 120 ms khi đổi hướng nhìn ở khúc 
 // tools/thap-trum-master.py) và chỉ biến đổi nó: hoa văn không thể trôi. Có cấu hình + ảnh gốc đã nạp → dùng; không → dải khung như cũ.
 //  kieu 'lan'  quả cầu LĂN: góc = quãng đường / bán kính (r = bán kính / cạnh ô); bóng sáng/tối cố định không xoay (PNG fx_cham_trang, cắt theo thân)
 //  kieu 'bay'  LƠ LỬNG: nhấp nhô sin, nghiêng theo hướng đi, giãn/nén khi rẽ, thở; bóng đất nhỏ lại khi lên cao
-//  kieu 'nhay' NHẢY (thạch): nhịp = nhip (lần/giây) + quãng đường / (buoc × cạnh ô), nén–giãn neo ở đáy; vương miện rời (vm = điểm neo) trễ nhịp
+//  kieu 'nhay' NHẢY (thạch; deo = hệ số nén–giãn, mặc định 1): nhịp = nhip (lần/giây) + quãng đường / (buoc × cạnh ô), nén–giãn neo ở đáy; vương miện rời (vm = điểm neo) trễ nhịp
 //  sang: lớp sáng trum_<id>_m_sang.png nhấp nháy ('lighter'), bùng lên lúc lấy đà chiêu. day = đáy thân / cạnh ô (neo nén–giãn).
 // Chiêu: lấy đà (nén, ngả ra sau, lõi sáng dần, rung) → tung lúc chiêu nổ (giãn + chớp + lao về bàn rồi lò xo về) → lắng. Trúng đòn: chớp trắng + nén.
 // Mọi thứ theo THỜI GIAN THỰC / QUÃNG ĐƯỜNG (không đếm khung) → 30/60 FPS, 1×/3× như nhau. Chỉ hình — mô phỏng không đổi.
@@ -39,6 +39,10 @@ const TRUM_ANIM_CODE = {
   hive: { kieu: 'lan', r: 0.457, day: 0.457, sang: 1 },
   prism: { kieu: 'bay', day: 0, sang: 1 },
   mad_crown: { kieu: 'nhay', day: 0.41, buoc: 0.6, nhip: 0.8, vm: [0.607, 0.431], sang: 1 },
+  // freezer: khối băng nặng, nhảy chậm hơn; lõi bông tuyết sáng theo nhịp + bùng lúc chạm đất; khoi = 2 cụm sương _m_khoi toả ra ở đất lúc chạm (tools/thap-trum-master-nhay2.py)
+  freezer: { kieu: 'nhay', day: 0.467, buoc: 0.66, nhip: 0.7, sang: 1, khoi: 1, deo: 0.6 },
+  // joker_king: hộp + NẮP rời _m_nap (neo = đáy giữa nắp) — nắp lạch cạch khi chạm đất, lấy đà chiêu nắp rung hé, tung chiêu nắp bật mở (lộ lò xo trong hộp) rồi sập về
+  joker_king: { kieu: 'nhay', day: 0.47, buoc: 0.6, nhip: 0.8, nap: [0.5, 0.68] },
 };
 const TRUM_ANIM_BAT = (() => { try { return new URLSearchParams(location.search).get('trumanim') !== '0'; } catch (e) { return true; } })(); // ?trumanim=0 → dải khung cũ (so sánh)
 const eoBack = (u) => { const c = 1.70158; u -= 1; return 1 + (c + 1) * u * u * u + c * u * u; };
@@ -127,7 +131,7 @@ Object.assign(REN, {
   // ---- trùm hoạt ảnh bằng code: tính trạng thái (trước khi vẽ bóng) — null nếu không áp dụng / ảnh gốc chưa nạp ----
   cdTinh(E, cf, co, kc, sc, he, t, dt, x, y) {
     const g = 'trum_' + E.trum + '_m';
-    if (!this.img(g) || (cf.sang && !this.img(g + '_sang')) || (cf.vm && !this.img(g + '_vm'))) return null;
+    if (!this.img(g) || (cf.sang && !this.img(g + '_sang')) || (cf.vm && !this.img(g + '_vm')) || (cf.nap && !this.img(g + '_nap')) || (cf.khoi && !this.img(g + '_khoi'))) return null;
     const Cb = co * kc, C = Cb * sc;
     // quãng đường thật (vị trí nội suy) + chiều lăn
     if (E._cdX == null) { E._cdX = x; E._cdY = y; E._cdQ = 0; E._cdA = 0; E._cdSg = 1; E._cdW = 0; E._cdG = E.gv != null ? E.gv : E.goc; E._cdL = 0; E._cdT = 0; }
@@ -141,12 +145,12 @@ Object.assign(REN, {
     if (dt > 0) E._cdW += (clamp(gocLech(E._cdG, gv) / dt, -6, 6) - E._cdW) * kd;
     E._cdG = gv;
     const R = { g, C, Cb, ox: 0, oy: 0, rot: 0, sx: 1, sy: 1, sang: 0.3, fl: he * he * 0.45, bs: 1, cao: 0 };
-    let nen = 0.06 * he; // trúng đòn: nén
+    let nen = 0.06 * he, wA = 0, rA = -1; // trúng đòn: nén · wA lấy đà 0..1 · rA giây từ lúc tung (−1: không)
     // ---- chiêu: lấy đà → tung (lúc chiêu nổ = E.bao vừa hết) → lắng ----
     const B = G.ban[E.ban], c = B && B.o && B.o[7], gb = c ? Math.atan2(c.y - y, c.x - x) : Math.PI / 2;
     if (E.bao) {
       const u = clamp(E.bao.t / (E.bao.song || 1.4), 0, 1), w = eoIO(Math.min(1, u / 0.9));
-      E._cdBao = 1; E._cdGb = gb;
+      E._cdBao = 1; E._cdGb = gb; wA = w;
       nen += 0.13 * w; R.sang += 0.9 * w;
       R.ox -= Math.cos(gb) * C * 0.05 * w; R.oy -= Math.sin(gb) * C * 0.05 * w; // lùi lấy đà
       R.rot -= Math.sign(Math.cos(gb) || 1) * 0.1 * w;                          // ngả ra sau
@@ -155,6 +159,7 @@ Object.assign(REN, {
     if (E._cdRel != null) {
       const r = t - E._cdRel;
       if (r < 0.6) {
+        rA = r;
         const lx = Math.exp(-7 * r) * Math.cos(17 * r), gb2 = E._cdGb != null ? E._cdGb : gb;
         nen -= 0.17 * lx;                                  // giãn bật ra rồi lò xo về
         const lao = Math.sin(Math.min(1, r / 0.09) * Math.PI / 2) * (1 - eoBack(Math.min(1, r / 0.6))) + Math.exp(-10 * r) * 0.6;
@@ -172,15 +177,27 @@ Object.assign(REN, {
       R.sx = (1 + tho + st) * (1 + nen * 0.8); R.sy = (1 + tho - st) * (1 - nen);
       R.sang += 0.25 + 0.25 * Math.sin(t * 3.3 + E.uid);
     } else if (cf.kieu === 'nhay') {
-      E._cdP = (E._cdP || 0) + (E.bao ? 0.15 : 1) * (dt * (cf.nhip || 0) + d / (cf.buoc * Cb)); // nhịp = nền theo giờ + theo quãng (3× nhảy dồn hơn); lấy đà chiêu: gần như đứng
+      const P0 = E._cdP || 0;
+      E._cdP = P0 + (E.bao ? 0.15 : 1) * (dt * (cf.nhip || 0) + d / (cf.buoc * Cb)); // nhịp = nền theo giờ + theo quãng (3× nhảy dồn hơn); lấy đà chiêu: gần như đứng
+      const kL = Math.floor(E._cdP - 0.85); // chạm đất ở pha k+0.85: nội suy đúng thời điểm trong khung → 30/60 FPS như nhau
+      if (kL > Math.floor(P0 - 0.85) && E._cdP > P0) E._cdLand = t - dt * (E._cdP - (kL + 0.85)) / (E._cdP - P0);
+      const rL = E._cdLand != null ? t - E._cdLand : 9;
       const u = E._cdP - Math.floor(E._cdP);
-      const [h, q] = nhipNhay(u), [, qL] = nhipNhay((u - 0.08 + 1) % 1);
-      R.cao = h; R.oy -= h * C * 0.14; R.bs = 1 - 0.35 * h;
+      const D = cf.deo || 1; // độ dẻo: khối băng cứng hơn thạch → nén/giãn ít hơn
+      let [h, q] = nhipNhay(u), [, qL] = nhipNhay((u - 0.08 + 1) % 1); q *= D; qL *= D; nen *= D;
+      R.cao = h; R.hop = h * C * 0.14; R.oy -= R.hop; R.bs = 1 - 0.35 * h;
       R.sx = 1 + (q + nen) * 0.85 + st; R.sy = 1 - q - nen;
       R.sxL = 1 + (qL + nen) * 0.85; R.syL = 1 - qL - nen; // vương miện theo nhịp trễ 8% → lắc theo quán tính
       R.vmRot = (qL - q) * 1.6 + Math.sin(t * 2.1 + E.uid) * 0.03;
       R.rot += clamp(E._cdW * 0.03, -0.08, 0.08);
       R.sang += 0.2 + 0.2 * Math.sin(t * 2.6 + E.uid);
+      if (cf.khoi) { R.khoi = rL; R.sang += 0.55 * Math.exp(-6 * rL) - 0.12; } // lõi băng: bùng lạnh lúc chạm đất, dịu khi bay
+      if (cf.nap) { // nắp rời: lạch cạch sau chạm đất · lấy đà: rung hé dần · tung: bật mở (lò xo) rồi sập về
+        let n = 0.045 * Math.exp(-9 * rL) * Math.abs(Math.sin(rL * 22));
+        n += wA * (0.02 + 0.025 * Math.abs(Math.sin(t * 31)));
+        if (rA >= 0) n += 0.11 * Math.sin(Math.min(1, rA / 0.08) * Math.PI / 2) * Math.exp(-4.5 * rA) * (1 + 0.25 * Math.cos(16 * rA));
+        R.nap = n; R.napRot = -Math.sign(Math.cos(gb) || 1) * n * 1.4;
+      }
     } else { // lan
       R.sx = 1 + nen * 0.85 + st * 0.5; R.sy = 1 - nen;
       R.sang += 0.15 + 0.15 * Math.sin(t * 2.4 + E.uid);
@@ -214,6 +231,23 @@ Object.assign(REN, {
       ctx.restore();
     }
     if (R.fl > 0.02) { const w = this.co(g, Cb, 'trang'); if (w) { ctx.globalAlpha = R.fl; if (xoay) ctx.rotate(xoay); ctx.drawImage(w, -C / 2, -C / 2, C, C); } }
+    if (cf.khoi && R.khoi < 0.55) { // sương chạm đất: 2 cụm toả ra 2 bên, neo ở ĐẤT (không theo độ nảy), tâm = tâm thân trên đường
+      const k = this.co(g + '_khoi', Cb);
+      if (k) {
+        const e = 1 - Math.pow(1 - R.khoi / 0.55, 2);
+        ctx.setTransform(M); ctx.translate(x + R.ox, y + R.oy + (R.hop || 0) + b); ctx.scale(0.85 + 0.45 * e, 0.8 + 0.3 * e);
+        ctx.globalAlpha = 0.9 * Math.pow(1 - R.khoi / 0.55, 1.5); ctx.drawImage(k, -C / 2, -C / 2 - b, C, C);
+      }
+    }
+    if (cf.nap) { // nắp rời: neo đáy giữa nắp theo nhịp TRỄ (như vương miện), nhấc lên R.nap × C và ngả về sau
+      const np = this.co(g + '_nap', Cb);
+      if (np) {
+        const px = (cf.nap[0] - 0.5) * C, py = (cf.nap[1] - 0.5) * C;
+        dat(0, 1, 1); ctx.translate(px * R.sxL, b + (py - b) * R.syL - (R.nap || 0) * C); ctx.rotate(R.vmRot * 0.5 + (R.napRot || 0));
+        ctx.globalAlpha = 1; ctx.drawImage(np, -C / 2 - px, -C / 2 - py, C, C);
+        if (R.fl > 0.02) { const w = this.co(g + '_nap', Cb, 'trang'); if (w) { ctx.globalAlpha = R.fl; ctx.drawImage(w, -C / 2 - px, -C / 2 - py, C, C); } }
+      }
+    }
     if (cf.vm) { // vương miện rời: đặt ở điểm neo đã biến đổi theo nhịp TRỄ, không nén (vật cứng)
       const vm = this.co(g + '_vm', Cb);
       if (vm) {
@@ -232,6 +266,7 @@ Object.assign(REN, {
     const x2 = c.getContext('2d'); x2.translate(n / 2, n / 2); if (cf.kieu === 'lan') x2.rotate(E._cdA || 0);
     x2.drawImage(than, -n / 2, -n / 2); x2.setTransform(1, 0, 0, 1, 0, 0);
     const vm = cf.vm && this.co(g + '_vm', co * kc); if (vm) x2.drawImage(vm, 0, 0, n, n);
+    const np = cf.nap && this.co(g + '_nap', co * kc); if (np) x2.drawImage(np, 0, 0, n, n);
     c.nf = 1; c.fm = n; c.gap = 0;
     return c;
   },
