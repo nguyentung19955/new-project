@@ -131,3 +131,7 @@ html body #bo-the .the.du::after { content: ''; position: absolute; z-index: 4; 
 html body #the-mv .mv-ten, html body #the-mv .mv-ten[style] { display: none !important; }
 /* trùm có CHÂN DUNG ChatGPT (trum.js TRUM_CHANDUNG): 1 khung, không chạy bước khung */
 #canh-bao .cb-sp[style*="nf: 1;"], #canh-bao .cb-sp[style*="nf:1;"] { animation: none !important; background-position: 50% 50%; }
+
+/* Hydra: thẻ khay = nút kích hoạt chung — xám khi thiếu mana / không có Hydra 3★+ sẵn sàng */
+html body #bo-the .the.hy-kich.hy-tat > *:not(.gia) { filter: grayscale(.85) brightness(.7); }
+html body #bo-the .the.hy-kich.hy-tat .gia { filter: grayscale(1); }

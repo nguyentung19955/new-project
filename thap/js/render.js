@@ -918,7 +918,7 @@ const REN = {
     if (!skT.veThemTren) veThem();
     const D = C0 * this.dauK(T.id, gd);
     // đầu súng VẼ RIÊNG (Sói Máy: đầu sói nhìn thẳng → xoay theo hướng bắn · Hydra: số đầu = số sao) — false = ảnh chưa tải → đầu cũ
-    const tuVe = !o.ghost && !!skT.veDau && skT.veDau(ctx, T, S, al, this, da);
+    const tuVe = (!o.ghost || !!skT.veDauGhost) && !!skT.veDau && skT.veDau(ctx, T, S, al, this, da); // veDauGhost: bản cầm kéo vẽ cùng kiểu đầu riêng (Hydra)
     const dau = tuVe ? null : this.co(this.dauTen(T.id, gd), D, da ? 'xam' : '');
     // animation hybrid (anim.js): thở / tụ lực / giật / hồi lò xo / xung hỗ trợ — hàm của thời gian sự kiện thật, không chặn phát bắn
     const AU = typeof AN !== 'undefined' && !o.ghost && !T.st.bang ? AN.u(T, D) : null;

@@ -241,8 +241,10 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       chu(elv, nlv); if (elv && elv._max !== (lv >= 5)) { elv._max = lv >= 5; elv.classList.toggle('lv-max', elv._max); } // '' / +1 / +2 / +3 / MAX (MAX vàng; ô giá ẩn khi tối đa)
       // số ụ loại này trên bàn: tấm đếm .dem-u (icon chồng ụ + số) — js/demkn.js
       const g = d._g || (d._g = d.querySelector('.gia b'));
-      const kn = !!(SKILLS[id] && SKILLS[id].khongNang), gp = g && g.parentElement; if (gp && (gp.style.visibility === 'hidden') !== kn) gp.style.visibility = kn ? 'hidden' : ''; // Hydra: không nâng bằng mana (ẩn ô giá)
-      if (kn) { chu(g, ''); d.classList.add('max'); d.classList.remove('du', 'thieu'); }
+      const tk = !!(SKILLS[id] && SKILLS[id].theKich) && typeof hydraGia === 'function'; // Hydra: thẻ khay = nút KÍCH HOẠT CHUNG (giá tăng gấp đôi mỗi lần)
+      const kn = !tk && !!(SKILLS[id] && SKILLS[id].khongNang), gp = g && g.parentElement; if (gp && (gp.style.visibility === 'hidden') !== kn) gp.style.visibility = kn ? 'hidden' : ''; // Lucky Slot: không nâng bằng mana (ẩn ô giá)
+      if (tk) { chu(g, hydraGia(B)); const ok = hydraCo(B); d.classList.remove('max'); d.classList.toggle('du', ok); d.classList.toggle('thieu', !ok); d.classList.toggle('hy-tat', !ok); d.classList.add('hy-kich'); }
+      else if (kn) { chu(g, ''); d.classList.add('max'); d.classList.remove('du', 'thieu'); }
       else if (lv >= 5) { chu(g, TEXT.ui.max); d.classList.add('max'); d.classList.remove('du', 'thieu'); }
       else { const gia = LUAT.giaNangCap[lv - 1]; chu(g, gia); d.classList.toggle('du', B.mana >= gia); d.classList.toggle('thieu', B.mana < gia); }
     });
@@ -428,7 +430,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       case 'ngaunhien': this.chon = deckNgauNhien(); SND.nut(); this.veBoChon(); break;
       case 'vao': this.vao(); break;
       case 'trieu': if (B && !G.ketThuc) { if (trieu(B)) SND.trieu(); } break;
-      case 'nang': if (this._boQuaBam) { this._boQuaBam = false; break; } if (B) { if (nangCap(B, el.dataset.id)) { el.classList.remove('sang'); void el.offsetWidth; el.classList.add('sang'); } } break;
+      case 'nang': if (this._boQuaBam) { this._boQuaBam = false; break; } if (B) { if (SKILLS[el.dataset.id] && SKILLS[el.dataset.id].theKich ? hydraKich(B) : nangCap(B, el.dataset.id)) { el.classList.remove('sang'); void el.offsetWidth; el.classList.add('sang'); } } break;
       case 'mv': if (this._boQuaMV) { this._boQuaMV = false; break; } if (B && !(typeof CHMU !== 'undefined' && CHMU.bat(B))) dungMV(B); break; // chỉ huy chạm-ô: vào chế độ ngắm (chihuy-moi.js)
       case 'tocdo': G.tocDo = G.tocDo >= 3 ? 1 : G.tocDo + 1; el.textContent = G.tocDo + '×'; break;
       case 'dung': this.huyKeo(); G.dung = true; $('#dung').hidden = false; $('#tt').hidden = true; break;

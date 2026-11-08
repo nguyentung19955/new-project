@@ -196,7 +196,7 @@ const SD_K = {
   nayda: { q: Q.hang(7, 205, 30, 6), lien: 1, c: [[0.2, 'Disc bounces between enemies'], [1.0, (T, s) => 'Bounces ' + s + (s > 1 ? ' times' : ' time') + ', stronger each', { ev: 'hit', cham: 0.7 }]] },
   combo: { kieu: 'ghep', ke: [[2, 'combo', 's']], c: [[0.2, 'Merge two Combo Cores'], [2.5, 'Every Combo Core gets stronger', { cham: 0.6 }]] },
   khoathoigian: { kieu: 'tc', q: Q.hang(3, 175, 50, 12), truoc: (T) => { T.nap = 0.86; }, c: [[0.2, 'Locks the first enemy in time'], [1.2, 'Damage is saved while locked', { cham: 0.5 }], [2.6, 'Lock ends: saved damage bursts', { ev: 'hit', cham: 0.5 }]] },
-  hydra: { q: Q.hang(7, 205, 28, 7), lien: 1, cham: [3.0], truoc: (T) => { T.nap = 0.95; T.napDay = -99; }, c: [[0.2, (T, s) => s + (s > 1 ? ' heads' : ' head') + ': a chain of shots'], [1.2, 'Each head picks its own target', { ev: 'hit', cham: 0.6 }], [3.0, (T, s) => s >= 7 ? 'Tap (mana): MACHINE GUN' : s >= 3 ? 'Tap (mana): shots twice as fast' : 'Tap skill unlocks at 3★', { cham: 0.6 }]] },
+  hydra: { q: Q.hang(7, 205, 28, 7), lien: 1, cham: [3.0], truoc: (T) => { const B = G.ban[T.ban]; if (B) B.mana = Math.max(B.mana, 200); }, c: [[0.2, (T, s) => s + (s > 1 ? ' heads' : ' head') + ': a chain of shots'], [1.2, 'Each head picks its own target', { ev: 'hit', cham: 0.6 }], [3.0, (T, s) => s >= 7 ? 'Tap the Hydra card: MACHINE GUN' : s >= 3 ? 'Tap the Hydra card: all Hydras 2× faster' : 'Card skill works from 3★', { cham: 0.6 }], [5.0, (T, s) => s >= 3 ? 'Cost doubles each use' : 'Merge to 3★ for the card skill']] },
   cuuvi: { kieu: 'tc', q: Q.dong(9, 0.4, 1), truoc: (T) => { T.duoi = 6; }, c: [[0.2, 'Kills grow fire tails'], [1.8, '9 tails: foxfires chase enemies', { cham: 0.7 }]] },
   pandora: { kieu: 'ghep', mana: 1, manaDau: 100, c: [[0.2, 'Merge two Pandora Vaults'], [2.5, 'The vault spins…', { cham: 0.8 }], [3.5, () => SD.pdr ? 'Vault opens: ' + SD.pdr.toLowerCase().replace('×3', '') .trim() : 'Opens 1 of 6 big effects', { cham: 0.5 }]] },
   luoicheo: { kieu: 'ht', ke: CHEO4.map((o, i) => [o, i % 2 ? 'canon' : 'lien', 's']), c: [[0.2, 'Buffs the 4 diagonal cells'], [2.0, 'All 4 diagonals filled: resonance', { cham: 0.5 }]] },
@@ -313,7 +313,7 @@ const SD_GD = {
   ngoisao: ['Small star shards', 'Star shards fly in pairs', 'Comets, and meteors every 5th'],
   lienket: ['Hollow ring bolt', 'Bolt drags a chain tether', 'Chain lashes a 2nd enemy'],
   dongbo: ['No same-star Attack turret', 'Synced: same-star turrets glow', 'Full sync: 3+ matched'],
-  hydra: ['1–3 heads fire a chain of shots', '4–6 heads: a longer chain', '7 heads: tap for a machine gun'],
+  hydra: ['1–3 heads fire a chain of shots', '4–6 heads: a longer chain', '7 heads: tap the card for a machine gun'],
   cuuvi: ['Straight foxfire orb', 'Foxfire curls with flame trail', 'Blue foxfire bursts in rings'],
   ngaithoigian: ['Piercing clock-hand dart', 'Dart stamps a slowing clock', 'Pierces the line, then echoes'],
   ronglua: ['Hatchling: thin orange fire beam', 'Wyrm / Armored: thicker HEART CORE beam (blue flame from 5★)', 'Inferno: white twin beams'],
@@ -564,7 +564,7 @@ SD.tick = function (dt) {
     const T = this.T, sk = SKILLS[this.id];
     if (T && B.t[T.o] === T && sk.chuDong && !sdKhoa()) {
       T.nap = 1; try { sk.chuDong(G, B, T); } catch (e) { }
-      const c = B.o[T.o]; this.tay = { x: c.x, y: c.y, t0: this.t, keo: null };
+      const c = B.o[T.o]; if (!sk.theKich) this.tay = { x: c.x, y: c.y, t0: this.t, keo: null }; // Hydra: kỹ năng bật từ THẺ khay, không chạm ụ
     }
   }
   if (ks.them) ks.them.forEach(([tt, fn], i) => { if (!this.themXong[i] && this.t >= tt) { this.themXong[i] = true; try { this.voiDoi(() => fn(B, this.D, this.T)); } catch (e) { console.error(e); } } });

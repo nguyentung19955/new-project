@@ -960,6 +960,7 @@ function aiBan(B, dt) {
     if ((trumLan || B.tim <= 1) && (B.mv.id !== 'hero' || oTrong(B).length >= 2)) { dungMV(B); return; }
   }
   if (CH.trangThai(B) === 'san' && B.mana > 200 && Math.random() < 0.3) { dungMV(B); return; }
+  if (typeof hydraAINen === 'function' && B.deck.includes('hydra') && hydraAINen(B)) { hydraKich(B); return; } // Hydra: kích hoạt chung (thẻ khay)
   if (B.mana >= B.gia && oTrong(B).length) { trieu(B); return; }
   // ghép: ưu tiên sao thấp
   // kỹ năng chủ động của ụ ĐỎ: AI tự dùng khi nạp đầy
