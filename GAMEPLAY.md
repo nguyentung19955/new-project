@@ -3671,6 +3671,17 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - Chữ: `mo()`, trang chi tiết (UP_MV), clip Skill preview cho cả 5, bảng chọn, bản Việt (vi.json → ngonngu-vi.js).
 - Test: mới `tools/thap-kt-chi-huy-moi.js` (114 ca: luật từng kỹ năng, ghép/tại chỗ, tất định, online khứ hồi, AI, cách có, bản lưu cũ, chạm-ngắm, ảnh 3 cỡ); mở rộng `thap-kt-chi-huy-bac` (bậc + giá 5 chỉ huy mới, khay trận). Đạt: khong-ban, vi, vfx-p0, shop, nhangia, tt-chiso, sao-tai-cho, co-bac, test-chihuy. Tờ liên hoàn: `docs/demo-hop-tuong/tuvan/chi-huy-moi/TONG.jpg`.
 
+## claude/demo-hop-tuong — thử hoạt ảnh TRÙM BẰNG CODE (3 trùm: hive · prism · mad_crown) (08/11)
+- Vấn đề (người dùng): dải đi gen từng khung → hoa văn/ngọc/vân đổi hình giữa các khung, trùm lăn mà hoạ tiết không lăn theo ("sôi").
+- Cách thử: vẽ 1 **ảnh gốc** `trum_<id>_m.png` (cắt từ khung 1 dải đi, không gen mới — `tools/thap-trum-master.py`) và chỉ biến đổi bằng code (`quaianim.js` `TRUM_ANIM_CODE`; ảnh gốc chưa nạp / trùm khác / `?trumanim=0` → dải khung cũ):
+  - **hive = LĂN**: góc quay = quãng đường thật / bán kính → hoa văn lăn khớp chuyển động; bóng sáng trên-trái + tối dưới-phải CỐ ĐỊNH (PNG fx_cham_trang cắt theo thân) nên vẫn sáng từ trên.
+  - **prism = LƠ LỬNG**: nhấp nhô sin, nghiêng theo hướng đi + vào cua, giãn/nén khi rẽ, thở ±1,8 %, lớp sáng lõi `_m_sang` nhấp nháy; bóng đất nhỏ lại khi lên cao.
+  - **mad_crown = NHẢY thạch**: nén lấy đà → bật giãn → chạm đất nén (neo ở đáy); **vương miện tách rời** `_m_vm` (thân đã vá chỗ khuyết) theo nhịp trễ 8 % → lắc theo quán tính; ngọc vàng sáng nhấp nháy.
+  - Chiêu (cả 3): lấy đà theo tiến độ báo chiêu (nén, lùi + ngả khỏi bàn, lõi sáng dần, rung cuối) → lúc chiêu nổ giãn + chớp trắng + lao về bàn rồi lò xo về (0,6 s); hiệu ứng chiêu rời giữ nguyên. Trúng đòn: chớp trắng + nén. Chết: "xác nổ" cũ dùng ảnh thân hiện tại.
+  - Theo thời gian thực / quãng đường (không đếm khung) → 30/60 FPS, 1×/3× như nhau. Thanh máu, quầng báo chiêu, dấu trạng thái giữ chỗ cũ. Gameplay không đổi.
+- GIF trước | sau 390×844 (đi 1×, 3× + rẽ, chiêu, trúng, chết) + bảng khung + ảnh trong trận: `docs/demo-hop-tuong/tuvan/trum-anim-code/` (dựng lại: `tools/thap-chup-trumcode.js`, bước mô phỏng tay → tất định).
+- Test: thap-kt-trum-don XANH (1320 tình huống) · thap-kt-anim XANH · thap-kt-vfx-p0 XANH.
+
 ## claude/demo-hop-tuong — Bỏ vòng sáng khoanh ụ cùng loại khi chạm thẻ khay trận (08/11)
 
 - Chạm thẻ ở khay trận không còn vẽ vòng `sup_ring` (tròn xanh-trắng có vạch) quanh mọi ụ cùng loại trên bàn (`ND.veSoi` không vẽ gì); chạm thẻ vẫn nâng cấp bằng mana như cũ. Vệt hàng/cột Salvo dưới đầu ụ giữ nguyên.

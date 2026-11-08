@@ -26,6 +26,29 @@ const ATK_K = 1.5;
 const ATK_SEQ = [0, 0, 0, 1, 1, 1, 2, 2, 3, 3, 4, 4, 4, 5, 6, 7]; // tiến độ chiêu (16 nấc) → khung; dải 16 khung cũ: phát thẳng
 const HUONG_NGHIENG = 0.139; // dải chưa có: dùng dải TRƯỚC nghiêng ≤ 8° về phía đi
 const HUONG_HOA = 0.12;      // hoà 120 ms khi đổi hướng nhìn ở khúc rẽ
+// ---- TRÙM HOẠT ẢNH BẰNG CODE (thử 08/11, tuvan/trum-anim-code) ----
+// Dải đi gen từng khung → hoa văn/ngọc đổi hình giữa các khung ("sôi"). Ở đây vẽ 1 ẢNH GỐC trum_<id>_m.png (cắt từ 1 khung dải đi,
+// tools/thap-trum-master.py) và chỉ biến đổi nó: hoa văn không thể trôi. Có cấu hình + ảnh gốc đã nạp → dùng; không → dải khung như cũ.
+//  kieu 'lan'  quả cầu LĂN: góc = quãng đường / bán kính (r = bán kính / cạnh ô); bóng sáng/tối cố định không xoay (PNG fx_cham_trang, cắt theo thân)
+//  kieu 'bay'  LƠ LỬNG: nhấp nhô sin, nghiêng theo hướng đi, giãn/nén khi rẽ, thở; bóng đất nhỏ lại khi lên cao
+//  kieu 'nhay' NHẢY (thạch): nhịp = nhip (lần/giây) + quãng đường / (buoc × cạnh ô), nén–giãn neo ở đáy; vương miện rời (vm = điểm neo) trễ nhịp
+//  sang: lớp sáng trum_<id>_m_sang.png nhấp nháy ('lighter'), bùng lên lúc lấy đà chiêu. day = đáy thân / cạnh ô (neo nén–giãn).
+// Chiêu: lấy đà (nén, ngả ra sau, lõi sáng dần, rung) → tung lúc chiêu nổ (giãn + chớp + lao về bàn rồi lò xo về) → lắng. Trúng đòn: chớp trắng + nén.
+// Mọi thứ theo THỜI GIAN THỰC / QUÃNG ĐƯỜNG (không đếm khung) → 30/60 FPS, 1×/3× như nhau. Chỉ hình — mô phỏng không đổi.
+const TRUM_ANIM_CODE = {
+  hive: { kieu: 'lan', r: 0.457, day: 0.457, sang: 1 },
+  prism: { kieu: 'bay', day: 0, sang: 1 },
+  mad_crown: { kieu: 'nhay', day: 0.41, buoc: 0.6, nhip: 0.8, vm: [0.607, 0.431], sang: 1 },
+};
+const TRUM_ANIM_BAT = (() => { try { return new URLSearchParams(location.search).get('trumanim') !== '0'; } catch (e) { return true; } })(); // ?trumanim=0 → dải khung cũ (so sánh)
+const eoBack = (u) => { const c = 1.70158; u -= 1; return 1 + (c + 1) * u * u * u + c * u * u; };
+const eoIO = (u) => (u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2);
+// nhịp nhảy thạch: u ∈ [0,1) → [độ cao 0..1, nén (+) / giãn (−)]
+const nhipNhay = (u) => {
+  if (u < 0.2) return [0, Math.sin(Math.PI * u / 0.2) * 0.13];
+  if (u < 0.85) { const v = (u - 0.2) / 0.65; return [Math.sin(Math.PI * v), -0.075 * Math.abs(Math.cos(Math.PI * v))]; }
+  return [0, Math.sin(Math.PI * (u - 0.85) / 0.15) * 0.2];
+};
 
 Object.assign(REN, {
   _xac: [],
@@ -101,6 +124,117 @@ Object.assign(REN, {
     ctx.drawImage(dai, f * st, 0, fw, dai.height, -co / 2, -co / 2, co, co);
   },
 
+  // ---- trùm hoạt ảnh bằng code: tính trạng thái (trước khi vẽ bóng) — null nếu không áp dụng / ảnh gốc chưa nạp ----
+  cdTinh(E, cf, co, kc, sc, he, t, dt, x, y) {
+    const g = 'trum_' + E.trum + '_m';
+    if (!this.img(g) || (cf.sang && !this.img(g + '_sang')) || (cf.vm && !this.img(g + '_vm'))) return null;
+    const Cb = co * kc, C = Cb * sc;
+    // quãng đường thật (vị trí nội suy) + chiều lăn
+    if (E._cdX == null) { E._cdX = x; E._cdY = y; E._cdQ = 0; E._cdA = 0; E._cdSg = 1; E._cdW = 0; E._cdG = E.gv != null ? E.gv : E.goc; E._cdL = 0; E._cdT = 0; }
+    let dx = x - E._cdX, dy = y - E._cdY, d = Math.hypot(dx, dy); E._cdX = x; E._cdY = y;
+    if (d > Cb) d = dx = dy = 0; // nhảy vị trí (kéo lùi / đổi bàn): không quay vọt
+    if (Math.abs(dx) > 0.05) E._cdSg = dx > 0 ? 1 : -1;
+    E._cdQ += d;
+    if (cf.kieu === 'lan') E._cdA += (dx + (d - Math.abs(dx)) * E._cdSg) / (cf.r * Cb);
+    // tốc độ rẽ (rad/s, làm mượt) → giãn/nén + nghiêng vào cua
+    const gv = E.gv != null ? E.gv : E.goc, kd = 1 - Math.exp(-dt * 10);
+    if (dt > 0) E._cdW += (clamp(gocLech(E._cdG, gv) / dt, -6, 6) - E._cdW) * kd;
+    E._cdG = gv;
+    const R = { g, C, Cb, ox: 0, oy: 0, rot: 0, sx: 1, sy: 1, sang: 0.3, fl: he * he * 0.45, bs: 1, cao: 0 };
+    let nen = 0.06 * he; // trúng đòn: nén
+    // ---- chiêu: lấy đà → tung (lúc chiêu nổ = E.bao vừa hết) → lắng ----
+    const B = G.ban[E.ban], c = B && B.o && B.o[7], gb = c ? Math.atan2(c.y - y, c.x - x) : Math.PI / 2;
+    if (E.bao) {
+      const u = clamp(E.bao.t / (E.bao.song || 1.4), 0, 1), w = eoIO(Math.min(1, u / 0.9));
+      E._cdBao = 1; E._cdGb = gb;
+      nen += 0.13 * w; R.sang += 0.9 * w;
+      R.ox -= Math.cos(gb) * C * 0.05 * w; R.oy -= Math.sin(gb) * C * 0.05 * w; // lùi lấy đà
+      R.rot -= Math.sign(Math.cos(gb) || 1) * 0.1 * w;                          // ngả ra sau
+      if (u > 0.7) { const z = (u - 0.7) / 0.3; R.ox += Math.sin(t * 95) * C * 0.008 * z; R.oy += Math.cos(t * 83) * C * 0.006 * z; } // rung trước khi tung
+    } else if (E._cdBao) { E._cdBao = 0; E._cdRel = t; }
+    if (E._cdRel != null) {
+      const r = t - E._cdRel;
+      if (r < 0.6) {
+        const lx = Math.exp(-7 * r) * Math.cos(17 * r), gb2 = E._cdGb != null ? E._cdGb : gb;
+        nen -= 0.17 * lx;                                  // giãn bật ra rồi lò xo về
+        const lao = Math.sin(Math.min(1, r / 0.09) * Math.PI / 2) * (1 - eoBack(Math.min(1, r / 0.6))) + Math.exp(-10 * r) * 0.6;
+        R.ox += Math.cos(gb2) * C * 0.07 * lao; R.oy += Math.sin(gb2) * C * 0.07 * lao; // lao về bàn rồi giật về
+        R.fl = Math.max(R.fl, 0.75 * Math.pow(Math.max(0, 1 - r / 0.25), 2)); R.sang += 1.2 * Math.exp(-6 * r);
+      } else E._cdRel = null;
+    }
+    const st = clamp(Math.abs(E._cdW) * 0.025, 0, 0.07); // rẽ: giãn ngang
+    if (cf.kieu === 'bay') {
+      const h = 0.5 + 0.5 * Math.sin(t * 2.3 + E.uid);
+      R.cao = h; R.oy -= C * (0.03 + 0.05 * h); R.bs = 1 - 0.18 * h;
+      E._cdL += (clamp(Math.cos(gv) * 0.09 + E._cdW * 0.03, -0.14, 0.14) - E._cdL) * (1 - Math.exp(-dt * 5));
+      R.rot += E._cdL + Math.sin(t * 1.3 + E.uid) * 0.02;
+      const tho = 0.018 * Math.sin(t * 1.7 + E.uid);
+      R.sx = (1 + tho + st) * (1 + nen * 0.8); R.sy = (1 + tho - st) * (1 - nen);
+      R.sang += 0.25 + 0.25 * Math.sin(t * 3.3 + E.uid);
+    } else if (cf.kieu === 'nhay') {
+      E._cdP = (E._cdP || 0) + (E.bao ? 0.15 : 1) * (dt * (cf.nhip || 0) + d / (cf.buoc * Cb)); // nhịp = nền theo giờ + theo quãng (3× nhảy dồn hơn); lấy đà chiêu: gần như đứng
+      const u = E._cdP - Math.floor(E._cdP);
+      const [h, q] = nhipNhay(u), [, qL] = nhipNhay((u - 0.08 + 1) % 1);
+      R.cao = h; R.oy -= h * C * 0.14; R.bs = 1 - 0.35 * h;
+      R.sx = 1 + (q + nen) * 0.85 + st; R.sy = 1 - q - nen;
+      R.sxL = 1 + (qL + nen) * 0.85; R.syL = 1 - qL - nen; // vương miện theo nhịp trễ 8% → lắc theo quán tính
+      R.vmRot = (qL - q) * 1.6 + Math.sin(t * 2.1 + E.uid) * 0.03;
+      R.rot += clamp(E._cdW * 0.03, -0.08, 0.08);
+      R.sang += 0.2 + 0.2 * Math.sin(t * 2.6 + E.uid);
+    } else { // lan
+      R.sx = 1 + nen * 0.85 + st * 0.5; R.sy = 1 - nen;
+      R.sang += 0.15 + 0.15 * Math.sin(t * 2.4 + E.uid);
+    }
+    R.sang = clamp(R.sang, 0, 1.6);
+    return R;
+  },
+  // vẽ trùm code tại (x,y): neo nén–giãn ở đáy thân
+  cdVe(ctx, E, cf, R, M, x, y) {
+    const C = R.C, Cb = R.Cb, g = R.g, b = cf.day * C;
+    const than = this.co(g, Cb), sang = cf.sang && this.co(g + '_sang', Cb); if (!than) return;
+    const dat = (rot2, sx, sy) => { ctx.setTransform(M); ctx.translate(x + R.ox, y + R.oy + b); ctx.rotate(R.rot + (rot2 || 0)); ctx.scale(sx, sy); ctx.translate(0, -b); };
+    let anh = than;
+    if (cf.kieu === 'lan') { // thân quay theo quãng đường trong canvas tạm, phủ bóng sáng/tối CỐ ĐỊNH (cắt theo thân)
+      const n = than.width, o = this._cdO || (this._cdO = document.createElement('canvas'));
+      if (o.width !== n) { o.width = n; o.height = n; }
+      const x2 = o.getContext('2d'); x2.setTransform(1, 0, 0, 1, 0, 0); x2.globalCompositeOperation = 'source-over'; x2.globalAlpha = 1; x2.clearRect(0, 0, n, n);
+      x2.translate(n / 2, n / 2); x2.rotate(E._cdA); x2.drawImage(than, -n / 2, -n / 2); x2.setTransform(1, 0, 0, 1, 0, 0);
+      x2.globalCompositeOperation = 'source-atop';
+      x2.globalAlpha = 0.55; x2.drawImage(this.bong1(), n * 0.12, n * 0.18, n * 1.15, n * 1.15);          // tối dưới-phải
+      x2.globalAlpha = 0.3; x2.drawImage(this.cham1('#fff3cf'), n * 0.06, n * 0.02, n * 0.55, n * 0.55);   // bóng sáng trên-trái
+      x2.globalCompositeOperation = 'source-over'; x2.globalAlpha = 1;
+      anh = o;
+    }
+    const xoay = cf.kieu === 'lan' ? E._cdA : 0;
+    dat(0, R.sx, R.sy); ctx.globalAlpha = 1; ctx.drawImage(anh, -C / 2, -C / 2, C, C);
+    if (sang && R.sang > 0.01) {
+      ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = Math.min(1, R.sang);
+      if (xoay) ctx.rotate(xoay); ctx.drawImage(sang, -C / 2, -C / 2, C, C);
+      if (R.sang > 1) { ctx.globalAlpha = R.sang - 1; ctx.drawImage(sang, -C * 0.55, -C * 0.55, C * 1.1, C * 1.1); }
+      ctx.restore();
+    }
+    if (R.fl > 0.02) { const w = this.co(g, Cb, 'trang'); if (w) { ctx.globalAlpha = R.fl; if (xoay) ctx.rotate(xoay); ctx.drawImage(w, -C / 2, -C / 2, C, C); } }
+    if (cf.vm) { // vương miện rời: đặt ở điểm neo đã biến đổi theo nhịp TRỄ, không nén (vật cứng)
+      const vm = this.co(g + '_vm', Cb);
+      if (vm) {
+        const px = (cf.vm[0] - 0.5) * C, py = (cf.vm[1] - 0.5) * C;
+        dat(0, 1, 1); ctx.translate(px * R.sxL, b + (py - b) * R.syL); ctx.rotate(R.vmRot);
+        ctx.globalAlpha = 1; ctx.drawImage(vm, -C / 2 - px, -C / 2 - py, C, C);
+        if (R.fl > 0.02) { const w = this.co(g + '_vm', Cb, 'trang'); if (w) { ctx.globalAlpha = R.fl; ctx.drawImage(w, -C / 2 - px, -C / 2 - py, C, C); } }
+      }
+    }
+    ctx.setTransform(M); ctx.globalAlpha = 1;
+  },
+  // ảnh chụp thân hiện tại (cho "xác nổ" lúc chết): 1 khung, cùng định dạng dải
+  cdChup(E, cf, co, kc) {
+    const g = 'trum_' + E.trum + '_m', than = this.co(g, co * kc); if (!than) return null;
+    const n = than.width, c = document.createElement('canvas'); c.width = n; c.height = n;
+    const x2 = c.getContext('2d'); x2.translate(n / 2, n / 2); if (cf.kieu === 'lan') x2.rotate(E._cdA || 0);
+    x2.drawImage(than, -n / 2, -n / 2); x2.setTransform(1, 0, 0, 1, 0, 0);
+    const vm = cf.vm && this.co(g + '_vm', co * kc); if (vm) x2.drawImage(vm, 0, 0, n, n);
+    c.nf = 1; c.fm = n; c.gap = 0;
+    return c;
+  },
   // trạng thái trên quái bằng ảnh tờ ST (fx_st_*): danh sách cần vẽ cho quái E
   stV2(E, lanh) {
     const c = (k) => typeof FXU !== 'undefined' && FXU.co('fx_st_' + k) && this.img('fx_st_' + k);
@@ -160,6 +294,8 @@ Object.assign(REN, {
         if (!E._pop && E.tChet < 0.25 && dai) {
           E._pop = 1;
           // nổ đúng hướng nhìn + đúng dải đang vẽ: chết giữa lúc tung chiêu → dải chiêu ở cỡ ×ATK_K (trước đây vẽ dải chiêu ở cỡ dải đi → trùm co lại 1/1.5 khi chết)
+          const cfX = E._cdOn && TRUM_ANIM_CODE[E.trum], sX = cfX && this.cdChup(E, cfX, co, kc); // trùm vẽ bằng code: nổ đúng ảnh đang thấy
+          if (sX) { this._xac.push({ x: E.x + (E._cdOx || 0), y: E.y + (E._cdOy || 0), goc: E._gv || 0, lat: 1, co: co * kc * (E._sc || 1), f: 0, t: 0, dai: sX, w: this.toBien(sX, 'trang') }); continue; }
           const kX = E._kHv || 1, tX = E._tHv || ten, dX = this.coDai(tX, co * kc * kX) || dai;
           this._xac.push({ x: E.x, y: E.y + (E._oy || 0), goc: E._gv || 0, lat: E._lat || 1, co: co * kc * kX * (E._sc || 1), f: E._f || 0, t: 0, dai: dX, w: this.coDai(tX, co * kc * kX, 'trang') });
         }
@@ -191,9 +327,11 @@ Object.assign(REN, {
       let x = E.x - (E.trum ? 0 : hx * kb), y = E.y + hover - (E.trum ? kb * 0.4 : hy * kb);
       let sc = 0.6 + 0.4 * (E.vao * E.vao * (3 - 2 * E.vao)); // xuất hiện êm
       sc *= 1 - 0.035 * he; // nén nhẹ khi trúng đòn
+      const cf = E.trum && TRUM_ANIM_BAT ? TRUM_ANIM_CODE[E.trum] : null, cd = cf ? this.cdTinh(E, cf, co, kc, sc, he, t, dt, x, y) : null;
+      E._cdOn = !!cd; if (cd) { E._cdOx = cd.ox; E._cdOy = cd.oy; }
       // ---- bóng ----
-      const bco = co * (bay ? 0.62 : 0.78) * sc * (bay ? 1 - (hover + 6) * 0.02 : 1);
-      ctx.globalAlpha = bay ? 0.32 : 0.5;
+      const bco = co * (bay ? 0.62 : 0.78) * sc * (bay ? 1 - (hover + 6) * 0.02 : 1) * (cd ? cd.bs : 1); // trùm code: bóng nhỏ lại khi nảy/bay lên
+      ctx.globalAlpha = (bay ? 0.32 : 0.5) * (cd ? 0.6 + 0.4 * cd.bs : 1);
       if (bong) ctx.drawImage(REN.mip(bong, bco * REN.s * REN.dpr), E.x + 2 - bco / 2, E.y + 4 + (bay ? 8 : 0) - bco * 0.42, bco, bco * 0.84);
       ctx.globalAlpha = 1;
       // ---- quầng báo chiêu của trùm ----
@@ -232,7 +370,8 @@ Object.assign(REN, {
       fr = fr <= nguong ? 0 : (fr - nguong) / (1 - nguong); fr = fr * fr * (3 - 2 * fr);
       if (E.trum) fr = 0; // 08/11: trùm KHÔNG hoà khung — dải trùm đổi hình lớn giữa 2 khung (nảy dẹt mad_crown, xoay janus/twin_core) → hoà ra 2 vương miện/2 thân chồng nhau
       E._f = fr > 0.5 && f1 >= 0 ? f1 : f0; E._gv = gv; E._oy = hover; E._sc = sc;
-      if (!dai) { /* ảnh quái chưa nạp: không vẽ chấm thay thế */ }
+      if (cd) { this.cdVe(ctx, E, cf, cd, M, x, y); E._tHv = null; E._kHv = 1; E._gv = cd.rot; }
+      else if (!dai) { /* ảnh quái chưa nạp: không vẽ chấm thay thế */ }
       else {
         // nhún/nén theo bước (≤3%): dọc hướng đi giãn thì ngang co, gần như giữ diện tích
         const am = E.trum ? 0.018 : (E.d.tach || E.id === 'nho' ? 0.03 : bay ? 0.012 : 0.022);
