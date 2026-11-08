@@ -3749,3 +3749,5 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - Chưa làm: F18 (chữ thẻ sao ghép cùng loại). Test mới `tools/thap-kt-nguyen-tac.js` (52 ca); sửa kỳ vọng cũ: `ban-sao-giu` (ghép thường X + X luôn thật), `cong-huong-luat`, `matran` (F19 + MK + Copycat/khiên + Pháo NSWE), `vang-g2` B5-4, `rong-may`, `ngau-nhien-sinh`, `conghuong2`, `kynang-vd` (Nine-Tail).
 
 - 08/11 (người dùng): ghép 2 Ember mà ngẫu nhiên ra Ember → Ember mới có **0 lửa** (không phải = ★). Sửa 1 dòng trong `ghep()` (game.js), áp cả bàn con rối online (apGhep gọi ghep).
+
+- 08/11 (người dùng: "xứng đáng tướng vàng hơn"): **Wild Link** (`tudo`) lên bậc **VÀNG** (roster + ROSTER_EMBED, họ JOKER bậc 3, khung vàng, LV9→17; xác suất +1★ cấp thẻ 10%→30%, `buoc` 2.5); luật ghép một chiều / ⌈trung bình⌉ giữ nguyên. Thẻ Tím đã có: giữ cấp + bản sao (dưới LV9 được nâng lên LV9).

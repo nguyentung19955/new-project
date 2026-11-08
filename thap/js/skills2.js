@@ -790,8 +790,8 @@ SKILLS.sinhdoi = { // Máy Sinh Đôi (Berit): khi GHÉP THƯỜNG gọi thêm 1
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'dan_tia', co: 17, sp: 580 }); },
   ghep(G, B, a, b, ra) { sinhDoi(B, a.sao, b.o); },
 };
-SKILLS.tudo = { // WILD LINK / Khớp Nối Vạn Năng (Tím, Đặc biệt — 08/11 người dùng): ghép với BẤT KỲ ụ (mọi loại, mọi sao); luật ở game.js (laTuDo / saoGhep / ghep)
-  // · Kết quả = ụ ngẫu nhiên trong bộ bài, sao = ⌈(sao 2 ụ)/2⌉ (không +1★) · cấp thẻ: xác suất +1★ (KY_NANG_CAP.tudo 10% → 28%)
+SKILLS.tudo = { // WILD LINK / Khớp Nối Vạn Năng (VÀNG, Đặc biệt — 08/11 người dùng; trước là Tím): ghép với BẤT KỲ ụ (mọi loại, mọi sao); luật ở game.js (laTuDo / saoGhep / ghep)
+  // · Kết quả = ụ ngẫu nhiên trong bộ bài, sao = ⌈(sao 2 ụ)/2⌉ (không +1★) · cấp thẻ: xác suất +1★ (KY_NANG_CAP.tudo 10% → 30%, thẻ Vàng LV9→17)
   // · GHÉP THẬT: bộ đếm ghép, Archive, Star Breaker, kỹ năng khi ghép (Twin Maker gọi thêm ụ ở sao trung bình…) chạy 1 lần như ghép thường
   // · Không có dạng ngẫu nhiên lúc sinh; bắn nhẹ như Mimic / Twin Maker (Đặc biệt nhóm ghép có bắn — data.js vai 'db')
   vai: 'db', dmg: 8.5, toc: 1.2, nham: 'dau', napMau: '#c77dff',

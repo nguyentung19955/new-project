@@ -1,4 +1,4 @@
-// TURRET MERGE — KIỂM Ụ GHÉP TỰ DO "WILD LINK" (tudo, Tím Đặc biệt — thap/js/game.js tdW / laTuDo / saoGhep / ghep)
+// TURRET MERGE — KIỂM Ụ GHÉP TỰ DO "WILD LINK" (tudo, VÀNG Đặc biệt — thap/js/game.js tdW / laTuDo / saoGhep / ghep)
 //   Luật (người dùng 08/11): ghép với BẤT KỲ ụ (mọi loại, mọi sao, cả ĐÁ / BĂNG, cả Pháo La Bàn / Prism Thief (cả mặt nạ) / Lucky Slot)
 //   → 1 ụ NGẪU NHIÊN trong bộ bài (RNG hạt giống), sao = ⌈(sao 2 ụ)/2⌉, không +1★ (cấp thẻ: xác suất +1★) · GHÉP THẬT (bộ đếm, Archive,
 //   kỹ năng khi ghép 1 lần — Twin Maker gọi thêm ụ ở sao trung bình) · Wild Link bị khoá thì không dùng được · tất định · gói online khứ hồi · AI.
@@ -35,8 +35,8 @@ const DECK = ['tudo', 'lien', 'tia', 'set', 'sinhdoi'];
 
 console.log('1 · có ụ: roster Tím Đặc biệt, họ JOKER, cấp thẻ, chữ thẻ');
 tran(DECK);
-ok(R("!!SKILLS.tudo && G.rosterMap.tudo.bac === 'tim' && SKILLS.tudo.vai === 'db' && HO_CUA.tudo && HO_CUA.tudo.ho === 'joker'"), 'SKILLS.tudo + roster Tím Đặc biệt + họ JOKER');
-BONUS(10, 28); ok(R("KY_NANG_CAP.tudo.base === 10 && knGt(KY_NANG_CAP.tudo, 9) === 28"), 'cấp thẻ: +1★ 10% → 28% (9 cấp Tím)'); BONUS(0, 0);
+ok(R("!!SKILLS.tudo && G.rosterMap.tudo.bac === 'vang' && HO_CUA.tudo.i === 3 && THE.maxLv('vang') === 17 && SKILLS.tudo.vai === 'db' && HO_CUA.tudo && HO_CUA.tudo.ho === 'joker'"), 'SKILLS.tudo + roster VÀNG Đặc biệt + họ JOKER (bậc Vàng, LV17)');
+BONUS(10, 30); ok(R("KY_NANG_CAP.tudo.base === 10 && KY_NANG_CAP.tudo.buoc === 2.5 && knGt(KY_NANG_CAP.tudo, 8) === 30 && knGt(KY_NANG_CAP.tudo, 9) === 30"), 'cấp thẻ: +1★ 10% → 30% (8 cấp Vàng LV9→17)'); BONUS(0, 0);
 ok(R("/ANY turret/.test(SKILLS.tudo.mo(dat(0, 'tudo', 1))) && /real merge/.test(SKILLS.tudo.mo(B.t[0])) && /Stone and Frozen/.test(SKILLS.tudo.mo(B.t[0]))"), 'mo(): ANY turret · real merge · Stone and Frozen');
 ok(R("SKILLS.tudo.dmg > 0 && typeof SKILLS.tudo.ban === 'function'"), 'bắn nhẹ như Mimic / Twin Maker (Đặc biệt nhóm ghép có bắn)');
 
