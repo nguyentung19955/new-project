@@ -185,6 +185,13 @@ function ghepDacBiet(a, b) {
   if (sb && sb.ghepDB && sb.ghepDB.haiChieu && sb.ghepDB.hopLe(b, a)) return { sk: sb, a: b, b: a, dao: true };
   return null;
 }
+// LUẬT "CHỈ GHÉP THẬT MỚI LÀ GHÉP" (08/11 người dùng: "hiệu ứng tăng sao từ ally hoặc từ ụ khác không làm reset các ụ nên không được tính là merge";
+//   "kể cả copy cũng vậy, khi A copy B để thành B thì phải B vào B mới tính là merge"):
+//   GHÉP THẬT = ghép thường (cùng loại / Mimic / đá+đá, ép ghép của trùm, gói online) hoặc ghép đặc biệt mà kỹ năng khai laGhep (Pháo La Bàn + Pháo La Bàn,
+//   Twin Anvil + Twin Anvil). KHÔNG phải ghép: Merge King +★ tại chỗ (cả MK + MK), Copycat chép, Teleporter đổi chỗ, Overclock / buff Anvil, Mạch Máu đánh dấu.
+//   Mọi bộ đếm / kỹ năng "khi ghép" (Archive, MERGE SURGE, Mirror Gate, hướng dẫn, nhiệm vụ / thống kê, chớp + tấm kết quả ghép) dùng hàm này.
+//   Gọi TRƯỚC ghep() (ụ kéo còn trên bàn).
+function laGhepThat(a, b, ep) { if (ep) return true; const db = a && b ? ghepDBHop(a, b) : null; return !db || !!(db.sk.ghepDB.laGhep && db.sk.ghepDB.laGhep(db.a, db.b)); }
 const GIU_CONG_DON = { hopbi: ['tuoi'], tienhoa: ['egg'], leviathan: ['vuc'] }; // cộng dồn giữ khi ghép cùng loại ra cùng loại
 // ghép a (kéo) vào b → ở ô b ra ụ NGẪU NHIÊN trong bộ bài, +1 sao (luật DCDW / Random Dice)
 function ghep(B, a, b, ep) {

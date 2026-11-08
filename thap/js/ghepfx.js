@@ -205,10 +205,10 @@ const GF = {
   veMeo(ctx, src) {
     const B = G.ban[src.ban], dang = UI.keo && UI.keo.dang, hover = dang ? this.hoverT : null, C = this.tile(B);
     let s = null, c = null, y = 0;
-    if (hover && hopLeGhep(src, hover)) { s = ghepDBHop(src, hover) ? KG.TXT.tipDB : KG.TXT.tip; c = B.o[hover.o]; y = c.y + C * 0.78; }
+    if (hover && hopLeGhep(src, hover)) { s = KG.chuMeo(src, hover); c = B.o[hover.o]; y = c.y + C * 0.78; }
     else if (UI.chonGhep && !dang) { s = KG.TXT.tapTip; c = B.o[src.o]; y = c.y - C * 0.78; }
     if (!s) { KG._tip = null; return; }
-    if (KG.soMeo() >= 3 && s !== KG.TXT.tipDB) return;
+    if (KG.soMeo() >= 3 && (s === KG.TXT.tip || s === KG.TXT.tapTip)) return; // mẹo kỹ năng kéo thả / ghép đặc biệt: luôn hiện
     if (!KG._tip || KG._tip.s !== s) KG._tip = { s, t0: performance.now() };
     const u = Math.min(1, (performance.now() - KG._tip.t0) / 140);
     KG.tam(ctx, s, c.x, Math.min(y, B.y + B.h - 10), 13, '#eaf6ff', u, 0.9 + 0.1 * u);

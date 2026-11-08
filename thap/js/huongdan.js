@@ -175,7 +175,7 @@ const HD = {
   const trieuGoc = trieu;
   trieu = function (B, mienPhi) { const T = trieuGoc.apply(this, arguments); if (T && !mienPhi && G.ban[0] === B) HD.su('trieu'); return T; };
   const ghepGoc = ghep;
-  ghep = function (B, a, b, ep) { const r = ghepGoc.apply(this, arguments); if (r && !ep && B === G.ban[0]) HD.su('ghep'); return r; };
+  ghep = function (B, a, b, ep) { const th = laGhepThat(a, b, ep), r = ghepGoc.apply(this, arguments); if (r && !ep && th && B === G.ban[0]) HD.su('ghep'); return r; }; // chỉ ghép thật (Merge King +★ / Copycat / Teleporter: không)
   const mvGoc = dungMV;
   dungMV = function (B) { const r = mvGoc.apply(this, arguments); if (r && B === G.ban[0]) HD.su('mv'); return r; };
   const moTTGoc = UI.moTT;

@@ -207,7 +207,7 @@ HU.khoNo = { cap(G, o, dt) { o.t += dt; return o.t >= o.song; }, ve(ctx, o) { co
   ghep = function (B, a, b, ep) {
     const B2 = b && G.ban[b.ban], oN = b && b.o;
     // ghép ĐẶC BIỆT chỉ tính khi kỹ năng tự khai là ghép thật (Twin Anvil + Twin Anvil); Vua Ghép / Sao Chép / Dịch Chuyển / Ép Xung / Mạch Máu / buff Anvil: không
-    const db = !ep && a && b ? ghepDBHop(a, b) : null, that = !db || !!(db.sk.ghepDB.laGhep && db.sk.ghepDB.laGhep(db.a, db.b));
+    const that = laGhepThat(a, b, ep); // game.js — cùng định nghĩa ghép thật cho mọi bộ đếm
     const r = _ghepVM1.apply(this, arguments);
     if (r && B2 && that) { B2.ghepN = (B2.ghepN || 0) + 1; SKILLS.luutru.nhan(B2, oN); }
     return r;

@@ -97,7 +97,7 @@ function upLuatGhep(id) {
     return L.concat([['Stone', 'If Janus Cube petrifies it, it only merges with stone of the same star (result: a higher-star stone).']]);
   }
   if (id === 'mimic') L.push(['Joker merge', 'Merges with any turret of the same star. The result gets +' + Math.round(knThe(null, 'mimic')) + '% damage for 8s.']);
-  else if (sk.ghepDB) L.push(['Special merge', upSC(mo1 || (TEXT.turret[id] || {}).skill) + '.']);
+  else if (sk.ghepDB) L.push([sk.ghepDB.laGhep ? 'Special merge' : 'Drag skill', upSC(mo1 || (TEXT.turret[id] || {}).skill) + '.']);
   if (sk.ghep) L.push(['Merge trigger', upSC((TEXT.turret[id] || {}).skill || mo1) + '.']);
   L.push(['Normal merge', sk.ghepDB && sk.ghepDB.cungLoai ? 'Two ' + ten + ' of the same star become one ' + ten + ' at +1★ (Golden is kept). Max 7★.' : 'Two ' + ten + ' of the same star merge into a random turret from your deck at +1★. Max 7★.']);
   L.push(['Stone', 'If Janus Cube petrifies it, it only merges with stone of the same star (result: a higher-star stone). Merge King can still raise a stone\'s star; Copycat can still copy it (the copy is a normal turret); Cleanser or Eve breaks the stone.']);

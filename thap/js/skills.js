@@ -95,6 +95,7 @@ SKILLS.canon = {
   },
   ghepDB: {
     cungLoai: true, // Pháo La Bàn + Pháo La Bàn → Pháo La Bàn có hợp hướng (không ra ụ ngẫu nhiên)
+    laGhep: () => true, // B kéo vào B = GHÉP THẬT (Archive +1, MERGE SURGE, nhiệm vụ) — game.js laGhepThat
     hopLe: (a, b) => b.ban === a.ban && !!SKILLS.canon.hopNhat(a, b),
     xemSao: (a, b) => SKILLS.canon.saoGhep(a, b),
     lam(G, B, a, b) {
