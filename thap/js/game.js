@@ -774,8 +774,12 @@ function capNhatTrum(E, dt) {
   if (!ds.length) { E.knT = 2; return; }
   let muc = [], muc2 = [], ban2 = null;
   const r = rngTrum(E); E.rng = r; // dùng lại lúc tung chiêu (mad_crown đổi loại, joker ghép) — vẫn tất định
-  if (E.trum === 'mad_crown' || E.trum === 'octopus') muc = tronTrum(ds, r).slice(0, 3);
-  else if (E.trum === 'nightmare') muc = tronTrum(ds, r).sort((a, b) => b.sao - a.sao).slice(0, 1);
+  // mục tiêu NGẪU NHIÊN ĐỀU trong các ụ HỢP LỆ (người dùng 08/11 "skill boss bắn phá ngẫu nhiên chứ không cố định"): chiêu gắn trạng thái xấu
+  //   (biến / đá / Mimic / đốt) bỏ ụ khoá (đá/băng) ngay lúc chọn → đủ số ụ trúng; chiêu mất sao (Nightmare) vẫn nhắm được ụ băng
+  const moKhoa = ds.filter(T => !biKhoa(T));
+  if (E.trum === 'mad_crown' || E.trum === 'octopus' || E.trum === 'janus' || E.trum === 'joker_king') { if (!moKhoa.length) { E.knT = 2; return; } }
+  if (E.trum === 'mad_crown' || E.trum === 'octopus') muc = tronTrum(moKhoa, r).slice(0, 3);
+  else if (E.trum === 'nightmare') muc = tronTrum(ds, r).slice(0, 1); // bỏ "luôn ụ nhiều sao nhất" → ụ ngẫu nhiên
   else if (E.trum === 'freezer') {
     // nhiều ụ: chọn NGẪU NHIÊN mỗi lần (tất định theo rngTrum — online vẫn khớp; người dùng chốt 07/11, bỏ ưu tiên sao cao). CO-OP: chia đôi cho 2 bàn (bàn trùm lấy phần lẻ), bàn nào thiếu ụ thì bàn kia bù
     const n = LUAT_BANG.so(G.wave), xep = (L) => tronTrum(L, r);
@@ -790,8 +794,8 @@ function capNhatTrum(E, dt) {
     muc = xep(ds1).slice(0, n1);
     if (B2 && n2 > 0) { muc2 = xep(ds2).slice(0, n2); ban2 = B2.i; }
   }
-  else if (E.trum === 'janus') muc = [chonTrum(ds, r)];
-  else if (E.trum === 'joker_king') { const co = ds.filter(T => coCapJoker(B, T)); muc = [chonTrum(co.length ? co : ds, r)]; } // ưu tiên ụ CÓ bạn ghép cùng sao (Mimic không bao giờ nằm lại trên bàn)
+  else if (E.trum === 'janus') muc = [chonTrum(moKhoa, r)];
+  else if (E.trum === 'joker_king') { const co = moKhoa.filter(T => coCapJoker(B, T)); muc = [chonTrum(co.length ? co : moKhoa, r)]; } // ưu tiên ụ CÓ bạn ghép cùng sao (Mimic không bao giờ nằm lại trên bàn)
   E.bao = { t: 0, song: 1.4, muc: muc.map(T => T.uid), muc2: muc2.map(T => T.uid), ban2 };
   for (const T of muc) T.st.ngam = 1.4;
   for (const T of muc2) T.st.ngam = 1.4;

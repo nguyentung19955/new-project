@@ -45,7 +45,7 @@ const TEXT = {
     freezer:    { name: 'FREEZER',      skill: 'DEEP FREEZE', desc: 'Freezes 3 random turrets for 6 s (+1 every 20 waves, max 5; co-op: split across both boards)', descN: (n) => 'Freezes ' + n + ' random turrets for 6 s' },
     janus:      { name: 'JANUS CUBE',   skill: 'PETRIFY',     desc: 'Turns 1 turret to stone (stone only merges with same-star stone → a higher stone)' },
     joker_king: { name: 'JOKER KING',   skill: 'FORCE MERGE', desc: 'Throws a Mimic onto 1 turret and forces a same-star merge' },
-    nightmare:  { name: 'NIGHTMARE',    skill: 'SNIPE',       desc: 'Snipes your highest-star turret: −1★ (1★ explodes)' },
+    nightmare:  { name: 'NIGHTMARE',    skill: 'SNIPE',       desc: 'Snipes a random turret: −1★ (1★ explodes)' },
     octopus:    { name: 'OCTOPUS EYES', skill: 'BURN',        desc: 'Burns 3 turrets for 6 s: −1★ when the fire ends unless cleansed (1★ is destroyed)' },
   },
   // kỹ năng Ma vương (Archfiend)

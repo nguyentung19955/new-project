@@ -608,3 +608,6 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 
 ## claude/demo-hop-tuong — Hydra: đầu cố định, cả vương miện xoay liền khối (08/11)
 - Các đầu rắn không còn ngoảnh/giật riêng (hết lắc khi 2 đầu): cả vương miện xoay mượt quanh tâm ô theo hướng mục tiêu (T.goc), giật rất nhẹ cả khối; viên bắn ra từ miệng theo vị trí đã xoay; gameplay giữ nguyên.
+
+## claude/demo-hop-tuong — Chiêu trùm nhắm ụ NGẪU NHIÊN (08/11)
+- Nightmare bắn tỉa 1 ụ ngẫu nhiên (bỏ "ụ nhiều sao nhất"); Jammer phần ngoài ụ Hỗ trợ chọn ngẫu nhiên (bỏ xếp sao); Mad Crown/Octopus/Janus/Joker chọn ngẫu nhiên trong ụ KHÔNG khoá (đủ số trúng); Star Leech giữ nhắm ụ mạnh nhất (bản sắc). RNG rngTrum có hạt — online tất định.
