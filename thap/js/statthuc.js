@@ -48,6 +48,8 @@ function statThuc(T) {
   if (B && B.cuong > 0) ds.push({ k: 'dmg', ic: 'dmg', txt: '×2 · Rage ' + Math.ceil(B.cuong) + 's' });
   const moc = typeof heSoMocDmg === 'function' ? heSoMocDmg(T) : 1;
   if (moc !== 1) ds.push({ k: 'dmg', ic: 'dmg', txt: '×' + +moc.toFixed(3) + ' · star milestone' });
+  const hk = typeof heHauKy === 'function' ? heHauKy(T) : 1;
+  if (hk !== 1) ds.push({ k: 'dmg', ic: 'dmg', txt: '×' + +hk.toFixed(2) + ' · late-game power' });
   if (typeof themMocCrit === 'function' && themMocCrit(T)) ds.push({ k: 'crit', ic: 'crit', txt: '+10% crit · 7★ milestone' });
   if (sk.crit) ds.push({ k: 'crit', ic: 'crit', txt: pc(sk.crit) + ' crit · ' + tuTen });
   if (luon) ds.push({ k: 'crit', ic: 'crit', txt: 'always crits now' });

@@ -337,6 +337,7 @@ function dmgU(T, them) {
   if (B.cuong > 0) d *= 2;
   if (G.che === 'pvp') d *= SKILLS.dongbo.heSoDoiThu(B); // Pháo Đồng Bộ (Dana) của đối thủ: −sát thương nhẹ
   d *= heSoMocDmg(T); // mốc sao chung 5★/7★ (phattrien.js)
+  d *= heHauKy(T); // gánh hậu kỳ: ụ Tấn công Vàng/Đỏ +%/wave sau wave 20 (data.js)
   return d;
 }
 function tocU(T) {

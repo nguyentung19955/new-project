@@ -5163,6 +5163,7 @@ const VI_MAU = {
 "· Mimic merge": "· Ghép Mimic",
 "· affecting": "· tác động lên",
 "· copy (": "· bản sao (",
+"· late-game power": "· sức mạnh hậu kỳ",
 "· max level": "· cấp tối đa",
 "· node": "· nút",
 "· power-up +": "· cường hoá +",
