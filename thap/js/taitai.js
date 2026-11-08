@@ -339,23 +339,40 @@ const TAI = {
   thaHoan() { this._hetHoan = true; const sau = this._sau; this._sau = []; for (const f of sau) { try { f(); } catch (e) { console.error('[TAI] sauHome', e); } } const ds = this._hoan; this._hoan = []; for (const [a, u, ten] of ds) if (!a.src && (!ten || REN.anh[ten] === a)) a.src = u; },
   // ảnh thẻ dựng lúc khởi động (cardArt → data-tm-src) → gán src thật (ảnh đã giải mã trong màn tải → hiện ngay)
   ganSrc(vung) { document.querySelectorAll(vung ? vung.split(',').map(v => v.trim() + ' img[data-tm-src]').join(',') : 'img[data-tm-src]').forEach(im => { im.setAttribute('src', im.getAttribute('data-tm-src')); im.removeAttribute('data-tm-src'); }); },
-  // ver.json (tools/thap-ver.py): bản trên máy chủ mới hơn bản đang chạy → nạp lại trang, nhưng CHỈ khi đang đứng ở HOME
-  // (không bao giờ chặn màn tải đầu, không cắt ngang trận / bảng đang mở)
+  // ver.json (tools/thap-ver.py): bản trên máy chủ mới hơn bản đang chạy → nạp lại trang, nhưng CHỈ khi đang ở menu
+  // (không bao giờ chặn màn tải đầu, không cắt ngang trận / bảng đang mở / sảnh online).
+  // Sửa 08/11 (người dùng: "chơi tướng mới là phải thoát ra vào lại mới load được"): trang CŨ (mạng chậm > 3,5 s → Service Worker
+  // trả index cũ trong máy; hoặc app nằm nền nhiều ngày) không có ảnh/ụ của bản mới → ụ mới không hiện tới khi thoát hẳn app.
+  //  · kiểm lại mỗi lần app quay lại (visibilitychange) + 3 phút/lần, không chỉ 1 lần lúc mở
+  //  · nạp lại bằng ?r= (sw.js bỏ qua) → index lấy THẲNG từ mạng, không lấy lại bản cũ trong máy; tối đa 2 lần / bản / phiên (không lặp)
+  //  · bấm PLAY khi đã biết có bản mới → nạp lại luôn (bộ bài đã lưu) thay vì vào trận bằng bản cũ thiếu ảnh
   ktVer() {
-    const m = document.querySelector('meta[name="tm-ver"]'); if (!m || this.xem) return;
+    const m = document.querySelector('meta[name="tm-ver"]'); if (!m || this.xem || this._ktDang) return;
     const V = m.getAttribute('content');
+    this._ktDang = true; this._ktT = Date.now();
     fetch('ver.json?t=' + Date.now(), { cache: 'no-store' }).then(r => r.json()).then(j => {
+      this._ktDang = false;
       if (!j || !j.v || j.v === V) return;
-      const k = 'tm-ver-tai'; try { if (sessionStorage.getItem(k) === j.v) return; } catch (e) { return; }
+      const k = 'tm-ver-tai'; let n = 0;
+      try { const c = (sessionStorage.getItem(k) || '').split('|'); n = c[0] === j.v ? +c[1] || 1 : 0; } catch (e) { return; }
+      if (n >= 2) return; // đã nạp lại 2 lần cho bản này mà vẫn cũ → thôi (không lặp)
+      this.verMoi = j.v;
+      if (this._ktCho) return; this._ktCho = true;
       const thu = () => {
         const c = document.getElementById('chon'), mo = document.getElementById('hm-mo');
-        const oHome = c && !c.hidden && c.classList.contains('xem-hm') && (!mo || mo.hidden) && !(G.ban && G.ban.length) && !this.cho && !this.mat && this.nenXong !== false;
-        if (!oHome) return setTimeout(thu, 2000);
-        try { sessionStorage.setItem(k, j.v); } catch (e) { }
-        location.reload();
+        const oMenu = c && !c.hidden && (!mo || mo.hidden) && !(G.ban && G.ban.length) && !this.cho && !this.mat && !this.trongOnl();
+        if (!oMenu) return setTimeout(thu, 2000);
+        this.napLaiMoi();
       };
       thu();
-    }).catch(() => { });
+    }).catch(() => { this._ktDang = false; });
+  },
+  trongOnl() { return (typeof ONL !== 'undefined' && ONL.code) || (typeof ONS !== 'undefined' && ONS.on); },
+  napLaiMoi() {
+    const k = 'tm-ver-tai';
+    try { const c = (sessionStorage.getItem(k) || '').split('|'); sessionStorage.setItem(k, this.verMoi + '|' + ((c[0] === this.verMoi ? +c[1] || 1 : 0) + 1)); } catch (e) { }
+    const u = new URL(location.href); u.searchParams.set('r', Date.now().toString(36));
+    location.replace(u.href);
   },
   // ---------- vào trận: đợi mọi ảnh của trận giải mã xong; vòng lặp đứng yên (TAI.cho) ----------
   tran(ds) {
@@ -518,3 +535,8 @@ addEventListener('click', (e) => { if (TAI.daBoot && !TAI.nenXong && !TAI.xem) T
 addEventListener('offline', () => TAI.khiOffline());
 addEventListener('online', () => TAI.coMang());
 // mở game khi đang mất mạng: bản đã lưu trong máy (Service Worker) vẫn chơi được → để bước tải ảnh tự báo nếu thật sự thiếu
+// ?r= (nạp lại bản mới, TAI.napLaiMoi) → bỏ khỏi thanh địa chỉ
+try { if (/[?&]r=/.test(location.search)) { const u = new URL(location.href); u.searchParams.delete('r'); history.replaceState(history.state, '', u.href); } } catch (e) { }
+// app quay lại (nằm nền lâu) / mỗi 3 phút: hỏi lại ver.json — bản mới → nạp lại khi đang ở menu
+document.addEventListener('visibilitychange', () => { if (!document.hidden && TAI.daBoot && Date.now() - (TAI._ktT || 0) > 20000) TAI.ktVer(); });
+setInterval(() => { if (TAI.daBoot && !document.hidden && Date.now() - (TAI._ktT || 0) > 170000) TAI.ktVer(); }, 30000);

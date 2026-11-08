@@ -6,7 +6,7 @@
 //  · KHÔNG đụng: tệp ngoài nguồn (Firebase, CDN), ver.json?t=, tải lại ?r=, ping, yêu cầu Range (âm thanh), POST.
 // V do tools/thap-ver.py dán lúc xuất bản (đổi V → trình duyệt cài SW mới, xoá bộ đệm cũ không băm).
 'use strict';
-const V = '9ba1316768';
+const V = '3467efb096';
 const BAM = 'tm-bam', THO = 'tm-tho-' + V;
 const GOC = new URL('./', self.registration.scope).pathname;
 
@@ -29,7 +29,10 @@ async function bamTruoc(e, req) {
 }
 async function mangTruoc(e, req, khoa) {
   const c = await caches.open(THO);
-  const mang = fetch(req).then((res) => { if (res.ok) e.waitUntil(luu(THO, khoa, res.clone())); return res; });
+  // lưu bản mạng vào máy kể cả khi đã trả bản cũ (quá 3,5 s): waitUntil gọi NGAY trong sự kiện (gọi muộn sau khi đã trả lời → lỗi,
+  // index mới có thể không được lưu → lần mở sau lại ra bản cũ, ụ mới thiếu ảnh tới khi thoát hẳn app)
+  const mang = fetch(req).then(async (res) => { if (res.ok) await luu(THO, khoa, res.clone()); return res; });
+  e.waitUntil(mang.catch(() => { }));
   const hen = new Promise((ok) => setTimeout(ok, 3500));
   try {
     const r = await Promise.race([mang, hen.then(() => null)]);
