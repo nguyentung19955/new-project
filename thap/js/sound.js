@@ -439,7 +439,7 @@ const SND = (() => {
   // ụ (id) → họ vũ khí khi ụ đó gọi âm <nguồn>; không có trong bảng → họ mặc định của chính âm đó
   const DOI = {
     'aten:tia': 'laser', 'dongbo:tia': 'laser', 'haoquang:tia': 'laser', 'ngaithoigian:tia': 'laser', 'nhatthuc:tia': 'laser',
-    'railgun:nap': 'tia', 'hasao:tia': 'tia', 'nemesis:tia': 'tia', 'sungluc:tia': 'tia',
+    'hasao:tia': 'tia', 'nemesis:tia': 'tia', 'sungluc:tia': 'tia',
     'phagiap:set': 'nl', 'nangluong:set': 'nl', 'ngoisao:set': 'nl', 'anhsang:mana': 'nl', 'cauvong:mana': 'nl', 'cuuvi:lien': 'nl',
     'maychem:lien': 'can', 'bua:phao': 'can', 'nam:dat': 'can', 'soi:dat': 'can', 'loren:dat': 'can',
     'docton:tia': 'doc', 'chuato:tia': 'trieu', 'marionette:mana': 'trieu',

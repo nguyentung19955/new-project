@@ -350,7 +350,7 @@ CG.K3 = {
     const n = a.mot === 'no' ? 4 : 6, fl = CG.kFlash();
     if (a.mot === 'no') {
       let x = a.x, y = a.y, goc = a.goc; const T = a.T;
-      if (T && G.ban[T.ban] && G.ban[T.ban].t[T.o] === T) { [x, y] = dauNong(T); goc = T.goc + (a.dg || 0); }
+      if (T && G.ban[T.ban] && G.ban[T.ban].t[T.o] === T) { [x, y] = a.nong4 && typeof AN !== 'undefined' ? AN.muzzle(T, a.lat) : dauNong(T); goc = T.goc + (a.dg || 0); } // nong4: chớp đúng từng nòng (Salvo Battery — HU.rail)
       const w = a.co / 0.86 * 1.02; // khung S ↔ ảnh rộng 0.86 S
       ctx.save(); ctx.translate(x, y); ctx.rotate(goc || 0); // khung có đầu nòng tại 0.06 S → dời để neo trùng nòng
       R.khungMuot(ctx, null, Math.min(n - 0.001, u * n), w * 0.44, 0, w, 0, (u < 0.25 ? 1 : fl > 0.9 ? 1 : 0.75), s);

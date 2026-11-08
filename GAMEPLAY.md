@@ -3629,3 +3629,12 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - Prism Thief: mặt nạ luôn thẳng — khi cầm kéo (ghost) vẽ đúng mặt nạ màu, không xoay; đầu dự phòng bienmau_nong xoay −90° cho thẳng. Các đầu "mặt" khác đã đứng yên (gocDau) hoặc là vũ khí/sinh vật cố ý xoay. Không đổi luật Chromatic Circuit.
 - Chữ Copycat: "random traits (colour, direction, Gold, Awakened, slot spin…) roll anew · keeps the Copycat's own buffs" (+ bản Việt trong vi.json).
 - Test: mới `tools/thap-kt-ngau-nhien-sinh.js` (6 ụ × 9 đường, phân bố + tất định + online khứ hồi). Đổi kỳ vọng có chủ đích: thap-kt-la-ban (Copycat chép NSWE → 1 hướng, 0 stack), thap-kt-cong-huong-luat (Copycat không còn giữ vàng/thức tỉnh), thap-kt-matran (copyLen của vàng/thức tỉnh/La Bàn = QUAY MỚI).
+
+## claude/demo-hop-tuong — Salvo Battery bắn loạt tên lửa (hết laze) + hiệu ứng hàng / cột / cả bàn (08/11)
+
+- Người dùng: "Salvo battery sao vẫn bắn laze vậy?" + "thêm hiệu ứng hàng cột khi đủ hàng đủ cột, khi đủ cả bàn thì toàn bộ các ụ sáng hơn 1 chút".
+- **Luật giữ nguyên** (`HU.rail`, `thap/js/skills.js`): vẫn 1 đường xuyên tại t = 0,38 s, cùng quái trúng, cùng ST, cùng lúc; không thêm Math.random (thap-kt-anim xanh).
+- **Hình mới:** bỏ vạch ngắm + tia laze. Mỗi phát = loạt **4–6 tên lửa** (1–2★ 4 · 3–4★ 5 · 5★+ 6) phóng so le 0,045 s từ đúng **4 nòng** của đầu mới (dời ngang đo từ `railgun_nong.png`, qua `AN.muzzle` → đúng mọi góc xoay), bay vòng cung nhẹ, chạm đúng lúc trừ máu (+ so le 0,02 s), mỗi nòng có chớp lửa riêng, mỗi quả nổ khói-lửa. Quái xuyên dư (nhiều hơn số tên lửa) vẫn có nổ.
+- Ảnh dùng lại: tên lửa `fx_canon_ten` (vàng + ngọc xanh, hợp Salvo; chưa có → `FXU.THAY.ten_laban`), chớp nòng `fx_canon_no`, nổ `fx_canon_trung`. `FXU.MUON.railgun` cho Salvo mượn chớp nòng/nổ trúng của pháo (ảnh `fx_railgun_*` cũ là điện/laze) — cả nổ khi giết quái. Tiếng bắn: pháo (`SND.phao`) thay tiếng zap; tiếng nạp về họ "phóng".
+- **Hàng / cột ĐỦ** (`VX.salvo`, `thap/js/hieuung.js`): lúc vừa đủ → vệt vàng `fx_bingo` quét + ô loé (đã có, nay vẽ **dưới đầu ụ**); đang đủ → vệt vàng mờ thường trực dọc hàng/cột, dưới đầu ụ. **Đủ cả bàn** (15 ô đều Salvo, không ô đá): loé mừng 1 lần (quét cả 3 hàng + quầng vàng + chữ "FULL BOARD SALVO!") rồi mọi ụ sáng hơn chút suốt lúc còn đủ (`SKILLS.railgun.sangDau`). Chỉ trình bày, trạng thái hình trong WeakMap.
+- Chữ: "piercing rail + BINGO lines" → "rocket salvo down a line + BINGO lines" (vi.json → `tools/thap-vi-dung.py`). Ảnh xem: `docs/demo-hop-tuong/tuvan/salvo/ban.jpg`.

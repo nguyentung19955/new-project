@@ -37,7 +37,7 @@ const HO_MOI = {
   doc: 'marks enemies: +12% damage taken', vungdoc: 'poison POOLS hit every enemy on them', aten: 'cashes in poison ×4; kills explode',
   canon: 'merge to combine directions: 1 homing rocket per direction', xucxac: 'gambles damage 3–300%', mortar: 'CLUSTER shells split into bomblets', no5: 'every 5th shot: 3 exploding bolts',
   orbital: 'merging awakens EVERY Orbital on the board: area salvos (no normal shots)',
-  set: 'chain lightning', laser: 'beam that ramps up ×4', bao: 'instant hits that ARC to a 2nd enemy', railgun: 'piercing rail + BINGO lines',
+  set: 'chain lightning', laser: 'beam that ramps up ×4', bao: 'instant hits that ARC to a 2nd enemy', railgun: 'rocket salvo down a line + BINGO lines',
   overlord: 'thunder blast + aftershock arcs (Mythic finisher, no active)',
   sungluc: 'one heavy instant shot', tia: 'hunts the toughest enemy', nangluong: 'banked mana → up to +500% shot',
   lien: 'very fast stream', phun: 'very fast at random enemies', radar: 'lends fire rate to neighbours', epxung: 'permanent +90% fire rate (stacks)',
