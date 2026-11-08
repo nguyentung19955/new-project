@@ -27,11 +27,13 @@ const DEMKN = {
     loren(T) { const n = Math.min(14, T.lo || 0); return n > 0 ? { m: [{ ic: T.dang === 'toc' ? 'ic_toc' : 'ic_dmg', s: n + '/14' }], sang: n >= 14 } : null; }, // Twin Anvil: icon dạng (ST / tốc) + cộng dồn
     // VỰC SÂU (ABYSS): icon xoáy vực riêng (không dùng ic_dmg chung) + chữ xanh biển sâu; không trần → luôn hiện số (≥100 chữ sáng hơn)
     leviathan(T) { const n = T.vuc || 0; return n > 0 ? { m: [{ ic: DEMKN.icVuc(), s: '' + n }], mau: n >= 100 ? '#b8f6ff' : '#5fe3ff' } : null; },
+    // Rồng Máy: NHIỆT lò (không trần) — ngọn lửa cam <100 · vàng ≥100 QUÁ NHIỆT · trắng ≥250 NÓNG CHẢY (chữ vàng = đang có thưởng mốc)
+    ronglua(T) { const n = Math.floor(T.nhiet || 0); return n > 0 ? { m: [{ ic: n >= 250 ? 'lua_t1' : n >= 100 ? 'lua_t3' : 'fx_cuuvi_dan', s: '' + n }], sang: n >= 100 } : null; },
     nangluong(T, B) { const k = Math.round(SKILLS.nangluong.k(B) * 100); return k > 0 ? { m: [{ ic: 'ic_mana', s: '+' + k + '%' }], sang: k >= 500 } : null; },
     // (Sói: bỏ bộ đếm mạng — Sói không còn lớn dần theo mạng; dạng thường / thức tỉnh quay lúc sinh)
     docton(T, B) { const n = SKILLS.docton.ke(B, T); return n === 0 ? { m: [{ ic: 'ic_toc', s: '+100%' }], sang: true } : n >= 3 ? { m: [{ ic: 'ic_toc', s: '−30%' }] } : null; },
   },
-  ANH: ['h2_tag', 'h2_ic_chong', 'ic_sao', 'ic_dmg', 'ic_toc', 'ic_chet', 'ic_mana', 'fx_leviathan_hieu', 'lev_abyss'],
+  ANH: ['h2_tag', 'h2_ic_chong', 'ic_sao', 'ic_dmg', 'ic_toc', 'ic_chet', 'ic_mana', 'fx_leviathan_hieu', 'lev_abyss', 'fx_cuuvi_dan', 'lua_t1', 'lua_t3'],
   // icon VỰC SÂU: ảnh ChatGPT lev_abyss (docs/demo-hop-tuong/tuvan/leviathan/CAN-VE.json) — chưa có thì xoáy nước fx_leviathan_hieu (ảnh ChatGPT sẵn có)
   IC_VUC: 'lev_abyss',
   icVuc() { return this.IC_VUC || 'fx_leviathan_hieu'; },

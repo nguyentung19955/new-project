@@ -90,7 +90,7 @@
     M('nguyenrua', 7, 'DOOM HEX', '7★ cannot merge again: hex off (best hex = merging two 6★: +25%)');
     M('leviathan', 5, 'DEEP MAW', 'From 4★ (DEEP ONE form): devours big enemies (×3 stacks)');
     M('khoisinh', 5, 'BLOOM', 'From 4★ (BLOSSOM form): neighbours +15% damage');
-    M('ronglua', 5, 'BLUE FLAME', 'From 4★ (BLUE WYRM form): +30% vs big enemies and bosses');
+    M('ronglua', 5, 'ARMORED DRAGON', 'New form: BLUE flame +30% vs big enemies and bosses, heart jet +200%');
     for (const id of GHEP7) if (SKILLS[id] && id !== 'pandora' && !(MOC_RIENG[id] && MOC_RIENG[id][7])) M(id, 7, 'APEX', '+30% damage, +10% crit on its shots · 7★ cannot merge again: merge skill off');
     if (typeof mocCua === 'function') {
       const mc = mocCua;

@@ -29,3 +29,5 @@ if (!window.UCU && window.DE_RIENG) {
   for (const id in window.STAGE_K) if (DE_RIENG[id]) { window.STAGE_DAU_MOI[id] = [1.0, 1.04, 1.08]; delete STAGE_K[id]; if (window.STAGE_TIP) delete STAGE_TIP[id]; }
   if (window.ART_META && window.UMOD_TIP) for (const id in UMOD_TIP) { ART_META[id] = ART_META[id] || { s: 1 }; ART_META[id].tip = UMOD_TIP[id]; }
 }
+// Rồng Máy 4 dạng (tools/thap-cat-rong-may.py): đầu ronglua_f<n>_nong (cỡ ô × K), bệ _de (bệ chung × DE), cánh _canh [x, y, cỡ, gốcX, gốcY]
+window.RONG_DANG = {"f1": {"K": 0.9794, "DE": 0.9367, "tip": 0.971, "canh": [0.1872, -0.2575, 0.2648, 0.161, -0.1675]}, "f2": {"K": 0.9765, "DE": 0.602, "tip": 0.987, "canh": [0.1697, -0.22, 0.3795, 0.1406, -0.0504]}, "f3": {"K": 0.9763, "DE": 0.7377, "tip": 0.991, "canh": [0.1326, -0.2866, 0.4039, 0.1124, -0.1127]}, "f4": {"K": 0.9766, "DE": 0.6528, "tip": 0.991, "canh": [0.1313, -0.2516, 0.4741, 0.0692, -0.0749]}};

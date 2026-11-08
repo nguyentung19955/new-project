@@ -123,7 +123,8 @@ async function luat(b) {
     KB.buoc(1.5);
     return { chayD: E.chayD, mong: 0.075 * 7 * dmgU(T), T3: E.chayT };
   });
-  kt('thiêu 3 s tổng 0.15D × 1.5 × sao (ST/giây = 0.075 × sao × D), nguồn mạnh nhất, làm mới thời gian', Math.abs(r.chayD - r.mong) < 1e-6 && r.T3 > 2.5, JSON.stringify(r));
+  // 08/11 Lò Phản Ứng (thap-kt-rong-may.js): D gồm thưởng NHIỆT (+0.2%/nhiệt) lúc nhịp phun → so D lúc đo lệch < 1%
+  kt('thiêu 3 s tổng 0.15D × 1.5 × sao (ST/giây = 0.075 × sao × D), nguồn mạnh nhất, làm mới thời gian', Math.abs(r.chayD - r.mong) < 0.01 * r.mong && r.T3 > 2.5, JSON.stringify(r));
 
   console.log('— Hố Đen');
   r = await R(() => {

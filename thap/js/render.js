@@ -1023,13 +1023,16 @@ const REN = {
   than(T, S, da, bong) {
     const km = 0; // (vòng màu khoá đã bỏ)
     // bệ riêng đã tải xong → dùng; đang tải / lỗi → bệ chung (không chờ)
-    const kR = this.DE_RIENG[T.id]; let tenR = kR ? T.id + '_de' : null;
+    let kR = this.DE_RIENG[T.id], tenR = kR ? T.id + '_de' : null, vId = T.id;
+    // bệ RIÊNG theo trạng thái (Rồng Máy: bệ mỗi dạng — SKILLS[id].deAnh(T) = [ảnh bệ, hệ số cỡ]); ảnh chưa tải → bệ thường
+    const dep = typeof SKILLS !== 'undefined' && SKILLS[T.id] && SKILLS[T.id].deAnh ? SKILLS[T.id].deAnh(T) : null;
+    if (dep && this.img(dep[0])) { tenR = dep[0]; kR = dep[1]; vId = dep[0].replace(/_de$/, ''); }
     // Pháo La Bàn: bệ theo TỔ HỢP HƯỚNG canon_de_<mặt nạ 1–15> (ảnh ChatGPT, khi window.LABAN_DE) · chưa có → bệ thường + mũi tên sáng (CM.veDe)
     const lb = T.id === 'canon' && typeof SKILLS !== 'undefined' && SKILLS.canon && SKILLS.canon.hb ? SKILLS.canon.hb(T) : 0;
     if (lb && window.LABAN_DE && this.img('canon_de_' + lb)) tenR = 'canon_de_' + lb;
     const rieng = tenR && this.img(tenR) ? tenR : null, ten = rieng || 'de_chung', lbVe = lb && rieng === 'canon_de' && typeof CM !== 'undefined' && CM.veDe ? lb : 0;
     // VIỀN BẬC (người dùng 07/11 18:25): viền kim loại ôm hình bóng bệ, màu = bậc (Trắng bạc · Xanh · Tím · Vàng · Đỏ); đầu ụ giữ màu riêng
-    const vb = rieng && this.VIEN_ON ? this.vienBac(T.id, T.bac, da) : null, vCho = vb === 0; // 0 = ảnh viền đang tải → vẽ tạm không viền, không giữ cache
+    const vb = rieng && this.VIEN_ON ? this.vienBac(vId, T.bac, da) : null, vCho = vb === 0; // 0 = ảnh viền đang tải → vẽ tạm không viền, không giữ cache
     const k = this.s * this.dpr, n = Math.round(S * 1.5 * k), key = 'than|' + (rieng || '') + '|' + T.bac + '|' + (da ? 1 : 0) + '|' + n + (bong ? '|b' : '') + '|' + km + (lbVe ? '|lb' + lbVe : '');
     let c = vCho ? null : this.cGet(key); if (c) return c;
     let de = da ? this.banXam(ten) : this.img(ten);

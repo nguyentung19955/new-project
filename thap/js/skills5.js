@@ -367,72 +367,200 @@ HU.cungSang = { // tia sáng CONG từ lõi sang ụ đích (đầu sáng chạy
 };
 
 // =====================================================================================================
-// R5 · WYRM ENGINE (ronglua) — Đỏ TC: phun lửa HÌNH NÓN liên tục vào quái đầu trong tầm (5 nhịp/s, dmg gốc 10 mỗi nhịp, gắn CHÁY 3 s),
-//      để lại VỆT CHÁY trên đường 2 s (đi qua bị cháy). Góc nón ★1→★7: 40…75°, tầm 100…135 px.
-//      GĐ2 (4★+): LỬA XANH +30% với quái to/trùm. GĐ3 (7★): LỬA TRẮNG viền xanh, vệt cháy 4 s, nón dài +15%.
-//      CHỦ ĐỘNG "DRAGON DIVE" (3★+, hồi 35 s): rồng cơ khí bổ nhào dọc TOÀN BỘ đường từ lõi về cổng: dmg×25 mỗi quái (+5% máu tối đa trùm),
-//      để lại vệt cháy trên cả đường 3 s.
+// R5 · WYRM ENGINE (ronglua) — Đỏ TC. LÀM LẠI 08/11 "LÒ PHẢN ỨNG" (INFERNAL REACTOR — docs/demo-hop-tuong/tuvan/rong-may/THIET-KE.md):
+//   · NÓN LỬA 5 nhịp/s: mỗi nhịp 0.7D mọi quái trong nón + gắn CHÁY 3 s (0.15D × 1.5 × sao, nguồn mạnh nhất, làm mới thời gian).
+//   · TIA TIM LÒ (từ 3★): mỗi nhịp thêm J×D vào quái ĐẦU trong tầm tia (1.6 × tầm nón) (J = 1.6 / 2.0 / 2.4 theo dạng 2/3/4; dạng 4 xuyên 2 quái đầu).
+//   · NHIỆT (không trần): +1 mỗi nhịp phun trúng; GHÉP THẬT có ô kết quả cùng HÀNG hoặc cùng CỘT với Rồng: +5 × sao ụ ra.
+//     Lò NGUỘI 2%/giây nhiệt đang có → phun liên tục cân bằng ~250 (300+ khi quá nhiệt); ghép hàng/cột đẩy vượt mức đó.
+//     Mỗi nhiệt +0.2% ST (cùng nhóm sát thương) · ≥100 QUÁ NHIỆT +25% tốc phun · ≥250 NÓNG CHẢY +100% ST chí mạng.
+//   · DRAGON DIVE (3★+, hồi 32 s, chạm): ĐỐT HẾT NHIỆT — mỗi quái trên đường 25D × (1 + nhiệt/100) (+5% máu tối đa trùm), vệt cháy × (1 + nhiệt/200).
+//     Nhiệt về 0 → mất thưởng nhiệt: QUYẾT ĐỊNH lao sớm cứu đường hay giữ lò nóng cho cú lao lớn. Người chơi để đầy: chỉ tự lao khi có TRÙM.
+//   · 4 DẠNG theo sao (đổi HÌNH thật): 1–2★ HATCHLING · 3–4★ WINGED WYRM (+tia tim, Dive) · 5–6★ ARMORED (lửa XANH +30% quái to/trùm) · 7★ INFERNO (lửa TRẮNG, nón dài +15%, vệt 4 s, tia xuyên 2).
+//   Tất định: không Math.random trong luật; nhiệt đi theo cờ ô 'H' (dongbo.js); Dive = gói 'cd'.
 // =====================================================================================================
 const RONG_MAU = [null, { a: '#ff3b1a', b: '#ffb43a', c: '#fff0b0' }, { a: '#1a5cff', b: '#3aa0ff', c: '#bfe8ff' }, { a: '#2a7aff', b: '#9fd8ff', c: '#ffffff' }];
 // VỆT CHÁY / THAN trên đường + quầng DRAGON DIVE: LUÔN màu lửa (than hồng cam/đỏ) ở MỌI dạng — lửa xanh/trắng chỉ là màu NÓN phun
 // (06/11 lỗi iPhone: rồng lửa đỏ bổ nhào để lại vệt XANH DA TRỜI vì vetChay/rongBo lấy RONG_MAU[gd] = bảng màu nón xanh)
 const RONG_THAN = [null, { a: '#ff3b1a', b: '#ffb43a' }, { a: '#ff4a12', b: '#ffc040' }, { a: '#ff5a1a', b: '#ffd870' }];
+const dangRong = (T) => (T.sao >= 7 ? 4 : T.sao >= 5 ? 3 : T.sao >= 3 ? 2 : 1); // 4 DẠNG theo sao
+const mauRong = (T) => [1, 1, 1, 2, 3][dangRong(T)]; // màu lửa: cam (dạng 1–2) · XANH (dạng 3) · TRẮNG (dạng 4)
+const RONG_TEN = ['HATCHLING ENGINE', 'WINGED WYRM', 'ARMORED DRAGON', 'INFERNO DRAGON'];
 SKILLS.ronglua = {
-  vai: 'tc', dmg: 8.5, toc: 5, // 10 → 8.5: tầm dài hơn (130→165) làm nón trúng nhiều quái hơn — sim-tier 07/11 4★ 3.9 → 5.5, bù lại napMau: '#ff3b1a',
+  vai: 'tc', dmg: 8.5, toc: 5,
   goc: (T) => sao7r(T, [40, 45, 50, 55, 60, 65, 75]) * Math.PI / 180,
-  tam: (T) => sao7r(T, [130, 135, 140, 145, 150, 155, 165]) * (T.sao >= 7 ? 1.15 : 1), // 100→135 → 130→165 px (BAO-CAO gioi-han §4 mục 7)
-  cd: 35,
-  // THIÊU (người dùng duyệt 08/11 — CHATGPT-SPEC §14): tổng 1 lần thiêu 3 s = 0.15D × (3/2) × sao (7★ = 1.575D), chia 6 nhịp 0.5 s
-  //   → ST/giây chayD = tổng / 3 = 0.075 × sao × D (HU.chay: mỗi nhịp chayD × 0.5). Không cộng dồn: giữ nguồn MẠNH NHẤT, làm mới thời gian.
+  tam: (T) => sao7r(T, [130, 135, 140, 145, 150, 155, 165]) * (T.sao >= 7 ? 1.15 : 1),
+  cd: 32,
+  C: 0.7, TIA_TAM: 1.6, J: [0, 0, 1.6, 2.0, 2.0], // C: nón lửa × D mỗi quái mỗi nhịp · J: tia tim lò theo dạng (× D mỗi nhịp)
+  NHIET_ST: 0.002, MOC1: 100, MOC2: 250, MOC1_TOC: 0.25, MOC2_CDMG: 1.0, GHEP: 5, NGUOI: 0.02, // nguội 2%/giây nhiệt đang có (không trần: phun đều cân bằng ~250, ghép hàng/cột đẩy cao hơn)
+  // THIÊU: tổng 1 lần thiêu 3 s = 0.15D × 1.5 × sao → ST/giây chayD = 0.075 × sao × D (HU.chay: mỗi nhịp chayD × 0.5). Không cộng dồn: nguồn mạnh nhất.
   chayD: (T, D) => 0.075 * T.sao * D,
-  mo: (T) => ['Orange', 'BLUE flame (+30% vs big)', 'WHITE flame (+30% vs big, trails 4s)'][gdSao(T) - 1] + ' · cone ' + Math.round(SKILLS.ronglua.goc(T) * 180 / Math.PI) + '° × ' + Math.round(SKILLS.ronglua.tam(T)) + ' px · burns 3s for ' + Math.round(22.5 * T.sao) + '% total (strongest burn wins, no stacking) · ' + (T.sao >= 3 ? 'TAP when full: DRAGON DIVE ×25 down the path' : 'DRAGON DIVE unlocks at 3★'),
+  dang: dangRong,
+  tenDang: (T) => RONG_TEN[dangRong(T) - 1],
+  nhiet: (T) => Math.max(0, T.nhiet || 0),
+  thuong(n) { return { dmg: n * this.NHIET_ST, toc: n >= this.MOC1 ? this.MOC1_TOC : 0, cdmg: n >= this.MOC2 ? this.MOC2_CDMG : 0 }; }, // thuần — test
+  heDive: (n) => 1 + n / 100,
+  mo(T) {
+    const d = dangRong(T), n = Math.floor(this.nhiet(T)), J = this.J[d];
+    return RONG_TEN[d - 1] + ' · Heat ' + n + ' → +' + Math.round(n * this.NHIET_ST * 100) + '% damage' + (n >= this.MOC1 ? ', OVERHEAT +25% breath speed' : '') + (n >= this.MOC2 ? ', MELTDOWN +100% crit damage' : '') +
+      ' · cone ' + Math.round(this.goc(T) * 180 / Math.PI) + '° × ' + Math.round(this.tam(T)) + ' px, 5 ticks/s, burns 3s for ' + Math.round(22.5 * T.sao) + '% (strongest burn wins)' +
+      (J ? ' · HEART JET +' + Math.round(J * 100) + '% per tick on the ' + (d >= 4 ? '2 front enemies' : 'front enemy') : ' · HEART JET at 3★') +
+      (d >= 3 ? ' · ' + (d >= 4 ? 'WHITE' : 'BLUE') + ' flame +30% vs big' : '') +
+      ' · Heat: +1 per tick that hits, +5 × ★ for every real merge in its ROW or COLUMN (no cap) · 100: +25% breath speed · 250: +100% crit damage · ' +
+      (T.sao >= 3 ? 'TAP when full: DRAGON DIVE burns ALL heat: 25× damage × (1 + heat/100) to every enemy on the path' : 'DRAGON DIVE unlocks at 3★');
+  },
+  sinh(G, T) { if (T.nhiet == null) T.nhiet = 0; },
   capNhat(G, B, T, dt) {
-    const L = this.tam(T), c = tamU(T), E = quaiDauTam(B, T, L);
+    const L = this.tam(T), c = tamU(T), d = dangRong(T), n = this.nhiet(T), th = this.thuong(n), J = this.J[d], Lj = L * this.TIA_TAM;
+    const E = quaiDauTam(B, T, L) || (J ? quaiDauTam(B, T, Lj) : null); // tia tim lò với xa hơn nón (TIA_TAM × tầm): không có quái trong nón vẫn bắn tia
+    T.buf.dmg += th.dmg; T.buf.toc += th.toc; if (th.cdmg) T.buf.cdmg = (T.buf.cdmg || 0) + th.cdmg;
+    if (n > 0) T.nhiet = n * (1 - this.NGUOI * dt); // lò nguội dần (tất định theo bước cố định)
     xoayDau(T, E, dt);
     T.phun = Math.max(0, (T.phun || 0) - dt);
     T.tick = (T.tick || 0) - dt * (1 + T.buf.toc) * (this.toc / 5);
     if (E && T.tick <= 0) {
       T.tick = Math.max(0, T.tick + 0.2); T.phun = 0.3; T.banLan++; // cộng dồn: đúng 5 nhịp/s ở mọi tốc độ khung hình
-      const gd = gdSao(T), a = this.goc(T) / 2, dmg = dmgU(T);
+      const gd = mauRong(T), a = this.goc(T) / 2, dmg = dmgU(T), to = (Q) => d >= 3 && (Q.d.to || Q.trum) ? 1.3 : 1, mau = gd === 3 ? '#e8f6ff' : gd === 2 ? '#9fd0ff' : '#ffb070';
+      const trong = [];
       for (const Q of dsMucTieu(B)) {
         if (Q.chet) continue;
-        const dx = Q.x - c.x, dy = Q.y - c.y, d = Math.hypot(dx, dy);
-        if (d > L + Q.d.co * 0.3 || Math.abs(gocLech(T.goc, Math.atan2(dy, dx))) > a + 0.08) continue;
-        trung(Q, dmg * (gd >= 2 && (Q.d.to || Q.trum) ? 1.3 : 1), { B, mau: gd === 3 ? '#e8f6ff' : gd === 2 ? '#9fd0ff' : '#ffb070', im: Math.random() < 0.6 });
+        const dx = Q.x - c.x, dy = Q.y - c.y, dd = Math.hypot(dx, dy);
+        if (dd > L + Q.d.co * 0.3 || Math.abs(gocLech(T.goc, Math.atan2(dy, dx))) > a + 0.08) continue;
+        trong.push(Q);
+      }
+      // quái ĐẦU trong nón (gần lõi nhất) — thứ tự tất định: quãng còn lại, rồi uid
+      trong.sort((p, q) => (G.duong[p.p].len - p.s) - (G.duong[q.p].len - q.s) || (p.uid || 0) - (q.uid || 0));
+      // tia: quái ĐẦU trong tầm tia (1, dạng 4: 2) — thứ tự tất định
+      const tia = !J ? [] : quaiTrongTam(B, T, Lj).filter(Q => !Q.chet).sort((p, q) => (G.duong[p.p].len - p.s) - (G.duong[q.p].len - q.s) || (p.uid || 0) - (q.uid || 0)).slice(0, d >= 4 ? 2 : 1);
+      let k = 0;
+      for (const Q of trong) {
+        if (Q.chet) continue;
+        trung(Q, dmg * this.C * to(Q), { B, mau, im: (T.banLan + k++) % 5 > 1 }); // im: chỉ bớt số nổi (không ngẫu nhiên)
         if (!Q.chet) { Q.chayT = Math.max(Q.chayT || 0, 3); Q.chayD = Math.max(Q.chayD || 0, this.chayD(T, dmg)); Q.chayB = B; if (!G.hu.some(o => o.k === 'chay' && o.E === Q)) G.hu.push({ k: 'chay', t: 0, song: 30, E: Q, T }); }
       }
+      for (const Q of tia) if (!Q.chet) trung(Q, dmg * J * to(Q), { B, mau: '#fff2c0' });
+      if (trong.length || tia.length) { T.nhiet = this.nhiet(T) + 1; if (tia.length) RONG_TIA.set(T, { ds: tia.map(Q => [Q.x, Q.y]), t: G.t }); }
       // vệt cháy trên đường dưới mục tiêu (≤1 vệt / 0.45 s / ụ)
-      if (G.t - (T.vetT || -9) > 0.45) { T.vetT = G.t; G.hu.push({ k: 'vetChay', t: 0, song: gd === 3 ? 4 : 2, x: E.x, y: E.y, B, T, dmg: dmg * 0.3, tick: 0, gd }); }
-      // hạt lửa dọc nón (giới hạn)
-      const [x, y] = dauNong(T), m = RONG_MAU[gd];
-      for (let i = 0; i < 3; i++) { const g = T.goc + rnd(-a, a), v = rnd(L * 1.6, L * 2.6); FX.hat1('lua', x, y, Math.cos(g) * v, Math.sin(g) * v, 0.32, 9, i ? m.b : m.c); }
+      if (G.t - (T.vetT || -9) > 0.45) { T.vetT = G.t; G.hu.push({ k: 'vetChay', t: 0, song: d >= 4 ? 4 : 2, x: E.x, y: E.y, B, T, dmg: dmg * 0.3, tick: 0, gd }); }
+      if (typeof GFX === 'undefined' || GFX.coDOM) { // hạt lửa dọc nón (chỉ hình — vòng lặp tất định theo banLan, không số ngẫu nhiên)
+        const [x, y] = dauNong(T), m = RONG_MAU[gd];
+        for (let i = 0; i < 3; i++) { const f = ((T.banLan * 7 + i * 13) % 17) / 16, g = T.goc - a + 2 * a * f, v = L * (1.6 + f); FX.hat1('lua', x, y, Math.cos(g) * v, Math.sin(g) * v, 0.32, 9, i ? m.b : m.c); }
+      }
       if (!B.ai || G.che === 'pvp') SND.gLua(gd);
     }
     if (!G.hu.some(o => o.k === 'nonLua' && o.T === T)) G.hu.push({ k: 'nonLua', t: 0, song: 1e9, T });
     napChuDong(G, B, T, dt, this.cd, this);
     return true;
   },
-  aiNen: (G, B, T) => dsMucTieu(B).filter(E => !E.chet).length >= 6 || G.quai.some(E => E.trum && !E.chet && banDuocQuai(B, E)),
+  // AI: lao khi có trùm, khi lò ≥ 200, hoặc đông quái và lò ≥ 100 · người chơi để đầy: chỉ tự lao khi có TRÙM (giữ lò là quyết định của người chơi)
+  aiNen(G, B, T) {
+    if (G.quai.some(E => E.trum && !E.chet && banDuocQuai(B, E))) return true;
+    if (!B.ai) return false;
+    const n = this.nhiet(T); return n >= 200 || (n >= 100 && dsMucTieu(B).filter(E => !E.chet).length >= 6);
+  },
   chuDong(G, B, T) {
     if (T.nap < 1 || T.sao < 3) return false;
-    T.nap = 0; T.napDay = 0; T.sang = 1; giat(T, 2.6);
+    const n = this.nhiet(T), h = this.heDive(n);
+    T.nap = 0; T.napDay = 0; T.sang = 1; giat(T, 2.6); T.nhiet = 0;
     const p = G.duong.find(q => q.ban === B.i) || G.duong[0];
-    G.hu.push({ k: 'rongBo', t: 0, song: 1.3, T, B, p, dmg: dmgU(T) * 25, da: new Set(), vetT: 0 });
-    nhanU(T, 'DRAGON DIVE!', '#ff5a1a', true); SND.gRong(); FX.lac(3);
+    G.hu.push({ k: 'rongBo', t: 0, song: 1.3, T, B, p, dmg: dmgU(T) * 25 * h, hv: 1 + n / 200, n, da: new Set(), vetT: 0 });
+    nhanU(T, n >= 1 ? 'DRAGON DIVE! ×' + h.toFixed(1) : 'DRAGON DIVE!', '#ff5a1a', true); SND.gRong(); FX.lac(3);
     return true;
   },
-  sangDau: (T) => (T.phun > 0 ? 0.2 : 0) + (T.gd === 3 ? 0.12 : 0),
+  // GHÉP THẬT có ô kết quả cùng hàng / cột: +5 × sao ụ ra (Rồng chính là nguyên liệu: không tính) — gọi từ móc ghep bên dưới
+  ghepHangCot(B, o, sao, a, b) {
+    const c = o % 5, h = (o / 5) | 0;
+    for (let i = 0; i < 15; i++) {
+      const X = B.t[i]; if (!X || X.id !== 'ronglua' || X.st.da || X === a || X === b || i === o) continue;
+      if (i % 5 !== c && ((i / 5) | 0) !== h) continue;
+      const them = this.GHEP * sao; X.nhiet = this.nhiet(X) + them; X.sang = 1; // tăng 1 lần: chỉ chớp
+      if (typeof G !== 'undefined' && G.hu) { const p = B.o[o], q = B.o[i]; G.hu.push({ k: 'rongNap', t: 0, song: 0.35 + 0.06 * (Math.abs(i % 5 - c) + Math.abs(((i / 5) | 0) - h)), x0: p.x, y0: p.y, x1: q.x, y1: q.y, n: them }); }
+    }
+  },
+  sangDau: (T) => (T.phun > 0 ? 0.2 : 0) + (dangRong(T) >= 4 ? 0.12 : 0) + Math.min(0.15, (T.nhiet || 0) / 1600),
+};
+// ---- HÌNH 4 DẠNG (tools/thap-cat-rong-may.py → artscale.js RONG_DANG): đầu ronglua_f<n>_nong + 2 cánh ronglua_f<n>_canh vỗ quanh gốc + bệ ronglua_f<n>_de.
+//      Chỉ hình: nhịp vỗ cánh / giật / chuyển dạng theo thời gian vẽ (REN.t) + WeakMap — không đụng luật, không vào đồng bộ. Ảnh chưa tải → đầu cũ ronglua_nong.
+const RONG_VE = new WeakMap(); // T → { f: dạng đang vẽ, cu: dạng cũ, t0: lúc đổi dạng }
+const RONG_VO = [0, { tan: 11, bien: 0.32 }, { tan: 6.5, bien: 0.22 }, { tan: 4.2, bien: 0.14 }, { tan: 3.4, bien: 0.2 }]; // nhịp vỗ (rad/s) + biên độ (rad) mỗi dạng
+Object.assign(SKILLS.ronglua, {
+  deAnh(T) { const M = window.RONG_DANG && RONG_DANG['f' + dangRong(T)]; return M ? ['ronglua_f' + dangRong(T) + '_de', M.DE] : null; },
+  // 1 dạng: 2 cánh (dưới) + đầu; sc = phóng đều, bien = '' | 'trang' (bóng trắng lúc đổi dạng)
+  veDang(ctx, T, f, C, al, sc, da, R, bien) {
+    const M = window.RONG_DANG && RONG_DANG['f' + f], ten = 'ronglua_f' + f + '_nong'; if (!M || !R.img(ten)) return false;
+    const kieu = bien || (da ? 'xam' : ''), D = C * M.K * sc, t = R.t + (T.pha || 0);
+    const V = RONG_VO[f], phun = T.phun > 0 ? Math.min(1, T.phun / 0.3) : 0;
+    // vỗ cánh: sóng sin + lúc phun dang rộng ra (ép cánh về sau theo nhịp giật), dạng 4 bay lơ lửng (nhấp nhô)
+    const vo = V.bien * Math.sin(t * V.tan) + 0.18 * phun, noi = f === 4 ? Math.sin(t * 2.2) * C * 0.012 : 0;
+    const lui = -(T.rx || 0) * 0.6 - phun * C * 0.025; // giật lùi khi phun
+    const [cx, cy, co, gx, gy] = M.canh, cw = R.img('ronglua_f' + f + '_canh') && R.co('ronglua_f' + f + '_canh', co * C * sc, kieu);
+    ctx.save(); ctx.globalAlpha = al; ctx.rotate(T.goc); ctx.translate(lui, noi);
+    if (cw) for (const lat of [1, -1]) {
+      ctx.save(); ctx.translate(gx * C * sc, lat * gy * C * sc); ctx.rotate(-lat * vo); ctx.scale(1, lat * (1 - 0.06 * Math.abs(Math.sin(t * V.tan))));
+      const w = co * C * sc; ctx.drawImage(cw, (cx - gx) * C * sc - w / 2, (cy - gy) * C * sc - w / 2, w, w); ctx.restore();
+    }
+    const h = R.co(ten, D, kieu); if (h) { const p = 1 + 0.035 * phun; ctx.drawImage(h, -D * p / 2, -D * p / 2, D * p, D * p); }
+    // miệng sáng khi phun / tim lò nóng (cộng sáng chính ảnh đầu, không vẽ hình code)
+    const nong = Math.min(0.35, (T.nhiet || 0) / 900) + 0.25 * phun + (T.chop > 0 ? Math.min(0.4, T.chop * 3) : 0);
+    if (h && !da && !bien && nong > 0.01) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * nong; ctx.drawImage(h, -D / 2, -D / 2, D, D); ctx.globalCompositeOperation = 'source-over'; }
+    ctx.restore(); ctx.globalAlpha = 1;
+    return true;
+  },
+  veDau(ctx, T, S, al, R, da) {
+    const f = dangRong(T), C = S / 0.98; let v = RONG_VE.get(T);
+    if (!v) { v = { f, cu: f, t0: -9 }; RONG_VE.set(T, v); }
+    if (v.f !== f) { v.cu = v.f; v.f = f; v.t0 = R.t; }
+    const u = (R.t - v.t0) / 0.65;
+    if (u >= 0 && u < 1 && v.cu !== f) { // ĐỔI DẠNG 0,65 s: dạng cũ co + trắng dần → chớp → dạng mới bung 0.85 → 1.1 → 1
+      const e = (x) => 1 - (1 - x) * (1 - x);
+      if (u < 0.45) { const k = u / 0.45; this.veDang(ctx, T, v.cu, C, al * (1 - k * 0.6), 1 - 0.12 * e(k), da, R) || 0; this.veDang(ctx, T, v.cu, C, al * k, 1 - 0.12 * e(k), da, R, 'trang'); }
+      if (u >= 0.35) { const k = (u - 0.35) / 0.65, sc = k < 0.5 ? 0.85 + 0.25 * e(k * 2) : 1.1 - 0.1 * e((k - 0.5) * 2); if (!this.veDang(ctx, T, f, C, al * Math.min(1, k * 2), sc, da, R)) return false; if (k < 0.3) this.veDang(ctx, T, f, C, al * (1 - k / 0.3), sc, da, R, 'trang'); }
+      return true;
+    }
+    return this.veDang(ctx, T, f, C, al, 1, da, R);
+  },
+});
+const RONG_TIA = new WeakMap(); // tia tim lò: toạ độ mục tiêu lần phun cuối (CHỈ để vẽ — không nằm trên T, không vào đồng bộ)
+GIU_CONG_DON.ronglua = ['nhiet']; // Rồng + Rồng ra Rồng: giữ nhiệt lớn hơn
+{
+  const _ghepRong = ghep;
+  ghep = function (B, a, b, ep) {
+    const that = laGhepThat(a, b, ep), B2 = b && G.ban[b.ban], o = b && b.o;
+    const r = _ghepRong.apply(this, arguments);
+    if (r && that && B2 && B2.t.some(X => X && X.id === 'ronglua')) { const ra = B2.t[o]; if (ra) SKILLS.ronglua.ghepHangCot(B2, o, ra.sao, a, b); }
+    return r;
+  };
+}
+HU.rongNap = { // nhiệt bay từ ô ghép tới Rồng cùng hàng/cột: 1 đốm lửa nhỏ PNG trượt thẳng (không vòng)
+  cap(G, o, dt) { o.t += dt; return o.t >= o.song; },
+  ve(ctx, o, R) {
+    const p = Math.min(1, o.t / o.song), e = 1 - (1 - p) * (1 - p), im = R.img('lua_t1') || R.img('fx_cuuvi_dan'); if (!im) return;
+    PX.ve(ctx, im, o.x0 + (o.x1 - o.x0) * e, o.y0 + (o.y1 - o.y0) * e - Math.sin(p * Math.PI) * 10, 14, 18, 0, 1 - p * 0.3);
+  },
 };
 // nón lửa = ảnh PNG fx_ronglua_dan (ChatGPT) — dạng 2/3 tô màu lửa xanh (thay sprite gradient + quadraticCurveTo dựng bằng code)
 function anhNon(gd) { if (gd > 1 && typeof FXU !== 'undefined' && FXU.co('fx_ronglua_dan' + gd)) return REN.img('fx_ronglua_dan' + gd); return gd > 1 ? PX.mau('fx_ronglua_dan', RONG_MAU[gd].b) : REN.img('fx_ronglua_dan'); }
+// TIA TIM LÒ: luồng lửa HẸP sáng từ miệng tới quái đầu (dải fx_wyrm_lua2 kéo mảnh, màu theo dạng) + loé trúng — chỉ hình
+function veTiaTim(ctx, T, R) {
+  const o = RONG_TIA.get(T); if (!o || G.t - o.t > 0.3 || !SKILLS.ronglua.J[dangRong(T)]) return;
+  const [x, y] = dauNong(T), gd = mauRong(T), ten = gd > 1 && REN.img('fx_wyrm_lua2_' + gd) ? 'fx_wyrm_lua2_' + gd : 'fx_wyrm_lua2', M2 = typeof SIG_META !== 'undefined' && SIG_META.fx_wyrm_lua2;
+  const f = 3 + Math.floor(R.t * 14) % 3, m = RONG_MAU[gd], a = Math.min(1, T.phun / 0.3);
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+  for (const [ex, ey] of o.ds) {
+    const L = Math.hypot(ex - x, ey - y), g = Math.atan2(ey - y, ex - x); if (L < 4) continue;
+    if (M2 && REN.img(ten) && typeof SIG !== 'undefined') { ctx.globalAlpha = 0.95 * a; SIG.k(ctx, ten, f, x, y, L / 0.78, { g, ax: 0.02, h: 14 + 3 * dangRong(T) }); }
+    ctx.globalAlpha = 0.85 * a; R.anhGiua(ctx, R.cham1(m.c), ex, ey, 22 + 4 * dangRong(T)); ctx.globalAlpha = 0.6 * a; R.anhGiua(ctx, R.cham1(m.b), ex, ey, 40);
+  }
+  ctx.restore(); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+}
 const LUA_BD = new WeakMap(); // lúc bắt đầu phun của mỗi ụ (chỉ để chọn khung hình — không nằm trên T, không vào đồng bộ online)
 HU.nonLua = { // nón lửa = dải 16 khung ChatGPT fx_wyrm_lua chạy ĐÚNG THỨ TỰ (bắt lửa 1–4 → chảy lặp 5–12 → tàn 13–16) — user 06/11 17:37: bỏ 1 ảnh tĩnh rung/phóng
   // dạng 2/3 (lửa XANH / TRẮNG theo luật) = cùng khung tô màu; chưa có dải → ảnh cũ fx_ronglua_dan (tĩnh, không rung)
   cap(G, o) { return !conTren(o.T) || o.T.id !== 'ronglua'; },
   ve(ctx, o, R) {
-    const T = o.T, gd = T.gd || gdSao(T);
+    const T = o.T, gd = mauRong(T);
     if (!(T.phun > 0)) { LUA_BD.delete(T); return; }
     if (!LUA_BD.has(T)) LUA_BD.set(T, R.t);
+    veTiaTim(ctx, T, R);
     const goc = SKILLS.ronglua.goc(T), [x, y] = dauNong(T); let L = SKILLS.ronglua.tam(T);
     // VFX P0 hitbox: phép trúng đo từ TÂM ụ (tamU) tới L — ảnh bắt đầu ở nòng nên rút phần nòng ra khỏi chiều dài → mũi lửa = đúng tầm thật
     const c0 = tamU(T); L = Math.max(20, L - Math.hypot(x - c0.x, y - c0.y));
@@ -500,13 +628,13 @@ HU.rongBo = { // DRAGON DIVE: bóng rồng bay dọc đường (lõi → cổng)
       o.da.add(E); trung(E, o.dmg + (E.trum ? E.max * 0.05 : 0), { B: o.B, mau: '#ffb070' });
       FX.no('no_phao', E.x, E.y, 60, 0.3); FX.tiaLua(E.x, E.y, 4, '#ffc070', 160, 8);
     }
-    o.vetT -= dt; if (o.vetT <= 0) { o.vetT = 0.08; G.hu.push({ k: 'vetChay', t: 0, song: 3, x, y, B: o.B, T: o.T, dmg: dmgU(o.T) * 0.3, tick: 0, gd: gdSao(o.T) }); }
+    o.vetT -= dt; if (o.vetT <= 0) { o.vetT = 0.08; G.hu.push({ k: 'vetChay', t: 0, song: 3, x, y, B: o.B, T: o.T, dmg: dmgU(o.T) * 0.3 * (o.hv || 1), tick: 0, gd: mauRong(o.T) }); }
     if (TVX.duocLac(0.35)) FX.lac(2);
     return false;
   },
   ve(ctx, o, R) {
     if (o.x == null) return;
-    const u = o.t / o.song, a = u < 0.08 ? u / 0.08 : u > 0.9 ? (1 - u) / 0.1 : 1, gd = gdSao(o.T), m = RONG_THAN[gd];
+    const u = o.t / o.song, a = u < 0.08 ? u / 0.08 : u > 0.9 ? (1 - u) / 0.1 : 1, gd = mauRong(o.T), m = RONG_THAN[gd];
     ctx.save(); ctx.translate(o.x, o.y);
     PX.bong(ctx, 6, 10, 60, 60, 0.35 * a); // bóng đổ = PNG tô đen
     ctx.rotate(o.g);
@@ -529,14 +657,14 @@ HU.rongBo = { // DRAGON DIVE: bóng rồng bay dọc đường (lõi → cổng)
 themHo('summon', 4, 'chuato', 'drones circle the hive, then fly out together + SWARM (active)');
 themHo('heavy', 4, 'leviathan', 'devours enemies for damage stacks (no cap) + TIDAL BREATH (active)');
 themHo('star', 4, 'khoisinh', 'raises the weakest neighbour (limited gifts) + GENESIS (active)');
-themHo('blast', 4, 'ronglua', 'flame cone that burns crowds + DRAGON DIVE (active)');
+themHo('blast', 4, 'ronglua', 'heat reactor: breath + heart jet build heat (row/column merges too), DRAGON DIVE burns it all (active)');
 
 Object.assign(MOC_RIENG, {
   blackhole: { 3: ['SINGULARITY', 'Unlocks the active skill (tap, 30 mana): the next hole is bigger and crushes harder'] },
   chuato: { 3: ['SWARM', 'Unlocks the active skill (tap when full; auto-fires if left full)'], 7: ['FULL BROOD', '7 drones: a 7-drone volley gets +48% damage'] },
   leviathan: { 3: ['TIDAL BREATH', 'Unlocks the active skill (tap when full; auto-fires if left full)'], 5: ['DEEP MAW', 'Devours big enemies (×3 stacks) — starts at 4★'], 7: ['ABYSS LORD', 'Devours every 5s, flyers too'] },
   khoisinh: { 3: ['GENESIS', 'Unlocks the active skill (tap, 30 mana): summons a 1★ next to it'], 5: ['BLOOM', 'Neighbours +15% damage (starts at 4★)'] },
-  ronglua: { 3: ['DRAGON DIVE', 'Unlocks the active skill (tap when full; auto-fires if left full)'], 5: ['BLUE FLAME', '+30% vs big enemies and bosses (starts at 4★)'], 7: ['WHITE FLAME', 'Longer cone, burning trail 4s'] },
+  ronglua: { 3: ['WINGED WYRM', 'New form: HEART JET +160% on the front enemy + DRAGON DIVE (tap when full, burns all heat)'], 5: ['ARMORED DRAGON', 'New form: BLUE flame +30% vs big enemies and bosses, jet +200%'], 7: ['INFERNO DRAGON', 'New form: WHITE flame, longer cone, trail 4s, jet +200% on the 2 front enemies'] },
 });
 Object.assign(GROW, {
   chuato: { mau: '#ff6a2a', khongAnh: true, ten: ['NEST', 'HIVE', 'ROYAL HIVE'], dk: 'Drones circling = stars (1–7) · all fly out when the brood is full',
@@ -545,10 +673,16 @@ Object.assign(GROW, {
     gd: (T) => ({ s: gdSao(T), p: (T.sao - 1) / 6, v: [0.5] }) },
   khoisinh: { mau: '#ff8ab0', khongAnh: true, ten: ['SEED', 'BLOSSOM', 'LOTUS OF LIFE'], dk: '1–3★ / 4–6★ (neighbours +15% dmg) / 7★ · gifts = its stars when it appeared',
     gd: (T) => ({ s: gdSao(T), p: (T.sao - 1) / 6, v: [0.5] }) },
-  ronglua: { mau: '#ff5a1a', ten: ['WHELP', 'BLUE WYRM', 'WHITE WYRM'], dk: '1–3★ orange flame / 4–6★ BLUE flame (+30% vs big) / 7★ WHITE flame (longer, trails 4s)',
-    gd: (T) => ({ s: gdSao(T), p: (T.sao - 1) / 6, v: [0.5] }) },
+  ronglua: { mau: '#ff5a1a', ten: ['HATCHLING', 'WYRM', 'INFERNO'], dk: '4 forms: 1–2★ Hatchling Engine · 3–4★ Winged Wyrm (heart jet) · 5–6★ Armored Dragon (BLUE flame +30% vs big) · 7★ Inferno Dragon (WHITE flame, jet hits 2)',
+    gd: (T) => ({ s: [1, 1, 2, 2, 3][dangRong(T)], p: (T.sao - 1) / 6, v: [0.5] }),
+    hinh: [ // trang ụ: 4 dạng HÌNH thật (icon tools/thap-cat-rong-may.py)
+      { sao: '1–2★', ten: 'Hatchling Engine', anh: 'nho/ronglua_f1', mo: 'Orange flame puffs' },
+      { sao: '3–4★', ten: 'Winged Wyrm', anh: 'nho/ronglua_f2', mo: 'Cone + HEART JET, DRAGON DIVE' },
+      { sao: '5–6★', ten: 'Armored Dragon', anh: 'nho/ronglua_f3', mo: 'BLUE flame +30% vs big', mau: '#4aa8ff' },
+      { sao: '7★', ten: 'Inferno Dragon', anh: 'nho/ronglua_f4', mo: 'WHITE flame, jet hits 2', mau: '#ffd870' },
+    ] },
 });
 Object.assign(NHIP, {
   chuato: (T) => 'brood ' + SKILLS.chuato.chuKy(T, T.thaN).toFixed(1) + 's',
-  ronglua: () => 'flame 5 ticks/s', khoisinh: (T) => '+1★ to a neighbour every ' + SKILLS.khoisinh.g(T) + 's',
+  ronglua: (T) => 'flame ' + (5 * (T && (T.nhiet || 0) >= 100 ? 1.25 : 1)) + ' ticks/s', khoisinh: (T) => '+1★ to a neighbour every ' + SKILLS.khoisinh.g(T) + 's',
 });

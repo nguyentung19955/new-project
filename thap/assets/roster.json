@@ -820,9 +820,9 @@
   "ten": "Wyrm Engine",
   "bac": "do",
   "dcdw": "Tiamat",
-  "kyNang": "Flame cone burns crowds (strongest burn wins). Active (3★+): DRAGON DIVE down the path",
+  "kyNang": "Heat reactor: flame cone + heart jet (3★+) build Heat (no cap, cools 2%/s); real merges in its row/column add +5×★ heat. +0.2% damage per heat, 100: +25% breath speed, 250: +100% crit damage. Active (3★+): DRAGON DIVE burns ALL heat for ×(1+heat/100). 4 forms: 1–2★ / 3–4★ / 5–6★ blue / 7★ white",
   "ten_vi": "Rồng Máy",
-  "kyNang_vi": "Phun lửa hình nón đốt cháy (thiêu mạnh nhất thắng, không cộng dồn); CHỦ ĐỘNG: rồng bổ nhào dọc đường",
+  "kyNang_vi": "Lò phản ứng: nón lửa + tia tim lò (3★+) tích NHIỆT (không trần, nguội 2%/giây); ghép thật cùng hàng/cột +5×★ nhiệt. Mỗi nhiệt +0.2% ST, 100: +25% tốc phun, 250: +100% ST chí mạng. CHỦ ĐỘNG (3★+): DRAGON DIVE đốt HẾT nhiệt ×(1+nhiệt/100). 4 dạng: 1–2★ / 3–4★ / 5–6★ xanh / 7★ trắng",
   "vai": "tc",
   "ho": "blast",
   "moi": "TUONG-MOI-20"

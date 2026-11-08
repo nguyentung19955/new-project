@@ -25,7 +25,8 @@ const SIG = {
       for (const k in SIG_META) if (k.startsWith('sig_' + ma + '_')) REN.img(k);
       if (id === 'leviathan') for (const k of ['fx_leviathan_dan', 'fx_leviathan_trung']) REN.img(k); // TIDAL BREATH: cầu nước bay lên + mưa nước (bỏ đầu rồng lev_rong, bỏ cột tia)
       if (id === 'marionette') for (const k of this.ROI) REN.img(k);
-      if (id === 'ronglua') for (const k of ['wyrm_rong', 'fx_wyrm_lua2', 'fx_wyrm_lua2_2', 'fx_wyrm_lua2_3', 'fx_wyrm_lua', 'fx_ronglua_trung']) REN.img(k);
+      if (id === 'ronglua') for (const k of ['wyrm_rong', 'fx_wyrm_lua2', 'fx_wyrm_lua2_2', 'fx_wyrm_lua2_3', 'fx_wyrm_lua', 'fx_ronglua_trung', 'lua_t1', 'lua_t3', 'fx_cuuvi_dan']) REN.img(k);
+      if (id === 'ronglua') for (let f = 1; f <= 4; f++) for (const p of ['_nong', '_canh', '_de', '_vien']) REN.img('ronglua_f' + f + p); // 4 dạng Rồng Máy (skills5.js veDau)
     }
   },
   san(id, g) { const a = REN.anh[this.ten(id, g)]; return !!(a && (a._cv || (a.complete && a.naturalWidth))); },
