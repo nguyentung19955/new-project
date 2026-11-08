@@ -64,7 +64,7 @@ ok(R('xa.lc') === 1, 'Ember ngoài hàng/cột của A và C không đổi');
 }
 { // ụ ra là Ember: giữ như cũ max(★, A + C), không nhận thêm từ hàng/cột · khác sao không ghép được
   R(`B.t.fill(null); var A = dat(0, 'lualien', 2, T => T.lc = 5), C = dat(1, 'lualien', 2, T => T.lc = 3), y = dat(2, 'lualien', 1, T => T.lc = 1); B.deck = ['lualien']; var ra = ghep(B, A, C);`);
-  ok(R('ra.id') === 'lualien' && R('ra.lc') === 3 && R('B.t[1] === ra') && R('y.lc') === 9, 'Ember + Ember ra Ember: ụ ra = Ember MỚI 3★ → 3 lửa (09/11 Q1 = A, không lấy A + C) · ô 2 = 1 + 5 + 3 = 9', R('[ra.lc, y.lc]'));
+  ok(R('ra.id') === 'lualien' && R('ra.lc') === 0 && R('B.t[1] === ra') && R('y.lc') === 9, 'Ember + Ember ra Ember: ụ ra = Ember MỚI → 0 lửa (08/11 người dùng, không lấy A + C) · ô 2 = 1 + 5 + 3 = 9', R('[ra.lc, y.lc]'));
   R(`B.t.fill(null); var A = dat(0, 'lualien', 2, T => T.lc = 5), C = dat(1, 'lualien', 3, T => T.lc = 3), y = dat(2, 'lualien', 1, T => T.lc = 1); var r = ghep(B, A, C);`);
   ok(!R('hopLeGhep(A, C)') && R('r') === null && R('B.t[0] === A && B.t[1] === C') && R('y.lc') === 1, '2 Ember KHÁC SAO: không ghép, không truyền lửa');
   R(`B.t.fill(null); var A = dat(0, 'lualien', 2, T => T.lc = 5), C = dat(1, 'lualien', 2, T => T.lc = 3), y = dat(2, 'lualien', 1, T => T.lc = 1); `);
