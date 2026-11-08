@@ -280,7 +280,7 @@ function trongTrang(arg) {
   if (Math.abs(them.orbital - them.heso) > 0.002) LOI.push('✗ bom Orbital của bản sao ×' + them.orbital + ' ≠ ×' + them.heso);
   if (!them.evo.ok) LOI.push('✗ Evolver mất sao phải đếm lại từ đầu (5★→4★, 7★ xịt→6★), lên sao giữ thời gian: ' + JSON.stringify(them.evo));
   if (them.cm !== JSON.stringify([[true, 3, 5, 0, true], [false, 4, 15], [3, 15, 3], ['canon', true, true, 0]])) LOI.push('✗ Pháo La Bàn: luật ghép sai ' + them.cm + ' (cần N2★+S3★ = NS 3★ · NS+N không ghép · NS+WE 4★ = NSWE 4★ · NSWE(2)+NSWE 1★ → 3★ stack 3 · Copycat chép = 1 hướng ngẫu nhiên mới, 0 stack)');
-  if (them.lc !== JSON.stringify([7, 2, 2, 2, 0])) LOI.push('✗ Lửa Thập Tự: ' + them.lc + ' (luật 08/11: Ember rời bàn truyền lửa theo hàng/cột CỦA NÓ, cộng dồn — ghép ô 6 (5) vào ô 2 (2): ụ ra = 5 + 2 = 7; ô 0, 4 (hàng ô 2), ô 12 (cột ô 2) +2; ô 10 không chung đường = 0)');
+  if (them.lc !== JSON.stringify([7, 7, 7, 7, 0])) LOI.push('✗ Lửa Thập Tự: ' + them.lc + ' (luật 08/11: ghép 2 Ember → lửa cả 2 truyền theo hàng/cột Ô GHÉP — ghép ô 6 (5) vào ô 2 (2): ụ ra = 5 + 2 = 7; ô 0, 4 (hàng ô 2), ô 12 (cột ô 2) +7; ô 10 không chung đường = 0)');
   if (them.dr !== JSON.stringify([7, 2])) LOI.push('✗ Drone Kéo Xa: ' + them.dr + ' (cần góc → góc 6 ô + 3★/3 = 7 drone; kề 1 ô = 2)');
   if (!them.capLoai) LOI.push('✗ Hộp Bí Ẩn (bản sao) mở ra: sức mạnh không theo cấp của LOẠI kết quả × % sao chép');
   for (const e of errs) LOI.push('✗ ' + e);

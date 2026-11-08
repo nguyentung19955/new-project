@@ -105,7 +105,7 @@ function sdLuaLien(x, B) {
   }
   if (t > 2.5 && t < 4.6) { // mũi tên dọc hàng + cột (ảnh duong_mui), nhấp nháy chạy ra ngoài
     const k = (t - 2.5) * 3;
-    for (const o1 of [7, o0]) for (let i = 0; i < 15; i++) { // từ CẢ 2 ô Ember rời bàn (7 và 8), mỗi ô theo hàng/cột của nó
+    for (const o1 of [o0]) for (let i = 0; i < 15; i++) { // từ Ô GHÉP (8): lửa cả 2 Ember theo hàng/cột ô ghép (luật 08/11)
       const c1 = o1 % 5, h1 = (o1 / 5) | 0, c = i % 5, h = (i / 5) | 0; if (i === o1 || i === 7 || i === o0 || (c !== c1 && h !== h1)) continue;
       const d = Math.abs(c - c1) + Math.abs(h - h1), r = c === c1 ? (h > h1 ? Math.PI / 2 : -Math.PI / 2) : (c > c1 ? 0 : Math.PI);
       const a = B.o[i]; x.globalAlpha = clamp(k - d + 1, 0, 1) * 0.9; sdVe(x, 'duong_mui', a.x - Math.cos(r) * B.cw * 0.5, a.y - Math.sin(r) * B.ch * 0.5, 26, 17, r); x.globalAlpha = 1;
@@ -239,7 +239,7 @@ const SD_K = {
     truoc: (T, B) => { B.deck = ['lualien']; if (T) T.lc = 3; if (B.t[8]) B.t[8].lc = 1; if (B.t[13]) B.t[13].lc = 7; for (const o of [3, 6, 11]) if (B.t[o]) B.t[o].lc = 1; },
     them: [[2.4, (B) => { SD.lcCu = {}; for (const X of B.t) if (X && X.id === 'lualien') SD.lcCu[X.o] = X.lc || 0; }]],
     ve: (x, B) => sdLuaLien(x, B),
-    c: [[0.2, 'Number = flames on each Relay'], [1.3, 'Merge two same-star Embers'], [2.5, 'Both leave: flames go along their row + column', { cham: 0.6 }], [3.9, 'Not in that row or column: nothing'], [5.0, 'Each flame: +2% damage, +0.12% crit'], [6.2, 'Max 70 flames (more at LV11+)']], dai: 9 },
+    c: [[0.2, 'Number = flames on each Relay'], [1.3, 'Merge two same-star Embers'], [2.5, 'Both flames go along the merge tile\'s row + column', { cham: 0.6 }], [3.9, 'Not in that row or column: nothing'], [5.0, 'Each flame: +2% damage, +0.12% crit'], [6.2, 'Max 70 flames (more at LV11+)']], dai: 9 },
   // Quantum Choir: thêm ụ cùng sao (trùng) và khác sao (không tính) — chỉ số sát thương trước → sau
   hopca: { q: Q.hang(4, 180, 40, 8), ke: [[6, 'lien', 's'], [8, 'canon', (s) => s > 1 ? s - 1 : 2]],
     them: [[2.0, (B, D, T) => { if (T) sdThem(B, [[2, 'set', T.sao], [12, 'bang', T.sao]], T, 'dmg'); }], [4.0, (B, D, T) => { if (T) sdThem(B, [[3, 'sungluc', T.sao > 1 ? T.sao - 1 : 2]], T, 'dmg'); }]],

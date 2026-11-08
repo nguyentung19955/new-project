@@ -65,6 +65,10 @@ function vm1Fx(id, x, y, w, song, mau) { G.hu.push({ k: 'vm1Fx', t: 0, song: son
 //      KHÔNG truyền khi Ember VẪN Ở ĐÓ: hoá đá, đóng băng, bị biến thành ụ khác tại chỗ (trùm / kỹ năng / Joker King…), Teleporter đổi chỗ,
 //        bị bắn trừ sao (haSao: trùm / Star Breaker; người dùng: "Cả bị súng bắn trừ sao cũng vậy") — giữ lửa. Trừ sao ở 1★ làm ụ VỠ (rời bàn) → truyền.
 //        Nhận biết: Ember biến mất mà ô cũ còn ụ khác (không phải do ghép) = biến hình → không truyền; ô cũ trống hoặc Ember là nguyên liệu ghép = rời bàn.
+//      SỬA 08/11 (người dùng: "A đang có 5 lửa thì nếu B có 5 lửa và C có 5 lửa thì merge vào truyền cho A 15 lửa"): Ember bị GHÉP mất (Ember+Ember,
+//        Mimic, Wild Link, ghép đặc biệt) → lửa của nó truyền theo hàng/cột của Ô GHÉP (ô đích, nơi ụ ra xuất hiện), không theo ô cũ của nó.
+//        Ghép B vào C (đều Ember): mọi Ember khác cùng hàng/cột với ô C nhận lửa B + lửa C (A = 5 + 5 + 5 = 15); mỗi lần ghép chỉ tính 1 lần.
+//        Rời bàn đơn lẻ khác (bán, Blood Circuit nuốt, trùm phá, vỡ do trừ sao…): vẫn theo hàng/cột ô của chính nó.
 //      Ghép Ember chỉ khi CÙNG SAO (luật ghép thường). Ụ ra (nếu là Ember): giữ như cũ = max(★ mới sinh, min(trần, A + C)) — câu hỏi mở cho người dùng.
 //      Ụ mới sinh: lửa = số sao. Mỗi lửa +2% sát thương và +0.12 điểm % chí mạng. Trần LV9 70 → LV11 100 → LV13 130 → LV15 160. Đột phá 10/30/50/70.
 //      Icon lửa theo mốc: <10 cam · ≥10 trắng · ≥30 xanh · ≥50 vàng · ≥70 đỏ (lua_t1–4). Online: bàn con rối (B.net) không tự truyền —
@@ -79,7 +83,7 @@ SKILLS.lualien = {
   icon(n) { return this.ICON[this.bac(n)]; },
   mo(T) {
     const n = Math.min(this.tran(T), T.lc || 0), cap = this.tran(T);
-    return 'Flames ' + n + '/' + cap + ' → +' + n * 2 + '% damage, +' + +(n * 0.12).toFixed(2) + '% crit chance · each flame: +2% damage, +0.12% crit · new Relays start with flames = ★ · when an Ember leaves the board for any reason, its flames pass to Embers in its row and column · Embers that stay (stone, frozen, transformed, lost a star) keep their flames · max ' + cap + ' flames (LV11 100, LV13 130, LV15 160)';
+    return 'Flames ' + n + '/' + cap + ' → +' + n * 2 + '% damage, +' + +(n * 0.12).toFixed(2) + '% crit chance · each flame: +2% damage, +0.12% crit · new Relays start with flames = ★ · when an Ember leaves the board for any reason, its flames pass to Embers in its row and column · merging two Embers: every other Ember in the merge tile\'s row and column gains both Embers\' flames · Embers that stay (stone, frozen, transformed, lost a star) keep their flames · max ' + cap + ' flames (LV11 100, LV13 130, LV15 160)';
   },
   sinh(G, T) { if (T.lc == null) T.lc = Math.min(this.tran(T), Math.max(1, T.sao | 0)); },
   capNhat(G, B, T) { const n = Math.min(this.tran(T), T.lc || 0); if (n) { T.buf.dmg += n * this.DMG; T.buf.crit += n * this.CRIT; } return false; },
@@ -115,18 +119,19 @@ const LUA_ROI = {
     if (B.net) { B._lr = null; return; } // bàn con rối online: số lửa đến từ máy chủ bàn (cờ 'r')
     const cu = B._lr; this.chup(B); if (!cu || !cu.length) return;
     const con = new Set(B.t), roi = [];
-    for (const [T, o] of cu) if (!con.has(T) && (!B.t[o] || T._gop)) roi.push([T, o]); // ô cũ còn ụ khác (không phải ghép) = biến hình tại chỗ → không truyền
+    for (const [T, o] of cu) if (!con.has(T) && (!B.t[o] || T._gop)) roi.push([T, o, T._gop ? T._gopO : o]); // ô cũ còn ụ khác (không phải ghép) = biến hình tại chỗ → không truyền
     if (roi.length) this.truyen(B, roi, new Set(cu.map(r => r[0])));
   },
-  // roi: [[Ember, ô cũ]] rời bàn cùng lúc → mỗi Ember góp lửa của nó 1 lần cho mọi Ember khác cùng hàng/cột với ô cũ của nó
+  // roi: [[Ember, ô cũ, ô nguồn]] rời bàn cùng lúc → mỗi Ember góp lửa của nó 1 lần cho mọi Ember khác cùng hàng/cột với Ô NGUỒN
+  //   (ô nguồn = ô GHÉP nếu Ember bị ghép mất, còn lại = ô cũ của nó)
   // co: Ember đã có trên bàn lúc chụp trước (ụ vừa sinh / ụ ra của ghép trong cùng lượt không nhận); bỏ trống = mọi Ember trên bàn
   truyen(B, roi, co) {
     const S = SKILLS.lualien, oRoi = new Set(roi.map(r => r[1])), cong = new Map();
-    for (const [T, o] of roi) {
-      const n = T.lc || 0; if (n <= 0) continue;
+    for (const [T, o0, o1] of roi) {
+      const n = T.lc || 0, o = o1 == null ? o0 : o1; if (n <= 0) continue;
       for (const i of S.chuThap(o)) {
         const X = B.t[i]; if (!X || X.id !== 'lualien' || X.st.da || oRoi.has(i) || (co && !co.has(X))) continue;
-        const v = cong.get(X) || { n: 0, tu: [] }; v.n += n; v.tu.push(o); cong.set(X, v);
+        const v = cong.get(X) || { n: 0, tu: [] }; v.n += n; if (!v.tu.includes(o)) v.tu.push(o); cong.set(X, v);
       }
     }
     const tang = [];
@@ -135,7 +140,7 @@ const LUA_ROI = {
       X.lc = moi; X.sang = 1; tang.push({ X, n: moi - cu, tu: v.tu });
     }
     if (tang.length) {
-      LUA_VET.phat(B, roi.map(r => r[1]), tang);
+      LUA_VET.phat(B, tang);
       if (!B.ai || G.che === 'pvp') SND.combo(Math.min(20, tang.length * 3 + 2));
     }
     return tang;
@@ -147,8 +152,8 @@ const LUA_ROI = {
   const _gh = ghep;
   ghep = function (B, a, b) {
     const B2 = (b && G.ban && G.ban[b.ban]) || B, em = [a, b].filter(X => X && X.id === 'lualien');
-    LUA_ROI.quet(B2); for (const X of em) X._gop = 1;
-    let r; try { r = _gh.apply(this, arguments); } finally { LUA_ROI.quet(B2); for (const X of em) if (B2 && B2.t.includes(X)) delete X._gop; }
+    LUA_ROI.quet(B2); for (const X of em) { X._gop = 1; X._gopO = b ? b.o : X.o; } // ô GHÉP = ô đích (ụ ra hiện ở đây)
+    let r; try { r = _gh.apply(this, arguments); } finally { LUA_ROI.quet(B2); for (const X of em) if (B2 && B2.t.includes(X)) { delete X._gop; delete X._gopO; } }
     return r;
   };
 }
@@ -162,8 +167,8 @@ const LUA_VET = {
   MAU: ['#ffb35a', '#f4f0ff', '#5ec4ff', '#ffd84a', '#ff5a3a'], // màu chữ / quầng theo mốc (cam · trắng · lam · vàng · đỏ)
   DI0: 0.16, DI1: 0.075, TAT: 0.18, POP: 0.85, // giây: vệt đi = DI0 + DI1 × số ô · tắt · "+N"
   _vet: [], _f: -1, _pop: new Map(), _moc: false,
-  // nguon: các ô Ember vừa rời bàn · tang: [{ X, n, tu: [ô nguồn] }] — vệt từ MỖI ô nguồn dọc hàng/cột tới Ember nhận xa nhất mỗi hướng; "+N" = lửa thật cộng thêm
-  phat(B, nguon, tang) {
+  // tang: [{ X, n, tu: [ô nguồn] }] (ô nguồn = ô ghép / ô Ember rời bàn đơn lẻ) — vệt từ MỖI ô nguồn dọc hàng/cột tới Ember nhận xa nhất mỗi hướng; "+N" = lửa thật cộng thêm
+  phat(B, tang) {
     if (!G.hu || !B || !B.o) return;
     const tre = (typeof VX !== 'undefined' && VX.TRE_LO) || 0, vet = {};
     for (const g of tang) {
@@ -434,7 +439,7 @@ HU.vm1Hero = { // ô anh hùng: vòng vàng PNG dưới ụ, hết hạn thì t�
 // =====================================================================================================
 // đăng ký: họ kỹ năng, mốc, grow-up (không ảnh dạng: vòng tiến độ), nhịp, ảnh tạm, bộ bài ngẫu nhiên, bộ đếm đáy ô
 // =====================================================================================================
-themHo('blast', 3, 'lualien', 'an Ember leaving the board passes its flames along its row and column: +damage & crit');
+themHo('blast', 3, 'lualien', 'an Ember leaving the board passes its flames along its row and column (merged: along the merge tile\'s): +damage & crit');
 themHo('star', 3, 'hopca', 'HARMONY: stronger next to same-star turrets');
 themHo('summon', 3, 'luutru', 'every real merge feeds one Archive: milestones 10–70');
 themHo('amp', 3, 'xuonganh', 'merge stamps a 25s HERO tile: big fire-rate boost');

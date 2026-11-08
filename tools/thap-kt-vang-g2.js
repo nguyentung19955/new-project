@@ -45,16 +45,22 @@ ok(gan(R("hsThe(B, 'lien')"), 1), 'thẻ bậc thấp không đổi (không có 
 console.log('Ember Relay (lualien)');
 tran(['lualien', 'lien', 'canon', 'bang', 'tia']);
 R(`var a = dat(1, 'lualien', 2, T => T.lc = 2), b = dat(2, 'lualien', 2, T => T.lc = 4), c3 = dat(4, 'lualien', 1, T => T.lc = 3), c8 = dat(7, 'lualien', 1, T => T.lc = 8), xa = dat(8, 'lualien', 1, T => T.lc = 1); B.deck = ['lien']; var ra = ghep(B, a, b);`);
-// LUẬT 08/11 (người dùng): Ember RỜI BÀN vì bất kỳ lý do gì → lửa của nó CỘNG cho mọi Ember khác cùng hàng/cột với ô CỦA NÓ; ở lại (đá/băng/biến hình/trừ sao) → không
-ok(R('c3.lc') === 9, 'Ember cùng hàng với cả A (ô 1) và C (ô 2): 3 + 2 + 4 = 9 (cộng dồn, thay luật cũ max)', R('c3.lc'));
-ok(R('c8.lc') === 12, 'Ember ô 7 chỉ chung CỘT với C (ô 2): 8 + 4 = 12 (không nhận lửa A — khác đường)', R('c8.lc'));
+// LUẬT 08/11 (người dùng): ghép Ember + Ember → mọi Ember khác cùng hàng/cột với Ô GHÉP (ô C) nhận lửa A + C; rời bàn đơn lẻ → theo ô của chính nó; ở lại → không
+ok(R('c3.lc') === 9, 'Ember cùng hàng ô ghép (ô 2): 3 + 2 + 4 = 9', R('c3.lc'));
+ok(R('c8.lc') === 14, 'Ember ô 7 chung CỘT với ô ghép (ô 2): 8 + 2 + 4 = 14', R('c8.lc'));
 ok(R('xa.lc') === 1, 'Ember ngoài hàng/cột của A và C không đổi');
 { // nhiều ụ nhận, hàng + cột, A và C khác hàng/khác cột (A ô 0, C ô 6)
   R(`B.t.fill(null); var A = dat(0, 'lualien', 2, T => T.lc = 5), C = dat(6, 'lualien', 2, T => T.lc = 3), x1 = dat(1, 'lualien', 1, T => T.lc = 1), x5 = dat(5, 'lualien', 1, T => T.lc = 2),
     x2 = dat(2, 'lualien', 1, T => T.lc = 0), x11 = dat(11, 'lualien', 1, T => T.lc = 4), x13 = dat(13, 'lualien', 1, T => T.lc = 7); B.deck = ['lien']; ghep(B, A, C);`);
-  ok(R('x1.lc') === 9 && R('x5.lc') === 10, 'ô 1 và ô 5 chung đường với CẢ A và C: nhận A + C (1 + 8 = 9, 2 + 8 = 10)', R('[x1.lc, x5.lc]'));
-  ok(R('x2.lc') === 5 && R('x11.lc') === 7, 'ô 2 (hàng A) chỉ nhận 5 · ô 11 (cột C) chỉ nhận 3', R('[x2.lc, x11.lc]'));
+  ok(R('x1.lc') === 9 && R('x5.lc') === 10, 'ô 1, ô 5 chung đường với ô ghép (ô 6): nhận A + C (1 + 8 = 9, 2 + 8 = 10)', R('[x1.lc, x5.lc]'));
+  ok(R('x2.lc') === 0 && R('x11.lc') === 12, 'ô 2 (chỉ hàng của A, không chung đường ô ghép) không nhận · ô 11 (cột ô ghép) nhận 3 + 5 = 8 → 12', R('[x2.lc, x11.lc]'));
   ok(R('x13.lc') === 7, 'ô 13 không chung đường → giữ 7');
+}
+{ // ví dụ người dùng: A = 5, B = 5, C = 5, kéo B vào C → A = 15 (A thẳng hàng với C, với B, với cả 2)
+  const ab = (oA, oB, oC) => { R(`B.t.fill(null); var A = dat(${oA}, 'lualien', 1, T => T.lc = 5), Bm = dat(${oB}, 'lualien', 2, T => T.lc = 5), Cm = dat(${oC}, 'lualien', 2, T => T.lc = 5); B.deck = ['lien']; ghep(B, Bm, Cm);`); return R('A.lc'); };
+  ok(ab(10, 7, 0) === 15, 'A chỉ chung CỘT với C (A ô 10, B ô 7, C ô 0): A = 5 + 5 + 5 = 15', ab(10, 7, 0));
+  ok(ab(10, 0, 7) === 5, 'A chỉ chung đường với B (A ô 10, B ô 0, C ô 7): không nhận (ô ghép là ô C)', ab(10, 0, 7));
+  ok(ab(2, 0, 1) === 15, 'A chung hàng với cả B và C (A ô 2, B ô 0, C ô 1): 15 (mỗi lần ghép tính 1 lần, không 25)', ab(2, 0, 1));
 }
 { // ụ ra là Ember: giữ như cũ max(★, A + C), không nhận thêm từ hàng/cột · khác sao không ghép được
   R(`B.t.fill(null); var A = dat(0, 'lualien', 2, T => T.lc = 5), C = dat(1, 'lualien', 2, T => T.lc = 3), y = dat(2, 'lualien', 1, T => T.lc = 1); B.deck = ['lualien']; var ra = ghep(B, A, C);`);
@@ -78,7 +84,8 @@ ok(R('xa.lc') === 1, 'Ember ngoài hàng/cột của A và C không đổi');
   ok(lam('', 'B.t[7] = giuKhiBien(sinhU(taoU(B, "lien", 3, 7)), E)') === '1,2,1', 'bị biến thành ụ khác tại chỗ (trùm / kỹ năng): không truyền');
   ok(lam('var tp = dat(14, "dichchuyen", 3);', 'ghep(B, tp, E)') === '1,2,1' && R('B.t[14] === E'), 'Teleporter đổi chỗ: không truyền');
   ok(lam('var mm = dat(2, "mimic", 3);', 'ghep(B, mm, E)') === '7,8,1', 'Mimic ghép vào Ember (Ember bị ghép mất): truyền', R('[h.lc, c.lc, k.lc]'));
-  ok(lam('var mm = dat(2, "mimic", 3);', 'ghep(B, E, mm)') === '7,8,1', 'Ember kéo vào Mimic: truyền theo ô CỦA EMBER (ô 7)');
+  ok(lam('var mm = dat(2, "mimic", 3);', 'ghep(B, E, mm)') === '1,8,7', 'Ember kéo vào Mimic: truyền theo Ô GHÉP (ô 2 của Mimic): ô 0 (hàng) +6, ô 12 (cột) +6, ô 5 không', R('[h.lc, c.lc, k.lc]'));
+  if (R('typeof SKILLS.tudo') === 'object') ok(lam('var wl = dat(2, "tudo", 3);', 'ghep(B, E, wl)') === '1,8,7', 'Ember kéo vào Wild Link: truyền theo Ô GHÉP (ô 2)', R('[h.lc, c.lc, k.lc]'));
   ok(lam('var E2 = dat(9, "lualien", 1, T => T.lc = 4);', 'B.t[7] = null; B.t[9] = null') === '11,8,1', 'bán 2 Ember cùng lúc: mỗi ụ góp 1 lần (ô 5: 1 + 6 + 4 = 11)', R('[h.lc, c.lc, k.lc]'));
   ok(lam('', 'B.t[7] = null; var moi = dat(2, "lualien", 1, T => T.lc = 1)') === '7,8,1' && R('moi.lc') === 1, 'Ember mới xuất hiện cùng lượt không nhận');
   if (R('typeof SKILLS.tudo') === 'object') ok(lam('var wl = dat(2, "tudo", 1);', 'ghep(B, wl, E)') === '7,8,1', 'Wild Link ghép vào Ember (Ember bị ghép mất): truyền', R('[h.lc, c.lc, k.lc]'));
