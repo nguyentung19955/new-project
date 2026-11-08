@@ -118,6 +118,10 @@ function taoU(B, id, sao, o) {
     khien: 0, tocT: 0, tocV: 0, epxung: 0, banSao: false, nhanT: 0, tuoi: 0, nguon: [], // nguon sẵn: ụ sinh GIỮA vòng capNhatBan (Sinh Đôi, Mạch Máu…) không vỡ khi kỹ năng đẩy buff
   };
 }
+// LUẬT "BẢN SAO THEO Ô ĐÍCH" (09/11 người dùng: "ghép ụ xịn vào ụ copy thì giữ ụ copy, còn ngược lại thì ưu tiên ụ xịn" — chọn kéo cái nào vào cái nào là chiến thuật):
+//   ghép CÙNG LOẠI ra đúng loại đó (La Bàn + La Bàn, hợp thể Prism → ô cuối, Anvil + Anvil, Merge King + Merge King, ghép thường X + X ra lại X: Ember, Leviathan,
+//   GIU_CONG_DON…) → kết quả lấy cờ bản sao của Ụ ĐÍCH (ô thả). Biến tại chỗ giữ cờ của chính ụ đó. Ghép ra ụ KHÁC loại (ngẫu nhiên, Mimic) = ụ mới thật.
+function giuBanSao(N, dich) { if (N) N.banSao = !!(dich && dich.banSao); return N; }
 // gọi hook 'sinh' của kỹ năng khi ụ xuất hiện (vd. Sói Máy 30% ra bản thức tỉnh)
 function sinhU(T) { const sk = SKILLS[T.id]; if (sk && sk.sinh) sk.sinh(G, T); return T; }
 // sinhU bằng RNG cho trước (chiêu trùm tất định: Mad Crown biến ra Merge King / Sói vẫn quay vàng / thức tỉnh, 2 máy online ra như nhau)
@@ -261,6 +265,7 @@ function ghep(B, a, b, ep) {
   if (!daDa && a.id === b.id && B2.t[b.o] === ra && ra.id === a.id) {
     for (const k of (GIU_CONG_DON[ra.id] || [])) ra[k] = Math.max(a[k] || 0, b[k] || 0, ra[k] || 0);
     if (a.epxung || b.epxung) ra.epxung = Math.max(a.epxung || 0, b.epxung || 0, ra.epxung || 0);
+    giuBanSao(ra, b); // ra lại đúng loại = ụ ĐÍCH tiếp tục → cờ bản sao theo ô đích (luật 09/11)
   }
   const kq = B2.t[b.o] || ra;
   // buff Twin Anvil (skills4.js) theo ụ con khi ghép thường: lấy buff MẠNH hơn của 2 nguyên liệu (không cộng, không nhân đôi)
@@ -548,7 +553,7 @@ function ktDeck(luc) {
       const bo = B.deck.filter(id => SKILLS[id] && G.rosterMap[id]); if (!bo.length) continue;
       const id = bo[(o * 7 + T.sao * 3 + B.i) % bo.length], r0 = Math.random; // tất định, không tiêu RNG chung (online 2 máy như nhau)
       Math.random = rngHat(1000003 + o * 131 + T.sao * 17 + B.i);
-      try { const N = sinhU(taoU(B, id, T.sao, o)); N.goc = T.goc; N.khien = T.khien; N.st.da = T.st.da; N.st.bang = T.st.bang; B.t[o] = N; } finally { Math.random = r0; }
+      try { const N = sinhU(taoU(B, id, T.sao, o)); N.goc = T.goc; N.khien = T.khien; N.banSao = !!T.banSao; N.st.da = T.st.da; N.st.bang = T.st.bang; B.t[o] = N; } finally { Math.random = r0; }
     }
   }
   return n;

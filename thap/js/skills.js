@@ -104,7 +104,7 @@ SKILLS.canon = {
       B.t[a.o] = null;
       G.bay.push({ id: a.id, sao: a.sao, x0: B.o[a.o].x, y0: B.o[a.o].y, x1: B.o[b.o].x, y1: B.o[b.o].y, t: 0, bac: a.bac });
       const saoCu = b.sao;
-      b.hb = kq.hb; b.cmC = kq.chong; b.sao = kq.sao; b.banSao = false; b.sang = 1; b.anim = { k: 'no', t: 0.25 };
+      b.hb = kq.hb; b.cmC = kq.chong; b.sao = kq.sao; giuBanSao(b, b); /* bản sao theo ô ĐÍCH (cũ: luôn tẩy thành thật) */ b.sang = 1; b.anim = { k: 'no', t: 0.25 };
       if (b.sao > saoCu) mocMoi(b, saoCu, 0.1);
       const c = B.o[b.o]; FX.tiaLua(c.x, c.y, 14, '#7fe8ff', 180, 11); FX.vong1(c.x, c.y, 6, 40, kq.kieu === 'chong' ? '#ffd23f' : '#7fe8ff', 0.4, 3);
       if (typeof buffNo === 'function') buffNo(b, 'dmg', kq.kieu === 'chong' ? 1 : 0.5);

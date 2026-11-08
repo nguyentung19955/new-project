@@ -61,6 +61,7 @@ Rồng băng/lửa trồi lên từ ụ (16 khung) · một vòng xanh quanh ụ
 ## 8. Luật game người dùng đã chốt (nhắc lại)
 - Mọi ụ trên bàn chỉ đến từ 5 thẻ trong bộ bài (có bất biến + fuzz test).
 - Copycat giữ phần giảm sức mạnh qua mọi biến hình; chép được ụ hoá đá/đóng băng.
+- **Trước khi đụng tới tương tác giữa các ụ** (ghép, biến hình, nâng/hạ sao, đá/băng, online): đọc `docs/demo-hop-tuong/tuvan/conghuong/NGUYEN-TAC.md` (chiều ghép = chiến thuật, kết quả theo ô đích…).
 - Evolver: bom hẹn giờ; 7★ = xác bom xịt, không tác dụng; mất sao → đếm lại.
 - Báo động chiêu trùm biến mất khi trùm chết. Hiệu ứng lửa phải màu lửa.
 - Không dùng "ảnh tĩnh rung" làm hiệu ứng — phải là hoạt ảnh thật.

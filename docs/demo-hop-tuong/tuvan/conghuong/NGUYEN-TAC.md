@@ -12,3 +12,7 @@ Người dùng: *"Vì game này tư duy chiến thuật nhiều nên tôi muốn
 8. **Cộng dồn do hành động thuộc về ụ** (ụ mới = 0); cộng dồn theo điều kiện bàn dùng chung.
 9. **Tất định:** chỉ RNG có hạt giống; hiệu ứng hình không bao giờ đổi luật.
 10. **Ụ Hỗ trợ không bao giờ bắn.**
+
+**Đã áp (09/11):** nguyên tắc 1 cho cờ bản sao Copycat — hàm `giuBanSao(N, dich)` (`thap/js/game.js`), dùng ở La Bàn + La Bàn, hợp thể Prism (ô cuối),
+ghép thường X + X ra lại X; Anvil + Anvil, Merge King + Merge King vốn giữ ụ đích. Test: `tools/thap-kt-ban-sao-giu.js` (cả 2 chiều + online).
+Trước khi đụng tới tương tác giữa các ụ: đọc file này + chạy test đó.

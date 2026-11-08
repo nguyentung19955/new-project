@@ -3710,3 +3710,12 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - Hình: đầu 2 vòng xích hình số 8 + ngọc nhiều màu, bệ 4 cánh tím, phần phụ vòng 4 chốt màu (ChatGPT, `docs/demo-hop-tuong/thap-art/raw_mod_tudo.png` → `tools/thap-cat-umod.py tudo`); chân dung tộc **Voltari** (plasma tím, cầm xích số 8) `docs/demo-hop-tuong/tuvan/chan-dung-moi/raw/cd_tudo.png` → `tools/thap-cat-chandung.py tudo`. Pixel: ghi ở `docs/pixel/DANH-SACH.md` mục Bổ sung (dự phòng vẽ ảnh thường).
 - Trang ụ (mục Merge rules), clip hướng dẫn (Wild 3★ lên Twin Maker 4★), tiếng Việt (vi.json → `tools/thap-vi-dung.py`).
 - Test: `node tools/thap-kt-ghep-tu-do.js` (luật sao, mọi loại/sao, đá/băng, La Bàn/Prism/Lucky Slot, ghép thật + Twin Maker 1 lần, bộ đếm, cấp thẻ, tất định, gói online khứ hồi, AI; Playwright kéo thật 390×844 + 844×390). `thap-kt-cong-huong-luat` cập nhật mong đợi cho đích Wild Link.
+
+## claude/demo-hop-tuong — Bản sao Copycat theo Ô ĐÍCH khi ghép cùng loại (09/11)
+- Lỗi người dùng báo: thả Pháo La Bàn thật vào Pháo La Bàn bản sao → ra La Bàn thật (mất −% bản sao). Người dùng chốt: chiều ghép là chiến thuật —
+  ghép CÙNG LOẠI ra đúng loại đó thì kết quả theo **ụ đích**: ụ thật → bản sao = bản sao; bản sao → ụ thật = ụ thật.
+- Sửa (hàm chung `giuBanSao` trong `thap/js/game.js`): La Bàn + La Bàn (trước luôn tẩy thành thật), hợp thể Prism (trước chỉ bản sao khi CẢ 4 là bản sao → nay theo ô cuối),
+  ghép thường X + X ra lại X (Ember, Leviathan, Evolver, Rồng… — trước luôn thật), sửa ụ ngoài bộ (ktDeck — trước mất cờ). Anvil + Anvil, Merge King + Merge King: đã giữ ụ đích, giữ nguyên.
+- Ghép ra loại khác / Mimic vẫn ra ụ thật. Online: gói 'gh' / 'pm' / ảnh chụp mang cờ 'c' (đã có, test khứ hồi).
+- Chữ Copycat thêm: "merging into a copy keeps it a copy; merging a copy into a real one makes it real" (+ tiếng Việt trong vi.json → ngonngu-vi.js).
+- Nguyên tắc tương tác chung cho mọi phiên sau: `docs/demo-hop-tuong/tuvan/conghuong/NGUYEN-TAC.md`. Test mới: `tools/thap-kt-ban-sao-giu.js`.
