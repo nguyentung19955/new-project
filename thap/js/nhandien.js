@@ -57,7 +57,8 @@ const ND = {
 
   // ---------- chạm thẻ bộ bài: khoanh mọi ụ cùng loại ~0,8 s ----------
   soiThe(id) { if (G.ban.length) this.soi = { id, t0: performance.now() }; },
-  veSoi(ctx) {
+  veSoi(ctx) { // 08/11 người dùng: bỏ vòng sáng khoanh ụ cùng loại trên bàn khi chạm thẻ khay → không vẽ gì nữa
+    if (this.soi) this.soi = null; return;
     const s = this.soi; if (!s) return;
     const u = (performance.now() - s.t0) / 800; if (u >= 1) { this.soi = null; return; }
     const B = G.ban[0], al = u < 0.75 ? 1 : (1 - u) / 0.25, vong = REN.img('sup_ring'); if (!vong) return;

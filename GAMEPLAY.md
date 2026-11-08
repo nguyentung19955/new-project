@@ -3670,3 +3670,7 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - **Hình** (ChatGPT): 5 chân dung "một thiên hà nhiều chủng tộc" (kỹ sư Terran, thuỷ tộc Thalassi, người máy Synthari, chim ưng Ferrin, plasma Voltari) + 5 icon kỹ năng + lưới — raw `docs/demo-hop-tuong/tuvan/chi-huy-moi/raw/` → `tools/thap-cat-chi-huy-moi.py` (af_<id>.png, hero/hero_af_<id>.webp, hero/home_af_<id>.webp, cmd_ic_<id>.png, cmd_fx_luoi.png); mốc mặt FACE_BOX / HERO_NEO. VFX: vòng `fx_vong_mong`, dây `sup_link` / `sup_link_vang`, dấu icon trên ụ đang được buff suốt thời gian. Pixel: ghi `docs/pixel/DANH-SACH.md` mục Bổ sung (thiếu ảnh → dự phòng). Âm: dùng lại `SND.mv`.
 - Chữ: `mo()`, trang chi tiết (UP_MV), clip Skill preview cho cả 5, bảng chọn, bản Việt (vi.json → ngonngu-vi.js).
 - Test: mới `tools/thap-kt-chi-huy-moi.js` (114 ca: luật từng kỹ năng, ghép/tại chỗ, tất định, online khứ hồi, AI, cách có, bản lưu cũ, chạm-ngắm, ảnh 3 cỡ); mở rộng `thap-kt-chi-huy-bac` (bậc + giá 5 chỉ huy mới, khay trận). Đạt: khong-ban, vi, vfx-p0, shop, nhangia, tt-chiso, sao-tai-cho, co-bac, test-chihuy. Tờ liên hoàn: `docs/demo-hop-tuong/tuvan/chi-huy-moi/TONG.jpg`.
+
+## claude/demo-hop-tuong — Bỏ vòng sáng khoanh ụ cùng loại khi chạm thẻ khay trận (08/11)
+
+- Chạm thẻ ở khay trận không còn vẽ vòng `sup_ring` (tròn xanh-trắng có vạch) quanh mọi ụ cùng loại trên bàn (`ND.veSoi` không vẽ gì); chạm thẻ vẫn nâng cấp bằng mana như cũ. Vệt hàng/cột Salvo dưới đầu ụ giữ nguyên.
