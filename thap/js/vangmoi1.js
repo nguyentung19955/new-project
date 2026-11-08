@@ -87,12 +87,13 @@ SKILLS.lualien = {
     if (ra && ra.id === 'lualien' && !ra.st.da) ds.push(ra);
     for (const i of this.chuThap(o)) { const X = B.t[i]; if (X && X.id === 'lualien' && !X.st.da && X !== ra) ds.push(X); }
     vm1Fx('lualien', tam.x, tam.y, B.cw * 2.6, 0.7, '#ff8a2a');
-    let n = 0;
+    let n = 0; const tang = [];
     for (const X of ds) {
-      if ((X.lc || 0) >= tong) continue;
+      const cu = X.lc || 0; if (cu >= tong) continue;
       X.lc = tong; X.sang = 1; n++; // tăng: chỉ chớp (không vòng/hào quang giữ lại)
-      const q = B.o[X.o]; if (X !== ra) G.hu.push({ k: 'vm1Tia', t: 0, song: 0.22 + 0.07 * (Math.abs(X.o % 5 - o % 5) + Math.abs(((X.o / 5) | 0) - ((o / 5) | 0))), x0: tam.x, y0: tam.y, x1: q.x, y1: q.y, im: this.icon(tong) });
+      tang.push({ X, n: tong - cu });
     }
+    if (tang.length) LUA_VET.phat(B, o, tang, ra, tong); // chỉ HÌNH: vệt lửa dọc hàng/cột + "+N" trên Relay nhận
     if (n && (!B.ai || G.che === 'pvp')) SND.combo(Math.min(20, n * 3 + 2));
   },
   veThem(ctx, T, S, al) { // 1 ngọn lửa nhỏ (màu theo mốc) lượn quanh đầu ụ — không vòng
@@ -102,7 +103,117 @@ SKILLS.lualien = {
     PX.ve(ctx, im, Math.cos(t) * r, Math.sin(t) * r * 0.55 - S * 0.06, w * 0.75, w, 0, al * 0.95);
   },
 };
-HU.vm1Tia = { // lửa bay từ ô ghép sang Relay nhận: ngọn lửa PNG (màu mốc) trượt theo đường thẳng
+// HIỆU ỨNG NHẬN LỬA (người dùng 08/11: "không có hiệu ứng để biết là hàng cột của ụ ember được cộng lửa") — CHỈ HÌNH, không đổi luật:
+//   · Vệt lửa (dải fx_ronglua_vet, nhịp 6 khung) chạy từ ô ghép dọc HÀNG/CỘT tới Relay nhận xa nhất mỗi hướng (~0,25–0,46 s), rồi tắt nhanh.
+//     Nằm DƯỚI đầu súng: lớp `duoi` vẽ phần ngoài các ô có ụ; trong ô có ụ, phần vệt vẽ lại ở lớp dưới đầu súng của chính ụ đó (VX.duoiDau)
+//     → bệ ụ không che vệt, đầu súng luôn nằm trên. Đầu vệt = icon lửa màu mốc (lua_t1–4).
+//   · Vệt tới Relay nào: "+N" (màu mốc) nổi lên trên tấm đếm + icon lửa trên tấm đếm loé 1 nhịp. Ụ ra (Relay) hiện số lửa mới.
+//   · Không vòng giữ lại. Bàn con rối online: datO thấy lửa tăng → chỉ "+N" + loé (không vệt).
+const LUA_VET = {
+  MAU: ['#ffb35a', '#f4f0ff', '#5ec4ff', '#ffd84a', '#ff5a3a'], // màu chữ / quầng theo mốc (cam · trắng · lam · vàng · đỏ)
+  DI0: 0.16, DI1: 0.075, TAT: 0.18, POP: 0.85, // giây: vệt đi = DI0 + DI1 × số ô · tắt · "+N"
+  _vet: [], _f: -1, _pop: new Map(), _moc: false,
+  phat(B, o, tang, ra, tong) {
+    if (!G.hu || !B || !B.o || !B.o[o]) return;
+    const tre = (typeof VX !== 'undefined' && VX.TRE_LO) || 0, c0 = o % 5, h0 = (o / 5) | 0, huong = {}, bac = SKILLS.lualien.bac(tong);
+    for (const g of tang) {
+      if (g.X === ra || g.X.o === o) { G.hu.push({ k: 'vm1Pop', t: -tre - 0.1, song: this.POP, X: g.X, so: String(tong), bac, ra: 1 }); continue; } // ụ ra: số lửa mới (nổi ở nửa trên ô — tấm tên ụ mới che đáy ô)
+      const c = g.X.o % 5, h = (g.X.o / 5) | 0, buoc = Math.abs(c - c0) + Math.abs(h - h0), di = this.DI0 + this.DI1 * buoc;
+      const key = c === c0 ? (h < h0 ? 'u' : 'd') : (c < c0 ? 'l' : 'r');
+      G.hu.push({ k: 'vm1Pop', t: -tre - di, song: this.POP, X: g.X, so: '+' + g.n, bac });
+      if (!huong[key] || huong[key].di < di) huong[key] = { di, q: B.o[g.X.o] };
+    }
+    const a = B.o[o];
+    for (const k in huong) { const v = huong[k], o1 = { k: 'vm1Vet', t: -tre, song: v.di + this.TAT, di: v.di, x0: a.x, y0: a.y, x1: v.q.x, y1: v.q.y, b: B.i, bac }; G.hu.push(o1, Object.assign({}, o1, { k: 'vm1VetDau', song: v.di + 0.08 })); }
+  },
+  // bàn con rối online (dongbo.js datO): lửa tăng → "+N" (không biết ô ghép → không vệt)
+  conRoi(T, cu) { if (G.hu && T && (T.lc || 0) > cu && cu > 0) G.hu.push({ k: 'vm1Pop', t: 0, song: this.POP, X: T, so: '+' + ((T.lc || 0) - cu), bac: SKILLS.lualien.bac(T.lc || 0) }); },
+  // móc lớp dưới đầu súng (1 lần, lúc vệt đầu tiên được vẽ — VX nạp sau file này)
+  moc() {
+    if (this._moc || typeof VX === 'undefined' || typeof VX.duoiDau !== 'function') return; this._moc = true;
+    const d0 = VX.duoiDau, L = this;
+    VX.duoiDau = function (ctx, T, S, al, R) { const r = d0.apply(this, arguments); if (L._f === R.t && L._vet.length) L.veO(ctx, T, R); return r; };
+  },
+  // trong ô của ụ T: vẽ lại phần vệt (toạ độ sân), cắt đúng ô
+  veO(ctx, T, R) {
+    const B = G.ban[T.ban]; if (!B || !B.o[T.o]) return;
+    let mo = false;
+    for (const o of this._vet) if (o.b === B.i) {
+      if (!mo) { mo = true; const k = R.s * R.dpr, c = B.o[T.o]; ctx.save(); ctx.setTransform(k, 0, 0, k, FX.rungX * k, FX.rungY * k); ctx.beginPath(); ctx.rect(c.x - B.cw / 2, c.y - B.ch / 2, B.cw, B.ch); ctx.clip(); }
+      this.ve(ctx, o, R);
+    }
+    if (mo) { ctx.restore(); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; }
+  },
+  ve(ctx, o, R) {
+    const B = G.ban[o.b]; if (!B || o.t < 0 || o.__t < 0) return; // __t: giờ thật (lúc vẽ nội suy kẹp t âm về 0)
+    const p = Math.min(1, o.t / o.di), e = 1 - (1 - p) * (1 - p), mo = o.t <= o.di ? 1 : Math.max(0, 1 - (o.t - o.di) / (o.song - o.di));
+    if (mo <= 0.01) return;
+    const dx = o.x1 - o.x0, dy = o.y1 - o.y0, L = Math.hypot(dx, dy) || 1, ux = dx / L, uy = dy / L, cw = Math.min(B.cw, B.ch);
+    const dau = L * e, s0 = cw * 0.18, day = cw * 0.46;
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    const im = REN.img('fx_ronglua_vet');
+    if (im && dau > s0) { // dải lửa kéo từ mép ô ghép tới đầu vệt (khung lặp 0–5), tim dải ở 55,7% chiều cao khung
+      const f = Math.floor((R.t || 0) * 14) % 6, a = REN.mip ? REN.mip(im, day * 8 * REN.s * REN.dpr) : im, kx = a.width / 1600;
+      ctx.translate(o.x0, o.y0); ctx.rotate(Math.atan2(dy, dx)); ctx.globalAlpha = 0.95 * mo;
+      ctx.drawImage(a, f * 200 * kx, 0, 200 * kx, a.height, s0 - day * 0.15, -day * 0.557, dau - s0 + day * 0.3, day);
+      ctx.restore(); ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    }
+    ctx.restore(); ctx.globalAlpha = 1;
+  },
+  // đầu vệt (lớp trên — ụ Relay gần kín ô nên vệt dưới đầu súng bị che khi đi dọc cột): quầng nhỏ + ngọn lửa màu mốc, chỉ ~0,3 s
+  veDau(ctx, o) {
+    const B = G.ban[o.b]; if (!B || o.t < 0 || o.__t < 0) return;
+    const p = Math.min(1, o.t / o.di), e = 1 - (1 - p) * (1 - p), cw = Math.min(B.cw, B.ch), dau = Math.hypot(o.x1 - o.x0, o.y1 - o.y0) * e;
+    const L = Math.hypot(o.x1 - o.x0, o.y1 - o.y0) || 1, ux = (o.x1 - o.x0) / L, uy = (o.y1 - o.y0) / L;
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    {
+      const hx = o.x0 + ux * dau, hy = o.y0 + uy * dau, al = o.t <= o.di ? 1 : Math.max(0, 1 - (o.t - o.di) / 0.08);
+      REN.anhGiua(ctx, REN.cham1(this.MAU[o.bac]), hx, hy, cw * 0.85, 0, al * 0.7);
+      ctx.globalCompositeOperation = 'source-over';
+      PX.ve(ctx, REN.img(SKILLS.lualien.ICON[o.bac]), hx, hy - cw * 0.02, cw * 0.26, cw * 0.36, 0, al);
+    }
+    ctx.restore(); ctx.globalAlpha = 1;
+  },
+  // lớp huy hiệu (sau tấm đếm): icon lửa trên tấm loé + "+N" nổi lên — h = ND.xep (cx, yDay, C, B, T)
+  veHH(ctx, h) {
+    const T = h && h.T, p = T && this._pop.get(T); if (!p || p._f !== REN.t || p.t < 0 || !h.B) return;
+    const u = Math.min(1, p.t / p.song), C = h.C || 40, hh = Math.max(9, C * 0.2), mau = this.MAU[p.bac] || this.MAU[0];
+    let ix = h.cx; const iy = h.yDay - 1 - hh / 2;
+    const v = typeof DEMKN !== 'undefined' && DEMKN.lay(T, h.B);
+    if (v && v.m && v.m.length) ix = h.cx - DEMKN.rong(v, hh) / 2 + hh * 0.42 + hh * 0.46;
+    ctx.save();
+    if (u < 0.55) { // loé icon lửa trên tấm đếm (nảy 1 nhịp)
+      const k = u / 0.55, sc = 1 + 0.7 * Math.sin(Math.PI * Math.min(1, k * 1.4)), al = (1 - k) * (h.al == null ? 1 : h.al);
+      ctx.globalCompositeOperation = 'lighter';
+      REN.anhGiua(ctx, REN.cham1(mau), ix, iy, hh * 3.2 * sc, 0, al * 0.75);
+      PX.ve(ctx, REN.img(SKILLS.lualien.icon(T.lc || 0)), ix, iy, hh * 0.92 * sc, hh * 1.28 * sc, 0, al * 0.9);
+    }
+    // "+N" (ụ ra: số lửa mới) nổi từ trên tấm đếm, nở nhanh rồi mờ
+    const fs = Math.max(11, Math.round(C * 0.22)), sc2 = u < 0.12 ? 0.6 + u / 0.12 * 0.5 : u < 0.22 ? 1.1 - (u - 0.12) : 1;
+    const y = (p.ra ? h.yDay - C * 0.62 : h.yDay - hh - 2 - fs * 0.55) - C * 0.18 * (1 - (1 - u) * (1 - u)), al2 = (u > 0.65 ? (1 - u) / 0.35 : 1) * (h.al == null ? 1 : h.al);
+    ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al2;
+    ctx.font = '900 ' + Math.round(fs * sc2) + 'px ' + FONT.display; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+    const iw = fs * 0.62 * sc2, tw = ctx.measureText(p.so).width, x0 = h.cx - (tw + iw + 2) / 2;
+    ctx.lineWidth = Math.max(2.5, fs * 0.22); ctx.strokeStyle = 'rgba(0,0,0,.9)'; ctx.strokeText(p.so, x0 + tw / 2, y);
+    ctx.fillStyle = mau; ctx.fillText(p.so, x0 + tw / 2, y);
+    PX.ve(ctx, REN.img(SKILLS.lualien.ICON[p.bac]), x0 + tw + 2 + iw / 2, y - 1, iw, iw * 1.39, 0, al2);
+    ctx.restore(); ctx.globalAlpha = 1;
+  },
+};
+HU.vm1Vet = { duoi: true, // phần vệt NGOÀI các ô có ụ (trong ô: LUA_VET.veO ở lớp dưới đầu súng)
+  ve(ctx, o, R) {
+    if (o.t < 0 || o.__t < 0) return; LUA_VET.moc();
+    if (LUA_VET._f !== R.t) { LUA_VET._f = R.t; LUA_VET._vet = []; }
+    LUA_VET._vet.push(o);
+    const B = G.ban[o.b]; if (!B) return;
+    ctx.save(); ctx.beginPath(); ctx.rect(-4000, -4000, 8000, 8000);
+    for (let i = 0; i < 15; i++) if (B.t[i] && B.o[i]) ctx.rect(B.o[i].x - B.cw / 2, B.o[i].y - B.ch / 2, B.cw, B.ch);
+    ctx.clip('evenodd'); LUA_VET.ve(ctx, o, R); ctx.restore(); ctx.globalAlpha = 1;
+  },
+};
+HU.vm1VetDau = { ve(ctx, o) { LUA_VET.veDau(ctx, o); } };
+HU.vm1Pop = { ve(ctx, o, R) { if (o.t >= 0 && !(o.__t < 0)) { o._f = R.t; LUA_VET._pop.set(o.X, o); } }, het(G, o) { if (LUA_VET._pop.get(o.X) === o) LUA_VET._pop.delete(o.X); } };
+HU.vm1Tia = { // (cũ — thay bằng HU.vm1Vet) giữ cho ảnh chụp / bản lưu cũ còn mục này // lửa bay từ ô ghép sang Relay nhận: ngọn lửa PNG (màu mốc) trượt theo đường thẳng
   cap(G, o, dt) { o.t += dt; return o.t >= o.song; },
   ve(ctx, o) { const p = Math.min(1, o.t / o.song), im = REN.img(o.im || 'fx_cuuvi_dan') || REN.img('fx_cuuvi_dan'); if (!im) return; ctx.save(); PX.ve(ctx, im, o.x0 + (o.x1 - o.x0) * p, o.y0 + (o.y1 - o.y0) * p, 16, 22, 0, 1 - p * 0.3); ctx.restore(); ctx.globalAlpha = 1; },
 };
@@ -304,7 +415,7 @@ if (typeof addEventListener === 'function') addEventListener('DOMContentLoaded',
     const r = _batDauVM1.apply(this, arguments);
     if (typeof REN !== 'undefined' && REN.img) for (const B of G.ban) for (const id of B.deck || []) if (VM1.FXCO.has(id)) {
       REN.img('fx_' + id + '_sk');
-      if (id === 'lualien') for (const k of ['fx_cuuvi_dan', 'lua_t1', 'lua_t2', 'lua_t3', 'lua_t4']) REN.img(k);
+      if (id === 'lualien') for (const k of ['fx_cuuvi_dan', 'lua_t1', 'lua_t2', 'lua_t3', 'lua_t4', 'fx_ronglua_vet']) REN.img(k);
       if (id === 'luutru') for (const k of ['kho_bay', 'kho_no', 'kho_icon']) REN.img(k);
       if (id === 'xuonganh') REN.img('tier_ring_vang');
     }
