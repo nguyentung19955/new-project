@@ -605,3 +605,6 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - 08/11 (người dùng: "xứng đáng tướng vàng hơn"): **Wild Link** (`tudo`) lên bậc **VÀNG** (roster + ROSTER_EMBED, họ JOKER bậc 3, khung vàng, LV9→17; xác suất +1★ cấp thẻ 10%→30%, `buoc` 2.5); luật ghép một chiều / ⌈trung bình⌉ giữ nguyên. Thẻ Tím đã có: giữ cấp + bản sao (dưới LV9 được nâng lên LV9).
 
 - 08/11 (người dùng: "hydra làm không đâu vào với đâu" + "ấn vào tướng bên dưới thì kích hoạt toàn bộ, tốn mana tăng dần"): **Hydra** vẽ lại thành vương miện n đầu (= sao) xoè đối xứng quanh thân tròn giữa ô, cổ ngắn, mọi đầu nằm trong ô, mỗi đầu ngoảnh tối đa ±30°/±23° về mục tiêu + giật lùi khi phun, đạn ra từ miệng, bóng cầm kéo cũng vẽ vương miện; bỏ kỹ năng chạm từng ụ — **chạm THẺ Hydra ở khay** = mọi Hydra 3★+ cùng bật (3–6★ bắn nhanh gấp đôi, 7★ SÚNG MÁY), giá 40 mana gấp đôi mỗi lần (40→80→160…), thẻ hiện giá, xám khi thiếu mana/không có Hydra 3★+ sẵn sàng; online gói `hy`, AI tự dùng; chữ EN/VI + clip hướng dẫn cập nhật; ảnh `docs/demo-hop-tuong/tuvan/hydra/truoc-sau.jpg`.
+
+## claude/demo-hop-tuong — Hydra: đầu cố định, cả vương miện xoay liền khối (08/11)
+- Các đầu rắn không còn ngoảnh/giật riêng (hết lắc khi 2 đầu): cả vương miện xoay mượt quanh tâm ô theo hướng mục tiêu (T.goc), giật rất nhẹ cả khối; viên bắn ra từ miệng theo vị trí đã xoay; gameplay giữ nguyên.
