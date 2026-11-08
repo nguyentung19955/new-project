@@ -25,7 +25,10 @@ const HB = {
     const DUOI = 674, TREN = 60; // mép trên khay dưới (#duoi) · dưới thanh trên + tấm tim đối thủ
     tt.classList.toggle('hb-tren', this.hai());
     tt.style.height = ''; tt.style.bottom = ''; tt.style.maxHeight = '';
-    if (!rong) { tt.style.top = (this.hai() ? TREN : DUOI - 64) + 'px'; return; } // dải 60 px
+    if (!rong) { // dải 60 px · có khối chỉ số (hb-cs): cao tự do, SOLO neo đáy ngay trên khay → mọc lên vùng trống dưới làn đường, không che ô
+      if (!this.hai() && tt.classList.contains('hb-cs')) { tt.style.top = 'auto'; tt.style.bottom = (H - DUOI + 4) + 'px'; return; }
+      tt.style.top = (this.hai() ? TREN : DUOI - 64) + 'px'; return;
+    }
     if (this.hai()) { // thả xuống từ trên, dừng trước hàng ô đầu của bàn mình
       tt.style.top = TREN + 'px'; tt.style.maxHeight = Math.max(200, Math.round(this.oBan(B0).tren - 8) - TREN) + 'px';
     } else { // trượt lên từ đáy, không lên quá làn đường dưới (dưới hàng ô cuối)
@@ -65,6 +68,23 @@ const HB = {
       const s = statThuc(T), f = (v) => (typeof ST !== 'undefined' ? ST.so(v) : Math.round(v));
       // BẢN SAO Copycat: luôn hiện dấu Copycat (PNG) + % sức mạnh — cả sau khi biến hình (Hộp Bí Ẩn / Tiến Hoá / Xáo Trộn…) — MA-TRAN.md
       const bs = T.banSao ? '<span class="hb-bs"><img src="assets/nho/saochep.png" alt=""><small>COPY</small><b>' + Math.round(heSaoChep(G.ban[T.ban]) * 100) + '%</b></span>' : '';
+      // KHỐI CHỈ SỐ (11/2026, người dùng: "chi tiết ụ trong trận không rõ cả tốc đánh"): DMG · SPD /s · CRIT · CRIT DMG — số thật
+      //   (chiSoTT, statthuc.js); buff đang có → số XANH + số gốc gạch nhỏ; bất lợi (đóng băng, kẹp…) → ĐỎ. Ụ không bắn: "Does not shoot".
+      if (typeof chiSoTT === 'function') {
+        const c = chiSoTT(T), sk = SKILLS[T.id] || {};
+        if (!c.ban) {
+          let h = '<span class="cs-kb">Does not shoot</span>';
+          if (sk.vai === 'ht' && typeof hoTroTT === 'function') { const x = hoTroTT(T); if (x) h += '<span class="ht">' + ST.esc(x.dong.replace(' (current)', '')) + '</span>'; }
+          return h + bs;
+        }
+        const o = (ic, nhan, v, v0, hien, hien0, don) => {
+          const len = v > v0 * 1.005 + 1e-9, xuong = v < v0 * 0.995 - 1e-9;
+          return '<span class="cs ' + (len ? 'len' : xuong ? 'xau' : '') + '"><small><img src="assets/ic_' + ic + '.png" alt="">' + nhan + '</small><b>' + hien + (don ? '<i>' + don + '</i>' : '') + '</b>' + (len || xuong ? '<s>' + hien0 + '</s>' : '') + '</span>';
+        };
+        const pc = (v) => Math.round(v * 100) + '%';
+        return '<span class="cs-hang">' + o('dmg', 'DMG', c.dmg, c.dmg0, (c.ghi ? c.ghi : '') + f(c.dmg), f(c.dmg0)) + o('toc', 'SPD', c.toc, c.toc0, c.toc.toFixed(2), c.toc0.toFixed(2), '/s') +
+          o('crit', 'CRIT', c.crit, c.crit0, pc(c.crit), pc(c.crit0)) + o('cdmg', 'CRIT DMG', c.cMul, c.cMul0, pc(c.cMul), pc(c.cMul0)) + '</span>' + bs;
+      }
       if (s.coDmg) return '<span><small>DMG</small><b>' + f(s.dmg) + '</b></span><span><small>RATE</small><b>' + (s.frozen ? '0' : s.toc.toFixed(2)) + '</b><i>/s</i></span>' + bs;
       const sk = SKILLS[T.id]; if (sk && sk.vai === 'ht' && typeof hoTroTT === 'function') { const h = hoTroTT(T); if (h) return bs + '<span class="ht">' + ST.esc(h.dong.replace(' (current)', '')) + '</span>'; }
       if (bs) return bs;
@@ -86,6 +106,7 @@ const HB = {
     this.dung(tt);
     this._id = id;
     tt.classList.add('hb-qi'); tt.classList.remove('hb-rong');
+    tt.classList.toggle('hb-cs', !!T && typeof chiSoTT === 'function'); // dải có khối chỉ số (cao hơn, mọc lên trên — không che ô)
     // tên + ★ (số sao trong trận) trên 1 dòng; dòng vai trò/độ hiếm ẩn (đã có ở tấm mở rộng)
     const sao = tt.querySelector('.hb-sao') || (() => { const b = document.createElement('b'); b.className = 'hb-sao'; tt.querySelector('.tt-dau').insertBefore(b, tt.querySelector('.tt-bac')); return b; })();
     sao.innerHTML = T ? T.sao + '<img src="assets/ui_sao.png" alt="">' : ''; sao.hidden = !T;
