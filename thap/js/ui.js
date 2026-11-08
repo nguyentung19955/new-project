@@ -20,12 +20,13 @@ const UI = {
     let r = null;
     try { // tối đa 4 s (Safari đôi khi treo fetch lúc nạp lại trang) → dùng bản nhúng meta.js
       const ac = typeof AbortController !== 'undefined' ? new AbortController() : null, hen = ac && setTimeout(() => ac.abort(), 4000);
-      const res = await fetch('assets/roster.json?v=3cf994b0', { cache: 'no-cache', signal: ac ? ac.signal : undefined }); if (res.ok) r = await res.json(); clearTimeout(hen);
+      const res = await fetch('assets/roster.json?v=4d15c1bd', { cache: 'no-cache', signal: ac ? ac.signal : undefined }); if (res.ok) r = await res.json(); clearTimeout(hen);
     } catch (e) { }
-    G.roster = applyText(r || window.ROSTER_EMBED || []);
+    G.roster = applyText(r || window.ROSTER_EMBED || []).filter(x => !(typeof THE_BO !== 'undefined' && THE_BO.includes(x.id))); // thẻ đã bỏ (Hào Quang Thánh) — thebai.js
     SND.nutNhan(); // nhãn nút NHẠC/SFX theo trạng thái đã lưu
     document.querySelectorAll('[data-t]').forEach(e => { const v = TEXT.ui[e.dataset.t]; if (typeof v === 'string') e.innerHTML = v; });
     G.rosterMap = {}; for (const x of G.roster) G.rosterMap[x.id] = x;
+    try { if (typeof THEBAI !== 'undefined' && THEBAI.boThe) THEBAI.boThe(); } catch (e) { } // bù thẻ đã bỏ + thay trong bộ bài đã lưu (trước khi đọc turret_bo)
     try { const l = JSON.parse(localStorage.getItem('turret_bo') || 'null'); if (l && l.chon) { this.chon = l.chon.filter(id => SKILLS[id] && G.rosterMap[id]); this.mv = MAVUONG[l.mv] ? l.mv : 'hero'; this.che = ['solo', 'coop', 'pvp'].includes(l.che) ? l.che : 'solo'; } } catch (e) { }
     this.veChon();
     document.addEventListener('click', (e) => this.bam(e));
@@ -238,7 +239,9 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       chu(elv, nlv); if (elv && elv._max !== (lv >= 5)) { elv._max = lv >= 5; elv.classList.toggle('lv-max', elv._max); } // '' / +1 / +2 / +3 / MAX (MAX vàng; ô giá ẩn khi tối đa)
       // số ụ loại này trên bàn: tấm đếm .dem-u (icon chồng ụ + số) — js/demkn.js
       const g = d._g || (d._g = d.querySelector('.gia b'));
-      if (lv >= 5) { chu(g, TEXT.ui.max); d.classList.add('max'); d.classList.remove('du', 'thieu'); }
+      const kn = !!(SKILLS[id] && SKILLS[id].khongNang), gp = g && g.parentElement; if (gp && (gp.style.visibility === 'hidden') !== kn) gp.style.visibility = kn ? 'hidden' : ''; // Hydra: không nâng bằng mana (ẩn ô giá)
+      if (kn) { chu(g, ''); d.classList.add('max'); d.classList.remove('du', 'thieu'); }
+      else if (lv >= 5) { chu(g, TEXT.ui.max); d.classList.add('max'); d.classList.remove('du', 'thieu'); }
       else { const gia = LUAT.giaNangCap[lv - 1]; chu(g, gia); d.classList.toggle('du', B.mana >= gia); d.classList.toggle('thieu', B.mana < gia); }
     });
     const mv = B.mv, md = MAVUONG[mv.id], te = $('#the-mv');
@@ -467,12 +470,14 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       const B = G.ban[0], C = Math.min(B.cw, B.ch);
       // khung canvas đo 1 lần lúc chạm (pointermove KHÔNG đọc bố cục → không ép trình duyệt tính lại layout mỗi lần rê)
       this.keo = { T, x, y, x0: x, y0: y, dang: false, id: e.pointerId, lech: e.pointerType === 'mouse' ? 0 : Math.round(C * 0.6), r: cv.getBoundingClientRect() };
+      if (T.id === 'bienmau') this.keo.duong = [T.o];
       if (typeof REN !== 'undefined' && REN.nongKeo && !laHoTro(T)) REN.nongKeo(T); // dựng sẵn bản nhấc + huy hiệu, rải theo khung
     });
     cv.addEventListener('pointermove', (e) => {
       const k = this.keo; if (!k || e.pointerId !== k.id) return;
       // chỉ ghi toạ độ mới nhất (trình duyệt đã gộp các lần rê trong 1 khung); vẽ theo ngón ở khung rAF kế tiếp
       const [x, y] = this.diemLogic(e, k.r); k.x = x; k.y = y;
+      if (k.duong) { const B = G.ban[0], C = Math.min(B.cw, B.ch); for (let i = 0; i < 15; i++) { const c = B.o[i]; if (Math.hypot(c.x - x, c.y - y) < C * 0.42) { if (k.duong[k.duong.length - 1] !== i) k.duong.push(i); break; } } } // Prism Thief: ô ngón tay đi qua (CHROMATIC CIRCUIT)
       if (!k.dang && Math.hypot(x - k.x0, y - k.y0) > 7) {
         if (k.T.st.bang > 0) { FX.chu1(x, y - 20, TEXT.fx.frozen, '#7fdcff', 12); this.keo = null; return; }
         k.dang = true; $('#tt').hidden = true; this.xemHT = null; this.chonGhep = null;
@@ -496,6 +501,14 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
         this.moTT(k.T.id, k.T);
         if (!k.T.st.bang && B.t.some(N => N && N !== k.T && hopLeGhep(k.T, N))) this.chonGhep = { T: k.T, t0: performance.now() };
         return;
+      }
+      // Prism Thief: vuốt qua 4 ô liền → CHROMATIC CIRCUIT (skills7.js) thay cho ghép; đi qua ≥ 3 ô Prism mà sai luật → báo lý do, không ghép
+      if (k.duong && typeof SKILLS.bienmau.kiemMach === 'function') {
+        const p = k.duong, soP = new Set(p.filter(o => B.t[o] && B.t[o].id === 'bienmau')).size;
+        if (p.length === 4 && SKILLS.bienmau.mach(B, p)) return;
+        if (soP >= 3) { const v = p.length === 4 ? SKILLS.bienmau.kiemMach(B, p) : { loi: 'path' }, c = B.o[p[p.length - 1]];
+          const chu = { path: 'SWIPE EXACTLY 4 CELLS', prism: '4 PRISM THIEVES NEEDED', colour: 'NEED 4 DIFFERENT COLOURS', cd: 'CIRCUIT READY IN ' + Math.ceil((B.pmCd || 0) - G.t) + 'S' }[v.loi] || '';
+          if (chu) FX.chu1(c.x, c.y - 22, chu, '#ff9a9a', 12); return; }
       }
       // kéo: chỉ ghép khi thả đúng lên ô HỢP LỆ; mọi chỗ khác = huỷ (không ghép)
       const [hx, hy] = this.diemKeo(k), D = this.uTai(hx, hy);

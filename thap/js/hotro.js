@@ -27,7 +27,7 @@ const HOTRO = {
   //   soc (choáng khi chí mạng, giây), xuyen (chí mạng xuyên), khang (kháng khống chế, xác suất), ngNguong (ngưỡng giết ngay), chacCrit
   k(T) { const B = G.ban[T.ban]; return this.K[clamp(T.sao | 0, 1, 7)] * (this.BAC[T.bac] || 1) * (1 + 0.06 * (((B && B.lv[T.id]) || 1) - 1)) * this.kThe(B, T); },
   // cấp thẻ: giá trị buff theo bảng THE.kyNang (hỗ trợ) — thẻ chưa có mục: +½ % sát thương mỗi cấp như cũ
-  kThe(B, T) { const h = KY_NANG_CAP[T.id] ? knHe(B, T.id) : 1 + 0.5 * (hsThe(B, T.id) - 1); return h; }, // bản sao Copycat của ụ hỗ trợ: buff giữ nguyên như trước (% sao chép chỉ áp vào sát thương)
+  kThe(B, T) { const v = typeof capVD === 'function' ? capVD(T.id) : null; if (v && v.ht && !KY_NANG_CAP[T.id]) return 1 + v.ht * ((B && B.capThe && B.capThe[T.id]) | 0); const h = KY_NANG_CAP[T.id] ? knHe(B, T.id) : 1 + 0.5 * (hsThe(B, T.id) - 1); return h; }, // bản sao Copycat của ụ hỗ trợ: buff giữ nguyên như trước (% sao chép chỉ áp vào sát thương)
   // cấp thẻ nâng TRẦN của nguồn T (= 1 + capLv: tới ×1.18 ở LV15) · hệ số trần nguồn = bậc × thẻ (= capHe) · trần riêng Amplifier
   capThe(T) { return 1 + this.capLv(T); },
   capNguon(T) { return this.capHe(T); },
@@ -40,7 +40,7 @@ const HOTRO = {
   //  07/11 (BAO-CAO gioi-han §4 mục 3/4/9): nhóm có điều kiện (lo/lanh/vet) trần RIÊNG DK 35% × bậc · Amplifier trần riêng (25% + 4%/★) × bậc · khang 35% × bậc ·
   //   cham 35% × bậc (apDung = khiTrung = chữ, một trần duy nhất) · crit 25% — mọi trần × (1 + cấp thẻ)
   CAP_LV: 0.18, PU_CHET: 0.005,
-  capLvK(bac, k) { const n = typeof THE !== 'undefined' ? THE.lvMax - (THE.lvDau[bac] || 1) : 0; return k > 0 && n > 0 ? Math.min(this.CAP_LV, this.CAP_LV * k / n) : 0; }, // k = số cấp thẻ trên cấp đầu
+  capLvK(bac, k) { const n = typeof THE !== 'undefined' ? (THE.maxLv ? THE.maxLv(bac) : THE.lvMax) - (THE.lvDau[bac] || 1) : 0; return k > 0 && n > 0 ? Math.min(this.CAP_LV, this.CAP_LV * k / n) : 0; }, // k = số cấp thẻ trên cấp đầu
   capLv(T) {
     const B = T && G.ban && G.ban[T.ban], r = T && G.rosterMap && G.rosterMap[T.id]; if (!B || !r) return 0;
     return this.capLvK(r.bac, knCap(B, T.id));

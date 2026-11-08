@@ -27,7 +27,7 @@ const HO = {
   summon:    { ten: 'MERGE BONUS', mau: '#fff6c0', bac: [[], ['drone', 'loa'], ['nhanban', 'anhsang'], ['sinhdoi'], []], gap: { 0: 'new idea needed', 4: 'Hive Queen' } },
   star:      { ten: 'STAR',       mau: '#ffd23f', bac: [[], [], ['nangsao'], ['vughep', 'hasao', 'ngoisao'], []], gap: { 0: 'new idea needed', 1: 'new idea needed', 4: 'Genesis Core' } },
   joker:     { ten: 'JOKER',      mau: '#ff6ad5', bac: [[], ['mimic', 'tron', 'dichchuyen'], ['xaotron'], ['saochep'], []], gap: { 0: 'new idea needed', 4: 'new idea needed' } },
-  guard:     { ten: 'GUARD',      mau: '#9fe6ff', bac: [[], [], ['khien', 'taylo', 'kepha'], [], ['haoquang']], gap: { 0: 'new idea needed', 1: 'new idea needed', 3: 'Mirror Gate' } },
+  guard:     { ten: 'GUARD',      mau: '#9fe6ff', bac: [[], [], ['khien', 'taylo', 'kepha'], [], []], gap: { 0: 'new idea needed', 1: 'new idea needed', 3: 'Mirror Gate' } },
   transform: { ten: 'TRANSFORM',  mau: '#c77dff', bac: [[], [], ['hopbi'], ['tienhoa'], []], gap: { 0: 'new idea needed', 1: 'new idea needed', 4: 'new idea needed' } },
 };
 // cơ chế MỚI mà mỗi ụ thêm vào họ của nó (bậc sau không chỉ là bản to hơn của bậc trước)
@@ -35,7 +35,7 @@ const HO_MOI = {
   bang: 'freezes the lead enemy (no damage)', kiembang: 'spreads slow + shatters slowed ×5', lanhgia: 'spreads slow through neighbours’ shots',
   baotuyet: 'slows ALL + brief freeze', lophanung: 'slow aura that makes neighbours hit slowed enemies harder',
   doc: 'marks enemies: +12% damage taken', vungdoc: 'poison POOLS hit every enemy on them', aten: 'cashes in poison ×4; kills explode',
-  canon: 'arrow + number: same-arrow merges add up', xucxac: 'gambles damage 3–300%', mortar: 'CLUSTER shells split into bomblets', no5: 'every 5th shot: 3 exploding bolts',
+  canon: 'merge to combine directions: 1 homing rocket per direction', xucxac: 'gambles damage 3–300%', mortar: 'CLUSTER shells split into bomblets', no5: 'every 5th shot: 3 exploding bolts',
   orbital: 'merging awakens EVERY Orbital on the board: area salvos (no normal shots)',
   set: 'chain lightning', laser: 'beam that ramps up ×4', bao: 'instant hits that ARC to a 2nd enemy', railgun: 'piercing rail + BINGO lines',
   overlord: 'thunder blast + aftershock arcs (Mythic finisher, no active)',
@@ -44,7 +44,7 @@ const HO_MOI = {
   bua: 'neighbours’ crits hit harder and stagger', nam: 'melee ring blasts', chimang: 'gives crit to neighbours', cuongno: 'crits → RAGE → FRENZY', soi: 'chance to come out AWAKENED: every hit crits',
   phagiap: 'exposes the lead + toughest enemy for its neighbours', khuech: 'boosts neighbours’ damage', lienket: 'stronger per LINKED twin', dongbo: 'buffs EVERY same-star Attack turret on the board',
   cauvong: 'co-op: trail enemies take more · PVP: rival trail enemies take less',
-  bomhen: 'timed bomb that weakens a group', min: 'mines across the path', wallgen: 'walls block the path and explode; merge raises a GOLDEN wall', blackhole: 'pulls enemies together and crushes them',
+  bomhen: 'timed bomb that weakens a group', min: 'mines across the path', wallgen: 'walls block the path and explode; merge raises a GOLDEN wall', blackhole: 'holds a crowd in place and crushes it + SINGULARITY (tap, mana)',
   maychem: 'chance to execute small enemies', tuthan: 'neighbours execute low-HP enemies',
   mana: 'makes mana over time', hutmana: 'leech bolts: damage + capped mana', nhanmana: 'mana burst on merge',
   drone: 'merge launches bomb drones', loa: 'merge cuts Archfiend cooldown', nhanban: 'merge summons a free 1★ (2★ from 3★ merges)', anhsang: 'summons 1★ turrets over time',
@@ -71,7 +71,7 @@ function hoTT(id) {
 // ===================================================== 2) MỐC SAO 3★/5★/7★ =====================================================
 // Ụ có mốc RIÊNG (cơ chế cài trong skills*.js bằng ms(T,n)); ụ khác dùng mốc CHUNG theo loại (cài ở đây + game.js)
 const MOC_RIENG = {
-  canon:     { 5: ['TRUE NORTH', 'Each number counts ×1.5'], 7: ['FOUR WINDS', '+30% damage; every 8s a shell toward all 4 arrows'] },
+  canon:     { 5: ['TRUE NORTH', '+20% damage; each stack counts ×1.5'], 7: ['FOUR WINDS', '+30% damage; every 8s a rocket toward all 4 directions'] },
   bang:      { 3: ['LONG FREEZE', 'Freeze +0.5s'], 5: ['QUICK FROST', 'Freezes every 4.5s'], 7: ['DOUBLE FREEZE', 'Freezes 2 lead enemies'] },
   kiembang:  { 3: ['SHATTER ×6', 'Slowed enemies take ×6'], 5: ['SPLINTERS', 'Shatter splashes 40% around'], 7: ['GLACIER', 'Slowed enemies take ×8'] },
   baotuyet:  { 3: ['SQUALL', 'Pulses 1.5s sooner'], 5: ['ICE SHARDS', 'Pulse damage ×3'], 7: ['WHITEOUT', 'Pulse freezes small enemies 1s'] },
@@ -104,7 +104,7 @@ const MOC_RIENG = {
   soi:       { 3: ['KEEN FANGS', '+10% crit chance'], 5: ['FERAL', '+25% damage'], 7: ['ALPHA HOWL', 'Neighbours +25% fire rate'] },
   mana:      { 3: ['FAST FLOW', 'Mana every 6s'], 5: ['OVERFLOW', '+25% mana'], 7: ['WELLSPRING', 'Mana every 5s'] },
   hopbi:     { 3: ['QUICK OPEN', 'Opens 12s sooner'], 5: ['LUCKY BOX', 'Result at least 3★'], 7: ['JACKPOT', 'Result at least 5★'] },
-  tienhoa:   { 3: ['FAST GROWTH', 'Countdown 20% shorter'], 5: ['BREAKTHROUGH', '25% chance of +2★ (never above 7★)'], 7: ['DUD', 'At 7★ the bomb fizzles: no skill, just a 7★ turret (losing a star restarts it)'] },
+  tienhoa:   { 7: ['BURNT EGG', 'A 6★ egg burns into a 7★ egg: no hatch, tap it to recycle for +20 mana'] },
 };
 // loại để chọn mốc chung
 const KHONG_DOI = new Set(['railgun', 'no5', 'bomhen']); // bắn có nhịp riêng → mốc 5★ chung = OVERCHARGE thay vì DOUBLE TAP
@@ -163,8 +163,9 @@ const GROW = {
     gd: (T) => ({ s: T.nap >= 0.8 ? 3 : T.nap >= 0.35 ? 2 : 1, p: T.nap, v: [0.35, 0.8] }) },
   hopbi: { mau: '#c77dff', ten: ['SEALED', 'UNSEALING', 'ABOUT TO OPEN'], dk: 'Timer 0–70% / 70–93% / 93–100%, then opens',
     gd: (T) => ({ s: T.nap >= 0.93 ? 3 : T.nap >= 0.7 ? 2 : 1, p: T.nap, v: [0.7, 0.93] }) },
-  tienhoa: { mau: '#ffd23f', ten: ['INCUBATING', 'FORGING', 'ASCENDING'], dk: 'Timer 0–60% / 60–90% / 90–100%, then evolves +1★',
-    gd: (T) => ({ s: T.nap >= 0.9 ? 3 : T.nap >= 0.6 ? 2 : 1, p: T.nap, v: [0.6, 0.9] }) },
+  // 08/11 TRỨNG: hình dạng = ảnh trứng theo sao (skills2.js dauAnh) → dạng grow giữ 1 (không hào quang dạng 2/3; trứng cháy không sáng rực)
+  tienhoa: { mau: '#9dff5a', ten: ['EGG', 'EGG', 'EGG'], dk: 'Egg: hatches after 10s + 2s per ★ (6★ burns into a 7★ egg)',
+    gd: (T) => ({ s: 1, p: Math.min(1, T.nap || 0), v: [0.6, 0.9] }) },
   lophanung: { mau: '#9fe6ff', lap: true, ten: ['IDLE CORE', 'HEATING', 'CRYO STORM READY'], dk: 'Active charge <50% / 50–99% / full (tap to FREEZE)',
     gd: (T) => ({ s: T.nap >= 1 || T.bungT > 0 ? 3 : T.nap >= 0.5 ? 2 : 1, p: T.nap, v: [0.5, 1] }) },
   soi: { mau: '#ff4b3e', ten: ['PUP', 'NORMAL', 'AWAKENED'], dk: 'Form is rolled on summon / merge: Normal, or Awakened by chance (30% at LV9, +1.5% per card level) — no growing',
@@ -207,7 +208,7 @@ function lanDoc(E, B) {
 const nhip3 = (T) => (T && T.id && mocChung(T, 3) ? 1.2 : 1); // mốc chung 3★ QUICK HANDS (+20% nạp) — số giây hiển thị = số thật
 const NHIP = {
   laser: () => 'continuous beam', overlord: (T) => 'charges ' + ((7 - 0.5 * (T.sao - 1)) / nhip3(T)).toFixed(1) + 's',
-  wallgen: (T) => 'wall every ' + (Math.max(5, 9 - 0.4 * T.sao) / nhip3(T)).toFixed(1) + 's', blackhole: (T) => 'hole every ' + (Math.max(6, 10 - 0.5 * T.sao) / nhip3(T)).toFixed(1) + 's',
+  wallgen: (T) => 'wall every ' + (Math.max(5, 9 - 0.4 * T.sao) / nhip3(T)).toFixed(1) + 's', blackhole: (T) => 'hole every ' + (SKILLS.blackhole.ky(T) / nhip3(T)).toFixed(1) + 's',
   vungdoc: (T) => 'pool every ' + SKILLS.vungdoc.ky(T).toFixed(1) + 's', min: (T) => 'mine every ' + (SKILLS.min.ky(T) / nhip3(T)).toFixed(1) + 's',
   baotuyet: (T) => 'pulse every ' + SKILLS.baotuyet.ky(T).toFixed(1) + 's', lophanung: () => 'aura 2.5 ticks/s',
 };

@@ -14,102 +14,82 @@ function napChuDong(G, B, T, dt, cd, sk) {
 }
 
 // =====================================================================================================
-// R2 · HIVE QUEEN (chuato) — Đỏ TC: mỗi c s đẻ 1 drone mini (tối đa n), drone bay quanh tổ rồi tự săn quái gần nhất (60% sát thương ụ / phát, mỗi 0.5 s).
-//      GĐ2 (4★+): drone đậu lên 4 ụ kề → +10% tốc bắn. GĐ3 (7★): cứ 5 drone có 1 drone HOÀNG GIA vàng ×3 sát thương.
-//      CHỦ ĐỘNG "SWARM" (3★+, hồi 30 s): cả bầy lao vào chỗ quái đông nhất, mỗi con nổ dmg×3 trong 35 px; bầy đẻ lại từ 0.
-//      Tổng drone tối đa 12 / bàn (nhẹ máy). PVP: drone không sang bàn đối thủ.
+// R2 · HIVE QUEEN (chuato) — Đỏ TC (người dùng duyệt 08/11 — CHATGPT-SPEC §13): drone BAY VÒNG quanh tổ, tối đa = số sao.
+//      Nạp: chu kỳ hồi C = 2×sao / [1 + 0.15×(số drone lần thả trước − 1)] / [1 + 0.02×(cấp thẻ − 9)] giây cho cả bầy
+//      (mỗi drone C/sao giây; lần đầu tính như thả đủ bầy). Đủ bầy + có quái → THẢ HẾT vào s quái gần tổ nhất (trùng được):
+//      mỗi drone (0.70 + 0.15×sao)D, cả loạt +8% mỗi drone thêm (7★ đủ 7: 7 × 1.75D × 1.48 ≈ 18.1D). Không tự bắn ngòi chích nữa.
+//      CHỦ ĐỘNG "SWARM" (3★+, hồi 25 s, không tốn mana): thả NGAY mọi drone đang có (≥1) +35% sát thương; lần nạp kế 1.5 s/drone.
+//      Vẽ tối đa 4 drone + số "×N" (mô phỏng đủ N). Tất định (không Math.random trong luật).
 // =====================================================================================================
 SKILLS.chuato = {
-  vai: 'tc', dmg: 16, toc: 1, nham: 'dau', napMau: '#ff4a1a',
-  c: (T) => sao7r(T, [4, 3.7, 3.4, 3.1, 2.8, 2.5, 2.2]),
-  n: (T) => sao7r(T, [3, 4, 5, 6, 7, 8, 10]),
-  cd: 30,
-  mo: (T) => (T.bay ? T.bay.length : 0) + '/' + SKILLS.chuato.n(T) + ' drones (1 per ' + SKILLS.chuato.c(T) + 's, 60% dmg each)' + (T.sao >= 4 ? ' · while it has drones: N/E/S/W neighbours +10% fire rate' : '') + (T.sao >= 7 ? ' · every 5th drone ROYAL ×3' : '') + ' · ' + (T.sao >= 3 ? 'TAP when full: SWARM kamikaze ×3 (35 px)' : 'SWARM unlocks at 3★'),
-  sinh(G, T) { T.bay = []; T.de = 0; T.deDem = 0; },
-  hoTro(G, T, N, ra) { if (T.sao >= 4 && T.bay && T.bay.length) { if (ra) ra.toc = 0.1; else N.buf.toc += 0.1; } }, // ra: vào trần tốc chung (HOTRO.apDung — BAO-CAO §3)
+  vai: 'tc', dmg: 80, toc: 1, nham: 'dau', napMau: '#ff4a1a',
+  cd: 25,
+  moiCon: (T) => 0.70 + 0.15 * T.sao,
+  chuKy: (T, tha) => 2 * T.sao / (1 + 0.15 * (Math.max(1, tha || T.sao) - 1)) / (1 + 0.02 * capThe9(G.ban[T.ban], 'chuato')),
+  mo: (T) => (T.bay ? T.bay.length : 0) + '/' + T.sao + ' drones circling · full brood every ' + SKILLS.chuato.chuKy(T, T.thaN).toFixed(2) + 's, then all fly out: ' + Math.round(SKILLS.chuato.moiCon(T) * 100) + '% damage each, +8% per extra drone · ' + (T.sao >= 3 ? 'TAP (cooldown 25s): SWARM — release all drones now +35%, next brood 1.5s per drone' : 'SWARM unlocks at 3★'),
+  sinh(G, T) { T.bay = []; T.de = 0; T.thaN = 0; T.nhanh = 0; },
   capNhat(G, B, T, dt) {
     if (!T.bay) this.sinh(G, T);
-    const tong = B.t.reduce((s, X) => s + (X && X.id === 'chuato' && X.bay ? X.bay.length : 0), 0);
-    T.de += dt * (1 + T.buf.toc);
-    if (T.de >= this.c(T) && T.bay.length < this.n(T) && tong < 12) {
-      T.de = 0; T.deDem++;
-      const c = tamU(T), vang = T.sao >= 7 && T.deDem % 5 === 0;
-      T.bay.push({ x: c.x, y: c.y, g: Math.random() * 6.28, r: 0, cd: rnd(0.2, 0.6), vang, ra: 0 });
-      FX.tiaLua(c.x, c.y, 4, vang ? '#ffd23f' : '#ff6a2a', 90, 6);
-      if (!B.ai || G.che === 'pvp') SND.gOng();
-    } else if (T.de > this.c(T)) T.de = this.c(T);
+    const E = quaiDau(B); xoayDau(T, E, dt);
+    if (T.bay.length > T.sao) T.bay.length = T.sao; // mất sao: bớt drone
+    if (T.bay.length < T.sao) {
+      const moi = T.nhanh > 0 ? 1.5 : this.chuKy(T, T.thaN) / T.sao;
+      T.de += dt * nhipU(T);
+      if (T.de >= moi) {
+        T.de -= moi; const c = tamU(T), i = T.bay.length;
+        T.bay.push({ x: c.x, y: c.y, g: i * 1.7, ra: 0 });
+        if (T.nhanh > 0) T.nhanh--;
+        if (!B.ai || G.che === 'pvp') SND.gOng();
+      }
+    } else T.de = 0;
+    if (T.bay.length >= T.sao && T.bay.length && dsMucTieu(B).some(Q => !Q.chet)) this.tha(G, B, T, 1);
     if (!G.hu.some(o => o.k === 'toOng' && o.T === T)) G.hu.push({ k: 'toOng', t: 0, song: 1e9, T, B });
     napChuDong(G, B, T, dt, this.cd, this);
-    return false; // ong chúa vẫn bắn ngòi chích như ụ thường
+    return true;
   },
-  ban(G, B, T, E) { // ngòi chích: kim cam-mật bay nhanh
-    giat(T, 0.6); chopNong(T, 20); SND.tia();
-    const dmg = dmgU(T);
-    danThang(B, T, E, 'g_ngoi', 620, 18, (G, d, M) => { if (M) trung(M, dmg, { B, mau: '#ffc23a' }); FX.tiaLua(d.x, d.y, 3, '#ffc23a', 110, 6); });
+  // thả cả bầy: drone thứ i → quái gần tổ thứ (i mod số quái); sát thương chốt LÚC THẢ (tất định)
+  tha(G, B, T, he, swarm) {
+    const c = tamU(T), ds = dsMucTieu(B).filter(Q => !Q.chet).sort((a, b) => Math.hypot(a.x - c.x, a.y - c.y) - Math.hypot(b.x - c.x, b.y - c.y));
+    if (!ds.length || !T.bay.length) return false;
+    const n = T.bay.length, dmg = dmgU(T) * this.moiCon(T) * (1 + 0.08 * (n - 1)) * he;
+    T.bay.forEach((d, i) => G.hu.push({ k: swarm ? 'ongLao' : 'hiveLao', t: 0, song: 1.4, x: d.x, y: d.y, E: ds[i % ds.length], ds, B, T, dmg, vang: false, vet: [], t0: 0, toi: HU.ongLao.TOI }));
+    T.thaN = n; T.bay.length = 0; T.de = 0; T.banLan++; giat(T, 0.8);
+    return true;
   },
-  aiNen: (G, B, T) => T.bay && T.bay.length >= Math.min(4, SKILLS.chuato.n(T)) && dsMucTieu(B).filter(E => !E.chet).length >= 4,
+  aiNen: (G, B, T) => T.bay && T.bay.length >= Math.max(1, Math.min(3, T.sao - 1)) && dsMucTieu(B).filter(E => !E.chet).length >= 3,
   chuDong(G, B, T) {
     if (T.nap < 1 || T.sao < 3 || !T.bay || !T.bay.length) return false;
-    // chỗ quái đông nhất: quái có nhiều quái khác trong 60 px nhất
-    const ds = dsMucTieu(B).filter(E => !E.chet); if (!ds.length) return false;
-    let tam = ds[0], best = -1;
-    for (const E of ds) { const n = ds.reduce((s, Q) => s + (Math.hypot(Q.x - E.x, Q.y - E.y) < 60 ? 1 : 0), 0); if (n > best) { best = n; tam = E; } }
-    T.nap = 0; T.napDay = 0; T.sang = 1; giat(T, 1.6);
-    const dmg = dmgU(T) * 3;
-    // cả bầy cất cánh cùng lúc và TỚI CÙNG LÚC (HU.ongLao.TOI) — trước lệch t = −i×0.05 + bay tốc độ cố định → drone gần nổ trước tới ~0.6 s (rà VFX 07/11)
-    //   Chia mục tiêu NGAY lúc cất cánh: drone nhắm chỗ đông (tam); khi các drone trước (dự tính) đã đủ hạ quái đó thì drone sau nhắm quái sống gần
-    //   tam nhất — trước: tới nơi mới đổi mục tiêu → chuỗi đuổi nối tiếp 1 s, nhảy sang khúc đường khác. Sát thương mỗi drone giữ nguyên.
-    const conMau = new Map(), mau = (E) => conMau.has(E) ? conMau.get(E) : E.hp;
-    T.bay.forEach((d, i) => {
-      const dd = dmg * (d.vang ? 3 : 1);
-      let M = tam;
-      if (mau(tam) <= 0) { let bd = Infinity; for (const E of ds) { if (mau(E) <= 0) continue; const q = (E.x - tam.x) * (E.x - tam.x) + (E.y - tam.y) * (E.y - tam.y); if (q < bd) { bd = q; M = E; } } }
-      // dự tính hơi rộng tay (+8 px quái đi tiếp trong 0.5 s, ×1.2 chí mạng / ụ khác) để drone sau ít khi tới nơi gặp quái đã chết
-      for (const E of ds) if (Math.hypot(E.x - M.x, E.y - M.y) <= 43 + E.d.co * 0.25) conMau.set(E, mau(E) - dd * 1.2 * (1 + HOTRO.vuln(E)) * (E.giapT > 0 ? 0.75 : 1));
-      G.hu.push({ k: 'ongLao', t: 0, song: 1.4, x: d.x, y: d.y, E: M, ds, B, T, dmg: dd, vang: d.vang, vet: [], t0: 0, toi: HU.ongLao.TOI });
-    });
-    // ngòi chích thường của Chúa Tổ (đạn = cùng ảnh drone) trúng quái đầu đường trong lúc bầy đang bay → nổ "WOW" bậc đỏ (ảnh tổ ong to) trông như
-    // 1 drone nổ sớm ở khúc dưới. Chỉ trình bày: hoãn nổ bậc (TVX) của tổ tới khi bầy tới; sát thương ngòi chích giữ nguyên.
+    if (!this.tha(G, B, T, 1.35, true)) return false;
+    T.nap = 0; T.napDay = 0; T.sang = 1; giat(T, 1.6); T.nhanh = T.sao; // lần nạp kế: 1.5 s/drone
     T._tvh = T._tvw = G.t + HU.ongLao.TOI;
-    T.bay.length = 0; T.de = 0;
     nhanU(T, 'SWARM!', '#ff6a2a', true); SND.gSwarm();
     const c = tamU(T); FX.vong1(c.x, c.y, 10, 50, '#ff6a2a', 0.35, 3);
     return true;
   },
   sangDau: (T) => (T.gd === 3 ? 0.17 : T.gd === 2 ? 0.08 : 0), // VFX P3
 };
-HU.toOng = { // bầy drone của 1 tổ: bay vòng quanh tổ (GĐ2: đậu trên ụ kề), tự săn quái gần nhất ≤150 px, tia chích ngắn
+HU.toOng = { // bầy drone của 1 tổ: bay VÒNG quanh tổ (chỉ hình — vị trí drone không ảnh hưởng luật); vẽ tối đa 4 + số ×N
   cap(G, o, dt) {
     const T = o.T; if (!conTren(T) || T.id !== 'chuato') return true;
-    const B = o.B, c = tamU(T), dmg = dmgU(T) * 0.6;
-    const ke = T.sao >= 4 ? keCan(B, T.o).filter(N => N && !N.st.da) : [];
+    const c = tamU(T), n = T.bay.length;
     T.bay.forEach((d, i) => {
       d.ra = Math.min(1, d.ra + dt * 3);
-      // chỗ đứng: drone 0..3 đậu trên ụ kề (GĐ2+), còn lại bay vòng tròn quanh tổ
-      let tx, ty;
-      if (i < ke.length) { const n = tamU(ke[i]); tx = n.x + 10; ty = n.y - 12; /* VFX P3: bỏ nhún */ d.dau = true; }
-      else { d.g += dt * (1.6 + 0.1 * i); const r = 24 + (i % 3) * 5; tx = c.x + Math.cos(d.g) * r; ty = c.y + Math.sin(d.g) * r; d.dau = false; }
+      d.g += dt * 1.8; const a = d.g + i * Math.PI * 2 / Math.max(1, Math.min(4, n)), r = 26;
+      const tx = c.x + Math.cos(a) * r, ty = c.y + Math.sin(a) * r * 0.8;
       d.x += (tx - d.x) * Math.min(1, dt * 8); d.y += (ty - d.y) * Math.min(1, dt * 8);
-      d.cd -= dt * (1 + T.buf.toc);
-      if (d.cd <= 0) {
-        let M = null, best = 150; for (const E of dsMucTieu(B)) if (!E.chet) { const L = Math.hypot(E.x - d.x, E.y - d.y); if (L < best) { best = L; M = E; } }
-        d.cd = M ? Math.max(0, d.cd + 0.5) : 0; // cộng dồn (đúng 2 phát/s ở mọi tốc độ khung hình); không có quái trong 150 px → chờ sẵn
-        if (M) {
-          G.dangBan = T; trung(M, dmg * (d.vang ? 3 : 1), { B, mau: d.vang ? '#ffd23f' : '#ffb070', phu: false, im: !d.vang && Math.random() < 0.5 });
-          G.hu.push({ k: 'chich', t: 0, song: 0.12, x0: d.x, y0: d.y, x1: M.x, y1: M.y, vang: d.vang });
-        }
-      }
     });
     return false;
   },
   ve(ctx, o, R) {
-    const T = o.T; if (!T.bay) return;
-    for (const d of T.bay) veDrone(ctx, R, d.x, d.y, 1 + (d.vang ? 0.25 : 0), d.vang, G.t * 40 + d.g, d.ra);
+    const T = o.T; if (!T.bay || !T.bay.length) return;
+    const n = T.bay.length;
+    for (let i = 0; i < Math.min(4, n); i++) { const d = T.bay[i]; veDrone(ctx, R, d.x, d.y, 1, false, 0, d.ra); }
+    if (n > 4) { const c = tamU(T); ctx.font = '900 11px ' + FONT.display; ctx.textAlign = 'center'; ctx.lineWidth = 3; ctx.strokeStyle = '#000'; ctx.globalAlpha = 1; ctx.strokeText('×' + n, c.x + 20, c.y - 20); ctx.fillStyle = '#ffd23f'; ctx.fillText('×' + n, c.x + 20, c.y - 20); ctx.textAlign = 'left'; }
   },
 };
-function veDrone(ctx, R, x, y, k, vang, pha, al) { // ong máy = ảnh PNG fx_chuato_dan / fx_chuato_hieu (ChatGPT); vỗ cánh = nhịp phóng ảnh
-  const ten = vang ? (typeof FXU !== 'undefined' && FXU.co('fx_chuato_dan3') ? 'fx_chuato_dan3' : REN.img('fx_chuato_hieu') ? 'fx_chuato_hieu' : 'fx_chuato_dan') : 'fx_chuato_dan'; // ong chúa vàng = dan3 (tờ G4)
-  R.anhGiua(ctx, ten, x, y, 20 * k * (vang ? 1.15 : 1), 0, al == null ? 1 : al); // VFX P3: bỏ phập phồng + lắc ảnh ong (bay vòng = chuyển động thật)
+function veDrone(ctx, R, x, y, k, vang, pha, al) { // drone bay vòng = ảnh ChatGPT raw_gc_chuato_drone (fx_hive_drone); chưa tải → ong máy cũ
+  const ten = REN.img('fx_hive_drone') ? 'fx_hive_drone' : vang ? (typeof FXU !== 'undefined' && FXU.co('fx_chuato_dan3') ? 'fx_chuato_dan3' : REN.img('fx_chuato_hieu') ? 'fx_chuato_hieu' : 'fx_chuato_dan') : 'fx_chuato_dan';
+  R.anhGiua(ctx, ten, x, y, 20 * k * (vang ? 1.15 : 1), 0, al == null ? 1 : al);
 }
 HU.chich = { ve(ctx, o, R) { const u = o.t / o.song; ctx.globalCompositeOperation = 'lighter'; PX.tia(ctx, o.x0, o.y0, o.x1, o.y1, o.vang ? 2.4 : 1.6, o.vang ? '#ffe680' : '#ff9a50', 1 - u); ctx.globalAlpha = 1 - u; R.anhGiua(ctx, R.cham1(o.vang ? '#ffd23f' : '#ff6a2a'), o.x1, o.y1, 12 * (1 - u)); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; } };
 HU.ongLao = { // SWARM: từng drone lao thành vệt sáng vào chỗ đông → nổ 35 px
@@ -150,6 +130,33 @@ HU.ongLao = { // SWARM: từng drone lao thành vệt sáng vào chỗ đông �
     veDrone(ctx, R, o.x, o.y, 1.15, o.vang, G.t * 60, 1);
   },
 };
+// drone thả theo chu kỳ (không phải SWARM): cùng đường bay tất định của ongLao, trúng ĐÚNG 1 quái (không nổ lan); ảnh mới raw_gc_chuato_drone:
+//   drone lao (fx_hive_lao, mũi hướng LÊN ảnh → xoay theo hướng bay) + vệt (fx_hive_vet) + nổ tổ ong (fx_hive_no). Chưa tải → hình ongLao cũ.
+HU.hiveLao = {
+  cap(G, o, dt) {
+    if (o.t < 0) return false;
+    if (o.E.chet) { const ds = dsMucTieu(o.B).filter(E => !E.chet); if (!ds.length) return true; const x0 = o.E.x, y0 = o.E.y; let best = ds[0], bd = Infinity; for (const E of ds) { const d = (E.x - x0) * (E.x - x0) + (E.y - y0) * (E.y - y0); if (d < bd) { bd = d; best = E; } } o.E = best; }
+    if (o.t >= o.toi - 1e-9) {
+      G.dangBan = o.T; trung(o.E, o.dmg, { B: o.B, mau: '#ffb070' });
+      G.hu.push({ k: 'hiveNo', t: 0, song: 0.35, x: o.E.x, y: o.E.y });
+      return true;
+    }
+    const dx = o.E.x - o.x, dy = o.E.y - o.y, D = o.toi - o.t0, u0 = Math.max(0, (o.t - dt - o.t0) / D), u1 = Math.min(1, (o.t - o.t0) / D), r = (u) => 1 - u * (0.4 + 0.6 * u);
+    const k = 1 - r(u1) / Math.max(1e-6, r(u0));
+    o.g = Math.atan2(dy, dx); o.x += dx * k; o.y += dy * k;
+    return false;
+  },
+  ve(ctx, o, R) {
+    if (o.t < 0) return;
+    const lao = REN.img('fx_hive_lao'); if (!lao) return HU.ongLao.ve.call(this, ctx, o, R);
+    const g = (o.g || 0) + Math.PI / 2, vet = REN.img('fx_hive_vet');
+    ctx.save(); ctx.translate(o.x, o.y); ctx.rotate(g);
+    if (vet) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.7; ctx.drawImage(vet, -5, 6, 10, 30); ctx.globalCompositeOperation = 'source-over'; } // vệt phía sau (dưới ảnh = phía sau)
+    ctx.globalAlpha = 1; ctx.drawImage(lao, -9, -14, 18, 18 * lao.height / lao.width);
+    ctx.restore();
+  },
+};
+HU.hiveNo = { ve(ctx, o, R) { const u = o.t / o.song, im = REN.img('fx_hive_no'); if (!im) return; PX.ve(ctx, im, o.x, o.y, 34 * (0.7 + 0.5 * u), 34 * (0.7 + 0.5 * u) * im.height / im.width, 0, 1 - u * u); ctx.globalAlpha = 1; } }; // nổ tổ ong nhỏ (chỉ hình)
 
 // =====================================================================================================
 // R3 · LEVIATHAN (leviathan) — Đỏ TC: bắn bọt nước nổ 30 px. Mỗi e s NUỐT 1 quái thường (không to, không trùm, GĐ1–2 không nuốt quái bay)
@@ -162,11 +169,17 @@ SKILLS.leviathan = {
   e: (T) => sao7r(T, [9, 8.5, 8, 7, 6, 5.5, 5]),
   cd: 35,
   // dòng bảng ụ: 'ABYSS 56 · +224% damage' (VI: '+224% sát thương') = đúng số trên tấm đếm xoáy vực ở đáy ô (demkn.js)
-  mo: (T) => 'ABYSS ' + (T.vuc || 0) + ' · +' + 4 * (T.vuc || 0) + '% damage · devours a small enemy every ' + SKILLS.leviathan.e(T) + 's (' + SKILLS.leviathan.TAM + ' px' + (T.sao >= 4 ? ', big ones ×3' : '') + (T.sao >= 7 ? ', flyers too' : '') + ') · bubble splash 30 px · ' + (T.sao >= 3 ? 'TAP when full: TIDAL BREATH ×' + (4 + 0.1 * (T.vuc || 0)).toFixed(1) + ' — water orbs shoot up from the turret and rain down along the whole path' : 'TIDAL BREATH unlocks at 3★'),
+  mo: (T) => 'ABYSS ' + (T.vuc || 0) + ' · +' + 4 * (T.vuc || 0) + '% damage · this turret only (a new one starts at 0) · its kills: elite +3, boss +10 · devours a small enemy every ' + SKILLS.leviathan.e(T) + 's (' + SKILLS.leviathan.TAM + ' px' + (T.sao >= 4 ? ', big ones ×3' : '') + (T.sao >= 7 ? ', flyers too' : '') + ') · bubble splash 30 px · ' + (T.sao >= 3 ? 'TAP when full: TIDAL BREATH ×' + (4 + 0.1 * (T.vuc || 0)).toFixed(1) + ' — water orbs shoot up from the turret and rain down along the whole path' : 'TIDAL BREATH unlocks at 3★'),
   TAM: 160, // tầm nuốt 120 → 160 px: mọi ô hàng giữa với tới đường (BAO-CAO gioi-han §4 mục 7)
   // VỰC SÂU RIÊNG TỪNG Ụ (người dùng 07/11 18:57): chỉ Leviathan NUỐT mới được điểm; ụ mới = 0; ụ bị biến/đổi/thay (ghép ra ụ khác, Mad Crown, Hộp…) mất điểm;
   //   ghép 2 Leviathan ra Leviathan → giữ số LỚN HƠN (GIU_CONG_DON, game.js) — như Ember Relay
   sinh(G, T) { T.vuc = T.vuc || 0; T.nuot = 0; },
+  // (người dùng duyệt 08/11) đòn của CHÍNH ụ này hạ TINH ANH (quái to) +3 ABYSS, hạ TRÙM +10 ABYSS (quái thường: nuốt +1 như cũ)
+  khiGiet(G, T, E) {
+    if (!T || T.id !== 'leviathan' || !conTren(T)) return;
+    const n = E.trum ? 10 : E.d && E.d.to ? 3 : 0; if (!n) return;
+    T.vuc = (T.vuc || 0) + n; nhanU(T, '+' + n + ' ABYSS', '#7fdcff');
+  },
   capNhat(G, B, T, dt) {
     T.buf.dmg += 0.04 * (T.vuc || 0);
     T.nuot = (T.nuot || 0) + dt * (1 + T.buf.toc);
@@ -265,64 +278,78 @@ HU.thoThuy = { // TIDAL BREATH: điểm cuối tia chạy dọc đường từ l
 };
 
 // =====================================================================================================
-// R4 · GENESIS CORE (khoisinh) — Đỏ ĐB: không bắn. Mỗi g s: +1★ cho ụ SAO THẤP NHẤT trên bàn (không phải chính nó; hoà → ngẫu nhiên;
-//      Co-op: chọn ụ của đồng đội nếu thấp hơn). +★ này KHÔNG tính là ghép. GĐ2 (4★+): 4 ô kề +15% sát thương.
-//      GĐ3 (7★): mỗi lần nâng sao còn gọi thêm 1 ụ 1★ nếu bàn còn ô trống.
-//      CHỦ ĐỘNG "GENESIS" (3★+, hồi 45 s): gọi k ụ (loại ngẫu nhiên trong bộ) ở MỨC SAO TRUNG BÌNH của bàn (làm tròn xuống) vào ô trống.
+// R4 · GENESIS CORE (khoisinh) — Đỏ ĐB, không bắn (người dùng duyệt 08/11 — CHATGPT-SPEC §16):
+//      Mỗi 12 s (÷(1 + 0.03×(cấp thẻ − 9)) → LV17 9.68 s; power-up trong trận −3%/bước) +1★ TẠI CHỖ cho ụ kề 4 hướng (dấu cộng)
+//      SAO THẤP NHẤT (<7★, không đá / băng / Lõi Khởi Sinh; hoà → ô số nhỏ hơn). Không biến hình, KHÔNG tính là ghép.
+//      LƯỢT = sao lúc sinh; mỗi lần nâng −1 lượt; hết lượt → TỰ HUỶ (ô trống). Không có ô hợp lệ → chờ, không mất lượt.
+//      Lõi bị hạ sao → lượt = min(lượt, sao); lõi được tăng sao KHÔNG hồi lượt. Băng/đá: đồng hồ dừng (capNhatU không chạy).
+//      4★+: 4 ô kề +15% sát thương (giữ). CHỦ ĐỘNG "GENESIS" (3★+, 30 mana, hồi 45 s): gọi 1 ụ 1★ (ngẫu nhiên trong bộ, hạt giống)
+//      vào ô TRỐNG kề có số nhỏ nhất; không có ô trống kề → không dùng, không trừ mana.
+//      Online: bàn con rối (B.net) không tự nâng/gọi — chờ ảnh chụp bàn của máy bạn.
 // =====================================================================================================
+const KE_CONG = (o) => { const c = o % 5, h = (o / 5) | 0, ds = []; if (h > 0) ds.push(o - 5); if (c > 0) ds.push(o - 1); if (c < 4) ds.push(o + 1); if (h < 2) ds.push(o + 5); return ds.sort((a, b) => a - b); }; // ô kề dấu cộng (tăng dần)
 SKILLS.khoisinh = {
   vai: 'db', dmg: 0, toc: 0, napMau: '#ff3a6a',
-  g: (T) => Math.round(sao7r(T, [30, 28, 26, 24, 22, 20, 16]) * (knThe(G.ban[T.ban], 'khoisinh') || 100)) / 100, // × cấp thẻ + power-up (KY_NANG_CAP.khoisinh)
-  k: (T) => sao7r(T, [1, 1, 2, 2, 2, 3, 3]),
+  GIA: 30,
+  g: (T) => { const B = G.ban[T.ban]; return Math.round(12 / (1 + 0.03 * capThe9(B, 'khoisinh')) * (1 - 0.03 * knPU(B, 'khoisinh')) * 100) / 100; },
   cd: 45,
-  mo: (T) => '+1★ to your lowest turret every ' + SKILLS.khoisinh.g(T) + 's (next in ' + Math.max(0, SKILLS.khoisinh.g(T) - (T.sinhT || 0)).toFixed(0) + 's)' + (T.sao >= 4 ? ' · neighbours +15% damage' : '') + (T.sao >= 7 ? ' · each raise also summons a free 1★' : '') + ' · ' + (T.sao >= 3 ? 'TAP when full: GENESIS summons ' + SKILLS.khoisinh.k(T) + ' at average ★' : 'GENESIS unlocks at 3★'),
+  mo: (T) => '+1★ to the lowest-star N/E/S/W neighbour every ' + SKILLS.khoisinh.g(T) + 's (next in ' + Math.max(0, SKILLS.khoisinh.g(T) - (T.sinhT || 0)).toFixed(0) + 's) · gifts left ' + Math.min(T.luot == null ? T.sao : T.luot, T.sao) + ' (= its stars when it appeared; at 0 it breaks) · waits if no neighbour can take a star' + (T.sao >= 4 ? ' · neighbours +15% damage' : '') + ' · ' + (T.sao >= 3 ? 'TAP (30 mana, cooldown 45s): GENESIS summons a 1★ into an empty neighbour cell' : 'GENESIS unlocks at 3★'),
+  sinh(G, T) { if (T.luot == null) T.luot = T.sao; T.sinhT = 0; },
   gocDau: (T, t) => t * (0.25 + 0.5 * (T.sinhT || 0) / SKILLS.khoisinh.g(T)),
   hoTro(G, T, N, ra) { if (T.sao >= 4) { if (ra) ra.dmg = 0.15; else N.buf.dmg += 0.15; } }, // ra: vào trần sát thương chung (HOTRO.apDung — BAO-CAO §3)
-  thapNhat(B, T) {
-    const ds = B.t.filter(N => N && N !== T && N.sao < LUAT.saoMax && !N.st.da && N.id !== 'khoisinh');
-    if (!ds.length) return null;
-    const m = Math.min(...ds.map(N => N.sao)); return pick(ds.filter(N => N.sao === m));
+  dich(B, T) { // ụ kề thấp sao nhất; hoà → ô số nhỏ hơn
+    let M = null;
+    for (const o of KE_CONG(T.o)) { const N = B.t[o]; if (!N || N.sao >= LUAT.saoMax || N.st.da || N.st.bang > 0 || N.id === 'khoisinh') continue; if (!M || N.sao < M.sao) M = N; }
+    return M;
   },
   capNhat(G, B, T, dt) {
-    T.sinhT = (T.sinhT || 0) + dt * (1 + T.buf.toc);
-    if (T.sinhT >= this.g(T)) {
-      let X = B, N = this.thapNhat(B, T);
-      if (G.che === 'coop') { const D = banKhac(B), M = D && this.thapNhat(D, T); if (M && (!N || M.sao < N.sao)) { X = D; N = M; } }
+    if (T.luot == null) T.luot = T.sao;
+    if (T.luot > T.sao) T.luot = T.sao; // bị hạ sao → lượt = min(lượt, sao)
+    T.nap = T.sao < 3 ? 0 : Math.min(1, T.nap + dt / this.cd); // chiêu TỐN MANA: không tự phát cho người chơi (AI bàn máy vẫn dùng — game.js)
+    if (B.net && typeof ONS !== 'undefined' && ONS.on) return true; // bàn con rối: chờ ảnh chụp bàn
+    const g = this.g(T);
+    T.sinhT = Math.min(g, (T.sinhT || 0) + dt * (1 + T.buf.toc));
+    if (T.sinhT >= g && T.luot > 0) {
+      const N = this.dich(B, T);
       if (N) {
-        T.sinhT = 0; T.sang = 1;
-        const c = tamU(T), n = X.o[N.o];
+        T.sinhT = 0; T.sang = 1; T.luot--;
+        const c = tamU(T), n = B.o[N.o];
         G.hu.push({ k: 'cungSang', t: 0, song: 0.55, x0: c.x, y0: c.y, x1: n.x, y1: n.y });
-        VX.hen(0.4, () => { if (X.t[N.o] === N) nangSao(X, N, 1, X === B ? 'GENESIS +1★' : 'ALLY GENESIS'); });
-        if (T.sao >= 7 && oTrong(B).length) { const M = trieu(B, true); if (M) nhanU(M, 'GENESIS SEED', '#ff8ab0', true); }
+        nangSao(B, N, 1, 'GENESIS +1★'); // tại chỗ, ngay lúc chọn (tất định)
         if (!B.ai || G.che === 'pvp') SND.gHop(0);
-      } else T.sinhT = this.g(T);
+        if (T.luot <= 0) { // hết lượt: tự huỷ, để trống ô
+          B.t[T.o] = null; FX.no('no_phao', c.x, c.y, 60, 0.45); FX.vong1(c.x, c.y, 8, 50, '#ff8ab0', 0.4, 4); FX.chu1(c.x, c.y - 20, 'GENESIS SPENT', '#ff8ab0', 14, 'to');
+        }
+      } // không có ô hợp lệ: giữ đồng hồ đầy, không mất lượt
     }
-    napChuDong(G, B, T, dt, this.cd, this);
     return true;
   },
-  aiNen: (G, B, T) => oTrong(B).length >= 1,
+  aiNen: (G, B, T) => KE_CONG(T.o).some(o => !B.t[o]),
   chuDong(G, B, T) {
-    if (T.nap < 1 || T.sao < 3 || !oTrong(B).length) return false;
-    T.nap = 0; T.napDay = 0; T.sang = 1;
-    const ts = B.t.filter(N => N && !N.st.da), tb = clamp(Math.floor(ts.reduce((s, N) => s + N.sao, 0) / Math.max(1, ts.length)), 1, 6);
-    const c = tamU(T); let n = 0;
-    for (let i = 0; i < this.k(T); i++) {
-      const tr = oTrong(B); if (!tr.length) break;
-      const o = pick(tr), id = pick(deckTru(B, ['khoisinh'])), N = sinhU(taoU(B, id, tb, o));
-      B.t[o] = N; VX.trieu(N); n++;
-      const q = B.o[o]; G.hu.push({ k: 'cungSang', t: -i * 0.08, song: 0.55, x0: c.x, y0: c.y, x1: q.x, y1: q.y });
+    if (T.nap < 1 || T.sao < 3) return false;
+    const o = KE_CONG(T.o).find(q => !B.t[q]); if (o == null) return false;
+    if (!traMana(B, T, this.GIA)) return false;
+    T.nap = 0; T.napDay = 0; T.sang = 1; T.genN = (T.genN || 0) + 1;
+    const c = tamU(T);
+    if (!(B.net && typeof ONS !== 'undefined' && ONS.on)) { // bàn con rối online: ụ mới tới theo ảnh chụp bàn
+      const ds = deckTru(B, ['khoisinh']), r = rngHat(((typeof ONS !== 'undefined' && ONS.on ? ONS.seed : G.hat) || 1) * 7919 + T.uid * 131 + T.genN * 977 + o * 17);
+      const N = sinhR(taoU(B, ds[Math.floor(r() * ds.length)], 1, o), r);
+      B.t[o] = N; VX.trieu(N);
+      const q = B.o[o]; G.hu.push({ k: 'cungSang', t: 0, song: 0.55, x0: c.x, y0: c.y, x1: q.x, y1: q.y });
     }
-    nhanU(T, 'GENESIS ×' + n + ' (' + tb + '★)', '#ff8ab0', true); SND.gHop(1); FX.vong1(c.x, c.y, 10, 60, '#ff8ab0', 0.4, 4); FX.sang(0.1, '#ffd0e0');
+    nhanU(T, 'GENESIS!', '#ff8ab0', true); SND.gHop(1); FX.vong1(c.x, c.y, 10, 60, '#ff8ab0', 0.4, 4);
     return true;
   },
   sangDau: (T) => (T.gd === 3 ? 0.2 + 0.08 * Math.sin(G.t * 4) : T.gd === 2 ? 0.1 : 0) + T.sang * 0.3,
-  veThem(ctx, T, S, al, R) { // GĐ1: 3 vành vàng quay · GĐ2: + 8 cánh sen thép · GĐ3: + ngôi sao trắng ở lõi
+  veThem(ctx, T, S, al, R) { // GĐ1: 3 vành vàng quay · GĐ2: + 8 cánh sen thép · GĐ3: + ngôi sao trắng ở lõi · chấm hồng = số lượt còn lại
     const gd = T.gd || 1, p = (T.sinhT || 0) / SKILLS.khoisinh.g(T);
     ctx.globalCompositeOperation = 'lighter';
     if (!MOT_VONG) for (let i = 0; i < 3; i++) { const rr = S * (0.3 + i * 0.045), vp = PX.mau('fx_vong_trieu', i === 2 ? '#ff8ab0' : '#ffd23f'); if (vp) PX.ve(ctx, vp, 0, 0, rr * 2.3, rr * 2.3, (i % 2 ? -1 : 1) * R.t * (0.4 + 0.2 * i), al * (0.35 + 0.15 * i)); } // vành = vòng phù văn PNG
     if (gd >= 2) for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4 + R.t * 0.3; PX.sao(ctx, Math.cos(a) * S * 0.34, Math.sin(a) * S * 0.34, S * 0.12, '#ffd23f', al * 0.5, a); } // cánh sen = lấp lánh PNG
     if (gd === 3) { ctx.globalAlpha = al * (0.5 + 0.2 * Math.sin(R.t * 4)); R.anhGiua(ctx, R.cham1('#ff8ab0'), 0, 0, S * 0.7); ctx.globalAlpha = al; vePandora(ctx, 'sao', S * 0.09, '#ffffff'); }
     if (p > 0.9) { ctx.globalAlpha = al * (p - 0.9) * 6 * (0.6 + 0.4 * Math.sin(R.t * 20)); R.anhGiua(ctx, R.cham1('#ffd23f'), 0, 0, S * 0.8); }
+    const n = Math.min(T.luot == null ? T.sao : T.luot, T.sao); // lượt còn lại: n chấm dưới lõi
+    for (let i = 0; i < n; i++) R.anhGiua(ctx, R.cham1('#ff8ab0'), (i - (n - 1) / 2) * S * 0.09, S * 0.3, 7, 0, al * 0.95);
     ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al;
   },
 };
@@ -355,7 +382,10 @@ SKILLS.ronglua = {
   goc: (T) => sao7r(T, [40, 45, 50, 55, 60, 65, 75]) * Math.PI / 180,
   tam: (T) => sao7r(T, [130, 135, 140, 145, 150, 155, 165]) * (T.sao >= 7 ? 1.15 : 1), // 100→135 → 130→165 px (BAO-CAO gioi-han §4 mục 7)
   cd: 35,
-  mo: (T) => ['Orange', 'BLUE flame (+30% vs big)', 'WHITE flame (+30% vs big, trails 4s)'][gdSao(T) - 1] + ' · cone ' + Math.round(SKILLS.ronglua.goc(T) * 180 / Math.PI) + '° × ' + Math.round(SKILLS.ronglua.tam(T)) + ' px · burns 3s · ' + (T.sao >= 3 ? 'TAP when full: DRAGON DIVE ×25 down the path' : 'DRAGON DIVE unlocks at 3★'),
+  // THIÊU (người dùng duyệt 08/11 — CHATGPT-SPEC §14): tổng 1 lần thiêu 3 s = 0.15D × (3/2) × sao (7★ = 1.575D), chia 6 nhịp 0.5 s
+  //   → ST/giây chayD = tổng / 3 = 0.075 × sao × D (HU.chay: mỗi nhịp chayD × 0.5). Không cộng dồn: giữ nguồn MẠNH NHẤT, làm mới thời gian.
+  chayD: (T, D) => 0.075 * T.sao * D,
+  mo: (T) => ['Orange', 'BLUE flame (+30% vs big)', 'WHITE flame (+30% vs big, trails 4s)'][gdSao(T) - 1] + ' · cone ' + Math.round(SKILLS.ronglua.goc(T) * 180 / Math.PI) + '° × ' + Math.round(SKILLS.ronglua.tam(T)) + ' px · burns 3s for ' + Math.round(22.5 * T.sao) + '% total (strongest burn wins, no stacking) · ' + (T.sao >= 3 ? 'TAP when full: DRAGON DIVE ×25 down the path' : 'DRAGON DIVE unlocks at 3★'),
   capNhat(G, B, T, dt) {
     const L = this.tam(T), c = tamU(T), E = quaiDauTam(B, T, L);
     xoayDau(T, E, dt);
@@ -369,7 +399,7 @@ SKILLS.ronglua = {
         const dx = Q.x - c.x, dy = Q.y - c.y, d = Math.hypot(dx, dy);
         if (d > L + Q.d.co * 0.3 || Math.abs(gocLech(T.goc, Math.atan2(dy, dx))) > a + 0.08) continue;
         trung(Q, dmg * (gd >= 2 && (Q.d.to || Q.trum) ? 1.3 : 1), { B, mau: gd === 3 ? '#e8f6ff' : gd === 2 ? '#9fd0ff' : '#ffb070', im: Math.random() < 0.6 });
-        if (!Q.chet) { Q.chayT = Math.max(Q.chayT || 0, 3); Q.chayD = Math.max(Q.chayD || 0, dmg * 0.6); Q.chayB = B; if (!G.hu.some(o => o.k === 'chay' && o.E === Q)) G.hu.push({ k: 'chay', t: 0, song: 30, E: Q, T }); }
+        if (!Q.chet) { Q.chayT = Math.max(Q.chayT || 0, 3); Q.chayD = Math.max(Q.chayD || 0, this.chayD(T, dmg)); Q.chayB = B; if (!G.hu.some(o => o.k === 'chay' && o.E === Q)) G.hu.push({ k: 'chay', t: 0, song: 30, E: Q, T }); }
       }
       // vệt cháy trên đường dưới mục tiêu (≤1 vệt / 0.45 s / ụ)
       if (G.t - (T.vetT || -9) > 0.45) { T.vetT = G.t; G.hu.push({ k: 'vetChay', t: 0, song: gd === 3 ? 4 : 2, x: E.x, y: E.y, B, T, dmg: dmg * 0.3, tick: 0, gd }); }
@@ -496,27 +526,29 @@ HU.rongBo = { // DRAGON DIVE: bóng rồng bay dọc đường (lõi → cổng)
 // =====================================================================================================
 // đăng ký: họ kỹ năng, mốc sao riêng, grow-up 3 giai đoạn, nhịp hiển thị
 // =====================================================================================================
-themHo('summon', 4, 'chuato', 'a swarm of hunter drones + SWARM kamikaze (active)');
+themHo('summon', 4, 'chuato', 'drones circle the hive, then fly out together + SWARM (active)');
 themHo('heavy', 4, 'leviathan', 'devours enemies for damage stacks (no cap) + TIDAL BREATH (active)');
-themHo('star', 4, 'khoisinh', 'raises your weakest turret over time + GENESIS (active)');
+themHo('star', 4, 'khoisinh', 'raises the weakest neighbour (limited gifts) + GENESIS (active)');
 themHo('blast', 4, 'ronglua', 'flame cone that burns crowds + DRAGON DIVE (active)');
 
 Object.assign(MOC_RIENG, {
-  chuato: { 3: ['SWARM', 'Unlocks the active skill (tap when full; auto-fires if left full)'], 5: ['QUICK BROOD', 'Up to 7 drones, one every 2.8s'], 7: ['ROYAL BROOD', 'Every 5th drone is gold ×3'] },
+  blackhole: { 3: ['SINGULARITY', 'Unlocks the active skill (tap, 30 mana): the next hole is bigger and crushes harder'] },
+  chuato: { 3: ['SWARM', 'Unlocks the active skill (tap when full; auto-fires if left full)'], 7: ['FULL BROOD', '7 drones: a 7-drone volley gets +48% damage'] },
   leviathan: { 3: ['TIDAL BREATH', 'Unlocks the active skill (tap when full; auto-fires if left full)'], 5: ['DEEP MAW', 'Devours big enemies (×3 stacks) — starts at 4★'], 7: ['ABYSS LORD', 'Devours every 5s, flyers too'] },
-  khoisinh: { 3: ['GENESIS', 'Unlocks the active skill (tap when full; auto-fires if left full)'], 5: ['BLOOM', 'Neighbours +15% damage (starts at 4★)'], 7: ['SEED OF LIFE', 'Each raise also summons a free 1★'] },
+  khoisinh: { 3: ['GENESIS', 'Unlocks the active skill (tap, 30 mana): summons a 1★ next to it'], 5: ['BLOOM', 'Neighbours +15% damage (starts at 4★)'] },
   ronglua: { 3: ['DRAGON DIVE', 'Unlocks the active skill (tap when full; auto-fires if left full)'], 5: ['BLUE FLAME', '+30% vs big enemies and bosses (starts at 4★)'], 7: ['WHITE FLAME', 'Longer cone, burning trail 4s'] },
 });
 Object.assign(GROW, {
-  chuato: { mau: '#ff6a2a', khongAnh: true, ten: ['NEST', 'HIVE', 'ROYAL HIVE'], dk: '1–3★ / 4–6★ (drones perch on neighbours) / 7★ ROYAL: every 5th drone gold ×3',
+  chuato: { mau: '#ff6a2a', khongAnh: true, ten: ['NEST', 'HIVE', 'ROYAL HIVE'], dk: 'Drones circling = stars (1–7) · all fly out when the brood is full',
     gd: (T) => ({ s: gdSao(T), p: (T.sao - 1) / 6, v: [0.5] }) },
   leviathan: { mau: '#1fb6d9', khongAnh: true, ten: ['HATCHLING', 'DEEP ONE', 'ABYSS LORD'], dk: '1–3★ / 4–6★ (devours big ones) / 7★ ABYSS LORD (devours flyers, every 5s)',
     gd: (T) => ({ s: gdSao(T), p: (T.sao - 1) / 6, v: [0.5] }) },
-  khoisinh: { mau: '#ff8ab0', khongAnh: true, ten: ['SEED', 'BLOSSOM', 'LOTUS OF LIFE'], dk: '1–3★ / 4–6★ (neighbours +15% dmg) / 7★ (each raise summons a free 1★)',
+  khoisinh: { mau: '#ff8ab0', khongAnh: true, ten: ['SEED', 'BLOSSOM', 'LOTUS OF LIFE'], dk: '1–3★ / 4–6★ (neighbours +15% dmg) / 7★ · gifts = its stars when it appeared',
     gd: (T) => ({ s: gdSao(T), p: (T.sao - 1) / 6, v: [0.5] }) },
   ronglua: { mau: '#ff5a1a', ten: ['WHELP', 'BLUE WYRM', 'WHITE WYRM'], dk: '1–3★ orange flame / 4–6★ BLUE flame (+30% vs big) / 7★ WHITE flame (longer, trails 4s)',
     gd: (T) => ({ s: gdSao(T), p: (T.sao - 1) / 6, v: [0.5] }) },
 });
 Object.assign(NHIP, {
-  ronglua: () => 'flame 5 ticks/s', khoisinh: (T) => '+1★ every ' + SKILLS.khoisinh.g(T) + 's',
+  chuato: (T) => 'brood ' + SKILLS.chuato.chuKy(T, T.thaN).toFixed(1) + 's',
+  ronglua: () => 'flame 5 ticks/s', khoisinh: (T) => '+1★ to a neighbour every ' + SKILLS.khoisinh.g(T) + 's',
 });

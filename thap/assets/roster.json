@@ -4,9 +4,9 @@
   "ten": "Compass Cannon",
   "bac": "vang",
   "dcdw": "Joan of Arc",
-  "kyNang": "Arrow + number: same-arrow merges add numbers, opposite merges subtract + shockwave; each number +damage",
+  "kyNang": "Merge to combine directions (N, S, W, E); each direction fires 1 homing rocket; NSWE + NSWE adds a damage stack",
   "ten_vi": "Pháo La Bàn",
-  "kyNang_vi": "Mũi tên + số: ghép cùng hướng cộng số, ngược hướng trừ số + sóng nổ; mỗi số +sát thương"
+  "kyNang_vi": "Ghép để gộp hướng (N, S, W, E); mỗi hướng bắn 1 tên lửa đuổi; NSWE + NSWE thêm 1 stack sát thương"
  },
  {
   "id": "xucxac",
@@ -442,12 +442,12 @@
  },
  {
   "id": "railgun",
-  "ten": "Railgun",
+  "ten": "Salvo Battery",
   "bac": "vang",
   "dcdw": "Removal Tee",
-  "kyNang": "Bingo: a full ROW of Railguns +200% damage, a full COLUMN of Railguns +150% fire rate (stones don't count)",
-  "ten_vi": "Railgun",
-  "kyNang_vi": "Bingo: đủ HÀNG NGANG toàn Railgun +200% sát thương, đủ CỘT DỌC toàn Railgun +150% tốc bắn (ô đá không tính)"
+  "kyNang": "Bingo: Salvo Batteries in a row add damage (3/5 +25%, 4/5 +65%, 5/5 +200%); in a column add fire rate (2/3 +35%, 3/3 +150%). Stones break the line",
+  "ten_vi": "Pháo Loạt Salvo",
+  "kyNang_vi": "Bingo: nhiều Salvo cùng hàng +ST (3/5 +25%, 4/5 +65%, 5/5 +200%); cùng cột +tốc bắn (2/3 +35%, 3/3 +150%). Ô đá làm đứt hàng"
  },
  {
   "id": "vughep",
@@ -481,9 +481,9 @@
   "ten": "Copycat",
   "bac": "vang",
   "dcdw": "Shamash",
-  "kyNang": "Copies any same-star turret, even stone (less damage)",
+  "kyNang": "Copies any same-star turret, frozen too, not stone (less damage)",
   "ten_vi": "Máy Sao Chép",
-  "kyNang_vi": "Sao chép ụ bất kỳ cùng sao, kể cả ụ hoá đá (giảm sát thương)"
+  "kyNang_vi": "Sao chép ụ bất kỳ cùng sao, cả ụ đóng băng, không chép ụ hoá đá (giảm sát thương)"
  },
  {
   "id": "ngoisao",
@@ -499,18 +499,18 @@
   "ten": "Werewolf",
   "bac": "vang",
   "dcdw": "Werewolf",
-  "kyNang": "Melee wolf: each summon/merge is Normal or AWAKENED by chance (30%+); Awakened always crits",
+  "kyNang": "Wolf gun: Normal = 1 barrel, a shot every 1.8s; AWAKENED by chance (30%+) = 3 barrels, 3-shot volley every 1.2s, always crits",
   "ten_vi": "Sói Máy",
-  "kyNang_vi": "Sói cận chiến: mỗi lần gọi/ghép ra bản Thường hoặc THỨC TỈNH theo xác suất (30%+); bản thức tỉnh luôn chí mạng"
+  "kyNang_vi": "Súng sói: bản Thường 1 nòng, 1 phát mỗi 1.8 s; THỨC TỈNH theo xác suất (30%+) há 3 nòng, loạt 3 viên mỗi 1.2 s, luôn chí mạng"
  },
  {
   "id": "tienhoa",
   "ten": "Evolver",
   "bac": "vang",
   "dcdw": "Moa",
-  "kyNang": "Time bomb counts down, then becomes a random turret +1★ (higher stars take longer; at 7★ it fizzles — no skill)",
-  "ten_vi": "Hộp Tiến Hoá",
-  "kyNang_vi": "Bom hẹn giờ đếm ngược rồi biến thành ụ ngẫu nhiên +1 sao (sao cao chờ lâu hơn; 7★ thì bom xịt — không còn tác dụng)"
+  "kyNang": "Egg: hatches into a random turret +1★ after 10s + 2s per ★. 6★ burns into a 7★ egg: tap it for +20 mana",
+  "ten_vi": "Trứng Tiến Hoá",
+  "kyNang_vi": "Trứng: nở thành ụ ngẫu nhiên +1★ sau 10 s + 2 s mỗi sao. 6★ cháy thành trứng 7★: chạm để lấy +20 mana"
  },
  {
   "id": "cauvong",
@@ -544,9 +544,9 @@
   "ten": "Black Hole",
   "bac": "do",
   "dcdw": "(new)",
-  "kyNang": "Pulls enemies in and crushes them",
+  "kyNang": "Holds a crowd in place, then crushes it. Active (3★+, 30 mana): SINGULARITY COLLAPSE",
   "ten_vi": "Hố Đen",
-  "kyNang_vi": "Hút quái lại rồi nghiền"
+  "kyNang_vi": "Giữ chân đám quái rồi nghiền; CHỦ ĐỘNG (30 mana): SINGULARITY COLLAPSE"
  },
  {
   "id": "overlord",
@@ -616,9 +616,9 @@
   "ten": "Hydra",
   "bac": "vang",
   "dcdw": "Hydra / Tiamat",
-  "kyNang": "One barrel per star, each hits a different enemy; 7★ fuses into a giant beam",
+  "kyNang": "One head per star, chained shots; no mana power-up — tap (3★+, mana) for faster shots, 7★ MACHINE GUN",
   "ten_vi": "Hydra",
-  "kyNang_vi": "Số nòng = số sao, mỗi nòng bắn 1 quái khác; 7★ hợp thành tia khổng lồ",
+  "kyNang_vi": "Số đầu = số sao, bắn nối tiếp; không nâng cấp mana — chạm (3★+, tốn mana) bắn nhanh gấp đôi, 7★ SÚNG MÁY",
   "vai": "tc",
   "ho": "rapid",
   "moi": "TUONG-MOI-20"
@@ -676,9 +676,9 @@
   "ten": "Nemesis",
   "bac": "vang",
   "dcdw": "Nemesis / Lancelot",
-  "kyNang": "Executes low-HP enemies; % max-HP judgment on bosses",
+  "kyNang": "Every 10 hits a VERDICT: mostly normal enemies → +fire rate, elites/bosses or a tie → +damage (capped)",
   "ten_vi": "Nữ Thần Phán Xử",
-  "kyNang_vi": "Xử tử quái dưới ngưỡng máu; vào trùm gây % máu tối đa",
+  "kyNang_vi": "Mỗi 10 đòn PHÁN QUYẾT: đa số quái thường → +tốc bắn, tinh anh/trùm hoặc hoà → +sát thương (có trần)",
   "vai": "tc",
   "ho": "execute",
   "moi": "TUONG-MOI-20"
@@ -745,12 +745,12 @@
  },
  {
   "id": "loren",
-  "ten": "Scrap Forge",
+  "ten": "Twin Anvil",
   "bac": "vang",
   "dcdw": "Original (Scrap Forge)",
-  "kyNang": "Special (original): FEED it a 1–3★ turret — your best Attack turret gains damage while the Forge stays on the board (no cap). Only feeding counts, not other merges",
-  "ten_vi": "Lò Rèn Phế Liệu",
-  "kyNang_vi": "Đặc biệt (ụ riêng): cho ĂN ụ 1–3★ — ụ Tấn công mạnh nhất +sát thương khi Lò còn trên bàn (không trần). Chỉ tính lúc cho ăn, không tính ghép khác",
+  "kyNang": "Special: Damage or Speed type. Same-type Anvils forge stacks (max 14, can fail). Drag onto another turret: +3% damage or +2% fire rate per stack for good",
+  "ten_vi": "Đe Song Sinh",
+  "kyNang_vi": "Đặc biệt: dạng ST hoặc tốc. Ghép Anvil cùng dạng cộng dồn (tối đa 14, có thể hỏng). Kéo lên ụ khác: +3% ST hoặc +2% tốc mỗi cộng dồn, vĩnh viễn",
   "vai": "db",
   "ho": "star",
   "moi": "TUONG-MOI-20"
@@ -784,9 +784,9 @@
   "ten": "Hive Queen",
   "bac": "do",
   "dcdw": "Lilith / Summoner",
-  "kyNang": "Breeds hunter drones. Active (3★+): SWARM kamikaze",
+  "kyNang": "Drones circle the hive (1 per star) and fly out together when full. Active (3★+): SWARM releases them now",
   "ten_vi": "Chúa Tổ",
-  "kyNang_vi": "Nuôi bầy drone mini tự săn quái; CHỦ ĐỘNG: cả bầy lao vào tự sát",
+  "kyNang_vi": "Drone bay vòng quanh tổ (1 con mỗi sao), đủ bầy thì bay ra cùng lúc; CHỦ ĐỘNG: SWARM thả ngay cả bầy",
   "vai": "tc",
   "ho": "summon",
   "moi": "TUONG-MOI-20"
@@ -796,9 +796,9 @@
   "ten": "Leviathan",
   "bac": "do",
   "dcdw": "Leviathan / Nidhogg",
-  "kyNang": "Devours enemies for endless stacks. Active (3★+): TIDAL BREATH sweeps the path",
+  "kyNang": "Devours enemies for endless stacks (elite kill +3, boss kill +10). Active (3★+): TIDAL BREATH sweeps the path",
   "ten_vi": "Thuỷ Quái",
-  "kyNang_vi": "Nuốt chửng quái thường lấy cộng dồn; CHỦ ĐỘNG: tia thở quét hết đường",
+  "kyNang_vi": "Nuốt chửng quái lấy cộng dồn (hạ tinh anh +3, trùm +10); CHỦ ĐỘNG: tia thở quét hết đường",
   "vai": "tc",
   "ho": "heavy",
   "moi": "TUONG-MOI-20"
@@ -808,9 +808,9 @@
   "ten": "Genesis Core",
   "bac": "do",
   "dcdw": "Brownie / Aurora King",
-  "kyNang": "Raises your lowest turret +1★ over time. Active (3★+): GENESIS summons turrets",
+  "kyNang": "Raises the lowest-star neighbour +1★ (gifts = its stars, then it breaks). Active (3★+, 30 mana): GENESIS summons a 1★",
   "ten_vi": "Lõi Khởi Sinh",
-  "kyNang_vi": "Định kỳ +1★ ụ yếu nhất; CHỦ ĐỘNG: gọi ụ ở mức sao trung bình",
+  "kyNang_vi": "Nâng +1★ ụ kề sao thấp nhất (số lượt = số sao, hết thì tự vỡ); CHỦ ĐỘNG (30 mana): GENESIS gọi 1 ụ 1★",
   "vai": "db",
   "ho": "star",
   "moi": "TUONG-MOI-20"
@@ -820,9 +820,9 @@
   "ten": "Wyrm Engine",
   "bac": "do",
   "dcdw": "Tiamat",
-  "kyNang": "Flame cone burns crowds. Active (3★+): DRAGON DIVE down the path",
+  "kyNang": "Flame cone burns crowds (strongest burn wins). Active (3★+): DRAGON DIVE down the path",
   "ten_vi": "Rồng Máy",
-  "kyNang_vi": "Phun lửa hình nón quét bàn, đốt cháy; CHỦ ĐỘNG: rồng bổ nhào dọc đường",
+  "kyNang_vi": "Phun lửa hình nón đốt cháy (thiêu mạnh nhất thắng, không cộng dồn); CHỦ ĐỘNG: rồng bổ nhào dọc đường",
   "vai": "tc",
   "ho": "blast",
   "moi": "TUONG-MOI-20"
@@ -832,53 +832,53 @@
   "ten": "Ember Relay",
   "bac": "vang",
   "dcdw": "Kalaratri",
-  "kyNang": "Merging a Relay gives +1 flame to every Relay in the same row and column (no cap); each flame +damage & crit",
+  "kyNang": "Merging 2 Relays: every Relay in the row and column gets both flames added (max 70). Each flame +2% damage, +0.12% crit",
   "vai": "tc",
   "ho": "blast",
   "ten_vi": "Lửa Thập Tự",
-  "kyNang_vi": "Ghép → +1 lửa cho mọi Ember Relay cùng hàng và cùng cột (không trần); mỗi lửa +sát thương & chí mạng"
+  "kyNang_vi": "Ghép 2 Relay: mọi Relay cùng hàng và cột nhận tổng lửa 2 ụ (tối đa 70). Mỗi lửa +2% ST, +0,12% chí mạng"
  },
  {
   "id": "hopca",
   "ten": "Quantum Choir",
   "bac": "vang",
   "dcdw": "Cosmem",
-  "kyNang": "+damage for every other turret on your board with the same ★ (no cap); 7★ +fire rate",
+  "kyNang": "Harmony: each touching same-star turret +25% damage, +8% crit damage; 2/3/4 Harmony unlock a 2nd target, +30% fire rate, echo hits",
   "vai": "tc",
   "ho": "star",
   "ten_vi": "Hợp Xướng Lượng Tử",
-  "kyNang_vi": "+sát thương theo số ụ cùng sao trên bàn (không trần); 7★ +tốc bắn"
+  "kyNang_vi": "Hoà âm: mỗi ụ kề cùng sao +25% ST, +8% ST chí mạng; 2/3/4 hoà âm mở mục tiêu thứ 2, +30% tốc, đòn vang"
  },
  {
   "id": "luutru",
   "ten": "Fusion Archive",
   "bac": "vang",
   "dcdw": "Aurora",
-  "kyNang": "Every merge you make adds a permanent archive charge (+damage); Archive + Archive fires 3 pulses",
+  "kyNang": "Every real merge gives +1 charge to one random Archive: +1% damage each, rewards at 10/20/30/40",
   "vai": "tc",
   "ho": "summon",
   "ten_vi": "Kho Lưu Hợp Nhất",
-  "kyNang_vi": "Mỗi lần ghép +1 điểm lưu vĩnh viễn (+sát thương); Archive + Archive nổ 3 xung"
+  "kyNang_vi": "Mỗi lần ghép thật +1 điểm cho 1 Archive ngẫu nhiên: +1% ST mỗi điểm, thưởng mốc 10/20/30/40"
  },
  {
   "id": "xuonganh",
   "ten": "Hero Foundry",
   "bac": "vang",
   "dcdw": "Kintia",
-  "kyNang": "Merge 2 Foundries: a random cell becomes a HERO tile for 12s (+fire rate to the turret on it)",
+  "kyNang": "Merge 2 Foundries: that cell becomes a 25s HERO tile: +80% fire rate, +30% crit damage",
   "vai": "db",
   "ho": "amp",
   "ten_vi": "Xưởng Anh Hùng",
-  "kyNang_vi": "Ghép 2 Foundry: 1 ô ngẫu nhiên thành ô ANH HÙNG 12 s (+tốc bắn cho ụ trên ô)"
+  "kyNang_vi": "Ghép 2 Foundry: ô đó thành ô ANH HÙNG 25 s: +80% tốc bắn, +30% ST chí mạng"
  },
  {
   "id": "mauhut",
   "ten": "Blood Circuit",
   "bac": "vang",
   "dcdw": "Strigoi",
-  "kyNang": "Kéo lên BẤT KỲ ụ của mình: cả 2 thành 1 ụ ngẫu nhiên ở sao cao hơn; cùng sao = VAMP",
+  "kyNang": "Marks a turret and eats it after 5s + 3s per ★ for Blood; tap with 10 Blood: Blood Rite +30% damage +15% fire rate to a neighbour",
   "ten_vi": "Mạch Máu",
-  "kyNang_vi": "Kéo lên BẤT KỲ ụ của mình: cả 2 thành 1 ụ ngẫu nhiên ở sao cao hơn; cùng sao = VAMP",
+  "kyNang_vi": "Đánh dấu 1 ụ, nuốt sau 5 s + 3 s mỗi sao để lấy Máu; chạm khi đủ 10 Máu: Blood Rite +30% ST +15% tốc cho ụ kề",
   "vai": "db",
   "ho": "star",
   "moi": "VANG-2"
@@ -912,9 +912,9 @@
   "ten": "Prism Thief",
   "bac": "vang",
   "dcdw": "Lupin",
-  "kyNang": "Đạn đổi màu đỏ/vàng/xanh; ghép 2 ụ cùng màu → COMBO",
+  "kyNang": "One colour each: red kills, gold mana, blue freezes, green crits. Swipe 4 different colours: Chromatic Circuit",
   "ten_vi": "Siêu Trộm Lăng Kính",
-  "kyNang_vi": "Đạn đổi màu đỏ/vàng/xanh; ghép 2 ụ cùng màu → COMBO",
+  "kyNang_vi": "Mỗi ụ 1 màu: đỏ giết, vàng mana, lam đóng băng, lục chí mạng. Vuốt qua 4 màu khác nhau: Chromatic Circuit",
   "vai": "tc",
   "ho": "crit",
   "moi": "VANG-2"

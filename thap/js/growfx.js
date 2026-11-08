@@ -137,6 +137,7 @@ const EVO = {
   so: { evo_bom: [0, 0.035, 0.25], fx_bomhen_hieu: [-0.04, 0.06, 0.26] }, // ô số trên ảnh: [dx, dy, cỡ chữ] theo cỡ huy hiệu
 };
 function veEvoBom(ctx, T, S, al, R) {
+  if (REN.img && REN.img('trung_1')) return; // 08/11: Evolver = QUẢ TRỨNG (đầu ảnh trung_*, skills2.js) — bỏ bom; còn số giây ở bộ đếm đáy ô (DEMKN)
   const t = VX.t;
   ctx.save(); ctx.globalCompositeOperation = 'source-over';
   if (T.sao >= LUAT.saoMax) { // 7★ xịt: nổ hụt (0–1.1 s sau khi lên 7★) rồi xác bom cố định ở giữa
@@ -416,7 +417,7 @@ HU.gSuong = { duoi: true, ve(ctx, o, R) { const u = o.t / o.song, r = o.r * (0.2
 HU.gBaoLuoi = { ve(ctx, o, R) { if (!GFX.coDOM) return; const u = o.t / o.song; ctx.globalCompositeOperation = 'lighter'; veSanBang(ctx, o.x, o.y, o.r, (1 - u) * 0.85, u); if (gV(ctx, 'fx_lophanung_dan3', o.x, o.y, o.r * 1.3, u * Math.PI, (1 - u) * 0.8)) { ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; return; } ctx.globalAlpha = (1 - u) * 0.35; R.anhGiua(ctx, R.cham1('#dffaff'), o.x, o.y, o.r * 2); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; } };
 
 // ---- SÓI MÁY (Warwolf): 1 vuốt cam → 2 vuốt chéo (lao tới) → THỨC TỈNH: 2 nhát chí mạng siêu nhanh, 3 vệt đỏ thẫm, mỗi 4 đòn LƯỚT tới ----
-ATK.soi = ['(unused — no Pup stage any more)', 'NORMAL Werewolf: X-shaped double slash (two hits), head lunges', 'AWAKENED Werewolf (chance on summon/merge): twin fast always-crit slashes, triple crimson claw marks, wide frenzy splash, every 4th hit DASHES to the target'];
+ATK.soi = ['(unused — no Pup stage any more)', 'NORMAL Werewolf: one barrel, a single shot every 1.8s', 'AWAKENED Werewolf (chance on summon/merge): the mouth opens 3 barrels, a 3-shot volley every 1.2s, always crits'];
 P.soi = () => {
   const sk = SKILLS.soi;
   sk.ban = function (G, B, T, E) {
@@ -630,7 +631,7 @@ HU.gSong = { ve(ctx, o, R) { const u = o.t / o.song, im = gCo('fx_dongbo_dacbiet
   for (let i = 0; i < 3; i++) { const r = 6 + i * 6 + u * 14; PX.ve(ctx, im, o.x + Math.cos(o.goc) * r, o.y + Math.sin(o.goc) * r, r * 1.6, r * 1.6 * im.height / im.width, o.goc, (1 - u) * (0.9 - i * 0.22)); } ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; } };
 
 // ---- HYDRA: kim ngọc bay (1–3★) → quạt kim tức thì so le 40 ms + dấu ấn lục giác (4–6★) → 7★ HỢP ĐẦU: tia xuyên khổng lồ + phù văn dọc tia ----
-ATK.hydra = ['1–3 barrels fire flying emerald NEEDLES at different enemies', 'Fan of instant needles, staggered 40 ms, each leaves a hex rune mark', 'FUSED HEAD: one giant piercing beam through the whole line, runes along the beam'];
+ATK.hydra = ['1–3 heads: a chain of emerald shots, 0.18s apart', '4–6 heads: a longer chain, each head picks its own target', '7 heads: 7-shot chain; tap skill = MACHINE GUN 10 shots/s'];
 P.hydra = () => {
   const sk = SKILLS.hydra;
   sk.ban = function (G, B, T, E) {
@@ -744,7 +745,7 @@ P.luoicheo = () => {
   };
 };
 // ---- 3 ụ Đỏ đợt 3 (chuato / leviathan / khoisinh) đổi dạng theo sao: đã vẽ riêng trong skills5.js (drone hoàng gia, bọt lớn, hoa sen) ----
-ATK.chuato = ['Stinger shots + up to 3–5 orbiting drones', 'HIVE: drones perch on neighbours (+10% fire rate)', 'ROYAL HIVE: every 5th drone is gold ×3'];
+ATK.chuato = ['1–3 drones circle the hive, then fly out together', '4–6 drones: each extra drone adds +8% to the volley', '7 drones: the full brood volley'];
 ATK.leviathan = ['Bubble shot, 30 px splash', 'Bubble shot, bigger splash ring (same 30 px); devours big enemies', 'ABYSS LORD: big double-ring bubbles; devours flyers'];
 ATK.khoisinh = ['3 rotating gold rings, raises your lowest turret', 'BLOSSOM: steel lotus petals, neighbours +15% damage', 'LOTUS OF LIFE: white star core, each raise also seeds a free 1★'];
 

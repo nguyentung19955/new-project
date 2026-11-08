@@ -43,7 +43,7 @@ const TBUI = {
       if (!phu2 && typeof THATSO !== 'undefined' && THATSO.capThe) phu2 = THATSO.capThe(id, t); // ụ hỗ trợ: trần nới theo cấp thẻ
       nut = '<button class="tb-nut" data-up="tbnang"' + (THEBAI.nangDuoc(t) ? '' : ' disabled') + '><b>LEVEL UP</b><small><img src="assets/ngoc_vang.png" alt="">' + this.so(t.vang) + '</small></button>';
     }
-    return '<div class="tb-cap" data-id="' + id + '"><div class="tb-cap-lv"><small>CARD LV</small><b>' + t.lv + '</b><em>/' + THE.lvMax + '</em></div>' +
+    return '<div class="tb-cap" data-id="' + id + '"><div class="tb-cap-lv"><small>CARD LV</small><b>' + t.lv + '</b><em>/' + THE.maxLv(t.bac) + '</em></div>' +
       '<div class="tb-cap-giua">' + this.thanh(t) + '<small class="tb-phu1">' + phu + '</small><small class="tb-phu2">' + phu2 + '</small><small class="tb-vi"><img src="assets/ngoc_vang.png" alt="">' + this.so(vang) + '</small></div>' + nut + '</div>';
   },
 

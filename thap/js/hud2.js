@@ -10,7 +10,7 @@ const HUD2 = {
   ANH_DOM: ['h2_rail', 'h2_lcd', 'h2_ngoc', 'h2_trieu_cho', 'h2_trieu_san', 'h2_trieu_an', 'h2_trieu_tat', 'h2_phim_dung_cho', 'h2_phim_dung_an', 'h2_phim_toc_cho', 'h2_phim_toc_an',
     'h2_tag', 'h2_ic_chong', 'h2_chip', 'h2_chip_tat', 'h2_ic_tim', 'seg_sang', 'seg_trum', 'loi_khuc_day', 'h2_khay_doi', 'h2_den_doi', 'h2_thanh', 'h2_tam_mong'],
   ANH_S10: ['nut_lon_thep', 'nut_lon_vang', 'nut_lon_xanh', 'nut_nho', 'khung_chon', 'nut_cong', 'khung_tt', 'ic_lui', 'ic_phat', 'h2_phim_dung_cho'],
-  ANH_CV: ['h2_sao', 'h2_sao_sang', 'h2_loi_0', 'h2_loi_1', 'h2_loi_2', 'h2_loi_chop', 'loi_vong_trai_sang', 'loi_vong_giua_sang', 'loi_vong_phai_sang', 'loi_vong_trai_tat', 'loi_vong_giua_tat', 'loi_vong_phai_tat', 'loi_vong_no', 'nhan_kn'],
+  ANH_CV: ['hh_sao1', 'hh_sao2', 'hh_sao3', 'hh_sao4', 'hh_sao5', 'hh_sao6', 'hh_sao7', 'h2_sao', 'h2_sao_sang', 'h2_loi_0', 'h2_loi_1', 'h2_loi_2', 'h2_loi_chop', 'loi_vong_trai_sang', 'loi_vong_giua_sang', 'loi_vong_phai_sang', 'loi_vong_trai_tat', 'loi_vong_giua_tat', 'loi_vong_phai_tat', 'loi_vong_no', 'nhan_kn'],
   VAI: { tc: 'h2_vai_tc', ht: 'h2_vai_ht', db: 'h2_vai_db' },
   bat: false, giam: false, _du: null, _theDu: {}, _tim: -1, _vfx: 0,
 
@@ -165,6 +165,33 @@ const HUD2 = {
   if (typeof REN !== 'undefined') {
     const hhGoc = REN.huyHieu;
     REN.huyHieu = function (n, d) {
+      // 08/11 (người dùng): huy hiệu = SỐ NGÔI SAO (hh_sao1…6: 1–4 một hàng, 5 = 3+2, 6 = 3+3) · 7★ = 1 sao đỏ to (hh_sao7). Chưa tải → khiên số cũ (dự phòng)
+      const sa = this.img(n >= 7 ? 'hh_sao1' : 'hh_sao' + Math.max(1, Math.min(7, n | 0)));
+      if (sa && this.img('hh_sao' + Math.max(1, Math.min(7, n | 0)))) {
+        // 08/11: ô vẽ 1.7d vuông, hàng sao nằm GIỮA ô vẽ (con dấu ghép / nhãn kéo vẽ thẳng như cũ). Trên bàn: REN.veHuyHieuTren đặt ĐÁY hàng sao
+        //   ở mốc cố định dưới mép trên ô (người dùng 'Cho sao ở giữa đi trên ụ 1 tý': giữa ô, ngay trên đầu ụ; 5★ = 3+2, 6★ = 3+3 lan lên trên).
+        //   2–6★ cùng cỡ MỖI ngôi sao (SAO_PX = cỡ 1 sao trong ảnh gốc; lỗi tester: 3★ nhỏ hơn 2★/4★).
+        //   7★ (người dùng 'Vàng viền đỏ đi'): 1 sao VÀNG to (hh_sao1) VIỀN ĐỎ + quầng sáng; nhịp sáng vẽ ở REN.veHuyHieu.
+        const E = 1.7, k = this.s * this.dpr, N = Math.max(8, Math.round(d * E * k)), key = 'hh7|' + n + '|' + N;
+        let c = this.cGet(key); if (c) return c;
+        c = document.createElement('canvas'); c.width = c.height = N;
+        const x = this.c2d(c), q = N / (d * E), mw = d * 1.6 * q, mh = d * (n >= 7 ? 0.68 : n === 1 ? 0.5 : 1.0) * q, SAO_PX = [0, 0, 85, 60, 85, 55, 52, 0][Math.max(1, Math.min(7, n | 0))];
+        // cỡ 1 sao: hàng đơn (2–4★) 0.46d · 2 hàng (5★, 6★) 0.38d cho thấp lại · 7★ cao 0.68d (REN.saoDay: đáy trên bàn)
+        const sc = Math.min(mw / sa.width, mh / sa.height, SAO_PX ? d * (n >= 5 ? 0.38 : 0.46) * q / SAO_PX : Infinity), w = Math.round(sa.width * sc), h = Math.round(sa.height * sc);
+        const X0 = Math.round(N / 2 - w / 2), Y0 = Math.round(N / 2 - h / 2);
+        if (n >= 7) {
+          const t = document.createElement('canvas'); t.width = w; t.height = h; const tx = this.c2d(t);
+          this.veNho(tx, sa, 0, 0, sa.width, sa.height, 0, 0, w, h);
+          const vd = document.createElement('canvas'); vd.width = w; vd.height = h; const vx = this.c2d(vd);
+          vx.drawImage(t, 0, 0); { const id = vx.getImageData(0, 0, w, h), px = id.data; for (let i = 0; i < px.length; i += 4) { const on = px[i + 3] > 140; px[i] = 0xe0; px[i + 1] = 0x14; px[i + 2] = 0x1e; px[i + 3] = on ? 255 : 0; } vx.putImageData(id, 0, 0); } // bóng sao ĐỎ (ngưỡng alpha: bỏ quầng mờ của ảnh gốc)
+          const o = Math.max(1.5, h * 0.075);
+          x.save(); x.shadowColor = 'rgba(255,60,30,0.9)'; x.shadowBlur = h * 0.22; x.globalAlpha = 0.8; x.drawImage(vd, X0, Y0); x.drawImage(vd, X0, Y0); x.restore(); // quầng sáng đỏ-cam mềm
+          for (let a = 0; a < 16; a++) x.drawImage(vd, X0 + Math.cos(a * Math.PI / 8) * o, Y0 + Math.sin(a * Math.PI / 8) * o); // viền ĐỎ rõ nét
+          x.drawImage(t, X0, Y0);
+        } else this.veNho(x, sa, 0, 0, sa.width, sa.height, X0, Y0, w, h);
+        c._E = E; c._hh = h / (q * d); c._v7 = n >= 7; // _hh: cao hàng sao (đơn vị d) cho REN.veHuyHieuTren
+        return this.cSet(key, c);
+      }
       const anh = this.img(n >= 7 ? 'h2_sao_sang' : 'h2_sao');
       if (!anh) return hhGoc.apply(this, arguments);
       // P0-04: SAO TRÊN BÀN = khiên to cùng cỡ mọi cấp (7★ chỉ thêm viền sáng ngoài), số to; ô vẽ 1.7d (REN.veHuyHieu bên dưới)
@@ -185,7 +212,18 @@ const HUD2 = {
       return this.cSet(key, c);
     };
     const vhGoc = REN.veHuyHieu;
-    REN.veHuyHieu = function (ctx, x, y, n, d) { if (!this.img(n >= 7 ? 'h2_sao_sang' : 'h2_sao')) return vhGoc.apply(this, arguments); const c = this.huyHieu(n, d); if (c) ctx.drawImage(c, x - d * 0.85, y - d * 0.85, d * 1.7, d * 1.7); };
+    REN.veHuyHieu = function (ctx, x, y, n, d) { if (!this.img('hh_sao' + Math.max(1, Math.min(7, n | 0))) && !this.img(n >= 7 ? 'h2_sao_sang' : 'h2_sao')) return vhGoc.apply(this, arguments); const c = this.huyHieu(n, d); if (!c) return; const E = c._E || 1.7;
+      ctx.drawImage(c, x - d * E / 2, y - d * E / 2, d * E, d * E);
+      if (c._v7) { const a0 = ctx.globalAlpha, u = 0.5 + 0.5 * Math.sin(performance.now() / 1000 * Math.PI * 2 / 1.4); // 7★: nhịp sáng nhẹ 1.4 s (thêm 1 lớp cộng sáng)
+        ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = a0 * 0.35 * u; ctx.drawImage(c, x - d * E / 2, y - d * E / 2, d * E, d * E); ctx.restore(); } };
+    // 08/11 huy hiệu sao GIỮA ô, ngay trên đầu ụ: (x, yTren) = giữa ô, mép trên ô. Đáy hàng sao ở yTren + saoDay(n)·d
+    //   (hàng đơn +0.28d, 2 hàng +0.42d, 7★ +0.44d → khe giữa tấm đếm của ô trên ≈ −0.23d và thân ụ ≈ +0.3d: không đè số / thân ụ)
+    REN.saoDay = (n) => (n >= 7 ? 0.44 : n >= 5 ? 0.42 : 0.28);
+    REN.saoTamY = function (n, d) { const c = this.huyHieu(n, d); return c && c._hh ? (this.saoDay(n) - c._hh / 2) * d : null; }; // tâm huy hiệu so với mép trên ô
+    REN.veHuyHieuTren = function (ctx, x, yTren, n, d, dong) {
+      const dy = this.saoTamY(n, dong ? this.qd(d) : d); if (dy == null) return dong ? this.veHuyHieuDong(ctx, x, yTren, n, d) : this.veHuyHieu(ctx, x, yTren, n, d);
+      if (dong) this.veHuyHieuDong(ctx, x, yTren + dy * d / this.qd(d), n, d); else this.veHuyHieu(ctx, x, yTren + dy, n, d);
+    };
   }
 
   // 11 · lõi: 3 ảnh trạng thái (nguyên / mẻ / nguy) thay vết nứt vẽ code; chớp đỏ = ảnh viền đỏ

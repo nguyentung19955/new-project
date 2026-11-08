@@ -19,7 +19,6 @@ const JP = {
     heist: { u: 'bienmau', ten: 'CHROMATIC HEIST', kho: 4, dmg: 1.6, toc: 0.65, cdmg: 1.2, song: 10, hoi: 30, mau: '#ffffff' },
     reactor: { u: 'lienket', ten: 'CHAIN REACTOR', kho: 4, dmg: 1.5, toc: 0.6, cdmg: 0.9, song: 12, hoi: 40, mau: '#d9a8ff' },
     eclipse: { u: 'mauhut', ten: 'BLOOD ECLIPSE', kho: 4, dmg: 1.8, toc: 0.7, cdmg: 1.1, song: 11, hoi: 30, mau: '#ff4a6a' },
-    truenorth: { u: 'canon', ten: 'TRUE NORTH', kho: 3, dmg: 1.1, toc: 0.45, cdmg: 0.7, song: 12, hoi: 30, mau: '#ffb35a' },
     chorus: { u: 'hopca', ten: 'GRAND CHORUS', kho: 4, dmg: 1.6, toc: 0.6, cdmg: 1.1, song: 12, hoi: 50, mau: '#d9b8ff' },
     royal: { u: 'pandora', ten: 'ROYAL VAULT', kho: 5, dmg: 2.2, toc: 0.85, cdmg: 1.5, song: 15, hoi: 0, mau: '#ffe46b' },
     loaded: { u: 'xucxac', ten: 'LOADED DICE', kho: 3, dmg: 0, toc: 0.7, cdmg: 0.8, song: 8, hoi: 30, mau: '#ffd23f' },
@@ -31,7 +30,7 @@ const JP = {
   HE_CUA: 60,                             // Chromatic Heist: ĐỎ → VÀNG → XANH trong 60 s
   CR_NHOM: 4, CR_CUA: 5, CR_DON: 3, CR_U: 3, CR_MOI: 6, CR_K: 2.5, // Chain Reactor
   BE_VAMP: 6, BE_CUA: 25, BE_XUNG: 3, BE_K: 3, // Blood Eclipse
-  TN_CUA: 45, TN_LAN: 3, TN_SO: 6, TN_K: 6, // True North
+  // (08/11 người dùng: BỎ hẳn jackpot TRUE NORTH của Pháo La Bàn — bù bằng sát thương tên lửa +15%, skills.js MOI)
   GC_U: 6, GC_TC: 3, GC_GIU: 10, GC_SAO: 3, // Grand Chorus (đội hình ≥ 3★ — mô phỏng: 1★ kích ngay wave 2)
   RV_MANA: 100,                           // Royal Vault
   LD_LAN: 12, LD_PHAT: 6, LD_SAO: 3,      // Loaded Dice (Pháo ≥ 3★ — mô phỏng: 1★ kích từ wave 1, 20 lần/trận)
@@ -76,7 +75,6 @@ const JP = {
       case 'orbital': { const o = B.jpOrb; return P(o && o.n > 0 && G.t - o.t0 < SKILLS.orbital.dai(B), o && o.n, 2); }
       case 'bienmau': { const o = B.jpPr; return P(o && o.n > 0 && G.t - o.t0 <= this.HE_CUA, o && o.n, 3); }
       case 'mauhut': { const o = B.jpBE; return P(o && G.t - o.t <= this.BE_CUA, 1, 2); }
-      case 'canon': { const o = B.jpTN; return P(o && o.n > 0 && G.t - o.t0 <= this.TN_CUA, o && o.n, 3); }
       case 'hopca': { const o = B.jpGC && B.jpGC[T.sao]; return P(o && !o.xong, o && Math.min(this.GC_GIU, Math.floor(G.t - o.t0)), this.GC_GIU); }
       case 'pandora': { const n = 6 - ((B.pdTui && B.pdTui.length) || 6); return P(B.pdTui && n > 0, n, 6); }
       case 'xucxac': { const s = new Set((T.ldH || []).filter(b => b >= 0)); return P(s.size > 0 && G.t >= this.cd(B, 'loaded' + T.uid), s.size, 3); }
@@ -86,20 +84,7 @@ const JP = {
   },
 };
 
-// ---------- 1) MASTERWORK — Scrap Forge: ăn đủ 1★ + 2★ + 3★ trong 75 s → ụ Tấn công sao cao nhất +240% ST, +85% tốc, +150 STCM 15 s; đòn đầu vào mỗi trùm +800% D9. 90 s / Lò.
-if (SKILLS.loren && SKILLS.loren.ghepDB) {
-  const lam = SKILLS.loren.ghepDB.lam;
-  SKILLS.loren.ghepDB.lam = function (G, B, a, b) {
-    const s = b && b.sao, laLo = a && a.id === 'loren';
-    const r = lam.apply(this, arguments);
-    if (laLo && s >= 1 && s <= 3 && B.t[a.o] === a) {
-      const g = a.mw || (a.mw = {}); g[s] = G.t;
-      for (const k of [1, 2, 3]) if (g[k] != null && G.t - g[k] > JP.MW_CUA) delete g[k];
-      if (g[1] != null && g[2] != null && g[3] != null && JP.kich(B, 'masterwork', [JP.tcCao(B)], a, 'masterwork' + a.uid)) a.mw = {};
-    }
-    return r;
-  };
-}
+// ---------- 1) MASTERWORK (Scrap Forge) — BỎ 08/11: Lò Rèn làm lại thành Twin Anvil (skills4.js), không còn ăn 1–3★.
 
 // ---------- 2) ORBITAL CASCADE — 2 lần ghép Vệ Tinh + Vệ Tinh trong CÙNG cửa sổ thức tỉnh 23 s (ghép thêm không kéo dài hạn) → mọi Vệ Tinh +100% / +45% / +60 10 s + 4 bom × 180%. 45 s.
 if (SKILLS.orbital) {
@@ -123,56 +108,9 @@ if (SKILLS.orbital) {
   };
 }
 
-// ---------- 3) CHROMATIC HEIST — Prism Thief: ghép cùng màu đúng thứ tự ĐỎ → VÀNG → XANH trong 60 s → LĂNG KÍNH TRẮNG 10 s (+160% / +65% / +120), mỗi phát thứ 3 xuyên.
-if (SKILLS.bienmau) {
-  const S = SKILLS.bienmau, gh = S.ghep, ban = S.ban;
-  S.ghep = function (G, B, a, b, ra) {
-    const ok = a && b && a.id === 'bienmau' && b.id === 'bienmau' && S.mau(a) === S.mau(b), m = ok ? S.mau(a) : -1; // màu lấy ĐÚNG nhịp lệnh ghép
-    const r = gh.apply(this, arguments);
-    if (ok) {
-      let o = B.jpPr || { n: 0, t0: 0 };
-      if (o.n > 0 && G.t - o.t0 > JP.HE_CUA) o = { n: 0, t0: 0 };
-      if (m === o.n) { if (!o.n) o.t0 = G.t; o.n++; } else o = m === 0 ? { n: 1, t0: G.t } : { n: 0, t0: 0 }; // sai màu → về đầu (ĐỎ thì bắt đầu chuỗi mới)
-      B.jpPr = o;
-      if (o.n >= 3) { JP.kich(B, 'heist', B.t.filter(X => X && X.id === 'bienmau'), B.t[b.o] || ra); B.jpPr = null; }
-    }
-    return r;
-  };
-  S.ban = function (G, B, T, E) {
-    const r = ban.apply(this, arguments);
-    if (JP.dang(T, 'heist') && E) {
-      T.heN = (T.heN || 0) + 1;
-      if (T.heN % 3 === 0) { // phát XUYÊN trắng: mọi quái trên đường thẳng ụ → mục tiêu (kéo dài 160 px), không thêm hệ số
-        const c = tamU(T), vx = E.x - c.x, vy = E.y - c.y, L = Math.hypot(vx, vy) || 1, ux = vx / L, uy = vy / L, dmg = dmgU(T), ds = [];
-        for (const M of dsMucTieu(B)) { if (M.chet || M === E) continue; const u = (M.x - c.x) * ux + (M.y - c.y) * uy; if (u < 0 || u > L + 160) continue; const px = c.x + ux * u - M.x, py = c.y + uy * u - M.y; if (px * px + py * py <= (16 + M.d.co * 0.25) ** 2) ds.push(M); }
-        ds.sort((p, q) => p.uid - q.uid); for (const M of ds) trung(M, dmg, { B, T, phu: true, mau: '#ffffff' });
-        G.hu.push({ k: 'tiaTia', t: 0, song: 0.2, x0: c.x, y0: c.y, x1: c.x + ux * (L + 160), y1: c.y + uy * (L + 160), mau: '#ffffff' });
-      }
-    }
-    return r;
-  };
-}
+// ---------- 3) CHROMATIC HEIST — BỎ 08/11: Prism Thief làm lại, combo mới = CHROMATIC CIRCUIT (vuốt 4 màu, skills7.js).
 
-// ---------- 5) BLOOD ECLIPSE — có ≥ 6 VAMP, 2 lần hiến KHÁC SAO trong 25 s → tiêu 2 VAMP cuối: mọi Blood Circuit +180% / +70% / +110 11 s + 3 xung xuyên × 300%.
-if (SKILLS.mauhut && SKILLS.mauhut.ghepDB) {
-  const lam = SKILLS.mauhut.ghepDB.lam;
-  SKILLS.mauhut.ghepDB.lam = function (G, B, a, b) {
-    const khac = a && b && a.sao !== b.sao, v0 = B.vamp || 0;
-    const r = lam.apply(this, arguments);
-    if (khac && v0 >= 2) { // lần hiến khác sao THẬT (đã tiêu 2 VAMP + xung 220%)
-      const o = B.jpBE;
-      if (o && G.t - o.t <= JP.BE_CUA) {
-        B.jpBE = null;
-        const ds = B.t.filter(X => X && X.id === 'mauhut' && !JP.khoa(X));
-        if ((B.vamp || 0) >= 2 && ds.length && G.t >= JP.cd(B, 'eclipse')) {
-          B.vamp -= 2;
-          if (JP.kich(B, 'eclipse', ds, ds[0])) for (const X of ds) G.hu.push({ k: 'jpXung', t: 0, song: 3, B, T: X, n: 0 });
-        }
-      } else if (v0 >= JP.BE_VAMP) B.jpBE = { t: G.t };
-    }
-    return r;
-  };
-}
+// ---------- 5) BLOOD ECLIPSE — BỎ 08/11: Blood Circuit làm lại (đánh dấu → nuốt → Máu → Blood Rite, skills7.js). HU.jpXung giữ cho bản cũ đang chạy.
 HU.jpXung = { // 3 xung máu xuyên cả làn của mình (0,5 / 1,5 / 2,5 s), mỗi quái trúng 1 lần mỗi xung — xét theo uid (tất định)
   cap(G, o) {
     while (o.n < JP.BE_XUNG && o.t >= 0.5 + o.n) {
@@ -186,30 +124,6 @@ HU.jpXung = { // 3 xung máu xuyên cả làn của mình (0,5 / 1,5 / 2,5 s), m
   ve() { },
 };
 
-// ---------- 6) TRUE NORTH — Pháo La Bàn: 3 lần ghép CÙNG mũi tên trong 45 s, không ghép ngược xen giữa, số kết quả ≥ 6 → mọi Pháo La Bàn +110% / +45% / +70 12 s + 1 phát xuyên × 600%.
-if (SKILLS.canon && SKILLS.canon.ghepDB) {
-  const S = SKILLS.canon, lam = S.ghepDB.lam;
-  S.ghepDB.lam = function (G, B, a, b) {
-    const kq = a && b ? S.ketQua(a, b) : null;
-    const r = lam.apply(this, arguments);
-    if (kq && kq.kieu === 'tru') B.jpTN = null; // ghép ngược hướng xen giữa → mất chuỗi
-    else if (kq && kq.kieu === 'cong') {
-      let o = B.jpTN; if (!o || G.t - o.t0 > JP.TN_CUA) o = { t0: G.t, n: 0 };
-      o.n++; B.jpTN = o;
-      if (o.n >= JP.TN_LAN && S.so(b) >= JP.TN_SO && JP.kich(B, 'truenorth', B.t.filter(X => X && X.id === 'canon'), b)) {
-        B.jpTN = null;
-        const E = S.mucTieu(B, b, S.huong(b)) || quaiDau(B);
-        if (E) { // phát xuyên vàng: mọi quái trên đường thẳng từ ụ qua mục tiêu (kéo dài tới 600 px)
-          const c = B.o[b.o], vx = E.x - c.x, vy = E.y - c.y, L = Math.hypot(vx, vy) || 1, ux = vx / L, uy = vy / L, dmg = JP.goc(b) * JP.TN_K, ds = [];
-          for (const M of dsMucTieu(B)) { if (M.chet) continue; const u = (M.x - c.x) * ux + (M.y - c.y) * uy; if (u < 0 || u > 600) continue; const px = c.x + ux * u - M.x, py = c.y + uy * u - M.y; if (px * px + py * py <= (18 + M.d.co * 0.25) ** 2) ds.push(M); }
-          ds.sort((p, q) => p.uid - q.uid); for (const M of ds) trung(M, dmg, { B, T: b, phu: true, mau: '#ffb35a' });
-          G.hu.push({ k: 'tiaTia', t: 0, song: 0.3, x0: c.x, y0: c.y, x1: c.x + ux * 600, y1: c.y + uy * 600, mau: '#ffd23f' });
-        }
-      }
-    }
-    return r;
-  };
-}
 
 // ---------- 8) SIX SEALS — Pandora: túi xáo 6 phép (mỗi chu kỳ ra đủ 6, không lặp; thứ tự theo hạt giống) · lần mở thứ 6 thêm ROYAL VAULT:
 //      ụ Tấn công sao cao nhất +220% / +85% / +150 15 s + 100 mana. 6★ / 7★ rút thêm từ cùng túi (mỗi lần rút mở 1 dấu ấn).
@@ -259,18 +173,7 @@ JP.tick = function (B, dt) {
       }
     }
   }
-  // 7) GRAND CHORUS — ≥ 6 ụ cùng sao (có Choir, trong đó ≥ 3 ụ Tấn công KHÁC loại) giữ 10 s → mọi Choir sao đó +160% / +60% / +110 12 s. Vỡ đội hình = mất tiến độ; phải vỡ rồi dựng lại mới kích lần sau. Hồi 50 s.
-  if (SKILLS.hopca && B.t.some(X => X && X.id === 'hopca')) {
-    const gc = B.jpGC || (B.jpGC = {}), co = {};
-    for (const X of B.t) if (X && X.id === 'hopca' && !JP.khoa(X) && X.sao >= JP.GC_SAO) co[X.sao] = 1;
-    for (let s = 1; s <= 7; s++) {
-      let ok = false;
-      if (co[s]) { const ds = B.t.filter(X => X && X.sao === s && !JP.khoa(X)), loai = new Set(ds.filter(X => JP.laTC(X)).map(X => X.id)); ok = ds.length >= JP.GC_U && loai.size >= JP.GC_TC; }
-      if (!ok) { delete gc[s]; continue; }
-      const o = gc[s] || (gc[s] = { t0: G.t, xong: false });
-      if (!o.xong && G.t - o.t0 >= JP.GC_GIU) { const ds = B.t.filter(X => X && X.id === 'hopca' && X.sao === s); if (JP.kich(B, 'chorus', ds, ds[0])) o.xong = true; }
-    }
-  }
+  // 7) GRAND CHORUS — BỎ 08/11: Quantum Choir làm lại thành HARMONY (ụ kề cùng sao, vangmoi1.js).
   // 10b) PERFECT FREQUENCY — Radar có đủ 4 ô thẳng là ụ Tấn công, ≥ 3 loại, giữ liên tục 8 s → 4 ụ đó +85% / +50% / +90 10 s. Radar bị khoá/câm → tắt sớm. Hồi 50 s / Radar.
   if (SKILLS.radar) for (const T of B.t) {
     if (!T || T.id !== 'radar') continue;
@@ -353,17 +256,12 @@ HU.jpVe = { // mọi bàn (solo / co-op / pvp / online): ụ đang có jackpot �
 
 // ---------- chữ thẻ (EN; bản Việt: docs/demo-hop-tuong/tuvan/ngonngu/vi.json) — số lấy từ JP.DS (khớp luật) ----------
 JP.CHU = {
-  loren: (d) => 'MASTERWORK: feed a 1-star, a 2-star and a 3-star turret within 75s → your best Attack turret +' + d.p + '% damage, +' + d.t + '% fire rate, +' + d.c + '% crit dmg ' + d.s + 's, first hit on each boss +800% (90s per Forge)',
   orbital: (d) => 'ORBITAL CASCADE: 2 Orbital merges (2+ stars) inside one awakening → every Orbital +' + d.p + '% damage, +' + d.t + '% fire rate, +' + d.c + '% crit dmg ' + d.s + 's + 4 bombs ×180% each (45s cooldown)',
-  bienmau: (d) => 'CHROMATIC HEIST: same-colour merges RED → GOLD → BLUE within 60s → WHITE PRISM ' + d.s + 's: every Prism Thief +' + d.p + '% damage, +' + d.t + '% fire rate, +' + d.c + '% crit dmg, every 3rd shot pierces',
   lienket: (d) => 'CHAIN REACTOR: a chain of 4+ where 3 links each land 3 hits within 5s → the chain +' + d.p + '% damage, +' + d.t + '% fire rate, +' + d.c + '% crit dmg ' + d.s + 's, every 6th hit fires a bolt ×250% (40s cooldown)',
-  mauhut: (d) => 'BLOOD ECLIPSE: with 6+ VAMP, 2 different-star feeds within 25s spend 2 more VAMP → every Blood Circuit +' + d.p + '% damage, +' + d.t + '% fire rate, +' + d.c + '% crit dmg ' + d.s + 's + 3 piercing pulses ×300%',
-  canon: (d) => 'TRUE NORTH: 3 same-arrow merges within 45s (no opposite merge between), number 6+ → every Compass Cannon +' + d.p + '% damage, +' + d.t + '% fire rate, +' + d.c + '% crit dmg ' + d.s + 's + 1 piercing shot ×600%',
-  hopca: (d) => 'GRAND CHORUS: 6+ same-star turrets (3+ stars) incl. a Choir and 3 different Attack types, held 10s → those Choirs +' + d.p + '% damage, +' + d.t + '% fire rate, +' + d.c + '% crit dmg ' + d.s + 's (break and re-form to repeat)',
   radar: (d) => 'PERFECT FREQUENCY (3+ stars): 4 Attack neighbours of 3+ types held 8s → those 4 +' + d.p + '% damage, +' + d.t + '% fire rate, +' + d.c + '% crit dmg ' + d.s + 's (50s cooldown)',
 };
 {
-  const ID = { loren: 'masterwork', orbital: 'cascade', bienmau: 'heist', lienket: 'reactor', mauhut: 'eclipse', canon: 'truenorth', hopca: 'chorus', radar: 'frequency' };
+  const ID = { loren: 'masterwork', orbital: 'cascade', bienmau: 'heist', lienket: 'reactor', mauhut: 'eclipse', hopca: 'chorus', radar: 'frequency' };
   for (const u in JP.CHU) {
     const sk = SKILLS[u]; if (!sk || !sk.mo) continue;
     const mo = sk.mo, d0 = JP.DS[ID[u]], d = { p: Math.round(d0.dmg * 100), t: Math.round(d0.toc * 100), c: Math.round(d0.cdmg * 100), s: d0.song };
@@ -374,7 +272,7 @@ JP.CHU = {
 // ---------- tấm đếm (DEMKN): thêm tiến độ jackpot (icon sao + n/N) ----------
 if (typeof addEventListener === 'function') addEventListener('DOMContentLoaded', () => {
   if (typeof DEMKN === 'undefined') return;
-  for (const id of ['loren', 'orbital', 'bienmau', 'mauhut', 'canon', 'hopca', 'pandora', 'xucxac', 'radar']) {
+  for (const id of ['orbital', 'pandora', 'xucxac', 'radar']) {
     const f = DEMKN.DS[id];
     DEMKN.DS[id] = function (T, B) {
       const v = f ? f.apply(this, arguments) : null, p = JP.tienDo(T, B);

@@ -150,6 +150,12 @@ html body #wrap #bo-the .the.ot > .gia b, html body #wrap #the-mv.ot > .mv-gia b
   font: 800 calc(13px * var(--ot-k))/1 Oxanium, sans-serif !important; text-shadow: 0 0 2px #000, 0 1px 1px #000, 1px 0 1px #000, -1px 0 1px #000 !important; }
 html body #wrap #the-mv.ot > .mv-gia img { width: calc(14px * var(--ot-k)) !important; height: calc(14px * var(--ot-k)) !important; }
 html body #wrap #the-mv.ot > .mv-gia b { font-size: calc(15px * var(--ot-k)) !important; }
+/* 08/11 (lỗi tester): màn ngang 844×390 / 667×375 — --ot-k ≈ 2 làm nhãn giá '◆100' rộng hơn ô thẻ → chồng nhau ("10C"), mất nhãn.
+   Kẹp hệ số chữ/ngọc của giá ở 1.5 (dọc / 1920 k ≤ 1.5 → không đổi). Kiểm: tools/thap-kt-nhangia.js (thêm 844×390, 667×375). */
+html body #wrap #bo-the .the.ot > .gia img, html body #wrap #the-mv.ot > .mv-gia img { width: calc(12px * min(var(--ot-k), 1.5)) !important; height: calc(12px * min(var(--ot-k), 1.5)) !important; }
+html body #wrap #bo-the .the.ot > .gia b { font-size: calc(13px * min(var(--ot-k), 1.5)) !important; }
+html body #wrap #the-mv.ot > .mv-gia img { width: calc(14px * min(var(--ot-k), 1.5)) !important; height: calc(14px * min(var(--ot-k), 1.5)) !important; }
+html body #wrap #the-mv.ot > .mv-gia b { font-size: calc(15px * min(var(--ot-k), 1.5)) !important; }
 /* tối đa: ẩn giá, thẻ chữ MAX góc trên-trái ô (góc trên-phải = số ụ trên bàn) */
 html body #wrap #bo-the .the.ot.max > .gia { visibility: hidden !important; }
 /* 07/11: bỏ thẻ chữ MAX góc trên-trái — MAX giờ nằm ngay ở nhãn cấp trận (.lv: '' / +1 / +2 / +3 / MAX), chỉ hiện 1 lần */

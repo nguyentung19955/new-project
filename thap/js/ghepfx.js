@@ -194,7 +194,7 @@ const GF = {
       const db = !!dr && !xs, n = xs || (db ? N.sao : Math.min(LUAT.saoMax, N.sao + 1)); // ghép đặc biệt: không hứa sao mới (trừ loại biết trước sao — Merge King)
       if (db) return;
       const d = C * 0.42 * sc, o = B.o[N.o], hb = REN.huyHieuDong(n, d); // cỡ đang nảy → bậc cỡ cố định (không dựng canvas mỗi khung)
-      const x = clamp(o.x + C * 0.42, B.x + d * 0.7, B.x + B.w - d * 0.7), y = Math.max(B.y + d * 0.7, o.y - C * 0.5 - C * 0.22 * this.eo((now - this.hoverT0 - 90) / 90));
+      const x = clamp(o.x, B.x + d * 0.7, B.x + B.w - d * 0.7) /* 08/11: giữa ô như huy hiệu thật */, y = Math.max(B.y + d * 0.7, o.y - C * 0.5 - C * 0.22 * this.eo((now - this.hoverT0 - 90) / 90));
       if (hb) { const P = d * 1.5; ctx.globalAlpha = al; ctx.drawImage(hb, x - P / 2, y - P / 2, P, P); ctx.globalAlpha = 1; }
     };
     if (this.hoverT) { const u = (now - this.hoverT0 - 90) / 90; if (u > 0) ve1(this.hoverT, this.eo(u), this.lerp(0.7, 1, this.bo(u, 2))); }
@@ -306,7 +306,8 @@ const GF = {
   veDau(ctx, r, t, o, C) {
     const M = this.M, B = r.B, n = r.ra.sao;
     const d = C * 0.34, dx = B.cw / 2 - d / 2 - 1.5, dy = B.ch / 2 - d / 2 - 1.5;
-    const hx = o.x + dx, hy = o.y - dy;
+    let hx = o.x + dx, hy = o.y - dy;
+    { const ty = REN.saoTamY && REN.img('hh_sao' + Math.max(1, Math.min(7, n | 0))) ? REN.saoTamY(n, d) : null; if (ty != null) { hx = o.x; hy = o.y - B.ch / 2 + ty; } } // 08/11: huy hiệu thật giờ ở GIỮA ô, ngay trên đầu ụ → con dấu rơi về đúng chỗ đó
     const u = (t - M.dau) / (M.dauXong - M.dau);
     // xung vòng phía sau (cf_dau_sao; dự phòng: chớp sao hud2_13)
     const up = (t - M.dau - 40) / 190;

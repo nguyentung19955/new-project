@@ -10,17 +10,20 @@
 const THE = {
   lvDau: { trang: 1, xanh: 3, tim: 6, vang: 9, do: 11 },
   lvMax: 15,
-  pct: { trang: 0.04, xanh: 0.05, tim: 0.07, vang: 0.10, do: 0.15 }, // +sát thương mỗi cấp trên cấp đầu (MAX ≈ +56–63% mọi bậc)
+  // 08/11 (người dùng duyệt, CHATGPT-SPEC A0): thẻ VÀNG / ĐỎ lên tới LV17 (2 cấp mới cần thêm bản sao + vàng ở cuối bảng); bậc khác vẫn tối đa 15
+  lvMaxBac: { vang: 17, do: 17 },
+  maxLv(bac) { return (this.lvMaxBac && this.lvMaxBac[bac]) || this.lvMax; },
+  pct: { trang: 0.04, xanh: 0.05, tim: 0.07, vang: 0.05, do: 0.05 }, // VÀNG/ĐỎ (08/11): theo VAI TRÒ — Tấn công +5% ST +2% tốc · Hỗ trợ +4% · Đặc biệt/Khống chế +3% mỗi cấp (CAP_VD trong data.js) // +sát thương mỗi cấp trên cấp đầu (MAX ≈ +56–63% mọi bậc)
   // bản sao cần cho lần lên cấp thứ k+1 (k = số cấp đã lên kể từ cấp đầu)
   saoCan: {
     trang: [2, 4, 8, 15, 25, 40, 60, 90, 130, 180, 240, 320, 420, 550],
     xanh: [2, 4, 7, 12, 20, 32, 48, 70, 100, 140, 190, 250],
     tim: [2, 3, 5, 8, 12, 18, 26, 36, 50],
-    vang: [1, 2, 3, 5, 8, 12],
-    do: [1, 2, 3, 5],
+    vang: [1, 2, 3, 5, 8, 12, 18, 26],
+    do: [1, 2, 3, 5, 8, 12],
   },
   // vàng cho cấp L → L+1 (theo cấp TUYỆT ĐỐI như DCDW/Random Dice: thẻ hiếm khởi đầu cao nên lên cấp đắt ngay)
-  vangCan: [0, 20, 50, 100, 200, 400, 800, 1500, 2500, 4000, 6000, 9000, 13000, 18000, 25000],
+  vangCan: [0, 20, 50, 100, 200, 400, 800, 1500, 2500, 4000, 6000, 9000, 13000, 18000, 25000, 35000, 50000],
   // túi thưởng: tỉ lệ độ hiếm mỗi lượt rút + số bản sao mỗi lượt
   // (06/11 người dùng: đỏ + vàng phải cày như DCDW — xem tuvan/shop/KINH-TE.md) trước 55/28/12/4,5/0,5
   tiLe: [['trang', 58], ['xanh', 29], ['tim', 11], ['vang', 1.8], ['do', 0.2]],
@@ -50,8 +53,8 @@ const THEBAI = {
   // trạng thái 1 thẻ: lv (tuyệt đối), n (bản sao đang có), can (bản sao cần), vang (vàng cần), max
   the(id) {
     const d = this.doc(), b = this.bac(id), dau = THE.lvDau[b], o = d.c[id] || {};
-    const lv = Math.max(dau, Math.min(THE.lvMax, (o.lv | 0) || dau)), n = Math.max(0, o.n | 0), k = lv - dau;
-    const max = lv >= THE.lvMax || k >= THE.saoCan[b].length;
+    const lvM = THE.maxLv(b), lv = Math.max(dau, Math.min(lvM, (o.lv | 0) || dau)), n = Math.max(0, o.n | 0), k = lv - dau;
+    const max = lv >= lvM || k >= THE.saoCan[b].length;
     return { id, bac: b, lv, dau, n, k, max, can: max ? 0 : THE.saoCan[b][k], vang: max ? 0 : THE.vangCan[lv], pct: k * THE.pct[b], pctSau: (k + 1) * THE.pct[b] };
   },
   coThe(t) { return !t.max && t.n >= t.can; },          // đủ bản sao (thanh xanh đầy — như DCDW)
@@ -69,7 +72,7 @@ const THEBAI = {
   capMay(deck) {
     const ds = (typeof UI !== 'undefined' && UI.chon && UI.chon.length) ? UI.chon : [];
     const tb = ds.length ? Math.floor(ds.reduce((a, id) => a + this.bonus(id), 0) / ds.length) : 0;
-    const m = {}; for (const id of deck || []) m[id] = Math.min(tb, THE.lvMax - THE.lvDau[this.bac(id)]); return m;
+    const m = {}; for (const id of deck || []) m[id] = Math.min(tb, THE.maxLv(this.bac(id)) - THE.lvDau[this.bac(id)]); return m;
   },
   capBan(i, deck, def) {
     if (typeof G !== 'undefined' && G.debug && G.debug.cap2 && i === 1) return Object.assign({}, G.debug.cap2);
@@ -121,3 +124,44 @@ const THEBAI = {
     return m._thuong;
   },
 };
+
+// ---------- THẺ ĐÃ BỎ (người dùng 08/11: bỏ Hào Quang Thánh 'haoquang' khỏi bộ bài + gacha) ----------
+// Không xoá mã kỹ năng (SKILLS.haoquang vẫn nạp, không ai gọi được) — chỉ lọc khỏi danh sách ụ lúc nạp (ui.js) → mọi chỗ dùng G.roster/rosterMap
+// (bộ bài, gacha, cửa hàng, bộ ngẫu nhiên, ảnh chụp bàn online — datO bỏ qua id lạ) tự không còn thấy nó.
+// BÙ cho người đã có thẻ: chuyển sang 1 thẻ Đỏ khác (tất định: thẻ Đỏ ĐẦU TIÊN theo thứ tự roster mà người chơi CHƯA có; có hết → thẻ Đỏ đầu tiên),
+//   giữ CẤP (lấy cấp lớn hơn) + CỘNG bản sao → không mất gì. Thẻ đích lưu ở d.doi để lần sau / máy khác (gộp hồ sơ Firebase) ra cùng thẻ.
+//   Bộ bài đã lưu (turret_bo, bộ mẫu turret_pre) có thẻ bỏ → thay bằng thẻ đích ở đúng ô.
+const THE_BO = ['haoquang'];
+Object.assign(THEBAI, {
+  BO: THE_BO,
+  laBo(id) { return THE_BO.includes(id); },
+  dsDo() { return (typeof G !== 'undefined' && G.roster || []).filter(r => r.bac === 'do' && !THE_BO.includes(r.id) && typeof SKILLS !== 'undefined' && SKILLS[r.id]).map(r => r.id); },
+  dich(d, id) { // thẻ đích của thẻ bỏ id trong dữ liệu d
+    d.doi = d.doi || {};
+    const cu = d.doi[id]; if (cu && !THE_BO.includes(cu) && this.dsDo().includes(cu)) return cu;
+    const ds = this.dsDo(); if (!ds.length) return null;
+    const co = (x) => { const o = d.c && d.c[x]; return !!(o && ((o.lv | 0) > 0 || (o.n | 0) > 0)); };
+    return (d.doi[id] = ds.find(x => !co(x)) || ds[0]);
+  },
+  // chuyển thẻ bỏ trong dữ liệu thẻ d (mặc định: bản đang dùng) + bộ bài đã lưu. Trả true nếu có đổi.
+  boThe(d) {
+    const minh = !d; d = d || this.doc(); let doi = false;
+    if (!this.dsDo().length) return false; // chưa nạp danh sách ụ
+    for (const id of THE_BO) {
+      const o = d.c && d.c[id];
+      if (o) { const t = this.dich(d, id); if (!t) continue; const x = d.c[t] || {}; d.c[t] = { lv: Math.max(x.lv | 0, o.lv | 0), n: (x.n | 0) + (o.n | 0) }; delete d.c[id]; doi = true; }
+    }
+    if (minh) {
+      if (doi) this.luu();
+      const thay = (ds) => Array.isArray(ds) ? ds.map(x => THE_BO.includes(x) ? this.dich(d, x) || x : x) : ds;
+      try { const l = JSON.parse(localStorage.getItem('turret_bo') || 'null'); if (l && Array.isArray(l.chon) && l.chon.some(x => THE_BO.includes(x))) { l.chon = thay(l.chon); localStorage.setItem('turret_bo', JSON.stringify(l)); this.luu(); } } catch (e) { }
+      try { const l = JSON.parse(localStorage.getItem('turret_pre') || 'null'); if (l && Array.isArray(l.ds) && l.ds.some(p => p && Array.isArray(p.o) && p.o.some(x => THE_BO.includes(x)))) { l.ds.forEach(p => { if (p && Array.isArray(p.o)) p.o = thay(p.o); }); localStorage.setItem('turret_pre', JSON.stringify(l)); this.luu(); } } catch (e) { }
+    }
+    return doi;
+  },
+  // bộ bài của NGƯỜI KHÁC (online, bản cũ còn gửi thẻ bỏ): thay bằng thẻ Đỏ đầu tiên chưa có trong bộ đó (tất định, 2 máy như nhau)
+  doiBo(deck) {
+    if (!Array.isArray(deck)) return deck;
+    return deck.map(x => { if (!THE_BO.includes(x)) return x; const t = this.dsDo().find(y => !deck.includes(y)); return t || x; });
+  },
+});

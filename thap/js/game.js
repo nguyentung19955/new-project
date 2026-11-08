@@ -171,6 +171,8 @@ function hopLeGhep(a, b) {
   if (a.st.bang > 0 || b.st.bang > 0) return false;
   if (a.sao !== b.sao || a.sao >= LUAT.saoMax) return false;
   if (a.st.da || b.st.da) return a.st.da && b.st.da; // đá chỉ ghép với đá cùng sao
+  if (a.id === 'canon' && b.id === 'canon') return false; // Pháo La Bàn: chỉ ghép tổ hợp hướng (ghepDB) — hợp không thêm hướng → không ghép
+  if (a.id === 'loren' && b.id === 'loren') return false; // Twin Anvil: chỉ ghép đặc biệt cùng dạng (khác dạng = không ghép được)
   if (a.id === b.id) return true;
   return a.id === 'mimic' || b.id === 'mimic'; // MIMIC ghép với BẤT KỲ ụ cùng sao
 }
@@ -183,7 +185,7 @@ function ghepDacBiet(a, b) {
   if (sb && sb.ghepDB && sb.ghepDB.haiChieu && sb.ghepDB.hopLe(b, a)) return { sk: sb, a: b, b: a, dao: true };
   return null;
 }
-const GIU_CONG_DON = { loren: ['lo'], hopbi: ['tuoi'], tienhoa: ['tuoi'], leviathan: ['vuc'] }; // cộng dồn giữ khi ghép cùng loại ra cùng loại
+const GIU_CONG_DON = { hopbi: ['tuoi'], tienhoa: ['egg'], leviathan: ['vuc'] }; // cộng dồn giữ khi ghép cùng loại ra cùng loại
 // ghép a (kéo) vào b → ở ô b ra ụ NGẪU NHIÊN trong bộ bài, +1 sao (luật DCDW / Random Dice)
 function ghep(B, a, b, ep) {
   if (!ep && !hopLeGhep(a, b)) return null;
@@ -216,6 +218,8 @@ function ghep(B, a, b, ep) {
     if (a.epxung || b.epxung) ra.epxung = Math.max(a.epxung || 0, b.epxung || 0, ra.epxung || 0);
   }
   const kq = B2.t[b.o] || ra;
+  // buff Twin Anvil (skills4.js) theo ụ con khi ghép thường: lấy buff MẠNH hơn của 2 nguyên liệu (không cộng, không nhân đôi)
+  if (!daDa && (a.anv || b.anv) && kq === ra) { const x = a.anv, y = b.anv; ra.anv = !x ? y : !y ? x : (y.v > x.v ? y : x); }
   // (+1★ hiện bằng con dấu sao ảnh trong phát lại ghép — ghepfx.js)
   if (kq === ra) mocMoi(ra, b.sao, VX.TRE_LO + 0.12);
   SND.ghep(kq.sao, B2.ai);
@@ -223,6 +227,7 @@ function ghep(B, a, b, ep) {
 }
 function nangCap(B, id) {
   const lv = B.lv[id]; if (lv >= 5) return false;
+  if (SKILLS[id] && SKILLS[id].khongNang) return false; // Hydra: không có POWER-UP mana (mana dùng cho kỹ năng chạm)
   const gia = LUAT.giaNangCap[lv - 1];
   if (B.mana < gia) return false;
   B.mana -= gia; B.lv[id] = lv + 1;
@@ -267,6 +272,7 @@ function tocU(T) {
   const sk = SKILLS[T.id];
   let r = sk.toc || 1;
   if (sk.tocSao) r *= 1 + sk.tocSao * (T.sao - 1);
+  if (typeof tocThe === 'function') r *= tocThe(G.ban[T.ban], T.id); // cấp thẻ Tấn công VÀNG/ĐỎ +2%/cấp
   r *= Math.max(0.1, 1 + T.buf.toc + T.epxung); // QA Tím: nhiều Súng Bão kề nhau không làm tốc bắn âm
   r *= heJP(T, 'toc');
   if (T.st.kep > 0) r *= 0.6; // bị Kẹp Phá của đối thủ
@@ -803,6 +809,7 @@ function banDan(o) {
 function capNhatDan(d, dt) {
   d.t += dt;
   TVX.dan(d, dt);
+  if (d.dd) return danDuoi(d, dt); // tên lửa đuổi (Pháo La Bàn)
   if (d.cong) {
     // đạn cầu vồng (pháo, cối): bay theo parabol tới điểm rơi (bám mục tiêu nếu còn sống)
     if (d.muc && !d.muc.chet) { d.px += (d.muc.x - d.px) * Math.min(1, dt * 6); d.py += (d.muc.y - d.py) * Math.min(1, dt * 6); }
@@ -825,17 +832,37 @@ function capNhatDan(d, dt) {
   return d.t > 3;
 }
 
+// TÊN LỬA ĐUỔI (Pháo La Bàn): bay thẳng theo hướng phóng d.dd.g 0,12 s rồi rẽ dần về mục tiêu (tốc độ rẽ + tốc độ bay tăng theo thời gian)
+//   mục tiêu chết → bám quái gần nhất (hoà: uid nhỏ) · không còn quái → nổ tại chỗ sau 0,6 s · chỉ dùng dt + vị trí quái → tất định (online lockstep)
+function danDuoi(d, dt) {
+  const v = d.dd;
+  if (!d.muc || d.muc.chet) {
+    let m = null, best = 1e18;
+    for (const E of dsMucTieu(d.B)) { if (E.chet) continue; const q = (E.x - d.x) ** 2 + (E.y - d.y) ** 2; if (q < best || (q === best && m && E.uid < m.uid)) { best = q; m = E; } }
+    d.muc = m;
+  }
+  const sp = d.sp * (1 + Math.min(1.6, d.t * 2.2)), b = sp * dt;
+  if (d.muc) {
+    const dx = d.muc.x - d.x, dy = d.muc.y - d.y, l = Math.hypot(dx, dy);
+    if (l <= b + 6) { d.x = d.muc.x; d.y = d.muc.y; d.goc = v.g; d.trung(G, d, d.muc); return true; }
+    if (d.t > 0.12) { const xoay = (6 + d.t * 16) * dt, lech = gocLech(v.g, Math.atan2(dy, dx)); v.g += Math.max(-xoay, Math.min(xoay, lech)); }
+  } else if (d.t > 0.6) { d.trung(G, d, null); return true; }
+  d.x += Math.cos(v.g) * b; d.y += Math.sin(v.g) * b; d.goc = v.g; d.px = d.x; d.py = d.y;
+  if (d.duoi === 'tenlua' && Math.random() < dt * 40) FX.hat1('khoi', d.x - Math.cos(v.g) * 8, d.y - Math.sin(v.g) * 8, 0, -4, 0.3, 6); // vfx: khói đuôi (không ảnh hưởng luật)
+  if (d.t > 3.5) { d.trung(G, d, null); return true; }
+  return false;
+}
+
 // ---------- AI (đồng đội / đối thủ; ?auto=1 cho bàn mình khi kiểm thử) ----------
-// AI chọn cặp ghép KHÔN hơn cho ụ có cơ chế vị trí (co-che-moi): Pháo La Bàn — ưu tiên CÙNG mũi tên (cộng số), rồi vuông góc kéo số nhỏ
-// vào số lớn, ngược hướng sau cùng (vẫn có sóng nổ) · Drone Kéo Xa — cặp xa nhau nhất. Cặp khác: giữ nguyên lựa chọn cũ.
+// AI chọn cặp ghép KHÔN hơn cho ụ có cơ chế vị trí (co-che-moi): Pháo La Bàn — cặp ra NHIỀU hướng nhất (NSWE + NSWE = stack), sao cao · Drone Kéo Xa — cặp xa nhau nhất. Cặp khác: giữ nguyên lựa chọn cũ.
 function aiCapTot(ts, a, b, hl) {
   if (a.id !== b.id || (a.id !== 'canon' && a.id !== 'drone')) return [a, b];
   let best = [a, b], bv = -1e9;
   for (const x of ts) for (const y of ts) {
-    if (x === y || x.id !== a.id || y.id !== a.id || x.sao !== a.sao || !hl(x, y)) continue;
+    if (x === y || x.id !== a.id || y.id !== a.id || (a.id !== 'canon' && x.sao !== a.sao) || !hl(x, y)) continue;
     let v;
     if (a.id === 'drone') v = SKILLS.drone.quang(x.o, y.o) * 10 - x.o * 0.01;
-    else { const S = SKILLS.canon, k = S.ketQua(x, y); v = (k.kieu === 'cong' ? 1000 : k.kieu === 'giu' ? 500 : 0) + k.so * 10 + k.song * 3 - x.o * 0.01; }
+    else { const S = SKILLS.canon, k = S.hopNhat(x, y); if (!k) continue; v = S.dem(k.hb) * 100 + k.chong * 300 + k.sao * 20 - x.o * 0.01; } // nhiều hướng / stack / sao cao trước
     if (v > bv) { bv = v; best = [x, y]; }
   }
   return best;
@@ -860,7 +887,7 @@ function aiBan(B, dt) {
   // POWER-UP: mọi loại đều có ích (10 ụ không sát thương nâng chính số kỹ năng — KY_NANG_CAP.pu, KIEM.md mục IX 'Đã quyết' #1)
   //  ưu tiên cấp thấp nhất, rồi loại đang có NHIỀU ụ trên bàn (nâng thứ đang đứng trên bàn); loại không có ụ nào trên bàn để sau
   const dem = (id) => ts.reduce((n, T) => n + (T.id === id ? 1 : 0), 0);
-  const loai = B.deck.filter(id => B.lv[id] < 5).sort((a, b) => (dem(a) ? 0 : 1) - (dem(b) ? 0 : 1) || B.lv[a] - B.lv[b] || dem(b) - dem(a));
+  const loai = B.deck.filter(id => B.lv[id] < 5 && !(SKILLS[id] && SKILLS[id].khongNang)).sort((a, b) => (dem(a) ? 0 : 1) - (dem(b) ? 0 : 1) || B.lv[a] - B.lv[b] || dem(b) - dem(a));
   if (loai.length && B.mana >= LUAT.giaNangCap[B.lv[loai[0]] - 1] + (oTrong(B).length ? B.gia : 0)) nangCap(B, loai[0]);
 }
 

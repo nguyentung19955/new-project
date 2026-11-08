@@ -16,7 +16,7 @@ const MV = {
   // vẽ vòng xanh lúc này?
   coNap(T) {
     const sk = SKILLS[T.id]; if (!sk || sk.bomDem || (T.st && T.st.da) || !(T.nap > 0.02)) return false;
-    if (sk.chuDong) return T.sao >= 3;
+    if (sk.chuDong) return T.sao >= 3 || !!sk.chuDongMoiSao; // Mạch Máu / Trứng cháy: chạm được ở mọi sao
     return !!(sk.napMau || this.NAP_KHAC[T.id]);
   },
   tenChieu(id) { try { const m = mocCua(id).find(q => /active skill/i.test(q.mo || '')); return m ? m.ten : null; } catch (e) { return null; } },
@@ -59,7 +59,7 @@ const MV = {
   // ---------- icon CHẠM khi chiêu chủ động đầy (chỉ bàn mình chạm được) ----------
   veTay(ctx, h) {
     const T = h.T, sk = SKILLS[T.id], B = h.B || G.ban[T.ban];
-    if (!sk || !sk.chuDong || T.sao < 3 || !(T.nap >= 1) || T.st.da || T.st.bang > 0 || !B || B.ai || B !== G.ban[0]) return;
+    if (!sk || !sk.chuDong || (T.sao < 3 && !sk.chuDongMoiSao) || !(T.nap >= 1) || T.st.da || T.st.bang > 0 || !B || B.ai || B !== G.ban[0]) return;
     const im = (this.CO_TAY && REN.img(this.TAY)) || REN.img('ic_phat'); if (!im) return;
     const t = typeof REN.t === 'number' ? REN.t : G.t, nay = 1 + 0.08 * Math.sin(t * 6);
     REN.anhGiua(ctx, im, h.gx, h.gy + Math.sin(t * 6) * h.d * 0.05, h.d * 0.95 * nay, 0, h.al);
@@ -72,15 +72,15 @@ const MV = {
     lienket: ['linked turrets in the chain', 'số ụ nối chuỗi'],
     dongbo: ['synced same-star Attack turrets', 'số ụ tấn công cùng sao đang đồng bộ'],
     luoicheo: ['diagonal turrets (4 = RESONANCE)', 'số ụ ở ô chéo (4 = CỘNG HƯỞNG)'],
-    railgun: ['Railguns in its row / column', 'số Railgun cùng hàng / cột'],
+    railgun: ['Salvos in its row / column', 'số Salvo cùng hàng / cột'],
     cuuvi: ['tails (max 9)', 'số đuôi (tối đa 9)'],
     loren: ['forge stacks', 'cộng dồn lò rèn'],
     leviathan: ['ABYSS points (+4% damage each)', 'điểm ABYSS (+4% sát thương mỗi điểm)'],
     ngoisao: ['stars on board / next milestone', 'tổng sao trên bàn / mốc kế'],
     nangluong: ['energy bonus', 'thưởng năng lượng'],
     docton: ['fire-rate bonus (alone = +100%)', 'thưởng tốc bắn (đứng một mình = +100%)'],
-    lualien: ['flames carried (no cap)', 'số lửa đang mang (không trần)'],
-    hopca: ['same-star turrets on board', 'số ụ cùng sao trên bàn'],
+    lualien: ['flames carried (max 70, more with card level)', 'số lửa đang mang (tối đa 70, thêm theo cấp thẻ)'],
+    hopca: ['Harmony: touching same-star turrets (x/4)', 'Hoà âm: số ụ cùng sao kề bên (x/4)'],
     luutru: ['archive stacks', 'cộng dồn lưu trữ'],
     xuonganh: ['HERO tiles active', 'số ô ANH HÙNG đang bật'],
   },
@@ -90,7 +90,7 @@ const MV = {
     const sk = SKILLS[T.id] || {}, B = G.ban[T.ban], P = [];
     if (this.laNap(T.id)) {
       const ten = this.tenChieu(T.id), cd = typeof sk.cd === 'number' ? ' (' + sk.cd + ' s)' : '';
-      if (sk.chuDong && T.sao < 3) P.push(vi ? 'Vòng xanh lá: chiêu ' + (ten ? tr(ten) + ' ' : '') + 'mở ở 3★' : 'Green ring: ' + (ten || 'skill') + ' unlocks at 3★');
+      if (sk.chuDong && T.sao < 3 && !sk.chuDongMoiSao) P.push(vi ? 'Vòng xanh lá: chiêu ' + (ten ? tr(ten) + ' ' : '') + 'mở ở 3★' : 'Green ring: ' + (ten || 'skill') + ' unlocks at 3★');
       else if (sk.chuDong) P.push(vi ? 'Vòng xanh lá: nạp chiêu ' + (ten ? tr(ten) : '') + cd + ' — đầy thì chạm ụ để dùng' : 'Green ring: ' + (ten || 'skill') + ' charging' + cd + ' — full: tap the turret to use');
       else P.push(vi ? 'Vòng xanh lá: đang nạp — đầy thì tự kích' : 'Green ring: charging — fires by itself when full');
     }
@@ -106,7 +106,7 @@ const MV = {
     const sk = SKILLS[T.id] || {}, B = G.ban[T.ban], P = [];
     if (this.laNap(T.id)) {
       const ten = this.tenChieu(T.id);
-      if (sk.chuDong && T.sao < 3) P.push(vi ? 'Vòng xanh lá: chiêu mở ở 3★' : 'Green ring: skill unlocks at 3★');
+      if (sk.chuDong && T.sao < 3 && !sk.chuDongMoiSao) P.push(vi ? 'Vòng xanh lá: chiêu mở ở 3★' : 'Green ring: skill unlocks at 3★');
       else if (sk.chuDong) P.push(vi ? 'Vòng xanh lá = nạp ' + (ten ? tr(ten) : 'chiêu') + ' (đầy thì chạm ụ)' : 'Green ring = ' + (ten || 'skill') + ' charge (tap when full)');
       else P.push(vi ? 'Vòng xanh lá = nạp chiêu (đầy tự kích)' : 'Green ring = skill charge (fires itself)');
     }
@@ -122,7 +122,7 @@ const MV = {
     const hang = (img, b, s) => '<div class="mv-h">' + img + '<span><b>' + b + '</b> ' + s + '</span></div>';
     const sk = SKILLS[id] || {}, ten = this.tenChieu(id);
     if (this.laNap(id)) P.push(hang(anhVong ? '<img src="' + anhVong + '" alt="">' : '', vi ? 'Vòng xanh lá' : 'Green ring',
-      sk.chuDong ? (vi ? '= nạp chiêu ' + (ten ? NN.t(ten) : '') + ' (từ 3★). Đầy thì vòng sáng nhịp + hiện nút chạm: chạm ụ để dùng.' : '= ' + (ten || 'active skill') + ' charging (from 3★). When full it pulses and shows a tap icon: tap the turret to use it.')
+      sk.chuDong ? (vi ? '= nạp chiêu ' + (ten ? NN.t(ten) : '') + (sk.chuDongMoiSao ? '' : ' (từ 3★)') + '. Đầy thì vòng sáng nhịp + hiện nút chạm: chạm ụ để dùng.' : '= ' + (ten || 'active skill') + ' charging' + (sk.chuDongMoiSao ? '' : ' (from 3★)') + '. When full it pulses and shows a tap icon: tap the turret to use it.')
         : (vi ? '= chiêu đang nạp. Đầy thì tự kích.' : '= skill charging. Fires by itself when full.')));
     if (typeof laGrow === 'function' && laGrow(id) && GROW[id]) {
       const g = GROW[id], n = g.dang ? g.dang.length : 3, ds = (g.dang ? g.dang.map(k => g.ten[k - 1]) : g.ten).map(x => vi ? NN.t(x) : x).join(' → ');

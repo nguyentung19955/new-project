@@ -29,6 +29,8 @@ const FXU = {
     g_vong_tim: 'fx_lienket_dan', g_xi_vang2: 'fx_dongbo_dan', g_kim_ngoc: 'fx_hydra_dan', g_ho_xanh: 'fx_cuuvi_dan3',
     g_kim_gio: 'fx_ngaithoigian_dan', g_vong_ngoc: 'fx_luoicheo_dan3',
     hu_hoden: 'fx_blackhole_hieu', // đĩa xoáy hố đen (tờ T11)
+    // tên lửa đuổi Pháo La Bàn: ảnh riêng fx_canon_ten (khi gen ChatGPT xong — docs/demo-hop-tuong/tuvan/la-ban-to-hop/PROMPT.md); chưa có → tên lửa Liên Thanh
+    ten_laban: typeof FXU_META !== 'undefined' && FXU_META.fx_canon_ten ? 'fx_canon_ten' : 'fx_lien_dan',
   },
   DAN_CHUNG: new Set(['dan_phao', 'dan_lien', 'dan_tia', 'dan_bang', 'dan_doc', 'tia_lua']),
   NO_CHUNG: new Set(['no_phao', 'dien', 'bang_vo', 'laser_trung', 'khoi_doc']),

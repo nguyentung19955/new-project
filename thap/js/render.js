@@ -591,8 +591,15 @@ const REN = {
   kDau(id) { const k = (window.HEAD_K || {})[id]; if (k) return k; const m = (window.ART_META || {})[id] || { s: 1 }; return 0.8 * m.s; },
   coDau(T) { const B = G.ban[T.ban]; return Math.min(B.cw, B.ch) * this.dauK(T.id, T.gd); },
   // tên ảnh + hệ số cỡ của đầu súng ở dạng gd (0 = đầu thường, 1..3 = dạng grow-up)
-  dauTen(id, gd) { return gd && STAGE_K[id] ? id + '_nong_s' + gd : id + '_nong'; },
-  dauK(id, gd) { return gd && STAGE_K[id] ? STAGE_K[id][gd - 1] : this.kDau(id); },
+  // REN._dauEp = [id, ảnh, K]: đầu RIÊNG theo trạng thái ụ đang vẽ (SKILLS[id].dauAnh(T) — Twin Anvil dạng tốc, mặt nạ Prism Thief, trứng Evolver); null = đầu thường
+  dauTen(id, gd) { if (this._dauEp && this._dauEp[0] === id) return this._dauEp[1]; return gd && STAGE_K[id] ? id + '_nong_s' + gd : id + '_nong'; },
+  dauK(id, gd) { if (this._dauEp && this._dauEp[0] === id) return this._dauEp[2]; return gd && STAGE_K[id] ? STAGE_K[id][gd - 1] : this.kDau(id); },
+  datDauEp(T) {
+    const sk = T && SKILLS[T.id], ten = sk && sk.dauAnh ? sk.dauAnh(T) : null;
+    if (!ten || !this.img(ten)) { this._dauEp = null; return; } // ảnh riêng chưa tải: vẽ đầu thường (dự phòng)
+    const k = sk.dauAnhK ? sk.dauAnhK(T) : ((window.HEAD_K || {})[ten.replace(/_nong$/, '')] || this.kDau(T.id));
+    this._dauEp = [T.id, ten, k];
+  },
   // vẽ 1 lớp đầu súng (đã xoay sẵn ở ctx): bien '' thường | 'trang' bóng trắng | 'den' bóng tối; sc = phóng ĐỀU
   veDauLop(ctx, id, gd, C, al, sc, da, bien) {
     const ten = this.dauTen(id, gd), D = C * this.dauK(id, gd) * (sc || 1);
@@ -895,9 +902,12 @@ const REN = {
     } // fx_vong_lv chưa tải: không vẽ vòng code
     // đầu súng
     const C0 = S / 0.98, gd = !o.ghost && T.gd && laGrow(T.id) ? T.gd : 0;
+    this.datDauEp(o.ghost ? null : T);
     if (!o.ghost) VX.duoiDau(ctx, T, S, al, this); // hào quang dạng thức tỉnh + vòng tiến độ grow-up (dưới đầu súng)
     const D = C0 * this.dauK(T.id, gd);
-    const dau = this.co(this.dauTen(T.id, gd), D, da ? 'xam' : '');
+    // đầu súng VẼ RIÊNG (Sói Máy: đầu sói nhìn thẳng → xoay theo hướng bắn · Hydra: số đầu = số sao) — false = ảnh chưa tải → đầu cũ
+    const tuVe = !o.ghost && !!skT.veDau && skT.veDau(ctx, T, S, al, this, da);
+    const dau = tuVe ? null : this.co(this.dauTen(T.id, gd), D, da ? 'xam' : '');
     // animation hybrid (anim.js): thở / tụ lực / giật / hồi lò xo / xung hỗ trợ — hàm của thời gian sự kiện thật, không chặn phát bắn
     const AU = typeof AN !== 'undefined' && !o.ghost && !T.st.bang ? AN.u(T, D) : null;
     if (dau) {
@@ -935,7 +945,7 @@ const REN = {
         this.anhGiua(ctx, this.cham1(mau[k]), Math.cos(a) * S * 0.26, Math.sin(a) * S * 0.26, S * 0.45);
         ctx.restore(); ctx.globalAlpha = al;
       }
-    } else if (!o.ghost && typeof TAI !== 'undefined') TAI.veXoay(ctx, 0, 0, D * 0.55); // đầu súng đang tải: vòng xoay PNG nhỏ (không vẽ hình thay thế)
+    } else if (!tuVe && !o.ghost && typeof TAI !== 'undefined') TAI.veXoay(ctx, 0, 0, D * 0.55); // đầu súng đang tải: vòng xoay PNG nhỏ (không vẽ hình thay thế)
     // tesla: cuộn sáng ở đầu nòng trước khi phóng
     if (T.id === 'set' && T.cd < 0.18 && !da && !o.ghost) {
       ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (0.18 - T.cd) * 3;
@@ -973,6 +983,7 @@ const REN = {
       // buff: không còn ký hiệu nhỏ trên ô — hiện bằng hào quang ảnh quanh đầu súng (buffvfx.js), số chỉ ở bảng chạm
     }
     ctx.globalAlpha = 1;
+    this._dauEp = null;
     if (A) VX.sau(ctx, T, x, y, St, A);
   },
   // phần phụ <id>_phu (ô 4 của tấm module) vẽ tại trục, ctx ở tâm ụ (chưa xoay đầu): quay chậm ngược chiều;
@@ -1008,11 +1019,14 @@ const REN = {
   than(T, S, da, bong) {
     const km = 0; // (vòng màu khoá đã bỏ)
     // bệ riêng đã tải xong → dùng; đang tải / lỗi → bệ chung (không chờ)
-    const kR = this.DE_RIENG[T.id], tenR = kR ? T.id + '_de' : null;
-    const rieng = tenR && this.img(tenR) ? tenR : null, ten = rieng || 'de_chung';
+    const kR = this.DE_RIENG[T.id]; let tenR = kR ? T.id + '_de' : null;
+    // Pháo La Bàn: bệ theo TỔ HỢP HƯỚNG canon_de_<mặt nạ 1–15> (ảnh ChatGPT, khi window.LABAN_DE) · chưa có → bệ thường + mũi tên sáng (CM.veDe)
+    const lb = T.id === 'canon' && typeof SKILLS !== 'undefined' && SKILLS.canon && SKILLS.canon.hb ? SKILLS.canon.hb(T) : 0;
+    if (lb && window.LABAN_DE && this.img('canon_de_' + lb)) tenR = 'canon_de_' + lb;
+    const rieng = tenR && this.img(tenR) ? tenR : null, ten = rieng || 'de_chung', lbVe = lb && rieng === 'canon_de' && typeof CM !== 'undefined' && CM.veDe ? lb : 0;
     // VIỀN BẬC (người dùng 07/11 18:25): viền kim loại ôm hình bóng bệ, màu = bậc (Trắng bạc · Xanh · Tím · Vàng · Đỏ); đầu ụ giữ màu riêng
     const vb = rieng && this.VIEN_ON ? this.vienBac(T.id, T.bac, da) : null, vCho = vb === 0; // 0 = ảnh viền đang tải → vẽ tạm không viền, không giữ cache
-    const k = this.s * this.dpr, n = Math.round(S * 1.5 * k), key = 'than|' + (rieng || '') + '|' + T.bac + '|' + (da ? 1 : 0) + '|' + n + (bong ? '|b' : '') + '|' + km;
+    const k = this.s * this.dpr, n = Math.round(S * 1.5 * k), key = 'than|' + (rieng || '') + '|' + T.bac + '|' + (da ? 1 : 0) + '|' + n + (bong ? '|b' : '') + '|' + km + (lbVe ? '|lb' + lbVe : '');
     let c = vCho ? null : this.cGet(key); if (c) return c;
     let de = da ? this.banXam(ten) : this.img(ten);
     if (!de && !(this.anh[ten] && this.anh[ten]._loi)) return null; // còn đang tải
@@ -1022,13 +1036,15 @@ const REN = {
     const q = n / (S * 1.5); x.scale(q, q); x.translate(S * 0.75, S * 0.75);
     const SB = S * 0.714, SD = rieng ? SB * kR : SB;
     const dw = de.naturalWidth || de.width;
-    de = this.mip(de, SD * q);
+    de = this.mip(de, (rieng && lb && rieng !== 'canon_de' ? SD * dw / 177 : SD) * q);
     if (bong) { x.globalAlpha = 0.7; x.drawImage(this.cham1('#000000'), 2 - SB * 0.62, SB * 0.06 + 3 - SB * 0.62, SB * 1.24, SB * 1.24); x.globalAlpha = 1; } // bóng = PNG tô đen
     if (vb) { const SV = SD * vb.width / (vb.dw || dw); x.drawImage(this.mip(vb, SV * q), -SV / 2, -SV / 2, SV, SV); } // viền cùng tâm bệ, khung = bệ + 12 px mỗi phía
-    x.drawImage(de, -SD / 2, -SD / 2, SD, SD);
+    const SDv = rieng && lb && rieng !== 'canon_de' ? SD * dw / 177 : SD; // bệ tổ hợp Pháo La Bàn: khung 211 = canon_de 177 + 17 px mỗi phía (mũi gai sáng), cùng tâm
+    x.drawImage(de, -SDv / 2, -SDv / 2, SDv, SDv);
+    const lbCho = !!lbVe && !CM.veDe(x, this, lbVe, SD, da); // mũi tên sáng theo hướng (ảnh PNG) — ảnh chưa tải: vẽ tạm, chưa giữ đệm
     // (bỏ vòng màu khoá vẽ code quanh bệ — QUY-TAC-HINH 1/4; nhận diện = biểu tượng vai trò PNG góc ô)
     // (BỎ vòng bậc tier_ring_<bac> quanh bệ — người dùng 2026-11-06: đầu ụ đã thể hiện bậc; mọi chế độ / bóng kéo / bảng kết quả đều qua hàm này)
-    return vCho ? c : this.cSet(key, c);
+    return vCho || lbCho ? c : this.cSet(key, c);
   },
   // VIỀN BẬC: <id>_vien.png (trắng, vát sẵn — tools/thap-cat-umod.py) tô màu bậc 1 lần (multiply giữ vát kim loại) → giữ trong REN.anh như DOTPHA.tenVong.
   // Vàng/Đỏ: thêm ánh kim nhẹ (cộng sáng chính ảnh viền). Ụ xám (da): viền bạc. Trả: ảnh đã tô · 0 đang tải · null không có viền (bệ chung / lỗi tải).
