@@ -100,7 +100,7 @@ const TEXT = {
     kepha:      { name: 'Jammer',         skill: 'Merge 2 Jammers. PvP: rival turrets shoot 40% slower. Co-op: your ally\'s turrets shoot faster. Solo: your turrets shoot faster' },
     taylo:      { name: 'Cleanser',      skill: 'Support: every 12s it cleans up to 2 Neighbours (4 sides): removes Freeze, Stone and burn. Nothing to clean: Neighbours get +18% damage' },
     khien:      { name: 'Shield Gen',    skill: 'Support: Neighbours (4 sides) get a shield. It blocks 1 Boss skill or rival attack, then comes back after 18s' },
-    hopbi:      { name: 'Mystery Box',   skill: 'Does not shoot. After 58s (46s from 3★) it opens and becomes a random turret of 1–6★, never lower than its own ★' },
+    hopbi:      { name: 'Mystery Box',   skill: 'Does not shoot. After 58s (46s from 3★) it opens and becomes a random turret of 1–7★, never lower than its own ★' },
     nangsao:    { name: 'Star Lift',     skill: 'Support: all 4 Neighbours shoot faster (+10% per ★). The lowest-star Neighbour gets ×1.5. From 5★: every 2 waves a star pip (3 pips = +1★)' },
     tuthan:     { name: 'Reaper Pillar', skill: 'Support: Neighbours (4 sides) may kill a normal enemy at once when its HP is under 30%' },
     xaotron:    { name: 'Scrambler',     skill: 'Merge 2 Scramblers. PvP: rival turrets are shuffled into other types. Co-op: lone ally turrets become mergeable. Solo: your lone turrets become mergeable' },

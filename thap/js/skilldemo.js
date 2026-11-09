@@ -113,7 +113,7 @@ function sdLuaLien(x, B) {
   }
 }
 // Mystery Box: khoảng sao khi mở = như SKILLS.hopbi.capNhat (sàn = max(mốc 5★/7★, sao của hộp ≤ 6))
-const sdHop = (s) => { const lo = Math.max(s >= 7 ? 5 : s >= 5 ? 3 : 1, Math.min(6, s | 0)); return (lo === (s >= 7 ? 7 : 6) ? '' : lo + '–') + (s >= 7 ? 7 : 6); };
+const sdHop = (s) => { const lo = Math.max(s >= 7 ? 5 : s >= 5 ? 3 : 1, Math.min(6, s | 0)); return (lo === 7 ? '' : lo + '–') + 7; };
 // Hero Foundry: % tốc của ô anh hùng vừa dập (giá trị thật trong B.hero — tính theo sao Foundry ghép, không theo ụ ra)
 function sdHero(T) { const B = G.ban[T.ban] || G.ban[0], h = B && B.hero && B.hero[B.hero.length - 1]; return h ? h.v : SKILLS.xuonganh.v(T); }
 const SD_K = {
