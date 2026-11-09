@@ -157,11 +157,7 @@ function trieu(B, mienPhi, idEp) {
   if (!mienPhi) { if (B.mana < B.gia) return null; B.mana -= B.gia; B.gia += LUAT.giaTrieuTang; }
   const r = rngLuat(B, 13); // ô + loại: RNG luật có hạt (online: gói 'tr' mang đúng ô/loại)
   const o = tr[Math.floor(r() * tr.length)];
-  // BẢO ĐẢM TẤN CÔNG (đúng chữ nút SUMMON): trên bàn < 2 ụ vai 'tc' → chỉ bốc trong các ụ Tấn công của bộ (bộ không có ụ 'tc' thì bốc đều cả bộ)
-  const laTC = (id) => !!(SKILLS[id] && SKILLS[id].vai === 'tc');
-  const boTC = B.t.filter(X => X && laTC(X.id)).length < 2 ? B.deck.filter(laTC) : [];
-  const bo = boTC.length ? boTC : B.deck;
-  const id = idEp || bo[Math.floor(r() * bo.length)];
+  const id = idEp || B.deck[Math.floor(r() * B.deck.length)]; // bốc đều trong bộ (09/11: bỏ bảo đảm ụ Tấn công)
   const T = sinhU(taoU(B, id, 1, o));
   B.t[o] = T;
   VX.trieu(T); // hiệu ứng triệu hồi theo thời gian thực (hieuung.js) — không chặn thao tác, luật chơi không chờ hoạt ảnh
