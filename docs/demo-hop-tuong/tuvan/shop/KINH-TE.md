@@ -98,3 +98,19 @@ Bản cửa hàng đầu đã làm theo `YEU-CAU-NGUOI-DUNG.md`; session này r�
 **Thời gian cho người chơi đều (5 trận/ngày):** ~0,06 bản Cổ đại/ngày (túi trận 0,05 + Rương Vàng ~0,007) → **~15–18 ngày / 1 bản đỏ bất kỳ**;
 1 thẻ đỏ cụ thể trong bộ bài cần 11 bản → **~1 năm tới MAX** (cày 10+ trận/ngày + quay ngọc + mốc cuối sự kiện: ~5–6 tháng).
 Thẻ vàng: ~4–5 tháng tới MAX. Thường → Sử thi: dễ hơn (đúng yêu cầu).
+
+## 7. Nguồn mảnh Vàng / Đỏ thêm (09/11 — `thap/js/manh.js`, kiểm `tools/thap-kt-manh.js`)
+
+Người dùng: "các cơ chế kiếm thêm mảnh ụ Vàng, Đỏ — Đỏ sẽ khó kiếm hơn". Rương / Daily Specials / vòng quay / sự kiện giữ nguyên.
+
+| Nguồn | Vàng (Huyền thoại) | Đỏ (Thần thoại/Cổ đại) | Ghi chú |
+|---|---|---|---|
+| Mốc wave Solo lần đầu | w20 ×1 · w30 ×2 · w40 ×3 · w50 ×3 · w60 ×4 · w70 ×5 = **18** | w50 ×1 · w60 ×1 · w70 ×2 = **4** | 1 lần; kỷ lục Solo cũ mở ngay |
+| Hạ trùm lần đầu | ×1 mỗi trùm = **12** | hạ đủ 12 trùm = **1** | mọi chế độ |
+| Nhiệm vụ ngày "Reach wave 30" | ×1 (≈ 1/3 số ngày được chọn → ~2,3/tuần) | — | |
+| Lò rèn: 30 bản 1 thẻ Sử thi + 2 000 vàng | ×1 ngẫu nhiên, **3/tuần** | — | |
+| Lò rèn: 10 bản 1 thẻ Vàng + 10 000 vàng | — | ×1 ngẫu nhiên, **1/tuần** | tỉ giá 10:1 |
+| (có sẵn) túi trận / Rương Vàng | 1,8% / 3,8% mỗi lượt | 0,2% / 0,2% | Đỏ ≈ 1/9–1/19 của Vàng |
+
+Một lần: 30 Vàng + 5 Đỏ. Thường xuyên thêm: ~2,3 Vàng/tuần (nhiệm vụ) + tối đa 3 Vàng + 1 Đỏ/tuần (lò rèn, tốn bản sao + vàng).
+Lưu `turret_kt.mh = { sw, moc, tr, trn, bo, ren: {tuan, n}, renN }`; gộp hồ sơ: cờ OR, `sw`/bộ đếm lấy lớn nhất.

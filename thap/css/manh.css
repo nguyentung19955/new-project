@@ -1,0 +1,21 @@
+/* NGUỒN MẢNH Vàng/Đỏ (js/manh.js): mốc wave Solo, trùm lần đầu, lò rèn, "kiếm ở đâu" trên trang ụ. Chỉ ảnh có sẵn (o_vien_*, chân dung trùm). */
+.mh-chip { display: inline-flex; align-items: center; gap: 2px; margin-left: 2px; font: 800 11px/1 var(--f-hien); font-style: normal; color: var(--m-chu); vertical-align: middle; white-space: nowrap; }
+.mh-chip img { width: 16px; height: 16px; }
+.kt-h-g > b .mh-chip:first-child { margin-left: 0; }
+.mh-ren .kt-h-g { gap: 3px; }
+.mh-ren .kt-h-g > b { font-size: 12px; }
+.mh-gia { display: flex; align-items: center; gap: 3px; font: 700 10px/1 var(--f-chu); letter-spacing: .04em; color: var(--m-mo); white-space: nowrap; }
+.mh-gia img { width: 14px; height: 14px; }
+.mh-trum { display: grid; grid-template-columns: repeat(6, minmax(0, 44px)); justify-content: center; gap: 4px 8px; margin: -2px 6px 8px; }
+.mh-trum i { display: block; min-width: 0; aspect-ratio: 1; }
+.mh-trum img { width: 100%; height: 100%; object-fit: contain; opacity: .28; }
+.mh-trum i.ha img { opacity: 1; }
+.mh-p .kt-phu-tam { max-height: 86vh; overflow-y: auto; }
+.mh-chon { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); width: min(320px, 74vw); gap: 10px 6px; margin: 8px auto 4px; }
+#chon #kt .mh-the { position: relative; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 0; background: none; border: 0; color: var(--m-chu); cursor: pointer; }
+html body #wrap #kt .mh-the .ot-mini { width: 52px; height: 52px; }
+.mh-the > b { font: 800 13px/1 var(--f-hien); color: var(--m-chu); }
+.mh-the > small { max-width: 100%; font: 700 10px/1.1 var(--f-chu); color: var(--m-mo); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#up .mh-nguon { margin: -4px 12px 8px; display: flex; flex-direction: column; gap: 2px; line-height: 1.25; }
+#up .mh-nguon small { font-size: 9px; font-weight: 800; letter-spacing: .08em; color: var(--c-mo, #9aa6b4); }
+#up .mh-nguon span { font-size: 11px; font-weight: 600; color: var(--c-mo, #c9ced6); }

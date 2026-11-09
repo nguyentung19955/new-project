@@ -711,3 +711,13 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - Chạm 1 trùm → chi tiết: chiêu (CHỦ ĐỘNG / BỊ ĐỘNG / KHI BỊ HẠ) + nhịp tung chiêu max(6, 10 − wave/15) s, báo 1.4 s; xuất hiện (Solo & PvP ngẫu nhiên từ wave N; Co-op thứ tự cố định wave 10–50); máu ở wave N/30/50/70 theo công thức sinhTrum (mauWave × 30 × (1 + w/35) × hệ số TRUM_MOI.hp, không tính PvP đột tử); mọi trùm: lọt −2 mạng, hạ = mana ×12. Nút ALL BOSSES quay lại.
 - "Chưa gặp": kỷ lục wave (TK.ho / tm_hoso / KT tk.wave) < wave xuất hiện → chân dung mờ + "REACH WAVE N" (vẫn đọc được).
 - File: `thap/js/trumxem.js`, `thap/css/trumxem.css` (chỉ tấm/nút PNG có sẵn), index.html nạp 2 file; 17 khoá dịch mới trong vi.json → ngonngu-vi.js. Act `tx-*` (home.js nuốt act `hm-*` lạ).
+
+## claude/demo-hop-tuong — Nguồn mảnh thẻ VÀNG / ĐỎ mới, Đỏ hiếm hơn (09/11)
+- Người dùng: "các cơ chế kiếm thêm mảnh ụ Vàng, Đỏ — Đỏ sẽ khó kiếm hơn". Mã mới `thap/js/manh.js` + `thap/css/manh.css` (bọc kinhte.js / kinhte-ui.js / thebai-ui.js, không đổi luật cũ). Bảng số: `docs/demo-hop-tuong/tuvan/shop/KINH-TE.md` §7.
+- **Mốc wave SOLO lần đầu** (kỷ lục Solo): w20 1 Vàng · w30 2 Vàng · w40 3 Vàng · w50 3 Vàng + 1 Đỏ · w60 4 Vàng + 1 Đỏ · w70 5 Vàng + 2 Đỏ (tổng 18 Vàng / 4 Đỏ). Co-op/PVP/online không tính.
+- **Hạ trùm lần đầu**: mỗi trùm (12) = 1 bản Vàng; hạ đủ 12 trùm = 1 bản Đỏ (mọi chế độ, chỉ trùm bàn mình hạ).
+- **Nhiệm vụ ngày mới** "Reach wave 30" = 1 bản Vàng (vào bể chọn 3 nhiệm vụ/ngày; danh sách hôm nay giữ nguyên).
+- **Lò rèn mảnh** (SHOP, dưới CHESTS): 30 bản của 1 thẻ Sử thi + 2 000 vàng → 1 bản Vàng ngẫu nhiên (3 lần/tuần) · 10 bản của 1 thẻ Vàng + 10 000 vàng → 1 bản Đỏ ngẫu nhiên (1 lần/tuần). Chạm ĐỔI → bảng chọn thẻ nguồn.
+- Hết trận tự nhận mốc/trùm mới mở; màn kết quả thêm thẻ nhận được vào ô REWARDS + dòng "SOLO WAVE 30/40 · FIRST KILL". Tab QUESTS có mục LEGENDARY & MYTHIC (mốc, lưới 12 chân dung trùm, nút NHẬN cho phần chưa nhận). Trang ụ Vàng/Đỏ có dòng "WHERE TO GET".
+- Lưu `turret_kt.mh` (khoá mới; bản cũ: kỷ lục Solo trong `turret_best` mở mốc nhận được ngay, không mất gì). Gộp hồ sơ Firebase: cờ OR, kỷ lục lớn nhất. Thẻ ngẫu nhiên chọn bằng `KT.cho` (hạt giống mã người chơi + khoá + bộ đếm lưu) rồi lưu ngay → tải lại không đổi.
+- Kiểm: `NODE_PATH=/opt/npm-tools/node_modules node tools/thap-kt-manh.js` (mới) + `tools/thap-kt-shop.js` XANH; chữ Việt qua vi.json.
