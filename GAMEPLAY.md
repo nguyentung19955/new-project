@@ -959,3 +959,5 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - Icon app mới (`raw_icon_aa.png` → `python3 tools/thap-icon.py`): toàn bộ `thap/assets/icon/` (favicon, apple-touch, 192/512, maskable — nền maskable không làm tối nữa).
 - Chữ: `<title>`, meta app-title/application-name + thêm meta description, manifest name/short_name, document.title (ngonngu.js), màn xoay dọc (rasoat.js), lời mời co-op (phong.js), SFX LAB + nghe-am-thanh.html; vi.json → ngonngu-vi.js.
 - KHÔNG đổi: khoá localStorage `turret_*`/`tm_*`, Firebase `turret-merge`/`turretmerge/`, SKU `com.turretmerge.*`, id nội bộ, thư mục, workflow, chú thích code.
+- Cửa hàng / vòng quay / nhiệm vụ / sự kiện: ô hàng, rương, điểm danh 7 ngày = ô vát góc; hàng nhiệm vụ/mốc/lò rèn = tấm chàm + ổ thưởng tròn + nút CLAIM (cam khi nhận được, pill chàm khi chưa); 4 thẻ dưới pill (đang mở = cyan); hộp thoại tỉ lệ / nhận thưởng = tấm chàm; thanh tiến độ teal. Băng DAILY SPECIALS và băng ụ sự kiện tạm là tấm chàm + icon (chờ ảnh băng anime — PROMPT-B3.md).
+- Màn TRÙM, hồ sơ phi công, bảng ONLINE: tấm/nút anime.
