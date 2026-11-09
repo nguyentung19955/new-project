@@ -37,23 +37,23 @@
 | 13 | bua Hammer | Trắng | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | **ĐÃ LÀM** (raw_anime_u_trang1–4) |
 | 14 | nam Iron Fist | Trắng | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | cannon | 4 | P1 làm lại |
 | 15 | bomhen Time Bomb | Trắng | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | chrono | 4 | P1 làm lại |
-| 16 | nhanmana Mana Doubler | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | P1 làm lại |
-| 17 | kiembang Ice Blade | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | ice | 4 | P1 làm lại |
-| 18 | mimic Mimic | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | evolver | 4 | P1 làm lại |
-| 19 | chimang Crit Antenna | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | P1 làm lại |
-| 20 | dichchuyen Teleporter | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | portal | 4 | P1 làm lại |
-| 21 | radar Radar | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | P1 làm lại |
-| 22 | drone Drone Bay | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | drone | 5 | P1 làm lại |
-| 23 | tron Fusion Mixer | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | P1 làm lại |
-| 24 | nangluong Energy Cannon | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | cannon | 4 | P1 làm lại |
-| 25 | laser Laser | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | beam | 5 | P1 làm lại |
-| 26 | lanhgia Chiller | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | ice | 4 | P1 làm lại |
-| 27 | mortar Mortar | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | nang | 5 | P1 làm lại |
-| 28 | khuech Amplifier | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | P1 làm lại |
-| 29 | vungdoc Toxic Pool | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | poison | 4 | P1 làm lại |
-| 30 | loa Cooldown Horn | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | P1 làm lại |
-| 31 | hutmana Mana Leech | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | gatling | 4 | P1 làm lại |
-| 32 | min Mine Layer | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | poison | 5 | P1 làm lại |
+| 16 | nhanmana Mana Doubler | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | **ĐÃ LÀM** (raw_anime_u_xanh1–6) |
+| 17 | kiembang Ice Blade | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | ice | 4 | **ĐÃ LÀM** (raw_anime_u_xanh1–6) |
+| 18 | mimic Mimic | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | evolver | 4 | **ĐÃ LÀM** (raw_anime_u_xanh1–6) |
+| 19 | chimang Crit Antenna | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | **ĐÃ LÀM** (raw_anime_u_xanh1–6) |
+| 20 | dichchuyen Teleporter | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | portal | 4 | **ĐÃ LÀM** (raw_anime_u_xanh1–6) |
+| 21 | radar Radar | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | **ĐÃ LÀM** (raw_anime_u_xanh1–6) |
+| 22 | drone Drone Bay | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | drone | 5 | **ĐÃ LÀM** (raw_anime_u_xanh1–6) |
+| 23 | tron Fusion Mixer | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | **ĐÃ LÀM** (raw_anime_u_xanh1–6) |
+| 24 | nangluong Energy Cannon | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | cannon | 4 | **ĐÃ LÀM** (raw_anime_u_xanh1–6) |
+| 25 | laser Laser | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | beam | 5 | **ĐÃ LÀM** (raw_anime_u_xanh1–6) |
+| 26 | lanhgia Chiller | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | ice | 4 | **ĐÃ LÀM** (raw_anime_u_xanh1–6) |
+| 27 | mortar Mortar | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | nang | 5 | **ĐÃ LÀM** (raw_anime_u_xanh1–6) |
+| 28 | khuech Amplifier | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | **ĐÃ LÀM** (raw_anime_u_xanh1–6) |
+| 29 | vungdoc Toxic Pool | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | poison | 4 | **ĐÃ LÀM** (raw_anime_u_xanh1–6) |
+| 30 | loa Cooldown Horn | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | **ĐÃ LÀM** (raw_anime_u_xanh1–6) |
+| 31 | hutmana Mana Leech | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | gatling | 4 | **ĐÃ LÀM** (raw_anime_u_xanh1–6) |
+| 32 | min Mine Layer | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | poison | 5 | **ĐÃ LÀM** (raw_anime_u_xanh1–6) |
 | 33 | cuongno Berserker | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | cannon | 8 | P2 làm lại |
 | 34 | baotuyet Blizzard | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | ice | 4 | P2 làm lại |
 | 35 | nhanban Cloner | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | evolver | 4 | P2 làm lại |
@@ -121,7 +121,7 @@
 | 97 | congap Hatchery Gate | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | evolver | 0 | — |
 
 ## Thứ tự làm (bước 2)
-1. Trắng 14 → **xong** (tấm `thap-art/raw_anime_u_trang1..5.png`, cắt `tools/thap-cat-anime-u.py`).
+1. Trắng 14 → **xong** · Xanh 17 → **xong** (`raw_anime_u_xanh1..6`) (tấm `thap-art/raw_anime_u_trang1..5.png`, cắt `tools/thap-cat-anime-u.py`).
 2. Xanh 17 (6 tấm) → Tím 22 (8 tấm) → Vàng 4 (2 tấm).
 3. Biến hình 14 ụ grow-up: mỗi ụ 1 hàng (dạng 1/2/3 cùng bệ) → `<id>_nong_s1..s3` + trả id về `STAGE_K`.
 4. Hiệu ứng vẽ tay: Sói (vuốt), Hydra (thân), Prism (vệt) → PNG nướng sẵn.

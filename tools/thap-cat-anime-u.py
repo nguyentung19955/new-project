@@ -18,7 +18,7 @@ U = importlib.util.module_from_spec(spec); spec.loader.exec_module(U)
 
 
 def tach_hang(nhom, ids):
-    a = Image.open(os.path.join(GOC, 'docs/demo-hop-tuong/thap-art', 'raw_anime_u_%s.png' % nhom)).convert('RGB')
+    a = Image.open(os.path.join(os.environ.get('RAW_ANIME', os.path.join(GOC, 'docs/demo-hop-tuong/thap-art')), 'raw_anime_u_%s.png' % nhom)).convert('RGB')
     W, H = a.size; NR = len(ids); cw, ch = W // 4, H // NR; n = max(cw, ch)
     tmp = tempfile.mkdtemp(prefix='anime-u-')
     for r, i in enumerate(ids):

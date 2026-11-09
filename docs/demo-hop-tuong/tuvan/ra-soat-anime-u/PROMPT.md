@@ -18,3 +18,7 @@ Lượt sau (cùng cuộc trò chuyện): "Perfect. Next sheet: same Royal Twili
 - xanh1: Ice Blade (kiếm băng chĩa lên, chắn tay vàng) · Mimic (rương mimic 1 mắt, răng nanh, lưỡi) · Crit Antenna (ăng-ten chữ thập 4 hồng ngọc, lõi tâm ngắm cyan)
 - xanh2: Teleporter (2 cổng dịch chuyển nối cầu vàng) · Radar (chảo radar, màn quét cyan) · Drone Bay (khoang phóng + drone bom tròn)
 - xanh3: Fusion Mixer (lõi lò xoáy 3 màu đỏ/lục/vàng) · Energy Cannon (pháo ngắn + pin mana teal) · Laser (lăng kính thạch anh tím + thấu kính)
+- xanh4: Chiller (quạt làm lạnh, tinh thể băng ở vành) · Mortar (ống cối ngắn đai vàng + giá đạn) · Amplifier (chồng 3 chevron tím-xanh)
+- xanh5: Toxic Pool (tay đòn vàng + bầu độc sủi) · Cooldown Horn (kèn trận vàng có đồng hồ cát) · Mana Leech (miệng đỉa vòng răng, ánh teal)
+- xanh6 (2 hàng): Mine Layer (băng 3 mìn lõi đỏ) · Mana Doubler (2 ngọc mana teal đôi)
+TÍM = "PURPLE base: a rounded HEXAGON gold platform with small triangular rune notches and amethyst-violet gems (#A966ED)"; thêm "keep each head compact, about 75% of the base width; no grey industrial metal, no yellow hazard stripes".
