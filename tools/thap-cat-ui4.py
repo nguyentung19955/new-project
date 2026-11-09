@@ -29,6 +29,28 @@ def luu(im, ten, ghi=''):
     print('%-14s %4dx%-4d %6.0f KB  %s' % (ten, im.size[0], im.size[1], os.path.getsize(p) / 1024, ghi))
 
 
+# ---------- 0. đoạn đường ĐỐI XỨNG 2 ray ----------
+# ha_duong (thap-cat-ui2.py) có ray ngoài (x=0) khác ray trong → làn đi ngược chiều quy ước (PVP bàn mình: chữ C mở dưới, co-op nhánh dưới)
+# lộ ray lệch ở góc rẽ. Lấy NỬA RAY NGOÀI gương sang nửa kia → 2 ray giống nhau, mọi hướng làn / góc / ngã ba khớp liền.
+# Chạy lại an toàn: chỉ đọc nửa trái (x < S/2) của ha_duong hiện có.
+dg = np.asarray(Image.open(os.path.join(DICH, 'ha_duong.png')).convert('RGBA')).copy()
+S2 = dg.shape[1] // 2
+dg[:, dg.shape[1] - S2:] = dg[:, :S2][:, ::-1]
+luu(Image.fromarray(dg, 'RGBA'), 'ha_duong.png', 'đoạn đường thẳng, 2 ray đối xứng')
+thang = dg.astype(np.float32)[..., :3]
+dai = thang.shape[0]
+S = thang.shape[1]
+yy, xx = np.mgrid[0:S, 0:S].astype(np.float32) + 0.5
+dd = np.hypot(S - xx, yy)
+u = S - dd
+phi = np.arctan2(yy, S - xx)
+v = (phi * S * 0.5) % dai
+goc = np.zeros((S, S, 4), np.float32)
+for k in range(3):
+    goc[..., k] = nd.map_coordinates(thang[..., k], [v, np.clip(u, 0, S - 1)], order=1, mode='wrap')
+goc[..., 3] = np.clip(u + 0.5, 0, 1) * 255
+luu(Image.fromarray(np.clip(goc, 0, 255).astype(np.uint8), 'RGBA'), 'ha_goc.png', 'góc đường (uốn từ đoạn đối xứng)')
+
 # ---------- 1. ô ngã ba ----------
 th = np.asarray(Image.open(os.path.join(DICH, 'ha_duong.png')).convert('RGBA')).astype(np.float32)  # (dài 152, ngang 104): x = ngang (0 = ray ngoài)
 L, S = th.shape[0], th.shape[1]
@@ -63,10 +85,9 @@ a = np.dstack([np.asarray(c), np.asarray(m)])
 loi = xen(Image.fromarray(a.astype(np.uint8), 'RGBA'))
 luu(thu(loi, 180), 'ha_loi.png', 'lõi pha lê (vẽ 60 css)')
 
-# ---------- 4. nút / tấm (raw_ui2_nut.png) — bảng tạm dừng, màn kết quả, vào trận ----------
-NUT = {'ha_nut_cam': ((30, 64, 1224, 474), 720, 'nút chính cam (RESUME / RETRY) ~240 css'),
-       'ha_nut_xanh': ((72, 503, 1200, 805), 720, 'nút phụ indigo viền cyan (MUSIC / QUIT…) ~240 css'),
-       'ha_vien_xanh': ((360, 898, 786, 1110), 180, 'viên cyan (ký hiệu tạm dừng: 2 viên dựng đứng)')}
+# ---------- 4. ký hiệu nút đáy (raw_ui2_nut.png) ----------
+# (nút/tấm bảng tạm dừng, kết quả, vào trận dùng component chung ua_* của phiên HOME — tools/thap-cat-ui3.py)
+NUT = {'ha_vien_xanh': ((360, 898, 786, 1110), 180, 'viên cyan (ký hiệu tạm dừng: 2 viên dựng đứng)')}
 for ten, (hop, w, ghi) in NUT.items():
     luu(thu(xen(tach_nen(nut.crop(hop), 'tim')), w), ten + '.png', ghi)
 # ký hiệu TẠM DỪNG: 2 viên cyan dựng đứng (ảnh ChatGPT xoay 90°), khe = 0,5 bề ngang viên — không vẽ code
@@ -77,3 +98,21 @@ ic = Image.new('RGBA', (cw, v.size[1]), (0, 0, 0, 0))
 ic.alpha_composite(v, (0, 0)); ic.alpha_composite(v, (cw - v.size[0], 0))
 luu(ic, 'ha_ic_dung2.png', 'tạm dừng (2 viên cyan)')
 # ký hiệu TỐC ĐỘ: dùng thẳng mũi tên ››› cyan có vệt gió của đường (assets/duong_mui.png, ChatGPT S4) — CSS hud-anime.css
+
+# ---------- 5. SUMMON màu CTA: lòng kem của ha_trieu (thap-cat-ui2.py) nhuộm cam đào #FFB866, giữ sáng tối của ảnh ----------
+t = np.asarray(Image.open(os.path.join(DICH, 'ha_trieu.png')).convert('RGBA')).astype(np.float32)
+rgb = t[..., :3] / 255
+mx, mn = rgb.max(2), rgb.min(2)
+sat = np.where(mx > 0, (mx - mn) / np.maximum(mx, 1e-4), 0)
+H_, W_ = t.shape[:2]
+yy, xx = np.mgrid[0:H_, 0:W_]
+cx, cy = W_ / 2, H_ * 0.5
+r = np.hypot(xx - cx, yy - cy) / (W_ / 2)
+long_ = (sat < 0.28) & (mx > 0.62) & (r < 0.62)          # lòng kem (không đụng vành vàng / ngọc)
+long_ = nd.binary_opening(long_, iterations=1)
+w8 = nd.gaussian_filter(long_.astype(np.float32), 1.2)[..., None]
+cam = np.array([255, 184, 102], np.float32) / 255
+L = rgb.mean(2, keepdims=True)
+nhuom = np.clip(cam * (0.55 + 0.6 * L), 0, 1)
+t[..., :3] = (rgb * (1 - w8) + nhuom * w8) * 255
+luu(Image.fromarray(np.clip(t, 0, 255).astype(np.uint8), 'RGBA'), 'ha_trieu_cam.png', 'SUMMON lòng cam đào CTA')

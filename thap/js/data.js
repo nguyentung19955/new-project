@@ -201,10 +201,12 @@ const DUONG_RONG = 46; // bề rộng đường đi
 // không giãn dọc (giãn làm ảnh đầu ụ vượt ngưỡng mip → tốn khung hình). Bàn đồng đội (CO-OP) / đối thủ (PVP) thu gọn 300 px ở trên, vẫn đọc được.
 // Vùng an toàn: thanh trên ≤ 48, khay dưới ≥ 674; dải xem nhanh SOLO 610–668 (không chồng ô nào).
 const BC_TO = { tw: 408, tx: 22, kv: 1 }, BC_GON = { tw: 300, tx: 92 };
-const BC_DOI = { tw: 355, tx: 64, ys: 92, e: 30, g: 38, dai: 685 }; // CO-OP: 2 bàn cùng cỡ (xem boCuc) · g 38: lõi (cao ~68) lọt khe 2 bàn · dai = độ dài luật làn (bố cục cũ 308 + 377)
+const BC_DOI = { tw: 356, tx: 64, ys: 88, e: 30, g: 38, dai: 685, lx: 30, lo: 34 }; // CO-OP: 2 bàn cùng cỡ (xem boCuc) · g 38: lõi (cao ~68) lọt khe 2 bàn · dai = độ dài luật làn (bố cục cũ 308 + 377)
+//   lx: tâm làn trái 30 (cổng Ø56 không lẹm mép khung) · lo: tâm lõi cách mép phải 34 (pha lê không tràn khung)
 // PVP chữ C: bàn nằm giữa 2 làn dọc (x 50..380) · day = tâm cổng/lõi bàn mình (chừa hàng tim mình + hàng nút đáy) · g = tâm làn ngang → mép bàn
-//   · kc = khoảng 2 tâm làn ngang giữa (46 + thanh mảnh đợt/trùm 28 + khe) · trên cùng: dải bộ bài + tim đối thủ (hud-anime.js)
-const BC_PVP = { tw: 314, tx: 58, day: 586, g: 31, kc: 80, dai: 666 };
+//   · kc = khoảng 2 tâm làn ngang giữa: 46 + KHE RỘNG (thanh mảnh đợt/trùm/♥ mình 28 nằm giữa, cách mỗi làn ~13) → 2 làn tách rõ, không thành 1 vòng kín
+//   · lx = tâm 2 làn dọc (cổng/lõi Ø56 không lẹm mép khung) · trên cùng: dải bộ bài + tim đối thủ (hud-anime.js)
+const BC_PVP = { tw: 308, tx: 61, day: 616, g: 31, kc: 100, dai: 666, lx: 30 };
 function boCuc(che) {
   const tw = BC_TO.tw, tx = BC_TO.tx;
   const lx = 27; // tâm làn trái
@@ -216,7 +218,7 @@ function boCuc(che) {
     // (online: máy bạn kia thấy bàn mình ở trên → làn của mỗi người dài như nhau trên cả 2 máy, không lệch như bố cục cũ 220/308).
     // Vừa khung 430×860 (mọi cỡ màn dọc chỉ phóng khung này): cổng trên ys dưới thanh trên + dải thẻ đồng đội, cổng dưới ≤ 650 (trên hàng nút đáy).
     // Độ dài LUẬT mỗi nhánh giữ = làn của mình ở bố cục cũ (dai 685, game.js taoDuong) → nhịp trận co-op không đổi dù bàn nhỏ lại.
-    const w = BC_DOI.tw, x = BC_DOI.tx, h = Math.round(w * KHAY_TL);
+    const w = BC_DOI.tw, x = BC_DOI.tx, h = Math.round(w * KHAY_TL), lx = BC_DOI.lx, lo = W - BC_DOI.lo;
     const y1 = BC_DOI.ys + BC_DOI.e, gy = y1 + h + BC_DOI.g, y2 = gy + BC_DOI.g, cuoi = y2 + h + BC_DOI.e;
     return {
       ban: [
@@ -224,8 +226,8 @@ function boCuc(che) {
         { x, y: y1, w, h, ai: true, ten: TEXT.ui.ally },
       ],
       duong: [
-        { pts: [[lx, cuoi], [lx, gy], [W - 26, gy]], ban: 0, nhap: 1, dai: BC_DOI.dai }, // nhánh dưới (của mình)
-        { pts: [[lx, BC_DOI.ys], [lx, gy], [W - 26, gy]], ban: 1, nhap: 1, dai: BC_DOI.dai }, // nhánh trên (đồng đội) — dài bằng nhánh dưới
+        { pts: [[lx, cuoi], [lx, gy], [lo, gy]], ban: 0, nhap: 1, dai: BC_DOI.dai }, // nhánh dưới (của mình)
+        { pts: [[lx, BC_DOI.ys], [lx, gy], [lo, gy]], ban: 1, nhap: 1, dai: BC_DOI.dai }, // nhánh trên (đồng đội) — dài bằng nhánh dưới
       ],
       chung: true,
     };
@@ -235,7 +237,7 @@ function boCuc(che) {
     // ôm 3 cạnh — BÀN MÌNH (dưới): cổng GÓC DƯỚI TRÁI → lên cạnh trái → ngang cạnh trên → xuống cạnh phải → lõi GÓC DƯỚI PHẢI;
     // BÀN ĐỐI THỦ (trên) đối xứng gương: cổng góc trên trái → xuống → ngang cạnh dưới → lên → lõi góc trên phải. 2 làn ngang ở giữa.
     // Độ dài LUẬT giữ như làn của mình ở bố cục cũ (dai = 666: 289 dọc + 377 ngang) → nhịp trận không đổi; cả 2 bên cùng độ dài (tất định).
-    const P = BC_PVP, w = P.tw, x = P.tx, h = Math.round(w * KHAY_TL), rx = W - lx;
+    const P = BC_PVP, w = P.tw, x = P.tx, h = Math.round(w * KHAY_TL), lx = P.lx, rx = W - lx;
     const cuoi = P.day, y2 = cuoi - h, yt = y2 - P.g, yb = yt - P.kc, y1 = yb - P.g - h;
     return {
       ban: [
