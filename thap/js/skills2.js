@@ -80,7 +80,9 @@ function veQuaCau(ctx, R, n, r, t, mau, co) { // n quả cầu quay quanh tâm
 }
 function boMuc(G, B, T, dt, E) { xoayDau(T, E, dt); } // chỉ xoay theo mục tiêu
 // hệ số nhịp nạp của ụ tự quản lý nhịp (xung / khoá / truy nã): như tốc bắn — buff tốc, Ép Xung, bị Kẹp/Nhiễu −40% (QA Tím)
-const nhipU = (T) => Math.max(0.1, 1 + T.buf.toc + (T.epxung || 0)) * (T.st && T.st.kep > 0 ? 0.6 : 1);
+//   09/11 (tốc bắn Vàng/Đỏ): + tocThe (cấp thẻ Tấn công Vàng/Đỏ +tốc mỗi cấp, Đỏ thêm tốc bậc) — trước đây ụ tự quản nhịp (Hố Đen, Chúa Tổ,
+//   Overlord, Rồng Máy, Sói…) KHÔNG nhận phần tốc này như tocU(). Ụ khác bậc / không phải Tấn công: tocThe = 1 → không đổi.
+const nhipU = (T) => Math.max(0.1, 1 + T.buf.toc + (T.epxung || 0)) * (T.st && T.st.kep > 0 ? 0.6 : 1) * (typeof tocThe === 'function' && G.ban && G.ban[T.ban] ? tocThe(G.ban[T.ban], T.id) : 1);
 
 // ===================================================== TRẮNG =====================================================
 SKILLS.xucxac = { // Pháo May Rủi (Fenrir): sát thương ngẫu nhiên 3–300%; chí mạng = luôn tối đa

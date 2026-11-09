@@ -70,7 +70,7 @@ const CS_RIENG = {
     const S = SKILLS.canon, k = S.dem(S.hb(T));
     c.dmg = S.dmgMoi(T, k, 1); c.dmg0 *= S.MOI[k]; c.toc *= k; c.toc0 *= k; c.ghi = k > 1 ? k + '×' : '';
   },
-  soi(T, c) { // Sói Máy: nhịp riêng (nhipU, không cấp thẻ tốc) — thức tỉnh: loạt 3 viên × 50% mỗi KY_TT giây
+  soi(T, c) { // Sói Máy: nhịp riêng (nhipU — từ 09/11 gồm cấp thẻ tốc) — thức tỉnh: loạt 3 viên × 50% mỗi KY_TT giây
     const S = SKILLS.soi, n = T.thuc ? 3 : 1, he = T.thuc ? 0.5 : 1, ky = T.thuc ? S.KY_TT : S.KY;
     c.dmg = dmgU(T) * he; c.dmg0 *= he; c.toc = nhipU(T) * n / ky; c.toc0 = n / ky; c.ghi = T.thuc ? '3×' : '';
   },
