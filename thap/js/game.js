@@ -29,6 +29,9 @@ function rosterOf(id) { return G.rosterMap[id]; }
 function tierOf(id) { const r = G.rosterMap[id]; return TIERS[r ? r.bac : 'trang']; }
 
 // ---------- đường đi ----------
+// d.dai (tuỳ chọn): ĐỘ DÀI LUẬT của làn — khác độ dài hình học khi bố cục vẽ lại đường (PVP chữ C 09/11) mà không muốn đổi nhịp trận:
+//   mọi số đo theo đường (E.s, p.len, s0 của đoạn, đẩy lùi/giữ chân theo px đường…) tính theo độ dài luật; chỉ viTri đổi ra toạ độ vẽ
+//   (k = dài hình học / dài luật) → thời gian quái đi hết làn giữ nguyên dù hình đường đổi. Không có d.dai → k = 1 (y như cũ).
 function taoDuong(d) {
   const segs = []; let s = 0;
   for (let i = 0; i < d.pts.length - 1; i++) {
@@ -37,13 +40,16 @@ function taoDuong(d) {
     segs.push({ x0, y0, x1, y1, len, dx: (x1 - x0) / len, dy: (y1 - y0) / len, s0: s });
     s += len;
   }
-  const p = { pts: d.pts, segs, len: s, ban: d.ban, sNhap: Infinity };
+  const k = d.dai ? s / d.dai : 1;
+  if (k !== 1) { for (const g of segs) { g.s0 /= k; g.len /= k; } s = d.dai; }
+  const p = { pts: d.pts, segs, len: s, k, ban: d.ban, sNhap: Infinity };
   if (d.nhap != null) p.sNhap = segs[d.nhap].s0;
   return p;
 }
 function viTri(p, s) {
   s = clamp(s, 0, p.len);
-  for (const g of p.segs) if (s <= g.s0 + g.len) { const u = s - g.s0; return [g.x0 + g.dx * u, g.y0 + g.dy * u, Math.atan2(g.dy, g.dx)]; }
+  const k = p.k || 1;
+  for (const g of p.segs) if (s <= g.s0 + g.len) { const u = (s - g.s0) * k; return [g.x0 + g.dx * u, g.y0 + g.dy * u, Math.atan2(g.dy, g.dx)]; }
   const g = p.segs[p.segs.length - 1]; return [g.x1, g.y1, Math.atan2(g.dy, g.dx)];
 }
 

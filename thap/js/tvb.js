@@ -227,11 +227,14 @@ const TVB = {
   }
   // §C · nhấc ụ khi kéo: bóng nhấc E17 (tv_keo_bong — bóng mềm + 4 góc cyan) thay bóng de_chung nhuộm tối trong lớp cầm (ghepfx.js veCam)
   if (typeof REN !== 'undefined' && REN.veKeo && REN.co) {
-    const kGoc = REN.veKeo, coGoc = REN.co;
+    const kGoc = REN.veKeo;
     REN.veKeo = function (ctx) {
       const a = this.img('tv_keo_bong'); if (!a) return kGoc.apply(this, arguments);
-      this.co = function (ten, px, kieu) { return ten === 'de_chung' && kieu === 'den' ? a : coGoc.apply(this, arguments); };
-      try { return kGoc.apply(this, arguments); } finally { this.co = coGoc; }
+      // 09/11: lấy REN.co HIỆN TẠI lúc gọi (trước đây giữ bản lúc nạp tvb.js → sau lần vẽ đầu, REN.co bị trả về bản gốc,
+      // làm mất mọi lớp bọc nạp sau: nongskill.js chống giật, hud-anime.js cổng/lõi Royal Twilight)
+      const coNay = this.co;
+      this.co = function (ten, px, kieu) { return ten === 'de_chung' && kieu === 'den' ? a : coNay.apply(this, arguments); };
+      try { return kGoc.apply(this, arguments); } finally { this.co = coNay; }
     };
   }
 })();

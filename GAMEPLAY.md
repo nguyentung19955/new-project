@@ -923,6 +923,14 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
   - Đáy: ô mana số lớn + icon teal; SUMMON tròn Ø~84 có giá bên trong (thiếu mana / bàn đầy = xám); 2× (chữ 1×/2×/3×, bật = viền sáng cyan) và tạm dừng (bật khi đang dừng); khay 5 thẻ khung bậc trắng/xanh/tím/vàng/đỏ, +cấp trong vòng tròn khung, giá mana ở dải đáy (thiếu = đỏ #FF5E80, tối đa = MAX vàng), số ụ trên bàn ×N; chỉ huy khung vuông vàng, hồi chiêu = phủ tối + số giây to, giá ×N.
   - Số bay +mana teal #4FEBD6 (FX.chu1 kiểu mana) + icon teal trên canvas; nhãn bàn ĐỐI THỦ/BẠN và chữ VS dùng tấm indigo viền vàng.
 - Còn lại (ghi trong báo cáo): cổng sinh/lõi thủ vẫn ảnh thép cũ, ngã ba co-op (duong_nga3) cũ, bảng tạm dừng/kết quả cũ; mana tím ngoài trận để B3. Prompt ảnh còn thiếu: tuvan/huong-anime/PROMPT-HUD2.md.
+- **Phần 2 (09/11 chiều — người dùng xem CO-OP/PVP trên iPhone):**
+  - CO-OP: 2 bàn CÙNG CỠ 355×210 (`BC_DOI`, trước: đồng đội 300 nhỏ hơn bàn mình 408), xếp đối xứng qua hành lang chung; 2 nhánh dài bằng nhau (online: làn mỗi người như nhau trên cả 2 máy — bố cục cũ lệch 220/308). Ngã ba = ô đá mới `ha_nga3` (uốn chính đoạn đường đá, `tools/thap-cat-ui3.py`) thay ô thép tối.
+  - PVP chữ C (người dùng 17:44): bàn mình — cổng góc dưới trái → lên → ngang cạnh trên → xuống → lõi góc dưới phải; bàn đối thủ đối xứng gương (mở cạnh trên). 2 bàn cùng cỡ 314×186 (`BC_PVP`).
+  - Độ dài LUẬT làn (`d.dai`, game.js `taoDuong`/`viTri`): mọi số đo theo đường giữ theo độ dài luật, chỉ toạ độ vẽ co giãn → thời gian quái đi hết làn KHÔNG đổi: PVP 666 (= làn mình bố cục cũ; đường vẽ 810, k = 1.216; làn đối thủ cũ 602 → nay 666 như mình), CO-OP 685 (= làn mình cũ). Tất định 2 máy (cùng boCuc).
+  - Bố cục gọn kiểu DCDW (không phần tử nào chồng bàn/đường/cổng/lõi): bỏ nhãn BẠN/ĐỐI THỦ/ĐỒNG ĐỘI/CHUNG/VS. PVP: dải bộ bài đối thủ + ♥ đối thủ ở trên (trái lõi đối thủ), thanh mảnh ĐỢT·TRÙM giữa 2 làn ngang, ♥ mình dưới bàn mình (trái lõi mình). CO-OP: thanh trên giữ (♥ chung), dải bộ bài đồng đội dưới thanh. Băng chiêu trùm 2 bàn thay chỗ thanh đợt trong lúc hiện.
+  - Cổng sinh quái `ha_cong` (vành nút tròn indigo viền vàng 4 ngọc, lõi xoáy tím cũ quay giữa), lõi thủ `ha_loi` (pha lê trên bệ vàng–indigo, cắt từ raw_ui2_ban); lõi hư thép cũ + 3 khúc tim thép bỏ (tim = số ♥). Dải bộ bài đồng đội/đối thủ: tấm indigo viền vàng + ô chân dung khung vàng.
+  - Chiều sâu 3D (17:50): khay có mặt bên dày (chính ảnh khay tối lại, lệch 5 px) + bóng mềm; lớp đường đổ bóng; nút/ô/thẻ đáy bóng đổ (drop-shadow tối, ánh sáng trên-trái).
+  - Sửa lỗi có sẵn: `tvb.js` veKeo trả `REN.co` về bản lúc nạp tvb.js sau mỗi khung → mất mọi lớp bọc nạp sau (nongskill.js chống giật, cổng/lõi mới). Nay giữ bản hiện tại.
 
 ## claude/demo-hop-tuong — cân bằng Lucky Slot (09/11)
 
