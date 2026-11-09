@@ -159,7 +159,7 @@ const HOTRO = {
   khiTrung(T, E, dmg, crit, o) {
     const b = T.buf, h = T.ht || {};
     if (b.cham > 0 && !E.d.khangCham) { E.chamT = Math.max(E.chamT, 2); E.cham = Math.max(E.cham, Math.min(b.cham, E.trum ? this.CHAM_TRUM : (h.capCham || this.CAP.cham))); } // quái kháng chậm: không đồng hồ chậm (Ice Blade không coi là 'đang chậm')
-    if (b.chet > 0 && Math.random() < b.chet) {
+    if (b.chet > 0 && rngLuat(G.ban[T.ban] || G.ban[0], 61, T.o)() < b.chet) { // Reaper Pillar: RNG luật có hạt (11/11, như Guillotine)
       if (E.trum) dmg += Math.min(dmg, E.max * 0.01); // trùm: không giết ngay — thêm 1 đòn nhỏ có trần 1% máu tối đa
       else if ((!E.d.to || h.chetTo) && (E.hp - dmg) / E.max < (E.d.to ? 0.15 : (h.ngNguong || 0.25))) { dmg = Math.max(dmg, E.hp + 1); VX.chem(E); }
     }
@@ -171,7 +171,7 @@ const HOTRO = {
   khang(B, X) {
     const M = B && X && this.keCo(B, X, 'guongcong'); if (!M) return false;
     const p = this.hd(M, 'khang', SKILLS.guongcong.khang(M)); // trần 35% × bậc × thẻ (= tran — chữ và số thật cùng một trần)
-    if (Math.random() >= p) return false;
+    if (rngLuat(B, 67, X.o)() >= p) return false; // Mirror Gate: RNG luật có hạt (11/11)
     const c = B.o[X.o]; VX.chanKhien(B, X); FX.chu1(c.x, c.y - 18, 'RESIST', '#bff6ff', 11);
     return true;
   },
@@ -234,4 +234,4 @@ lanDoc = function (E, B) {
   const Q = dsMucTieu(B || G.ban[0]).filter(Q => Q !== E && !Q.chet && !(Q.vmT > 1)).sort((a, b) => Math.hypot(a.x - E.x, a.y - E.y) - Math.hypot(b.x - E.x, b.y - E.y))[0];
   if (Q && Math.hypot(Q.x - E.x, Q.y - E.y) < 90) { Q.vmT = 5; Q.vmK = E.vmK; Q.vmLay = 1; Q.yeu = Math.max(Q.yeu, 5); G.hu.push({ k: 'tiaPhep', t: 0, song: 0.35, x0: E.x, y0: E.y, x1: Q.x, y1: Q.y, mau: '#9dff5a' }); }
 };
-// (bỏ SÀN TẤN CÔNG — DCDW: Triệu hồi / kết quả GHÉP / Twin Maker chọn ĐỀU NGẪU NHIÊN trong 5 thẻ bộ bài, không thiên vị vai trò)
+// SÀN TẤN CÔNG chỉ áp cho TRIỆU HỒI (game.js trieu: bàn < 2 ụ 'tc' → bốc trong ụ Tấn công của bộ); kết quả GHÉP / Twin Maker vẫn ĐỀU NGẪU NHIÊN trong bộ bài
