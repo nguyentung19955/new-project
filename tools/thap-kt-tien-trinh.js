@@ -1,3 +1,4 @@
+// (giai đoạn C — chedo-c.js: thêm khoá QUICK TRIALS sau hướng dẫn · TOWER CLIMB cấp 5 · BOSS HUNT 3 trùm)
 // TURRET MERGE — KIỂM TIẾN TRÌNH ĐỢT 1 (js/tientrinh.js + chỉnh kinhte.js / thebai.js / manh.js) — tuvan/tien-trinh/THIET-KE.md
 //  ✓ người mới: cấp 1, Trắng/Xanh mở, Tím/Vàng/Đỏ khoá; XP = wave + 3×trùm + 10 thắng; lên cấp phát thưởng 1 lần; cấp 3/6/12 mở Tím/Vàng/Đỏ (Đỏ cần kỷ lục 30)
 //  ✓ bộ bài không nhận ụ khoá (UI.chonU, DK.loi, chạm thẻ lưới), thẻ khoá có nhãn điều kiện, bộ ngẫu nhiên chỉ ra ụ đã mở
@@ -267,7 +268,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     o.toast = (document.getElementById('chon-goi-nhac') || {}).textContent; o.che2 = HM.che;
     return o;
   });
-  ok(r.mo === '' && r.cheCoop === 'solo' && r.cheOnl === 'solo' && !r.shopMo && !r.vqMo && r.quay && r.ru && r.ruFree && r.sp && r.onl && r.nut && r.che === 'coop,pvp,online' && /Pilot Level 4/.test(r.toast) && r.che2 === 'solo',
+  ok(r.mo === '' && r.cheCoop === 'solo' && r.cheOnl === 'solo' && !r.shopMo && !r.vqMo && r.quay && r.ru && r.ruFree && r.sp && r.onl && r.nut && r.che === 'coop,pvp,online,thu,thap,san' && /Pilot Level 4/.test(r.toast) && r.che2 === 'solo',
     'người mới (chưa xong hướng dẫn): khoá CO-OP/PVP/ONLINE/cửa hàng/vòng quay/rương (rương thưởng vẫn mở), nút tối + "LV 2", chạm → điều kiện', JSON.stringify(r));
   await chup('khoa-1-che-moi');
   await p.evaluate(() => HM.dong(true)); await chup('khoa-0-home-moi');
@@ -284,7 +285,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     KTUI.dong();
     return o;
   });
-  ok(r.hd === 'coop' && r.c2 === 'coop,pvp,nvd,shop,vq' && r.bao2 === 'pvp,nvd,shop,vq' && r.chePvp === 'pvp' && r.shopMo && r.ruV && r.ren === 3 && r.ruVLogic && r.c3 && r.ruV3,
+  ok(r.hd === 'coop,thu' && r.c2 === 'coop,pvp,nvd,shop,vq,thu' && r.bao2 === 'pvp,nvd,shop,vq' && r.chePvp === 'pvp' && r.shopMo && r.ruV && r.ren === 3 && r.ruVLogic && r.c3 && r.ruV3,
     'xong hướng dẫn → CO-OP · cấp 2 → PVP/nhiệm vụ ngày/cửa hàng/vòng quay (báo mở khoá) · Rương Vàng cấp 3 · lò rèn còn khoá', JSON.stringify(r));
   await p.evaluate(() => { const t = TT.st(); t.bao = []; t.xp = TT.xpTong(2); KT.luu(true); HM.ve(); KTUI.capNhat(); });
   await chup('khoa-2-home-cap2');
@@ -303,7 +304,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     KTUI.dong(); t.bao = []; KT.doc().tk.wave = 0; t.xp = TT.xpTong(4); KT.luu(true); HM.ve(); KTUI.capNhat();
     return o;
   });
-  ok(r.onl && r.bao4 === 'online' && r.che === 'online' && r.bao10 === 'nvt,ren,an' && r.ren && r.renUi && r.bao12 === 'ruThan,renDo' && r.do,
+  ok(r.onl && r.bao4 === 'online' && r.che === 'online' && r.bao10 === 'nvt,ren,an,thap' && r.ren && r.renUi && r.bao12 === 'ruThan,renDo' && r.do,
     'cấp 4 → ONLINE · cấp 10 → lò rèn + Ấn Vàng (Lò rèn Đỏ / Rương Thần thoại còn khoá) · cấp 12 + kỷ lục 30 → mở hết', JSON.stringify(r));
   await chup('khoa-5-home-cap4');
   await p.evaluate(async () => { const t = TT.st(); t.xp = TT.xpTong(10); KT.luu(true); KTUI.moTab('shop'); await new Promise(r => setTimeout(r, 200)); const e = [...document.querySelectorAll('#kt .kt-muc')].find(x => /FORGE/.test(x.textContent)); e && e.scrollIntoView(); });
@@ -321,7 +322,8 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   await p.evaluate(() => localStorage.clear());
   await p.goto(BASE + '?room=ABCD', { waitUntil: 'load' });
   await p.waitForFunction(() => typeof TAI !== 'undefined' && !TAI.cho && typeof TT !== 'undefined' && G.roster && G.roster.length, null, { timeout: 60000 });
-  await sleep(1500);
+  await p.waitForFunction(() => { const pp = document.getElementById('tt-phu'); return pp && !pp.hidden; }, null, { timeout: 15000 }).catch(() => { }); // bảng báo hiện sau TAI.bootP (máy tải nặng: vài giây)
+  await sleep(300);
   r = await p.evaluate(() => { const pp = document.getElementById('tt-phu'); return { bao: !!pp && !pp.hidden && /ONLINE/.test(pp.textContent) && /Pilot Level 4/.test(pp.textContent), code: ONL.code, url: location.search, tran: !!(G.ban && G.ban.length) }; });
   ok(r.bao && !r.code && !/room/.test(r.url) && !r.tran, 'người mới mở link mời ONLINE (?room=) khi chưa cấp 4: báo điều kiện, không vào phòng, bỏ mã khỏi địa chỉ', JSON.stringify(r));
   await chup('khoa-9-moi-online');
