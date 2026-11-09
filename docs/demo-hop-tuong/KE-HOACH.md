@@ -12,12 +12,19 @@ Làm **lần lượt từng giai đoạn**, giai đoạn trước xong (đã ki�
 | A6 | Hạn chế các nguồn +★ miễn phí (Star Lift, Merge/Gold King, Genesis Core, Royal Vault, Nguyền rủa ở Solo, Evolver…): trần 5★ cho nguồn miễn phí, giảm tần suất; đo trước/sau | 09/11 20:00 | **xong 09/11 15:20** (xuất bản; bảng tổng ở tuvan/sao-mien-phi/BAO-CAO.md mục 4) |
 | B1 | Tư vấn ChatGPT hướng hình ảnh anime (HUD trận, HOME, màn phụ) + ảnh mockup → anh chốt hướng | 09/11 15:00 | **xong 09/11 14:00** — anh chốt bản PHA A+B (mockup-C-pha.jpg) + bảng màu Royal Twilight (mockup-D, BANG-MAU.md); asset HUD/bàn/khung bậc đã có (raw_ui2_*) |
 | B2 | Làm lại HUD trận theo hướng anime đã chốt (thanh trên, nút Summon/mana, khay thẻ, banner trùm) | 11/11 18:00 | **xong 09/11 16:45** (xuất bản) |
-| B3 | HOME + bộ bài + bộ sưu tập + trang ụ + cửa hàng/nhiệm vụ theo cùng hướng | 13/11 18:00 | chờ B2 |
-| C | Tiến trình đợt 2: Leo Tháp 100 tầng, Săn Trùm, Tinh thể Đỏ + Ấn Đỏ, thử thách ngắn 3–5 phút cho người mới | 16/11 18:00 | chờ |
+| B3 | HOME + bộ bài + bộ sưu tập + trang ụ + cửa hàng/nhiệm vụ theo cùng hướng | 13/11 18:00 | **xong 09/11** (HUD trận + các màn ngoài trận anime + ảnh mới — vòng quay, rương, băng shop/sự kiện, tấm hộp thoại, ổ khoá, nền màn tải — đã xuất bản) |
+| C | Tiến trình đợt 2: Leo Tháp 100 tầng, Săn Trùm, Tinh thể Đỏ + Ấn Đỏ, thử thách ngắn 3–5 phút cho người mới | 16/11 18:00 | **đang làm** — thiết kế `tuvan/che-do-c/THIET-KE.md` (09/11); làm lần lượt Tháp → Săn Trùm → Ấn Đỏ → Thử thách ngắn, mỗi mục 1 commit |
 | D | Tiến trình đợt 3: Thử thách tuần (bộ cố định, công bằng), Vô tận sau wave 70 + bảng xếp hạng | 19/11 18:00 | chờ |
 | E | Tiến trình đợt 4: sự kiện xoay 4 tuần (Lễ hội Họ / Đột Biến / Đại Săn Trùm / Bốc Bài), thang mốc, cửa hàng sự kiện (Đỏ của tuần 3.500 xu), rương Featured | 23/11 18:00 | chờ |
 | F | Nền tảng trước khi thu phí: tài khoản + lưu đám mây an toàn, ví/sổ giao dịch phía server, chống gian lận nhận thưởng, analytics D1/D7/D30 | 30/11 18:00 | chờ |
 | G | Thương mại hoá thử (Season Pass, gói khởi đầu, IAP, công bố tỉ lệ) | sau F, lên lịch lại | chờ |
+
+**Phát sinh (đã xong):**
+
+| Việc | Trạng thái |
+|---|---|
+| Đổi tên game → **Astral Arsenal** (cửa hàng: "Astral Arsenal: Merge Defense"; logo, tiêu đề, manifest) | **xong 09/11** (xuất bản) |
+| **Gacha thu thập**: chỉ dùng ụ đã sở hữu (người mới 10 ụ), mở nhóm ụ theo cấp phi công vào bể rơi, thưởng = rương (Trận / Sự kiện / Huyền thoại / Cổ đại) — `tuvan/gacha-thu-thap/BANG-MO-NHOM.md` | **xong 09/11** (xuất bản) |
 
 **Tạm gác (theo anh 09/11):** skin ụ, hiệu ứng ghép, biểu cảm.
 
