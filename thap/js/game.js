@@ -157,7 +157,11 @@ function trieu(B, mienPhi, idEp) {
   if (!mienPhi) { if (B.mana < B.gia) return null; B.mana -= B.gia; B.gia += LUAT.giaTrieuTang; }
   const r = rngLuat(B, 13); // ô + loại: RNG luật có hạt (online: gói 'tr' mang đúng ô/loại)
   const o = tr[Math.floor(r() * tr.length)];
-  const id = idEp || B.deck[Math.floor(r() * B.deck.length)];
+  // BẢO ĐẢM TẤN CÔNG (đúng chữ nút SUMMON): trên bàn < 2 ụ vai 'tc' → chỉ bốc trong các ụ Tấn công của bộ (bộ không có ụ 'tc' thì bốc đều cả bộ)
+  const laTC = (id) => !!(SKILLS[id] && SKILLS[id].vai === 'tc');
+  const boTC = B.t.filter(X => X && laTC(X.id)).length < 2 ? B.deck.filter(laTC) : [];
+  const bo = boTC.length ? boTC : B.deck;
+  const id = idEp || bo[Math.floor(r() * bo.length)];
   const T = sinhU(taoU(B, id, 1, o));
   B.t[o] = T;
   VX.trieu(T); // hiệu ứng triệu hồi theo thời gian thực (hieuung.js) — không chặn thao tác, luật chơi không chờ hoạt ảnh
@@ -371,7 +375,7 @@ function dsMucTieu(B) {
 // mục tiêu mặc định: quái ĐẦU (gần lối ra nhất)
 function quaiDau(B) { let m = null, best = 1e9; for (const E of dsMucTieu(B)) { const r = G.duong[E.p].len - E.s; if (r < best) { best = r; m = E; } } return m; }
 function quaiMauNhat(B) { let m = null, best = -1; for (const E of dsMucTieu(B)) if (E.hp > best) { best = E.hp; m = E; } return m; }
-function quaiNgauNhien(B) { const ds = dsMucTieu(B); return ds.length ? pick(ds) : null; }
+function quaiNgauNhien(B, T) { const ds = dsMucTieu(B); return ds.length ? ds[Math.floor(rngLuat(B, 59, T ? T.o : 0)() * ds.length)] : null; } // RNG luật có hạt (11/11, Scatter/Mortar…)
 
 // ---------- quái ----------
 function sinhQuai(id, pi, s, hs, gui) {
@@ -400,7 +404,8 @@ function trung(E, dmg, o) {
   o = o || {};
   const T = o.T !== undefined ? o.T : G.dangBan; // ụ gây đòn (để tính chí mạng / hỗ trợ kề)
   const sk = T && SKILLS[T.id];
-  let crit = o.crit != null ? o.crit : Math.random() < critU(T);
+  let crit = o.crit;
+  if (crit == null) { const pc = critU(T); crit = pc > 0 && (T && G.ban[T.ban] ? rngLuat(G.ban[T.ban], 53, T.o)() : Math.random()) < pc; } // chí mạng: RNG luật có hạt (11/11)
   if (sk && sk.luonCrit && sk.luonCrit(T)) crit = true;
   if (T && T._critChac && !o.phu && o.crit == null) { crit = true; T._critChac = false; } // Crit Antenna 7★: đòn chắc chắn chí mạng (đòn đã tự quyết chí mạng — Dice Gun / tia Laser / chém — không bị ép)
   if (crit) { dmg *= (2 + ((T && T.buf && T.buf.cdmg) || 0)); if (T && T.buf && T.buf.xuyen > 0 && !o.phu && typeof xuyenCrit === 'function') xuyenCrit(E, dmg, T, o); } // Focus Lens: +sát thương chí mạng, chí mạng xuyên
@@ -699,7 +704,7 @@ function capNhatU(B, T, dt) {
   tienHoaCap(B, T); // ụ grow-up: đổi dạng khi đạt điều kiện → hoạt ảnh biến hình
   if (sk.capNhat && sk.capNhat(G, B, T, dt)) return; // kỹ năng tự quản lý (laser, overlord, mana…)
   if (!sk.dmg) return;
-  const E = sk.chonMuc ? sk.chonMuc(G, B, T) : sk.nham === 'mau' ? quaiMauNhat(B) : sk.nham === 'ngau' ? (T.muc && !T.muc.chet && banDuocQuai(B, T.muc) && T.cd > 0.05 ? T.muc : quaiNgauNhien(B)) : quaiDau(B);
+  const E = sk.chonMuc ? sk.chonMuc(G, B, T) : sk.nham === 'mau' ? quaiMauNhat(B) : sk.nham === 'ngau' ? (T.muc && !T.muc.chet && banDuocQuai(B, T.muc) && T.cd > 0.05 ? T.muc : quaiNgauNhien(B, T)) : quaiDau(B);
   T.muc = E;
   xoayDau(T, E, dt);
   T.cd -= dt * tocU(T);

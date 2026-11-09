@@ -285,7 +285,7 @@ SKILLS.mortar = { // Súng Cối (Nade): bắn quái ngẫu nhiên, đạn vòng
         const chum = cum && typeof VXM !== 'undefined' && VXM.co('fx_mortar_chum'); // rà VFX 07/11: đạn chùm = 1 dải nổ chùm 5 cánh ChatGPT (thay 4 ảnh nổ rời)
         noLan(d.x, d.y, 46, dmg, B); if (!chum) FX.no('no_phao', d.x, d.y, 46 * 2.5, 0.5); FX.bui(d.x, d.y, 6, 10); FX.lac(3); SND.no(0.4);
         if (cum) G.hu.push({ k: 'vxmPhat', t: 0, song: 0.6, ten: 'fx_mortar_chum', x: d.x, y: d.y, w: 132 });
-        if (cum) for (let i = 0; i < 3; i++) { const a = i * 2.09 + Math.random(), px = d.x + Math.cos(a) * 30, py = d.y + Math.sin(a) * 30; noLan(px, py, 26, dmg * 0.45, B, { phu: true }); if (!chum) FX.no('no_phao', px, py, 60, 0.35); }
+        if (cum) for (let i = 0; i < 3; i++) { const a = i * 2.09 + rngLuat(B, 73, T.o)(), px = d.x + Math.cos(a) * 30, py = d.y + Math.sin(a) * 30; noLan(px, py, 26, dmg * 0.45, B, { phu: true }); if (!chum) FX.no('no_phao', px, py, 60, 0.35); }
       } });
     if (cum) nhanU(T, 'CLUSTER', '#ffb35a');
   },
@@ -334,7 +334,8 @@ SKILLS.orbital = { // Vệ Tinh (Mafdet) — ĐẶC BIỆT: KHÔNG bắn thườ
     const ds = dsMucTieu(B).filter(E => !E.chet); if (!ds.length) { T.salvo = 0.2; return true; }
     T.salvo += this.nhip(T); if (T.salvo < 0) T.salvo = 0.2;
     const n = this.soBom(T), dmg = this.bomDmg(B, T);
-    for (let i = 0; i < n; i++) { const E = ds[Math.floor(Math.random() * ds.length)]; G.hu.push({ k: 'vetinh', t: -i * 0.08, song: 0.5, E, x: E.x + rnd(-8, 8), y: E.y, dmg, r: 34, B, da: false, vang: 1 }); }
+    const rb = rngLuat(B, 71, T.o); // RNG luật có hạt (11/11)
+    for (let i = 0; i < n; i++) { const E = ds[Math.floor(rb() * ds.length)]; G.hu.push({ k: 'vetinh', t: -i * 0.08, song: 0.5, E, x: E.x + rnd(-8, 8), y: E.y, dmg, r: 34, B, da: false, vang: 1 }); }
     T.sang = 1; giat(T, 0.6);
     if (!B.ai) SND.nap();
     return true;

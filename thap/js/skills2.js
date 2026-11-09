@@ -192,7 +192,7 @@ SKILLS.bomhen = { // Bom Hẹn Giờ (Hecate) — ĐẶC BIỆT (đợt vai trò
   mo: (T) => 'Every 2s sticks a 5s bomb on a random enemy · blast (' + SKILLS.bomhen.r(T) + ' px) weakens: +' + +(SKILLS.bomhen.yw(T) * 100).toFixed(2) + '% damage taken ' + SKILLS.bomhen.yeuDai(T) + 's' + (ms(T, 5) ? ' · staggers 0.5s' : '') + (ms(T, 7) ? ' · 2 bombs' : ''),
   capNhat(G, B, T, dt) {
     const ds = dsMucTieu(B).filter(E => !E.chet && !E.bom);
-    if (!T.muc || T.muc.chet || T.muc.bom || !banDuocQuai(B, T.muc)) T.muc = ds.length ? pick(ds) : null;
+    if (!T.muc || T.muc.chet || T.muc.bom || !banDuocQuai(B, T.muc)) T.muc = ds.length ? ds[Math.floor(rngLuat(B, 79, T.o)() * ds.length)] : null; // RNG luật có hạt (11/11)
     xoayDau(T, T.muc || quaiDau(B), dt);
     T.nap = Math.min(1, T.nap + dt * nhipU(T) / 2);
     if (T.nap < 1 || !T.muc) return true;
