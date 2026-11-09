@@ -123,7 +123,7 @@ const SD_K = {
     truoc: (T, B) => { if (T) { T.hb = 1; T.cmC = 0; } if (B.t[8]) { B.t[8].hb = 4; B.t[8].cmC = 0; } if (B.t[13]) { B.t[13].hb = 10; B.t[13].cmC = 0; } },
     ve: (x, B) => sdLaBan(x, B),
     c: [[0.2, 'Each Compass has a direction: N, S, W or E'], [1.4, 'Drag one Compass onto another'], [2.6, 'N + S = NS: 2 homing rockets', { cham: 0.6 }], [4.0, 'Star = average of the two, rounded up'],
-      [5.6, 'NS + WE = NSWE: 4 rockets', { cham: 0.7 }], [6.8, (T) => 'NSWE + NSWE: +1 stack = +' + Math.round(SKILLS.canon.moiChong(T) * 100) + '% damage']], dai: 9.4 },
+      [5.6, 'NS + WE = NSWE: 4 rockets', { cham: 0.7 }], [6.8, (T) => 'NSWE + NSWE: +1 stack = +' + Math.round(SKILLS.canon.moiChong(T) * 100) + '% damage, faster fire']], dai: 9.4 },
   xucxac: { q: Q.hang(3, 170, 50, 6), may: [5, 5.8], c: [[0.2, 'Each shot: random 3–300% damage'], [1.5, 'Look at the damage numbers', { ev: 'hit', cham: 0.4 }], [4.8, 'A crit always does 300%', { ev: 'hit', cham: 0.5 }]] },
   lien: { q: Q.dong(7, 0.55, 3), c: [[0.2, 'Shoots very fast at the first enemy'], [2.4, (T, s) => s >= 3 ? 'More ★ = shoots faster' : 'More ★ = shoots faster', { cham: 0.4 }]] },
   phun: { q: Q.nhom(6, 185, 24, 6), c: [[0.2, 'Shoots fast at random enemies'], [1.6, 'Every enemy gets hit', { ev: 'hit', cham: 0.4 }]] },
@@ -247,7 +247,7 @@ const SD_K = {
     truoc: (T, B) => { B.deck = ['lualien']; if (T) T.lc = 3; if (B.t[8]) B.t[8].lc = 1; if (B.t[13]) B.t[13].lc = 7; for (const o of [3, 6, 11]) if (B.t[o]) B.t[o].lc = 1; },
     them: [[2.4, (B) => { SD.lcCu = {}; for (const X of B.t) if (X && X.id === 'lualien') SD.lcCu[X.o] = X.lc || 0; }]],
     ve: (x, B) => sdLuaLien(x, B),
-    c: [[0.2, 'Number = flames on each Relay'], [1.3, 'Merge two same-star Embers'], [2.5, 'Both flames go along the merge tile\'s row + column', { cham: 0.6 }], [3.9, 'Not in that row or column: nothing'], [5.0, 'Each flame: +8% damage, +0.4% crit, +4% crit damage'], [6.2, 'No flame limit']], dai: 9 },
+    c: [[0.2, 'Number = flames on each Relay'], [1.3, 'Merge two same-star Embers'], [2.5, 'Both flames go along the merge tile\'s row + column', { cham: 0.6 }], [3.9, 'Not in that row or column: nothing'], [5.0, 'Each flame: +8% damage, +0.4% crit, +4% crit damage'], [6.2, (T) => 'Max ' + SKILLS.lualien.tran(T) + ' flames: higher card LV, higher limit']], dai: 9 },
   // Quantum Choir: thêm ụ cùng sao (trùng) và khác sao (không tính) — chỉ số sát thương trước → sau
   hopca: { q: Q.hang(4, 180, 40, 8), ke: [[6, 'lien', 's'], [8, 'canon', (s) => s > 1 ? s - 1 : 2]],
     them: [[2.0, (B, D, T) => { if (T) sdThem(B, [[2, 'set', T.sao], [12, 'bang', T.sao]], T, 'dmg'); }], [4.0, (B, D, T) => { if (T) sdThem(B, [[3, 'sungluc', T.sao > 1 ? T.sao - 1 : 2]], T, 'dmg'); }]],
@@ -278,7 +278,7 @@ const SD_K = {
     them: [[2.8, (B) => { SKILLS.bienmau.mach(B, [6, 7, 8, 13], true); }],
       [4.6, (B) => { for (const [o, q] of [[6, 0], [7, 1], [8, 2]]) if (!B.t[o]) { const N = taoU(B, 'bienmau', SD.sao, o); N.pm = q; N.pms = 1; N.goc = -Math.PI / 2; B.t[o] = N; VX.trieu(N); } }],
       [6.0, (B) => { SKILLS.bienmau.mach(B, [6, 7, 8, 13], true); }]],
-    c: [[0.2, 'Red kills, gold mana, blue freezes, green crits'], [1.4, '4 different colours side by side'], [2.8, 'Swipe all 4: they fuse into one mask', { cham: 0.7 }], [4.6, 'The mask has all 4 colours'], [6.0, 'Fuse again: fusion 2, stronger', { cham: 0.7 }], [7.4, 'Every fusion: more damage, no limit']], dai: 9.6 },
+    c: [[0.2, 'Red kills, gold mana, blue freezes, green crits'], [1.4, '4 different colours side by side'], [2.8, 'Swipe all 4: they fuse into one mask', { cham: 0.7 }], [4.6, 'The mask has all 4 colours'], [6.0, 'Fuse again: fusion 2, stronger', { cham: 0.7 }], [7.4, 'Every fusion: more damage, fire rate and crit damage']], dai: 9.6 },
 };
 // ---------- chỉ huy (Ma vương): chạm nút → kỹ năng thật (dungMV) ----------
 const SD_MV = {
@@ -393,8 +393,8 @@ const SD_MO = {
   laser: (T) => 'Beam ramps to ×4 over 3s',
   mortar: (T) => 'Damage ' + Math.round(dmgU(T)) + ', 46 px splash',
   no5: (T) => 'Damage ' + Math.round(dmgU(T)) + ' per shot',
-  lualien: (T) => 'Each flame +8% damage and more fire rate, no cap',
-  canon: (T) => 'Each stack +' + Math.round(SKILLS.canon.moiChong(T) * 100) + '% damage',
+  lualien: (T) => 'Flames ' + (T.lc || 0) + '/' + SKILLS.lualien.tran(T) + ' · each flame +8% damage and more fire rate',
+  canon: (T) => 'Each stack +' + Math.round(SKILLS.canon.moiChong(T) * 100) + '% damage, +' + Math.round(SKILLS.canon.CDMG * 100) + '% crit damage, faster fire',
   drone: (T) => '1 drone per cell, +' + Math.floor(T.sao / 3) + ' bonus',
   hopca: () => '+35% damage per Harmony, max 4',
   luutru: (T) => '+2% damage per charge, max ' + SKILLS.luutru.tran(T),

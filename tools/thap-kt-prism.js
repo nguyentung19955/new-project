@@ -80,8 +80,8 @@ ok(R('okC && N && N.id === "bienmau" && !(N.pf > 0) && N.pm >= 0 && N.pm < 4 && 
 console.log('Chỉ số theo số hợp thể');
 tran(DECK);
 R(`var D = PR(7, 1, 4, 2), K = PR(8, 0, 0, 2); K.pf = 3; K.pmk = [5, 6, 7, 8]; cn();`);
-ok(gan(R('K.buf.dmg'), 3 * 3 + 0.06, 1e-9) && gan(R('K.buf.toc'), 0.3, 1e-9) && gan(R('K.buf.cdmg || 0'), 0.4, 1e-9), 'n = 3: +900% ST (+6% vàng), +30% tốc, +40% ST chí mạng (8 cộng dồn lục)');
-ok(gan(R('SKILLS.bienmau.ti(K, 0)'), 0.04 * 1.75) && gan(R('SKILLS.bienmau.ti(K, 3)'), 0.1 * 1.75), 'tỉ lệ mỗi màu × (1 + 0.25 n)');
+ok(gan(R('K.buf.dmg'), 6 * 3 + 0.06, 1e-9) && R('K.buf.toc') >= 0.3 + 3 * 3 / 5 - 1e-9 && R('K.buf.toc') <= 2.25 /* +5% tốc ngoài (có từ trước, không thuộc hợp thể) */ && gan(R('K.buf.cdmg || 0'), 0.5 * 3 + 0.4, 1e-9), 'n = 3 (09/11 lần 2): +1800% ST (+6% vàng), tốc +30% + trần mềm 300%·3/5 = +210%, +150% STCM hợp thể + 40% (8 cộng dồn lục)', R('[K.buf.dmg, K.buf.toc, K.buf.cdmg]'));
+ok(gan(R('SKILLS.bienmau.ti(K, 0)'), R('SKILLS.bienmau.TI[0]') * 1.75) && gan(R('SKILLS.bienmau.ti(K, 3)'), R('SKILLS.bienmau.TI[3]') * 1.75), 'tỉ lệ mỗi màu × (1 + 0.25 n)');
 ok(R('SKILLS.bienmau.tran(K)') === 40 && R('SKILLS.bienmau.tran(D)') === 10 && (R('B.capThe.bienmau = 8'), R('SKILLS.bienmau.tran(K)')) === 72, 'trần cộng dồn: đơn 10, mặt nạ n=3: 40; LV17: 18 × 4 = 72'); R('B.capThe.bienmau = 0');
 ok(R('SKILLS.bienmau.manaTran(B)') === 12, 'trần mana vàng / giây cả bàn: 6 + 2 × 3 = 12');
 ok(R('dmgU(K) > dmgU(D) * 4'), 'mặt nạ n = 3 mạnh hơn 4 Prism đơn cùng sao (ST/phát)');

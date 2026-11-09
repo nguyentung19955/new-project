@@ -70,9 +70,13 @@ ok(R('xa.lc') === 1, 'Ember ngoài hàng/cột của A và C không đổi');
   R(`B.t.fill(null); var A = dat(0, 'lualien', 2, T => T.lc = 5), C = dat(1, 'lualien', 2, T => T.lc = 3), y = dat(2, 'lualien', 1, T => T.lc = 1); `);
   ok(R('y.lc') === 1 && R('typeof SKILLS.lualien.ghep') === 'undefined', 'Ember không còn kỹ năng KHI GHÉP (chỉ móc rời bàn truyền) — không cộng 2 lần, ụ ra không lấy A + C');
 }
-{ // KHÔNG TRẦN (08/11)
-  R(`B.t.fill(null); var A = dat(0, 'lualien', 2, T => T.lc = 30), C = dat(1, 'lualien', 2, T => T.lc = 20), y = dat(2, 'lualien', 1, T => T.lc = 60); B.deck = ['lien']; ghep(B, A, C);`);
-  ok(R('y.lc') === 110, 'không trần: 60 + 30 + 20 = 110', R('y.lc'));
+{ // TRẦN CỨNG THEO CẤP THẺ (09/11 lần 2): LV9 90 → +12/cấp → LV17 186; lửa thừa mất
+  R(`B.capThe.lualien = 0; B.t.fill(null); var A = dat(0, 'lualien', 2, T => T.lc = 30), C = dat(1, 'lualien', 2, T => T.lc = 20), y = dat(2, 'lualien', 1, T => T.lc = 60); B.deck = ['lien']; ghep(B, A, C);`);
+  ok(R('y.lc') === 90, 'trần LV9: 60 + 30 + 20 = 110 → 90 (phần thừa mất)', R('y.lc'));
+  R(`B.capThe.lualien = 2; B.t.fill(null); var A = dat(0, 'lualien', 2, T => T.lc = 30), C = dat(1, 'lualien', 2, T => T.lc = 20), y = dat(2, 'lualien', 1, T => T.lc = 60); B.deck = ['lien']; ghep(B, A, C);`);
+  ok(R('y.lc') === 110, 'LV11 (trần 114): 60 + 30 + 20 = 110 đủ', R('y.lc'));
+  R(`B.t.fill(null); var A = dat(0, 'lualien', 2, T => T.lc = 30), C = dat(1, 'lualien', 2, T => T.lc = 20), y = dat(2, 'lualien', 1, T => T.lc = 114); ghep(B, A, C);`);
+  ok(R('y.lc') === 114, 'đã chạm trần: không nhận thêm', R('y.lc')); R('B.capThe.lualien = 0');
 }
 { // các đường RỜI BÀN khác (móc chung ở mức bàn)
   const lam = (dung, viec) => { R(`B.t.fill(null); B.deck = ['lualien', 'lien']; var E = dat(7, 'lualien', 3, T => T.lc = 6), h = dat(5, 'lualien', 1, T => T.lc = 1), c = dat(12, 'lualien', 1, T => T.lc = 2), k = dat(0, 'lualien', 1, T => T.lc = 1); ${dung || ''} cn();`); R(viec + '; cn();'); return R('[h.lc, c.lc, k.lc]').join(','); };
@@ -96,7 +100,9 @@ R(`B.t.fill(null); var n0 = dat(5, 'lualien', 3);`); ok(R('n0.lc') === 3, 'Relay
 R(`n0.lc = 50; cn();`); ok(gan(R('n0.buf.dmg'), 4.0 + R('DOTPHA.thuong(3, "lualien").dmg')) && gan(R('n0.buf.crit'), 0.20 + R('DOTPHA.thuong(3, "lualien").crit')) && gan(R('n0.buf.cdmg'), 2.0 + R('DOTPHA.thuong(3, "lualien").cdmg')), '50 lửa: +400% ST, +20 điểm % chí mạng, +200% STCM (+ đột phá III) — 08/11 mỗi lửa 8% / 0.4 / 4%');
 ok(R('DOTPHA.KHO.lualien') === 5 && gan(R('DOTPHA.thuong(4, "lualien").toc'), 0.25) && gan(R('DOTPHA.thuong(4, "lualien").cdmg'), 1.35) && gan(R('DOTPHA.thuong(4, "lualien").dmg'), 0.45), 'đột phá độ khó 5: +25% tốc · +45% ST · IV +135% STCM');
 R(`n0.lc = 300; cn();`); ok(R('critU(n0)') <= 1 + 1e-9, 'chí mạng tổng ≤ 100% (300 lửa)', R('critU(n0)'));
-ok(R('SKILLS.lualien.tran(n0)') === Infinity && (R('B.capThe.lualien = 6'), R('SKILLS.lualien.tran(n0)')) === Infinity && /no flame limit/.test(R('SKILLS.lualien.mo(n0)')), 'không trần lửa (mọi cấp thẻ)');
+ok(R('SKILLS.lualien.tran(n0)') === 90 && (R('B.capThe.lualien = 4'), R('SKILLS.lualien.tran(n0)')) === 138 && (R('B.capThe.lualien = 8'), R('SKILLS.lualien.tran(n0)')) === 186 && /flame limit 186/.test(R('SKILLS.lualien.mo(n0)')) && /Flames 186\/186/.test(R('SKILLS.lualien.mo(n0)')), 'trần lửa theo cấp thẻ: LV9 90 · LV13 138 · LV17 186 (mo: "n/trần")', R('SKILLS.lualien.mo(n0)').slice(0, 40));
+R('n0.lc = 300; B.capThe.lualien = 0; cn();'); ok(gan(R('n0.buf.dmg'), 90 * 0.08 + R('DOTPHA.thuong(4, "lualien").dmg')), '300 lửa ở LV9: chỉ tính 90 (trần)');
+ok(R('SKILLS.lualien.dmg') === 30 && R('SKILLS.lualien.toc') === 1.8, 'bù trần: ST gốc 30, tốc 1.8 (09/11 lần 2)');
 R(`B.capThe.lualien = 0; B.t.fill(null); var p = dat(0, 'lualien', 1, T => T.lc = 50), q = dat(1, 'lualien', 1, T => T.lc = 40), r2 = dat(2, 'lualien', 1, T => T.lc = 0); B.deck = ['lien']; ghep(B, p, q);`);
 ok(R('r2.lc') === 90, 'không trần: 0 + 50 + 40 = 90', R('r2.lc'));
 ok(R('SKILLS.lualien.icon(5)') === 'fx_cuuvi_dan' && R('SKILLS.lualien.icon(10)') === 'lua_t1' && R('SKILLS.lualien.icon(30)') === 'lua_t2' && R('SKILLS.lualien.icon(50)') === 'lua_t3' && R('SKILLS.lualien.icon(70)') === 'lua_t4', 'icon lửa: cam <10 · trắng · xanh · vàng · đỏ');

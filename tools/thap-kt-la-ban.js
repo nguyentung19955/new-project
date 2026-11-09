@@ -56,7 +56,7 @@ R('var a = cn(0, 15, 3, 2), b = cn(1, 15, 4, 0); ghep(B, a, b)'); ok(R('B.t[1].h
 R('var a = cn(0, 15, 7, 40), b = cn(1, 15, 7, 59); ghep(B, a, b)'); ok(R('B.t[1].cmC === 100 && B.t[1].sao === 7'), '7★ + 7★ vẫn ghép được: stack 40 + 59 + 1 = 100 (không trần, sao giữ 7)', R('B.t[1].cmC'));
 ok(R('JSON.stringify([0,1,3,7,15,99].map(n => DOTPHA.bac(n, DOTPHA.NGUONG.canon)))') === '[0,1,2,3,4,4]', 'đột phá theo stack 1/3/7/15', R('JSON.stringify([0,1,3,7,15,99].map(n => DOTPHA.bac(n, DOTPHA.NGUONG.canon)))'));
 { const k = R('(() => { const T0 = cn(5, 15, 2, 0), T1 = cn(6, 15, 2, 1), T4 = cn(7, 15, 2, 4); return [S.them(T0), S.them(T1), S.them(T4), S.moiChong(T0)]; })()');
-  ok(Math.abs(k[0]) < 1e-9 && Math.abs(k[1] - k[3]) < 1e-9 && Math.abs(k[2] - 4 * k[3]) < 1e-9 && k[3] >= 0.5 && k[3] <= 0.7, 'mỗi stack +' + Math.round(k[3] * 100) + '% ST (cộng thẳng, 4 stack = +' + Math.round(k[2] * 100) + '%)', JSON.stringify(k)); }
+  ok(Math.abs(k[0]) < 1e-9 && Math.abs(k[1] - k[3]) < 1e-9 && Math.abs(k[2] - 4 * k[3]) < 1e-9 && k[3] >= 1.75 && k[3] <= 1.95, 'mỗi stack +' + Math.round(k[3] * 100) + '% ST (cộng thẳng, 4 stack = +' + Math.round(k[2] * 100) + '%)', JSON.stringify(k)); }
 ok(R('(() => { const T = cn(5, 15, 5, 2); return Math.abs(S.them(T) - (S.moiChong(T) * 3 + 0.2)) < 1e-9; })()'), '5★ POLE STAR: stack tính ×1.5, +20% ST');
 
 console.log('4 · số tên lửa theo tổ hợp + tên lửa đuổi trúng');

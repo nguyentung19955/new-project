@@ -3,6 +3,15 @@
 > Game merge tower-defense trong `thap/`. Luật game và bàn giao: `docs/demo-hop-tuong/ban-giao/BAN-GIAO.md`, luật code/hình: `thap/QUY-TAC-HINH.md`.
 > Mỗi session thêm một mục `## claude/<tên-nhánh> — …` ở CUỐI file (file gộp kiểu union, không xung đột).
 
+## claude/demo-hop-tuong — Ember trần theo cấp, La Bàn/Prism mạnh theo stack
+- Người dùng chốt (09/11 16:46). Số đo trước/sau: `docs/demo-hop-tuong/tocban/CONG-DON-EMBER-LABAN-PRISM.md` mục "Lần 2 — đã áp dụng".
+- **Ember (Lửa Thập Tự):** trần lửa CỨNG theo cấp thẻ: LV9 90, +12 mỗi cấp, LV17 186. Lửa thừa bị mất (sinh, truyền khi rời bàn, ghép). Bù: ST gốc 24 → 30, tốc 1.5 → 1.8. Tấm đếm và mô tả hiện "n/trần" (vd 186/186, sáng khi đầy). Trang ụ: dòng "Trần lửa 90 → 102" ở hàng cấp thẻ.
+- **Pháo La Bàn:** không dễ tích stack hơn. Mỗi stack: +175% ST (LV17 +195%), +25% ST chí mạng, tốc bắn trần mềm +300% × s/(s+2).
+- **Prism Thief:** không dễ hợp thể hơn. Mỗi lần hợp thể: +600% ST (cũ 300%), +50% ST chí mạng, tốc +10%/lần + trần mềm 300% × n/(n+2).
+- Bot 20 trận, LV9 → wave TB: Ember 42.2 → 43.0 · La Bàn 27.7 → 40.0 · Prism 33.3 → 39.4. LV17: Ember 61 · La Bàn 54.6 · Prism 50.9, đều dưới Đỏ max thẻ (67).
+- Trang ụ: chỉ thêm dấu chấm cuối câu khi câu chưa kết thúc bằng . ! ? … (hết lỗi ".." ở Lucky Slot và các ụ khác).
+- Tool `tools/thap-do-cong-don.js`: thêm `cap=`, `pa=cu`, `SUA=`, `DBG=1`; bot giữ Prism để hợp thể.
+
 ## claude/demo-hop-tuong — sửa gấp ảnh ụ Vàng mất trên iPhone (09/11)
 - Lỗi: trên iPhone, Ember và Cổng Ấp Nở chỉ còn vòng cam / quầng + nhãn, mất cả bệ lẫn đầu ụ.
 - Nguyên nhân gốc: Safari iOS vượt trần bộ nhớ canvas (hoặc chép ảnh chưa giải mã) thì canvas dựng ra vẫn "hợp lệ" nhưng TRONG SUỐT. Bộ đệm (REN.cache / REN.anh._cv) giữ ảnh rỗng đó VĨNH VIỄN, nên ụ nào được dựng lại đúng lúc đó mất hình tới khi mở lại app. Giả lập trên Chromium (canvas dựng ra rỗng trong 2,5 s) cho ra y hệt ảnh người dùng chụp.

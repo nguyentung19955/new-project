@@ -96,3 +96,62 @@ node tools/thap-do-cong-don.js gop "Ember B=/tmp/b.json" "Ember gốc=/tmp/g.jso
 node tools/thap-do-cong-don.js ban lualien pa=A     # DPS 1 ụ theo số lửa (bài như thap-do-vang-do)
 ```
 Phương án chỉ vá trong mô phỏng (`PA` trong tool) — chưa đụng `thap/js`.
+
+---
+
+## Lần 2 — đã áp dụng (09/11, người dùng chốt 16:46)
+
+**Chốt:** Ember = phương án **A, trần lửa CỨNG tăng theo cấp thẻ** + bù ST/tốc; La Bàn / Prism **không dễ tích stack hơn** mà **mạnh hơn theo MỖI stack** (ST + tốc bắn + ST chí mạng). Tất định (chỉ đọc `B.capThe` — online đi theo chuỗi bộ bài), không thêm bắn lan / tràn sát thương.
+
+### Luật mới
+
+| Ụ | Trước | Sau | File |
+|---|---|---|---|
+| **Ember** (`lualien`) | không trần · ST 24 · tốc 1.5 | **trần lửa = 90 + 12 × cấp thẻ trên LV9** (`KY_NANG_CAP.lualien` 90 → 186): LV9 **90** · LV10 102 · LV11 114 · LV12 126 · LV13 **138** · LV14 150 · LV15 162 · LV16 174 · LV17 **186**. Chạm trần: lửa thừa MẤT (sinh / truyền khi rời bàn / ghép đều `min(trần, …)`). ST **30**, tốc **1.8**. Tấm đếm + mô tả hiện **"n/trần"** (vd 186/186, sáng khi đầy); trang ụ: dòng "Flame limit 90 → 102" ở hàng CẤP THẺ | `vangmoi1.js` |
+| **La Bàn** (`canon`) | mỗi stack +50 → 70% ST | mỗi stack **+175% → +195% ST** (cấp thẻ, `KY_NANG_CAP.canon`), **+25% ST chí mạng**, **tốc bắn trần mềm +300% × s/(s+2)** (s1 +100% · s3 +180% · s7 +233%) — s = stack hiệu dụng (5★ ×1.5) | `data.js`, `skills.js` |
+| **Prism Thief** (`bienmau`) | mỗi hợp thể +300% ST, +10% tốc | mỗi hợp thể **+600% ST**, **+50% ST chí mạng**, tốc **+10%·n + 300% × n/(n+2)** (n1 +110% · n3 +210% · n10 +350%) | `skills7.js` |
+
+Hệ số lý thuyết (×ST/giây so với 0 stack, 4–5★, gồm Đột phá — `heso cap=0`): Ember trần 90 = **×126** (LV17 trần 186 = ×645; trước: 800 lửa ×6 922) · La Bàn stack 1/3/7 = ×22 / 71 / 189 (trước 6.3 / 10.7 / 20) · Prism n 1/3/10 = ×15 / 63 / 342 (trước 4.4 / 13 / 62).
+
+### Bot SOLO trước / sau (20 trận/nhóm, Đỏ 12 trận; EP=0.5 "dồn ụ X", Đỏ = AI game; cấp thẻ áp cho cả bộ)
+
+ST = ST thô cả bàn/giây (trung vị; ngoặc = số trận còn sống ở mốc đó). Prism "trước" đo bằng bot mới (giữ Prism, tự hợp thể — bot lần 1 lấy Prism làm nguyên liệu ghép nên hầu như không hợp thể).
+
+| nhóm | trận | wave TB | trung vị | chạm 70 | ST w10 | ST w30 | ST w50 | ST w70 |
+|---|---|---|---|---|---|---|---|---|
+| Ember trước · LV9 | 20 | **42.2** | 40 | 1/20 | 448 | 13.0k | 79.1k (2) | 253k (1) |
+| Ember sau · LV9 (trần 90) | 20 | **43.0** | 39 | 0/20 | 404 | 4750 | 30.7k (5) | — |
+| Ember sau · LV13 (trần 138) | 20 | **49.8** | 48 | 2/20 | 496 | 7255 | 50.4k (9) | 133k (2) |
+| Ember trước · LV17 | 20 | **60.0** | 55 | 6/20 | 440 | 21.5k | 106k (13) | 412k (6) |
+| Ember sau · LV17 (trần 186) | 20 | **61.0** | 60 | 7/20 | 470 | 8518 | 62.1k (14) | 203k (7) |
+| La Bàn trước · LV9 | 20 | **27.7** | 31 | 0/20 | 351 | 4659 (13) | — | — |
+| La Bàn sau · LV9 | 20 | **40.0** | 34 | 1/20 | 334 | 7442 (17) | 81.9k (5) | 295k (1) |
+| La Bàn trước · LV17 | 20 | **36.2** | 34 | 0/20 | 392 | 5474 | — | — |
+| La Bàn sau · LV17 | 20 | **54.6** | 53 | 5/20 | 397 | 8029 | 86.5k (15) | 248k (5) |
+| Prism trước · LV9 | 20 | **33.3** | 33 | 0/20 | 408 | 5138 (16) | — | — |
+| Prism sau · LV9 | 20 | **39.4** | 38 | 0/20 | 547 | 13.2k (19) | 26.9k (2) | — |
+| Prism trước · LV17 | 20 | **47.0** | 47 | 0/20 | 421 | 7225 | 40.6k (8) | — |
+| Prism sau · LV17 | 20 | **50.9** | 50 | 1/20 | 431 | 12.0k | 52.8k (11) | 491k (1) |
+| *Đỏ Wyrm Engine · LV11* | 12 | *53.0* | 55 | 2/12 | 339 | 6552 | 66.7k (7) | 201k (2) |
+| *Đỏ Arcane Cascade · LV11* | 12 | *52.3* | 52 | 0/12 | 462 | 5196 | 73.2k (8) | — |
+| *Đỏ Wyrm Engine · LV17* | 12 | *66.8* | 70 | 9/12 | 375 | 8141 | 84.2k (11) | 227k (9) |
+| *Đỏ Arcane Cascade · LV17* | 12 | *67.3* | 67 | 6/12 | 489 | 7780 | 83.1k | 351k (6) |
+
+Đòn lớn nhất Ember (trung vị) w40 / w60 / w70: LV9 trước 21.6k / 41.4k / 51.5k → sau 2.8k / 8.4k / — · LV17 trước 41.3k / 71k / 99.7k → sau 9.8k / 27.2k / 33.9k.
+
+### Đọc số
+
+- **Ember:** LV9 wave TB 42.2 → **43.0** (không thua sớm hơn; w10 ST ngang, lửa chạm 90 từ ~w20); đuôi bùng nổ bị cắt: ST w30 ÷2.7, đòn w60 ÷5. LV17 61 wave (Đỏ max 67, chạm 70 7/20 vs Đỏ 15/24) → **max thẻ vẫn dưới dải Đỏ max**. Số lửa không còn vượt 186 (trước 3 736+ lửa, có trận tới wave 120).
+- **La Bàn:** 27.7 → **40.0** (LV9), 36.2 → 54.6 (LV17); w10 không đổi (chưa có stack), w30 ST ×1.6. Vẫn có "tường" boss wave 30 (trùm lấy 2 tim, rồi đám đông w32–33) ở trận stack thấp — trung vị 34.
+- **Prism:** 33.3 → **39.4** (LV9), 47.0 → 50.9 (LV17); w30 ST ×2.6.
+- Cả 3 ở LV9 trong dải **≈ 39–43** (mục tiêu 40–45, Prism sát dưới), LV17 51–61 < Đỏ max 67; LV9 đều < Đỏ LV11 (52–53). wave 10–30 không yếu đi.
+- Mẫu nhỏ (20 trận, máy 2 nhân): wave TB lệch ±2–3.
+
+### Tái hiện
+
+```
+node tools/thap-do-cong-don.js heso cap=0|8 [pa=cu]
+EP=0.5 node tools/thap-do-cong-don.js song lualien|canon|bienmau hat=1-20 cap=0|4|8 ra=/tmp/x.json   # pa=cu = luật trước lần 2
+node tools/thap-do-cong-don.js song ronglua chien=ai hat=1-12 cap=6                               # Đỏ max thẻ
+node tools/thap-do-cong-don.js ban lualien cap=8                                                   # DPS 1 ụ theo số lửa
+```

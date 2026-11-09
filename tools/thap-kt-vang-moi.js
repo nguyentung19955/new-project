@@ -36,7 +36,7 @@ ok(R('n1.lc === 6 && xa.lc === 5 && n2.lc === 14'), 'ghép 0 → 1: cùng hàng 
 ok(!R('kc.lc'), 'ụ khác loại không nhận lửa');
 R('n1.lc = 10; capNhatBan(B, 1/30)');
 ok(Math.abs(R('n1.buf.dmg') - (0.8 + R('DOTPHA.thuong(1, "lualien").dmg'))) < 1e-6 && Math.abs(R('n1.buf.crit') - 0.04) < 1e-6, '10 lửa: +80% ST, +4 điểm % chí mạng (đột phá I) — 08/11');
-ok(/no flame limit/.test(R('SKILLS.lualien.mo(n1)')), 'chữ xem: không trần lửa');
+ok(/flame limit 90 /.test(R('SKILLS.lualien.mo(n1)')) && /Flames \d+\/90/.test(R('SKILLS.lualien.mo(n1)')), 'chữ xem: trần lửa 90 ở LV9 (09/11 lần 2), số lửa dạng n/trần');
 
 console.log('Quantum Choir (hopca)');
 tran(['hopca', 'lien', 'canon', 'bang', 'tia']);

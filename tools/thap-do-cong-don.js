@@ -12,7 +12,10 @@
 //   node tools/thap-do-cong-don.js ban [id] [pa=…]   → DPS 1 ụ (ô 2, 5★, cấp thẻ 0) theo số stack 0…800 ở wave 30 (bài đo như thap-do-vang-do.js)
 //   node tools/thap-do-cong-don.js heso [pa=…]        → hệ số nhân sát thương lý thuyết theo số stack (không mô phỏng) — Ember / La Bàn / Prism
 //
-//   Phương án (pa) — CHỈ VÁ TRONG MÔ PHỎNG, không sửa code game:
+//   LẦN 2 (09/11, đã áp dụng vào game): cap=k = số cấp thẻ trên cấp đầu cho cả bộ (song / ban / heso; Vàng max 8, Đỏ max 6) · pa=cu = luật trước lần 2 ·
+//     SUA='…' vá thử hằng số (vd SUA='SKILLS.canon.TOC_MAX = 2;') · PMGIU=0 tắt "giữ Prism" (bot lần 1: Prism làm nguyên liệu ghép thường, hiếm hợp thể) ·
+//     DBG=1 in tim / số quái mỗi wave · ST thô bỏ đòn "phu" (Prism đỏ giết ngay = máu quái, không phải sức mạnh).
+//   Phương án lần 1 (pa) — CHỈ VÁ TRONG MÔ PHỎNG (A đã thành luật game ở lần 2, theo cấp thẻ):
 //     goc : như bản hiện tại (Ember không trần, +8% ST, +0.4% CM, +4% STCM mỗi lửa, tốc +200%·n/(n+60))
 //     A   : TRẦN CỨNG 120 lửa (truyền lửa chạm trần = mất phần thừa) + bù: ST 24 → 30 (+25%), tốc 1.5 → 1.8 (+20%)
 //     B   : GIẢM DẦN: lửa hiệu dụng = n nếu n ≤ 60; trên 60: 60 + 30·ln(1 + (n−60)/30) (800 lửa ≈ 146 hiệu dụng)
@@ -22,7 +25,10 @@
 const fs = require('fs'), path = require('path'), vm = require('vm');
 const { taoMoiTruong: taoGoc, R } = require('./thap-sim-vaitro.js');
 const PA = {
-  goc: '',
+  goc: '', // = code game hiện tại (09/11 lần 2: Ember trần theo cấp thẻ + bù; La Bàn / Prism mạnh theo stack)
+  cu: `{ const S = SKILLS.lualien; S.dmg = 24; S.toc = 1.5; S.tran = () => Infinity;
+        SKILLS.canon.moiChong = (T) => (50 + 2.5 * Math.min(8, knCap(T && G.ban[T.ban], 'canon'))) / 100; SKILLS.canon.TOC_MAX = 0; SKILLS.canon.CDMG = 0;
+        SKILLS.bienmau.HOP_DMG = 3; SKILLS.bienmau.TOC_MAX = 0; SKILLS.bienmau.HOP_CDMG = 0; }`, // trước lần 2 (để so)
   A: `{ const S = SKILLS.lualien; S.dmg = 30; S.toc = 1.8; S.tran = () => 120; }`,
   B: `{ const S = SKILLS.lualien; S.dmg = 30; S.toc = 1.8; S.CDMG = 0.025;
         S.hd = (n) => (n <= 60 ? n : 60 + 30 * Math.log(1 + (n - 60) / 30));
@@ -35,8 +41,9 @@ function taoMoiTruong(hat, pa) {
   vm.runInContext("if (typeof SUP === 'undefined') { var SUP = {}, SUP_LOAI = {}, SUP_GIA = {}; }", ctx);
   for (const f of ['vangmoi1', 'skills7']) { const p = path.join(__dirname, '..', 'thap', 'js', f + '.js'); if (fs.existsSync(p)) vm.runInContext(fs.readFileSync(p, 'utf8'), ctx, { filename: f + '.js' }); }
   // ST thô (gồm phần thừa) + đòn lớn nhất
-  R(ctx, 'const _tr2 = trung; trung = function (E, d, o) { if (!E.chet && d > 0) { G._tho = (G._tho || 0) + d; if (d > (G._dmax || 0)) G._dmax = d; } return _tr2(E, d, o); };');
+  R(ctx, 'const _tr2 = trung; trung = function (E, d, o) { if (!E.chet && d > 0 && !(o && o.phu)) { G._tho = (G._tho || 0) + d; if (d > (G._dmax || 0)) G._dmax = d; } return _tr2(E, d, o); };');
   if (pa && PA[pa]) R(ctx, PA[pa]);
+  if (process.env.SUA) R(ctx, process.env.SUA); // vá thử nhanh: SUA='SKILLS.canon.TOC_MAX = 2;'
   return ctx;
 }
 // số stack của ụ (đọc trạng thái)
@@ -60,6 +67,9 @@ const BOT = `aiBan = (function (goc) { const SO_ = ${SO}; return function (B, dt
     let best = null, bs = 0;
     for (const a of xs) for (const b of xs) if (a !== b) { const h = SKILLS.canon.hopNhat(a, b); if (!h || h.kieu === 'cung') continue; const g = h.kieu === 'chong' ? 10 + h.chong : SKILLS.canon.dem(h.hb); if (g > bs) { bs = g; best = [a, b]; } }
     if (best) { ghep(B, best[0], best[1]); return; }
+  } else if (X === 'bienmau' && G._pmGiu) { // (lần 2) giữ Prism: tự vuốt hợp thể / gộp mặt nạ trước, Prism không làm nguyên liệu ghép thường
+    const S = SKILLS.bienmau, p = S.timMach(B); if (p) { S.mach(B, p); return; }
+    const M = xs.filter(T => S.n(T) > 0); if (M.length >= 2) { ghep(B, M[0], M[1]); return; }
   }
   // 2) triệu hồi
   if (B.mana >= B.gia && oTrong(B).length) { if (G._ep && Math.random() < G._ep) trieu(B, false, X); else trieu(B); return; }
@@ -70,27 +80,30 @@ const BOT = `aiBan = (function (goc) { const SO_ = ${SO}; return function (B, dt
   if (oTrong(B).length <= 2) {
     const ys = ts.filter(T => T.id !== X && !biKhoa(T)).sort((p, q) => p.sao - q.sao);
     for (const a of ys) for (const b of ys) if (a !== b && a.sao < 7 && hopLeGhep(a, b) && (a.id === b.id || a.sao === b.sao)) { ghep(B, a, b); return; }
-    if (X === 'lualien' || X === 'canon') { // kẹt: cho phép ghép X với X (ra ụ mới) để không chết vì đầy bàn
+    if (X === 'lualien' || X === 'canon' || (X === 'bienmau' && G._pmGiu)) { // kẹt: cho phép ghép X với X (ra ụ mới) để không chết vì đầy bàn
       for (const a of xs) for (const b of xs) if (a !== b && a.sao < 7 && hopLeGhep(a, b)) { ghep(B, a, b); return; }
     }
   }
   // 5) phần còn lại (chỉ huy, kỹ năng Đỏ, Prism hợp thể…) — AI gốc, nhưng chặn ghép thường có X làm nguyên liệu
-  const hl = hopLeGhep; hopLeGhep = function (a, b) { if (G._chan && (a.id === X || b.id === X) && !(X === 'bienmau')) return false; return hl(a, b); };
+  const hl = hopLeGhep; hopLeGhep = function (a, b) { if (G._chan && (a.id === X || b.id === X) && !(X === 'bienmau' && !G._pmGiu)) return false; return hl(a, b); };
   G._chan = true; B.aiT = 0; try { goc(B, dt); } finally { G._chan = false; hopLeGhep = hl; }
 }; })(aiBan);`;
 const BO_PHU = ['soi', 'nhatthuc', 'hasao', 'cuongno', 'lien'];
 const MOC = [10, 20, 30, 40, 50, 60, 70];
-function song(hat, X, pa, chien, maxT) {
+function song(hat, X, pa, chien, maxT, capK) {
+  capK = capK | 0;
   const ctx = taoMoiTruong(hat, pa);
   R(ctx, BOT);
   ctx._deck = [X].concat(BO_PHU.filter(i => i !== X)).slice(0, 5); ctx._X = X;
-  R(ctx, `G.debug = { auto: true }; batDau('solo', _deck, 'hero'); G._X = _X; G._ky = ${chien !== 'ai'}; G._ep = ${+(process.env.EP || 0)}; G._tho = 0; G._dmax = 0;`);
+  R(ctx, `G.debug = { auto: true }; batDau('solo', _deck, 'hero'); G._X = _X; G._ky = ${chien !== 'ai'}; G._ep = ${+(process.env.EP || 0)}; G._pmGiu = ${process.env.PMGIU !== '0'}; G._tho = 0; G._dmax = 0;
+    if (${capK} > 0) { const B = G.ban[0]; B.capThe = B.capThe || {}; for (const id of B.deck) B.capThe[id] = ${capK}; }`);
   const dt = 1 / 30, ghi = {}; let w0 = R(ctx, 'G.wave'), t0 = 0, tho0 = 0;
   for (let t = 0; t < maxT; t += dt) {
     R(ctx, 'capNhat(' + dt + ')');
     if (ctx._cho.length) { const c = ctx._cho.splice(0); c.forEach(f => f()); }
     const w = R(ctx, 'G.wave');
     if (w !== w0) {
+      if (process.env.DBG) process.stderr.write(`[w${w} tim ${R(ctx, 'G.ban[0].tim')} quai ${R(ctx, 'G.quai.filter(e => !e.chet).length')} trum ${R(ctx, "(G.quai.find(e => !e.chet && e.trum) || {}).id || ''")}] `);
       if (MOC.includes(w)) {
         const tho = R(ctx, 'G._tho');
         const s = R(ctx, `(() => { const SO_ = ${SO}; const xs = G.ban[0].t.filter(T => T && T.id === G._X); const v = xs.map(T => SO_[G._X] ? SO_[G._X](T) : 0);
@@ -107,7 +120,7 @@ function song(hat, X, pa, chien, maxT) {
 function dps1(ctx, id, sao, wave, T0, max, hs, stack) {
   ctx._a = [id, sao, wave, stack];
   R(ctx, `{ const [id, sao, wave, st] = _a; G.debug = { auto: false }; batDau('solo', ['lien', 'canon', 'set', 'tia', 'mana'], 'hero'); G.cho = 1e9; G.wave = wave;
-    const B = G.ban[0]; B.tim = 1e9; B.mana = 600; B.capThe = {}; B.lv = B.lv || {}; B.lv[id] = 4;
+    const B = G.ban[0]; B.tim = 1e9; B.mana = 600; B.capThe = {}; B.capThe[id] = (typeof _capK === 'number' ? _capK : 0); B.lv = B.lv || {}; B.lv[id] = 4;
     const T = sinhU(taoU(B, id, sao, 2)); B.t[2] = T;
     if (id === 'lualien') T.lc = st; else if (id === 'canon') { T.hb = 15; T.cmC = st; } else if (id === 'bienmau') { T.pf = st; T.pmk = [999, 999, 999, 999]; }
     G._T = T; G._sum = 0; G._q = 0; }`);
@@ -122,24 +135,28 @@ function dps1(ctx, id, sao, wave, T0, max, hs, stack) {
   R(ctx, 'G._vong = false;');
   return R(ctx, 'G._tho') / T0; // ST thô (không giới hạn bởi máu quái) — so sức mạnh tuyệt đối
 }
-function ban(id, pa, ds) {
-  const ctx = taoMoiTruong(4242, pa), out = {};
+function ban(id, pa, ds, capK) {
+  const ctx = taoMoiTruong(4242, pa), out = {}; ctx._capK = capK | 0;
   for (const n of ds) { R(ctx, 'G._tho = 0;'); const a = dps1(ctx, id, 5, 30, 16, 1, 1e6, n); out[n] = Math.round(a); }
   return out;
 }
 // ---- hệ số lý thuyết (×ST trung bình mỗi giây so với 0 stack), 5★, chí mạng nền 5% / STCM nền 150% ----
-function heSo(pa) {
-  const ctx = taoMoiTruong(1, pa);
+function heSo(pa, capK) {
+  const ctx = taoMoiTruong(1, pa); ctx._capK = capK | 0;
+  R(ctx, "batDau('solo', ['lualien', 'canon', 'bienmau', 'lien', 'set'], 'hero'); G.ban[0].capThe = { lualien: _capK, canon: _capK, bienmau: _capK };");
   return R(ctx, `(() => {
     const E = SKILLS.lualien, C = SKILLS.canon, P = SKILLS.bienmau, kq = { lualien: {}, canon: {}, bienmau: {} };
     const cm = (p, d) => 1 + Math.min(1, p) * (d - 1), goc = cm(0.05, 1.5);
     for (const n of [0, 10, 30, 60, 100, 150, 200, 300, 500, 800]) {
-      const T = { lc: n, buf: { dmg: 0, crit: 0, toc: 0, cdmg: 0 }, sao: 5 }; E.capNhat(G, G.ban ? G.ban[0] : null, T);
+      const T = { id: 'lualien', ban: 0, lc: n, buf: { dmg: 0, crit: 0, toc: 0, cdmg: 0 }, sao: 5 }; E.capNhat(G, G.ban ? G.ban[0] : null, T);
       kq.lualien[n] = +((1 + T.buf.dmg) * cm(0.05 + T.buf.crit, 1.5 + T.buf.cdmg) / goc * (E.toc * (1 + T.buf.toc)) / 1.5 * E.dmg / 24).toFixed(1);
     }
-    const mc = (C.moiChong({ ban: 0 }) || 0.5);
-    for (const k of [0, 1, 3, 7, 15, 31]) kq.canon[k] = +((1 + mc * k) * 4 * C.MOI[4] / C.MOI[1]).toFixed(1); // NSWE = 4 tên lửa; so với 1 hướng 0 stack
-    for (const n of [0, 1, 2, 3, 5, 10]) kq.bienmau[n] = +((1 + P.HOP_DMG * n) * (1 + P.HOP_TOC * n)).toFixed(1);
+    // (lần 2) La Bàn / Prism cũng đi qua capNhat thật (gồm tốc + STCM theo stack, Đột phá La Bàn), 4★ (chưa POLE STAR)
+    const he = (T, them) => (1 + T.buf.dmg + them) * cm(0.05 + T.buf.crit, 1.5 + T.buf.cdmg) / goc * (1 + T.buf.toc);
+    for (const k of [0, 1, 3, 5, 7, 15, 31]) { const T = { id: 'canon', ban: 0, o: 2, hb: 15, cmC: k, sao: 4, tuoi: 0, buf: { dmg: 0, crit: 0, toc: 0, cdmg: 0 } }; C.capNhat(G, G.ban[0], T, 0);
+      kq.canon[k] = +(he(T, C.them(T)) * 4 * C.MOI[4] / C.MOI[1]).toFixed(1); } // NSWE = 4 tên lửa; so với 1 hướng 0 stack
+    for (const n of [0, 1, 2, 3, 5, 10]) { const T = { id: 'bienmau', ban: 0, o: 2, pf: n, pm: 0, pms: 0, pmk: [0, 0, 0, 0], sao: 4, tuoi: 0, buf: { dmg: 0, crit: 0, toc: 0, cdmg: 0 } }; P.capNhat(G, G.ban[0], T, 0);
+      kq.bienmau[n] = +he(T, 0).toFixed(1); }
     return kq; })()`);
 }
 if (require.main === module) {
@@ -150,7 +167,7 @@ if (require.main === module) {
     const kq = {};
     for (const id of ids) {
       kq[id] = [];
-      for (let h = h1; h <= h2; h++) { const r = song(h, id, pa, chien, +lay('maxT', 3000)); kq[id].push(r); process.stderr.write(id + '#' + h + ':' + r.wave + ' '); }
+      for (let h = h1; h <= h2; h++) { const r = song(h, id, pa, chien, +lay('maxT', 3000), +lay('cap', 0)); kq[id].push(r); process.stderr.write(id + '#' + h + ':' + r.wave + ' '); }
       process.stderr.write('\n');
     }
     const ra = lay('ra', ''); if (ra) fs.writeFileSync(ra, JSON.stringify({ pa, chien, kq }));
@@ -161,14 +178,14 @@ if (require.main === module) {
         console.log(`  w${w} (${g.length} trận): stack max TV ${med(g.map(x => x.max))} (cao nhất ${Math.max(...g.map(x => x.max))}) · số ụ TV ${med(g.map(x => x.so))} · ST thô bàn/s TV ${med(g.map(x => x.tho))} · đòn lớn nhất TV ${med(g.map(x => x.dmax))}`); }
     }
   } else if (che === 'ban') {
-    const id = a[1] || 'lualien', ds = id === 'lualien' ? [0, 10, 30, 60, 100, 150, 300, 500, 800] : id === 'canon' ? [0, 1, 3, 7, 15, 31] : [0, 1, 2, 3, 5, 10];
-    console.log(id, pa, JSON.stringify(ban(id, pa, ds)));
+    const id = a[1] || 'lualien', ds = id === 'lualien' ? [0, 10, 30, 60, 90, 100, 150, 186, 300, 800] : id === 'canon' ? [0, 1, 2, 3, 5, 7, 15] : id === 'bienmau' ? [0, 1, 2, 3, 5, 10] : [0];
+    console.log(id, pa, 'cap+' + (+lay('cap', 0)), JSON.stringify(ban(id, pa, ds, +lay('cap', 0))));
   } else if (che === 'gop') { // gộp nhiều file ra=… : node tools/thap-do-cong-don.js gop nhan=a.json,b.json …
     const med = (v) => { const b = v.slice().sort((x, y) => x - y); return b.length ? b[(b.length - 1) >> 1] : 0; };
     for (const nhom of a.slice(1)) { const [nhan, ds] = nhom.split('='); const rs = []; for (const f of ds.split(',')) if (fs.existsSync(f)) { const d = JSON.parse(fs.readFileSync(f)); for (const k in d.kq) rs.push(...d.kq[k]); }
       if (!rs.length) continue; const ws = rs.map(r => r.wave);
       const cot = MOC.map(w => { const g = rs.map(r => r.ghi[w]).filter(Boolean); return g.length ? 'w' + w + ' ' + med(g.map(x => x.max)) + '/' + med(g.map(x => x.tho)) + '(' + g.length + ')' : ''; }).filter(Boolean).join(' · ');
       console.log('| ' + nhan + ' | ' + rs.length + ' | ' + (ws.reduce((x, y) => x + y, 0) / ws.length).toFixed(1) + ' | ' + med(ws) + ' | ' + ws.filter(w => w >= 70).length + '/' + ws.length + ' | ' + cot + ' |'); }
-  } else if (che === 'heso') console.log(JSON.stringify(heSo(pa), null, 1));
+  } else if (che === 'heso') console.log(JSON.stringify(heSo(pa, +lay('cap', 0))));
 }
 module.exports = { song, ban, heSo, PA };
