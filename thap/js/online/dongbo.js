@@ -235,6 +235,7 @@ const ONS = {
     if (T.id === 'leviathan' && T.vuc) f += 'v' + T.vuc + ';'; // Leviathan: ABYSS
     if (T.id === 'cuuvi') { if (T.duoi) f += 'd' + T.duoi + ';'; if (T.xaN) f += 'f' + T.xaN + ';'; } // Nine-Tail: đuôi + số lần xả (đột phá)
     if (T.id === 'nemesis') { if (T.nmDem) f += 'N' + T.nmDem + ';'; if (T.nmN) f += 'm' + T.nmN + ';'; if (T.nmE) f += 'E' + T.nmE + ';'; if (T.nmToc) f += 'O' + Math.round(T.nmToc * 1000) + ';'; if (T.nmDmg) f += 'D' + Math.round(T.nmDmg * 1000) + ';'; } // Nemesis: đếm phán quyết + buff đã cộng
+    if (T.id === 'congap') { const S = SKILLS.congap; f += 'A' + (S.luot(T) + 1) + ';Y' + T.sao + ';'; if (T.cgT) f += 'W' + Math.round(T.cgT * 10) + ';'; } // Hatchery Gate: lượt còn (+1) + sao đã thấy + đồng hồ ×10
     if (T.id === 'khoisinh') { if (T.luot != null) f += 'L' + ((T.luot | 0) + 1) + ';'; if (T.sinhT) f += 'I' + Math.round(T.sinhT * 10) + ';'; } // Genesis: lượt còn + đồng hồ
     if (T.id === 'chuato' && T.thaN) f += 'j' + T.thaN + ';'; // Hive: số drone lần thả trước (nhịp nở)
     if (T.khien > 0) f += 'i' + T.khien + ';'; if (T.aurora > 0) f += 'o' + Math.round(T.aurora * 10) + ';'; // khiên 1 lần · Aurora (Mimic)
@@ -270,6 +271,7 @@ const ONS = {
     if (T.id === 'leviathan') T.vuc = so('v');
     if (T.id === 'cuuvi') { T.duoi = so('d'); T.xaN = so('f'); }
     if (T.id === 'nemesis') { T.nmDem = so('N'); T.nmN = so('m'); T.nmE = so('E'); T.nmToc = so('O') / 1000; T.nmDmg = so('D') / 1000; }
+    if (T.id === 'congap') { const l = so('A'); if (l) { T.cgL = l - 1; T.cgS = so('Y') || T.sao; } T.cgT = so('W') / 10; }
     if (T.id === 'khoisinh') { const l = so('L'); T.luot = l ? l - 1 : T.luot; T.sinhT = so('I') / 10; }
     if (T.id === 'chuato') T.thaN = so('j');
     T.khien = so('i'); T.aurora = so('o') / 10; T.st.lua = so('p') / 10; T.st.kep = so('y') / 10;

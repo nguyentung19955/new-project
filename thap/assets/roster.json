@@ -954,5 +954,17 @@
   "vai": "tc",
   "ho": "mana",
   "moi": "THAC-MANA"
+ },
+ {
+  "id": "congap",
+  "ten": "Hatchery Gate",
+  "bac": "vang",
+  "dcdw": "(new)",
+  "kyNang": "Does not shoot. CALLS = its stars when it appears. Every 11s it uses 1 call: a random 1★ turret from your deck appears in an empty cell (free, no mana, summon price unchanged). Full board: waits and keeps the call. +★ in place (Merge King, Star Lift, Genesis…) adds the same number of calls; losing ★ removes them. Out of calls: it stays and does nothing",
+  "ten_vi": "Cổng Ấp Nở",
+  "kyNang_vi": "Không bắn. LƯỢT GỌI = số sao lúc xuất hiện. Mỗi 11 giây dùng 1 lượt: 1 ụ 1★ ngẫu nhiên trong bộ bài hiện ra ở 1 ô trống (miễn phí, không tốn mana, không tăng giá triệu hồi). Bàn đầy: chờ, giữ lượt. Được +★ tại chỗ (Merge King, Bệ Nâng Sao, Lõi Khởi Sinh…) thì thêm đúng bằng số sao tăng; mất ★ thì mất bấy nhiêu lượt. Hết lượt: ở lại, không làm gì",
+  "vai": "db",
+  "ho": "summon",
+  "moi": "CONG-AP"
  }
 ]
