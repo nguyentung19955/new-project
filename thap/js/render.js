@@ -953,7 +953,9 @@ const REN = {
     // LỚP VÒNG DƯỚI ĐẦU SÚNG (người dùng 08/11: "vòng green quay không được phép che ụ, ụ cần ưu tiên đè hình ảnh"):
     // vòng xanh nạp chiêu + vẽ thêm của kỹ năng (vòng/hào quang/vật bay quanh ụ, vòng nạp ụ có dạng) vẽ TRƯỚC đầu súng → đầu luôn nằm trên.
     // Ngoại lệ skT.veThemTren (vd mũi tên La Bàn) vẽ sau đầu như cũ. Huy hiệu sao / số / icon nhỏ vẫn ở lớp trên (lớp huy hiệu).
-    if (!o.ghost && !laGrow(T.id) && (typeof MV !== 'undefined' ? MV.coNap(T) : T.nap > 0.02 && (T.id === 'overlord' || T.id === 'wallgen' || T.id === 'blackhole' || T.id === 'mana' || skT.napMau))) { // luật chung MV.coNap (motvong.js)
+    if (!o.ghost && !laGrow(T.id) && typeof MV !== 'undefined' && MV.tichTu) { // 09/11: TÍCH TỤ trên thân ụ thay vòng xanh nạp chiêu (motvong.js MV.tichTu)
+      ctx.save(); MV.tichTu(ctx, T, S, al, this.t); ctx.restore(); ctx.globalAlpha = al;
+    } else if (!o.ghost && !laGrow(T.id) && (typeof MV !== 'undefined' ? MV.coNap(T) : T.nap > 0.02 && (T.id === 'overlord' || T.id === 'wallgen' || T.id === 'blackhole' || T.id === 'mana' || skT.napMau))) { // dự phòng: vòng xanh cũ
       ctx.save(); PX.vongHoi(ctx, T, T.nap, S * 0.41, al, this.t, !!skT.chuDong); ctx.restore(); ctx.globalAlpha = al;
     }
     const veThem = () => { if (skT.veThem && !o.ghost) { ctx.save(); skT.veThem(ctx, T, S, al, this, B); ctx.restore(); ctx.globalAlpha = al; ctx.globalCompositeOperation = 'source-over'; } };

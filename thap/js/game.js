@@ -190,9 +190,32 @@ function biKhoa(T) { return !!(T && (T.st.da || T.st.bang > 0)); }
 // chạm ụ trên bàn mình = dùng chiêu (có ▶) thay vì mở dải thông tin: chiêu chủ động nạp đầy, không bị khoá.
 // Trứng cháy (Evolver): luôn chạm tái chế được — kể cả bị băng/đá/câm (trứng không bắn; trùm wave cao hay khoá ụ ngẫu nhiên).
 function chamSan(T) {
-  const sk = T && SKILLS[T.id]; if (!sk || !sk.chuDong) return false;
+  const sk = T && SKILLS[T.id]; if (!sk || !sk.chuDong || laTuKich(T.id)) return false; // ụ TỰ KÍCH: chạm = xem như ụ thường
   if (T.id === 'tienhoa') return sk.chay(T);
   return T.nap >= 1 && !biKhoa(T);
+}
+// CHỈ 2 ụ BẤM TAY (người dùng 09/11 — claude/demo-hop-tuong "chỉ 2 ụ bấm tay"): Black Hole + Arcane Cascade giữ chạm-khi-đầy.
+// Các ụ có chiêu khác TỰ KÍCH khi nạp đầy (sức mạnh giữ nguyên) — đổi danh sách ở đây (hoặc cờ SKILLS[id].tuKich).
+const TU_KICH = { ngaithoigian: 1, haoquang: 1, chuato: 1, leviathan: 1, khoisinh: 1, ronglua: 1, lophanung: 1, hydra: 1, tienhoa: 1 };
+function laTuKich(id) { return !!(TU_KICH[id] || (SKILLS[id] && SKILLS[id].tuKich)); }
+// gọi mỗi khung sau capNhatU của bàn (mọi bàn: mình / AI / con rối online) — chỉ dựa trạng thái mô phỏng (tất định, không Math.random / giờ thật).
+// Điều kiện = luật AI cũ: đầy + đủ sao + không đá/băng + aiNen (đáng dùng). Hydra: kích hoạt chung như AI (hydraAINen: đủ mana, giá còn rẻ).
+// G._tuKich = 1 trong lúc gọi → online/dongbo.js không gửi gói 'cd'/'hy' (máy bạn kia tự kích trên bàn con rối).
+function tuKichBan(B) {
+  if (!B || G.ketThuc) return;
+  if (typeof SD !== 'undefined' && SD && SD.ks && SD.ks.cham) return; // màn demo kỹ năng: kịch bản tự bấm giờ nổ chiêu (skilldemo.js 'cham')
+  G._tuKich = 1;
+  try {
+    if (typeof hydraAINen === 'function' && B.t.some(T => T && T.id === 'hydra') && hydraAINen(B)) hydraKich(B);
+    for (const T of B.t) {
+      if (!T || T.id === 'hydra' || !laTuKich(T.id)) continue;
+      const sk = SKILLS[T.id]; if (!sk || !sk.chuDong || B.t[T.o] !== T) continue;
+      const san = T.id === 'tienhoa' ? sk.chay(T) : T.nap >= 1 && !biKhoa(T) && (T.sao >= 3 || !!sk.chuDongMoiSao);
+      if (!san || (sk.aiNen && !sk.aiNen(G, B, T))) continue;
+      const tu = T._tuPhat; T._tuPhat = 1; // thatso.js: huy hiệu 'tự phát'
+      try { sk.chuDong(G, B, T); } finally { T._tuPhat = tu; }
+    }
+  } finally { G._tuKich = 0; }
 }
 function ghepDBHop(a, b) {
   if (!a || !b || a === b || biKhoa(a)) return null; // ụ kéo bị khoá: không dùng kỹ năng
@@ -661,6 +684,7 @@ function capNhatBan(B, dt) {
   HOTRO.apDung(B, dt); // hệ thống hỗ trợ chung (hotro.js): hình ô, đường cong sao 3/5/7★, bản mạnh nhất / loại, trần theo nhóm
   if (typeof CHM !== 'undefined') CHM.buf(B); // chỉ huy mới (08/11): buff có thời hạn vào T.buf (cộng gộp)
   for (const T of B.t) if (T) capNhatU(B, T, dt);
+  tuKichBan(B); // ụ tự kích khi nạp đầy (mọi ụ có chiêu trừ 2 ụ bấm tay)
   if (B.ai || G.debug.auto) aiBan(B, dt);
 }
 function keCan(B, o) {
@@ -1010,7 +1034,7 @@ function aiBan(B, dt) {
   if (B.mana >= B.gia && oTrong(B).length) { trieu(B); return; }
   // ghép: ưu tiên sao thấp
   // kỹ năng chủ động của ụ ĐỎ: AI tự dùng khi nạp đầy
-  for (const T of ts) { const sk = SKILLS[T.id]; if (sk.chuDong && T.nap >= 1 && !biKhoa(T) && sk.aiNen(G, B, T)) { sk.chuDong(G, B, T); return; } }
+  for (const T of ts) { const sk = SKILLS[T.id]; if (sk.chuDong && !laTuKich(T.id) && T.nap >= 1 && !biKhoa(T) && sk.aiNen(G, B, T)) { sk.chuDong(G, B, T); return; } }
   ts.sort((a, b) => a.sao - b.sao);
   // Wild Link (laTuDo): AI chỉ ghép khi 2 sao lệch ≤ 1 (kết quả = sao cao hơn → không mất sao); ưu tiên ụ có kỹ năng khi ghép (Twin Maker, Mana Doubler…)
   const hl = (a, b) => hopLeGhep(a, b) && !(biKhoa(b) && !biKhoa(a)) && (laTuDo(a, b) ? Math.abs(a.sao - b.sao) <= 1 : (a.id === b.id || a.id === 'mimic' || b.id === 'mimic' || (a.sao === b.sao && a.id !== 'dichchuyen' && SKILLS[b.id].vai !== 'ht')));

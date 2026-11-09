@@ -191,10 +191,10 @@ const ONS = {
         case 'gh': this.apGhep(B1, d); break;
         case 'nc': if (d && B1.lv[d.id] != null && !(SKILLS[d.id] && SKILLS[d.id].khongNang)) { B1.lv[d.id] = d.lv; for (const T of B1.t) if (T && T.id === d.id) T.lvSang = 1; } break;
         case 'mv': { const mv = B1.mv; mv.cd = 0; B1.mana = Math.max(B1.mana, mv.gia); CH_HOP(B1, d && d.o != null ? d.o : undefined); if (d && d.m != null) B1.mana = d.m; break; }
-        case 'hy': if (typeof hydraKich === 'function') { this._cd = 1; try { hydraKich(B1); } finally { this._cd = 0; } if (d && d.m != null) B1.mana = d.m; if (d && d.g != null) B1.hyGia = d.g; } break; // Hydra: kích hoạt chung của bạn
+        case 'hy': if (typeof hydraKich === 'function' && !(typeof laTuKich === 'function' && laTuKich('hydra'))) { this._cd = 1; try { hydraKich(B1); } finally { this._cd = 0; } if (d && d.m != null) B1.mana = d.m; if (d && d.g != null) B1.hyGia = d.g; } break; // Hydra: kích hoạt chung của bạn
         case 'cb': this.apCB(B1, d); break; // Lucky Slot: kết quả quay xèng của bạn (jackpot.js CB)
         case 'pm': if (d && Array.isArray(d.o) && SKILLS.bienmau && SKILLS.bienmau.mach) SKILLS.bienmau.mach(B1, d.o, true, d.r); break; // Prism Thief: HỢP THỂ (đường vuốt + cờ ô kết quả) của bạn
-        case 'cd': { const T = d && B1.t[d.o]; const sk = T && SKILLS[T.id]; if (sk && sk.chuDong) { T.nap = 1; this._cd = 1; /* AUDIT F17: không tự gỡ đá/băng trên bàn con rối — chờ ảnh chụp */ try { sk.chuDong(G, B1, T); } finally { this._cd = 0; } } break; }
+        case 'cd': { const T = d && B1.t[d.o]; const sk = T && SKILLS[T.id]; if (sk && sk.chuDong && !(typeof laTuKich === 'function' && laTuKich(T.id))) { /* ụ tự kích: bàn con rối tự kích trong mô phỏng (game.js tuKichBan) → bỏ gói để không kích đôi */ T.nap = 1; this._cd = 1; /* AUDIT F17: không tự gỡ đá/băng trên bàn con rối — chờ ảnh chụp */ try { sk.chuDong(G, B1, T); } finally { this._cd = 0; } } break; }
         case 'w': if (!this.host && d) { this.hostWave = Math.max(this.hostWave, d.n); if (G.wave < d.n) { G.cho = 0; wavMoi(); } } break;
         case 'l': if (this.host && d) this.truTim(d.n, d.id); break;
         case 'vao': this.banVao = true; break;
@@ -523,7 +523,7 @@ const ONS = {
     });
     g('hydraKich', (goc) => function (B) { // Hydra: chạm thẻ khay = kích hoạt mọi Hydra 3★+ (gói 'hy': mana sau + giá kế)
       const r = goc.apply(this, arguments);
-      if (self.on && r && B === G.ban[0] && !self._cd) self.gui('hy', { m: B.mana, g: B.hyGia });
+      if (self.on && r && B === G.ban[0] && !self._cd && !G._tuKich) self.gui('hy', { m: B.mana, g: B.hyGia }); // tự kích (G._tuKich): máy bạn kia tự chạy, không gửi
       return r;
     });
     g('dungMV', (goc) => {
@@ -581,7 +581,7 @@ const ONS = {
       const goc = sk.chuDong; sk._onl = true;
       sk.chuDong = function (Gx, B, T) {
         const r = goc.apply(this, arguments);
-        if (self.on && B === G.ban[0] && !self._cd && T) self.gui('cd', { o: T.o });
+        if (self.on && B === G.ban[0] && !self._cd && T && !G._tuKich && !(typeof laTuKich === 'function' && laTuKich(T.id))) self.gui('cd', { o: T.o }); // chỉ ụ bấm tay gửi gói chạm
         return r;
       };
     }

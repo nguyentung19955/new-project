@@ -6,10 +6,15 @@
 //     Ụ 2 dạng cố định (Werewolf) = 2 viên. Bộ đếm (ABYSS, COMBO ×N, chuỗi ×N…) giữ tấm nhỏ ở đáy ô (demkn.js).
 //  3) Bảng chạm ụ: 1 dòng giải thích từng dấu của ụ đó (EN/VI). Trang ụ: mục "On-board icons".
 //  Chỉ đặt ảnh PNG + chữ (QUY-TAC-HINH 3). Không đổi luật chơi / đồng bộ online.
+//  09/11 (claude/demo-hop-tuong — chỉ 2 ụ bấm tay): BỎ vòng xanh nạp chiêu + icon chạm. Thay bằng TÍCH TỤ trên thân ụ (MV.tichTu):
+//     lõi sáng dần theo màu ụ, hạt năng lượng bị hút vào tâm dày dần, đập nhịp khi ≥ 85%, đầy = "căng đầy" (hạt xoáy quanh),
+//     lúc ra chiêu (nạp tụt) = XẢ ngắn (loé + sóng toả). Chỉ ảnh PNG (fx_cham_trang / fx_vong_mong tô màu), nhiễu theo id + thời gian.
+//     Chiêu TỰ KÍCH (game.js TU_KICH) — chỉ Black Hole + Arcane Cascade còn chạm khi đầy; chữ mô tả đổi "TAP when full" → tự kích (MV.doiChu).
 'use strict';
 const MV = {
   GON: true, // bàn gọn: không vẽ hàng 3 viên ngọc dạng (false = hình cũ)
   NAP_KHAC: { overlord: 1, wallgen: 1, blackhole: 1, mana: 1 }, // ụ nạp tự kích không có napMau (giữ đúng danh sách cũ của render.js)
+  CO_ICON_CHAM: false, // true = icon chạm cũ góc ô khi chiêu bấm tay đầy
   TAY: 'ui_tay', CO_TAY: false, // bàn tay chạm ChatGPT (HINH-VE-CODE-AUDIT S12) — chưa gen: tạm ic_phat (nút bấm PNG có sẵn)
   // ụ có chiêu nạp được (kể cả đang 0)
   laNap(id) { const sk = SKILLS[id]; if (!sk || sk.bomDem) return false; return !!(sk.chuDong || sk.napMau || this.NAP_KHAC[id]); },
@@ -19,6 +24,90 @@ const MV = {
     if (sk.chuDong) return T.sao >= 3 || !!sk.chuDongMoiSao; // Mạch Máu / Trứng cháy: chạm được ở mọi sao
     return !!(sk.napMau || this.NAP_KHAC[T.id]);
   },
+  // ---------- TÍCH TỤ (09/11, thay vòng xanh nạp chiêu) ----------
+  // ụ BẤM TAY (chạm khi đầy): có chuDong mà không tự kích (game.js TU_KICH) — còn lại Black Hole + Arcane Cascade
+  bamTay(id) { const sk = SKILLS[id]; return !!(sk && sk.chuDong && !(typeof laTuKich === 'function' && laTuKich(id))); },
+  // màu đặc trưng: napMau > màu dạng (GROW) > bảng riêng > màu bậc
+  MAU: { blackhole: '#c070ff', thacmana: '#59a8ff', ngaithoigian: '#ff6a8a', haoquang: '#ffe27a', leviathan: '#3fd0ff', khoisinh: '#ff8ab0', ronglua: '#ff8a2a', lophanung: '#9fe6ff', overlord: '#ff5a5a', wallgen: '#9ad1ff', mana: '#7fdcff', hydra: '#2ee89a' },
+  mauNap(id) {
+    const sk = SKILLS[id] || {}; if (sk.napMau) return sk.napMau;
+    if (this.MAU[id]) return this.MAU[id];
+    if (typeof GROW !== 'undefined' && GROW[id] && typeof GROW[id].mau === 'string') return GROW[id].mau;
+    try { return tierOf(id).mau; } catch (e) { return '#9fe6ff'; }
+  },
+  _tk: new WeakMap(), // trạng thái vẽ theo ụ: { p: nạp khung trước, xa: thời điểm xả }
+  TK_HAT: 9, // tối đa hạt mỗi ụ
+  // nhiễu cố định theo id ụ + chỉ số (thay Math.random — mọi khung, mọi máy như nhau)
+  nhieu(u, i) { const x = Math.sin(u * 12.9898 + i * 78.233) * 43758.5453; return x - Math.floor(x); },
+  // vẽ TÍCH TỤ quanh tâm ụ (ctx đã dời về tâm ụ, vẽ DƯỚI đầu súng). Gọi cho MỌI ụ laNap (kể cả nạp 0) để bắt khoảnh khắc xả.
+  tichTu(ctx, T, S, al, t) {
+    const sk = SKILLS[T.id]; if (!sk || sk.bomDem || !this.laNap(T.id) || !(al > 0.01)) return;
+    const mo = !sk.chuDong || T.sao >= 3 || !!sk.chuDongMoiSao; // chiêu chưa mở (dưới 3★): không tích tụ
+    let p = mo ? (T.nap > 1 ? 1 : T.nap > 0 ? T.nap : 0) : 0;
+    if (T.st && T.st.da) p = 0;
+    let s = this._tk.get(T); if (!s) { s = { p, xa: -9 }; this._tk.set(T, s); }
+    if (s.p >= 0.9 && p < s.p - 0.4) s.xa = t; // nạp tụt mạnh = vừa ra chiêu → XẢ
+    s.p = p;
+    const e = (t - s.xa) / 0.45, dangXa = e >= 0 && e < 1;
+    if (p <= 0.02 && !dangXa) return;
+    const m = this.mauNap(T.id), op = ctx.globalCompositeOperation, bang = T.st && T.st.bang > 0;
+    ctx.globalCompositeOperation = 'lighter';
+    if (p > 0.02) {
+      const day = p >= 0.999, gan = p >= 0.85;
+      const nhip = day ? 0.5 + 0.5 * Math.sin(t * 5.2) : gan ? 0.5 + 0.5 * Math.sin(t * (8 + 10 * (p - 0.85))) : 0; // đập nhịp khi gần đầy · căng đầy: đập đều
+      const k = bang ? 0.45 : 1; // bị băng: tích tụ mờ đi (chiêu không dùng được)
+      // 1) lõi sáng dần (quầng PNG tô màu) — nhỏ hơn ô, alpha vừa phải → không che quái
+      const r0 = S * (0.48 + 0.4 * p + (gan ? 0.06 * nhip : 0));
+      PX.cham(ctx, 0, 0, r0 * 2, m, al * k * (0.12 + 0.4 * p * p + (gan ? 0.12 * nhip : 0)));
+      PX.cham(ctx, 0, 0, r0 * 0.9, '#ffffff', al * k * (0.05 + 0.2 * p * p * p + (day ? 0.08 * nhip : 0))); // tâm trắng nóng
+      // 2) hạt năng lượng bị hút vào tâm (đầy: xoáy quanh thân)
+      const n = Math.min(this.TK_HAT, Math.round(2 + 7 * p)), u = T.uid || 1, co = S * 0.13;
+      for (let i = 0; i < n; i++) {
+        const h1 = this.nhieu(u, i), h2 = this.nhieu(u, i + 31);
+        let x, y, a1;
+        if (day) { // căng đầy: hạt xoáy đều quanh lõi
+          const g = h1 * 6.283 + t * (1.6 + 0.6 * h2), rr = S * (0.42 + 0.08 * Math.sin(t * 3 + i));
+          x = Math.cos(g) * rr; y = Math.sin(g) * rr * 0.92; a1 = 0.55 + 0.35 * Math.sin(t * 4 + i * 1.7);
+        } else { // đang tích: hạt từ ngoài bay vào tâm, chu kỳ nhanh dần theo p
+          const v = (t * (0.55 + 0.9 * p) * (0.75 + 0.5 * h2) + h1) % 1, g = h1 * 6.283 + h2 * 2 + v * 0.9;
+          const rr = S * (0.16 + 0.6 * (1 - v));
+          x = Math.cos(g) * rr; y = Math.sin(g) * rr; a1 = Math.sin(v * Math.PI) * (0.35 + 0.55 * p);
+        }
+        PX.cham(ctx, x, y, co * (0.7 + 0.5 * h2), i % 3 ? m : '#ffffff', al * k * a1);
+      }
+    }
+    if (dangXa) { // 3) XẢ: loé + sóng toả ngắn rồi về
+      PX.cham(ctx, 0, 0, S * (1 + 0.9 * e), '#ffffff', al * (1 - e) * 0.55);
+      PX.vong(ctx, 0, 0, S * (0.3 + 0.75 * e), 3, m, al * (1 - e) * 0.9);
+      PX.vong(ctx, 0, 0, S * (0.2 + 0.45 * e), 2, '#ffffff', al * (1 - e) * 0.5);
+    }
+    ctx.globalCompositeOperation = op; ctx.globalAlpha = al;
+  },
+  // ---------- chữ mô tả ụ TỰ KÍCH: "TAP when full" → tự kích (EN + bản Việt), dùng chung cho mô tả / mốc sao / demo ----------
+  DOI_EN: [
+    [/ \(tap when full; auto-fires if left full\)/g, ' (fires by itself when full)'],
+    [/TAP when full/g, 'AUTO when full'], [/Tap when full/g, 'Auto when full'], [/tap when full/g, 'auto when full'],
+    [/TAP THE HYDRA CARD/g, 'AUTO WHEN CROWDED'], [/Tap the Hydra card/g, 'Auto when crowded'], [/tap the Hydra card/g, 'auto when crowded'],
+    [/tap the card for a machine gun/g, 'machine gun when crowded'], [/tap the card = /g, 'when crowded: '], [/tap the card/g, 'auto when crowded'],
+    [/\(tap, /g, '(auto, '], [/\bTAP \(/g, 'AUTO ('], [/\bTAP:/g, 'AUTO:'], [/\bTap: /g, 'Auto: '], [/\btap:/g, 'auto:'], [/\btap \(/g, 'auto ('],
+    [/tap to FREEZE/g, 'auto FREEZE'], [/tap to freeze/g, 'auto freeze'], [/Tap skill/g, 'Auto skill'], [/tap skill/g, 'auto skill'],
+    [/tap it to recycle it/g, 'it recycles itself'], [/tap a burnt egg to recycle it/g, 'a burnt egg recycles itself'], [/tap it to recycle/g, 'recycles itself'],
+    [/tap it for \+/g, 'recycles itself for +'], [/tap for \+/g, 'recycles itself for +'], [/Tap it: \+/g, 'Recycles itself: +'],
+    [/ after (\d+|#) ?s full/g, ' when full'],
+  ],
+  DOI_VI: [
+    [/ \(chạm khi đầy; tự kích nếu để đầy\)/g, ' (tự kích khi đầy)'],
+    [/CHẠM khi đầy/g, 'TỰ KÍCH khi đầy'], [/Chạm khi đầy/g, 'Tự kích khi đầy'], [/chạm khi đầy/g, 'tự kích khi đầy'],
+    [/CHẠM THẺ HYDRA/g, 'TỰ KÍCH KHI ĐÔNG QUÁI'], [/Chạm thẻ Hydra/g, 'Tự kích khi đông quái'], [/chạm thẻ Hydra/g, 'tự kích khi đông quái'],
+    [/chạm thẻ để thành súng máy/g, 'súng máy khi đông quái'], [/chạm thẻ = /g, 'khi đông quái: '], [/chạm thẻ/g, 'tự kích khi đông quái'],
+    [/\(chạm, /g, '(tự kích, '], [/CHẠM \(/g, 'TỰ KÍCH ('], [/CHẠM:/g, 'TỰ KÍCH:'], [/Chạm: /g, 'Tự kích: '], [/chạm:/g, 'tự kích:'], [/chạm \(/g, 'tự kích ('],
+    [/chạm để ĐÓNG BĂNG/g, 'tự ĐÓNG BĂNG'], [/Kỹ năng chạm/g, 'Kỹ năng tự kích'], [/kỹ năng chạm/g, 'kỹ năng tự kích'],
+    [/chạm để tái chế lấy/g, 'tự tái chế lấy'], [/chạm để lấy/g, 'tự tái chế lấy'], [/chạm lấy/g, 'tự tái chế lấy'],
+    [/đầy thì chạm/g, 'đầy thì tự kích'], [/tự phát sau (\d+|#) ?s đầy/g, 'tự phát khi đầy'],
+  ],
+  doiEN(s) { if (typeof s !== 'string') return s; for (const [a, b] of this.DOI_EN) s = s.replace(a, b); return s; },
+  doiVI(s) { if (typeof s !== 'string') return s; for (const [a, b] of this.DOI_VI) s = s.replace(a, b); return s; },
+  doiChu(s) { return this.doiVI(this.doiEN(s)); },
   coNgoc(T) { if (!T || (typeof DOTPHA !== 'undefined' && DOTPHA.NGUONG[T.id])) return false; const d = this.dang(T); return !!d && (!this.GON || d.s >= 2); },
   tenChieu(id) { try { const m = mocCua(id).find(q => /active skill/i.test(q.mo || '')); return m ? m.ten : null; } catch (e) { return null; } },
   // dạng: { s: 1-based trong số n, n, ten }
@@ -59,6 +148,7 @@ const MV = {
   },
   // ---------- icon CHẠM khi chiêu chủ động đầy (chỉ bàn mình chạm được) ----------
   veTay(ctx, h) {
+    if (!this.CO_ICON_CHAM) return; // 09/11: bỏ bàn tay / nút chạm — ụ bấm tay tự lộ bằng trạng thái "căng đầy" (MV.tichTu)
     const T = h.T, sk = SKILLS[T.id], B = h.B || G.ban[T.ban];
     if (!sk || !sk.chuDong || (T.sao < 3 && !sk.chuDongMoiSao) || !(typeof chamSan === 'function' ? chamSan(T) : T.nap >= 1 && !T.st.da && !(T.st.bang > 0)) || !B || B.ai || B !== G.ban[0]) return;
     const im = (this.CO_TAY && REN.img(this.TAY)) || REN.img('ic_phat'); if (!im) return;
@@ -91,9 +181,10 @@ const MV = {
     const sk = SKILLS[T.id] || {}, B = G.ban[T.ban], P = [];
     if (this.laNap(T.id)) {
       const ten = this.tenChieu(T.id), cd = typeof sk.cd === 'number' ? ' (' + sk.cd + ' s)' : '';
-      if (sk.chuDong && T.sao < 3 && !sk.chuDongMoiSao) P.push(vi ? 'Vòng xanh lá: chiêu ' + (ten ? tr(ten) + ' ' : '') + 'mở ở 3★' : 'Green ring: ' + (ten || 'skill') + ' unlocks at 3★');
-      else if (sk.chuDong) P.push(vi ? 'Vòng xanh lá: nạp chiêu ' + (ten ? tr(ten) : '') + cd + ' — đầy thì chạm ụ để dùng' : 'Green ring: ' + (ten || 'skill') + ' charging' + cd + ' — full: tap the turret to use');
-      else P.push(vi ? 'Vòng xanh lá: đang nạp — đầy thì tự kích' : 'Green ring: charging — fires by itself when full');
+      const bam = this.bamTay(T.id);
+      if (sk.chuDong && T.sao < 3 && !sk.chuDongMoiSao) P.push(vi ? 'Lõi sáng: chiêu ' + (ten ? tr(ten) + ' ' : '') + 'mở ở 3★' : 'Core glow: ' + (ten || 'skill') + ' unlocks at 3★');
+      else if (bam) P.push(vi ? 'Lõi sáng: tích tụ ' + (ten ? tr(ten) : 'chiêu') + cd + ' — căng đầy thì chạm ụ để dùng' : 'Core glow: ' + (ten || 'skill') + ' building up' + cd + ' — when it is brimming, tap the turret');
+      else P.push(vi ? 'Lõi sáng: tích tụ ' + (ten ? tr(ten) : 'chiêu') + ' — đầy thì tự kích' : 'Core glow: ' + (ten || 'skill') + ' building up — fires by itself when full');
     }
     const d = this.coNgoc(T) && this.dang(T); // rà phần đã bỏ: hàng 3 viên ngọc đã bỏ (bàn gọn 07/11) — chỉ nhắc khi có hạt ngọc ở huy hiệu sao
     if (d) P.push(vi ? 'Ngọc: dạng ' + d.s + '/' + d.n + ' ' + tr(d.ten) : 'Gems: form ' + d.s + '/' + d.n + ' ' + d.ten);
@@ -107,9 +198,9 @@ const MV = {
     const sk = SKILLS[T.id] || {}, B = G.ban[T.ban], P = [];
     if (this.laNap(T.id)) {
       const ten = this.tenChieu(T.id);
-      if (sk.chuDong && T.sao < 3 && !sk.chuDongMoiSao) P.push(vi ? 'Vòng xanh lá: chiêu mở ở 3★' : 'Green ring: skill unlocks at 3★');
-      else if (sk.chuDong) P.push(vi ? 'Vòng xanh lá = nạp ' + (ten ? tr(ten) : 'chiêu') + ' (đầy thì chạm ụ)' : 'Green ring = ' + (ten || 'skill') + ' charge (tap when full)');
-      else P.push(vi ? 'Vòng xanh lá = nạp chiêu (đầy tự kích)' : 'Green ring = skill charge (fires itself)');
+      if (sk.chuDong && T.sao < 3 && !sk.chuDongMoiSao) P.push(vi ? 'Lõi sáng: chiêu mở ở 3★' : 'Core glow: skill unlocks at 3★');
+      else if (this.bamTay(T.id)) P.push(vi ? 'Lõi sáng = tích tụ ' + (ten ? tr(ten) : 'chiêu') + ' (căng đầy thì chạm ụ)' : 'Core glow = ' + (ten || 'skill') + ' build-up (tap when brimming)');
+      else P.push(vi ? 'Lõi sáng = tích tụ chiêu (đầy tự kích)' : 'Core glow = skill build-up (fires itself)');
     }
     const d = this.coNgoc(T) && this.dang(T);
     if (d) P.push(vi ? 'Ngọc = dạng ' + d.s + '/' + d.n + ' ' + tr(d.ten) : 'Gems = form ' + d.s + '/' + d.n + ' ' + d.ten);
@@ -119,22 +210,48 @@ const MV = {
   // trang ụ (Turret File): chú thích chung
   chuGiai(id) {
     const vi = typeof NN !== 'undefined' && NN.vi(), P = [];
-    const anhVong = (() => { try { const c = PX.anhHoi(PX.HOI_MAU); return c ? c.toDataURL() : ''; } catch (e) { return ''; } })();
+    const anhVong = (() => { try { const c = PX.mau('fx_cham_trang', MV.mauNap(id)); return c && c.toDataURL ? c.toDataURL() : ''; } catch (e) { return ''; } })(); // quầng lõi tích tụ (PNG tô màu)
     const hang = (img, b, s) => '<div class="mv-h">' + img + '<span><b>' + b + '</b> ' + s + '</span></div>';
-    const sk = SKILLS[id] || {}, ten = this.tenChieu(id);
-    if (this.laNap(id)) P.push(hang(anhVong ? '<img src="' + anhVong + '" alt="">' : '', vi ? 'Vòng xanh lá' : 'Green ring',
-      sk.chuDong ? (vi ? '= nạp chiêu ' + (ten ? NN.t(ten) : '') + (sk.chuDongMoiSao ? '' : ' (từ 3★)') + '. Đầy thì vòng sáng nhịp + hiện nút chạm: chạm ụ để dùng.' : '= ' + (ten || 'active skill') + ' charging' + (sk.chuDongMoiSao ? '' : ' (from 3★)') + '. When full it pulses and shows a tap icon: tap the turret to use it.')
-        : (vi ? '= chiêu đang nạp. Đầy thì tự kích.' : '= skill charging. Fires by itself when full.')));
+    const sk = SKILLS[id] || {}, ten = this.tenChieu(id), bam = this.bamTay(id);
+    if (this.laNap(id)) P.push(hang(anhVong ? '<img src="' + anhVong + '" alt="">' : '', vi ? 'Lõi sáng' : 'Core glow',
+      bam ? (vi ? '= tích tụ chiêu ' + (ten ? NN.t(ten) : '') + (sk.chuDongMoiSao ? '' : ' (từ 3★)') + ': hạt năng lượng hút vào ụ, lõi sáng dần. Căng đầy (lõi đập đều, hạt xoáy quanh) thì chạm ụ để dùng.' : '= ' + (ten || 'active skill') + ' building up' + (sk.chuDongMoiSao ? '' : ' (from 3★)') + ': energy is drawn into the turret and its core brightens. When it is brimming (steady pulse, swirling sparks), tap the turret to use it.')
+        : (vi ? '= chiêu đang tích tụ: hạt năng lượng hút vào ụ, lõi sáng dần. Đầy thì tự kích (loé + sóng toả).' : '= skill building up: energy is drawn into the turret and its core brightens. Fires by itself when full (flash + shockwave).')));
     if (typeof laGrow === 'function' && laGrow(id) && GROW[id] && !(typeof DOTPHA !== 'undefined' && DOTPHA.NGUONG[id])) {
       const g = GROW[id], n = g.dang ? g.dang.length : 3, ds = (g.dang ? g.dang.map(k => g.ten[k - 1]) : g.ten).map(x => vi ? NN.t(x) : x).join(' → ');
       P.push(hang('<img src="assets/ngoc_xanh.png" alt=""><img src="assets/ngoc_vang.png" alt="">', vi ? 'Hạt ngọc' : 'Gem', (vi ? 'ở góc số sao: xanh = dạng giữa, vàng = dạng cuối (' + n + ' dạng: ' : 'on the star badge corner: blue = middle form, gold = final form (' + n + ' forms: ') + ds + ')')); // rà phần đã bỏ: hết hàng 3 viên ngọc dưới sao (bàn gọn 07/11)
     }
     if (typeof DEMKN !== 'undefined' && DEMKN.DS[id]) { const g = this.TAG[id] || ['skill counter', 'bộ đếm kỹ năng']; P.push(hang('<img src="assets/h2_tag.png" alt="" class="mv-tag">', vi ? 'Số dưới ô' : 'Bottom tag', '= ' + (vi ? g[1] : g[0]))); }
-    if (!P.length) P.push('<p class="up-phu">' + (vi ? 'Ụ này không có vòng hay ngọc — chỉ số sao ở góc.' : 'No ring or gems on this turret — just the star badge.') + '</p>');
+    if (!P.length) P.push('<p class="up-phu">' + (vi ? 'Ụ này không có lõi tích tụ hay ngọc — chỉ số sao ở góc.' : 'No core glow or gems on this turret — just the star badge.') + '</p>');
     return '<div class="mv-cg">' + P.join('') + '</div>';
   },
 };
 window.MV = MV;
+
+// chữ ụ TỰ KÍCH (09/11 — chỉ 2 ụ bấm tay): bản Việt sinh kèm từ khoá cũ (khoá EN đổi theo DOI_EN → giá trị đổi theo DOI_VI),
+// rồi đổi mô tả gốc (SKILLS.mo, TEXT.turret, mốc sao MOC_RIENG, dạng GROW, ATK) của các ụ trong TU_KICH. Không đụng Black Hole / Arcane Cascade.
+(() => {
+  for (const d of [typeof VI_DICH !== 'undefined' ? VI_DICH : null, typeof VI_MAU !== 'undefined' ? VI_MAU : null]) if (d) {
+    for (const k of Object.keys(d)) { const k2 = MV.doiEN(k); if (k2 !== k && !Object.prototype.hasOwnProperty.call(d, k2)) d[k2] = MV.doiVI(d[k]); }
+  }
+  if (typeof VI_DICH !== 'undefined') Object.assign(VI_DICH, {
+    'Unlocks the auto skill': 'Mở khoá kỹ năng tự kích',
+    'Unlocks the active skill (fires by itself when full)': 'Mở kỹ năng chủ động (tự kích khi đầy)',
+    'Hatches in #s → +#★ turret · #★ burns: auto +# mana': 'Nở sau # s → ụ +#★ · #★ cháy: tự tái chế +# mana',
+    'Max # Mythic per deck. Its active skill fires by itself when charged (some unlock it at #★).': 'Tối đa # Thần thoại mỗi bộ bài. Kỹ năng chủ động tự kích khi nạp đầy (vài ụ mở khoá ở #★).',
+    'Max # Mythic per deck. Tap it on the board when charged to fire its active skill (only @ and @; others fire by themselves).': 'Tối đa # Thần thoại mỗi bộ bài. Chạm vào nó trên bàn khi nạp đầy để dùng kỹ năng chủ động (chỉ @ và @; ụ khác tự kích).', // @ = tên ụ (ngonngu.js mau)
+  });
+  if (typeof laTuKich !== 'function' || typeof SKILLS === 'undefined') return;
+  const doi = (s) => MV.doiChu(s);
+  for (const id of Object.keys(SKILLS)) {
+    if (!laTuKich(id)) continue;
+    const sk = SKILLS[id];
+    if (typeof sk.mo === 'function') { const mo = sk.mo; sk.mo = function () { return doi(mo.apply(this, arguments)); }; }
+    try { const u = TEXT.turret[id]; if (u && u.skill) u.skill = doi(u.skill); } catch (e) { }
+    if (typeof MOC_RIENG !== 'undefined' && MOC_RIENG[id]) for (const n in MOC_RIENG[id]) { const m = MOC_RIENG[id][n]; if (Array.isArray(m)) m[1] = doi(m[1]); }
+    if (typeof GROW !== 'undefined' && GROW[id] && typeof GROW[id].dk === 'string') GROW[id].dk = doi(GROW[id].dk);
+    if (typeof ATK !== 'undefined' && Array.isArray(ATK[id])) ATK[id] = ATK[id].map(doi);
+  }
+})();
 
 (() => {
   if (typeof document === 'undefined') return;

@@ -23,7 +23,7 @@
       const nt = THEBAI.nhanTran(G.ban[T.ban], id); let so = T.sao + '★' + (nt ? ' · ' + nt : ''); // cùng nhãn thẻ trận: +n / MAX
       if (!coLive && sk.mo) { try { so += ' · ' + sk.mo(T); } catch (e) { } }
       if (typeof THATSO !== 'undefined' && THATSO.puDong) { const pu = THATSO.puDong(G.ban[T.ban], id); if (pu) so += ' · ' + pu; } // ụ không sát thương: power-up nâng chính số kỹ năng (số ở mô tả đã gồm) — KIEM.md mục IX 'Đã quyết' #1
-      if (sk.chuDong) so += ' · ' + (T.nap >= 1 ? TEXT.ui.readyTap : TEXT.ui.charge(Math.round(T.nap * 100)));
+      if (sk.chuDong) so += ' · ' + (T.nap >= 1 ? (typeof laTuKich === 'function' && laTuKich(T.id) ? 'READY' : TEXT.ui.readyTap) : TEXT.ui.charge(Math.round(T.nap * 100))); // ụ tự kích: không mời chạm
       L.push('<div class="d-so g1">' + esc(so) + '</div>');
       if (coLive && sk.demTT) { try { L.push('<div class="d-so g1 d-dem">' + esc(sk.demTT(T)) + '</div>'); } catch (e) { } } // bộ đếm kỹ năng (Star Cannon: ★ đã đếm n/50)
     }

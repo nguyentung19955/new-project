@@ -380,7 +380,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       if (T.st.da) so += ' · ' + TEXT.ui.stoned;
       if (T.st.bang > 0) so += ' · ' + TEXT.ui.frozen;
       if (T.st.lua > 0) so += ' · ' + TEXT.ui.burning;
-      if (sk.chuDong) so += ' · ' + (T.nap >= 1 ? TEXT.ui.readyTap : TEXT.ui.charge(Math.round(T.nap * 100)));
+      if (sk.chuDong) so += ' · ' + (T.nap >= 1 ? (typeof laTuKich === 'function' && laTuKich(T.id) ? 'READY' : TEXT.ui.readyTap) : TEXT.ui.charge(Math.round(T.nap * 100))); // ụ tự kích: không mời chạm
     } else {
       so = TEXT.ui.baseDmg(Math.round((sk.dmg || 0) * tier.hs), tier.hs);
       const tc = tocTT(id, null); if (tc) so += ' · ' + tc;
