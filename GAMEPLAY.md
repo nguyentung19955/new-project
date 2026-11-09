@@ -1065,3 +1065,8 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 ## claude/demo-hop-tuong — Ụ anime: vẽ lại 22 ụ Tím (09/11)
 - 22 ụ Tím (cuongno … santhuong): bệ LỤC GIÁC viền vàng có khía rune tam giác + ngọc thạch anh tím (#A966ED), thân indigo, ánh tím (không hồng). Ảnh `thap-art/raw_anime_u_tim1..7.png` + `raw_anime_u_vang1.png` (hàng 1 = Bounty Beacon). Trước/sau: `tuvan/ra-soat-anime-u/truoc_sau_tim_a/b.jpg`.
 - `artscale.js`: thêm `window.STAGE_ANIME` (rỗng, chuẩn bị đầu dạng 1/2/3 mới cho ụ grow-up — `tools/thap-cat-anime-u.py --dang`). Không đổi luật.
+
+## claude/demo-hop-tuong — Ụ anime: Vàng (Twin Maker, Copycat) + BIẾN HÌNH 3 dạng (Nine-Tail, Star Cannon, Resonance Grid) + vệt Prism (10/11)
+- sinhdoi, saochep vẽ lại (bệ vàng vuông góc vương miện) — `thap-art/raw_anime_u_vang2.png`.
+- Biến hình grow-up: đầu dạng 1/2/3 mới `<id>_nong_s1..s3.png` cho cuuvi, ngoisao, luoicheo (giữ hình chính đạt sẵn; dạng 1 = đầu hiện tại). `artscale.js` `window.STAGE_ANIME` → đưa id về `STAGE_K` nên growfx đổi đúng ảnh khi lên dạng (hoạt ảnh biến hình ~650 ms có sẵn). Cắt: `tools/thap-cat-anime-u.py --dang` (GIU_CHINH=1). Ảnh soát: `tuvan/ra-soat-anime-u/bien_hinh_*.jpg`.
+- Prism Thief (`skills7.js` pmVeVet): vệt vuốt hợp thể bỏ gradient/đường vẽ code → ảnh `fx_laser_tia` tô màu 2 đầu (bộ đệm theo màu, không tạo canvas mỗi khung); giữ đường vẽ cũ làm dự phòng khi ảnh chưa tải.

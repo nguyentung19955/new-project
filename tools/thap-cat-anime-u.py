@@ -39,10 +39,15 @@ def tach_hang(nhom, ids):
 def dang(nhom, i):
     import shutil, json
     U.RAW = tach_hang(nhom, [i, i + '_g2', i + '_g3'])
-    sys.argv = [sys.argv[0], i]; U.main()                       # hàng 1 = hình chính (bệ, đầu, phụ, icon thẻ)
+    giu = os.environ.get('GIU_CHINH')  # 1 = giữ hình chính hiện có (ụ đã đạt): dạng 1 = đầu hiện tại, chỉ lấy đầu dạng 2/3
+    if not giu: sys.argv = [sys.argv[0], i]; U.main()          # hàng 1 = hình chính (bệ, đầu, phụ, icon thẻ)
     goc_out = U.OUT; tmp = tempfile.mkdtemp(prefix='anime-dang-'); U.OUT = tmp
     K, tip = [], []
+    t0 = open(os.path.join(U.JS, 'artscale.js'), encoding='utf-8').read()
     for n, ten in enumerate((i, i + '_g2', i + '_g3'), 1):
+        if giu and n == 1:
+            shutil.copyfile(os.path.join(goc_out, i + '_nong.png'), os.path.join(goc_out, '%s_nong_s1.png' % i))
+            K.append(U.js_obj(t0, 'HEAD_K')[i]); tip.append(round(float(U.js_obj(t0, 'UMOD_TIP')[i]), 3)); continue
         r = U.mot(ten)
         shutil.copyfile(os.path.join(tmp, ten + '_nong.png'), os.path.join(goc_out, '%s_nong_s%d.png' % (i, n)))
         K.append(r['HEAD_K']); tip.append(round(float(r['tip']), 3))

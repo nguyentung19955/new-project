@@ -31,3 +31,12 @@ TÍM = "PURPLE base: a rounded HEXAGON gold platform with small triangular rune 
 - tim7: Lone Ace (mắt khe tím + nòng mảnh) · Focus Lens (thấu kính ngọc lục bảo) · Signal Jammer (tháp phát sóng)
 - vang1: hàng 1 Bounty Beacon (đồng xu tâm ngắm, bệ TÍM) · hàng 2–3 Sync Cannon / Orbital (bệ VÀNG vuông góc vương miện) — 2 hàng sau chưa dùng (sẽ làm bằng tấm biến hình).
 VÀNG = "a rounded SQUARE gold platform with small crown-shaped corner ornaments and topaz-gold gems (#FFD65B), dark indigo inside".
+- vang2 (2 hàng, bệ vàng): Twin Maker (2 quả cầu âm dương nối vòng vô cực) · Copycat (gương sao chép khung vàng)
+
+## Tấm BIẾN HÌNH (1 ụ / tấm): `raw_anime_u_dang_<id>.png`
+Kèm ảnh `refd_<id>` (icon hiện tại + 3 đầu dạng CŨ `_s1.._s3_v1` làm ý tưởng). Prompt chung:
+"Next: a TRANSFORMATION sheet for ONE turret: <tên>. ONE image 1536x1024, solid flat magenta #FF00FF, 3 rows x 4 columns … Row 1 = STAGE 1, row 2 = STAGE 2, row 3 = STAGE 3: the SAME turret evolving, each stage clearly more powerful, bigger and more ornate … Columns per row: (1) assembled turret top-down pointing UP; (2) the BASE alone … the SAME base in all 3 rows, matching the CURRENT turret's base …; (3) the HEAD alone pointing UP …; (4) a round emblem of that stage. Keep every head compact … (max 85%). Stage ideas: …"
+- cuuvi: 3 đuôi lửa cam → 6 đuôi lửa cuộn → 9 đuôi lửa cáo trắng-xanh
+- ngoisao: sao pha lê 1 nòng → NOVA sao đôi vệt lấp lánh → SUPERNOVA sao lớn đuôi sao chổi
+- luoicheo: lưới vàng lõi teal mờ → HUMMING vòng tia teal 4 góc chéo → RESONANCE lõi rực + gai pha lê chéo + cánh vàng
+- soi, hydra, tienhoa: đã gen (soi) / dừng (hydra) / gen (tienhoa) nhưng KHÔNG dùng — 3 ụ này vẽ đầu riêng theo trạng thái trong skills (đầu thường/thức tỉnh, số đầu, trứng theo sao).

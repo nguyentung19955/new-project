@@ -12,7 +12,7 @@
 |---|---|
 | Ụ cần vẽ lại (lệch tông) | **57** — Trắng 14 + Xanh 17 (nặng: kim loại xám công nghiệp, không khung vàng/indigo) · Tím 22 (vừa: thân xám + tím) · Vàng 4 (`dongbo` bánh răng cam phẳng, `orbital` vệ tinh phẳng mảnh, `sinhdoi` trắng đen phẳng, `saochep` lưới cyan trơn) |
 | Ụ đạt | 40 (29 Vàng + 11 Đỏ) |
-| Thiếu hình biến hình | **14** ụ GROW-UP (`growfx.js` G_IDS) — ảnh `_nong_s1..s3` là bộ cũ lệch đầu module v2 nên `artscale.js` cho cả 3 dạng dùng CHUNG 1 đầu + quầng màu. Có đủ: `ronglua` (f1–f4), `mauhut` (f2–f4). Mốc 3★/5★/7★ của mọi ụ khác là mốc KỸ NĂNG (hình giữ, thêm sao + quầng tier) |
+| Thiếu hình biến hình | **11** ụ GROW-UP (`growfx.js` G_IDS): overlord hopbi lophanung orbital cuongno ngoisao lienket dongbo cuuvi ngaithoigian luoicheo — ảnh `_nong_s1..s3` là bộ cũ lệch đầu module v2 nên `artscale.js` cho cả 3 dạng dùng CHUNG 1 đầu + quầng màu. Có hình riêng theo trạng thái (vẽ đầu riêng trong skills): `soi` (đầu thường / thức tỉnh), `tienhoa` (trứng theo sao), `hydra` (số đầu theo sao), `ronglua` (f1–f4), `mauhut` (f2–f4). Mốc 3★/5★/7★ của mọi ụ khác là mốc KỸ NĂNG (hình giữ, thêm sao + quầng tier) |
 | Animation | 97/97 có nhóm chuyển động (`anim-meta.js` ANIM_U: thở/nhún/giật nòng/quay/lơ lửng…) — không ụ nào đứng im. Biến hình grow-up có hoạt ảnh ~650 ms (`growfx.js`) |
 | Hiệu ứng riêng của ụ | 93/97 có PNG `fx_<id>_*`; 4 ụ dùng ảnh tên khác (`cobac` cb_*, `tudo`, `thacmana`, `congap`) |
 | Hiệu ứng còn VẼ TAY (canvas) | 3: `skills2.js` HU.soiLan (Sói — vòng + 3 vết vuốt bằng arc/quadraticCurveTo) · `skills3.js` veThan (thân Hydra — gradient + vòng, dựng sẵn) · `skills7.js` pmVeVet (Prism Thief — vệt vuốt gradient line) |
@@ -73,12 +73,12 @@
 | 49 | dongbo Sync Cannon | Vàng | lệch vừa: phẳng/hoạt hình đơn sắc, thiếu khung vàng | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | support | 9 | P2 làm lại |
 | 50 | railgun Salvo Battery | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | nang | 5 | — |
 | 51 | vughep Merge King | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | evolver | 4 | — |
-| 52 | sinhdoi Twin Maker | Vàng | lệch vừa: phẳng/hoạt hình đơn sắc, thiếu khung vàng | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | evolver | 4 | P2 làm lại |
+| 52 | sinhdoi Twin Maker | Vàng | lệch vừa: phẳng/hoạt hình đơn sắc, thiếu khung vàng | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | evolver | 4 | **ĐÃ LÀM** (raw_anime_u_vang2) |
 | 53 | hasao Star Breaker | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | — |
-| 54 | saochep Copycat | Vàng | lệch vừa: phẳng/hoạt hình đơn sắc, thiếu khung vàng | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | evolver | 4 | P2 làm lại |
-| 55 | ngoisao Star Cannon | Vàng | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | nang | 8 | — |
-| 56 | soi Werewolf | Vàng | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng + thức tỉnh | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | cannon | 8 · HU.soiLan vẽ code (vòng + 3 vết vuốt) | — |
-| 57 | tienhoa Evolver | Vàng | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | evolver | 9 | — |
+| 54 | saochep Copycat | Vàng | lệch vừa: phẳng/hoạt hình đơn sắc, thiếu khung vàng | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | evolver | 4 | **ĐÃ LÀM** (raw_anime_u_vang2) |
+| 55 | ngoisao Star Cannon | Vàng | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | **ĐÃ CÓ** dạng 1/2/3 (raw_anime_u_dang_ngoisao, STAGE_ANIME) | nang | 8 | — |
+| 56 | soi Werewolf | Vàng | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng + thức tỉnh | có (đầu riêng theo trạng thái trong skills) | cannon | 8 · HU.soiLan vẽ code (vòng + 3 vết vuốt) | — |
+| 57 | tienhoa Evolver | Vàng | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | có (đầu riêng theo trạng thái trong skills) | evolver | 9 | — |
 | 58 | cauvong Rainbow | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | — |
 | 59 | wallgen Wall Projector | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | nang | 5 | — |
 | 60 | orbital Orbital | Vàng | lệch vừa: phẳng/hoạt hình đơn sắc, thiếu khung vàng | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | drone | 11 | P2 làm lại |
@@ -89,10 +89,10 @@
 | 65 | nayda Ricochet | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | cannon | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
 | 66 | combo Combo Core | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | revolver | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
 | 67 | khoathoigian Chrono Lock | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | chrono | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
-| 68 | hydra Hydra | Vàng | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | cannon | 10 · thân Hydra vẽ code (gradient + vòng) skills3 veThan | — |
-| 69 | cuuvi Nine-Tail | Vàng | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | cannon | 9 | — |
+| 68 | hydra Hydra | Vàng | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | có (đầu riêng theo trạng thái trong skills) | cannon | 10 · thân Hydra vẽ code (gradient + vòng) skills3 veThan | — |
+| 69 | cuuvi Nine-Tail | Vàng | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | **ĐÃ CÓ** dạng 1/2/3 (raw_anime_u_dang_cuuvi, STAGE_ANIME) | cannon | 9 | — |
 | 70 | pandora Pandora Vault | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | portal | 4 | — |
-| 71 | luoicheo Resonance Grid | Vàng | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | support | 8 | — |
+| 71 | luoicheo Resonance Grid | Vàng | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | **ĐÃ CÓ** dạng 1/2/3 (raw_anime_u_dang_luoicheo, STAGE_ANIME) | support | 8 | — |
 | 72 | ngaithoigian Chrono Throne | Đỏ | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | chrono | 8 | — |
 | 73 | nemesis Nemesis | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | revolver | 5 | — |
 | 74 | docton Lone Ace | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | cannon | 5 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
@@ -114,7 +114,7 @@
 | 90 | mauhut Blood Circuit | Vàng | đạt (khung vàng, anime fantasy) | mốc Máu 4 dạng | có f2–f4 | poison | 5 | — |
 | 91 | nguyenrua Hex Saboteur | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | poison | 1 | — |
 | 92 | thanhdia Sanctum | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 1 | — |
-| 93 | bienmau Prism Thief | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | cannon | 2 · vệt vuốt hợp thể vẽ code (gradient line) skills7 pmVeVet | — |
+| 93 | bienmau Prism Thief | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | cannon | 2 · vệt vuốt hợp thể: **ĐÃ thay** ảnh fx_laser_tia tô màu | — |
 | 94 | cobac Lucky Slot | Đỏ | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | cannon | 0 | — |
 | 95 | tudo Wild Link | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | evolver | 0 | — |
 | 96 | thacmana Arcane Cascade | Đỏ | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | chain | 0 | — |
@@ -123,5 +123,5 @@
 ## Thứ tự làm (bước 2)
 1. Trắng 14 → **xong** · Xanh 17 → **xong** (`raw_anime_u_xanh1..6`) · Tím 22 → **xong** (`raw_anime_u_tim1..7` + `vang1` hàng 1) (tấm `thap-art/raw_anime_u_trang1..5.png`, cắt `tools/thap-cat-anime-u.py`).
 2. Xanh 17 (6 tấm) → Tím 22 (8 tấm) → Vàng 4 (2 tấm).
-3. Biến hình 14 ụ grow-up: mỗi ụ 1 hàng (dạng 1/2/3 cùng bệ) → `<id>_nong_s1..s3` + trả id về `STAGE_K`.
+3. Biến hình 11 ụ grow-up (xong: cuuvi ngoisao luoicheo): mỗi ụ 1 hàng (dạng 1/2/3 cùng bệ) → `<id>_nong_s1..s3` + trả id về `STAGE_K`.
 4. Hiệu ứng vẽ tay: Sói (vuốt), Hydra (thân), Prism (vệt) → PNG nướng sẵn.
