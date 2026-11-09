@@ -67,7 +67,8 @@ const UA = {
       const u = im.getAttribute('src') || im.getAttribute('data-tm-src'); if (!u) continue;
       const m = /assets\/([a-z0-9_]+)\.(?:png|webp)/.exec(u); if (!m || !this.DOI[m[1]]) continue;
       if (im.closest('#duoi, #top, #bo-the, #the-mv, #mana-hop')) continue; // HUD trận: phiên hud-anime lo
-      const moi = this.a(this.DOI[m[1]]);
+      // tiêu đề nhóm HỌ (ui.js .nh-i) dùng ngọc tím làm hoạ tiết, không phải MANA → icon bộ sưu tập
+      const moi = this.a(m[1] === 'h2_ngoc' && im.classList.contains('nh-i') ? 'ua_ic_bst' : this.DOI[m[1]]);
       if (!im.dataset.uaCu) im.dataset.uaCu = u;
       if (im.hasAttribute('src')) im.src = moi; else im.setAttribute('data-tm-src', moi);
     }

@@ -961,3 +961,4 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - KHÔNG đổi: khoá localStorage `turret_*`/`tm_*`, Firebase `turret-merge`/`turretmerge/`, SKU `com.turretmerge.*`, id nội bộ, thư mục, workflow, chú thích code.
 - Cửa hàng / vòng quay / nhiệm vụ / sự kiện: ô hàng, rương, điểm danh 7 ngày = ô vát góc; hàng nhiệm vụ/mốc/lò rèn = tấm chàm + ổ thưởng tròn + nút CLAIM (cam khi nhận được, pill chàm khi chưa); 4 thẻ dưới pill (đang mở = cyan); hộp thoại tỉ lệ / nhận thưởng = tấm chàm; thanh tiến độ teal. Băng DAILY SPECIALS và băng ụ sự kiện tạm là tấm chàm + icon (chờ ảnh băng anime — PROMPT-B3.md).
 - Màn TRÙM, hồ sơ phi công, bảng ONLINE: tấm/nút anime.
+- Bảng lên cấp / mở khoá ở HOME, nhắc nhanh ở menu: tấm/pill anime. Icon tiêu đề nhóm HỌ = icon bộ sưu tập (không dùng ngọc mana). Ảnh còn thiếu (vòng quay, ổ khoá/cộng, băng cửa hàng/sự kiện, rương, tấm lớn, nền HOME riêng): prompt ở `docs/demo-hop-tuong/tuvan/huong-anime/PROMPT-B3.md`.

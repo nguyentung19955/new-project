@@ -308,3 +308,9 @@ html.ua body #onl-ma, html.ua body #tk-ten, html.ua body .tk-so > div { border-i
 html.ua body #onl-sanh .s7-moi { border-image: var(--ua-t) / 20px 22px stretch !important; }
 /* lớp phủ "xoay dọc" */
 html.ua body #xoay-doc .xd-tam { border-image: var(--ua-t) / 22px 24px stretch !important; }
+/* bảng lên cấp / mở khoá ở HOME (#tt-phu, tientrinh.js) — cùng tấm hộp thoại */
+html.ua body #wrap #tt-phu .kt-phu-tam { border-image: var(--ua-t) / 20px 22px stretch !important; }
+html.ua body #wrap #tt-phu .kt-phu-t, html.ua body #wrap #kt .kt-phu-t { color: #FFB866 !important; }
+html.ua body #wrap #tt-phu small, html.ua body #wrap #kt .kt-phu-tam small { color: #B8C3E6; }
+/* nhắc nhanh ở menu (UI.nhac): pill chàm thay nhãn thép sọc đỏ */
+html.ua body #wrap #chon:not([hidden]) ~ #chon-goi-nhac { border-image: url(../assets/ua_pill_tat.png) 40 62 fill / 13px 20px stretch !important; padding: 10px 24px !important; color: #F7F8FF !important; text-shadow: 0 1px 2px #000 !important; }
