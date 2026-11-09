@@ -35,7 +35,7 @@ const HUD2 = {
     const B = G.ban[0]; if (!B) return;
     const nt = $('#nut-trieu'), du = nt.classList.contains('du');
     if (this._du === false && du) { nt.classList.add('h2-san'); clearTimeout(this._san); this._san = setTimeout(() => nt.classList.remove('h2-san'), 420); } // 1 nhịp, không lặp
-    if (!du) nt.classList.remove('h2-san');
+    if (!du) nt.classList.toggle('h2-san', false); // toggle(x, false): không ghi lại class mỗi lần (remove ghi lại 30 lần/s khi thiếu mana / bàn đầy → nút có filter bị vẽ lại)
     this._du = du;
     document.querySelectorAll('#bo-the .the').forEach(d => {
       const id = d.dataset.id;
