@@ -55,14 +55,14 @@ function fx7(id, x, y, w, song) {
 //        dạng càng cao đạn càng to / đỏ; từ 100 Máu mỗi phát thứ 6 (200 Máu: thứ 4) nổ NOVA máu quanh điểm trúng.
 //      Số Máu: góc TRÊN-PHẢI ô, màu theo mốc. Online: 'B' Máu · 'P' dạng · 'Q' đếm phát · 'M'/'C' dấu (dongbo.js); bàn con rối không tự nuốt.
 // =====================================================================================================
-SKILLS.mauhut = {
-  vai: 'tc', dmg: 17, toc: 0.9, nham: 'dau', napMau: null,
+SKILLS.mauhut = { // 09/11 gánh hậu kỳ: ST 17 → 22, tốc 0.9 → 1.3
+  vai: 'tc', dmg: 22, toc: 1.3, nham: 'dau', napMau: null,
   MOC: [20, 50, 100, 200],
   TEN: ['BLOOD CIRCUIT', 'BLOOD HUNTER', 'CRIMSON ENGINE', 'SANGUINE SOVEREIGN', 'BLOOD MOON'],
   MAU: ['#f6e3e6', '#ff7080', '#ff2a4a', '#ffd23f', '#ff8af0'], // màu số Máu theo mốc
   DMG: 0.05, TOC: 0.006, CRIT: 0.002, CDMG: 0.03,               // mỗi 1 Máu
   DANG_DMG: [0, 0.15, 0.4, 0.6, 0.9],                            // thưởng thêm khi đạt mốc (không cộng dồn, lấy bậc hiện tại)
-  NOVA: [0, 0, 0, 6, 4], NOVA_K: 1.2, NOVA_R: 55,                // nova máu: mỗi phát thứ N, ×1.2 ST quanh điểm trúng (cân bằng 09/11: tools sim)
+  NOVA: [0, 10, 6, 5, 4], NOVA_K: 1.2, NOVA_R: 55,               // nova máu: mỗi phát thứ N, ×1.2 ST quanh điểm trúng (09/11 hậu kỳ: từ 20 Máu — trước [0,0,0,6,4] chỉ từ 100 Máu)
   CAM: ['tienhoa', 'loren', 'khoisinh', 'mauhut'],
   camAn: (b) => !b || b.sao >= 7 || SKILLS.mauhut.CAM.includes(b.id) || !!(SKILLS[b.id] && SKILLS[b.id].vai === 'ht'),
   // thời gian nuốt: cấp thẻ −4% / cấp (KY_NANG_CAP.mauhut: 0 → −32% ở LV17)
@@ -76,7 +76,7 @@ SKILLS.mauhut = {
       +(n * this.CRIT * 100).toFixed(1) + '% crit chance, +' + Math.round(n * this.CDMG * 100) + '% crit damage' + (nx ? ' · next form at ' + nx + ' Blood' : '') +
       (m && X ? ' · eating ' + (TEXT.turret[X.id] ? TEXT.turret[X.id].name : X.id) + ' ' + X.sao + '★ in ' + Math.ceil(m.con) + 's' : '') +
       ' · drag onto one of your turrets to MARK it: after ' + this.tg(1, B) + 's + ' + Math.round(3 * this.kTg(B) * 10) / 10 + 's per ★ it is eaten and gives 5 Blood per ★' +
-      ' · each Blood: +5% damage, +0.6% fire rate, +0.2% crit (max 100%), +3% crit damage, no limit · new forms at 20 / 50 / 100 Blood: bigger bolts, more damage · 100 Blood: every 6th shot is a blood nova (200 Blood: every 4th)' +
+      ' · each Blood: +5% damage, +0.6% fire rate, +0.2% crit (max 100%), +3% crit damage, no limit · new forms at 20 / 50 / 100 Blood: bigger bolts, more damage · 20 Blood: every 10th shot is a blood nova (50 / 100 / 200 Blood: every 6th / 5th / 4th)' +
       ' · cannot eat 7★, eggs, Twin Anvil, Genesis Core or Support turrets · a frozen or stone target pauses the timer · new Blood Circuits start with 0 Blood';
   },
   capNhat(G, B, T, dt) {
@@ -308,11 +308,11 @@ SKILLS.thanhdia = {
 //      F n · K cộng dồn 4 màu (dongbo.js oTT). Mặt nạ luôn nằm NGANG, không xoay theo mục tiêu (kể cả bản cầm kéo).
 // =====================================================================================================
 const PRISM_MAU = ['#ff4a2a', '#ffd23f', '#4fb8ff', '#5cff7a'];
-SKILLS.bienmau = {
-  vai: 'tc', dmg: 15, toc: 1, nham: 'dau',
+SKILLS.bienmau = { // 09/11 gánh hậu kỳ: ST 15 → 24, tốc 1 → 2, tỉ lệ màu đơn 4/6/8/10% → 8/10/12/15%
+  vai: 'tc', dmg: 24, toc: 2, nham: 'dau',
   TEN: ['RED', 'GOLD', 'BLUE', 'GREEN'], ANH: ['bienmau_m_do', 'bienmau_m_vang', 'bienmau_m_lam', 'bienmau_m_luc'],
   HOP: ['bienmau_hop_1', 'bienmau_hop_2', 'bienmau_hop_3', 'bienmau_hop_4'], // mặt nạ 4 màu: bậc sáng theo n (1–2 · 3–4 · 5–9 · 10+)
-  TI: [0.04, 0.06, 0.08, 0.10], MANA_S: 6,
+  TI: [0.08, 0.10, 0.12, 0.15], MANA_S: 6,
   HOP_DMG: 3, HOP_TOC: 0.10, HOP_TI: 0.25,
   mau: (T) => (T.pm | 0) & 3,
   n: (T) => (T && T.id === 'bienmau' ? T.pf | 0 : 0),

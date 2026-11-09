@@ -660,3 +660,14 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - Mô tả cập nhật: text.js, roster.json/meta.js (kyNang + kyNang_vi), skilldemo.js, vi.json (+ câu mới cho Pháo Ngôi Sao) → ngonngu-vi.js.
 - Wave trung bình trước → sau: soi/nemesis/ngoisao/dongbo/vughep 32.2 → 41.2 (24 hạt; bộ Vàng canon 43.3) · soi/nemesis/ngoisao/thanhdia/saochep 32.8 → 36.1 · aten/railgun/soi 45.0 → 44.6 (không quá mạnh).
 - Ụ Vàng tấn công khác còn yếu (chỉ ghi, chưa sửa): bộ nhatthuc/lualien/hopca 31.2, luutru/mauhut/bienmau 24.6 (bộ 1 ụ tấn công: bienmau 15.8, luutru 17, hopca 19, lualien 20.8; hydra 15.8 do bot không dùng kỹ năng chạm).
+
+## claude/demo-hop-tuong — Buff hậu kỳ 6 ụ Vàng tấn công yếu, ưu tiên TỐC BẮN (09/11)
+- Người dùng: tăng các ụ Vàng yếu; phản hồi khi chơi: "Lửa Thập Tự 260 lửa, 18k dame mà bắn không nổi" → phát to nhưng chậm, đơn mục tiêu. Bot (môi trường thap-sim, cấp thẻ 8, ưu tiên power-up) cho thấy cả 6 ụ gãy ở wave ~31–34 vì bầy quái tách/bay từ wave 30: tăng sát thương mỗi phát gần như không đổi kết quả, tăng TỐC BẮN mới có tác dụng.
+- Nhật Thực: tốc 0.9 → 1.5 · tia ngày ×1.5–2.5 → ×2.2–3.8 · cháy 40% → 60% · nón trăng đêm ×0.6 → ×1 (`DEM_K`, `CHAY_K`).
+- Lửa Thập Tự: ST 17 → 24 · tốc 1.0 → 1.5 · MỚI: lửa cho tốc bắn trần mềm +200% × n / (n + 60) (10 lửa +29%, 60 lửa +100%, 260 lửa +162%) — `tocLua`, `TOC_MAX`, `TOC_K`. Luật truyền lửa giữ nguyên.
+- Hợp Xướng: ST 15 → 24 · tốc 1.0 → 2.0 · mỗi Hoà âm +25% → +35% ST · mục tiêu thứ 2 50% → 80%.
+- Kho Lưu Hợp Nhất: ST 15 → 24 · tốc 1.0 → 2.0 · mỗi điểm +1% → +2% ST (mốc giữ nguyên).
+- Mạch Máu: ST 17 → 22 · tốc 0.9 → 1.3 · nova máu từ 20 Máu mỗi phát thứ 10 (50/100/200 Máu: 6/5/4; trước chỉ từ 100 Máu: 6, 200: 4).
+- Siêu Trộm Lăng Kính: ST 15 → 24 · tốc 1 → 2 · tỉ lệ màu đơn 4/6/8/10% → 8/10/12/15% (luật hợp thể theo ô đích giữ nguyên).
+- Bot chơi tốt (24 hạt) trước → sau: nhatthuc/lualien/hopca/dongbo/vughep 31.2 → 43.4 · luutru/mauhut/bienmau/dongbo/vughep 24.6 → 44.8 (trung vị 38; Máu không trần nên có ván chạy tới 70). Ụ tấn công duy nhất (+ lien, phun, dongbo, vughep; mốc Aten 29.8, Sói 33.2): Nhật Thực 24.4 → 34.2, Mạch Máu 22.9 → ~35, Lửa Thập Tự 17.8 → 27.2, Hợp Xướng 20.8 → 27.5, Kho Lưu 17.9 → 27.0, Lăng Kính 18.7 → 25.2 (bot không vuốt hợp thể / xếp Hoà âm).
+- Test `tools/thap-kt-vang-g2.js`: cập nhật kỳ vọng số (Hoà âm, điểm Kho Lưu); còn 1 lỗi CÓ SẴN trước đợt này (Ember kéo vào Wild Link).

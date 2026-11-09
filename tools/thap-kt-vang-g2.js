@@ -106,7 +106,7 @@ console.log('Quantum Choir — Harmony (hopca)');
 tran(['hopca', 'lien', 'canon', 'bang', 'tia']);
 R(`var h = dat(7, 'hopca', 2); dat(2, 'lien', 2); dat(6, 'canon', 2); dat(8, 'bang', 1); dat(1, 'tia', 2); cn();`);
 ok(R('SKILLS.hopca.hoa(B, h)') === 2, 'đếm 2 ụ KỀ cùng sao (chéo / khác sao không tính)');
-ok(gan(R('h.buf.dmg'), 0.5) && gan(R('h.buf.cdmg'), 0.16) && gan(R('h.buf.toc'), 0), '2 Harmony: +50% ST, +16% ST chí mạng');
+ok(gan(R('h.buf.dmg'), 2 * R('SKILLS.hopca.HOA_DMG')) && gan(R('h.buf.cdmg'), 0.16) && gan(R('h.buf.toc'), 0), '2 Harmony: +2×HOA_DMG ST, +16% ST chí mạng');
 R(`dat(12, 'set', 2, T => T.st.bang = 99); cn();`); ok(R('SKILLS.hopca.hoa(B, h)') === 3 && gan(R('h.buf.toc'), 0.3), 'ụ băng vẫn tính · 3 Harmony: +30% tốc');
 R(`B.t[8] = null; dat(8, 'lien', 2, T => T.st.da = true); cn();`); ok(R('SKILLS.hopca.hoa(B, h)') === 3, 'ô đá không tính');
 R(`B.t[8] = null; dat(8, 'lien', 2); cn();`); ok(R('SKILLS.hopca.hoa(B, h)') === 4 && gan(R('h.buf.cdmg'), 0.32 + 0.5), '4 Harmony: +50% ST chí mạng thêm');
@@ -124,8 +124,8 @@ R(`B.t[0] = null; B.t[1] = null; dat(0, 'saochep', 1); dat(1, 'canon', 1); ghep(
 ok(R('A1.kho + A2.kho + A3.kho') === R('tong0'), 'Copycat: không tính');
 R(`B.t.fill(null); var A = dat(10, 'luutru', 1); A.kho = 39; B.deck = ['lien']; dat(0, 'lien', 1); dat(1, 'lien', 1); ghep(B, B.t[0], B.t[1]); dat(3, 'lien', 1); dat(4, 'lien', 1); ghep(B, B.t[3], B.t[4]); cn();`);
 ok(R('A.kho') === 40, 'trần 40 ở LV9');
-const t40 = R('SKILLS.luutru.thuong(40)'); ok(gan(t40.dmg, 0.65) && gan(t40.toc, 0.15) && gan(t40.crit, 0.08) && gan(t40.cdmg, 0.40), '40 điểm: +40% +25% ST, +15% tốc, +8% chí mạng, +40% ST chí mạng');
-ok(gan(R('SKILLS.luutru.thuong(70)').dmg, 0.70 + 0.25 + 0.2 + 0.3 + 0.4), 'mốc 50/60/70 thêm +20/30/40% ST');
+const t40 = R('SKILLS.luutru.thuong(40)'); ok(gan(t40.dmg, 0.40 * R('SKILLS.luutru.DIEM') / 0.01 + 0.25) && gan(t40.toc, 0.15) && gan(t40.crit, 0.08) && gan(t40.cdmg, 0.40), '40 điểm: +40% +25% ST, +15% tốc, +8% chí mạng, +40% ST chí mạng');
+ok(gan(R('SKILLS.luutru.thuong(70)').dmg, 70 * R('SKILLS.luutru.DIEM') + 0.25 + 0.2 + 0.3 + 0.4), 'mốc 50/60/70 thêm +20/30/40% ST');
 R(`B.capThe.luutru = 6;`); ok(R('SKILLS.luutru.tran(A)') === 70, 'trần 70 ở LV15');
 R(`B.t.fill(null); var X1 = dat(10, 'luutru', 2); dat(11, 'luutru', 2); B.deck = ['lien']; var rr = ghep(B, B.t[11], B.t[10]);`);
 ok(R('G.hu.every(o => o.k !== "vm1Xung")'), 'bỏ 3 xung Archive + Archive');
@@ -175,7 +175,7 @@ ok(R('[0, 19, 20, 49, 50, 99, 100, 199, 200, 999].map(n => SKILLS.mauhut.dang({ 
 R(`M.mau = 5000; cn();`); ok(R('critU(M)') === 1, 'Máu rất cao: chí mạng ≤ 100%');
 R(`M.mau = 100; M.mhN = 0; G.quai.length = 0; var nv = 0; var _hu = G.hu.push.bind(G.hu); G.hu.push = (o) => { if (o && o.k === 'mhNova') nv++; return _hu(o); };
   for (let i = 0; i < 6; i++) { const E = sinhQuai(Object.keys(QUAI)[0], 0, 100, 1000); E.vao = 1; SKILLS.mauhut.ban(G, B, M, E); for (let k = 0; k < 90 && G.dan.length; k++) G.dan = G.dan.filter(d => !capNhatDan(d, 1 / 30)); }`);
-ok(R('nv') === 1 && R('M.mhN') === 6, '100 Máu: phát thứ 6 nổ nova máu (1 lần / 6 phát)', R('[nv, M.mhN]'));
+ok(R('nv') === 1 && R('M.mhN') === 6, '100 Máu: nova máu mỗi phát thứ NOVA[3] (1 lần trong 6 phát)', R('[nv, M.mhN]'));
 R('B.capThe.mauhut = 8;'); ok(gan(R('SKILLS.mauhut.tg(4, B)'), 11.56, 1e-6), 'LV17: thời gian nuốt −32% (4★: 17 s → 11.56 s)'); R('B.capThe.mauhut = 0;');
 R(`B.t.fill(null); var M2 = dat(0, 'mauhut', 3), M3 = dat(1, 'mauhut', 3); M2.mau = 60; M3.mau = 40; B.deck = ['mauhut']; var ra = ghep(B, M2, M3);`);
 ok(!R('ra') || (R('ra.mau') || 0) === 0, 'ghép thường 2 Mạch Máu → ụ mới 0 Máu');
