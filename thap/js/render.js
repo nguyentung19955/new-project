@@ -19,6 +19,10 @@ const _DS_CV = [];
 })();
 // màu vệt đạn theo ảnh đạn
 const MAU_VET = { dan_lien: '#ffb347', dan_bang: '#8fe3ff', dan_doc: '#8dff4a', dan_tia: '#7fd0ff', tia_lua: '#ffc070' };
+// dịu VFX (claude/diu-vfx, người dùng 09/11: hiệu ứng che kín quái/đường): chỉ hình, không đổi luật · ?diu=0 tắt để so
+//  duoi = alpha đổ lớp vùng phủ nền (độc/cầu vồng/vệt lửa/mìn/hố đen/băng) · tren = alpha đổ lớp nổ/tia/tường/hạt
+//  lo / loTrum = độ khoét mềm lớp trên quanh mỗi quái / trùm (1 = xoá hẳn)
+const DIU = { bat: !(typeof location !== 'undefined' && /[?&]diu=0\b/.test(location.search)), duoi: 0.55, tren: 0.88, lo: 0.6, loTrum: 0.4 };
 const REN = {
   dbg: /[?&]debug(=|&|$)/.test(location.search), // ?debug: cho phép hình vẽ code dự phòng khi thiếu ảnh (chỉ để gỡ lỗi)
   cv: null, ctx: null, s: 1, dpr: 1, anh: {}, nen: null, xam: {}, trang: {}, cham: {}, cache: {}, t: 0, thieu: new Set(), dt: 0, a: 1, _vet: {}, _glow: {},
@@ -678,20 +682,28 @@ const REN = {
     this.veCongLoi(ctx);
     this.veNhanBan(ctx);
     // vật trên đường (mây độc, vũng độc, mìn, cầu vồng…) vẽ dưới quái
-    for (const o of G.hu) if (HU[o.k] && HU[o.k].duoi) { this._T = o.T || o._T || null; HU[o.k].ve(ctx, o, this); }
+    // dịu VFX (claude/diu-vfx): vùng phủ nền vẽ vào lớp riêng rồi đổ xuống với alpha DIU.duoi → đường/quái không bị phủ đặc
+    const diu = DIU.bat && G.hu.some(o => o.k === 'hoden' || (HU[o.k] && HU[o.k].duoi)), cDuoi = diu ? this.lopFx() : ctx;
+    for (const o of G.hu) if (HU[o.k] && HU[o.k].duoi) { this._T = o.T || o._T || null; HU[o.k].ve(cDuoi, o, this); }
     { const da = []; // hố đen DƯỚI quái (chống rối claude/chong-roi: trước đè lên quái/đường); nhiều hố trùng tâm (nhiều ụ cùng nhịp) chỉ vẽ 1 → không chồng đặc
-      for (const o of G.hu) if (o.k === 'hoden') { if (da.some(q => Math.abs(q.x - o.x) < o.r * 0.3 && Math.abs(q.y - o.y) < o.r * 0.3)) continue; da.push(o); this._T = o.T || o._T || null; HU.hoden.ve(ctx, o, this); } }
+      for (const o of G.hu) if (o.k === 'hoden') { if (da.some(q => Math.abs(q.x - o.x) < o.r * 0.3 && Math.abs(q.y - o.y) < o.r * 0.3)) continue; da.push(o); this._T = o.T || o._T || null; HU.hoden.ve(cDuoi, o, this); } }
     this._T = null;
+    if (diu) this.gopLop(ctx, DIU.duoi, false);
+    this._thanh = DIU.bat ? [] : null; // thanh máu quái gom lại, vẽ SAU lớp hiệu ứng (luôn đọc được)
     this.veQuai(ctx);
     this._hang = [];
     this.veO(ctx);
-    for (const o of G.hu) if (o.k === 'tuong') { this._T = o.T || o._T || null; HU.tuong.ve(ctx, o, this); }
-    this._T = null;
     this.veLaser(ctx);
     this.veDan(ctx);
-    for (const o of G.hu) if (o.k !== 'hoden' && o.k !== 'tuong' && HU[o.k] && HU[o.k].ve && !HU[o.k].duoi) { this._T = o.T || o._T || null; HU[o.k].ve(ctx, o, this); }
+    // hiệu ứng trên quái (tường, nổ, tia chiêu, hạt…) vẽ vào lớp riêng → khoét mềm quanh từng quái → đổ lên với alpha DIU.tren
+    const cTren = DIU.bat ? this.lopFx() : ctx;
+    for (const o of G.hu) if (o.k === 'tuong') { this._T = o.T || o._T || null; HU.tuong.ve(cTren, o, this); }
     this._T = null;
-    this.veFx(ctx);
+    for (const o of G.hu) if (o.k !== 'hoden' && o.k !== 'tuong' && HU[o.k] && HU[o.k].ve && !HU[o.k].duoi) { this._T = o.T || o._T || null; HU[o.k].ve(cTren, o, this); }
+    this._T = null;
+    this.veFx(cTren);
+    if (DIU.bat) this.gopLop(ctx, DIU.tren, true);
+    { const th = this._thanh; this._thanh = null; if (th) for (const f of th) f(); }
     VX.veDs(ctx, this); // hiệu ứng sự kiện: sao lên mốc, kỹ năng ghép, dây liên kết, bingo, tiếng hú
     if (this.veHoTro) this.veHoTro(ctx); // chạm/giữ ụ hỗ trợ: hiển thị vùng & loại buff
     ND.veSoi(ctx); // chạm thẻ bộ bài: khoanh các ụ cùng loại
@@ -701,8 +713,36 @@ const REN = {
     ND.veKeoTren(ctx);
     this.veChu(ctx);
     if (typeof CORE !== 'undefined') CORE.veHud(ctx, this); // số tim trên lõi nhà chính
-    if (FX.chop > 0) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = Math.min(0.3, FX.chop); ctx.drawImage(this.cham1(FX.chopMau), -W * 0.6, -H * 0.4, W * 2.2, H * 1.8); ctx.restore(); ctx.globalAlpha = 1; } // chớp màn = fx_cham_trang PNG phóng to
+    if (FX.chop > 0) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = Math.min(DIU.bat ? 0.14 : 0.3, FX.chop); ctx.drawImage(this.cham1(FX.chopMau), -W * 0.6, -H * 0.4, W * 2.2, H * 1.8); ctx.restore(); ctx.globalAlpha = 1; } // chớp màn = fx_cham_trang PNG phóng to
   },
+
+  // ---- dịu VFX (claude/diu-vfx): lớp hiệu ứng riêng cùng cỡ canvas chính ----
+  lopFx() {
+    const cv = this.cv; let L = this._lop;
+    if (!L) { L = this._lop = document.createElement('canvas'); this._lopX = L.getContext('2d'); }
+    const x = this._lopX;
+    if (L.width !== cv.width || L.height !== cv.height) { L.width = cv.width; L.height = cv.height; this.min(x); x.lineCap = 'round'; x.lineJoin = 'round'; }
+    // chỉ dùng dải trên của canvas tới hết đường + lề (hiệu ứng nằm trên đường/bàn; dải thẻ bài phía dưới không cần) → bớt điểm ảnh xoá/đổ mỗi khung
+    if (this._lopD !== G.duong) { this._lopD = G.duong; let my = 0; for (const p of G.duong) for (const q of p.pts) my = Math.max(my, q.y !== undefined ? q.y : q[1]); this._lopY = my > 0 ? my + 90 : H; }
+    this._lopH = Math.min(L.height, Math.ceil((this._lopY + 10) * this.s * this.dpr));
+    x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; x.globalCompositeOperation = 'source-over'; x.clearRect(0, 0, L.width, this._lopH);
+    x.setTransform(this.ctx.getTransform());
+    return x;
+  },
+  // đổ lớp lên canvas chính; khoet: xoá mềm (destination-out, chấm mờ fx_cham_trang = mặt nạ) quanh từng quái sống → quái luôn lộ ra
+  gopLop(ctx, al, khoet) {
+    const x = this._lopX, L = this._lop;
+    x.globalAlpha = 1; x.globalCompositeOperation = 'source-over';
+    if (khoet && G.quai.length) {
+      const lo = this.cham1('#ffffff'); x.globalCompositeOperation = 'destination-out';
+      for (const E of G.quai) if (!E.chet) { const c = E.d.co * (E.trum ? 0.9 : 1.15); x.globalAlpha = E.trum ? DIU.loTrum : DIU.lo; x.drawImage(lo, E.x - c / 2, E.y - c * 0.6, c, c); }
+      x.globalAlpha = 1; x.globalCompositeOperation = 'source-over';
+    }
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al; const h = this._lopH || L.height; ctx.drawImage(L, 0, 0, L.width, h, 0, 0, L.width, h); ctx.restore();
+    ctx.globalAlpha = 1;
+  },
+  // thanh máu quái: trong khung đang vẽ (ve0) gom lại vẽ sau lớp hiệu ứng; ngoài ve0 vẽ ngay
+  sauThanh(f) { if (this._thanh) this._thanh.push(f); else f(); },
 
   // dòng chảy: mũi tên ›› mờ trôi dọc đường về lõi (co-op: 2 làn nhập vào hành lang chung đọc rõ)
   veDongChay(ctx) {
@@ -832,12 +872,13 @@ const REN = {
       // thanh máu
       if (!E.chet && E.hp < E.max && !E.trum) {
         const w = Math.max(18, co * 0.55), yy = y - co * 0.42;
-        this.thanhAnh(ctx, x - w / 2, yy, w, 3.5, E.hp / E.max, E.docT > 0 ? '#7cff4a' : (E.cham > 0 && !E.d.khangCham ? '#6fd8ff' : '#ff4a4a'));
+        const mm = E.docT > 0 ? '#7cff4a' : (E.cham > 0 && !E.d.khangCham ? '#6fd8ff' : '#ff4a4a'), tl = E.hp / E.max;
+        this.sauThanh(() => this.thanhAnh(ctx, x - w / 2, yy, w, 3.5, tl, mm));
       }
       // (bỏ bông tuyết cạnh thanh máu — người dùng 08/11; bị chậm vẫn thấy: thanh máu xanh băng + viền băng trên thân)
       if (E.trum && !E.chet) {
         const w = 70, yy = y - co * 0.55;
-        this.thanhAnh(ctx, x - w / 2, yy - 1, w, 6, E.hp / E.max, TRUM[E.trum].mau);
+        { const tl = E.hp / E.max, mm = TRUM[E.trum].mau; this.sauThanh(() => this.thanhAnh(ctx, x - w / 2, yy - 1, w, 6, tl, mm)); }
         if (E.bao) { // đường ngắm tới ụ bị nhắm
           const B = G.ban[E.ban];
           ctx.save(); ctx.globalAlpha = 0.75; const ln = this.toMauA('sup_link', TRUM[E.trum].mau, 0.6), vd = this.img('h2_vong_do'); // dây ngắm = sup_link PNG cuộn + vòng đỏ PNG trên ụ bị nhắm
@@ -1215,14 +1256,14 @@ const REN = {
       }
       ctx.globalAlpha = 1;
       const aI = this.img('fx_' + a.ten), nK = aI ? Math.round(aI.width / aI.height) : 6; // dải 6 khung (fx_*) hoặc 16 khung (fx_trum_<id>)
-      this.khungMuot(ctx, 'fx_' + a.ten, u * (nK - 0.001), x, y, a.co * sc, goc, Math.min(0.82, al) * (window.CG ? CG.kA(a) : 1)); // trần độ sáng cộng · CG.kA: trần sáng chung + chỉ 1 dải T4 sáng đủ (camgiac.js)
+      this.khungMuot(ctx, 'fx_' + a.ten, u * (nK - 0.001), x, y, a.co * sc, goc, Math.min(DIU.bat ? 0.7 : 0.82, al) * (window.CG ? CG.kA(a) : 1)); // trần độ sáng cộng · CG.kA: trần sáng chung + chỉ 1 dải T4 sáng đủ (camgiac.js)
     }
     const vm = typeof FXU !== 'undefined' && FXU.co('fx_vong_mong') && this.img('fx_vong_mong');
     for (const v of FX.vong) {
       const u = v.t / v.song, e = 1 - (1 - u) * (1 - u);
       if (vm) { // vòng mảnh PNG (T22) tô màu — thay arc vẽ code
         const r = Math.max(1, v.r0 + (v.r1 - v.r0) * e), im = FXU.mau('fx_vong_mong', v.mau);
-        if (im) { ctx.globalAlpha = (1 - u) * 0.85; ctx.drawImage(this.mip(im, r * 2.3 * this.s * this.dpr), v.x - r * 1.15, v.y - r * 1.15, r * 2.3, r * 2.3); }
+        if (im) { ctx.globalAlpha = (1 - u) * (DIU.bat ? 0.6 : 0.85); ctx.drawImage(this.mip(im, r * 2.3 * this.s * this.dpr), v.x - r * 1.15, v.y - r * 1.15, r * 2.3, r * 2.3); }
         continue;
       }
       // fx_vong_mong chưa tải: không vẽ vòng code
@@ -1286,7 +1327,7 @@ const REN = {
       if (c.kieu === 'to') { sc = u < 0.15 ? 0.5 + u / 0.15 * 0.7 : 1.2 - Math.min(0.2, (u - 0.15)); y = c.y - u * 18; }
       ctx.globalAlpha = u > 0.7 ? (1 - u) / 0.3 : 1;
       if (c.kieu !== 'nhan') {
-        const mx = c.kieu === 'crit' ? 1.6 : c.kieu === 'to' ? 1.2 : 1, px = Math.round(c.co * mx), im = this.chuAnh(c.s, c.mau, px), q = sc / mx;
+        const mx = c.kieu === 'crit' ? (DIU.bat ? 1.3 : 1.6) : c.kieu === 'to' ? 1.2 : 1, px = Math.round(c.co * mx * (DIU.bat && (!c.kieu || c.kieu === 'crit') ? 0.85 : 1)), im = this.chuAnh(c.s, c.mau, px), q = sc / mx;
         let q2 = q; if (im.lw * q2 > W - 12) q2 = (W - 12) / im.lw; // chữ dài: tự thu nhỏ cho vừa màn
         const w = im.lw * q2, h = im.lh * q2, cx = clamp(c.x, w / 2 + 2, W - w / 2 - 2);
         if (c.kieu === 'mana') this.anhGiua(ctx, 'ui_mana', cx - im.tw * q / 2 - 8, y - c.co * 0.35, 14);

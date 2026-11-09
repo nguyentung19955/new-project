@@ -677,11 +677,13 @@ Object.assign(REN, {
   // vẽ: cỡ = co × 1.1, alpha 0.85, thở ±6% 2 Hz; choáng xoay 120°/s trên đầu; đóng băng phủ lên thân
   veStV2(ctx, E, s, x, y, co, t) {
     const tho = 1 + 0.06 * Math.sin(t * 12.6 + E.uid), C = co * 1.02 * tho;
-    if (s.cham) this.anhGiua(ctx, 'fx_st_cham', x, y, C, t * 0.4, 0.85);
-    if (s.doc) this.anhGiua(ctx, 'fx_st_doc', x, y, C, 0, 0.85);
-    if (s.chay) this.anhGiua(ctx, 'fx_st_chay', x, y - co * 0.05, C, 0, 0.85);
+    // dịu VFX (claude/diu-vfx): dấu chậm/độc/cháy phủ lên thân → mờ hơn (0.85 → 0.42/0.6/0.6) để vẫn thấy quái khi cả đường bị làm chậm
+    const dA = typeof DIU !== 'undefined' && DIU.bat;
+    if (s.cham) this.anhGiua(ctx, 'fx_st_cham', x, y, C, t * 0.4, dA ? 0.42 : 0.85);
+    if (s.doc) this.anhGiua(ctx, 'fx_st_doc', x, y, C, 0, dA ? 0.6 : 0.85);
+    if (s.chay) this.anhGiua(ctx, 'fx_st_chay', x, y - co * 0.05, C, 0, dA ? 0.6 : 0.85);
     if (s.yeu) this.anhGiua(ctx, 'fx_st_' + s.yeu, x, y, C * 1.05, s.yeu === 'cauvong' ? t * 1.2 : 0, s.yeu === 'khienvang' ? 0.55 : 0.6);
-    if (s.dong) this.anhGiua(ctx, 'fx_st_dong', x, y, co * 1.05, 0, 0.8);
+    if (s.dong) this.anhGiua(ctx, 'fx_st_dong', x, y, co * 1.05, 0, dA ? 0.62 : 0.8);
     if (s.choang) this.anhGiua(ctx, 'fx_st_choang', x, y - co * 0.42, co * 0.75, 0.12 * Math.sin(t * 6), 0.95);
     ctx.globalAlpha = 1;
   },
@@ -851,12 +853,13 @@ Object.assign(REN, {
       const yb = E.y + hover;
       if (E.hp < E.max && !E.trum) {
         const w = Math.max(18, co * 0.55), yy = yb - co * 0.42;
-        PX.thanh(ctx, E.x + lech - w / 2, yy, w, 3, E.hp / E.max, E.docT > 0 ? '#7cff4a' : (lanh ? '#6fd8ff' : '#ff4a4a'));
+        const xx = E.x + lech - w / 2, tl = E.hp / E.max, mm = E.docT > 0 ? '#7cff4a' : (lanh ? '#6fd8ff' : '#ff4a4a');
+        this.sauThanh(() => PX.thanh(ctx, xx, yy, w, 3, tl, mm)); // vẽ sau lớp hiệu ứng (claude/diu-vfx)
       }
       // (bỏ bông tuyết cạnh thanh máu — người dùng 08/11; bị chậm vẫn thấy: thanh máu xanh băng + vòng gió lạnh / băng trên thân)
       if (E.trum) {
         const w = 70, yy = yb - co * 0.6; // 0.55 → 0.6: đỉnh nảy của mad_crown/freezer/joker_king chạm thanh máu
-        PX.thanh(ctx, clamp(E.x + lech, w / 2 + 2, W - w / 2 - 2) - w / 2, yy, w, 4, E.hp / E.max, TRUM[E.trum].mau);
+        { const xx = clamp(E.x + lech, w / 2 + 2, W - w / 2 - 2) - w / 2, tl = E.hp / E.max, mm = TRUM[E.trum].mau; this.sauThanh(() => PX.thanh(ctx, xx, yy, w, 4, tl, mm)); }
         if (E.bao) { // dây báo chiêu tới ụ bị nhắm: tia PNG tô màu trùm, lặp + trượt (thay nét đứt vẽ code)
           const B = G.ban[E.ban];
           ctx.save(); ctx.globalCompositeOperation = 'lighter';
