@@ -368,7 +368,7 @@ chanKhien = function (B, T) {
 const _thucHienChieuGoc = thucHienChieu;
 thucHienChieu = function (E, B) { G._trumDang = true; try { return _thucHienChieuGoc(E, B); } finally { G._trumDang = false; } };
 // Co-op: sao chép hiệu ứng ghép AN TOÀN của đồng đội (½ sao) lên bàn mình
-const GUONG_CHEP = new Set(['nhanmana', 'drone', 'loa', 'nhanban', 'kepha', 'sinhdoi', 'orbital', 'pandora', 'nhieusong']);
+const GUONG_CHEP = new Set(['nhanmana', 'drone', 'loa', 'nhanban', 'kepha', 'sinhdoi', 'orbital', 'khoathoigian', 'pandora', 'nhieusong']);
 const _ghepGuong = ghep;
 ghep = function (B, a, b, ep) {
   const ids = a && b && laGhepThat(a, b, ep) ? [...new Set([a.id, b.id])].filter(id => GUONG_CHEP.has(id)) : [], saoA = a ? (b && laTuDo(a, b) ? saoGhep(a, b) : a.sao) : 1; // (Wild Link: sao trung bình) // chỉ ghép thật (Merge King +★ / Copycat / Teleporter: không chép)

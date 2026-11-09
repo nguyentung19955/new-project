@@ -117,68 +117,36 @@ SKILLS.combo = {
 };
 
 // =====================================================================================================
-// Ụ SÁNG TẠO — MẪU (09/11, tuvan/u-sang-tao/DE-XUAT.md §6.3): ĐỒNG HỒ CÁT (Hourglass, id 'khoathoigian', Tím ĐB) — thay "khoá + dồn ST".
-//   Mỗi 9 s (3★ 8 s, nhịp CỐ ĐỊNH theo thời gian trận, không ngẫu nhiên) đồng hồ TỰ LẬT → 3 s "CÁT CHẬM":
-//   · quái trong DẢI HÀNG của đồng hồ (|y − tâm hàng| ≤ ½ ô, kéo dài ra đường) chậm 45% (tinh anh 30%, trùm 20%) — cấp thẻ +% (KY_NANG_CAP);
-//     chậm không cộng dồn (lấy mức mạnh nhất, luật chung). Frost Flyer (kháng chậm) miễn.
-//   · ụ TẤN CÔNG cùng hàng +30% tốc bắn (vào hệ hỗ trợ chung: HOTRO.apDung → hoTro).
-//   · Không gây sát thương. 5★ CÁT NGƯỢC: thêm dải CỘT (quái + ụ cùng cột) · 7★ NGƯNG ĐỌNG: 0,5 s đầu mỗi lần lật quái thường trong dải ĐỨNG YÊN.
+// P1 · CHRONO LOCK (khoathoigian) — Tím ĐB: mỗi chu kỳ khoá quái ĐẦU (không trùm) trong ô thời gian, đứng yên t s;
+//      sát thương nhận trong lúc khoá DỒN LẠI, mở khoá nổ x% lượng dồn vào quái đó + quái trong 40 px.
+//      Trùm: chậm 50% trong t/2 s, nổ 50%. Frost Flyer miễn chậm nhưng KHÔNG miễn khoá. Khi GHÉP: khoá ngay 1 quái.
 // =====================================================================================================
 SKILLS.khoathoigian = {
-  vai: 'db', toc: 1, napMau: '#45e0c8', CAT: 3, TOC: 0.3, CHAM_TO: 0.3, CHAM_TRUM: 0.2,
-  ky: (T) => (T.sao >= 3 ? 8 : 9),
-  cham: (T) => (knThe(G.ban[T.ban], 'khoathoigian') || 45) / 100,
-  coCot: (T) => T.sao >= 5,
-  trongDai(B, T, E) { const c = B.o[T.o]; return Math.abs(E.y - c.y) <= B.ch / 2 || (this.coCot(T) && Math.abs(E.x - c.x) <= B.cw / 2); },
-  oCung(T) { const c = T.o % 5, h = (T.o / 5) | 0, ds = []; for (let i = 0; i < 15; i++) if (i !== T.o && (((i / 5) | 0) === h || (this.coCot(T) && i % 5 === c))) ds.push(i); return ds; },
-  mo: (T) => { const k = SKILLS.khoathoigian; return 'Flips every ' + k.ky(T) + 's · ' + k.CAT + 's of slow sand · enemies in its Row' + (k.coCot(T) ? ' + Column bands ' : ' band ') + Math.round(k.cham(T) * 100) + '% slower (elite 30%, boss 20%) · Attack turrets in that line +' + Math.round(k.TOC * 100) + '% fire rate' + (T.sao >= 7 ? ' · first 0.5s of a flip: normal enemies in the band stop' : ''); },
+  vai: 'db', dmg: 10, toc: 0.8, nham: 'dau', napMau: '#45e0c8',
+  ky: (T) => sao7(T, [7.5, 7, 6.5, 6, 5.5, 5, 4.5]), // 9→6 s ⇒ 7.5→4.5 s (đo bậc 06/11)
+  dai: (T) => sao7(T, [1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.5]),
+  no: (T) => sao7(T, [0.4, 0.45, 0.5, 0.6, 0.65, 0.75, 0.95]), // +~30% (đo bậc 06/11)
+  mo: (T) => 'Every ' + (SKILLS.khoathoigian.ky(T) / (T.buf ? nhipU(T) : (T.sao >= 3 ? 1.2 : 1))).toFixed(1) + 's locks the lead non-boss enemy ' + SKILLS.khoathoigian.dai(T) + 's · release bursts ' + Math.round(SKILLS.khoathoigian.no(T) * 100) + '% of stored damage (40 px) · a boss (only if nothing else): 50% slow, half time, half burst · on merge: lock now',
   capNhat(G, B, T, dt) {
-    if (!T._huDH || T._huDH.T !== T || G.hu.indexOf(T._huDH) < 0) { T._huDH = { k: 'dhDai', t: 0, song: 1e9, T }; G.hu.push(T._huDH); } // chỉ để VẼ dải sương
-    T.dh = (T.dh || 0) + dt; const ky = this.ky(T);
-    if (T.dh >= ky) { T.dh -= ky; T.cat = this.CAT; T.latN = (T.latN | 0) + 1; T.latLuc = G.t; SND.tua(); }
-    T.nap = Math.min(1, T.dh / ky);
-    if (T.cat > 0) {
-      T.cat = Math.max(0, T.cat - dt); const dau = this.CAT - T.cat, s0 = this.cham(T);
-      for (const E of dsMucTieu(B)) {
-        if (E.chet || !this.trongDai(B, T, E)) continue;
-        if (!E.d.khangCham) { const s = E.trum ? Math.min(this.CHAM_TRUM, HOTRO.CHAM_TRUM) : E.d.to ? this.CHAM_TO : s0; if (E.cham <= s || E.chamT <= 0.2) { E.cham = Math.max(E.cham, s); E.chamT = Math.max(E.chamT, 0.2); } }
-        if (T.sao >= 7 && dau < 0.5 && !E.trum && !E.d.to) E.chan = Math.max(E.chan || 0, 0.5 - dau);
-      }
-    }
+    if (G.hu.some(o => o.k === 'khoa' && o.T === T)) return false; // tối đa 1 quái bị khoá / ụ
+    T.nap = Math.min(1, T.nap + dt * nhipU(T) / this.ky(T));
+    if (T.nap >= 1 && this.khoa(G, B, T, T.sao)) T.nap = 0;
+    return false;
+  },
+  khoa(G, B, T, sao) {
+    const ds = quaiTheoDau(B).filter(E => !E.khoaHu);
+    const E = ds.find(E => !E.trum) || ds[0]; if (!E) return false;
+    const S = { sao }, trum = !!E.trum, dai = this.dai(S) * (trum ? 0.5 : 1);
+    const o = { k: 'khoa', t: 0, song: dai, E, B, T, hp: E.hp, don: 0, pct: this.no(S) * (trum ? 0.5 : 1), x: E.x, y: E.y, trum };
+    E.khoaHu = o; E.chan = Math.max(E.chan || 0, dai); E.chamT = Math.max(E.chamT, dai); // bị khoá = "đang chậm" (Ice Blade ×5)
+    G.hu.push(o);
+    if (conTren(T)) { const [x, y] = dauNong(T); tiaPhep(x, y, E.x, E.y, '#45e0c8'); }
+    FX.vong1(E.x, E.y, 30, 10, '#45e0c8', 0.3, 3); SND.tich();
     return true;
   },
-  hoTro(G, T, N, ra) { if (T.cat > 0 && SKILLS[N.id] && SKILLS[N.id].vai === 'tc') ra.toc = this.TOC; },
-  gocDau: () => 0,
-  // đồng hồ cát (ảnh ChatGPT raw_usangtao_khoathoigian → udh_1/2/3): cát chảy 3 khung theo tiến độ; lật = xoay 180° trong 0,4 s
-  veDau(ctx, T, S, al, R, da) {
-    const a1 = R.img('udh_1'); if (!a1 || !R.img('udh_2') || !R.img('udh_3')) return false;
-    const h = S * 0.9, w = h * a1.width / a1.height, e = T.latLuc != null ? (G.t - T.latLuc) / Math.sqrt(G.tocDo || 1) : 9;
-    const p = T.cat > 0 ? 1 - T.cat / this.CAT : 1, ten = e < 0.4 ? 'udh_3' : p < 0.34 ? 'udh_1' : p < 0.8 ? 'udh_2' : 'udh_3';
-    ctx.save(); ctx.globalAlpha = al;
-    if (e < 0.4) ctx.rotate(Math.PI * VX.eo(e / 0.4)); else if (T.nap > 0.9 && !da) ctx.rotate(Math.sin(R.t * 30) * 0.03 * (T.nap - 0.9) * 10);
-    const im = R.co(ten, h, da ? 'xam' : ''); if (im) ctx.drawImage(im, -w / 2, -h / 2, w, h);
-    if (T.cat > 0 && !da) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * 0.25 * (0.6 + 0.4 * Math.sin(R.t * 8)); if (im) ctx.drawImage(im, -w / 2, -h / 2, w, h); }
-    ctx.restore(); return true;
-  },
+  ghep(G, B, a, b, ra) { if (this.khoa(G, B, ra, Math.min(7, a.sao + 1))) nhanU(ra, 'TIME LOCK!', '#45e0c8', true); },
+  ban(G, B, T, E) { banNhe(B, T, E, { img: 'dan_bang', co: 15, mau: '#9ff5e6', sp: 520 }); },
 };
-// dải sương cát chậm phủ hàng (+ cột 5★) + vòng đồng hồ quanh ụ cùng hàng — chỉ hình (vẽ dưới quái)
-HU.dhDai = {
-  duoi: true,
-  cap: (G, o) => !conTren(o.T) || o.T.id !== 'khoathoigian',
-  ve(ctx, o, R) {
-    const T = o.T; if (!(T.cat > 0)) return; const B = G.ban[T.ban], c = B.o[T.o], sk = SKILLS.khoathoigian, im = R.img('udh_vong'); if (!im) return;
-    const p = 1 - T.cat / sk.CAT, a = Math.min(1, p * 8, (1 - p) * 6);
-    ctx.globalCompositeOperation = 'lighter';
-    const dai = (x, y, w, h) => { const n = Math.max(1, Math.round(Math.max(w, h) / Math.min(w, h))); for (let i = 0; i < n; i++) { const t = (i + 0.5) / n; PX.ve(ctx, im, w > h ? x - w / 2 + w * t : x, w > h ? y : y - h / 2 + h * t, Math.min(w, h) * 1.15, Math.min(w, h) * 1.15, R.t * 0.8 + i, a * 0.28); } };
-    dai(B.x + B.w / 2, c.y, B.w * 1.06, B.ch); if (sk.coCot(T)) dai(c.x, B.y + B.h / 2, B.cw, B.h * 1.06);
-    for (const o2 of sk.oCung(T)) { const N = B.t[o2]; if (N && SKILLS[N.id] && SKILLS[N.id].vai === 'tc') { const q = B.o[o2]; PX.ve(ctx, im, q.x, q.y - B.ch * 0.36, B.ch * 0.34, B.ch * 0.34, -R.t * 6, a * 0.9); } }
-    ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
-  },
-};
-Object.assign(KY_NANG_CAP, { khoathoigian: { ten: 'Slow', base: 45, buoc: 1.35, max: 55.8, dv: '%', pu: 1.5 } }); // Khống chế +1,35%/cấp thẻ (Tím LV5→13)
-// ụ "cùng hàng" (+ cột 5★) nhận buff tốc của Đồng Hồ Cát qua hệ hỗ trợ chung
-const _oHoTroDH = oHoTro;
-oHoTro = function (B, T) { if (T.id === 'khoathoigian') return SKILLS.khoathoigian.oCung(T).map(o => B.t[o]); return _oHoTroDH(B, T); };
 HU.khoa = { // ô thời gian lục giác trong suốt quanh quái + đồng hồ đếm ngược; hết giờ → kính vỡ, nổ phần sát thương đã dồn
   cap(G, o, dt) {
     const E = o.E;
@@ -686,7 +654,7 @@ oHoTro = function (B, T) { if (SKILLS[T.id] && SKILLS[T.id].huong) return oCheo(
 function themHo(ho, bac, id, moi) { const F = HO[ho]; if (!F.bac[bac].includes(id)) F.bac[bac].push(id); if (F.gap) delete F.gap[bac]; HO_CUA[id] = { ho, i: bac }; if (moi) HO_MOI[id] = moi; }
 themHo('energy', 2, 'nayda', 'bounces that grow STRONGER each hop');
 themHo('summon', 2, 'combo', 'every same-type merge powers up the whole line forever');
-themHo('trap', 2, 'khoathoigian', 'flips every 9s: its row slows 45%, turrets in the row +30% fire rate');
+themHo('trap', 2, 'khoathoigian', 'time-locks the lead enemy, stored damage bursts');
 themHo('rapid', 3, 'hydra', 'one head per star, chained shots + tap the card: all Hydras fire faster');
 themHo('blast', 3, 'cuuvi', 'kills grow tails → 9 homing foxfires');
 themHo('joker', 3, 'pandora', 'merge opens 1 of 6 vault effects');

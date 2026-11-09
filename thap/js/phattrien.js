@@ -39,8 +39,8 @@ const HO_MOI = {
   orbital: 'merging awakens EVERY Orbital on the board: area salvos (no normal shots)',
   set: 'chain lightning', laser: 'beam that ramps up ×4', bao: 'instant hits that ARC to a 2nd enemy', railgun: 'rocket salvo down a line + BINGO lines',
   overlord: 'thunder blast + aftershock arcs (Mythic finisher, no active)',
-  sungluc: 'slashes the lead enemy in its row/column band', tia: 'hunts the toughest enemy', nangluong: 'banked mana → up to +500% shot',
-  lien: 'very fast stream', phun: 'bees fly out to random enemies and sting', radar: 'lends fire rate to neighbours', epxung: 'permanent +90% fire rate (stacks)',
+  sungluc: 'one heavy instant shot', tia: 'hunts the toughest enemy', nangluong: 'banked mana → up to +500% shot',
+  lien: 'very fast stream', phun: 'very fast at random enemies', radar: 'lends fire rate to neighbours', epxung: 'permanent +90% fire rate (stacks)',
   bua: 'neighbours’ crits hit harder and stagger', nam: 'melee ring blasts', chimang: 'gives crit to neighbours', cuongno: 'crits → RAGE → FRENZY', soi: 'chance to come out AWAKENED: every hit crits',
   phagiap: 'exposes the lead + toughest enemy for its neighbours', khuech: 'boosts neighbours’ damage', lienket: 'stronger per LINKED twin', dongbo: 'buffs EVERY same-star Attack turret on the board',
   cauvong: 'co-op: trail enemies take more · PVP: rival trail enemies take less',
@@ -104,9 +104,6 @@ const MOC_RIENG = {
   soi:       { 3: ['KEEN FANGS', '+10% crit chance'], 5: ['FERAL', '+25% damage'], 7: ['ALPHA HOWL', 'Neighbours +25% fire rate'] },
   mana:      { 3: ['FAST FLOW', 'Mana every 6s'], 5: ['OVERFLOW', '+25% mana'], 7: ['WELLSPRING', 'Mana every 5s'] },
   hopbi:     { 3: ['QUICK OPEN', 'Opens 12s sooner'], 5: ['LUCKY BOX', 'Result at least 3★'], 7: ['TOP PRIZE', 'Result at least 5★'] },
-  sungluc:   { 3: ['TWO PATHS', 'Band 1.5 tiles wide, +20% slash speed'], 5: ['ISSEN', '+25% damage; a band slash also cuts the 2nd enemy in the band'], 7: ['SHADOWLESS', '+30% damage, slashes every 1.4s'] }, // Ụ SÁNG TẠO mẫu (09/11)
-  phun:      { 3: ['GROUND BEES', 'Flying enemies take ×1.5 stings'], 5: ['HONEY', 'Stung enemies are 10% slower for 1s'], 7: ['QUEEN BEE', 'Bees fly at 340 px/s'] },
-  khoathoigian: { 3: ['QUICK SAND', 'Flips every 8s'], 5: ['REVERSE SAND', 'Its Column counts too (enemies + turrets)'], 7: ['STILLNESS', 'First 0.5s of each flip: normal enemies in the band stop'] },
   tienhoa:   { 7: ['BURNT EGG', 'A 6★ egg burns into a 7★ egg: no hatch, tap it to recycle for +20 mana'] },
 };
 // loại để chọn mốc chung

@@ -101,141 +101,26 @@ SKILLS.xucxac = { // Pháo May Rủi (Fenrir): sát thương ngẫu nhiên 3–3
     });
   },
 };
-// =====================================================================================================
-// Ụ SÁNG TẠO — MẪU (09/11, docs/demo-hop-tuong/tuvan/u-sang-tao/DE-XUAT.md §6): giữ id/bậc/khoá lưu, thay cơ chế + hình + tên.
-// TỔ ONG (Bee Hive, id 'phun', Trắng TC): 2 + ⌊★/2⌋ con ong. Ong ở tổ → chọn QUÁI NGẪU NHIÊN (rngLuat muối 131, ưu tiên quái chưa có
-//   ong khác nhắm) → bay 260 px/s (7★ 340) đuổi theo → đốt 1 phát (1 mục tiêu, không lan) → bay về → nghỉ 0,25 s.
-//   Tốc độ bay / nghỉ × tốc bắn (buff hỗ trợ). Đặt sát đường = đốt dày hơn. Quái chết giữa đường → ong quay về.
-//   3★ ONG ĐẤT: quái BAY nhận ×1,5 · 5★ MẬT NGỌT: quái bị đốt chậm 10% 1 s · 7★ ONG CHÚA: bay 340 px/s.
-//   Ong là trạng thái trong T.ong (pha 0 ở tổ / 1 bay tới / 2 bay về) — bước cố định 1/60 s → tất định online (không Math.random).
-// =====================================================================================================
-SKILLS.phun = {
-  vai: 'tc', dmg: 14, toc: 1, nham: 'ngau', MUOI: 131, NGHI: 0.25,
-  soOng: (T) => 2 + Math.floor(T.sao / 2),
-  tocBay: (T) => (T.sao >= 7 ? 340 : 260),
-  mo: (T) => SKILLS.phun.soOng(T) + ' bees · each flies to a random enemy, stings once and flies home · closer to the path = more stings',
-  chon(B, T) {
-    const ds = dsMucTieu(B).filter(E => !E.chet); if (!ds.length) return null;
-    const dang = new Set(); for (const b of T.ong) if (b.pha === 1 && b.E) dang.add(b.E);
-    const tu = ds.filter(E => !dang.has(E)), L = tu.length ? tu : ds;
-    return L[Math.floor(rngLuat(B, this.MUOI, T.o)() * L.length)];
-  },
-  capNhat(G, B, T, dt) {
-    const c = tamU(T), n = this.soOng(T);
-    if (!T.ong) T.ong = [];
-    while (T.ong.length < n) T.ong.push({ pha: 0, t: 0.18 * T.ong.length, x: c.x, y: c.y, E: null, g: 0 });
-    if (T.ong.length > n) T.ong.length = n;
-    if (!T._huOng || T._huOng.T !== T || G.hu.indexOf(T._huOng) < 0) { T._huOng = { k: 'toOng', t: 0, song: 1e9, T }; G.hu.push(T._huOng); } // chỉ để VẼ ong đang bay
-    const k = tocU(T) / this.toc, v = this.tocBay(T) * k;
-    for (const b of T.ong) {
-      if (b.pha === 0) {
-        b.x = c.x; b.y = c.y; b.t -= dt; if (b.t > 0) continue;
-        const E = this.chon(B, T); if (!E) { b.t = 0; continue; }
-        b.E = E; b.pha = 1; T.banLan++; T.ongRa = G.t;
-      } else if (b.pha === 1) {
-        const E = b.E;
-        if (!E || E.chet || !banDuocQuai(B, E)) { b.pha = 2; b.E = null; continue; }
-        const dx = E.x - b.x, dy = E.y - b.y, d = Math.hypot(dx, dy); b.g = Math.atan2(dy, dx);
-        if (d <= v * dt + 6) { b.x = E.x; b.y = E.y; this.dot(G, B, T, E); b.pha = 2; b.E = null; }
-        else { b.x += dx / d * v * dt; b.y += dy / d * v * dt; }
-      } else {
-        const dx = c.x - b.x, dy = c.y - b.y, d = Math.hypot(dx, dy); b.g = Math.atan2(dy, dx);
-        if (d <= v * dt + 2) { b.x = c.x; b.y = c.y; b.pha = 0; b.t = this.NGHI / k; }
-        else { b.x += dx / d * v * dt; b.y += dy / d * v * dt; }
-      }
-    }
-    return true;
-  },
-  dot(G, B, T, E) {
-    let d = dmgU(T); if (T.sao >= 3 && E.d.bay) d *= 1.5;
-    G.dangBan = T; trung(E, d, { B, T });
-    if (T.sao >= 5 && !E.d.khangCham && !E.chet) { E.cham = Math.max(E.cham, E.trum ? Math.min(0.1, HOTRO.CHAM_TRUM) : 0.1); E.chamT = Math.max(E.chamT, 1); }
-    G.hu.push({ k: 'ongDot', t: 0, song: 0.28, x: E.x, y: E.y });
-  },
-  gocDau: () => 0,
-  // tổ ong (ảnh ChatGPT raw_usangtao_phun → uto_to): đung đưa nhẹ, nhún khi ong ra; ong ĐANG Ở NHÀ bay vòng quanh tổ
-  veDau(ctx, T, S, al, R, da) {
-    const to = R.img('uto_to'); if (!to) return false;
-    const h = S * 0.86, w = h * to.width / to.height, im = R.co('uto_to', h, da ? 'xam' : ''); if (!im) return false;
-    const e = T.ongRa != null ? Math.max(0, G.t - T.ongRa) : 9, nhun = e < 0.25 ? Math.sin(e / 0.25 * Math.PI) * 0.06 : 0;
-    ctx.save(); ctx.globalAlpha = al; ctx.rotate(Math.sin(R.t * 1.6 + (T.pha || 0)) * 0.05); ctx.scale(1 + nhun, 1 - nhun);
-    ctx.drawImage(im, -w / 2, -h / 2 - S * 0.04, w, h); ctx.restore();
-    if (!da && T.ong) { let i = 0; for (const b of T.ong) if (b.pha === 0) { const a = R.t * 2.4 + i * 2.1 + (T.pha || 0); veOng(ctx, R, Math.cos(a) * S * 0.34, Math.sin(a) * S * 0.22 + S * 0.05, S * 0.25, Math.cos(a) < 0 ? 1 : -1, R.t + i, al); i++; } }
-    return true;
-  },
-};
-// 1 con ong (2 khung cánh uto_ong1/2 đổi 18 lần/s), hướng: lat = 1 nhìn phải / -1 nhìn trái
-function veOng(ctx, R, x, y, co, lat, t, al) {
-  const ten = (t * 18 | 0) % 2 ? 'uto_ong2' : 'uto_ong1', im = R.co(ten, co); if (!im) return;
-  ctx.save(); ctx.globalAlpha = al; ctx.translate(x, y + Math.sin(t * 9) * co * 0.06); if (lat < 0) ctx.scale(-1, 1);
-  const w = co * im.width / im.height; ctx.drawImage(im, -w / 2, -co / 2, w, co); ctx.restore();
-}
-HU.toOng = { // ong đang bay (ngoài tổ) — chỉ vẽ, luật ở SKILLS.phun.capNhat
-  cap: (G, o) => !conTren(o.T) || o.T.id !== 'phun',
-  ve(ctx, o, R) {
-    const T = o.T; if (!T.ong) return; const B = G.ban[T.ban], co = Math.min(B.cw, B.ch) * 0.98 * 0.32;
-    let i = 0; for (const b of T.ong) { i++; if (b.pha === 0) continue; veOng(ctx, R, b.x + Math.sin(R.t * 7 + i) * 2, b.y + Math.cos(R.t * 6 + i) * 2, co, Math.cos(b.g) >= 0 ? 1 : -1, R.t + i * 0.37, 1); }
-    ctx.globalAlpha = 1;
-  },
-};
-HU.ongDot = { ve(ctx, o, R) { const u = o.t / o.song, im = R.img('uto_dot'); if (!im) return; ctx.globalCompositeOperation = 'lighter'; PX.ve(ctx, im, o.x, o.y - 4, 26 * (0.6 + 0.6 * u), 26 * (0.6 + 0.6 * u), u * 1.2, 1 - u * u); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1; } };
-// =====================================================================================================
-// KIẾM RÚT NHANH (Iaido Katana, id 'sungluc', Trắng TC): DẢI CHÉM = dải HÀNG (|y − tâm hàng| ≤ ½ ô) hoặc CỘT (|x − tâm cột| ≤ ½ ô)
-//   của ô kiếm, kéo dài ra đường. Có quái trong dải → chém quái đầu trong dải 100% (40 ST, nhịp 1,8 s, trúng tức thì);
-//   không có → chọc quái đầu 45%. Chí mạng gốc +10% (như Súng Lục cũ). 1 mục tiêu / nhát, không lan.
-//   3★ HAI ĐƯỜNG: dải rộng 1,5 ô · 5★ NHẤT THIỂM: nhát chém trúng thêm quái thứ 2 trong dải (100%, mục tiêu riêng) · 7★ VÔ ẢNH: nhịp 1,4 s.
-// =====================================================================================================
-SKILLS.sungluc = {
-  vai: 'tc', dmg: 40, toc: 1 / 1.8, nham: 'dau', crit: 0.1, CHOC: 0.45,
-  rong: (T) => (T.sao >= 3 ? 1.5 : 1),
-  nhanh: (T) => (T.sao >= 7 ? 1.2 * 1.8 / 1.4 : T.sao >= 3 ? 1.2 : 1), // hệ số nhịp riêng (thay mốc chung QUICK HANDS)
-  them: (T) => (T.sao >= 7 ? 1.25 * 1.3 - 1 : T.sao >= 5 ? 0.25 : 0),  // +% ST riêng (thay OVERCHARGE / APEX của mốc chung, cộng dồn)
-  trongDai(B, T, E) { const c = B.o[T.o], w = this.rong(T); return Math.abs(E.y - c.y) <= B.ch * w / 2 || Math.abs(E.x - c.x) <= B.cw * w / 2; },
-  dsDai(B, T) { return dsMucTieu(B).filter(E => !E.chet && this.trongDai(B, T, E)).sort((a, b) => (G.duong[a.p].len - a.s) - (G.duong[b.p].len - b.s)); },
-  chonMuc(G, B, T) { const ds = this.dsDai(B, T); T.kiemDai = ds.length > 0; return ds[0] || quaiDau(B); },
-  mo: (T) => 'Slashes the lead enemy in its Row or Column band (' + SKILLS.sungluc.rong(T) + ' tile wide) · outside the band: a 45% poke · ' + Math.round((0.2 + (T ? themMocCrit(T) : 0)) * 100) + '% crit',
+SKILLS.phun = { // Súng Phun Loạn (Hairball): bắn cực nhanh vào quái ngẫu nhiên
+  vai: 'tc', dmg: 3.43, toc: 5, tocSao: 0.08, nham: 'ngau',
+  mo: () => 'random targets · each ★ +8% fire rate',
   ban(G, B, T, E) {
-    const trong = this.trongDai(B, T, E), c = tamU(T);
-    const d = dmgU(T) * (1 + this.them(T));
-    trung(E, d * (trong ? 1 : this.CHOC), { B });
-    let E2 = null;
-    if (trong && T.sao >= 5) { E2 = this.dsDai(B, T).find(Q => Q !== E && !Q.chet) || null; if (E2) trung(E2, d, { B }); }
-    T.cd -= 1 - 1 / this.nhanh(T); // 3★ +20% nhịp · 7★ VÔ ẢNH nhịp 1,4 s
-    T.chemLuc = G.t; T.chemTrong = trong;
-    G.hu.push({ k: 'kiemChem', t: 0, song: trong ? 0.34 : 0.22, x0: c.x, y0: c.y, x1: E.x, y1: E.y, trong });
-    if (E2) G.hu.push({ k: 'kiemChem', t: 0, song: 0.34, x0: c.x, y0: c.y, x1: E2.x, y1: E2.y, trong: true });
-    SND.tia(); FX.tiaLua(E.x, E.y, trong ? 6 : 3, '#dff4ff', 170, 8);
-  },
-  // kiếm trong vỏ (ảnh ChatGPT raw_usangtao_sungluc → usk_vo / usk_vo_rong / usk_luoi, CÙNG tỉ lệ cắt): xoay theo mục tiêu;
-  //   quái vào dải → rung; chém: lưỡi trượt ra khỏi vỏ (0,07 s) → vung cung ±60° (0,19 s) → tra vỏ (0,16 s). Thời gian nhìn (÷√tốc độ trận).
-  veDau(ctx, T, S, al, R, da) {
-    const vo = R.img('usk_vo'), rong = R.img('usk_vo_rong'), luoi = R.img('usk_luoi'); if (!vo || !rong || !luoi) return false;
-    const g = S * 0.96 / vo.width, e = T.chemLuc != null ? (G.t - T.chemLuc) / Math.sqrt(G.tocDo || 1) : 9;
-    const ve = (ten, a, x) => { const w = a.width * g, h = a.height * g, im = R.co(ten, w, da ? 'xam' : ''); if (im) ctx.drawImage(im, x - w / 2, -h / 2, w, h); };
-    ctx.save(); ctx.globalAlpha = al; ctx.rotate(T.goc); ctx.translate((T.rx || 0) - S * 0.04, S * 0.02);
-    if (e < 0.42 && !da) {
-      const ra = e < 0.07 ? e / 0.07 : e < 0.26 ? 1 : 1 - (e - 0.26) / 0.16; // ra khỏi vỏ → giữ → tra vỏ
-      const vung = e < 0.07 ? -1.05 * ra : e < 0.26 ? -1.05 + 2.1 * VX.eo((e - 0.07) / 0.19) : 1.05 * ra;
-      ve('usk_vo_rong', rong, 21.8 * g);
-      const wL = luoi.width * g, hL = luoi.height * g, im = R.co('usk_luoi', wL); // trục xoay = chuôi kiếm (10% từ đầu chuôi)
-      ctx.save(); ctx.translate(5.6 * g - wL / 2 + wL * 0.1 + ra * wL * 0.45, 0); ctx.rotate(vung);
-      if (im) ctx.drawImage(im, -wL * 0.1, -hL / 2, wL, hL);
-      if (e < 0.3) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * 0.5 * (1 - e / 0.3); if (im) ctx.drawImage(im, -wL * 0.1, -hL / 2, wL, hL); }
-      ctx.restore();
-    } else {
-      const run = T.kiemDai && !da && T.cd < 0.35 ? Math.sin(R.t * 60) * S * 0.012 : 0;
-      ctx.translate(run, run * 0.5); ve('usk_vo', vo, 0);
-    }
-    ctx.restore(); return true;
+    giat(T, 0.22); const [x, y] = dauNong(T);
+    FX.no('chop_nong', x, y, 16 + Math.random() * 6, 0.06, T.goc + rnd(-0.2, 0.2)); SND.lien();
+    const dmg = dmgU(T);
+    danThang(B, T, E, 'dan_lien', 640, 12, (G, d, M) => { if (M) trung(M, dmg, { B }); FX.tiaLua(d.x, d.y, 1, '#ffd080', 100, 6); });
+    T.muc = null; // phát sau chọn quái NGẪU NHIÊN mới (cũ: ở 60 khung/s cửa sổ đổi mục tiêu cd ≤ 0.05 bị nhảy qua → bám 1 con)
   },
 };
-HU.kiemChem = { // vệt chém (ảnh usk_chem) cắt từ ụ tới quái — chỉ hình
-  ve(ctx, o, R) {
-    const im = R.img('usk_chem'); if (!im) return; const u = o.t / o.song, dx = o.x1 - o.x0, dy = o.y1 - o.y0, d = Math.hypot(dx, dy), g = Math.atan2(dy, dx);
-    ctx.globalCompositeOperation = 'lighter';
-    if (o.trong) { const len = Math.max(60, d + 30) * (0.35 + 0.65 * VX.eo(Math.min(1, u * 3))); PX.ve(ctx, im, o.x0 + Math.cos(g) * (d - len / 2 + 15), o.y0 + Math.sin(g) * (d - len / 2 + 15), len, 26, g, (1 - u) * 0.9); }
-    PX.ve(ctx, im, o.x1, o.y1, o.trong ? 64 : 40, o.trong ? 34 : 22, g + Math.PI / 2 * (o.trong ? 0.6 : 0.2), (1 - u));
-    ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
+SKILLS.sungluc = { // Súng Lục (Girl detective): một phát lớn trúng tức thì vào quái đầu
+  vai: 'tc', dmg: 34.5, toc: 0.6, nham: 'dau', crit: 0.1,
+  mo: (T) => 'Heavy instant shot · ' + Math.round((0.2 + (T ? themMocCrit(T) : 0)) * 100) + '% crit',
+  ban(G, B, T, E) {
+    giat(T, 1.6); const [x, y] = chopNong(T, 32); phutKhoi(x, y, 1); SND.tia();
+    trung(E, dmgU(T), { B });
+    G.hu.push({ k: 'tiaTia', t: 0, song: 0.2, x0: x, y0: y, x1: E.x, y1: E.y, mau: '#ffd080' });
+    FX.tiaLua(E.x, E.y, 6, '#ffd080', 170, 9);
+    FX.hat1('bui', x - Math.cos(T.goc) * 16, y - Math.sin(T.goc) * 16, rnd(-40, 40), -50, 0.45, 3.5); // vỏ đạn văng
   },
 };
 SKILLS.maychem = { // Máy Chém (Scaffold): xác suất giết ngay quái nhỏ
