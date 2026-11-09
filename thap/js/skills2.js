@@ -89,7 +89,8 @@ SKILLS.xucxac = { // Pháo May Rủi (Fenrir): sát thương ngẫu nhiên 3–3
   ban(G, B, T, E) {
     giat(T, 0.9); const [x, y] = chopNong(T, 26); phutKhoi(x, y, 1); SND.phao();
     const chac = !!T._critChac; if (chac) T._critChac = false; // Crit Antenna 7★: cú chắc chắn chí mạng = cú tối đa (không nhân đôi thêm)
-    const crit = chac || Math.random() < critU(T), roll = crit ? 300 : 3 + rint(298), dmg = dmgU(T) * (crit ? 1.5 : roll / 100);
+    const r = rngLuat(B, 37, T.o), crit = chac || r() < critU(T), roll = crit ? 300 : 3 + Math.floor(r() * 298), // RNG luật có hạt (10/11, thay Math.random)
+      dmg = dmgU(T) * (crit ? 1.5 : roll / 100);
     // chí mạng: 150% × (2 + sát thương chí mạng) = 300% (+ Hammer/Focus Lens)
     danThang(B, T, E, 'dan_phao', 520, 15, (G, d, M) => {
       if (M) trung(M, dmg, { B, crit, mau: roll >= 240 ? '#ffd23f' : roll < 40 ? '#9aa6b4' : '#ffffff' });
@@ -129,7 +130,7 @@ SKILLS.maychem = { // Máy Chém (Scaffold): xác suất giết ngay quái nhỏ
     const dmg = dmgU(T), tl = this.tile(T);
     danThang(B, T, E, 'dan_tia', 600, 18, (G, d, M) => {
       if (!M) return;
-      if (!M.trum && !M.d.to && Math.random() < tl) {
+      if (!M.trum && !M.d.to && rngLuat(B, 41, T.o)() < tl) { // RNG luật có hạt (10/11)
         G.hu.push({ k: 'chem', t: 0, song: 0.4, x: M.x, y: M.y });
         trung(M, M.hp + 1, { B, crit: false, mau: '#ff4b3e' }); VX.chem(M); SND.no(0.3);
       } else trung(M, dmg, { B });
@@ -404,9 +405,9 @@ SKILLS.min = { // Bệ Rải Mìn (Ptah): rải mìn trên đường; đôi khi 
     T.nap = Math.min(1, T.nap + dt * nhipU(T) / this.ky(T));
     const soMin = G.hu.filter(o => o.k === 'min' && o.T === T).length;
     if (T.nap >= 1 && E && soMin < 6) {
-      const Q = pick(ds), p = G.duong[Q.p], [px, py] = viTri(p, Math.min(p.len - 16, Q.s + rnd(30, 110)));
+      const rm = rngLuat(B, 43, T.o), Q = ds[Math.floor(rm() * ds.length)], p = G.duong[Q.p], [px, py] = viTri(p, Math.min(p.len - 16, Q.s + 30 + rm() * 80)); // RNG luật có hạt (10/11)
       T.nap = 0; T.minDich = [px, py]; giat(T, 0.9); const [x, y] = chopNong(T, 20); SND.nap();
-      const sao3 = Math.random() < 0.03 + 0.005 * (T.sao - 1), dmg = dmgU(T) * 7 * (sao3 ? 3 : 1);
+      const sao3 = rm() < 0.03 + 0.005 * (T.sao - 1), dmg = dmgU(T) * 7 * (sao3 ? 3 : 1);
       banDan({ img: 'dan_phao', x, y, px, py, sp: 240, co: 15, cong: 50, B, T,
         trung(G, d) { G.hu.push({ k: 'min', t: 0, song: 30, x: d.x, y: d.y, r: 36, dmg, B, T, sao3 }); FX.bui(d.x, d.y, 4, 5); } });
       if (sao3) nhanU(T, 'STAR MINE ×3!', '#ffd23f', true);
@@ -680,7 +681,7 @@ SKILLS.bao = { // Súng Bão (Pantheon): trúng tức thì, cực nhanh · 10/11
     trung(E, dmgU(T), { B, mau: '#9ffcff' });
     G.hu.push({ k: 'tiaTia', t: 0, song: 0.09, x0: x, y0: y, x1: E.x, y1: E.y, mau: '#9ffcff' });
     if (Math.random() < 0.4) FX.no('dien', E.x, E.y, 26, 0.15);
-    if (Math.random() < this.nay(B, T)) { // ARC: tia sét nảy sang quái gần nhất (cơ chế mới của bậc TÍM họ Energy)
+    if (rngLuat(B, 31, T.o)() < this.nay(B, T)) { // RNG luật có hạt (10/11) · ARC: tia sét nảy sang quái gần nhất (cơ chế mới của bậc TÍM họ Energy)
       let Q = null, best = 96; for (const X of dsMucTieu(B)) if (X !== E && !X.chet) { const dd = Math.hypot(X.x - E.x, X.y - E.y); if (dd < best) { best = dd; Q = X; } }
       if (Q) { trung(Q, dmgU(T) * 0.7, { B, mau: '#9ffcff' }); G.hu.push({ k: 'set', t: 0, song: 0.16, x: E.x, y: E.y, ds: [{ Q, x: Q.x, y: Q.y }], seed: Math.random() * 999 }); }
     }

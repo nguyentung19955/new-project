@@ -349,7 +349,7 @@ SKILLS.cuuvi = {
     nhanU(T, 'NINE-TAIL FOXFIRE!', thuc ? '#9fe8ff' : '#ffa020', true); FX.vong1(c.x, c.y, 10, 60, thuc ? '#9fe8ff' : '#ffa020', 0.4, 4); SND.hoLy();
   },
   capNhat(G, B, T) { T.buf.toc += 0.05 * (T.duoi || 0); return false; },
-  khiGiet(G, T, E) { if (!E.trum) this.them(T, 1 + (T.sao >= 5 && Math.random() < 0.2 ? 1 : 0)); },
+  khiGiet(G, T, E) { if (!E.trum) this.them(T, 1 + (T.sao >= 5 && rngLuat(G.ban[T.ban], 47, T.o)() < 0.2 ? 1 : 0)); }, // RNG luật có hạt (10/11)
   khiTrung(G, T, E, dmg) {
     if (!E.trum) return;
     T.trumAcc = (T.trumAcc || 0) + dmg; let n = 0;

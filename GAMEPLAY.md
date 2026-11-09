@@ -700,3 +700,7 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - (C) Súng Bão: bỏ phạt −15% tốc/ụ kề cùng loại; mỗi Súng Bão kề +5 điểm % nảy (gốc 20%). (Nảy vẫn dùng Math.random như cũ — ghi nhận, chưa đổi.)
 - Bot chơi tốt 12 hạt (bỏ ván thua wave 2) trước → sau: Đỏ blackhole 58.2 → 63.7 · Rồng/Thuỷ Quái 68.8 → 70.0 (chạm trần 70) · Vàng canon 43.2 → 45.2 · soi 37.2 → 37.4 · nhatthuc 41.6 → 46.3 · luutru 48.6 → 50.7 · Tím cuongno 35.2 → 34.3 · Xanh 17.8 → 17.2 · Trắng 22.3 → 22.4.
 - Test `tools/thap-kt-vang-g2.js`: kỳ vọng tốc trừ phần tốc theo sao; còn 1 lỗi có sẵn (Ember kéo vào Wild Link). `thap-kt-kynang-tim.js` cập nhật công thức sao (tool vốn đã lỗi khi chạy, trước và sau như nhau).
+
+## claude/demo-hop-tuong — RNG có hạt cho xác suất trong kỹ năng (10/11)
+- Đổi Math.random → `rngLuat(B, muối, ô)` (tất định online): Súng Bão nảy (31), Xúc Xắc chí mạng + cuộn 3–300% (37), Máy Chém giết ngay (41), Mìn chọn chỗ + mìn sao (43), Cửu Vĩ thêm đuôi 5★ (47).
+- Còn Math.random trong luật (chưa sửa — đụng lõi): chí mạng chung `trung()` (game.js), và `pick/rnd/rint` (Math.random) khi chọn mục tiêu ngẫu nhiên (`quaiNgauNhien`, Mortar…) trong skills*.js.
