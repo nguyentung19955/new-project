@@ -149,6 +149,8 @@ console.log('8 · online: gói cb mang CẢ CHUỖI + ảnh chụp khứ hồi (
   const anh = R('JSON.stringify(ONS.anhBan(B))');
   R('B1.cb = [0, 0, 0]; pm.cbS = 0; ONS.apAnh(B1, JSON.parse(' + JSON.stringify(anh) + '), false);');
   ok(R('B1.cb.join() === B.cb.join() && pm.cbS === 3'), 'ảnh chụp (cb + cờ z) sửa lệch bàn con rối', R('JSON.stringify([B1.cb, pm.cbS, ONS.oTT(m)])'));
+  R('B.cb = [CB.TIA[1], CB.TIA[1] + 2, CB.TIA[1]]; B1.cb = [0, 0, 0]; ONS.apAnh(B1, ONS.anhBan(B), false);');
+  ok(R('B1.cb.join() === B.cb.join() && CB.tia(B1) === 3 && CB.tia(B) === 3'), 'online: số tia của bàn con rối = máy chủ (theo ngăn quả đồng bộ)', R('JSON.stringify([B1.cb, CB.tia(B1)])'));
   R('nangSao(B, m, 1, "x"); nangSao(B1, pm, 1, "x");'); buoc(0.1);
   ok(R('gui.length === 1 && m.cbS === 3 && pm.cbS === 3'), 'lên sao tại chỗ (online): máy chủ không quay / không gửi lại', R('JSON.stringify(gui.map(x => x[0]))'));
   R('var nh = G.cbLog.length; ONS.apCB(B1, Object.assign({}, gui[0][1], { s: 4, n: 99 }));');
@@ -177,6 +179,36 @@ ok(R("/no mana power-up/.test(SKILLS.cobac.mo(Z))"), 'chữ kỹ năng ghi rõ k
   R('ONS.nhan({ u: "b", k: "nc", d: JSON.stringify({ id: "cobac", lv: 3 }) }); ONS.nhan({ u: "b", k: "nc", d: JSON.stringify({ id: "lien", lv: 4 }) });');
   ok(R('B1.lv.cobac === 1 && B1.lv.lien === 4'), 'online: gói nâng cấp nc cho Lucky Slot bị bỏ qua', R('JSON.stringify(B1.lv)'));
   R('ONS.on = false;');
+}
+
+console.log('10 · TIA THEO NGƯỠNG: min(3 quả, điểm quay) ≥ CB.TIA[0] → 2 tia · ≥ CB.TIA[1] → 3 tia, mục tiêu khác nhau theo thứ tự đường');
+{ const dung = (c) => { // c: mảng ngăn quả; 4 quái đứng yên (s 300/250/200/150) → 1 loạt bắn của Lucky Slot đã quay xong
+    c.R('var kP = G.duong.findIndex(q => q.ban === 0), kQS = [150, 300, 200, 250].map(s => { const E = sinhQuai("bo", kP, s, 1e6); E.vao = 1; E.d = Object.assign({}, E.d, { v: 0 }); return E; });'
+      + 'var kL = dat(7, "cobac", 3); kL.cbS = 3; kL.cbQuay = 0; kL.goc = 0; var kGhi = [], kTr = trung; trung = function (M, d, o) { kGhi.push([M.s, d]); return kTr.apply(this, arguments); };'
+      + 'var kBan = (cb) => { B.cb = cb.slice(); G.dan.length = 0; kGhi.length = 0; mocBuf(B); SKILLS.cobac.ban(G, B, kL, quaiDau(B)); return G.dan.filter(d => d.T === kL).map(d => d.muc.s); };'); };
+  tran(DECK, 31); dung({ R });
+  const T1 = R('CB.TIA[0]'), T2 = R('CB.TIA[1]');
+  ok(T1 >= 1 && T2 > T1, 'ngưỡng CB.TIA = [' + T1 + ', ' + T2 + '] (điểm quay, không tính KHOI)');
+  ok(R(`CB.tia({ cb: [${T1 - 1}, 99, 99] }) === 1 && CB.tia({ cb: [${T1}, ${T1}, ${T1}] }) === 2 && CB.tia({ cb: [99, ${T2 - 1}, 99] }) === 2 && CB.tia({ cb: [${T2}, ${T2}, ${T2}] }) === 3 && CB.tia({ cb: [0, 0, 0] }) === 1`), 'CB.tia: chỉ tính quả THẤP nhất (cả 3 phải đạt) · KHOI không tính');
+  ok(R(`JSON.stringify(kBan([${T1 - 1}, 50, 50])) === "[300]"`), 'dưới ngưỡng (1 quả thiếu 1 điểm) → 1 tia vào quái đầu', R(`JSON.stringify(kBan([${T1 - 1}, 50, 50]))`));
+  ok(R(`JSON.stringify(kBan([${T1}, ${T1}, ${T2 - 1}])) === "[300,250]"`), 'min ≥ T1 → 2 tia: quái đầu + quái kế tiếp theo đường', R(`JSON.stringify(kBan([${T1}, ${T1}, ${T2 - 1}]))`));
+  ok(R(`JSON.stringify(kBan([${T2}, ${T2 + 5}, ${T2}])) === "[300,250,200]"`), 'min ≥ T2 → 3 tia: 3 quái đầu theo thứ tự đường, không trùng');
+  R(`var kM3 = kBan([${T2}, ${T2}, ${T2}]); for (let i = 0; i < 90; i++) { for (let j = G.dan.length - 1; j >= 0; j--) if (capNhatDan(G.dan[j], 1 / 30)) G.dan.splice(j, 1); }`);
+  ok(R('kGhi.length === 3 && new Set(kGhi.map(g => g[0])).size === 3 && kGhi.every(g => Math.abs(g[1] - dmgU(kL) * CB.TIA_ST[2]) < 1e-6)'), 'mỗi tia trúng ĐÚNG 1 quái khác nhau, ST mỗi tia = dmgU × TIA_ST (không lan)', R('JSON.stringify([kGhi, dmgU(kL), CB.TIA_ST])'));
+  R('for (const E of kQS) if (E.s !== 300) E.chet = true; G.quai = G.quai.filter(E => !E.chet); B._ds = null;');
+  ok(R(`JSON.stringify(kBan([${T2}, ${T2}, ${T2}])) === "[300]"`), 'chỉ còn 1 quái → 1 tia (không bắn trùng mục tiêu)');
+  ok(R(`/All 3 fruits at ${T1}\\+ spun points/.test(SKILLS.cobac.mo(kL)) && /Beams now: 3/.test(SKILLS.cobac.mo(kL))`), 'mô tả ụ: ngưỡng tia + số tia hiện tại');
+  R('trung = kTr;');
+  // online / 2 máy: cùng hạt + cùng ngăn quả → cùng chuỗi mục tiêu (thứ tự đường, hoà → uid), không Math.random
+  const chuoi = (c, cb) => { c.R(`G.debug = { seed: 4321 }; batDau('solo', ${JSON.stringify(DECK)}, 'hero'); G.cho = 1e9; G.quai.length = 0; G.dan.length = 0; for (const X of G.ban) { X.t.fill(null); X.mana = 0; X.ai = false; } var B = G.ban[0];`
+      + 'var kP = G.duong.findIndex(q => q.ban === 0); for (let i = 0; i < 6; i++) { const E = sinhQuai("bo", kP, 120 + (i % 3) * 40, 1e5); E.vao = 1; }' // 2 quái cùng vị trí → hoà, tách bằng uid
+      + `B.cb = ${JSON.stringify(cb)}; var kL = sinhU(taoU(B, "cobac", 4, 7)); B.t[7] = kL; kL.cbS = 4; kL.cbQuay = 0; kL.goc = -Math.PI / 2; kL.pha = 0; kL.cd = 0.3; var ds = []; var kBb = SKILLS.cobac.ban; SKILLS.cobac.ban = function (G, B, T, E) { const n0 = G.dan.length; kBb.apply(this, arguments); ds.push(G.dan.slice(n0).map(d => d.muc.uid).join(',')); };`);
+    for (let x = 0; x < 4; x += 1 / 30) { c.R('capNhat(1/30)'); if (c.ctx._cho.length) c.ctx._cho.splice(0).forEach(f => { try { f(); } catch (e) { } }); }
+    return c.R('SKILLS.cobac.ban = kBb; JSON.stringify(ds)'); };
+  const c1 = moiTruong(), c2 = moiTruong(), m1 = { ctx: c1, R: (s) => vm.runInContext(s, c1) }, m2 = { ctx: c2, R: (s) => vm.runInContext(s, c2) };
+  const a = chuoi(m1, [T2, T2, T2 + 3]), b = chuoi(m2, [T2, T2, T2 + 3]);
+  ok(a === b && JSON.parse(a).length >= 3 && JSON.parse(a).every(x => x.split(',').length === 3 && new Set(x.split(',')).size === 3), '2 máy (cùng hạt, cùng ngăn quả) → cùng chuỗi 3 mục tiêu mỗi loạt, không trùng', a.slice(0, 160) + ' | ' + b.slice(0, 160));
+  ok(/CB\.tia\(B\)/.test(fs.readFileSync(path.join(goc, 'js', 'jackpot.js'), 'utf8')) && !/Math\.random/.test(fs.readFileSync(path.join(goc, 'js', 'jackpot.js'), 'utf8').split('SKILLS.cobac = {')[1].split('};')[0]), 'số tia thuần theo B.cb (đồng bộ gói cb), SKILLS.cobac không dùng Math.random');
 }
 
 if (loi) { console.log('\n✗ ' + loi + ' lỗi (phần luật)'); }
@@ -254,6 +286,15 @@ async function khung(p, o, t, ten) {
         const el = await p.$('#bo-the .the[data-id="cobac"]'), bb = await el.boundingBox();
         await p.screenshot({ path: path.join(SHOTS, 'khay-' + w + 'x' + h + '-' + v.join('_') + '.png'), clip: { x: Math.max(0, bb.x - 8), y: Math.max(0, bb.y - 8), width: bb.width + 16, height: bb.height + 16 } });
       }
+      // huy hiệu số tia: [7,45,153] (min 7) ẩn · [10,12,10] ×2 · [20,30,21] ×3 — nằm góc trên thẻ, không đè dải số quả
+      for (const [v, ky] of [[[7, 45, 153], ''], [[10, 12, 10], '×2'], [[20, 30, 21], '×3']]) {
+        await p.evaluate((v) => { const B = G.ban[0]; B.cb = v.slice(); B.cbV = null; CB.khay(); }, v); await p.waitForTimeout(300);
+        const r = await p.evaluate(() => { const d = document.querySelector('#bo-the .the[data-id="cobac"]'), b = d.querySelector('.cb-tia'), q = d.querySelector('.cb-qua');
+          if (!b || b.hidden) return { an: true }; const x = b.getBoundingClientRect(), y = q.getBoundingClientRect(), dr = d.getBoundingClientRect();
+          return { an: false, t: b.textContent, de: x.bottom > y.top + 0.5 && x.right > y.left && x.left < y.right, ngoai: x.left < dr.left - 6 || x.top < dr.top - 6 || x.right > dr.right }; });
+        ok(ky ? !r.an && r.t === ky && !r.de && !r.ngoai : r.an, w + 'x' + h + ': huy hiệu tia ' + (ky || 'ẩn') + ' (ngăn ' + v.join('/') + ')', JSON.stringify(r));
+      }
+      { const el = await p.$('#bo-the .the[data-id="cobac"]'), bb = await el.boundingBox(); await p.screenshot({ path: path.join(SHOTS, 'khay-' + w + 'x' + h + '-tia3.png'), clip: { x: Math.max(0, bb.x - 8), y: Math.max(0, bb.y - 8), width: bb.width + 16, height: bb.height + 16 } }); }
       await p.close();
     }
   } finally { await br.close(); }

@@ -35,3 +35,12 @@
 #dp-dai .dp-the > .cb-qua .cb-q b { font-size: 6px; }
 #dp-dai .dp-the > .cb-qua .cb-q img { max-width: 7px; }
 @media (prefers-reduced-motion: reduce) { .cb-qua .cb-q.cb-nhay img, .cb-qua .cb-q.cb-nhay b { animation: none; } }
+/* LUCKY SLOT — số tia (jackpot.js CB.khay): cả 3 quả ≥ CB.TIA → huy hiệu xu "×2" (lam) / "×3" (tím) góc trên-trái thẻ; 1 tia thì ẩn */
+#bo-the .the > .cb-tia, #dp-dai .dp-the > .cb-tia { position: absolute; z-index: 7; top: 2px; left: 2px; display: flex; align-items: center; pointer-events: none; padding: 0 3px 0 1px; border-radius: 6px; background: rgba(10, 4, 6, .82); }
+.cb-tia[hidden] { display: none; }
+.cb-tia img { width: 12px; height: 12px; display: block; }
+.cb-tia b { font: 900 12px/14px var(--f-display); letter-spacing: -.5px; text-shadow: 0 1px 0 #000, 1px 0 0 #000, -1px 0 0 #000, 0 -1px 0 #000; }
+.cb-tia.cb-nhay { animation: cbNhay .6s ease-out; }
+#dp-dai .dp-the > .cb-tia { top: -2px; left: -2px; padding: 0 1px 0 0; border-radius: 3px; }
+#dp-dai .dp-the > .cb-tia img { width: 6px; height: 6px; } #dp-dai .dp-the > .cb-tia b { font-size: 6px; line-height: 7px; }
+@media (prefers-reduced-motion: reduce) { .cb-tia.cb-nhay { animation: none; } }

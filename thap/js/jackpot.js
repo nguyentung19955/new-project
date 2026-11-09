@@ -27,6 +27,10 @@ const CB = {
   MAX_LUOT: 12,      // chặn vô hạn (xác suất 12 lượt khác hết liền ≈ (2/9)^12 ≈ 1e-8): lượt 12 ép ô 3 = ô 1
   DMG: 0.025, TOC: 0.05, TOC_TRAN: 1.5, CDMG: 0.06, // mỗi điểm ngăn (cấp thẻ đầu) — 09/11 (cùng KHOI 10): 5 → 2,5% / 3,5 → 5% / 17 → 6%, đường cong phẳng hơn: mạnh ngay từ đầu, bớt bùng nổ cuối trận · 08/11 người dùng "Lucky Slot yếu" (+25–30%): ST gốc 50→58, mỗi điểm 4,5→5% / 3→3,5% / 15→17% (ST/phút 4★ W12: 7/7/7 102k→~125k, 14/14/14 179k→~231k · Hive Queen ~75k); trước đó: điểm kiểu cũ / điểm 3 ô ≈ 1,2–1,6 (tools/thap-sim-co-bac.js diem) → mỗi điểm ×1,5 cũ (3% / 2% / 10%)
   KHOI: 10,          // 09/11 người dùng "Lucky Slot … chơi khó": ĐIỂM KHỞI ĐẦU — mỗi ngăn tính thêm KHOI điểm sẵn (số trên khay vẫn là điểm quay được; mọi điểm quay vẫn cộng thêm)
+  // TIA THEO NGƯỠNG (09/11 người dùng chốt: "khi cả 3 loại quả đạt ngưỡng bằng nhau thì mới cho bắn 2 tia, và ngưỡng tiếp theo bắn 3 tia"):
+  //   min(cam, dưa, nho) điểm QUAY ĐƯỢC (số trên khay, KHÔNG tính KHOI) ≥ TIA[0] → 2 tia · ≥ TIA[1] → 3 tia. Mỗi tia 1 mục tiêu KHÁC NHAU theo thứ tự
+  //   đường (quái đầu, quái kế tiếp…; hoà → uid nhỏ), không nổ lan. TIA_ST = hệ số ST mỗi tia theo số tia (đo: docs/demo-hop-tuong/tocban/LUCKY-SLOT.md "Tia theo ngưỡng").
+  TIA: [10, 20], TIA_ST: [1, 1, 1], TIA_MAU: ['#ffd23f', '#7fe0ff', '#e3a6ff'],
   MOC: [10, 25, 50, 100], // mốc màu số ngăn trên khay (DOTPHA.MAU: vàng / lam / tím / trắng)
   he(B) { const v = typeof knThe === 'function' ? knThe(B, 'cobac') : null; return (v || 100) / 100; },
   st(B) { if (!B.cb) B.cb = [0, 0, 0]; return B.cb; },
@@ -36,6 +40,15 @@ const CB = {
     if (k === 'dmg') return a[0] * this.DMG * h;
     if (k === 'cdmg') return a[2] * this.CDMG * h;
     return this.TOC_TRAN * (1 - Math.exp(-a[1] * this.TOC * h / this.TOC_TRAN)); // tốc: giảm dần, tiến tới +150%
+  },
+  // số tia của bàn B (1..3) — thuần theo B.cb (đồng bộ gói 'cb') → online 2 máy như nhau
+  tia(B) { const a = (B && B.cb) || [0, 0, 0], m = Math.min(a[0] | 0, a[1] | 0, a[2] | 0); return m >= this.TIA[1] ? 3 : m >= this.TIA[0] ? 2 : 1; },
+  // mục tiêu của 1 loạt n tia: E (quái đầu) + n−1 quái KẾ TIẾP theo thứ tự đường, không trùng
+  mucTieu(B, E, n) {
+    const r = [E]; if (n <= 1) return r;
+    const ds = dsMucTieu(B).filter(Q => Q !== E && !Q.chet).sort((a, b) => ((G.duong[a.p].len - a.s) - (G.duong[b.p].len - b.s)) || ((a.uid | 0) - (b.uid | 0)));
+    for (let i = 0; i < ds.length && r.length < n; i++) r.push(ds[i]);
+    return r;
   },
   laSung: (T) => !!(T && T.id === 'cobac' && T.cbS > 0 && !(T.cbQuay > 0)),
   hat() { return ((typeof ONS !== 'undefined' && ONS.on ? ONS.seed : G.hat) || 1) | 0; },
@@ -92,7 +105,7 @@ const CB = {
 };
 
 // =====================================================================================================
-// SKILLS.cobac — Lucky Slot (Đỏ TC): bắn xu vàng 1 phát/s vào quái đầu · không kỹ năng chủ động (kỹ năng = máy xèng 3 ô + ngăn quả)
+// SKILLS.cobac — Lucky Slot (Đỏ TC): bắn xu vàng 1 phát/s vào quái đầu (cả 3 quả ≥ CB.TIA: 2 / 3 tia, quái kế tiếp theo đường) · không kỹ năng chủ động (kỹ năng = máy xèng 3 ô + ngăn quả)
 // =====================================================================================================
 SKILLS.cobac = {
   vai: 'tc', dmg: 58, toc: 1.0, crit: 0.15, nham: 'dau', khongNang: true, // 08/11 người dùng: KHÔNG nâng cấp bằng mana trong trận (ngăn quả đã mạnh vô hạn theo thời gian) — ẩn giá, AI bỏ qua, nangCap từ chối // 58 × Đỏ 2.7 (08/11 người dùng "yếu": 50 → 58) — cân bằng 08/11 (3 ô): xem GAMEPLAY.md + tools/thap-sim-co-bac.js
@@ -100,7 +113,8 @@ SKILLS.cobac = {
     const B = T && G.ban && G.ban[T.ban], a = (B && B.cb) || [0, 0, 0], p = (k) => Math.round(CB.gt(B || { cb: a }, k) * 100), h = CB.he(B);
     return 'Spins 3 fruit reels when it appears (summon or merge). A pair = +1 point to that fruit; 3 of a kind = JACKPOT: +2 to all fruits. No match = spin again. Points are shared by all Lucky Slots. Orange = damage, Watermelon = speed, Grape = crit damage. Raising its star in place (like Merge King) doesn\'t spin again.'
       + ' · no mana power-up · Every fruit starts with ' + CB.KHOI + ' bonus points · Per point: +' + +(CB.DMG * h * 100).toFixed(1) + '% damage, +' + +(CB.TOC * h * 100).toFixed(1) + '% speed (less as it grows, max +150%), +' + +(CB.CDMG * h * 100).toFixed(1) + '% crit damage'
-      + ' · Now: Orange ' + a[0] + ' (+' + p('dmg') + '%), Watermelon ' + a[1] + ' (+' + p('toc') + '%), Grape ' + a[2] + ' (+' + p('cdmg') + '%)';
+      + ' · All 3 fruits at ' + CB.TIA[0] + '+ spun points (tray number): 2 beams at 2 different enemies, full damage each · all at ' + CB.TIA[1] + '+: 3 beams'
+      + ' · Now: Orange ' + a[0] + ' (+' + p('dmg') + '%), Watermelon ' + a[1] + ' (+' + p('toc') + '%), Grape ' + a[2] + ' (+' + p('cdmg') + '%) · Beams now: ' + CB.tia(B || { cb: a });
   },
   sinh(G, T) { T.cbS = 0; T.cbQuay = 0; T.cbQ = null; },
   capNhat(G, B, T, dt) {
@@ -112,7 +126,17 @@ SKILLS.cobac = {
   },
   ban(G, B, T, E) {
     const anh = typeof REN !== 'undefined' && REN.img && REN.img('cb_xu') ? 'cb_xu' : 'tia_lua';
-    banNhe(B, T, E, { img: anh, co: 17, mau: '#ffd23f', sp: 520 });
+    const n = CB.tia(B), ds = CB.mucTieu(B, E, n), k = CB.TIA_ST[n - 1], mau = CB.TIA_MAU[n - 1];
+    const d0 = banNhe(B, T, E, { img: anh, co: 17, mau: '#ffd23f', sp: 520, dmg: dmgU(T) * k });
+    if (n < 2) return;
+    if (d0) d0.mau = mau; // 2–3 tia: xu nhuộm lam / tím + vệt cùng màu (chỉ hình)
+    const [x, y] = dauNong(T);
+    for (let i = 1; i < ds.length; i++) { // tia 2, 3: quái kế tiếp theo đường, đủ ST × TIA_ST, không lan
+      const M0 = ds[i], dmg = dmgU(T) * k;
+      const d = danThang(B, T, M0, anh, 520, 15, (G, dd, M) => { if (M) trung(M, dmg, { B, mau: '#ffd23f' }); });
+      if (d) d.mau = mau;
+    }
+    if (typeof G !== 'undefined' && G.hu) G.hu.push({ k: 'cbTia', t: 0, song: 0.14, x0: x, y0: y, ds: ds.map(M => ({ x: M.x, y: M.y })), n });
   },
 };
 
@@ -234,6 +258,16 @@ HU.cbQuay = {
   },
 };
 
+// 2–3 TIA (chỉ hình): mỗi loạt chớp 0,14 s các tia mảnh từ đầu nòng tới từng mục tiêu (PNG tia_laser nhuộm lam = 2 tia / tím = 3 tia) + chấm sáng ở quái
+HU.cbTia = {
+  ve(ctx, o, R) {
+    if (!R || !R.tia) return;
+    const u = Math.min(1, o.t / o.song), mau = CB.TIA_MAU[o.n - 1] || CB.TIA_MAU[1], im = R.toMauA ? R.toMauA('tia_laser', mau, 0.85) : 'tia_laser';
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.85 * (1 - u);
+    for (const q of o.ds) { R.tia(ctx, im, o.x0, o.y0, q.x, q.y, o.n >= 3 ? 8 : 6.5, 0, true); R.anhGiua(ctx, R.cham1(mau), q.x, q.y, 22 * (1 - u * 0.5)); }
+    ctx.restore(); ctx.globalAlpha = 1;
+  },
+};
 // số trên khay: ≤ 999 hiện đủ; ≥ 1000 (chỉ ở trận vô tận rất dài) rút gọn 1.2k / 12k — số đúng vẫn ở bảng chỉ số + chữ kỹ năng
 CB.soNgan = (n) => n < 1000 ? String(n) : n < 10000 ? (Math.floor(n / 100) / 10) + 'k' : Math.floor(n / 1000) + 'k';
 // co chữ số cho vừa ô (đo bề rộng thật, không phụ thuộc phông/cỡ màn): bóp ngang trước, dọc tối đa xuống 80%
@@ -260,6 +294,9 @@ CB.khay = function () {
       s._v[i] = v[i];
     }
     s._r = rong;
+    // số tia (2 / 3) — huy hiệu xu nhỏ "×2" / "×3" góc trên thẻ; 1 tia thì ẩn
+    const n = CB.tia(B); let b = d._cbT; if (!b || !b.isConnected) { b = d.querySelector(':scope > .cb-tia'); if (!b) { b = document.createElement('span'); b.className = 'cb-tia'; b.innerHTML = '<img src="' + (typeof anhUrl === 'function' ? anhUrl('cb_xu') : 'assets/cb_xu.png') + '" alt="" draggable="false"><b></b>'; d.appendChild(b); } d._cbT = b; b._n = 0; }
+    if (b._n !== n) { const tang = b._n > 0 && n > b._n; b._n = n; b.hidden = n < 2; b.lastChild.textContent = '×' + n; b.style.color = CB.TIA_MAU[n - 1]; b.className = 'cb-tia cb-tia' + n; if (tang) { void b.offsetWidth; b.classList.add('cb-nhay'); } }
   };
   document.querySelectorAll('#bo-the .the[data-id="cobac"]').forEach(d => gan(d, G.ban[0]));
   const D = G.ban[1], dp = document.getElementById('dp-dai');
@@ -267,6 +304,6 @@ CB.khay = function () {
 };
 if (typeof addEventListener === 'function') addEventListener('DOMContentLoaded', () => {
   if (typeof UI !== 'undefined' && UI.capNhat) { const g = UI.capNhat; UI.capNhat = function () { const r = g.apply(this, arguments); try { CB.khay(); } catch (e) { console.error('CB.khay', e); } return r; }; }
-  if (typeof REN !== 'undefined' && REN.img) for (const t of CB.IC.concat(CB.IC.map(x => x + '_m'), ['cb_khung3', 'cb_dung', 'cb_cap', 'cb_lai', 'cb_jp', 'fx_cb_no', 'cb_xu'])) { if (REN.CO_DINH) REN.CO_DINH.add(t); try { REN.img(t); } catch (e) { } }
+  if (typeof REN !== 'undefined' && REN.img) for (const t of CB.IC.concat(CB.IC.map(x => x + '_m'), ['cb_khung3', 'cb_dung', 'cb_cap', 'cb_lai', 'cb_jp', 'fx_cb_no', 'cb_xu', 'tia_laser'])) { if (REN.CO_DINH) REN.CO_DINH.add(t); try { REN.img(t); } catch (e) { } }
 });
 window.CB = CB;

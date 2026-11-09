@@ -924,9 +924,9 @@
   "ten": "Lucky Slot",
   "bac": "do",
   "dcdw": "(new)",
-  "kyNang": "Spins 3 fruit reels when it appears: a pair = +1 point to that fruit, 3 of a kind = JACKPOT (+2 to all fruits), no match = spin again. Orange +damage, Watermelon +speed, Grape +crit damage, shared by all Lucky Slots",
+  "kyNang": "Spins 3 fruit reels when it appears: a pair = +1 point to that fruit, 3 of a kind = JACKPOT (+2 to all fruits), no match = spin again. Orange +damage, Watermelon +speed, Grape +crit damage, shared by all Lucky Slots; all 3 fruits at 10+ / 20+: 2 / 3 beams",
   "ten_vi": "Máy Xèng",
-  "kyNang_vi": "Quay 3 cuộn trái cây khi xuất hiện: ra cặp = +1 điểm cho quả đó, 3 ô giống nhau = JACKPOT (+2 cho mọi quả), không trùng = quay lại. Cam +sát thương, Dưa hấu +tốc bắn, Nho +sát thương chí mạng, dùng chung cho mọi Máy Xèng",
+  "kyNang_vi": "Quay 3 cuộn trái cây khi xuất hiện: ra cặp = +1 điểm cho quả đó, 3 ô giống nhau = JACKPOT (+2 cho mọi quả), không trùng = quay lại. Cam +sát thương, Dưa hấu +tốc bắn, Nho +sát thương chí mạng, dùng chung cho mọi Máy Xèng; cả 3 quả đạt 10+ / 20+: bắn 2 / 3 tia",
   "vai": "tc",
   "ho": "joker",
   "moi": "CO-BAC"

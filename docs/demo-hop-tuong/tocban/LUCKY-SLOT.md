@@ -66,3 +66,37 @@ So Vàng tốt nhất: vừa có (0 điểm) ≈ 1.25–1.7× (trước 0.63–0
 Đối chứng cùng hạt 11–16: thay Lucky Slot bằng Hive Queen (Thường) 22.8 · bằng Overlord (Vàng) 56.7. Thử cả `KHOI 40` (mạnh gấp nhiều lần) vẫn chỉ 30.5 / 40.2 → ở bộ Vàng, kết quả trận **không còn phụ thuộc chỉ số Lucky Slot**: Lucky Slot chỉ bắn 1 xu vào quái đầu (không lan, đúng ràng buộc) nên dư sát thương ở quái đầu trong khi Overlord khoẻ ở đám đông. Không tăng thêm chỉ số vì đơn mục tiêu đã ≈ Overlord; muốn bộ Vàng đi xa hơn cần đổi cơ chế (ngoài phạm vi).
 
 Số thô: `ls-truoc-{0,4,8,KV}.json`, `ls-sau-{0,4,8,KV}.json` (chỉ Lucky Slot; gộp với `do2-sau.json` để so). Lệnh: `CB=0 node tools/thap-do-vang-do.js ra.json chi=cobac`.
+
+## Tia theo ngưỡng (09/11, người dùng chốt 16:57)
+
+*"có nhưng phải là khi cả 3 loại quả đạt ngưỡng bằng nhau thì mới cho bắn 2 tia, và ngưỡng tiếp theo bắn 3 tia"* — trước đó Lucky Slot chỉ bắn 1 xu vào quái đầu nên bộ Vàng + Lucky Slot dừng ~wave 40 dù chỉ số đơn mục tiêu ≈ Overlord.
+
+**Luật** (`jackpot.js` `CB.TIA`, `CB.tia`, `CB.mucTieu`):
+- `min(cam, dưa, nho)` điểm **quay được** (đúng số trên khay, KHÔNG tính 10 điểm có sẵn `KHOI` — tính cả thì mọi Lucky Slot vừa ra đã có 10, ngưỡng mất ý nghĩa "phải quay mới lên") **≥ 10 → 2 tia**, **≥ 20 → 3 tia**.
+- Mỗi tia 1 xu vào 1 quái KHÁC NHAU: quái đầu + quái kế tiếp theo thứ tự đường (còn lại trên đường ít nhất; hoà → uid nhỏ). Ít quái hơn số tia → bắn ít tia hơn, không trùng. Không nổ lan.
+- **Mỗi tia đủ sát thương** (`CB.TIA_ST = [1, 1, 1]`, = dmgU của ụ, chí mạng tính riêng từng tia).
+- Tất định: số tia thuần theo `B.cb` (đã đồng bộ gói `cb` / ảnh chụp), chọn mục tiêu theo thứ tự đường — không RNG mới. Online 2 máy như nhau (test 2 máy cùng hạt → cùng chuỗi mục tiêu).
+- Hình: huy hiệu xu `×2` (lam) / `×3` (tím) góc trên-trái thẻ khay (1 tia thì ẩn); mỗi loạt chớp 0,14 s các tia mảnh (PNG `tia_laser` nhuộm lam / tím) từ đầu nòng tới từng mục tiêu, xu nhuộm cùng màu. Clip skilldemo thêm 2 cảnh (8,2 s: 2 tia · 10,2 s: 3 tia).
+
+**Chọn ngưỡng** — điểm quả THẤP NHẤT theo wave (bot SOLO, máu vô hạn, 16 trận mỗi bộ, script đo tạm như `tools/thap-sim-co-bac.js diem`):
+
+| wave | min 3 quả — Vàng (trung vị / dải) | Thường | Máy Xèng trên bàn |
+|---|---|---|---|
+| 20 | 11 / 4–17 | 8 / 3–17 | 2.5–3.3 |
+| 25 | 13 / 7–18 | 11 / 4–21 | 2.6 |
+| 30 | 18 / 7–21 | 13 / 5–23 | 2.1–2.8 |
+| 40 | 21 / 8–29 | 16 / 5–27 | 2.0–2.6 |
+| 50 | 24 / 8–39 | 19 / 5–32 | 1.3–2.3 |
+
+→ đạt 10 (2 tia): trung vị **wave 25** (cả 2 bộ, sớm nhất 15); đạt 20 (3 tia): bộ Vàng trung vị **wave 40** (11/16 trận), bộ Thường ít khi (6/16). Số tròn 10 / 20 dễ đọc trên khay.
+
+**Kết quả SOLO bot** (AI game, cấp thẻ 0, tim thật, hạt 11–34 = 24 trận mỗi dòng):
+
+| bộ | trước (1 tia) | sau (2–3 tia, đủ ST) | đối chứng |
+|---|---|---|---|
+| Vàng `cobac soi nhatthuc hasao cuongno` | TB 39.1 | **TB 52.9** | thay bằng Overlord 55.2 · Đỏ trung vị (6 Đỏ, hạt 11–22) 53.6: Hố Đen 49.3 · Chúa Tổ 42.3 · Overlord 52.6 · Arcane 54.6 · Rồng 55.1 · Thuỷ Quái 56.6 |
+| Thường `cobac lien canon tia set` | TB 29.8 | **TB 34.9** | |
+
+Số tia lúc wave 40 (bộ Vàng, hạt 11–22, trận còn sống): 1 / 2 / 3 tia = 0 / 6 / 4. Bộ Vàng + Lucky Slot nay ≈ trung vị Đỏ, vẫn dưới Overlord → giữ **đủ ST mỗi tia** (không cần giảm).
+
+**Bài 24 s / 90 s** (`CB=10` / `CB=20 node tools/thap-do-vang-do.js … chi=cobac`; `CB_TIA=[1e9,1e9]` = tắt tia để so): đám đông ×2 / ×3, đơn mục tiêu giữ nguyên. Lucky Slot / Overlord (TB 4 wave, 3★–7★, LV đầu–max): 10 điểm 0.6–1.1× → **0.9–1.7×**; 20 điểm 0.9–1.6× → **1.4–2.9×** (90 s: 10 điểm 0.75–1.4× → 1.05–2.0×; 20 điểm 1.0–2.0× → 1.8–3.5×). Bài đo đặt sẵn điểm từ giây 0 nên thổi phồng: trong trận thật mức 3 tia chỉ tới ~wave 40, kết quả trận (bảng trên) vẫn dưới Overlord. Số thô: `ls-tia-{10,20}-{truoc,sau}[-90].json`.

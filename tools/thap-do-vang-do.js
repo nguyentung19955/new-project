@@ -1,5 +1,5 @@
 // TURRET MERGE — ĐO TỐC BẮN + DPS ụ Tấn công TÍM / VÀNG / ĐỎ (yêu cầu 09/11: "ụ đỏ không imba như tôi nghĩ")
-//   node tools/thap-do-vang-do.js [ra.json] [nhanh] [chi=id1,id2]
+//   node tools/thap-do-vang-do.js [ra.json] [nhanh] [chi=id1,id2]   (Lucky Slot: CB=n đặt sẵn điểm quả · CB_TIA=[1e9,1e9] tắt 2–3 tia)
 // Cách đo (mô phỏng không giao diện như tools/thap-sim-tier.js, RNG có hạt):
 //   · 1 ụ ở ô 2 (sát đường), sao 3/5/7, cấp thẻ: "dau" (LV đầu bậc) và "max" (LV tối đa bậc: Tím 15, Vàng/Đỏ 17), POWER-UP +3 (MAX) như nhau.
 //   · DPS đơn (1 quái trâu) + DPS đám đông (≤10 quái) → chỉ số = trung bình nhân. Wave 20/30/40/50: máu quái giữ cùng mức tuyệt đối
@@ -14,6 +14,7 @@ function taoMoiTruong(hat) {
   const ctx = taoGoc(hat);
   vm.runInContext("if (typeof SUP === 'undefined') { var SUP = {}, SUP_LOAI = {}, SUP_GIA = {}; }", ctx);
   for (const f of ['vangmoi1', 'skills7', 'jackpot']) { const p = path.join(__dirname, '..', 'thap', 'js', f + '.js'); if (fs.existsSync(p)) vm.runInContext(fs.readFileSync(p, 'utf8'), ctx, { filename: f + '.js' }); }
+  if (process.env.CB_TIA) vm.runInContext('CB.TIA = ' + process.env.CB_TIA, ctx); // CB_TIA=[1e9,1e9]: tắt tia theo ngưỡng (đo trước/sau)
   return ctx;
 }
 const DUNG_CD = `{ const B = G.ban[0]; for (const T of B.t) if (T) { const sk = SKILLS[T.id]; if (sk.chuDong && T.nap >= 1) sk.chuDong(G, B, T); } }`;
