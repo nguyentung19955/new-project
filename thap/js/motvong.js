@@ -25,6 +25,13 @@ const MV = {
     return !!(sk.napMau || this.NAP_KHAC[T.id]);
   },
   // ---------- TÍCH TỤ (09/11, thay vòng xanh nạp chiêu) ----------
+  // CHIÊU THẬT (người dùng 09/11 18:10 "tụ gì mà lâu vậy" — Toxic Pool ném vũng mỗi ~3.3 s / đầy mãi khi chưa có quái mà vẫn hiện tích tụ):
+  //   tích tụ đầy đủ CHỈ cho ụ có chiêu riêng nổ khi đầy (chuDong: bấm tay + tự kích) và ụ nạp-tự-kích kiểu Overlord / Wall Projector.
+  //   Ụ chỉ bắn/ném/đánh dấu định kỳ (napMau thường, Mana) = NHẸ: chỉ 20% cuối chu kỳ, mờ, không xoáy đầy, không xả; đầy mà chưa có mục tiêu → tắt dần sau 0.5 s.
+  CHIEU_NAP: { overlord: 1, wallgen: 1 },
+  chieuThat(id) { const sk = SKILLS[id]; return !!(sk && !sk.bomDem && (sk.chuDong || this.CHIEU_NAP[id])); },
+  NHE_TU: 0.8, NHE_K: 0.35, // ụ định kỳ: hiện từ 80% nạp, cường độ tối đa 35%
+  CHO_SAU: 1.5, CHO_K: 0.4, // ụ tự kích đầy mà chưa đủ điều kiện (aiNen): sau 1.5 s đầy hạ còn 40% (không "căng đầy" mãi); ụ bấm tay giữ nguyên (là tín hiệu chạm)
   // ụ BẤM TAY (chạm khi đầy): có chuDong mà không tự kích (game.js TU_KICH) — còn lại Black Hole + Arcane Cascade
   bamTay(id) { const sk = SKILLS[id]; return !!(sk && sk.chuDong && !(typeof laTuKich === 'function' && laTuKich(id))); },
   // màu đặc trưng: napMau > màu dạng (GROW) > bảng riêng > màu bậc
@@ -49,17 +56,25 @@ const MV = {
     const mo = !sk.chuDong || T.sao >= 3 || !!sk.chuDongMoiSao; // chiêu chưa mở (dưới 3★): không tích tụ
     let p = mo ? (T.nap > 1 ? 1 : T.nap > 0 ? T.nap : 0) : 0;
     if (T.st && T.st.da) p = 0;
-    let s = this._tk.get(T); if (!s) { s = { p, xa: -9 }; this._tk.set(T, s); }
-    if (s.p >= 0.9 && p < s.p - 0.4) s.xa = t; // nạp tụt mạnh = vừa ra chiêu → XẢ
+    let s = this._tk.get(T); if (!s) { s = { p, xa: -9, d0: -9 }; this._tk.set(T, s); }
+    const that = this.chieuThat(T.id);
+    if (that && s.p >= 0.9 && p < s.p - 0.4) s.xa = t; // nạp tụt mạnh = vừa ra chiêu → XẢ (ụ định kỳ: không — đã có FX bắn riêng)
+    if (p >= 0.999 && s.p < 0.999) s.d0 = t; // lúc vừa đầy
     s.p = p;
-    const e = (t - s.xa) / 0.45, dangXa = e >= 0 && e < 1;
+    const e = (t - s.xa) / 0.45, dangXa = e >= 0 && e < 1, dD = p >= 0.999 ? t - s.d0 : 0;
+    let kL = 1; // hệ số nhẹ / chờ
+    if (!that) { // ụ bắn định kỳ: chỉ 20% cuối, mờ; đầy (chưa có mục tiêu) → tắt dần
+      if (p < this.NHE_TU) return;
+      kL = this.NHE_K * Math.min(1, (p - this.NHE_TU) / (1 - this.NHE_TU)) * (dD > 0 ? Math.max(0, 1 - dD / 0.5) : 1);
+      if (!(kL > 0.01)) return;
+    } else if (dD > this.CHO_SAU && !this.bamTay(T.id)) kL = 1 - (1 - this.CHO_K) * Math.min(1, (dD - this.CHO_SAU) / 1); // tự kích đang chờ điều kiện
     if (p <= 0.02 && !dangXa) return;
     const m = this.mauNap(T.id), op = ctx.globalCompositeOperation, bang = T.st && T.st.bang > 0;
     ctx.globalCompositeOperation = 'lighter';
     if (p > 0.02) {
-      const day = p >= 0.999, gan = p >= 0.85;
+      const day = p >= 0.999 && that, gan = p >= 0.85 && that; // ụ định kỳ: không đập nhịp / không xoáy đầy
       const nhip = day ? 0.5 + 0.5 * Math.sin(t * 5.2) : gan ? 0.5 + 0.5 * Math.sin(t * (8 + 10 * (p - 0.85))) : 0; // đập nhịp khi gần đầy · căng đầy: đập đều
-      const k = (bang ? 0.45 : 1) * this.kBao(T, p); // bị băng: tích tụ mờ đi (chiêu không dùng được) · ụ Đỏ có báo trước riêng: nhường từ 80%
+      const k = (bang ? 0.45 : 1) * this.kBao(T, p) * kL; // bị băng: tích tụ mờ đi (chiêu không dùng được) · ụ Đỏ có báo trước riêng: nhường từ 80%
       // 1) lõi sáng dần (quầng PNG tô màu) — nhỏ hơn ô, alpha vừa phải → không che quái
       const r0 = S * (0.48 + 0.4 * p + (gan ? 0.06 * nhip : 0));
       PX.cham(ctx, 0, 0, r0 * 2, m, al * k * (0.12 + 0.4 * p * p + (gan ? 0.12 * nhip : 0)));
@@ -184,7 +199,7 @@ const MV = {
     if (gon) return this.dongGon(T);
     const vi = typeof NN !== 'undefined' && NN.vi(), tr = (s) => (vi && typeof NN !== 'undefined' ? NN.t(s) : s);
     const sk = SKILLS[T.id] || {}, B = G.ban[T.ban], P = [];
-    if (this.laNap(T.id)) {
+    if (this.chieuThat(T.id)) { // 09/11: ụ bắn định kỳ chỉ loé nhẹ cuối chu kỳ → không ghi dòng 'Lõi sáng'
       const ten = this.tenChieu(T.id), cd = typeof sk.cd === 'number' ? ' (' + sk.cd + ' s)' : '';
       const bam = this.bamTay(T.id);
       if (sk.chuDong && T.sao < 3 && !sk.chuDongMoiSao) P.push(vi ? 'Lõi sáng: chiêu ' + (ten ? tr(ten) + ' ' : '') + 'mở ở 3★' : 'Core glow: ' + (ten || 'skill') + ' unlocks at 3★');
@@ -201,7 +216,7 @@ const MV = {
   dongGon(T) {
     const vi = typeof NN !== 'undefined' && NN.vi(), tr = (s) => (vi ? NN.t(s) : s);
     const sk = SKILLS[T.id] || {}, B = G.ban[T.ban], P = [];
-    if (this.laNap(T.id)) {
+    if (this.chieuThat(T.id)) { // 09/11: ụ bắn định kỳ chỉ loé nhẹ cuối chu kỳ → không ghi dòng 'Lõi sáng'
       const ten = this.tenChieu(T.id);
       if (sk.chuDong && T.sao < 3 && !sk.chuDongMoiSao) P.push(vi ? 'Lõi sáng: chiêu mở ở 3★' : 'Core glow: skill unlocks at 3★');
       else if (this.bamTay(T.id)) P.push(vi ? 'Lõi sáng = tích tụ ' + (ten ? tr(ten) : 'chiêu') + ' (căng đầy thì chạm ụ)' : 'Core glow = ' + (ten || 'skill') + ' build-up (tap when brimming)');
@@ -218,7 +233,7 @@ const MV = {
     const anhVong = (() => { try { const c = PX.mau('fx_cham_trang', MV.mauNap(id)); return c && c.toDataURL ? c.toDataURL() : ''; } catch (e) { return ''; } })(); // quầng lõi tích tụ (PNG tô màu)
     const hang = (img, b, s) => '<div class="mv-h">' + img + '<span><b>' + b + '</b> ' + s + '</span></div>';
     const sk = SKILLS[id] || {}, ten = this.tenChieu(id), bam = this.bamTay(id);
-    if (this.laNap(id)) P.push(hang(anhVong ? '<img src="' + anhVong + '" alt="">' : '', vi ? 'Lõi sáng' : 'Core glow',
+    if (this.chieuThat(id)) P.push(hang(anhVong ? '<img src="' + anhVong + '" alt="">' : '', vi ? 'Lõi sáng' : 'Core glow',
       bam ? (vi ? '= tích tụ chiêu ' + (ten ? NN.t(ten) : '') + (sk.chuDongMoiSao ? '' : ' (từ 3★)') + ': hạt năng lượng hút vào ụ, lõi sáng dần. Căng đầy (lõi đập đều, hạt xoáy quanh) thì chạm ụ để dùng.' : '= ' + (ten || 'active skill') + ' building up' + (sk.chuDongMoiSao ? '' : ' (from 3★)') + ': energy is drawn into the turret and its core brightens. When it is brimming (steady pulse, swirling sparks), tap the turret to use it.')
         : (vi ? '= chiêu đang tích tụ: hạt năng lượng hút vào ụ, lõi sáng dần. Đầy thì tự kích (loé + sóng toả).' : '= skill building up: energy is drawn into the turret and its core brightens. Fires by itself when full (flash + shockwave).')));
     if (typeof laGrow === 'function' && laGrow(id) && GROW[id] && !(typeof DOTPHA !== 'undefined' && DOTPHA.NGUONG[id])) {
