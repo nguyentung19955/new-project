@@ -1004,3 +1004,11 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - Trận tháp = bàn SOLO + bộ bài/cấp thẻ thật; quái sinh bằng RNG có hạt của tầng (cùng tầng = cùng quái, không Math.random); KHÔNG ghi kỷ lục Solo / mốc wave / điểm sự kiện / nhiệm vụ / Rương Trận. Thanh trên: "FLOOR t · k/5" thay "BOSS IN N"; màn mở đầu chỉ hiện trùm của tầng. Kết quả: NEXT · FLOOR t+1 / RETRY · FLOOR t.
 - Lưu: `turret_kt.cd` (khoá con mới) + `turret_kt.mh.tt` (tinh thể); gộp Firebase OR / lớn nhất.
 - Test: `tools/thap-kt-thap-leo.js` (mới) · `thap-kt-tien-trinh` (cập nhật danh sách khoá mới, chờ bảng báo link mời thay vì chờ cố định) · `so-huu` · `shop` · `manh` đều đạt.
+
+## claude/demo-hop-tuong — Giai đoạn C (2/4): SĂN TRÙM (09/11)
+- Mở khi đã hạ 3 trùm khác nhau (mọi chế độ). Chọn 1 trong 12 trùm ĐÃ HẠ (trùm chưa hạ: tối + ổ khoá) + bậc 1–10 (bậc b mở khi thắng bậc b−1 của cùng trùm).
+- Bậc b ≤ 7: wave 10b−4 … 10b, trùm ở wave cuối; bậc 8/9/10: wave 66–70, máu trùm ×2/×4/×8. Trùm có **90 giây** (đồng hồ "BOSS TIME Ns" dưới thanh trên, đỏ khi ≤ 15 s); hết giờ hoặc trùm lọt = thua.
+- **Vé**: 3/ngày (reset 0 giờ), trừ khi trận bắt đầu (thua vẫn mất); mua thêm tối đa 2 vé/ngày × 3 000 vàng. Hết vé → **LUYỆN TẬP** (không thưởng, không mở bậc).
+- Thưởng lần đầu mỗi (trùm, bậc): 300 vàng (b1–3) · 1 000 vàng + 15 ngọc (b4–6) · Rương Huyền thoại (b7) · 2 000 vàng + 30 ngọc (b8–10); XP 5 + 2b. Đủ 12 trùm cùng bậc: Rương Thường (b1–3) / Rương Vàng (b4–6) / Rương Huyền thoại 3 Vàng (b7) / 2 Tinh thể Đỏ (b10).
+- **Trùm của tuần** (`KT.tuan() % 12`, như nhau với mọi người): bậc cao nhất thắng trong tuần → b3 2 000 vàng · b5 50 ngọc · b7 Rương Huyền thoại · b9 1 Tinh thể Đỏ (1 lần/tuần).
+- Test: `tools/thap-kt-san-trum.js` (mới) + `thap-kt-thap-leo` đạt.
