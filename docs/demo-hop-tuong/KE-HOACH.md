@@ -11,7 +11,7 @@ Làm **lần lượt từng giai đoạn**, giai đoạn trước xong (đã ki�
 | A5 | Rà animation theo bậc; làm lại hiệu ứng skill/special 9 ụ Đỏ (mỗi ụ một chữ ký riêng) | 09/11 19:00 (Đỏ) · 10/11 12:00 (Vàng/Tím quá đơn giản) | **xong 09/11 16:20** (xuất bản; còn 4 ụ Xanh hơi nhạt) |
 | A6 | Hạn chế các nguồn +★ miễn phí (Star Lift, Merge/Gold King, Genesis Core, Royal Vault, Nguyền rủa ở Solo, Evolver…): trần 5★ cho nguồn miễn phí, giảm tần suất; đo trước/sau | 09/11 20:00 | **xong 09/11 15:20** (xuất bản; bảng tổng ở tuvan/sao-mien-phi/BAO-CAO.md mục 4) |
 | B1 | Tư vấn ChatGPT hướng hình ảnh anime (HUD trận, HOME, màn phụ) + ảnh mockup → anh chốt hướng | 09/11 15:00 | **xong 09/11 14:00** — anh chốt bản PHA A+B (mockup-C-pha.jpg) + bảng màu Royal Twilight (mockup-D, BANG-MAU.md); asset HUD/bàn/khung bậc đã có (raw_ui2_*) |
-| B2 | Làm lại HUD trận theo hướng anime đã chốt (thanh trên, nút Summon/mana, khay thẻ, banner trùm) | 11/11 18:00 | đang làm (bắt đầu 09/11 15:25) |
+| B2 | Làm lại HUD trận theo hướng anime đã chốt (thanh trên, nút Summon/mana, khay thẻ, banner trùm) | 11/11 18:00 | **xong 09/11 16:45** (xuất bản) |
 | B3 | HOME + bộ bài + bộ sưu tập + trang ụ + cửa hàng/nhiệm vụ theo cùng hướng | 13/11 18:00 | chờ B2 |
 | C | Tiến trình đợt 2: Leo Tháp 100 tầng, Săn Trùm, Tinh thể Đỏ + Ấn Đỏ, thử thách ngắn 3–5 phút cho người mới | 16/11 18:00 | chờ |
 | D | Tiến trình đợt 3: Thử thách tuần (bộ cố định, công bằng), Vô tận sau wave 70 + bảng xếp hạng | 19/11 18:00 | chờ |
