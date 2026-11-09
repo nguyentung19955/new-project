@@ -61,12 +61,23 @@
     <script>
     // đặt khung #wrap NGAY khi trình duyệt dựng tới đây (trước 40+ tệp js, phông, ảnh) — F5 / mạng chậm trên iPhone Safari
     // không còn màn đen + nền lệch góc phải dưới. taitai.js / REN.coLai() đặt lại mỗi lần đổi cỡ.
+    // VÙNG AN TOÀN (tai thỏ / Dynamic Island / thanh home): đo env(safe-area-inset-*) bằng 1 phần tử dò; khung 430×860 co vào
+    // phần màn còn lại (viewport-fit=cover) → HUD trên/dưới và mọi màn chính không bị che. Máy không có tai thỏ: 0 → như cũ.
+    window.vungAT = function () {
+      var d = document.getElementById('tm-vat');
+      if (!d) { d = document.createElement('div'); d.id = 'tm-vat'; d.setAttribute('aria-hidden', 'true');
+        d.style.cssText = 'position:fixed;left:0;top:0;width:0;height:0;visibility:hidden;pointer-events:none;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)';
+        (document.body || document.documentElement).appendChild(d); }
+      var c = getComputedStyle(d);
+      return { t: parseFloat(c.paddingTop) || 0, r: parseFloat(c.paddingRight) || 0, b: parseFloat(c.paddingBottom) || 0, l: parseFloat(c.paddingLeft) || 0 };
+    };
     function datKhung() {
       var wrap = document.getElementById('wrap'); if (!wrap) return false;
       var vw = innerWidth || document.documentElement.clientWidth, vh = innerHeight || document.documentElement.clientHeight;
       if (!(vw > 0 && vh > 0)) return false;
-      var thuc = devicePixelRatio || 1, s = Math.min(vw / 430, vh / 860);
-      wrap.style.left = Math.round((vw - 430 * s) / 2 * thuc) / thuc + 'px'; wrap.style.top = Math.round((vh - 860 * s) / 2 * thuc) / thuc + 'px';
+      var a = vungAT(), cw = Math.max(1, vw - a.l - a.r), ch = Math.max(1, vh - a.t - a.b);
+      var thuc = devicePixelRatio || 1, s = Math.min(cw / 430, ch / 860);
+      wrap.style.left = Math.round((a.l + (cw - 430 * s) / 2) * thuc) / thuc + 'px'; wrap.style.top = Math.round((a.t + (ch - 860 * s) / 2) * thuc) / thuc + 'px';
       wrap.style.transformOrigin = '0 0'; wrap.style.transform = 'scale(' + s + ')';
       return true;
     }
@@ -234,6 +245,7 @@
   <link rel="stylesheet" href="css/kinhte.css"> <!-- cửa hàng / rương / vòng quay / nhiệm vụ / sự kiện (js/kinhte-ui.js) -->
   <link rel="stylesheet" href="css/manh.css"> <!-- nguồn mảnh Vàng/Đỏ (js/manh.js) -->
   <link rel="stylesheet" href="css/trumxem.css"> <!-- xem 12 trùm ở HOME (js/trumxem.js) -->
+  <link rel="stylesheet" href="css/rasoat.css"> <!-- rà soát thiết kế 09/11: lớp phủ xoay dọc, nút "i" trên thẻ, sàn cỡ chữ 12px, vùng chạm ≥48 (≈44 px màn 390) -->
   <script src="js/donet.js"></script>
   <script src="js/font.js"></script>
   <script src="js/taitai-anh.js"></script>
@@ -337,6 +349,7 @@
   <script src="js/cm-meta.js"></script> <script src="js/comoi.js"></script> <!-- CƠ CHẾ MỚI đợt 1: Pháo La Bàn (mũi tên + số), Lửa Thập Tự (vệt lửa hàng/cột), Drone Kéo Xa (dây kéo) — tuvan/co-che-moi -->
   <script src="js/anim-meta.js"></script>
   <script src="js/anim.js"></script> <!-- ANIMATION HYBRID: ụ sống — thở, tụ lực, giật/hồi lò xo, muzzle socket, nhóm chuyển động 93 ụ (tuvan/anim) -->
+  <script src="js/rasoat.js"></script> <!-- rà soát thiết kế 09/11: khoá dọc (lớp phủ + tạm dừng trận), nút "i" mở chi tiết ụ -->
   </template>
   <script id="tm-nap-js">
   // NẠP KHỞI ĐỘNG + THANH TIẾN ĐỘ THEO BYTE (TDO). css trước (song song) → js (song song, chạy đúng thứ tự). Không chặn vẽ màn tải.

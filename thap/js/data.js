@@ -222,7 +222,8 @@ function boCuc(che) {
     };
   }
   // SOLO: một bàn giữa vùng chơi (48–604), đường hình chữ U ôm 3 cạnh bàn (trên → trái → dưới) như Random Dice
-  const th = toH(BC_TO.kv), y = Math.round((48 + 604) / 2 - (th + 112) / 2 + 57);
+  // rà soát 09/11: hạ bàn thêm 28 (57 → 85) → khoảng trống trên (HUD → đường) và dưới (đường → khay) gần bằng nhau, đáy đường 531 < dải xem nhanh 610
+  const th = toH(BC_TO.kv), y = Math.round((48 + 604) / 2 - (th + 112) / 2 + 85);
   return {
     ban: [{ x: tx, y, w: tw, h: th, ai: false, ten: TEXT.ui.you }],
     duong: [{ pts: [[W - 26, y - 34], [lx, y - 34], [lx, y + th + 32], [W - 26, y + th + 32]], ban: 0 }],

@@ -1040,3 +1040,8 @@ Tiền tố: *"Same style as attached game screenshot, chunky sci-fi industrial 
 |---|---|---|---|
 | raw_p12_vang | 1024×512, 1 hàng × 2 (ô 512) | 1 "Single shiny gold coin with an embossed gear-and-star mark, slight tilt, thick dark outline" · 2 "Small stack of 3 gold coins, same style" | `ngoc_vang` đang dùng làm biểu tượng VÀNG (trùng ngọc độ hiếm Huyền thoại) |
 | raw_p12_thanh | 1536×512, 3 hàng × 1 | 1 "Very thin empty progress bar frame, dark gunmetal, tiny rivets at both ends, stretchable middle" · 2 "Bar fill strip, glossy amber" · 3 "Bar fill strip, glossy bright green" | `h2_tag` + `tai_day` / `loi_khuc_day` (thanh bản sao n/m dưới thẻ) |
+
+### RÀ SOÁT 09/11 — lớp phủ "Xoay dọc máy" (js/rasoat.js XD.IC) — đang mượn `assets/icon/icon-192.png`, chờ gen
+| raw | cỡ / lưới | prompt ngắn (nền magenta #FF00FF đặc, same style as attached, no text) | thay cho (cỡ CSS lớn nhất) |
+|---|---|---|---|
+| raw_rs_xoay | 1024×512, 1 hàng × 2 (ô 512) | 1 "Chunky sci-fi metal smartphone icon lying sideways with a curved glowing cyan arrow showing it rotating to upright, gunmetal + brass trim, thick dark outline" · 2 same phone standing upright with a small green check glow | icon-192 xoay (76×76 → 228×228) |

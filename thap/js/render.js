@@ -59,13 +59,14 @@ const REN = {
   coLai() {
     const vw = innerWidth || document.documentElement.clientWidth, vh = innerHeight || document.documentElement.clientHeight;
     if (!(vw > 0 && vh > 0)) { if (typeof hoiKhung === 'function') setTimeout(() => hoiKhung(true), 50); return; } // Safari chưa có viewport → thử lại
-    this.s = Math.min(vw / W, vh / H);
+    const a = typeof vungAT === 'function' ? vungAT() : { t: 0, r: 0, b: 0, l: 0 }, cw = Math.max(1, vw - a.l - a.r), ch = Math.max(1, vh - a.t - a.b); // vùng an toàn tai thỏ (index.html vungAT)
+    this.s = Math.min(cw / W, ch / H);
     const thuc = devicePixelRatio || 1;
     this.dpr = Math.max(1, Math.min(this.dprMax || 3, G.debug && G.debug.dpr ? G.debug.dpr : thuc));
     const wrap = document.getElementById('wrap');
     // đặt khung ở toạ độ NGUYÊN điểm ảnh thiết bị (không dùng translate -50%): lệch nửa điểm ảnh làm trình duyệt
     // nội suy lại cả canvas lẫn chữ → nhoè toàn màn
-    const L = Math.round((vw - W * this.s) / 2 * thuc) / thuc, T = Math.round((vh - H * this.s) / 2 * thuc) / thuc;
+    const L = Math.round((a.l + (cw - W * this.s) / 2) * thuc) / thuc, T = Math.round((a.t + (ch - H * this.s) / 2) * thuc) / thuc;
     wrap.style.left = L + 'px'; wrap.style.top = T + 'px';
     wrap.style.transformOrigin = '0 0'; wrap.style.transform = 'scale(' + this.s + ')';
     this.cv.width = Math.round(W * this.s * this.dpr); this.cv.height = Math.round(H * this.s * this.dpr);

@@ -136,7 +136,7 @@ const UI = {
     c.dataset.act = 'chon-u'; c.dataset.id = r.id;
 c.style.setProperty('--m', TIERS[r.bac].mau);
     c.innerHTML = cardArt(r.id) +
-      '<div class="ten">' + r.ten + '</div>' + (co ? '' : '<div class="sapco">' + TEXT.ui.soon + '</div>');
+      '<div class="ten">' + r.ten + '</div>' + (co ? '<span class="the-i" data-act="the-i" role="button" aria-label="Details"><img src="assets/p7_ic_tin.png" alt="" draggable="false"></span>' : '<div class="sapco">' + TEXT.ui.soon + '</div>'); // nút "i" = mở chi tiết (js/rasoat.js), rà soát 09/11
     return c;
   },
   veBoChon() {

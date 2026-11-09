@@ -5524,5 +5524,11 @@
 "More mana: more bounces": "Càng nhiều mana càng nảy nhiều",
 "MANA FLOOD over the whole path": "THÁC LŨ MANA phủ cả đường",
 "Mana #: ×# damage, # targets": "Mana #: ×# sát thương, # mục tiêu",
-"Arcane Cascade": "Thác Mana"
+"Arcane Cascade": "Thác Mana",
+"EVENT +# PTS": "SỰ KIỆN +# ĐIỂM",
+"loaded, tap PLAY or swap cards": "đã tải, chạm CHƠI hoặc đổi thẻ",
+"1 head per ★. The heads fire a chain of shots, then rest. No mana power-up. Tap the Hydra card: ALL Hydras of 3★ or more fire twice as fast; 7★ ones become a MACHINE GUN (10 shots/s for 7.5s, longer with card level). Cost: 40 mana, doubles each use": "Mỗi sao 1 đầu. Các đầu bắn một chuỗi đạn rồi nghỉ. Không nâng cấp mana. Chạm thẻ Hydra: MỌI Hydra từ 3★ bắn nhanh gấp đôi; Hydra 7★ thành SÚNG MÁY (10 phát/giây trong 7,5 giây, lâu hơn theo cấp thẻ). Giá: 40 mana, gấp đôi mỗi lần dùng",
+"ROTATE TO PLAY": "XOAY DỌC MÁY ĐỂ CHƠI",
+"Turret Merge is played in portrait only": "Turret Merge chỉ chơi ở màn dọc",
+"The battle is paused until you rotate back": "Trận đang tạm dừng — xoay dọc lại để chơi tiếp"
 }
