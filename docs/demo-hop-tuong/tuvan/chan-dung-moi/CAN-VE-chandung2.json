@@ -1,0 +1,282 @@
+[
+ {
+  "name": "raw_pilot2_maychem.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Guillotine\": stern tall samurai executioner woman, black high topknot, red eyepatch, giant cleaver blade on shoulder, black and vermilion kimono armor, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_tia.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Sniper\": laid-back chameleon-folk sniper, green speckled scales, chewing a straw, one eye fitted with a scope lens, long rifle, khaki poncho, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_luutru.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Fusion Archive\": kind elderly tortoise-folk archivist, round spectacles, shell stacked with glowing scrolls and books, teal robe, warm smile, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_wallgen.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Wall Projector\": chubby beaver-folk builder, yellow hard hat, big front teeth grin, holding a holographic wall blueprint, orange work vest, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_bienmau.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Prism Thief\": magpie-folk phantom thief girl, black and white feathers with iridescent sheen, small top hat, winking, pinching a rainbow prism gem, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_khuech.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Amplifier\": punk rock idol woman, hot pink mohawk, nose ring, shouting into mic, huge speaker-guitar, black leather jacket with lime studs, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_santhuong.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Bounty Beacon\": greedy little goblin bounty broker, long ears, gold tooth grin, fan of wanted posters, oversized brown coat, coin pouch, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_guongcong.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Mirror Gate\": tall blue-skinned mirror djinn man, braided black beard, gold earrings, golden mirror rings orbiting him, calm knowing smile, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_laser.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Laser\": cute round one-eyed cyclops monster mascot, giant single eye charging a red laser, tiny horn, stubby arms, navy fur, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_mana.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Mana Core\": dark-skinned elf archmage man, long pointed ears, black braids with sapphire beads, glowing blue mana orb, rune tattoos, deep blue robe, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_luoicheo.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Resonance Grid\": cute boxy robot mascot with a TV-screen face showing happy pixel eyes, antenna emitting sound rings, white and lime green body, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_dongbo.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Sync Cannon\": cheerful plump conductor man, curly mustache, maroon tailcoat, raising a baton that sparks in rhythm, brass buttons, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_railgun.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Salvo Battery\": tough cyborg heavy-weapons woman, buzz cut, mechanical arm, cheek scar, smirk, olive military armor, missile pods on shoulder, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_tudo.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Wild Link\": mischievous little gremlin imp, mismatched eyes, patchwork jacket, hugging a tangle of colorful cables, toothy grin, ageless creature, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_nhanban.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Cloner\": eccentric mad scientist woman, messy green hair, lab coat, holding a test tube with a tiny clone of herself inside, manic grin, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_kepha.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Jammer\": octopus-folk hacker, tentacles typing on several holo keyboards, sly half-lidded eyes, hoodie, coral red skin, green code glow, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_nemesis.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Nemesis\": dapper demon lord, curled ram horns, red skin, slicked black hair, black suit, holding a glowing contract scroll, smirk, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_phun.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Scatter\": burly orc gunner, green skin, tusks, mohawk, blunderbuss scattergun, belly laugh, leather bandolier, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_min.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Mine Layer\": chubby mole-folk sapper, miner helmet with lamp, dirty cheeks, hugging a round mine, tiny glasses, proud smile, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_khien.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Shield Gen\": gentle giant crystal golem knight, faceted blue crystal body, soft glowing kind eyes, hexagon energy shield, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_radar.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Radar\": bat-folk girl, huge ears, echolocation rings, navy cape, small fangs, curious expression, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_nayda.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Ricochet\": mischievous boy about 10 years old, backwards cap, band-aid on nose, slingshot, bouncing rubber balls, cheeky grin, kid outfit, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_mimic.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Mimic\": cute treasure chest mimic monster, big round eyes peeking under the lid, long tongue, gold coins spilling, wooden chest with gold trim, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_loa.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Cooldown Horn\": chubby penguin-folk herald blowing a frosty horn, puffed cheeks, red scarf, blue and white feathers, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_ronglua.png",
+  "ref": [
+   "pilot_canon.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Wyrm Engine\": proud young dragonborn man, emerald scales, golden horns, smoke from nostrils, brass engine armor with pistons, fiery eyes, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_cuongno.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Berserker\": muscular oni woman berserker, red skin, two horns, wild black hair, spiked kanabo club, battle-crazed grin, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_nam.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Iron Fist\": tough boxer woman, short pink buzz cut, bandaged cheek, huge iron gauntlets raised, determined glare, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_loren.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Twin Anvil\": stout dwarf blacksmith, braided red beard, soot on face, two hammers one red one blue, leather apron, hearty laugh, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_nguyenrua.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Hex Saboteur\": middle-aged hex saboteur, plague-doctor beak mask pushed up on forehead, face visible, green hex candles, sly look, dark coat, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_tienhoa.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Evolver\": cute round slime creature, mint-to-orange gradient jelly body, big sparkly eyes, tiny DNA-helix antenna, happy, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_ngaithoigian.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Chrono Throne\": sleepy regal sphinx cat-folk queen, egyptian gold headdress, lapis jewelry, lounging on an hourglass throne, half-lidded eyes, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_cauvong.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Rainbow\": cheerful cloud spirit young woman, small unicorn horn, white fluffy hair with rainbow streaks, giant paintbrush, pastel, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_khoisinh.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Genesis Core\": gentle elderly dryad tree spirit, bark skin, mossy hair with blossoms, cupping a glowing seed of light, serene, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_thanhdia.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Sanctum\": stern female angel paladin, short black hair, six white wings, golden winged helm, glowing sword, sky blue cloak, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ },
+ {
+  "name": "raw_pilot2_hutmana.png",
+  "ref": [
+   "pilot_ronglua.png",
+   "pilot_cobac.png"
+  ],
+  "prompt": "Turret \"Mana Leech\": pale vampire count, slicked back black hair, crimson cape, sipping glowing blue mana from a goblet, elegant smirk, anime gacha hero bust portrait, 3/4 view, face in upper half, clean bold lineart, vivid cel shading, solid flat #FF00FF background, no text"
+ }
+]
