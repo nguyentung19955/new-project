@@ -11,6 +11,12 @@
 - Lớp hiệu ứng toàn màn (lopFx) chỉ cao bằng dải được dùng, để bớt bộ nhớ canvas; hình không đổi.
 - Gameplay không đổi.
 
+## claude/demo-hop-tuong — ụ không bắn (09/11)
+- Ụ không có sát thương (25 ụ: Cổng Ấp Nở, Máy Mana, Hộp Bí Ẩn, Trứng Tiến Hoá, Đe Rèn, Lõi Khởi Sinh + các ụ Hỗ trợ) KHÔNG BAO GIỜ bắn/gây sát thương: đã kiểm Solo/PVP/Co-op, buff dồn, ghép, Wild Link, Mimic, Copycat.
+- Trang ụ: Tầm bắn của ụ không bắn không còn "Toàn đường đi". Không có vùng → "—"; ụ hỗ trợ ghi vùng thật (4 ô kề / 4 ô chéo / Cả bàn / 4 ô kề + đường đi). Máy Mana: "Tăng —". Vệ Tinh: Mục tiêu "Kiểu riêng".
+- Bảng chạm ngoài trận: "Không bắn" thay "ST gốc 0".
+- Test: `tools/thap-kt-u-khong-ban.js` (có trong hoiquy). Báo cáo: docs/demo-hop-tuong/tuvan/u-khong-ban/BAO-CAO.md
+
 ## claude/demo-hop-tuong — chỉ 2 ụ bấm tay (09/11)
 - **Chỉ Black Hole (`blackhole`) và Arcane Cascade / Thác Mana (`thacmana`) còn chạm ụ khi nạp đầy.** 9 ụ khác TỰ KÍCH khi đầy (sức mạnh giữ nguyên): Chrono Throne, Holy Halo (đã rời roster), Hive Queen, Leviathan, Genesis Core, Wyrm Engine, Cryo Reactor, Hydra (bỏ chạm thẻ khay — tự kích hoạt chung khi đông quái và đủ mana, luật AI cũ), Evolver (trứng cháy tự tái chế +20 mana). Danh sách ở `game.js` `TU_KICH` (hoặc cờ `SKILLS[id].tuKich`).
 - Điều kiện tự kích (mọi bàn, mỗi khung sau `capNhatU` — `tuKichBan`): nạp đầy + đủ 3★ + không đá/băng + `aiNen` (luật AI cũ: Chrono — trùm/quái gần cuối; Hive — ≥2 drone và ≥3 quái; Leviathan/Hydra — ≥6/5 quái hoặc trùm; Cryo — ≥5 quái trong tầm hoặc trùm; Wyrm — trùm, hoặc nhiệt ≥ 200 / ≥ 100 khi ≥ 6 quái (trước đây người chơi chỉ khi có trùm); Genesis — có ô kề trống, trừ 30 mana như cũ). `napChuDong` không còn tự dùng chiêu Arcane Cascade sau 6 s.
