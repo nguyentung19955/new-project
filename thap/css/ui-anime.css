@@ -1,0 +1,110 @@
+/* TURRET MERGE — GIAO DIỆN NGOÀI TRẬN ANIME "Royal Twilight" (B3 09/11, js/ui-anime.js). Chỉ có hiệu lực khi html.ua.
+   Bảng màu (huong-anime/BANG-MAU.md): nền #10162F · panel #212B50 · viền champagne #E9CCA0 · nhấn cyan #71E4EE · CTA #FFB866/chữ #172040 ·
+   chữ #F7F8FF · phụ #B8C3E6 (≥ 7:1 trên #212B50) · cảnh báo #FF5E80. Tài nguyên: MANA teal (ua_ts_mana) · vàng ua_ts_vang · ngọc hồng
+   ua_ts_ngoc · tinh thể Đỏ ua_ts_do · xu sự kiện ua_ts_sk · XP ua_ts_xp.
+   Component chung (mọi tấm/nút = ảnh ChatGPT qua border-image / <img>, QUY-TAC-HINH.md):
+     --ua-a  nút chính cam đào (1 cái/màn: PLAY, mua, nhận)    ua_nut_chinh 40 75 fill
+     --ua-b  nút phụ chàm viền cyan (tab, nút thường)             ua_nut_phu   36 60 fill
+     --ua-p  pill tắt / --ua-pb pill bật (chip lọc, tab con)      ua_pill_tat / ua_pill_bat 40 62 fill
+     --ua-t  tấm chàm vát góc (bảng trượt, hàng, thẻ thông tin)   ua_tam 50 fill
+     --ua-o  ô vuông vát góc (ô hàng, ô thưởng, rương)            ua_o 52 fill
+   Toạ độ = khung 430×860 (#wrap). Nạp CUỐI (sau hud-anime.css) để thắng các lớp tvc/hudmuot/kinhte cũ. */
+:root {
+  --ua-nen: #10162F; --ua-tam: #212B50; --ua-vien: #E9CCA0; --ua-lam: #71E4EE; --ua-cta: #FFB866; --ua-cta-chu: #172040;
+  --ua-chu: #F7F8FF; --ua-mo: #B8C3E6; --ua-do: #FF5E80; --ua-xanh: #4ED6A4; --ua-mana: #25D6C0; --ua-ngoc: #FB73B8; --ua-vang: #CA8842;
+  --ua-a: url(../assets/ua_nut_chinh.webp?v=54ba97dd) 40 75 fill; --ua-b: url(../assets/ua_nut_phu.webp?v=5eb74425) 36 60 fill;
+  --ua-p: url(../assets/ua_pill_tat.webp?v=7011ead0) 40 62 fill; --ua-pb: url(../assets/ua_pill_bat.webp?v=20bd9c86) 40 62 fill;
+  --ua-t: url(../assets/ua_tam.webp?v=45cf4b68) 50 fill; --ua-o: url(../assets/ua_o.webp?v=47ec89eb) 52 fill;
+}
+html.ua, html.ua body { background: #10162F; }
+/* token màu cũ trỏ về bảng mới (chữ/nhấn trong mọi màn menu đổi theo) */
+html.ua { --m-nen: #10162F; --m-tam: #212B50; --m-chu: #F7F8FF; --m-mo: #B8C3E6; --m-lam: #71E4EE; --m-vang: #E9CCA0; --m-do: #FF5E80;
+  --tv-n0: #10162F; --tv-n1: #212B50; --tv-chu: #F7F8FF; --tv-mo: #B8C3E6; --tv-lam: #71E4EE; --tv-do: #FF5E80; --tv-d1: #E9CCA0;
+  --c-nen: #10162F; --c-chu: #F7F8FF; --c-mo: #B8C3E6; --c-lam: #71E4EE; --c-vang: #E9CCA0; --c-do: #FF5E80;
+  --vl-a: url(../assets/ua_nut_chinh.webp?v=54ba97dd); --vl-a-cat: 40 75 fill; --vl-a-sang: url(../assets/ua_pill_bat.webp?v=20bd9c86); --vl-a-sang-cat: 40 62 fill;
+  --vl-b: url(../assets/ua_nut_phu.webp?v=5eb74425); --vl-b-cat: 36 60 fill; --vl-b-hang: url(../assets/ua_tam.webp?v=45cf4b68); --vl-b-hang-cat: 50 fill;
+  --vl-c: url(../assets/ua_tam.webp?v=45cf4b68); --vl-c-cat: 50 fill; --vl-d: url(../assets/ua_tam.webp?v=45cf4b68); --vl-d-cat: 50 fill; }
+html.ua body #wrap #chon { background: #10162F; }
+/* nền mọi màn menu: trời lâu đài + vòng phép (thay xưởng thép nen_home / nen_deck) */
+html.ua body #wrap .hm-nen, html.ua body #wrap .dk-nen, html.ua body #wrap .kt-nen { content: url(../assets/ua_nen.jpg?v=18124db2); opacity: 1 !important; object-fit: cover; }
+
+/* ================= COMPONENT CHUNG ================= */
+/* nút chính cam đào: chữ chàm đậm #172040 (9.3:1) */
+html.ua body #wrap .hm-choi, html.ua body #wrap .hm-nut2.vang, html.ua body #hm-mo .hm-nut2.vang {
+  border: 0 solid transparent !important; border-image: var(--ua-a) / 19px 36px stretch !important; color: #172040 !important; filter: none; }
+html.ua body #wrap .hm-nut2.vang b, html.ua body #wrap .hm-nut2.vang small, html.ua body #wrap .hm-choi b, html.ua body #wrap .hm-choi small { color: #172040 !important; text-shadow: none !important; }
+html.ua body #wrap .hm-nut2.vang:disabled, html.ua body #wrap button.hm-choi:disabled { border-image-source: url(../assets/ua_nut_phu.webp?v=5eb74425) !important; border-image-slice: 36 60 fill !important; color: #B8C3E6 !important; filter: none !important; }
+html.ua body #wrap .hm-nut2.vang:disabled b, html.ua body #wrap .hm-nut2.vang:disabled small, html.ua body #wrap button.hm-choi:disabled b, html.ua body #wrap button.hm-choi:disabled small { color: #B8C3E6 !important; }
+/* nút phụ chàm viền cyan */
+html.ua body #wrap .hm-nut2:not(.vang), html.ua body #wrap .hm-tab button, html.ua body #hm-mo .hm-nut2:not(.vang) {
+  border: 0 solid transparent !important; border-image: var(--ua-b) / 15px 25px stretch !important; color: #F7F8FF !important; }
+/* nhấn: chỉ lún (nutlun.css) + sáng nhẹ, không đổi ảnh thép */
+html.ua body #wrap button.hm-an, html.ua body #hm-mo button.hm-an { filter: brightness(1.12) !important; }
+html.ua body #wrap #chon button.hm-an:not(.hm-choi):not(.dk-lui), html.ua body #wrap #hm-mo button.hm-nut2.hm-an:not(.vang) { border-image-source: url(../assets/ua_nut_phu.webp?v=5eb74425) !important; }
+html.ua body #wrap #chon button.hm-choi.hm-an, html.ua body #wrap #hm-mo button.hm-nut2.vang.hm-an { border-image-source: url(../assets/ua_nut_chinh.webp?v=54ba97dd) !important; }
+/* nút tròn (ảnh ua_ic_* đã có vòng tròn): bỏ khung thép */
+html.ua body #wrap .hm-ic, html.ua body #hm-mo .hm-ic { border-image: none !important; background: none !important; }
+html.ua body #wrap .hm-ic.hm-ic1 > img, html.ua body #hm-mo .hm-ic.hm-ic1 > img { width: 44px !important; height: 44px !important; max-height: none !important; object-fit: contain; }
+/* bảng trượt + hàng chọn */
+html.ua body #wrap .hm-tam, html.ua body #hm-mo .hm-tam { border-image: var(--ua-t) / 20px 22px stretch !important; }
+html.ua body #wrap .hm-hang, html.ua body #hm-mo .hm-hang { border: 0 solid transparent !important; border-image: var(--ua-o) / 14px 16px stretch !important; }
+html.ua body #wrap .hm-hang.on, html.ua body #hm-mo .hm-hang.on { border-image: var(--ua-t) / 16px 18px stretch !important; }
+html.ua body #wrap .hm-hang.on em, html.ua body #hm-mo .hm-hang.on em { color: #71E4EE !important; }
+html.ua body #wrap .hm-tam-dau b, html.ua body #hm-mo .hm-tam-dau b { color: #F7F8FF; }
+html.ua body #wrap .hm-tam-dau small, html.ua body #hm-mo .hm-tam-dau small { color: #B8C3E6; }
+/* chip lọc / bật-tắt: pill chàm, đang chọn = pill cyan (chữ chàm đậm) */
+html.ua body #wrap .hm-chip, html.ua body #hm-mo .hm-chip { border: 0 solid transparent !important; border-image: var(--ua-p) / 14px 20px stretch !important; color: #F7F8FF !important; }
+html.ua body #wrap .hm-chip.on, html.ua body #hm-mo .hm-chip.on { border-image: var(--ua-pb) / 14px 20px stretch !important; color: #172040 !important; }
+html.ua body #wrap .hm-chip.on small, html.ua body #hm-mo .hm-chip.on small { color: #172040 !important; }
+html.ua body #wrap .hm-chip small, html.ua body #hm-mo .hm-chip small { color: #B8C3E6; }
+/* chip tiền (vàng/ngọc): pill chàm + icon mới */
+html.ua body #wrap .hm-tien { border: 0 solid transparent !important; border-image: var(--ua-p) / 13px 18px stretch !important; }
+html.ua body #wrap .kt-tien img { width: 26px !important; height: 26px !important; margin-left: -4px; }
+html.ua body #wrap .kt-tien b { color: #F7F8FF !important; }
+
+/* ================= HOME ================= */
+/* thẻ phi công: pill chàm, avatar tròn, tên + trạng thái */
+html.ua body #wrap #hm .hm-tk #tk-chip { border: 0 solid transparent !important; border-image: var(--ua-p) / 16px 22px stretch !important; padding: 0 14px 0 6px !important; height: 52px !important; }
+html.ua body #wrap #hm .hm-tk #tk-chip small { color: #71E4EE !important; }
+/* cấp phi công: huy hiệu XP + LV + thanh teal (cắt ảnh ha_mau_xanh trên rãnh ha_mau_ranh) */
+html.ua body #wrap #hm .tt-cap { top: 66px !important; width: 150px !important; height: 22px !important; gap: 4px !important; }
+html.ua body #wrap #hm .tt-cap .ua-xp { width: 22px; height: 22px; flex: none; object-fit: contain; }
+html.ua body #wrap #hm .tt-cap > b { color: #E9CCA0 !important; font-size: 13px !important; }
+html.ua body #wrap #hm .tt-cap .tb-sb { height: 14px !important; position: relative; border: 0 !important; border-image: none !important; background: url(../assets/ha_mau_ranh.png?v=c483d997) 0 50% / 100% 8px no-repeat !important; }
+html.ua body #wrap #hm .tt-cap .tb-sb .tb-day { position: absolute !important; left: 0 !important; right: 0 !important; top: 3px !important; bottom: 3px !important; }
+html.ua body #wrap #hm .tt-cap .tb-sb .tb-day img { content: url(../assets/ha_mau_xanh.png?v=c60bd74a); object-fit: fill; }
+html.ua body #wrap #hm .tt-cap .tb-sb b { position: relative; z-index: 1; color: #F7F8FF !important; text-shadow: 0 1px 2px #000, 0 0 3px #000 !important; }
+/* nút bên (nhiệm vụ / sự kiện | cửa hàng / vòng quay): icon anime không khung bánh răng */
+html.ua body #wrap #chon .kt-nut .kt-nut-o, html.ua body #wrap #chon .kt-nut .kt-nut-o img { width: 56px !important; height: 56px !important; }
+html.ua body #wrap #chon .kt-nut .kt-nut-o img { filter: drop-shadow(0 2px 3px #000c); } /* vetay-ok: png — bóng theo alpha của chính ảnh */
+html.ua body #wrap #chon .kt-nut > b { color: #F7F8FF; text-shadow: 0 1px 2px #000, 0 0 4px #000, 0 0 6px #10162F !important; }
+/* chọn chế độ gọn: pill chàm — icon · tên · nút tròn ▼ (ảnh ua_ic_loc) */
+html.ua body #wrap #hm .hm-che { height: 52px !important; border: 0 solid transparent !important; border-image: var(--ua-b) / 15px 25px stretch !important; padding: 0 58px 0 18px !important; position: relative; }
+html.ua body #wrap #hm .hm-che::after { content: ''; position: absolute; right: 12px; top: 50%; width: 36px; height: 36px; margin-top: -18px; background: url(../assets/ua_ic_loc.webp?v=bc66b750) center / contain no-repeat; pointer-events: none; }
+html.ua body #wrap #hm .hm-che img { width: 38px !important; height: 38px !important; }
+html.ua body #wrap #hm .hm-che b { color: #F7F8FF !important; font-size: 20px !important; }
+html.ua body #wrap #hm .hm-che small, html.ua body #wrap #hm .hm-che em { display: none !important; }
+/* logo: thấp xuống một chút để không đè thanh cấp phi công */
+html.ua body #wrap #hm .hm-logo { top: 92px !important; width: 280px !important; margin-left: -140px !important; }
+/* PLAY: nút cam đào lớn + vương miện ngọc; bộ bài thiếu → BUILD DECK (vẫn cam: là hành động chính) */
+html.ua body #wrap #hm .hm-choi { position: relative; height: 80px !important; border-image: var(--ua-a) / 25px 47px stretch !important; margin-top: 8px; }
+html.ua body #wrap #hm .hm-choi::before { content: ''; position: absolute; left: 50%; top: -13px; width: 100px; height: 26px; margin-left: -50px; background: url(../assets/ua_mien.png?v=f4a6ec6d) center / contain no-repeat; pointer-events: none; }
+html.ua body #wrap #hm .hm-choi b { font-size: 32px !important; letter-spacing: .1em !important; }
+html.ua body #wrap #hm .hm-choi.ua-xay b { font-size: 26px !important; letter-spacing: .06em !important; }
+html.ua body #wrap #hm .hm-choi small { font-size: 13.5px !important; font-weight: 700 !important; }
+html.ua body #wrap #chon button.hm-choi.thieu { border-image-source: url(../assets/ua_nut_chinh.webp?v=54ba97dd) !important; color: #172040 !important; }
+html.ua body #wrap #chon button.hm-choi.thieu b, html.ua body #wrap #chon button.hm-choi.thieu small { color: #172040 !important; text-shadow: none !important; }
+/* 3 thẻ dưới: icon anime (bộ bài / bộ sưu tập / trùm) nhô lên trên nút + tên + số */
+html.ua body #wrap #hm .hm-tab { margin-top: 18px; }
+html.ua body #wrap #hm .hm-tab button { position: relative; height: 64px !important; padding: 12px 6px 4px !important; gap: 3px !important; overflow: visible; border-image-width: 13px 22px !important; }
+html.ua body #wrap #hm .hm-tab button::before { content: ''; position: absolute; left: 50%; top: -22px; width: 40px; height: 40px; margin-left: -20px; background: center / contain no-repeat; pointer-events: none; filter: drop-shadow(0 2px 2px #000a); } /* vetay-ok: png — bóng theo alpha của chính ảnh */
+html.ua body #wrap #hm .hm-tab button[data-act="hm-deck"]::before { background-image: url(../assets/ua_ic_deck.webp?v=a3636298); }
+html.ua body #wrap #hm .hm-tab button[data-act="hm-bst"]::before { background-image: url(../assets/ua_ic_bst.webp?v=30731013); }
+html.ua body #wrap #hm .hm-tab button[data-act="tx-mo"]::before { background-image: url(../assets/ua_ic_trum.webp?v=5693ffe6); }
+html.ua body #wrap #hm .hm-tab .hm-tab-u { display: none !important; }
+html.ua body #wrap #hm .hm-tab .hm-tab-u + b + small { display: block !important; }
+html.ua body #wrap #hm .hm-tab b { color: #F7F8FF !important; }
+html.ua body #wrap #hm .hm-tab small { color: #B8C3E6 !important; }
+html.ua body #wrap #hm .hm-tk #tk-chip span { min-width: 0; }
+html.ua body #wrap #hm .hm-tk #tk-chip b, html.ua body #wrap #hm .hm-tk #tk-chip small { white-space: nowrap !important; overflow: hidden; text-overflow: ellipsis; }
+html.ua body #wrap #chon .kt-nut > b { white-space: nowrap; }
