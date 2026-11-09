@@ -6,7 +6,10 @@
 //    Điểm KHÔNG còn nhân theo sao (súng có tăng sao thường như mọi ụ: dmgU × (1 + 0,85·(sao−1))). Đang quay (mọi lượt) ụ không bắn.
 //    Cuộn đều (mỗi ô 1/3): 3 giống 1/9 · cặp 2/3 · khác hết 2/9 → mỗi lượt xong: JACKPOT 1/7 ≈ 14,3 %, cặp 6/7 ≈ 85,7 %; trung bình 1,29 lượt quay.
 //  · Ngăn quả là CỦA BÀN (B.cb = [cam, dưa, nho]) — dùng chung cho MỌI Lucky Slot đã quay xong, không mất khi ụ bị ghép đi.
-//    Mỗi điểm (cấp thẻ đầu, × "Fruit power" KY_NANG_CAP.cobac 100% → 130% LV17): cam +5% ST · dưa +3,5% tốc (giảm dần, trần +150%) · nho +17% ST chí mạng (08/11: tăng từ 4,5 / 3 / 15%).
+//    Mỗi điểm (cấp thẻ đầu, × "Fruit power" KY_NANG_CAP.cobac 100% → 130% LV17): cam +2,5% ST · dưa +5% tốc (giảm dần, trần +150%) · nho +6% ST chí mạng,
+//    MỖI NGĂN TÍNH SẴN +10 ĐIỂM (CB.KHOI) — 09/11 người dùng "Lucky Slot … tốc đánh cộng thêm không bằng, chơi khó": trước (5 / 3,5 / 17%, không điểm sẵn)
+//    0 điểm chỉ 0,63–0,95× Vàng tốt nhất (yếu nhất Đỏ, cần ~8 điểm/ngăn ≈ wave 15–20 mới bằng trung vị Đỏ) mà ~25 điểm (wave 50) lại 3–5×;
+//    nay 0 điểm 1,2–1,7× · 4 điểm 1,5–2,1× · kỳ vọng wave 20–50 2,6–4,1× (docs/demo-hop-tuong/tocban/LUCKY-SLOT.md).
 //  · TẤT ĐỊNH: ô j của lượt k trong lần quay n = rngHat(hạt trận·7331 + bàn·977 + n·104729 + k·7919 + j·131 + 17) — không Math.random.
 //    Online: máy chủ bàn gửi gói 'cb' { o, q: [[a,b,c]…] (MỌI ô của MỌI lượt), s, st, n }; bàn con rối phát lại đúng chuỗi + nhận ngăn quả.
 //  · Hình (CHỈ trình bày, không đổi luật): khung 3 ô trên ô ụ, cuộn mờ chuyển động → dừng "cạch" từng ô → cặp: 2 ô sáng xanh;
@@ -22,13 +25,14 @@ const CB = {
   QUAY: 1.2, QUAY_LAI: 0.7, CACH: 0.35, NGHI: 0.45, // cuộn đầu 1,2 s · quay lại 0,7 s · các ô dừng cách 0,35 s · khác hết: dừng 0,45 s rồi quay lại
   SAU: [0.4, 0.9],   // sau ô cuối: cặp 0,4 s · jackpot 0,9 s (ăn mừng) rồi mới thành súng
   MAX_LUOT: 12,      // chặn vô hạn (xác suất 12 lượt khác hết liền ≈ (2/9)^12 ≈ 1e-8): lượt 12 ép ô 3 = ô 1
-  DMG: 0.05, TOC: 0.035, TOC_TRAN: 1.5, CDMG: 0.17, // mỗi điểm ngăn (cấp thẻ đầu) — 08/11 người dùng "Lucky Slot yếu" (+25–30%): ST gốc 50→58, mỗi điểm 4,5→5% / 3→3,5% / 15→17% (ST/phút 4★ W12: 7/7/7 102k→~125k, 14/14/14 179k→~231k · Hive Queen ~75k); trước đó: điểm kiểu cũ / điểm 3 ô ≈ 1,2–1,6 (tools/thap-sim-co-bac.js diem) → mỗi điểm ×1,5 cũ (3% / 2% / 10%)
+  DMG: 0.025, TOC: 0.05, TOC_TRAN: 1.5, CDMG: 0.06, // mỗi điểm ngăn (cấp thẻ đầu) — 09/11 (cùng KHOI 10): 5 → 2,5% / 3,5 → 5% / 17 → 6%, đường cong phẳng hơn: mạnh ngay từ đầu, bớt bùng nổ cuối trận · 08/11 người dùng "Lucky Slot yếu" (+25–30%): ST gốc 50→58, mỗi điểm 4,5→5% / 3→3,5% / 15→17% (ST/phút 4★ W12: 7/7/7 102k→~125k, 14/14/14 179k→~231k · Hive Queen ~75k); trước đó: điểm kiểu cũ / điểm 3 ô ≈ 1,2–1,6 (tools/thap-sim-co-bac.js diem) → mỗi điểm ×1,5 cũ (3% / 2% / 10%)
+  KHOI: 10,          // 09/11 người dùng "Lucky Slot … chơi khó": ĐIỂM KHỞI ĐẦU — mỗi ngăn tính thêm KHOI điểm sẵn (số trên khay vẫn là điểm quay được; mọi điểm quay vẫn cộng thêm)
   MOC: [10, 25, 50, 100], // mốc màu số ngăn trên khay (DOTPHA.MAU: vàng / lam / tím / trắng)
   he(B) { const v = typeof knThe === 'function' ? knThe(B, 'cobac') : null; return (v || 100) / 100; },
   st(B) { if (!B.cb) B.cb = [0, 0, 0]; return B.cb; },
   // +% theo ngăn của bàn B: k = 'dmg' | 'toc' | 'cdmg'
   gt(B, k) {
-    if (!B || !B.cb) return 0; const h = this.he(B), a = B.cb;
+    if (!B) return 0; const h = this.he(B), a = (B.cb || [0, 0, 0]).map(n => n + this.KHOI);
     if (k === 'dmg') return a[0] * this.DMG * h;
     if (k === 'cdmg') return a[2] * this.CDMG * h;
     return this.TOC_TRAN * (1 - Math.exp(-a[1] * this.TOC * h / this.TOC_TRAN)); // tốc: giảm dần, tiến tới +150%
@@ -95,7 +99,7 @@ SKILLS.cobac = {
   mo: (T) => {
     const B = T && G.ban && G.ban[T.ban], a = (B && B.cb) || [0, 0, 0], p = (k) => Math.round(CB.gt(B || { cb: a }, k) * 100), h = CB.he(B);
     return 'Spins 3 fruit reels when it appears (summon or merge). A pair = +1 point to that fruit; 3 of a kind = JACKPOT: +2 to all fruits. No match = spin again. Points are shared by all Lucky Slots. Orange = damage, Watermelon = speed, Grape = crit damage. Raising its star in place (like Merge King) doesn\'t spin again.'
-      + ' · no mana power-up · Per point: +' + +(CB.DMG * h * 100).toFixed(1) + '% damage, +' + +(CB.TOC * h * 100).toFixed(1) + '% speed (less as it grows, max +150%), +' + +(CB.CDMG * h * 100).toFixed(1) + '% crit damage'
+      + ' · no mana power-up · Every fruit starts with ' + CB.KHOI + ' bonus points · Per point: +' + +(CB.DMG * h * 100).toFixed(1) + '% damage, +' + +(CB.TOC * h * 100).toFixed(1) + '% speed (less as it grows, max +150%), +' + +(CB.CDMG * h * 100).toFixed(1) + '% crit damage'
       + ' · Now: Orange ' + a[0] + ' (+' + p('dmg') + '%), Watermelon ' + a[1] + ' (+' + p('toc') + '%), Grape ' + a[2] + ' (+' + p('cdmg') + '%)';
   },
   sinh(G, T) { T.cbS = 0; T.cbQuay = 0; T.cbQ = null; },
