@@ -23,6 +23,7 @@ Nhánh `claude/demo-hop-tuong` chỉ chứa game **TURRET MERGE** (merge tower-d
 
 ## Hình ảnh
 - Hình chỉ từ **ChatGPT** (PNG, nền magenta), không vẽ bằng code — chi tiết ở `thap/QUY-TAC-HINH.md`. Vẽ qua Claude in Chrome theo `docs/demo-hop-tuong/ban-giao/BAN-GIAO.md` mục 4; xong là đóng tab.
+- **Tạo nhiều ảnh / hỏi ChatGPT nhiều việc: mở NHIỀU tab ChatGPT song song** (mỗi tab 1 ảnh hoặc 1 câu hỏi) để không phải chờ nhau; tự lấy ảnh về repo (tab GitHub upload, ≤3 file/commit) — không bắt người dùng tải; làm xong lượt nào thì **đóng hết tab** của lượt đó (người dùng chốt 09/11).
 - ChatGPT hết lượt gen → đổi sang **tài khoản đã lưu sẵn** (menu tài khoản góc dưới trái); không gõ mật khẩu, không thêm tài khoản mới; hết cả thì dừng và báo.
 
 ## Kiểm tra (tiết kiệm token)
