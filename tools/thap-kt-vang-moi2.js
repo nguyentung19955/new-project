@@ -167,21 +167,22 @@ const MOI = ['mauhut', 'nguyenrua', 'thanhdia', 'bienmau'];
   }
   await p.close();
 
-  // ======================================================= CO-OP (Hex: ally +1★, never grief; 7★ ineligible)
+  // ======================================================= CO-OP (Hex: 09/11 thôi +1★ — ụ BẮN của đồng đội +50% tốc bắn 6 s theo xác suất; không bao giờ đổi sao)
   p = await mo('?mode=coop&deck=nguyenrua,mauhut,thanhdia,bienmau,canon&deck2=canon,lien,guongcong,bang,tia&wave=3&mana=0&notut=1');
   await p.evaluate(`window.DUNG = ${DUNG.toString()}`);
   console.log('— CO-OP');
   r = await p.evaluate(() => {
-    const B = G.ban[0], D = G.ban[1], out = { len: 0, giu: 0, xau: 0, bay: 0 };
+    const B = G.ban[0], D = G.ban[1], out = { len: 0, giu: 0, doiSao: 0 };
     for (let k = 0; k < 20; k++) {
       DUNG([[0, 'nguyenrua', 5], [1, 'nguyenrua', 5]], 0); DUNG([[5, 'canon', 3], [6, 'lien', 7]], 1); D.ai = false;
+      D.t[5].tocT = 0; D.t[6].tocT = 0;
       B.hexCd = 0; B.hexN = k; ghep(B, B.t[0], B.t[1]); G.dung = true; for (let t = 0; t < 1.6; t += 1 / 30) capNhat(1 / 30);
-      if (D.t[6].sao !== 7) out.bay++;
-      const s = D.t[5] && D.t[5].sao; if (s === 4) out.len++; else if (s === 3) out.giu++; else out.xau++;
+      if (D.t[5].sao !== 3 || D.t[6].sao !== 7) out.doiSao++;
+      if (D.t[5].tocT > 0 || D.t[6].tocT > 0) out.len++; else out.giu++;
     }
     G.dung = false; return out;
   });
-  ok(r.xau === 0 && r.bay === 0 && r.len > 3 && r.giu > 1, 'Hex CO-OP: ụ đồng đội +1★ theo xác suất, 7★ không bị chọn, không bao giờ −★', JSON.stringify(r));
+  ok(r.doiSao === 0 && r.len > 3 && r.giu > 1, 'Hex CO-OP: ụ bắn của đồng đội +50% tốc bắn 6 s theo xác suất, không bao giờ đổi ★ (thôi +1★ 09/11)', JSON.stringify(r));
   if (SHOTS) {
     let anh = [];
     await p.evaluate(() => { DUNG([[6, 'nguyenrua', 6], [7, 'nguyenrua', 6], [8, 'thanhdia', 3]], 0); DUNG([[6, 'canon', 3]], 1); G.ban[0].hexCd = 0; G.ban[0].hexN = 1; G.ban[1].ai = false; });

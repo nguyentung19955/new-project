@@ -1,0 +1,112 @@
+## nen/hero [lien,canon,set,tia,sungluc] wave 18.3 · mana giết quái 9485 · mana trùm 336 · ★ trả trùm 0.0 · triệu hồi 41.3 (free 9.3) · ★ miễn phí theo nguồn: —
+   canon.keo              lần 11.3 · Δ★ -15.0 · Δụ -11.3 · +mana 0 · tốn 0 · ★ hơn ghép thường -9.7
+   chihuy.hero            lần 4.7 · Δ★ 9.3 · Δụ 9.3 · +mana 0 · tốn 770
+   trum.joker_king        lần 1.0 · Δ★ -1.0 · Δụ -1.0 · +mana 0 · tốn 0
+   trum.nightmare         lần 1.3 · Δ★ -1.3 · Δụ -0.7 · +mana 0 · tốn 0
+## nen/dahlia [lien,canon,set,tia,sungluc] wave 16.7 · mana giết quái 7825 · mana trùm 224 · ★ trả trùm 0.0 · triệu hồi 36.7 (free 0.0) · ★ miễn phí theo nguồn: —
+   canon.keo              lần 7.0 · Δ★ -8.7 · Δụ -7.0 · +mana 0 · tốn 0 · ★ hơn ghép thường -5.7
+   chihuy.dahlia          lần 3.0 · Δ★ 0.0 · Δụ 0.0 · +mana 0 · tốn 413
+   trum.joker_king        lần 0.7 · Δ★ -0.3 · Δụ -0.7 · +mana 0 · tốn 0
+   trum.nightmare         lần 1.3 · Δ★ -1.3 · Δụ -0.3 · +mana 0 · tốn 0
+## nen/eve [lien,canon,set,tia,sungluc] wave 15.3 · mana giết quái 6291 · mana trùm 224 · ★ trả trùm 0.0 · triệu hồi 33.0 (free 0.0) · ★ miễn phí theo nguồn: —
+   canon.keo              lần 5.3 · Δ★ -6.7 · Δụ -5.3 · +mana 0 · tốn 0 · ★ hơn ghép thường -4.3
+   chihuy.eve             lần 2.7 · Δ★ 0.0 · Δụ 0.0 · +mana 0 · tốn 307
+   trum.joker_king        lần 1.0 · Δ★ -0.7 · Δụ -1.0 · +mana 0 · tốn 0
+   trum.nightmare         lần 1.7 · Δ★ -1.7 · Δụ -0.7 · +mana 0 · tốn 0
+## nen/tech [lien,canon,set,tia,sungluc] wave 14.7 · mana giết quái 5317 · mana trùm 224 · ★ trả trùm 0.0 · triệu hồi 31.0 (free 0.0) · ★ miễn phí theo nguồn: —
+   canon.keo              lần 6.0 · Δ★ -7.3 · Δụ -6.0 · +mana 0 · tốn 0 · ★ hơn ghép thường -4.7
+   chihuy.tech            lần 3.3 · Δ★ 0.0 · Δụ 0.0 · +mana 0 · tốn 275
+   trum.joker_king        lần 1.0 · Δ★ -0.7 · Δụ -1.0 · +mana 0 · tốn 0
+   trum.nightmare         lần 1.3 · Δ★ -1.3 · Δụ -0.3 · +mana 0 · tốn 0
+## nen/tide [lien,canon,set,tia,sungluc] wave 14.0 · mana giết quái 4722 · mana trùm 224 · ★ trả trùm 0.0 · triệu hồi 29.0 (free 0.0) · ★ miễn phí theo nguồn: —
+   canon.keo              lần 5.0 · Δ★ -5.7 · Δụ -5.0 · +mana 0 · tốn 0 · ★ hơn ghép thường -4.0
+   chihuy.tide            lần 3.0 · Δ★ 0.0 · Δụ 0.0 · +mana 0 · tốn 310
+   trum.joker_king        lần 1.3 · Δ★ -1.0 · Δụ -1.3 · +mana 0 · tốn 0
+   trum.nightmare         lần 1.3 · Δ★ -1.3 · Δụ -0.3 · +mana 0 · tốn 0
+## nen/twin [lien,canon,set,tia,sungluc] wave 14.7 · mana giết quái 5446 · mana trùm 224 · ★ trả trùm 0.0 · triệu hồi 31.3 (free 0.0) · ★ miễn phí theo nguồn: —
+   canon.keo              lần 6.0 · Δ★ -7.0 · Δụ -6.0 · +mana 0 · tốn 0 · ★ hơn ghép thường -5.3
+   chihuy.twin            lần 3.3 · Δ★ 0.0 · Δụ 0.0 · +mana 0 · tốn 385
+   trum.joker_king        lần 1.0 · Δ★ -0.7 · Δụ -1.0 · +mana 0 · tốn 0
+   trum.nightmare         lần 1.3 · Δ★ -1.3 · Δụ -0.7 · +mana 0 · tốn 0
+## nen/hawk [lien,canon,set,tia,sungluc] wave 16.7 · mana giết quái 7994 · mana trùm 224 · ★ trả trùm 0.0 · triệu hồi 37.3 (free 0.0) · ★ miễn phí theo nguồn: —
+   canon.keo              lần 7.3 · Δ★ -9.3 · Δụ -7.3 · +mana 0 · tốn 0 · ★ hơn ghép thường -6.0
+   chihuy.hawk            lần 3.3 · Δ★ 0.0 · Δụ 0.0 · +mana 0 · tốn 495
+   trum.joker_king        lần 1.0 · Δ★ -0.7 · Δụ -1.0 · +mana 0 · tốn 0
+   trum.nightmare         lần 1.3 · Δ★ -1.3 · Δụ -0.3 · +mana 0 · tốn 0
+## nen/weaver [lien,canon,set,tia,sungluc] wave 15.3 · mana giết quái 6636 · mana trùm 224 · ★ trả trùm 0.0 · triệu hồi 35.0 (free 0.0) · ★ miễn phí theo nguồn: —
+   canon.keo              lần 6.7 · Δ★ -8.0 · Δụ -6.7 · +mana 0 · tốn 0 · ★ hơn ghép thường -5.3
+   trum.joker_king        lần 1.3 · Δ★ -1.0 · Δụ -1.3 · +mana 0 · tốn 0
+   trum.nightmare         lần 1.3 · Δ★ -1.3 · Δụ -0.7 · +mana 0 · tốn 0
+## pandora+vughep/hero [lien,canon,set,pandora,vughep] wave 19.7 · mana giết quái 10301 · mana trùm 336 · ★ trả trùm 0.0 · triệu hồi 43.3 (free 8.7) · ★ miễn phí theo nguồn: GOLD KING 4.7, MERGE KING 10.7, VAULT STAR 0.7
+   canon.keo              lần 10.0 · Δ★ -14.0 · Δụ -10.0 · +mana 0 · tốn 0 · ★ hơn ghép thường -9.3
+   chihuy.hero            lần 4.3 · Δ★ 8.7 · Δụ 8.7 · +mana 0 · tốn 610
+   trum.joker_king        lần 1.0 · Δ★ -0.7 · Δụ -1.0 · +mana 0 · tốn 0
+   trum.nightmare         lần 4.0 · Δ★ -4.0 · Δụ -0.7 · +mana 0 · tốn 0
+   vughep.keo             lần 13.0 · Δ★ 0.3 · Δụ -13.0 · +mana 0 · tốn 0 · ★ hơn ghép thường 2.3
+## sinhdoi+tudo/hero [lien,canon,set,sinhdoi,tudo] wave 20.0 · mana giết quái 10812 · mana trùm 336 · ★ trả trùm 0.0 · triệu hồi 44.0 (free 8.7) · ★ miễn phí theo nguồn: twin 27.0, wildlink 2.7
+   canon.keo              lần 16.0 · Δ★ -22.0 · Δụ -16.0 · +mana 0 · tốn 0 · ★ hơn ghép thường -13.3
+   chihuy.hero            lần 4.3 · Δ★ 8.7 · Δụ 8.7 · +mana 0 · tốn 610
+   sinhdoi.ghep           lần 15.0 · Δ★ 27.0 · Δụ 15.0 · +mana 0 · tốn 0
+   trum.joker_king        lần 1.0 · Δ★ -0.3 · Δụ -0.7 · +mana 0 · tốn 0
+   trum.nightmare         lần 1.3 · Δ★ -1.3 · Δụ -0.7 · +mana 0 · tốn 0
+## nhanban+mimic/hero [lien,canon,set,nhanban,mimic] wave 15.3 · mana giết quái 8224 · mana trùm 224 · ★ trả trùm 0.0 · triệu hồi 34.3 (free 13.0) · ★ miễn phí theo nguồn: —
+   canon.keo              lần 8.0 · Δ★ -11.7 · Δụ -8.0 · +mana 0 · tốn 0 · ★ hơn ghép thường -6.7
+   chihuy.hero            lần 2.7 · Δ★ 5.3 · Δụ 5.3 · +mana 0 · tốn 380
+   nhanban.ghep           lần 7.7 · Δ★ 10.3 · Δụ 7.7 · +mana 0 · tốn 0
+   trum.joker_king        lần 1.3 · Δ★ -0.7 · Δụ -1.0 · +mana 0 · tốn 0
+## vughep+nangsao/hero [lien,canon,set,vughep,nangsao] wave 15.3 · mana giết quái 5905 · mana trùm 336 · ★ trả trùm 0.0 · triệu hồi 32.0 (free 7.3) · ★ miễn phí theo nguồn: MERGE KING 6.7, GOLD KING 0.7
+   canon.keo              lần 7.3 · Δ★ -9.3 · Δụ -7.3 · +mana 0 · tốn 0 · ★ hơn ghép thường -6.3
+   chihuy.hero            lần 3.7 · Δ★ 7.3 · Δụ 7.3 · +mana 0 · tốn 370
+   trum.joker_king        lần 1.7 · Δ★ -2.0 · Δụ -1.7 · +mana 0 · tốn 0
+   trum.nightmare         lần 1.3 · Δ★ -1.3 · Δụ -0.7 · +mana 0 · tốn 0
+   vughep.keo             lần 7.0 · Δ★ -0.3 · Δụ -7.0 · +mana 0 · tốn 0 · ★ hơn ghép thường 0.3
+## saochep+xaotron/hero [lien,canon,set,saochep,xaotron] wave 17.3 · mana giết quái 7927 · mana trùm 336 · ★ trả trùm 0.0 · triệu hồi 38.0 (free 7.3) · ★ miễn phí theo nguồn: —
+   canon.keo              lần 9.0 · Δ★ -10.7 · Δụ -9.0 · +mana 0 · tốn 0 · ★ hơn ghép thường -8.0
+   chihuy.hero            lần 3.7 · Δ★ 7.3 · Δụ 7.3 · +mana 0 · tốn 370
+   trum.joker_king        lần 1.0 · Δ★ -1.3 · Δụ -1.0 · +mana 0 · tốn 0
+   trum.nightmare         lần 1.3 · Δ★ -1.3 · Δụ -0.7 · +mana 0 · tốn 0
+## pandora+hopbi/hero [lien,canon,set,pandora,hopbi] wave 16.7 · mana giết quái 7686 · mana trùm 224 · ★ trả trùm 0.0 · triệu hồi 36.3 (free 6.7) · ★ miễn phí theo nguồn: hopbi 8.0, VAULT STAR 1.0
+   canon.keo              lần 10.0 · Δ★ -13.7 · Δụ -10.0 · +mana 0 · tốn 0 · ★ hơn ghép thường -8.0
+   chihuy.hero            lần 3.3 · Δ★ 6.7 · Δụ 6.7 · +mana 0 · tốn 620
+   hopbi.capNhat          lần 3.7 · Δ★ 8.0 · Δụ 0.0 · +mana 0 · tốn 0
+   trum.joker_king        lần 1.3 · Δ★ -1.7 · Δụ -1.3 · +mana 0 · tốn 0
+   trum.nightmare         lần 1.7 · Δ★ -1.7 · Δụ -0.7 · +mana 0 · tốn 0
+## tienhoa+congap/hero [lien,canon,set,tienhoa,congap] wave 25.7 · mana giết quái 19499 · mana trùm 528 · ★ trả trùm 0.0 · triệu hồi 60.0 (free 40.3) · ★ miễn phí theo nguồn: tienhoa 21.0
+   canon.keo              lần 31.3 · Δ★ -51.7 · Δụ -31.3 · +mana 0 · tốn 0 · ★ hơn ghép thường -31.3
+   chihuy.hero            lần 5.0 · Δ★ 10.0 · Δụ 10.0 · +mana 0 · tốn 930
+   congap.capNhat         lần 30.3 · Δ★ 30.3 · Δụ 30.3 · +mana 0 · tốn 0
+   tienhoa.capNhat        lần 21.0 · Δ★ 21.0 · Δụ 0.0 · +mana 0 · tốn 0
+   trum.joker_king        lần 0.7 · Δ★ -0.7 · Δụ -0.7 · +mana 0 · tốn 0
+   trum.nightmare         lần 4.0 · Δ★ -4.0 · Δụ -0.7 · +mana 0 · tốn 0
+## khoisinh+anhsang/hero [lien,canon,set,khoisinh,anhsang] wave 26.7 · mana giết quái 22432 · mana trùm 992 · ★ trả trùm 0.0 · triệu hồi 60.0 (free 81.7) · ★ miễn phí theo nguồn: GENESIS 40.3, REINFORCE 1.3
+   anhsang.capNhat        lần 71.7 · Δ★ 71.7 · Δụ 71.7 · +mana 0 · tốn 0
+   canon.keo              lần 32.3 · Δ★ -53.3 · Δụ -32.3 · +mana 0 · tốn 0 · ★ hơn ghép thường -27.7
+   chihuy.hero            lần 5.7 · Δ★ 11.3 · Δụ 10.0 · +mana 0 · tốn 1890
+   khoisinh.capNhat       lần 40.3 · Δ★ 2.7 · Δụ -24.0 · +mana 0 · tốn 0
+   khoisinh.chuDong       lần 0.3 · Δ★ 0.3 · Δụ 0.3 · +mana 0 · tốn 10
+   trum.joker_king        lần 1.3 · Δ★ -2.3 · Δụ -1.3 · +mana 0 · tốn 0
+   trum.nightmare         lần 3.3 · Δ★ -3.3 · Δụ 0.0 · +mana 0 · tốn 0
+## nhanmana+mana/hero [lien,canon,set,nhanmana,mana] wave 19.0 · mana giết quái 11586 · mana trùm 416 · ★ trả trùm 0.0 · triệu hồi 49.0 (free 8.7) · ★ miễn phí theo nguồn: —
+   canon.keo              lần 13.3 · Δ★ -19.0 · Δụ -13.3 · +mana 0 · tốn 0 · ★ hơn ghép thường -11.0
+   chihuy.hero            lần 4.3 · Δ★ 8.7 · Δụ 8.7 · +mana 0 · tốn 610
+   mana.capNhat           lần 126.7 · Δ★ 0.0 · Δụ 0.0 · +mana 2106 · tốn 0
+   nhanmana.ghep          lần 8.0 · Δ★ 0.0 · Δụ 0.0 · +mana 499 · tốn 0
+   trum.joker_king        lần 1.3 · Δ★ -2.0 · Δụ -1.3 · +mana 103 · tốn 0
+   trum.nightmare         lần 1.3 · Δ★ -1.3 · Δụ -0.7 · +mana 0 · tốn 0
+## hutmana+santhuong/hero [lien,canon,set,hutmana,santhuong] wave 17.0 · mana giết quái 8576 · mana trùm 241 · ★ trả trùm 0.0 · triệu hồi 38.7 (free 6.0) · ★ miễn phí theo nguồn: —
+   canon.keo              lần 9.3 · Δ★ -11.7 · Δụ -9.3 · +mana 0 · tốn 0 · ★ hơn ghép thường -8.3
+   chihuy.hero            lần 3.0 · Δ★ 6.0 · Δụ 6.0 · +mana 0 · tốn 460
+   trum.joker_king        lần 1.0 · Δ★ -1.3 · Δụ -1.0 · +mana 0 · tốn 0
+   trum.nightmare         lần 1.0 · Δ★ -1.0 · Δụ -0.3 · +mana 0 · tốn 0
+## bienmau+nguyenrua/hero [lien,canon,set,bienmau,nguyenrua] wave 23.7 · mana giết quái 14867 · mana trùm 528 · ★ trả trùm 0.0 · triệu hồi 53.0 (free 10.0) · ★ miễn phí theo nguồn: —
+   canon.keo              lần 13.7 · Δ★ -16.7 · Δụ -13.7 · +mana 0 · tốn 0 · ★ hơn ghép thường -11.3
+   chihuy.hero            lần 5.0 · Δ★ 10.0 · Δụ 10.0 · +mana 0 · tốn 930
+   trum.joker_king        lần 0.7 · Δ★ -0.7 · Δụ -0.7 · +mana 0 · tốn 0
+   trum.nightmare         lần 3.0 · Δ★ -3.0 · Δụ 0.0 · +mana 0 · tốn 0
+## cobac+thacmana/hero [lien,canon,set,cobac,thacmana] wave 26.7 · mana giết quái 22383 · mana trùm 1184 · ★ trả trùm 0.0 · triệu hồi 65.3 (free 10.0) · ★ miễn phí theo nguồn: —
+   canon.keo              lần 19.3 · Δ★ -28.7 · Δụ -19.3 · +mana 0 · tốn 0 · ★ hơn ghép thường -16.7
+   chihuy.hero            lần 5.0 · Δ★ 10.0 · Δụ 10.0 · +mana 0 · tốn 930
+   thacmana.capNhat       lần 1.7 · Δ★ 0.0 · Δụ 0.0 · +mana 0 · tốn 93
+   thacmana.chuDong       lần 3.3 · Δ★ 0.0 · Δụ 0.0 · +mana 0 · tốn 210
+   trum.joker_king        lần 0.3 · Δ★ -0.3 · Δụ -0.3 · +mana 0 · tốn 0
+   trum.nightmare         lần 3.0 · Δ★ -3.0 · Δụ 0.0 · +mana 0 · tốn 0

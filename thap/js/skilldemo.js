@@ -266,7 +266,7 @@ const SD_K = {
     c: [[0.2, 'Drag onto one of your turrets'], [2.5, 'Marked: it will be eaten', { cham: 0.5 }], [4.4, 'Eaten: +5 Blood per ★', { cham: 0.6 }], [5.2, '20 Blood: a stronger form'], [6.6, '100 Blood: final form, more blood novas', { ev: 'hit', cham: 0.5 }], [8.0, 'More Blood = more damage, no limit']], dai: 10 },
   // Hex Saboteur: PvP thu nhỏ — lượt nguyền chọn sẵn để cú gieo thật trúng (ca may mắn), chú thích nói đúng xác suất
   nguyenrua: { kieu: 'ghep', doi: [[4, 'canon', 3], [9, 'tia', 4], [14, 'set', 3]], truoc: (T, B) => sdHexTrung(B, T, 8),
-    c: [[0.2, 'Merge two Hex Saboteurs'], [2.5, 'A hex flies at a rival turret', { cham: 0.6 }], [4.0, (T) => Math.round(SKILLS.nguyenrua.p(T) * 100) + '% chance: the rival turret loses 1★', { ev: 'sao', cham: 0.6 }], [5.2, 'Co-op: an ally turret gets +1★']] },
+    c: [[0.2, 'Merge two Hex Saboteurs'], [2.5, 'A hex flies at a rival turret', { cham: 0.6 }], [4.0, (T) => Math.round(SKILLS.nguyenrua.p(T) * 100) + '% chance: the rival turret loses 1★', { ev: 'sao', cham: 0.6 }], [5.2, 'Co-op: an ally turret shoots 50% faster']] },
   // Sanctum: vào bàn lúc 1.8 s (triệu hồi thật → sinh/moiDen) → tẩy băng 2 ụ kề + khiên 1 lần; rồi hào quang sát thương
   thanhdia: { kieu: 'ht', ke: [[2, 'lien', 's'], [6, 'canon', 's'], [8, 'lien', 's'], [12, 'canon', 's']], dong: [2, 8], truoc: (T, B) => { if (T) B.t[T.o] = null; },
     them: [[1.8, (B, D, T) => { if (!T || B.t[7]) return; const N = sinhU(taoU(B, 'thanhdia', T.sao, 7)); N.goc = -Math.PI / 2; B.t[7] = N; VX.trieu(N); }]],

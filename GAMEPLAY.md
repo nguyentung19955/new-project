@@ -868,6 +868,13 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - Để lại: 4 nút biểu cảm tạm trong chat ONLINE (chờ người dùng quyết, "tạm gác biểu cảm"); chữ "vòng xanh / chạm khi đầy" (≈35 chỗ) chờ nhánh tự kích vào rồi rà lại.
 - Kiểm: thap-kt-vi (không thiếu chuỗi mới; 44 thiếu có sẵn), thap-kt-motvong, thap-kt-tien-trinh (như bản gốc), ảnh 390×844 EN/VI trang ụ + kết quả hướng dẫn.
 
+## claude/demo-hop-tuong — hạn chế +★ miễn phí (09/11)
+- Người dùng chốt: KHÔNG đặt trần 5★ chung; Gold King giữ +2★, Evolver giữ nở +1★, Genesis Core / Merge King giữ nguyên; Star Lift chỉ đưa số + phương án (báo cáo mục 3).
+- **Pandora Vault**: quà +1★ (STAR GIFT) chỉ có ở vòng túi 6 lẻ → 1/12 lần mở (trước 1/6); vòng chẵn thay bằng VAULT BOMBS lần 2. Tất định theo hạt giống trận như cũ.
+- **Hex Saboteur** co-op: thôi +1★ ụ đồng đội → ụ bắn của đồng đội +50% tốc bắn 6 s (cùng xác suất). Solo / PVP giữ nguyên.
+- Mô tả ụ, câu họ ụ, clip Hex, bản dịch vi.json → ngonngu-vi.js; test `thap-kt-vang-moi2` ca co-op Hex theo luật mới.
+- Công cụ đo mới `tools/thap-do-sao-mien-phi.js` (đếm ★ / ụ / mana "cho không" theo từng kỹ năng, chỉ huy, trùm). Báo cáo + bảng dễ đọc mọi cơ chế sinh ụ khi ghép, +★ ngoài ghép, thưởng ẩn trong trận: `docs/demo-hop-tuong/tuvan/sao-mien-phi/BAO-CAO.md`.
+
 ## claude/demo-hop-tuong — animation theo bậc (09/11): rà soát 97 ụ + CHỮ KÝ ĐỎ
 - Rà soát: `tools/thap-anim-bac.js` chụp dải khung đánh thường (1★) + chiêu/đặc biệt (5★, quanh sự kiện chiêu, có pha báo trước) của mọi ụ ở 390×844 → bảng theo bậc `docs/demo-hop-tuong/tuvan/anim-bac/bang-*.jpg`, báo cáo + danh sách ưu tiên `RA-SOAT.md`. Trắng/Xanh đạt; Tím 6 ụ, Vàng 14 ụ "quá đơn giản so với bậc" (chung khuôn chấm trúng nhạt) — ghi lại để làm tiếp; Đỏ trước: 7/10 ụ chưa xứng bậc, không ụ nào báo trước.
 - `thap/js/dosig.js` (mới, nạp sau vfxp3.js): mỗi ụ ĐỎ một chữ ký hình riêng — báo trước theo thanh nạp → bùng nổ nhiều lớp → loé/rung nhẹ (chặn chung TVX) → dư âm: Hố Đen chân trời sự kiện + nghiền vỡ mảnh, Overlord thiên lôi từ trời + vết nứt có điện bò, Lò Băng bông tuyết 6 cánh + tuyết rơi, Ngai đồng hồ kim quay ngược + bóng quái + cát vàng, Chúa Tổ tổ ong lục giác, Leviathan đầu sóng + gợn đọng, Khởi Sinh sen 8 cánh + cột sáng + cánh hoa ở ụ nhận, Rồng gầm + dải cánh lửa, Lucky Slot mưa xu / jackpot, Thác Mana trận đồ + dòng mana đổ xuống từng quái.

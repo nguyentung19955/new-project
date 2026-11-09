@@ -5626,5 +5626,18 @@
 "TUTORIAL": "HƯỚNG DẪN",
 "NEW FEATURES UNLOCKED": "MỞ KHOÁ TÍNH NĂNG MỚI",
 "UNLOCKED": "ĐÃ MỞ KHOÁ",
-"MYTHIC FORGE": "LÒ RÈN THẦN THOẠI"
+"MYTHIC FORGE": "LÒ RÈN THẦN THOẠI",
+" Merge hexes a rival turret −#★ (co-op: ally +#% fire rate).": " Ghép yểm một ụ đối thủ −#★ (co-op: đồng đội +#% tốc bắn).",
+"CO-OP: ally turret +#% fire rate #s": "CO-OP: ụ đồng đội +#% tốc bắn #s",
+"Co-op: an ally turret may shoot #% faster for #s": "Co-op: một ụ đồng đội có thể bắn nhanh hơn #% trong #s",
+"Co-op: an ally turret shoots #% faster": "Co-op: một ụ đồng đội bắn nhanh hơn #%",
+"Merge # Hex Saboteurs: a hex flies out. PvP: a rival turret may lose #★. Co-op: an ally turret may shoot #% faster for #s. Solo: the first enemy is slowed and takes more damage": "Ghép # Kẻ Nguyền: lời nguyền bay ra. PvP: một ụ đối thủ có thể mất #★. Co-op: một ụ đồng đội có thể bắn nhanh hơn #% trong #s. Solo: quái đầu bị chậm và nhận thêm sát thương",
+"Merge # Hex Saboteurs: a hex flies out. PvP: a rival turret may lose #★. Co-op: an ally turret may shoot #% faster for #s. Solo: the first enemy is slowed and takes more damage.": "Ghép # Kẻ Nguyền: lời nguyền bay ra. PvP: một ụ đối thủ có thể mất #★. Co-op: một ụ đồng đội có thể bắn nhanh hơn #% trong #s. Solo: quái đầu bị chậm và nhận thêm sát thương.",
+"Merge # Pandora Vaults: the vault opens # of # big effects (mana, Freeze all, +#★, bombs, shields, frenzy). The +#★ only comes every other round of # openings (bombs instead). Co-op: some effects also help your ally": "Ghép # Hộp Pandora: hộp mở # trong # hiệu ứng lớn (mana, Đóng băng hết, +#★, bom, khiên, cuồng nộ). Quà +#★ chỉ có cách một vòng # lần mở (vòng kia ra bom). Co-op: vài hiệu ứng giúp cả đồng đội",
+"Merge # Pandora Vaults: the vault opens # of # big effects (mana, Freeze all, +#★, bombs, shields, frenzy). The +#★ only comes every other round of # openings (bombs instead). Co-op: some effects also help your ally.": "Ghép # Hộp Pandora: hộp mở # trong # hiệu ứng lớn (mana, Đóng băng hết, +#★, bom, khiên, cuồng nộ). Quà +#★ chỉ có cách một vòng # lần mở (vòng kia ra bom). Co-op: vài hiệu ứng giúp cả đồng đội.",
+"SIX SEALS: every # openings give # effects": "SÁU ẤN: mỗi # lần mở ra # phép",
+"SIX SEALS: every # openings give # effects; the +#★ gift only every other round (the other round: bombs twice)": "SÁU ẤN: mỗi # lần mở ra # phép; quà +#★ chỉ có cách một vòng (vòng kia: bom hai lần)",
+"The +#★ only comes every other round of # openings (bombs instead)": "Quà +#★ chỉ có cách một vòng # lần mở (vòng kia ra bom)",
+"merge hexes a rival turret −#★ (co-op: ally +#% fire rate)": "ghép yểm một ụ đối thủ −#★ (co-op: đồng đội +#% tốc bắn)",
+"the +#★ gift only every other round (the other round: bombs twice)": "quà +#★ chỉ có cách một vòng (vòng kia: bom hai lần)"
 }
