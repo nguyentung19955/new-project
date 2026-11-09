@@ -552,6 +552,7 @@ const VI_MAU = {
 "# mana, #s cooldown": "# mana, hồi chiêu #s",
 "# more to go": "Còn #",
 "# neighbours": "# ô kề",
+"# neighbours + path": "# ô kề + đường đi",
 "# of # still gives +#%": "# / # vẫn +#%",
 "# of a kind: JACKPOT! +# to all fruits": "# ô giống nhau: JACKPOT! +# cho mọi quả",
 "# orb/s · # bounce targets": "# cầu/giây · # quái trúng",
