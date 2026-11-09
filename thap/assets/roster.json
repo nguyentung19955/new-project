@@ -364,9 +364,9 @@
   "ten": "Star Lift",
   "bac": "tim",
   "dcdw": "Brownie",
-  "kyNang": "Support: all 4 N/E/S/W neighbours +fire rate, the lowest-star one ×1.5; 5★: every 2 waves it gets a star pip (3 pips = +1★)",
+  "kyNang": "Support: all 4 N/E/S/W neighbours +fire rate (+12% per ★), the lowest-star one ×1.5",
   "ten_vi": "Bệ Nâng Sao",
-  "kyNang_vi": "Hỗ trợ: cả 4 ô kề +tốc bắn, ụ kề sao thấp nhất ×1,5; 5★: mỗi 2 wave ụ đó nhận 1 nấc sao (3 nấc = +1★)"
+  "kyNang_vi": "Hỗ trợ: cả 4 ô kề +tốc bắn (+12% mỗi ★), ụ kề sao thấp nhất ×1,5"
  },
  {
   "id": "tuthan",
