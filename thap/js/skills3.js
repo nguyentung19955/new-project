@@ -408,6 +408,7 @@ HU.hoHoa = { // cầu lửa hồ ly: bung ra theo vòng rồi tự dẫn đườ
 //   1 MANA RAIN +10×sao · 2 FREEZE toàn bộ quái 1.5 s (trùm 0.5) · 3 STAR GIFT +1★ 1 ụ ngẫu nhiên
 //   4 VAULT BOMBS 3 quả vào 3 quái đầu dmg×(3+sao) · 5 SHIELD chặn 1 lần cho 3 ụ · 6 FRENZY toàn bàn +40% tốc bắn 6 s
 //   Co-op: 3/5/6 áp cả đồng đội. +★ từ hộp KHÔNG tính là ghép (không kích hoạt hiệu ứng ghép).
+//   09/11: STAR GIFT chỉ ở chu kỳ túi lẻ (1/12 lần mở) — chu kỳ chẵn là VAULT BOMBS ×2 (pandoraTui).
 // =====================================================================================================
 const PANDORA = [
   { k: 'mana', ten: 'MANA RAIN', mau: '#58D9AD' }, { k: 'dong', ten: 'FREEZE', mau: '#78D9F5' }, { k: 'sao', ten: 'STAR GIFT', mau: '#ffe46b' },
@@ -417,7 +418,8 @@ const PANDORA = [
 function pandoraTui(B) {
   if (!B.pdTui || !B.pdTui.length) {
     B.pdChu = (B.pdChu || 0) + 1;
-    const hat = (typeof ONS !== 'undefined' && ONS.on ? ONS.seed : G.hat) || 1, r = rngHat(hat * 4219 + B.i * 131 + B.pdChu * 7919), a = [0, 1, 2, 3, 4, 5];
+    // 09/11 hạn chế +★ miễn phí (người dùng): STAR GIFT chỉ có ở chu kỳ LẺ (1 lần / 12 lần mở, trước 1 / 6); chu kỳ CHẴN thay bằng VAULT BOMBS lần 2
+    const hat = (typeof ONS !== 'undefined' && ONS.on ? ONS.seed : G.hat) || 1, r = rngHat(hat * 4219 + B.i * 131 + B.pdChu * 7919), a = B.pdChu % 2 ? [0, 1, 2, 3, 4, 5] : [0, 1, 3, 3, 4, 5];
     for (let i = 5; i > 0; i--) { const j = Math.floor(r() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; }
     B.pdTui = a;
   }
@@ -426,7 +428,7 @@ function pandoraTui(B) {
 const PANDORA_TOT = ['sao', 'cuong', 'bom', 'mana', 'dong', 'khien']; // 6★: quay 2 lần → giữ cái đứng trước trong danh sách này
 SKILLS.pandora = {
   vai: 'db', dmg: 10, toc: 0.9, nham: 'dau',
-  mo: (T) => 'On merge: opens the vault — 1 of 6 (mana rain · freeze all · +1★ gift · 5 bombs · 5 shields · frenzy)' + ' · SIX SEALS: every 6 openings give all 6 once' + (T.sao >= 7 ? ' · OPEN: its 7★ merge fired 2 effects' : T.sao >= 5 ? ' · merging into 6★ rolls twice (keeps the better), into 7★ fires 2 effects' : ''),
+  mo: (T) => 'On merge: opens the vault — 1 of 6 (mana rain · freeze all · +1★ gift · 5 bombs · 5 shields · frenzy)' + ' · SIX SEALS: every 6 openings give 6 effects; the +1★ gift only every other round (the other round: bombs twice)' + (T.sao >= 7 ? ' · OPEN: its 7★ merge fired 2 effects' : T.sao >= 5 ? ' · merging into 6★ rolls twice (keeps the better), into 7★ fires 2 effects' : ''),
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'tia_lua', co: 15, mau: '#ffd86a', sp: 480 }); },
   ghep(G, B, a, b, ra) {
     // SIX SEALS (07/11): rút từ TÚI XÁO 6 phép (mỗi chu kỳ đủ 6, không lặp, hạt giống trận). 08/11: bỏ ROYAL VAULT (jackpot chỉ còn ở Lucky Slot) — bù: mưa mana 25 → 30 ×★, bom hộp +20%

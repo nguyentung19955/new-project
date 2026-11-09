@@ -189,14 +189,14 @@ const MH_SO = {
 // =====================================================================================================
 // P3 · HEX SABOTEUR (nguyenrua) — Vàng ĐB: GHÉP 2 Hex Saboteur → nguyền 1 ụ ngẫu nhiên (RNG gieo hạt) sau 1.5 s:
 //      PVP: thử −1★ ụ đối thủ (1★: tê liệt 2.5 s, không xoá); khiên / Mirror Gate kiểm tra LÚC TRÚNG (Mirror Gate phản lại).
-//      CO-OP: ụ ngẫu nhiên của đồng đội (<7★) +1★ cùng xác suất (không bao giờ phá đồng đội). SOLO: nguyền quái đầu (chậm 30% + nhận +15% 4 s).
+//      CO-OP: ụ BẮN ngẫu nhiên của đồng đội +50% tốc bắn 6 s cùng xác suất (09/11: thôi +1★ — hạn chế +★ miễn phí; không bao giờ phá đồng đội). SOLO: nguyền quái đầu (chậm 30% + nhận +15% 4 s).
 //      Xác suất: 35% (LV9, 1★) +2%/cấp thẻ +5%/sao người ghép, trần 80%. Hồi 8 s CHUNG cả bàn — ghép trong lúc hồi = bỏ (tất định).
 // =====================================================================================================
 SKILLS.nguyenrua = {
   vai: 'db', dmg: 13, toc: 1, nham: 'dau', napMau: '#ff3a3a',
   CD: 8, TRE: 1.5,
   p: (T) => Math.min(0.8, kn7(T) + 0.05 * (clamp(T.sao, 1, 7) - 1)),
-  mo(T) { const B = G.ban[T.ban], cd = B && B.hexCd > G.t ? Math.ceil(B.hexCd - G.t) : 0; return 'Merge two: hex a random turret after 1.5s — ' + Math.round(this.p(T) * 100) + '% · PVP: rival −1★ (1★: disabled 2.5s) · CO-OP: ally +1★ · SOLO (always): lead enemy slowed 30% + takes +15% for 4s · team cooldown ' + this.CD + 's' + (cd ? ' (' + cd + 's)' : ''); },
+  mo(T) { const B = G.ban[T.ban], cd = B && B.hexCd > G.t ? Math.ceil(B.hexCd - G.t) : 0; return 'Merge two: hex a random turret after 1.5s — ' + Math.round(this.p(T) * 100) + '% · PVP: rival −1★ (1★: disabled 2.5s) · CO-OP: ally turret +50% fire rate 6s · SOLO (always): lead enemy slowed 30% + takes +15% for 4s · team cooldown ' + this.CD + 's' + (cd ? ' (' + cd + 's)' : ''); },
   ban(G, B, T, E) { banNhe(B, T, E, { img: SK7.anh('nguyenrua', 'dan', 'dan_tia'), co: 15, mau: '#ff3a3a', sp: 560 }); },
   ghep(G, B, a, b, ra) {
     if (B.hexCd > G.t) return; // hồi chung: bỏ, không xếp hàng
@@ -206,7 +206,7 @@ SKILLS.nguyenrua = {
       const ds = D.t.filter(X => X && !X.st.da), X = ds.length ? ds[Math.floor(r() * ds.length)] : null;
       if (X) o = { D, uid: X.uid, o: X.o, cuoc: r() < p, kieu: 'pvp' };
     } else if (G.che === 'coop' && D) {
-      const ds = D.t.filter(X => X && !X.st.da && X.sao < LUAT.saoMax), X = ds.length ? ds[Math.floor(r() * ds.length)] : null;
+      const ds = D.t.filter(X => X && !X.st.da && SKILLS[X.id] && SKILLS[X.id].dmg), X = ds.length ? ds[Math.floor(r() * ds.length)] : null;
       if (X) o = { D, uid: X.uid, o: X.o, cuoc: r() < p, kieu: 'coop' };
     } else {
       B._dsT = -1; const E = quaiDau(B); // danh sách mục tiêu có thể đang nhớ từ trước bước này
@@ -231,8 +231,8 @@ HU.hexBay = { // âm thoa đỏ bay tới đích 1.5 s rồi phán (kiểm khiê
       fx7('nguyenrua', c.x, c.y, 64, 0.45);
       if (X.sao > 1) { X.sao--; X.sang = 1; FX.tiaLua(c.x, c.y, 12, '#ff3a3a', 150); }
       else if (!biKhoa(X)) X.hexT = 2.5; // ụ khoá không nhận tê liệt — rà cộng hưởng 07/11, người dùng chốt
-    } else if (o.cuoc && X.sao < LUAT.saoMax) {
-      const s0 = X.sao; X.sao++; X.sang = 1; X.anim = { k: 'no', t: 0.25 }; mocMoi(X, s0, 0.1);
+    } else if (o.cuoc) { // CO-OP (09/11 hạn chế +★ miễn phí): ụ đồng đội KHÔNG còn +1★ — thay bằng CUỒNG BẮN +50% tốc bắn 6 s
+      X.tocT = Math.max(X.tocT || 0, 6); X.tocV = Math.max(X.tocV || 0, 0.5); X.sang = 1;
       fx7('nguyenrua', c.x, c.y, 64, 0.45); FX.vong1(c.x, c.y, 6, 40, '#ffe46b', 0.4, 3);
     }
     return true;
@@ -533,7 +533,7 @@ deckNgauNhien = function (tru) { return _deckNN7([...(tru || []), ...SK7.CHUA_AN
 if (typeof DC !== 'undefined' && DC.ngauNhien) { /* dkcham.js nạp sau — xem cuối file */ }
 
 themHo('star', 3, 'mauhut', 'eats your turrets for Blood: more Blood = more damage, new forms at 20/50/100');
-themHo('guard', 3, 'nguyenrua', 'merge hexes a rival turret −1★ (co-op: ally +1★)');
+themHo('guard', 3, 'nguyenrua', 'merge hexes a rival turret −1★ (co-op: ally +50% fire rate)');
 themHo('guard', 3, 'thanhdia', 'cleanses + shields neighbours on arrival, damage aura');
 themHo('crit', 3, 'bienmau', '4 colours; swipe 4 different colours to FUSE a Spectrum Prism');
 
