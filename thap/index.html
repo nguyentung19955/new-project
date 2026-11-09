@@ -6,10 +6,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#16171a">
-  <title>TURRET MERGE</title>
+  <title>ASTRAL ARSENAL</title>
   <!-- ICON APP (ảnh đại diện, ChatGPT raw_app_icon.png → tools/thap-icon.py). Đường dẫn TƯƠNG ĐỐI: chạy cả GitHub Pages /new-project/thap/ lẫn turret-merge.web.app -->
-  <meta name="apple-mobile-web-app-title" content="Turret Merge">
-  <meta name="application-name" content="Turret Merge">
+  <meta name="apple-mobile-web-app-title" content="Astral Arsenal">
+  <meta name="application-name" content="Astral Arsenal">
+  <meta name="description" content="Astral Arsenal: Merge Defense — anime fantasy-tech merge tower defense: summon, merge and command magic-powered crystal cannons.">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/icon/favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="assets/icon/favicon-16.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icon/icon-192.png">
@@ -25,7 +26,7 @@
   <link rel="preload" href="assets/tai_khung.png" as="image">
   <link rel="preload" href="assets/tai_day.png" as="image">
   <link rel="preload" href="assets/nen_menu.jpg" as="image">
-  <link rel="preload" href="assets/logo.png" as="image">
+  <link rel="preload" href="assets/logo_aa.png" as="image">
   <style id="tm-tai-css">
     @font-face { font-family: 'TM Display'; font-weight: 100 900; font-display: swap; src: url(assets/fonts/oxanium/oxanium-latin-800-normal.woff2) format('woff2'); }
     html, body { margin: 0; height: 100%; background: #16171a; overflow: hidden; }
@@ -34,7 +35,7 @@
     #tai[hidden] { display: none; }
     #tai:not(.san) .tai-giua { visibility: hidden; } /* đợi logo + khung (script dưới #tai) */
     #tai .tai-giua { display: flex; flex-direction: column; align-items: center; gap: 18px; width: 340px; transform: scale(var(--tk, 1)); }
-    #tai .tai-logo { width: 290px; aspect-ratio: 704 / 288; background: url(assets/logo.png) center / contain no-repeat; filter: drop-shadow(0 3px 0 #000a); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
+    #tai .tai-logo { width: 290px; aspect-ratio: 960 / 387; background: url(assets/logo_aa.png) center / contain no-repeat; filter: drop-shadow(0 3px 0 #000a); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
     #tai .tai-thanh { position: relative; width: 330px; height: 34px; box-sizing: border-box; border-style: solid; border-width: 0; border-image: url(assets/tai_khung.png) 36.9 69 36.9 70 fill / 12px 23px stretch; } /* GIỐNG HỆT css/taitai.css (trước: lát 14 22 ≠ 36.9 58 → khung đổi hình giữa chừng) */
     #tai .tai-day { position: absolute; left: 11px; right: 11px; top: 9px; bottom: 10px; overflow: hidden; clip-path: inset(0 calc(100% - var(--p, 0%)) 0 0); transition: clip-path .2s; }
     #tai .tai-day img { position: absolute; left: 0; top: 0; display: block; width: 100%; height: 100%; object-fit: fill; }
@@ -50,7 +51,7 @@
   <script>(function () {
     // logo + khung thanh hiện CÙNG LÚC khi ảnh đã giải mã (không bật logo/khung lẻ từng cái); quá 1,5 s thì hiện luôn
     (function () { var t = document.getElementById('tai'), n = 2, hien = function () { if (t) t.classList.add('san'); }, xong = function () { if (--n <= 0) hien(); };
-      ['assets/logo.png', 'assets/tai_khung.png'].forEach(function (u) { var im = new Image(); im.onload = im.onerror = function () { (im.decode ? im.decode() : Promise.resolve()).then(xong, xong); }; im.src = u; });
+      ['assets/logo_aa.png', 'assets/tai_khung.png'].forEach(function (u) { var im = new Image(); im.onload = im.onerror = function () { (im.decode ? im.decode() : Promise.resolve()).then(xong, xong); }; im.src = u; });
       setTimeout(hien, 1500); })();
     var vw = innerWidth || 390, vh = innerHeight || 844; document.documentElement.style.setProperty('--tk', Math.max(0.8, Math.min(1.6, vw / 430, vh / 640)).toFixed(3));
     // ảnh chỉ huy lớn của HOME (home.js) — tải SONG SONG với js thay vì đợi js chạy xong
@@ -136,7 +137,7 @@
           <div class="hm-tien" id="hm-tien"><span>BEST</span><b id="hm-best">0</b></div>
           <button class="hm-ic hm-ic1" data-act="hm-cai" aria-label="Settings"><img src="assets/p7_ic_caidat.png" alt=""></button>
         </div>
-        <img class="hm-logo" src="assets/logo.png" alt="TURRET MERGE">
+        <img class="hm-logo" src="assets/logo_aa.png" alt="ASTRAL ARSENAL">
         <div class="hm-duoi">
           <button class="hm-che" data-act="hm-che" id="hm-che"><img id="hm-che-ic" src="assets/ic_solo.png" alt=""><span><small>MODE</small><b id="hm-che-ten">SOLO</b></span><em>CHANGE</em></button>
           <button class="hm-choi" data-act="hm-choi" id="hm-choi"><b>PLAY</b><small id="hm-choi-phu"></small></button>

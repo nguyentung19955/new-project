@@ -1,18 +1,19 @@
 #!/usr/bin/env python3
 """Sinh bộ ICON APP (ảnh đại diện) từ ảnh ChatGPT docs/demo-hop-tuong/thap-art/raw_app_icon.png → thap/assets/icon/.
 
-  python3 tools/thap-icon.py
+  python3 tools/thap-icon.py [ảnh thô]   (09/11 đổi tên Astral Arsenal: docs/demo-hop-tuong/thap-art/raw_icon_aa.png)
 
  · ≥ 120 px: trọn ảnh (khung bát giác + ụ súng), Lanczos + làm nét nhẹ, RGB (không trong suốt — iOS tô đen nền trong suốt).
  · favicon 48/32/16 + favicon.ico: cắt sát hơn (82 % giữa) → ụ súng còn đọc được ở 16–32 px.
  · maskable 512: cả ảnh thu về 80 % (vùng an toàn) giữa, phần ngoài = mép ảnh phản chiếu + nhoè (nền thép tối liền mạch).
 """
 import os
+import sys
 import numpy as np
 from PIL import Image, ImageFilter
 
 GOC = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
-SRC = os.path.join(GOC, 'docs/demo-hop-tuong/thap-art/raw_app_icon.png')
+SRC = sys.argv[1] if len(sys.argv) > 1 else os.path.join(GOC, 'docs/demo-hop-tuong/thap-art/raw_icon_aa.png')
 OUT = os.path.join(GOC, 'thap/assets/icon')
 os.makedirs(OUT, exist_ok=True)
 
@@ -44,7 +45,7 @@ pad = (N - T) // 2
 a = np.asarray(im.resize((T, T), Image.LANCZOS))
 p = np.pad(a, ((pad, N - T - pad), (pad, N - T - pad), (0, 0)), mode='reflect')
 nen = Image.fromarray(p).filter(ImageFilter.GaussianBlur(28))
-nen = Image.fromarray((np.asarray(nen).astype(np.float32) * 0.5).astype(np.uint8))
+nen = Image.fromarray((np.asarray(nen).astype(np.float32) * 1.0).astype(np.uint8))  # icon Astral Arsenal nền chàm phẳng: không làm tối (tối → lộ ô vuông)
 m = Image.new('L', (N, N), 0)
 m.paste(255, (pad, pad, pad + T, pad + T))
 m = m.filter(ImageFilter.GaussianBlur(3))

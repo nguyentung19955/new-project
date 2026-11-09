@@ -950,3 +950,10 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - Bộ bài + bộ sưu tập: thẻ dọc dùng KHUNG BẬC anime (ha_khung_*: Trắng viền thẳng · Xanh viền đôi · Tím rune · Vàng vương miện · Đỏ lửa) — cùng khung khay trận; LV trong vòng tròn góc phải, nút (i) góc trái, số bản sao ở dải đáy. Bộ bài 5 cột, BỘ SƯU TẬP 4 cột có tên ụ. 5 ô bộ bài cùng thẻ dọc; ô trống = ô vát góc + nút tròn.
 - Thẻ ụ khoá: vẫn thấy hình (xám nhẹ) + tên + khung bậc, nhãn "PILOT / LV n" ở đáy cửa sổ; tiêu đề nhóm bậc hiện lại, nhóm còn khoá ghi "Unlocks at Pilot Level n" (Đỏ: "… and best wave 30"); nhãn đếm "PLAYABLE n · TOTAL m".
 - Đầu màn, băng chỉ huy, ô tìm, chip xếp: tấm/pill anime. Hợp đồng kéo-thả giữ nguyên (thap-kt-keo 23/23 ở 360/390/430).
+
+## claude/demo-hop-tuong — đổi tên Astral Arsenal
+- Người dùng chốt (09/11 18:10): tên game **Astral Arsenal** (cửa hàng: "Astral Arsenal: Merge Defense"). Tài liệu: `docs/demo-hop-tuong/tuvan/doi-ten/DOI-TEN.md`.
+- Logo mới `thap/assets/logo_aa.png` (ChatGPT `raw_logo_aa_1.png`, tách nền magenta bằng `tools/thap-cat-logo-aa.py`) thay `logo.png` ở màn tải, HOME, màn ảnh gen (`anhgen.css`). `logo.png` cũ vẫn giữ trong assets (không còn dùng).
+- Icon app mới (`raw_icon_aa.png` → `python3 tools/thap-icon.py`): toàn bộ `thap/assets/icon/` (favicon, apple-touch, 192/512, maskable — nền maskable không làm tối nữa).
+- Chữ: `<title>`, meta app-title/application-name + thêm meta description, manifest name/short_name, document.title (ngonngu.js), màn xoay dọc (rasoat.js), lời mời co-op (phong.js), SFX LAB + nghe-am-thanh.html; vi.json → ngonngu-vi.js.
+- KHÔNG đổi: khoá localStorage `turret_*`/`tm_*`, Firebase `turret-merge`/`turretmerge/`, SKU `com.turretmerge.*`, id nội bộ, thư mục, workflow, chú thích code.
