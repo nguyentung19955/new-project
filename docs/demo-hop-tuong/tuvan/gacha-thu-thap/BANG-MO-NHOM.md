@@ -94,7 +94,7 @@ Tỉ lệ = % MỖI thẻ; bản sao mỗi thẻ: Trắng 4–8 · Xanh 2–4 ·
 | Rương Thần thoại (MYTHIC) | cửa hàng 6 000 ngọc (mở khi đủ điều kiện Đỏ) | 12 | 30 | 38 | 24 | 7 | 1 | 1 Đỏ + 2 Vàng |
 | **Rương Sự kiện** (EVENT, mới) | thang sự kiện tuần (mốc 100 / 400 / 1 000 ×2) | 1 + 3 | 35 | 40 | 25 | — | — | 1 (2) bản **ụ Vàng nổi bật của tuần** |
 | **Rương Huyền thoại** (LEGENDARY, mới) | mốc Solo w20/30/40…, trùm lần đầu, "Reach wave 30", nhiệm vụ tuần, sự kiện mốc 1 700, vòng quay jackpot | n + 2 | 40 | 40 | 20 | — | — | **n bản Vàng** (n = số bản Vàng của phần thưởng cũ) |
-| **Rương Cổ đại** (ANCIENT, mới) | mốc Solo w50/60/70, hạ đủ 12 trùm, sự kiện mốc 3 600, lò rèn Đỏ | n + 2 | — | 40 | 60 | — | — | **n bản Đỏ** |
+| **Rương Cổ đại** (ANCIENT, mới) | mốc Solo w50/60/70, hạ đủ 12 trùm, sự kiện mốc 3 600, jackpot vòng quay ngọc (30%) | n + 2 | — | 40 | 60 | — | — | **n bản Đỏ** (bể chưa có Đỏ → lùi về Vàng) |
 
 - Rương Sự kiện / Huyền thoại / Cổ đại **không bán** — chỉ là "vỏ" của phần thưởng cũ: lượng Vàng / Đỏ giữ đúng như trước (KINH-TE §8), thêm 2–3 thẻ Trắng/Xanh/Tím để mở rương có cảm giác.
 - Ụ nổi bật của tuần: chọn tất định theo tuần trong các Vàng **đã mở** của người chơi (cùng cấp → cùng ụ).
@@ -114,7 +114,7 @@ Tỉ lệ = % MỖI thẻ; bản sao mỗi thẻ: Trắng 4–8 · Xanh 2–4 ·
 | Sự kiện mốc 3 600 | 1 bản Đỏ | Rương Cổ đại (1 Đỏ) |
 | Mốc Solo w20…70 | 1/2/3/3/4/5 Vàng + w50/60/70 1/1/2 Đỏ | Rương Huyền thoại (n Vàng) + Rương Cổ đại (n Đỏ) |
 | Trùm lần đầu / đủ 12 trùm | 1 Vàng / 1 Đỏ | Rương Huyền thoại / Rương Cổ đại |
-| Lò rèn Sử thi → Vàng / Vàng → Đỏ | 1 bản ngẫu nhiên | 1 bản ngẫu nhiên **trong bể** |
+| Lò rèn Sử thi → Vàng / Vàng → Đỏ | 1 bản ngẫu nhiên | 1 bản ngẫu nhiên **trong bể** (giữ là thẻ, không phải rương) |
 | Ấn Vàng | chọn bất kỳ Vàng | chọn Vàng **đã mở / đã có** |
 | Vòng quay, Daily Specials, quà miễn phí | thẻ ngẫu nhiên mọi ụ | thẻ **trong bể** |
 | Lên cấp | vàng + ngọc (+ Rương Vàng mỗi 5 cấp) | giữ + bảng lên cấp hiện **nhóm ụ vừa mở** (hình + tên) |
@@ -152,7 +152,11 @@ Lần đầu chạy bản này (`turret_kt.sh` chưa có): đánh dấu **SỞ H
 Cấp phi công giữ nguyên (đã quy đổi theo kỷ lục ở đợt 1: ≥ 30 → 12 · ≥ 20 → 8 · ≥ 10 → 5 · có bản lưu → 3) → các nhóm ≤ cấp đó mở ngay, **không báo lại** (không có bảng "mở 50 ụ" ập tới).
 Gộp hồ sơ Firebase: sở hữu / đã báo / quà đã nhận = OR (đổi máy không mất ụ).
 
-## 7. Cần người dùng xem
+## 7. Đã làm trong code (09/11)
+
+`thap/js/sohuu.js` (+ `css/sohuu.css`), chỉnh `kinhte.js` (rương vỏ, bể rơi, lùi bậc, NEW), `kinhte-ui.js` (mở rương: NEW!, Đỏ nổi bật, nhiều rương, dùng được ở HOME / màn kết quả), `thebai.js` (Rương Trận chỉ rơi ụ trong bể), `manh.js` (mốc/trùm → rương, Ấn Vàng chỉ chọn ụ đã mở), `tientrinh.js` (khoá = chưa sở hữu, 3 trạng thái thẻ, bảng lên cấp hiện nhóm ụ, quà Hành trình). Kiểm `tools/thap-kt-so-huu.js`.
+
+## 8. Cần người dùng xem
 
 1. Bảng nhóm §2 (thứ tự, chủ đề, Đỏ nào đi cấp nào).
 2. 10 ụ khởi đầu §1 + 4 ụ quà (Ice Blade · Berserker · Storm Gun · Overclock).

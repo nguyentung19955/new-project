@@ -209,3 +209,31 @@ Gộp hồ sơ Firebase: XP / cấp đã thưởng / bộ đếm lấy lớn nh�
 bản mạng của bản game cũ (chưa có `cp`) → quy đổi theo kỷ lục như người chơi cũ (đổi máy không tụt cấp). Nhãn nguồn mới của `KT.cong`: `level`, `journey`.
 Chưa làm ở đợt 1 (theo thiết kế §2.2): khoá chế độ theo cấp (PVP/ONLINE/Leo Tháp…), khoá Lò rèn ở cấp 10 — người dùng chưa chốt.
 
+
+## 11. Gacha thu thập — sở hữu + rương + mở nhóm theo cấp (09/11 — `thap/js/sohuu.js`; thiết kế `tuvan/gacha-thu-thap/BANG-MO-NHOM.md`; kiểm `tools/thap-kt-so-huu.js`, mô phỏng `tools/thap-sim-gacha.js`)
+
+Người dùng chốt 09/11 18:11–18:19: "game gacha thu thập thẻ bài, phải thu thập dần dần" (như DCDW).
+
+| Phần | Luật |
+|---|---|
+| Sở hữu | chỉ ụ đã nhận ≥ 1 bản sao vào bộ bài / bộ mẫu / RANDOM. Người mới: 10 ụ (8 Trắng + 2 Xanh). Quà: Ice Blade (hướng dẫn), Berserker / Storm Gun / Overclock (Hành trình ngày 1 / 4 / 6) |
+| Bể rơi | 24 nhóm theo cấp phi công (3–6 ụ/nhóm, `SHC.nhom`); ụ chưa mở không rơi ở rương, túi trận, Daily Specials, vòng quay, chọn 1 trong 3, Ấn Vàng, lò rèn. Đỏ: nhóm cấp 12+ VÀ kỷ lục ≥ wave 30. Ụ đã có luôn nhận thêm bản sao |
+| Lùi bậc | bậc rơi ra mà bể trống → bậc thấp hơn gần nhất (rương không mất lượt). Túi trận giữ luật cũ (bỏ lượt) → tỉ lệ Vàng/Đỏ không tăng |
+| Bảo hiểm | Vàng ≤ 10 / Đỏ ≤ 120 Rương Vàng giữ nguyên; chỉ đếm khi bể đã có ụ bậc đó (cấp 1–5 mở Rương Vàng không "tiêu" bảo hiểm Vàng) |
+| Rương "vỏ" mới (không bán) | Sự kiện = 1/2 bản Vàng nổi bật + 3 thẻ (35/40/25 Trắng/Xanh/Tím) · Huyền thoại = n bản Vàng + 2 thẻ (40/40/20) · Cổ đại = n bản Đỏ + 2 thẻ (40/60 Xanh/Tím) |
+| Đổi nguồn → rương | mốc Solo, trùm lần đầu, "Reach wave 30", nhiệm vụ tuần, sự kiện 100/400/1 000/1 700/3 600, jackpot vòng quay → rương vỏ (CÙNG số bản Vàng/Đỏ như §8, §10); Hành trình ngày 1: 10 bản Xanh → Rương Thường; túi trận = Rương Trận (nội dung y như cũ, mở bằng lật thẻ) |
+
+**Ảnh hưởng số liệu**: lượng bản Vàng / Đỏ mỗi nguồn KHÔNG đổi (rương vỏ chỉ thêm 2–3 thẻ Trắng/Xanh/Tím). Khác biệt duy nhất: bản sao dồn vào ít ụ hơn ở tuần đầu (bể nhỏ) →
+thẻ cụ thể trong bộ lên cấp nhanh hơn một chút lúc đầu; khi đã mở hết (THƯỜNG ~ngày 25) mọi số ở §4, §6 như cũ.
+
+**Sở hữu theo ngày** (trung bình 1 000 lần, `node tools/thap-sim-gacha.js`):
+
+| Ngày | THƯỜNG 5 trận/ngày: cấp · sở hữu T/X/Tm/V/Đ (tổng) · có ≥1 Đỏ | NHẸ 1–2 trận/ngày: cấp · sở hữu (tổng) · có ≥1 Đỏ |
+|---|---|---|
+| 1 | 2,5 · 9,9/4,2/1/0/0 (15) · 0% | 1,4 · 8,2/3,2/0/0/0 (11) · 0% |
+| 3 | 5,8 · 13,8/9,1/5,1/1,2/0 (29) · 0% | 3 · 10,9/4,5/1/0/0 (16) · 0% |
+| 7 | 10,1 · 14/13,8/12,2/4,9/0 (45) · 0% | 5 · 13,7/8,2/4,2/0/0 (26) · 0% |
+| 14 | 16,6 · 14/17/18,6/8/0,5 (58) · 43% | 7,7 · 14/12/7,7/3,1/0 (37) · 0% |
+| 30 | 26 · 14/17/21,9/17/1,6 (71) · 87% | 12,8 · 14/16,4/15/6,2/0,1 (52) · 12% |
+
+Bản Vàng / Đỏ đã nhận ngày 14 (THƯỜNG): ~27 / ~0,5 (≈ 1/50) → Đỏ hiếm hơn Vàng rõ rệt. Ngày 1 đã đủ 1 bộ 5 ụ đủ vai (10 ụ khởi đầu).
