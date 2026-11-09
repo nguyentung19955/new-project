@@ -6,7 +6,7 @@ Làm **lần lượt từng giai đoạn**, giai đoạn trước xong (đã ki�
 |---|---|---|---|
 | A1 | Khoá chế độ chơi theo cấp (PVP/nhiệm vụ/cửa hàng/vòng quay C2, Rương Vàng C3, Online C4) + Lò rèn C10, Lò Đỏ C12+w30 | 09/11 15:00 | **xong 09/11 13:45** (xuất bản) |
 | A2 | Chỉ số Đỏ bù 2 cấp (Đỏ ≈1.5–1.8× Vàng ở 3★/5★, ≈1.8–2.2× ở 7★) | 09/11 15:30 | đang làm |
-| A3 | Chỉ Black Hole + Thác Mana bấm tay, 9 ụ còn lại tự kích; thay vòng xanh bằng hiệu ứng tích tụ → xả chiêu | 09/11 17:00 | đang làm |
+| A3 | Chỉ Black Hole + Thác Mana bấm tay, 9 ụ còn lại tự kích; thay vòng xanh bằng hiệu ứng tích tụ → xả chiêu | 09/11 17:00 | **xong 09/11 14:35** (xuất bản) |
 | A4 | Rà phần đã bỏ còn sót ở các màn khác | 09/11 16:00 | **xong 09/11 14:10** (xuất bản) |
 | A5 | Rà animation theo bậc; làm lại hiệu ứng skill/special 9 ụ Đỏ (mỗi ụ một chữ ký riêng) | 09/11 19:00 (Đỏ) · 10/11 12:00 (Vàng/Tím quá đơn giản) | đang làm |
 | A6 | Hạn chế các nguồn +★ miễn phí (Star Lift, Merge/Gold King, Genesis Core, Royal Vault, Nguyền rủa ở Solo, Evolver…): trần 5★ cho nguồn miễn phí, giảm tần suất; đo trước/sau | 09/11 20:00 | đang làm |
