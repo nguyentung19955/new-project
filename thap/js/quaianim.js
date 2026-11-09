@@ -638,7 +638,8 @@ Object.assign(REN, {
     if (cd && cf) { const r = this.cdRong(cd.g, cf, cd.g); if (r) { lo = r[0]; hi = r[1]; } k = cf.kieu === 'nhay' ? 1.2 : cf.kieu === 'bo' ? 1.12 : 1.06; } // biên nén–giãn / bò duỗi
     const st = E.cham > 0 || E.docT > 0 || E.chayT > 0 || E.cvT > 0 || E.cvPT > 0 || E.giapT > 0 || E.yeu > 0 || E.chan > 0 ? 0.57 * co : 0; // lớp trạng thái phủ thân (veStV2, ≈ co × 1.1)
     const m = 2, L = Math.min(x + lo * C * k, x - st), P = Math.max(x + hi * C * k, x + st);
-    return L < m ? m - L : P > W - m ? W - m - P : 0;
+    const v = L < m ? m - L : P > W - m ? W - m - P : 0;
+    return Math.max(-6, Math.min(6, v)); // 09/11 (người dùng: trùm sát mép bị đẩy vào, lệch khỏi đường) — chỉ lùi tối đa 6 px, thân bám đúng làn (mép màn có thể cắt nhẹ)
   },
   cdRong(id, cf, g) { // [trái, phải] của phần có hình so với tâm ô (tỉ lệ cạnh ô), gộp thân + phần rời; tính 1 lần / trùm
     const M = this._cdRongC || (this._cdRongC = {}); if (M[id]) return M[id];
