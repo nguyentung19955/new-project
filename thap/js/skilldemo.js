@@ -221,6 +221,10 @@ const SD_K = {
   leviathan: { q: Q.nho().concat([{ k: 'khong_lo', s: 30, h: 30 }]), cham: [4.6], truoc: (T) => { T.nap = 0.95; T.napDay = -99; T.nuot = 99; }, c: [[0.2, 'Eats a small enemy'], [1.4, 'Each eat: ABYSS +1 (+4% damage)'], [4.6, 'Tap: water orbs rain on the path', { cham: 0.7 }]], dai: 9 },
   khoisinh: { kieu: 'phu', cham: [4.6], truoc: (T) => { T.sinhT = SKILLS.khoisinh.g(T) - 1.4; T.nap = 0.95; T.napDay = -99; }, ke: [[6, 'lien', 1], [8, 'canon', 2], [2, 'set', 3]], c: [[0.2, 'Raises the lowest neighbour'], [1.4, 'Lowest neighbour gets +1★', { ev: 'sao', cham: 0.6 }], [4.6, 'Tap: summons a 1★ next to it', { cham: 0.6 }]], dai: 9 },
   // Rồng Máy LÒ PHẢN ỨNG: nhịp phun tích nhiệt → 2,4 s ghép thật cùng HÀNG (+5×★ nhiệt bay vào) → 5,2 s chạm: DRAGON DIVE đốt hết nhiệt
+  // Arcane Cascade (thacmana.js): mana 120 → 2 quái; 2,4 s mana +1100 (1220 → 5 quái, ×2.75); 5,0 s chạm MANA FLOOD (xả 20%)
+  thacmana: { q: Q.nhom(8, 205, 22, 14), mana: 1, manaDau: 120, cham: [5.0], truoc: (T) => { T.nap = 0.95; T.napDay = -99; T.thacT = 0; },
+    them: [[2.4, (B) => { B.mana += 1100; }]],
+    c: [[0.2, 'Mana orb bounces to nearby enemies'], [2.4, 'More mana: more damage and more bounces', { ev: 'hit', cham: 0.6 }], [5.0, 'Tap: MANA FLOOD spends 20% mana, hits the whole path', { cham: 0.7 }]], dai: 8.6 },
   ronglua: { q: Q.nhom(6, 190, 20, 12), cham: [5.2], truoc: (T) => { T.nap = 0.95; T.napDay = -99; T.nhiet = 80; },
     them: [[2.4, (B, D, T) => { if (!T) return; const o = T.o % 5 ? T.o - 1 : T.o + 1; SKILLS.ronglua.ghepHangCot(B, o, Math.max(3, T.sao), null, null); }]],
     c: [[0.2, 'Every beam tick that hits builds HEAT (+damage)'], [2.4, 'Merge in its row or column: +5 × ★ heat', { cham: 0.6 }], [5.2, 'Tap: DRAGON DIVE burns ALL heat', { cham: 0.7 }]], dai: 9.4 },
@@ -316,6 +320,7 @@ const SD_GD = {
   hydra: ['1–3 heads fire a chain of shots', '4–6 heads: a longer chain', '7 heads: tap the card for a machine gun'],
   cuuvi: ['Straight foxfire orb', 'Foxfire curls with flame trail', 'Blue foxfire bursts in rings'],
   ngaithoigian: ['Piercing clock-hand dart', 'Dart stamps a slowing clock', 'Pierces the line, then echoes'],
+  thacmana: ['Mana orb that bounces', 'More mana: more bounces', 'MANA FLOOD over the whole path'],
   ronglua: ['Hatchling: thin orange fire beam', 'Wyrm / Armored: thicker HEART CORE beam (blue flame from 5★)', 'Inferno: white twin beams'],
   luoicheo: ['Diagonal damage buff', 'Buffed hits spark teal rings', 'Every 3rd shot shows an echo (visual only)'],
   cobac: ['Slot gun: spins 3 reels on arrival', 'HIGH ROLLER: a bigger coin gun', 'GRAND CASINO: the full casino'],
@@ -376,6 +381,7 @@ const SD_MO = {
   chuato: (T) => 'Up to ' + T.sao + ' drones',
   leviathan: () => 'ABYSS: +4% damage each, no cap',
   khoisinh: (T) => '+1★ to a neighbour every ' + SKILLS.khoisinh.g(T) + 's',
+  thacmana: (T) => { const M = SKILLS.thacmana.mana(G.ban[T.ban]); return 'Mana ' + Math.floor(M) + ': ×' + SKILLS.thacmana.k(M).toFixed(2) + ' damage, ' + SKILLS.thacmana.lan(M) + ' targets'; },
   ronglua: (T) => SKILLS.ronglua.tenDang(T) + ' · heat ' + Math.floor(T.nhiet || 0) + ' (+' + Math.round((T.nhiet || 0) * SKILLS.ronglua.NHIET_ST * 100) + '% damage)',
   anhsang: (T) => 'Free 1★ turret every ' + SKILLS.anhsang.ky(T).toFixed(0) + 's',
   haoquang: (T) => 'Tap: team barrier ' + SKILLS.haoquang.tg(T) + 's',
@@ -393,7 +399,7 @@ const SD_MO = {
   bienmau: (T) => (SKILLS.bienmau.n(T) ? 'Spectrum prism · fusion ' + SKILLS.bienmau.n(T) : SKILLS.bienmau.TEN[SKILLS.bienmau.mau(T)] + ' prism') + ' · stacks max ' + SKILLS.bienmau.tran(T),
 };
 // kỹ năng chủ động mở từ 3★
-const SD_KHOA3 = ['chuato', 'leviathan', 'khoisinh', 'ronglua', 'ngaithoigian'];
+const SD_KHOA3 = ['chuato', 'leviathan', 'khoisinh', 'ronglua', 'ngaithoigian', 'thacmana'];
 const sdKhoa = () => SD_KHOA3.includes(SD.id) && SD.T && SD.T.sao < 3;
 // % buff ụ hỗ trợ trao cho 1 ụ kề (đọc từ nguồn buff thật)
 function sdBuf(T) {

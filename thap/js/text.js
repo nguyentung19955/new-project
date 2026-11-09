@@ -160,6 +160,8 @@ const TEXT = {
     // ụ cờ bạc Đỏ (jackpot.js, 08/11)
     // ụ ghép tự do VÀNG (game.js laTuDo, 08/11)
     tudo:         { name: 'Wild Link',      skill: 'Merges with ANY turret: any type, any star. Result: a random turret, star = average of the two, rounded up (3 + 4 stars = 4 stars, no bonus star). Counts as a real merge (triggers Twin Maker etc.). Works on Stone and Frozen turrets too: the result is unlocked' },
+    // ụ Đỏ mana (thacmana.js, 09/11)
+    thacmana:     { name: 'Arcane Cascade', skill: 'Mana orb gun that grows with the MANA you hold. Hits the front enemy, then bounces to the nearest ones (−10% per bounce). Damage × (1 + 0.5 × √(mana/100)), no cap. At 100 / 300 / 600 / 1000 / 2000 / 4000 mana it hits 2 / 3 / 4 / 5 / 6 / 8 enemies, then +1 per doubling. 3★: MANA FLOOD — tap when full: spends 20% of your mana (min 50) for 4s of cascades hitting every enemy on the path' },
     cobac:        { name: 'Lucky Slot',     skill: 'Spins 3 fruit reels when it appears (summon or merge). A pair = +1 point to that fruit; 3 of a kind = JACKPOT: +2 to all fruits. No match = spin again. Points are shared by all Lucky Slots. Orange = damage, Watermelon = speed, Grape = crit damage. Raising its star in place (like Merge King) doesn\'t spin again.' },
     bienmau:      { name: 'Prism Thief',    skill: 'Each one has 1 colour: red kills, gold gives mana, blue freezes, green crits. Put 4 different colours side by side and swipe through all 4: they FUSE into one 4-colour Spectrum Prism with all 4 effects. Fuse it again to make it stronger, no limit' },
   },

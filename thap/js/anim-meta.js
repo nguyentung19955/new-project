@@ -30,7 +30,7 @@ window.ANIM_U = {
   sungluc: 'revolver', nemesis: 'revolver', combo: 'revolver', xaotron: 'revolver',
   lien: 'gatling', phun: 'gatling', bao: 'gatling', hutmana: 'gatling',
   laser: 'beam', anhsang: 'beam', nhatthuc: 'beam', thaukinh: 'beam',
-  set: 'chain', lienket: 'chain', lualien: 'chain', hopca: 'chain', santhuong: 'chain',
+  set: 'chain', thacmana: 'chain', lienket: 'chain', lualien: 'chain', hopca: 'chain', santhuong: 'chain',
   bang: 'ice', kiembang: 'ice', baotuyet: 'ice', lophanung: 'ice', lanhgia: 'ice',
   doc: 'poison', vungdoc: 'poison', mauhut: 'poison', nguyenrua: 'poison', min: 'poison',
   mana: 'support', nhanmana: 'support', phagiap: 'support', bua: 'support', chimang: 'support', radar: 'support', tron: 'support',
