@@ -1061,3 +1061,7 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 ## claude/demo-hop-tuong — Ụ anime: vẽ lại 17 ụ Xanh (09/11)
 - kiembang mimic chimang dichchuyen radar drone tron nangluong laser lanhgia mortar khuech vungdoc loa hutmana min nhanmana: bệ TRÒN viền vàng, vòng chấm + ngọc sapphire (#4D8CFA), thân indigo; giữ ý tưởng cũ (kiếm băng, rương mimic 1 mắt, chảo radar, drone, lăng kính…).
 - Ảnh `thap-art/raw_anime_u_xanh1..6.png` → `tools/thap-cat-anime-u.py` (nay đọc raw từ `RAW_ANIME` nếu đặt). Ảnh trước/sau: `tuvan/ra-soat-anime-u/truoc_sau_xanh_a/b.jpg`.
+
+## claude/demo-hop-tuong — Ụ anime: vẽ lại 22 ụ Tím (09/11)
+- 22 ụ Tím (cuongno … santhuong): bệ LỤC GIÁC viền vàng có khía rune tam giác + ngọc thạch anh tím (#A966ED), thân indigo, ánh tím (không hồng). Ảnh `thap-art/raw_anime_u_tim1..7.png` + `raw_anime_u_vang1.png` (hàng 1 = Bounty Beacon). Trước/sau: `tuvan/ra-soat-anime-u/truoc_sau_tim_a/b.jpg`.
+- `artscale.js`: thêm `window.STAGE_ANIME` (rỗng, chuẩn bị đầu dạng 1/2/3 mới cho ụ grow-up — `tools/thap-cat-anime-u.py --dang`). Không đổi luật.

@@ -54,21 +54,21 @@
 | 30 | loa Cooldown Horn | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | **ĐÃ LÀM** (raw_anime_u_xanh1–6) |
 | 31 | hutmana Mana Leech | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | gatling | 4 | **ĐÃ LÀM** (raw_anime_u_xanh1–6) |
 | 32 | min Mine Layer | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | poison | 5 | **ĐÃ LÀM** (raw_anime_u_xanh1–6) |
-| 33 | cuongno Berserker | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | cannon | 8 | P2 làm lại |
-| 34 | baotuyet Blizzard | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | ice | 4 | P2 làm lại |
-| 35 | nhanban Cloner | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | evolver | 4 | P2 làm lại |
-| 36 | lienket Chain Link | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | chain | 8 | P2 làm lại |
-| 37 | kepha Jammer | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | P2 làm lại |
-| 38 | taylo Cleanser | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | P2 làm lại |
-| 39 | khien Shield Gen | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | P2 làm lại |
-| 40 | hopbi Mystery Box | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | evolver | 8 | P2 làm lại |
-| 41 | nangsao Star Lift | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | P2 làm lại |
-| 42 | tuthan Reaper Pillar | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | P2 làm lại |
-| 43 | xaotron Scrambler | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | revolver | 4 | P2 làm lại |
-| 44 | epxung Overclock | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | P2 làm lại |
-| 45 | no5 Fifth Shot | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | cannon | 4 | P2 làm lại |
-| 46 | bao Storm Gun | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | gatling | 5 | P2 làm lại |
-| 47 | anhsang Lighthouse | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | beam | 5 | P2 làm lại |
+| 33 | cuongno Berserker | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | cannon | 8 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
+| 34 | baotuyet Blizzard | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | ice | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
+| 35 | nhanban Cloner | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | evolver | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
+| 36 | lienket Chain Link | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | chain | 8 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
+| 37 | kepha Jammer | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
+| 38 | taylo Cleanser | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
+| 39 | khien Shield Gen | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
+| 40 | hopbi Mystery Box | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | evolver | 8 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
+| 41 | nangsao Star Lift | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
+| 42 | tuthan Reaper Pillar | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
+| 43 | xaotron Scrambler | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | revolver | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
+| 44 | epxung Overclock | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
+| 45 | no5 Fifth Shot | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | cannon | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
+| 46 | bao Storm Gun | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | gatling | 5 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
+| 47 | anhsang Lighthouse | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | beam | 5 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
 | 48 | aten Purifier | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | cannon | 4 | — |
 | 49 | dongbo Sync Cannon | Vàng | lệch vừa: phẳng/hoạt hình đơn sắc, thiếu khung vàng | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | support | 9 | P2 làm lại |
 | 50 | railgun Salvo Battery | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | nang | 5 | — |
@@ -86,19 +86,19 @@
 | 62 | overlord Overlord | Đỏ | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | nang | 9 | — |
 | 63 | lophanung Cryo Reactor | Đỏ | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | ice | 8 | — |
 | 64 | haoquang Holy Halo | Đỏ | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 5 | — |
-| 65 | nayda Ricochet | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | cannon | 4 | P2 làm lại |
-| 66 | combo Combo Core | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | revolver | 4 | P2 làm lại |
-| 67 | khoathoigian Chrono Lock | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | chrono | 4 | P2 làm lại |
+| 65 | nayda Ricochet | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | cannon | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
+| 66 | combo Combo Core | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | revolver | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
+| 67 | khoathoigian Chrono Lock | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | chrono | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
 | 68 | hydra Hydra | Vàng | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | cannon | 10 · thân Hydra vẽ code (gradient + vòng) skills3 veThan | — |
 | 69 | cuuvi Nine-Tail | Vàng | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | cannon | 9 | — |
 | 70 | pandora Pandora Vault | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | portal | 4 | — |
 | 71 | luoicheo Resonance Grid | Vàng | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | support | 8 | — |
 | 72 | ngaithoigian Chrono Throne | Đỏ | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | chrono | 8 | — |
 | 73 | nemesis Nemesis | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | revolver | 5 | — |
-| 74 | docton Lone Ace | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | cannon | 5 | P2 làm lại |
-| 75 | thaukinh Focus Lens | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | beam | 4 | P2 làm lại |
-| 76 | nhieusong Signal Jammer | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | P2 làm lại |
-| 77 | santhuong Bounty Beacon | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | chain | 4 | P2 làm lại |
+| 74 | docton Lone Ace | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | cannon | 5 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
+| 75 | thaukinh Focus Lens | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | beam | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
+| 76 | nhieusong Signal Jammer | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
+| 77 | santhuong Bounty Beacon | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | chain | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
 | 78 | nhatthuc Eclipse | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | beam | 5 | — |
 | 79 | loren Twin Anvil | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | evolver | 4 | — |
 | 80 | guongcong Mirror Gate | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | — |
@@ -121,7 +121,7 @@
 | 97 | congap Hatchery Gate | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | evolver | 0 | — |
 
 ## Thứ tự làm (bước 2)
-1. Trắng 14 → **xong** · Xanh 17 → **xong** (`raw_anime_u_xanh1..6`) (tấm `thap-art/raw_anime_u_trang1..5.png`, cắt `tools/thap-cat-anime-u.py`).
+1. Trắng 14 → **xong** · Xanh 17 → **xong** (`raw_anime_u_xanh1..6`) · Tím 22 → **xong** (`raw_anime_u_tim1..7` + `vang1` hàng 1) (tấm `thap-art/raw_anime_u_trang1..5.png`, cắt `tools/thap-cat-anime-u.py`).
 2. Xanh 17 (6 tấm) → Tím 22 (8 tấm) → Vàng 4 (2 tấm).
 3. Biến hình 14 ụ grow-up: mỗi ụ 1 hàng (dạng 1/2/3 cùng bệ) → `<id>_nong_s1..s3` + trả id về `STAGE_K`.
 4. Hiệu ứng vẽ tay: Sói (vuốt), Hydra (thân), Prism (vệt) → PNG nướng sẵn.

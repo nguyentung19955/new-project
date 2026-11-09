@@ -22,3 +22,12 @@ Lượt sau (cùng cuộc trò chuyện): "Perfect. Next sheet: same Royal Twili
 - xanh5: Toxic Pool (tay đòn vàng + bầu độc sủi) · Cooldown Horn (kèn trận vàng có đồng hồ cát) · Mana Leech (miệng đỉa vòng răng, ánh teal)
 - xanh6 (2 hàng): Mine Layer (băng 3 mìn lõi đỏ) · Mana Doubler (2 ngọc mana teal đôi)
 TÍM = "PURPLE base: a rounded HEXAGON gold platform with small triangular rune notches and amethyst-violet gems (#A966ED)"; thêm "keep each head compact, about 75% of the base width; no grey industrial metal, no yellow hazard stripes".
+- tim1: Berserker (mặt nạ quỷ sừng + 2 nòng) · Blizzard (cầu bão tuyết) · Cloner (khoang nhân bản)
+- tim2 (làm lại 1 lần: lượt đầu ra hồng sáng, lệch bệ → gửi kèm `ref_tim_base` = nửa trái tim1, yêu cầu "NO hot pink"): Chain Link · Jammer (kẹp chữ C) · Cleanser (chữ thập bạc hà + cờ lê)
+- tim3: Shield Gen (vòm tổ ong cyan) · Mystery Box (hộp quà nơ tím) · Star Lift (bệ nâng mũi tên + sao)
+- tim4: Reaper Pillar (cột + lưỡi hái) · Scrambler (hộp xáo 3 ô rune) · Overclock (pin đôi tia sét)
+- tim5: Fifth Shot (nỏ + bánh 5 chấm) · Storm Gun (pháo mây bão) · Lighthouse (hải đăng nhỏ)
+- tim6: Ricochet (đĩa cưa lục) · Combo Core (lõi xoáy cam) · Chrono Lock (ổ khoá + mặt đồng hồ)
+- tim7: Lone Ace (mắt khe tím + nòng mảnh) · Focus Lens (thấu kính ngọc lục bảo) · Signal Jammer (tháp phát sóng)
+- vang1: hàng 1 Bounty Beacon (đồng xu tâm ngắm, bệ TÍM) · hàng 2–3 Sync Cannon / Orbital (bệ VÀNG vuông góc vương miện) — 2 hàng sau chưa dùng (sẽ làm bằng tấm biến hình).
+VÀNG = "a rounded SQUARE gold platform with small crown-shaped corner ornaments and topaz-gold gems (#FFD65B), dark indigo inside".
