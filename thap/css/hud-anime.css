@@ -191,12 +191,19 @@ html.ha2 body #wrap #top #tb-tim .ht-ai { display: none !important; }
 html.ha2 body #wrap.ha-coop #top #ht-phu, html.ha2 body #wrap.ha-coop #dp-dai { display: none !important; } /* CO-OP: 2 bàn đối xử như nhau — không dải chân dung riêng bàn trên (bộ bài đồng đội xem ở màn vào trận / chạm ụ) */
 html.ha2 body #wrap.ha-cb-on #top { visibility: hidden !important; } /* băng chiêu trùm thay chỗ thanh trong lúc hiện */
 
-/* 09/11: dải điểm 3 quả Lucky Slot (.cb-qua, chữ 6px) đè nửa dưới chân dung ô 30px, đọc không được → ẩn trong dải đối thủ (người dùng: cụm số "6 5 5" đè chân dung) */
+/* 09/11: điểm 3 quả Lucky Slot (.cb-qua) trong dải đối thủ — người dùng muốn GIỮ, chỉ không được đè chân dung:
+   đặt thành viên thuốc nhỏ NGAY DƯỚI ô chân dung (không phủ lên ảnh), chữ 10px đọc được */
+html.ha2 body #wrap #dp-dai .dp-the > .cb-qua { position: absolute !important; z-index: 7 !important; left: 50% !important; right: auto !important; top: 31px !important; transform: translateX(-50%);
+  width: auto !important; height: 13px !important; padding: 0 3px !important; gap: 2px !important; display: flex !important; align-items: center !important;
+  background: rgba(16,22,47,.92) !important; border: 1px solid #E9CCA0 !important; border-radius: 7px !important; pointer-events: none; }
+html.ha2 body #wrap #dp-dai .dp-the > .cb-qua .cb-q { flex: 0 0 auto !important; flex-direction: row !important; align-items: center !important; gap: 1px; }
+html.ha2 body #wrap #dp-dai .dp-the > .cb-qua .cb-q img { width: 8px !important; max-width: 8px !important; filter: none !important; }
+html.ha2 body #wrap #dp-dai .dp-the > .cb-qua .cb-q b { font-size: 10px !important; margin: 0 !important; letter-spacing: 0 !important; text-shadow: 0 1px 0 #000 !important; transform: none !important; }
 /* ---- dải bộ bài đồng đội / đối thủ: tấm indigo viền vàng (ha_o_rong 9 mảnh) + 6 ô chân dung khung vàng (ha_o_vuong) ---- */
 html.ha2 body #wrap #dp-dai { top: var(--ha-doi-y, 80px) !important; left: 60px !important; width: 228px !important; height: 42px !important; padding: 0 !important; box-sizing: border-box !important;
   background: none !important; box-shadow: none !important; border: 0 solid transparent !important; border-width: 0 15px !important; border-image: url(../assets/ha_o_rong.png) 0 46 fill / 0 15px / 0 stretch !important;
   filter: drop-shadow(0 3px 3px rgba(4,6,20,.55)); }
-html.ha2 body #wrap #dp-dai .dp-the > .cb-qua, html.ha2 body #wrap #dp-dai .h2-den, html.ha2 body #wrap #dp-dai .h2-nhan, html.ha2 body #wrap #dp-dai .dp-nhan, html.ha2 body #wrap #dp-dai .dp-the > img.ov, html.ha2 body #wrap #dp-dai .dp-the::after { display: none !important; }
+html.ha2 body #wrap #dp-dai .h2-den, html.ha2 body #wrap #dp-dai .h2-nhan, html.ha2 body #wrap #dp-dai .dp-nhan, html.ha2 body #wrap #dp-dai .dp-the > img.ov, html.ha2 body #wrap #dp-dai .dp-the::after { display: none !important; }
 html.ha2 body #wrap #dp-dai .dp-the { position: absolute !important; top: 6px !important; width: 30px !important; height: 30px !important; margin: 0 !important; padding: 0 !important; border: 0 !important; border-radius: 0 !important; overflow: visible !important;
   background: url(../assets/ha_o_vuong.png) center / 100% 100% no-repeat !important; box-shadow: none !important; }
 html.ha2 body #wrap #dp-dai .dp-the > img.po { position: absolute !important; inset: 4px auto auto 4px !important; width: 22px !important; height: 22px !important; object-fit: cover; object-position: 50% 15%; border-radius: 3px; }
