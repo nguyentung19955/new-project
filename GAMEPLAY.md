@@ -776,3 +776,9 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - Đo (BANG-TOC-BAN, DPS 7★ w30): Drone Bay 325, Mana Leech 344, Energy Cannon 351 — ngang/kém ụ Trắng đơn mục tiêu (300–470) dù hệ số bậc ×1.3; Laser 611. Chỉ chỉnh số, giữ điều kiện/cách chơi: Drone Bay ST 11.5 → 17 (bom drone khi ghép cũng tăng theo), Mana Leech 13.5 → 20, Energy Cannon 23 → 34 (vẫn +100%/120 mana), Laser 12 → 14.
 - Bot chơi tốt 12 hạt (triệu hồi đều 20%/thẻ — có ván thua sớm do toàn Hỗ trợ, đã tính vào): bộ Xanh drone/nangluong/laser/mortar/chimang 19.6 → 23.8; kiembang/drone/nangluong/chimang/nhanmana 16.1 → 20.1; hutmana/laser/kiembang/radar/mimic 17.3 → 20.8. Bộ Trắng tốt nhất (lien/tia/set/sungluc/mana) 17.7, bộ Trắng không có Mana Core ~6–10. Bộ có 2 thẻ Hỗ trợ/Đặc biệt vẫn kẹt ~20 (bot ghép kém khi bàn nhiều ụ hỗ trợ).
 - Đề xuất tách bản sắc ụ trùng chức năng (chỉ đề xuất): `docs/demo-hop-tuong/tuvan/trung-lap/DE-XUAT.md`.
+
+## claude/demo-hop-tuong — Salvo: bỏ nhãn bingo dưới ụ, thay bằng mũi tên chạy trong ô (09/11, chỉ VFX)
+- Bỏ tấm đếm "⚔ n/5 » n/3" dưới mỗi Pháo Loạt Salvo (`railgun`, xoá `DEMKN.DS.railgun` trong `thap/js/demkn.js`; số hàng/cột vẫn xem ở bảng chạm ụ).
+- Mới (`thap/js/hieuung.js` `VX.salvo.veMui`, gắn `SKILLS.railgun.veThem` + `veThemTren`): hàng đang có thưởng (≥3/5 → +sát thương) = mũi tên ĐỎ chạy từ dưới lên trong ô; cột đang có thưởng (≥2/3 → +tốc bắn) = mũi tên XANH. Cả hai → làn đỏ/xanh xen kẽ, lệch pha. Mức cao (hàng 5/5, cột 3/3) = 2 làn + chạy nhanh hơn (0,85 s/vòng thay 1,25 s).
+- Mũi tên = ảnh `mui_tiep` (PNG sẵn có) xoay lên, tô màu 1 lần bằng blend `color` (giữ sáng tối ảnh) + lót tối; hiện nhanh ở đáy, mờ dần lên đỉnh; nằm gọn trong ô (y +0,34S → −0,38S). Không đổi gameplay.
+- Các ụ khác còn tấm đếm dưới ô kiểu tương tự (không sửa): ngoisao, combo, lienket, dongbo, luoicheo, cuuvi, tienhoa, mauhut, bienmau, loren, leviathan, ronglua, nangluong, docton, canon, drone, lualien, hopca, luutru, xuonganh.
