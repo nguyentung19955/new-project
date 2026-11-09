@@ -73,6 +73,7 @@ const DSG = {
         case 'vet': { const g = Math.atan2(p.vy, p.vx); PX.ve(ctx, this.anh('fx_vet_trang', p.mau), p.x, p.y, co, co * 0.45, g + Math.PI, al); break; } // vệt hướng theo vận tốc (đầu sáng phía trước)
         case 'than': PX.ve(ctx, this.anh('fx_than', p.mau), p.x, p.y, co, co * 0.88, p.goc, al); break;
         case 'la': PX.ve(ctx, this.anh('fx_la', p.mau), p.x, p.y, co, co, p.goc, al); break;
+        case 'sen': if (!this.khungAnh(ctx, 'dosig_sen', u < 0.6 ? (p.f || 0) : (p.f || 0) + (u - 0.6) / 0.4 * (3 - (p.f || 0)), p.x, p.y, co * 1.3, p.goc, al)) PX.ve(ctx, this.anh('fx_la', p.mau), p.x, p.y, co, co, p.goc, al); break; // cánh sen ảnh (cuối đời tan thành sao)
         case 'giot': PX.ve(ctx, this.anh('fx_giot_nuoc', p.mau), p.x, p.y, co * 0.95, co, Math.atan2(p.vy, p.vx) - Math.PI / 2, al); break;
         case 'xu': { const im = REN.img('cb_xu'); if (im) PX.ve(ctx, im, p.x, p.y, co * Math.max(0.15, Math.abs(Math.cos(p.goc))), co, 0, al); break; } // xu lật = co bề ngang theo cos
         case 'giay': PX.ve(ctx, this.anh('fx_hoa_giay', p.mau), p.x, p.y, co, co * 0.9, p.goc, al); break;
@@ -96,6 +97,16 @@ const DSG = {
   loeLon(ctx, x, y, co, mau, t, dai) {
     if (!this._nhe) this.ch(ctx, x, y, co * 0.8, mau, 0.45 * this.loe(t / Math.min(0.22, dai), 0.15, 0.85));
     this.ch(ctx, x, y, co * 0.4, '#ffffff', 0.85 * this.loe(t / 0.16, 0.2, 0.8));
+  },
+  // ẢNH CHỮ KÝ (ChatGPT 09/11, cắt bằng tools/thap-cat-dosig.py → thap/assets/dosig_*.png, dải 4 khung vuông):
+  //   dosig_hex (tổ ong: nhỏ → đầy → nứt → mờ) · dosig_sen (cánh sen: thẳng / nghiêng / cong / tan thành sao) · dosig_nut (vết nứt đỏ: tươi → sáng →
+  //   nguội → mờ) · dosig_tran (trận đồ lục mang tinh: thường → sáng → rực → tan). f thực = hoà 2 khung (REN.khungMuot).
+  //   Ảnh chưa tải → trả false → nơi gọi vẽ hình ghép tạm cũ (đường dự phòng). Bản nhẹ: ảnh > LON px bỏ qua (trả true = không vẽ dự phòng).
+  khungAnh(ctx, ten, f, x, y, co, goc, al) {
+    if (!(al > 0.01) || !(co > 0.5)) return true;
+    if (this._nhe && co > this.LON) return true;
+    const im = REN.img(ten); if (!im) return false;
+    ctx.globalAlpha = 1; return REN.khungMuot(ctx, ten, Math.max(0, Math.min(3, f)), x, y, co, goc || 0, Math.min(1, al));
   },
   conTren(T) { return T && G.ban[T.ban] && G.ban[T.ban].t[T.o] === T; },
 
@@ -130,6 +141,7 @@ const DSG = {
     // trạng thái ụ (Lò Băng bùng / Thác Mana bật lũ)
     for (const B of G.ban) for (const T of B.t) {
       if (!T || T.bac !== 'do') continue;
+      if (!this._napAnh) { this._napAnh = 1; for (const t of ['dosig_hex', 'dosig_sen', 'dosig_nut', 'dosig_tran']) REN.img(t); } // nạp sớm ảnh chữ ký khi bàn có ụ Đỏ
       let s = this._st.get(T); if (!s) { s = { bung: T.bungT || 0, thac: T.thacT || 0 }; this._st.set(T, s); }
       if (T.id === 'lophanung' && (T.bungT || 0) > s.bung + 0.5) this.them('bang', { T, B, R: SKILLS.lophanung.r(T) * 1.6 });
       if (T.id === 'thacmana' && (T.thacT || 0) > s.thac + 1) this.them('tran', { T, B });
@@ -211,7 +223,8 @@ DSG.BAO = {
   // Chúa Tổ: lục giác hổ phách xoay chậm quanh tổ khi SWARM sẵn sàng
   chuato(ctx, T, B, c, k) {
     const q = this.qBao(T); if (!q) return; ctx.globalCompositeOperation = 'lighter';
-    this.dagiac(ctx, c.x, c.y, 32 * k * (0.8 + 0.2 * q), 6, G.t * 0.6, 1.4, '#ffb43a', 0.55 * q);
+    const r = 32 * k * (0.8 + 0.2 * q);
+    if (!this.khungAnh(ctx, 'dosig_hex', 1, c.x, c.y, r * 2.6, G.t * 0.6, 0.6 * q)) this.dagiac(ctx, c.x, c.y, r, 6, G.t * 0.6, 1.4, '#ffb43a', 0.55 * q);
   },
   // Leviathan: bong bóng nổi lên từ thân khi TIDAL BREATH sẵn sàng
   leviathan(ctx, T, B, c, k) {
@@ -221,7 +234,7 @@ DSG.BAO = {
   // Khởi Sinh: 3 cánh sen bay vòng khi GENESIS sẵn sàng
   khoisinh(ctx, T, B, c, k) {
     const q = this.qBao(T); if (!q) return; ctx.globalCompositeOperation = 'lighter';
-    for (let i = 0; i < 3; i++) { const a = G.t * 1.2 + i * 2.094; PX.ve(ctx, this.anh('fx_la', '#ff8ab0'), c.x + Math.cos(a) * 28 * k, c.y + Math.sin(a) * 28 * k, 12 * k, 12 * k, a + Math.PI / 2, 0.7 * q); }
+    for (let i = 0; i < 3; i++) { const a = G.t * 1.2 + i * 2.094; const x = c.x + Math.cos(a) * 28 * k, y = c.y + Math.sin(a) * 28 * k; if (!this.khungAnh(ctx, 'dosig_sen', 1, x, y, 16 * k, a + Math.PI, 0.8 * q)) PX.ve(ctx, this.anh('fx_la', '#ff8ab0'), x, y, 12 * k, 12 * k, a + Math.PI / 2, 0.7 * q); }
   },
   // Rồng Máy: than lửa bốc lên + hơi nóng khi DRAGON DIVE sẵn sàng
   ronglua(ctx, T, B, c, k) {
@@ -307,7 +320,9 @@ DSG.SIG = {
       for (let i = 0; i < 2; i++) { const v = (t - 0.04 - i * 0.1) / 0.5; if (v > 0 && v < 1) this.vg(ctx, e.x, e.y, R * (0.2 + 0.95 * this.e3(v)), 3, i ? '#ff2a4a' : '#ffffff', 0.8 * (1 - v)); }
       // vết nứt đất: sáng đỏ rồi nguội; điện bò dọc vết nứt
       const an = Math.max(0, 1 - Math.max(0, t - 0.3) / 1.1), mo = Math.min(1, t / 0.08) * an;
-      for (const p of e.nut) {
+      // ảnh vết nứt đỏ (tươi → sáng → nguội → mờ theo thời gian); chưa có ảnh → vết nứt ghép đoạn tia
+      const coNut = mo > 0.01 && this.khungAnh(ctx, 'dosig_nut', Math.min(3, t / 1.3 * 3), e.x, e.y, R * 2.1, e.seed * 1.7, 0.9 * mo);
+      if (!coNut) for (const p of e.nut) {
         PX.duong(ctx, p, 2.4, '#ff5a6a', 0.85 * mo);
         const dau = p[p.length - 1]; this.ch(ctx, dau[0], dau[1], 10 * k, '#ff8a9a', 0.6 * mo);
       }
@@ -377,7 +392,7 @@ DSG.SIG = {
     ve(ctx, e, k) {
       if (!this.conTren(e.T)) return; const c = tamU(e.T), t = e.t, r = 14 * k; ctx.globalCompositeOperation = 'lighter';
       const o = [[0, 0]]; for (let i = 0; i < 6; i++) { const a = Math.PI / 6 + i * Math.PI / 3; o.push([Math.cos(a) * r * 1.74, Math.sin(a) * r * 1.74]); }
-      o.forEach((p, i) => { const u = (t - (i ? 0.06 + i * 0.02 : 0)) / 0.6; if (u > 0 && u < 1) this.dagiac(ctx, c.x + p[0] * (0.6 + 0.4 * this.e3(u)), c.y + p[1] * (0.6 + 0.4 * this.e3(u)), r * (0.9 + 0.2 * u), 6, 0, 2, i ? '#ffb43a' : '#fff0b0', 0.9 * (1 - u)); });
+      o.forEach((p, i) => { const u = (t - (i ? 0.06 + i * 0.02 : 0)) / 0.6; if (u > 0 && u < 1) { const x = c.x + p[0] * (0.6 + 0.4 * this.e3(u)), y = c.y + p[1] * (0.6 + 0.4 * this.e3(u)), rr = r * (0.9 + 0.2 * u); if (!this.khungAnh(ctx, 'dosig_hex', u < 0.15 ? u / 0.15 : 1 + (u - 0.15) / 0.85 * 2, x, y, rr * 2.6, Math.PI / 6, 0.95 * (1 - u * u))) this.dagiac(ctx, x, y, rr, 6, 0, 2, i ? '#ffb43a' : '#fff0b0', 0.9 * (1 - u)); } });
       this.ch(ctx, c.x, c.y, 96 * k, '#ff8a2a', 0.55 * this.loe(t / 0.6, 0.1, 0.9));
     },
   },
@@ -387,6 +402,7 @@ DSG.SIG = {
     bat(e) { if (e.lon) this.bung(5, () => { const a = e.r() * 6.283, v = 120 * this.kBan(e.B); this.hat1({ k: 'sao', x: e.x, y: e.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, can: 3, song: 0.35, co: 10, mau: '#ffd23f' }); }); },
     ve(ctx, e, k) {
       const u = e.t / this.SIG.ongNo.dai(e), r = (e.lon ? 10 + 14 * this.e3(u) : 7 + 8 * this.e3(u)) * k; ctx.globalCompositeOperation = 'lighter';
+      if (this.khungAnh(ctx, 'dosig_hex', 1 + u * 2, e.x, e.y, r * 2.6, Math.PI / 6, (e.lon ? 0.95 : 0.7) * (1 - u * u))) return; // tổ ong nổ: đầy → nứt → mờ
       this.dagiac(ctx, e.x, e.y, r, 6, 0, e.lon ? 2.2 : 1.5, '#ffb43a', (e.lon ? 0.9 : 0.6) * (1 - u));
       if (e.lon) this.dagiac(ctx, e.x, e.y, r * 0.55, 6, Math.PI / 6, 1.6, '#fff0b0', 0.8 * (1 - u));
     },
@@ -438,13 +454,13 @@ DSG.SIG = {
       // sen nở tại lõi (8 cánh)
       const mo = this.e3(t / 0.35), al = 1 - Math.max(0, (t - 0.6) / 0.4);
       if (al > 0.01) {
-        for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4 + t * 0.4, d = (8 + 18 * mo) * k, s = (10 + 16 * mo) * k; PX.ve(ctx, this.anh('fx_la', i % 2 ? '#ff8ab0' : '#ffc0d8'), e.x0 + Math.cos(a) * d, e.y0 + Math.sin(a) * d, s, s, a + Math.PI * 0.75, 0.85 * al); }
+        for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4 + t * 0.4, d = (8 + 18 * mo) * k, s = (10 + 16 * mo) * k; const x = e.x0 + Math.cos(a) * d, y = e.y0 + Math.sin(a) * d; if (!this.khungAnh(ctx, 'dosig_sen', al < 0.6 ? 3 - 2 * al / 0.6 : i % 2, x, y, s * 1.35, a + Math.PI / 2, 0.9 * al)) PX.ve(ctx, this.anh('fx_la', i % 2 ? '#ff8ab0' : '#ffc0d8'), x, y, s, s, a + Math.PI * 0.75, 0.85 * al); }
         this.ch(ctx, e.x0, e.y0, 30 * k, '#fff0f6', 0.7 * al);
         PX.tia(ctx, e.x0, e.y0, e.x0, e.y0 - 90 * k * mo, 12, '#ffc0d8', 0.55 * al); // cột sáng
       }
       // tới ụ nhận (~0.55 s): vòng vàng + cánh hoa toả rồi rơi chậm
       if (t >= 0.5 && !e.toi) {
-        e.toi = 1; this.bung(7, (i, n) => { const a = i / n * 6.283, v = 70 * k; this.hat1({ k: 'la', x: e.x1, y: e.y1, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 30, g: 60, can: 2.5, song: 0.9, co: 11 * k, mau: i % 2 ? '#ff8ab0' : '#ffc0d8', goc: a, vg: 3 }); });
+        e.toi = 1; this.bung(7, (i, n) => { const a = i / n * 6.283, v = 70 * k; this.hat1({ k: 'sen', f: i % 3, x: e.x1, y: e.y1, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 30, g: 60, can: 2.5, song: 0.9, co: 11 * k, mau: i % 2 ? '#ff8ab0' : '#ffc0d8', goc: a, vg: 3 }); });
       }
       if (t >= 0.5) { const u = (t - 0.5) / 0.45; if (u < 1) { this.vg(ctx, e.x1, e.y1, (8 + 26 * this.e3(u)) * k, 3, '#ffd27a', 0.85 * (1 - u)); this.ch(ctx, e.x1, e.y1, 40 * k, '#ff8ab0', 0.5 * (1 - u)); } }
     },
@@ -495,6 +511,9 @@ DSG.SIG = {
       const c = tamU(e.T), t = e.t, sc = this.e3((t - 0.2) / 0.3), al = Math.min(1, e.T.thacT / 0.4) * sc; if (al <= 0.01) return;
       ctx.globalCompositeOperation = 'lighter';
       const R = 38 * k;
+      // ảnh trận đồ: đập nhịp thường ↔ rực (khung 0 → 2), sắp hết lũ → tan (khung 3), quay chậm
+      const fT = e.T.thacT < 0.5 ? 3 - e.T.thacT / 0.5 : 1 + Math.sin(t * 4);
+      if (this.khungAnh(ctx, 'dosig_tran', fT, c.x, c.y, R * 2.5, t * 0.35, 0.8 * al)) return;
       this.vg(ctx, c.x, c.y, R, 2, '#9a7bff', 0.6 * al); this.vg(ctx, c.x, c.y, R * 0.78, 2, '#7fd8ff', 0.45 * al);
       this.dagiac(ctx, c.x, c.y, R * 0.74, 3, t * 0.7, 1.4, '#b48cff', 0.55 * al); this.dagiac(ctx, c.x, c.y, R * 0.74, 3, -t * 0.7 + Math.PI, 1.4, '#7fd8ff', 0.55 * al);
       for (let i = 0; i < 12; i++) { const a = i * Math.PI / 6 - t * 0.5; PX.sao(ctx, c.x + Math.cos(a) * R * 0.9, c.y + Math.sin(a) * R * 0.9, 7 * k, '#e0d4ff', 0.6 * al, a); }

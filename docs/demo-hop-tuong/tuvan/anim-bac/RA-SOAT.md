@@ -153,7 +153,15 @@ Nhánh `claude/demo-hop-tuong` không có `docs/pixel/QUY-CHUAN.md`; chữ ký V
 ## Bản pixel
 Nhánh `claude/demo-hop-tuong` (game `thap/`) không có `docs/pixel/QUY-CHUAN.md` / `DANH-SACH.md` (quy chuẩn pixel thuộc game nhánh chính). Chữ ký Đỏ chỉ dùng lại ảnh PNG có sẵn, không thêm ảnh mới → khi chuyển `thap/` sang pixel chỉ cần bản pixel của 10 ảnh nền đã liệt kê ở trên (vòng mỏng, tia, chấm sáng, sao, vòng gai `fx_song_xung`, vệt `fx_vet_trang`, lá `fx_la`, giọt `fx_giot_nuoc`, than `fx_than`, giấy màu `fx_hoa_giay`, xu `cb_xu`, tuyết `hat_tuyet`) — ghi ở đây làm mục "Bổ sung" cho đợt pixel.
 
-## Cần ảnh (ChatGPT) — không bắt buộc, code đã chạy được bằng ảnh có sẵn
+## Ảnh chữ ký Đỏ đã có (09/11) — ĐÃ GẮN
+4 tờ `docs/demo-hop-tuong/thap-art/raw_dosig_{hex,lotus_petal,crack,rune}.png` → `python3 tools/thap-cat-dosig.py` → `thap/assets/dosig_hex|sen|nut|tran.png` (dải 4 khung vuông, hộp bao chung giữ tỉ lệ nhỏ → lớn, khoá magenta mềm + gỡ trộn nền; ảnh kiểm [dosig-cat.png](dosig-cat.png), đã xem). `DSG.khungAnh` (REN.khungMuot hoà 2 khung) thay phần ghép tạm, ảnh chưa tải → hình ghép cũ (dự phòng):
+- **Hive Queen**: lục giác báo trước (khung "đầy" xoay chậm), tổ ong SWARM 7 ô (nhỏ → đầy → nứt → mờ theo đời), nổ chỗ drone lao (đầy → nứt → mờ).
+- **Genesis Core**: 3 cánh sen báo trước, sen 8 cánh nở (lúc tắt chuyển khung "tan thành sao"), cánh hoa rơi ở ụ nhận = hạt `sen` (cuối đời tan).
+- **Overlord**: vết nứt đất = decal `dosig_nut` (tươi → sáng → nguội → mờ trong 1,3 s, xoay theo sự kiện); điện vẫn bò dọc đường nứt cũ.
+- **Arcane Cascade**: trận đồ suốt MANA FLOOD = `dosig_tran` đập nhịp (thường ↔ rực), sắp hết lũ → khung tan, quay chậm.
+Ảnh nạp sớm khi bàn có ụ Đỏ. Trước/sau (anim-bac `PHA=sk`, đã xem): lục giác tổ ong / cánh sen / vòng trận đồ hiện rõ thay nét ghép mảnh.
+
+## Cần ảnh (ChatGPT) — không bắt buộc, code đã chạy được bằng ảnh có sẵn (4 ảnh `raw_dosig_*` bên dưới: ĐÃ CÓ + đã gắn)
 Chung: lưới ô vuông, nền magenta #FF00FF đặc, không chữ, "same style as attached" (đính kèm `fx_song_xung.png` + `fx_vet_trang.png`).
 - `raw_dosig_hex`: *"4×1 grid, glowing amber honeycomb hexagon outline sprites (thin bright edge, soft glow), frames: small → full → cracked → fading, game VFX, magenta background, no text"* — thay lục giác ghép từ đoạn tia (Hive Queen).
 - `raw_dosig_lotus_petal`: *"4×1 grid, single glowing pink lotus petal, front / tilted / curled / dissolving into sparkles, game VFX, magenta background, no text"* — thay `fx_la` tô hồng (Genesis Core).
