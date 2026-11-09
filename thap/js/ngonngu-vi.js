@@ -5426,4 +5426,6 @@ const VI_MAU = {
 "−#% damage until hit by # different turret types (# from wave #)": "−#% ST cho đến khi trúng # loại ụ khác nhau (# từ đợt #)",
 "−#s": "−# s",
 "≥# IN CHEST": "≥# TRONG RƯƠNG",
+"PLAYABLE": "DÙNG ĐƯỢC",
+"TOTAL": "TỔNG",
 };
