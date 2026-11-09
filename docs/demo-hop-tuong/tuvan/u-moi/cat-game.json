@@ -353,6 +353,31 @@
 312.8
 ]
 },
+"congap": {
+"DE_RIENG": 1.013,
+"HEAD_K": 0.4559,
+"PHU_K": 0.4719,
+"co": {
+"de": 177,
+"nong": 137
+},
+"dao_bo": {},
+"khop_be": [
+1.0,
+950.2798
+],
+"khop_dau": [
+0.775,
+3142.467
+],
+"nguon": "raw_congap_parts.png (ô 1–4)",
+"thu": 1.0,
+"tip": 0.954,
+"truc_o3": [
+254.4,
+254.8
+]
+},
 "cuongno": {
 "DE_RIENG": 1.0129,
 "HEAD_K": 0.7011,
@@ -2030,6 +2055,31 @@
 "truc_o3": [
 323.1,
 296.1
+]
+},
+"thacmana": {
+"DE_RIENG": 1.0145,
+"HEAD_K": 0.6712,
+"PHU_K": 0.412,
+"co": {
+"de": 177,
+"nong": 201
+},
+"dao_bo": {},
+"khop_be": [
+0.96,
+8189.5376
+],
+"khop_dau": [
+0.74,
+3029.8984
+],
+"nguon": "raw_thacmana_parts.png + raw_thacmana_master.png (ô 1)",
+"thu": 1.0,
+"tip": 0.985,
+"truc_o3": [
+240.7,
+304.6
 ]
 },
 "thanhdia": {
