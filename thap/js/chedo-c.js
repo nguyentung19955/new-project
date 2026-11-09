@@ -370,8 +370,8 @@ const CDUI = {
     const phu = document.getElementById('kq-phu'); if (phu) phu.textContent = dich(CD.tenCheDo(c) + ' · ' + (c.loai === 'san' ? 'TIER ' + c.bac : CD.tenTran(c).toUpperCase())) + (c.loai === 'san' ? ' · ' + CD.tenTrum(c.id) : '') + (!k.thang && k.ly ? ' · ' + dich(k.ly) : '');
     const chi = document.getElementById('kq-chi'); if (!chi) return;
     const o = (nhan, so) => '<div class="kq-o"><small>' + nhan + '</small><b>' + so + '</b></div>';
-    const qua = Math.max(0, Math.min(5, G.wave - c.w0 + (k.thang ? 1 : 0))), tim = G.ban[0] ? Math.max(0, G.ban[0].tim | 0) : 0;
-    let h = '<div class="kq-hang">' + (c.loai === 'san' ? o('TIER', c.bac) + o('TICKETS', CD.ve()) : o(c.loai === 'thap' ? 'FLOOR' : 'TRIAL', c.id) + o('WAVES', qua + '/5')) + o('LIVES', tim + '/' + c.tim) + '</div>';
+    const soW = c.w1 - c.w0 + 1, qua = Math.max(0, Math.min(soW, G.wave - c.w0 + (k.thang ? 1 : 0))), tim = G.ban[0] ? Math.max(0, G.ban[0].tim | 0) : 0;
+    let h = '<div class="kq-hang">' + (c.loai === 'san' ? o('TIER', c.bac) + o('TICKETS', CD.ve()) : o(c.loai === 'thap' ? 'FLOOR' : 'TRIAL', c.id) + o('WAVES', qua + '/' + soW)) + o('LIVES', tim + '/' + c.tim) + '</div>';
     let th;
     if (c.luyen) th = '<small>PRACTICE · NO REWARD</small>';
     else if (r && (r.ra.vang || r.ra.ngoc || r.ra.tt || r.ra.the.length || (r.ra.ru || []).length)) {
@@ -399,8 +399,8 @@ const CDUI = {
   // nhãn trong trận (dưới thanh trên): tầng + wave x/5 · Săn Trùm: đồng hồ trùm
   // nhãn giữa thanh trên (thay "BOSS IN N" theo chu kỳ 10 wave): FLOOR t · k/5 — trùm đang ở sân: giữ máu trùm của HUD; Săn Trùm: + đồng hồ
   nhanTren(c) {
-    const qua = Math.max(1, Math.min(5, G.wave - c.w0 + 1));
-    return (c.loai === 'san' ? 'TIER ' + c.bac + (c.luyen ? ' · PRACTICE' : '') : (c.loai === 'thap' ? 'FLOOR ' : 'TRIAL ') + c.id) + ' · ' + qua + '/5';
+    const soW = c.w1 - c.w0 + 1, qua = Math.max(1, Math.min(soW, G.wave - c.w0 + 1));
+    return (c.loai === 'san' ? 'TIER ' + c.bac + (c.luyen ? ' · PRACTICE' : '') : (c.loai === 'thap' ? 'FLOOR ' : 'TRIAL ') + c.id) + ' · ' + qua + '/' + soW;
   },
   chip() {
     const c = G.cd, top = document.getElementById('top'); if (!top) return;
@@ -411,7 +411,7 @@ const CDUI = {
     const trum = !G.ketThuc && G.quai.some(x => x.trum && !x.chet);
     if (!trum) {
       const tc = document.getElementById('tb-trum-chu'), t = this.nhanTren(c); if (tc && tc.textContent !== t) tc.textContent = t;
-      const f = document.querySelector('#ha-thanh .f'); if (f) { const w = (Math.max(1, Math.min(5, G.wave - c.w0 + 1)) / 5 * 100) + '%'; if (f.style.width !== w) f.style.width = w; }
+      const f = document.querySelector('#ha-thanh .f'); if (f) { const soW = c.w1 - c.w0 + 1, w = (Math.max(1, Math.min(soW, G.wave - c.w0 + 1)) / soW * 100) + '%'; if (f.style.width !== w) f.style.width = w; }
     }
     const gio = CD.conGio();
     if (gio == null || !trum || G.ketThuc) { if (e && !e.hidden) e.hidden = true; return; }
@@ -604,7 +604,7 @@ const CDUI = {
     'Beat a boss you know in 90 s · 3 tickets a day': 'Hạ trùm đã gặp trong 90 giây · 3 vé mỗi ngày',
     'Trial #': 'Thử thách #', '3–5 min': '3–5 phút', 'Floor # / #': 'Tầng # / #', 'Tickets #/#': 'Vé #/#',
     'BEST FLOOR # / #': 'TẦNG CAO NHẤT # / #', 'CHAPTER #': 'CHƯƠNG #', 'FLOOR #': 'TẦNG #', 'BOSS: ': 'TRÙM: ',
-    'WAVES': 'WAVE', 'START MANA': 'MANA ĐẦU', 'LIVES': 'MẠNG', 'FIRST CLEAR REWARD': 'THƯỞNG LẦN ĐẦU', 'FIRST CLEAR REWARD CLAIMED': 'ĐÃ NHẬN THƯỞNG LẦN ĐẦU',
+    'WAVES': 'ĐỢT', 'START MANA': 'MANA ĐẦU', 'LIVES': 'MẠNG', 'FIRST CLEAR REWARD': 'THƯỞNG LẦN ĐẦU', 'FIRST CLEAR REWARD CLAIMED': 'ĐÃ NHẬN THƯỞNG LẦN ĐẦU',
     'FIRST WIN REWARD': 'THƯỞNG THẮNG LẦN ĐẦU', 'FIRST WIN REWARD CLAIMED': 'ĐÃ NHẬN THƯỞNG THẮNG LẦN ĐẦU',
     'CLIMB · FLOOR #': 'LEO · TẦNG #', 'CLOSE': 'ĐÓNG', 'No extra rules': 'Không luật thêm',
     'Horde': 'Bầy Đông', 'Swift': 'Thần Tốc', 'Giants': 'Khổng Lồ', 'Thick Hide': 'Da Dày', 'Sky Raid': 'Không Kích', 'Glass Core': 'Lõi Thuỷ Tinh',
@@ -617,7 +617,7 @@ const CDUI = {
     'TICKETS # / # · RESETS IN ': 'VÉ # / # · LÀM MỚI SAU ', 'TICKETS # / #': 'VÉ # / #', 'RESETS IN #:#:#': 'LÀM MỚI SAU #:#:#', 'TICKETS # / # · RESETS IN #:#:#': 'VÉ # / # · LÀM MỚI SAU #:#:#', 'BOSS OF THE WEEK': 'TRÙM CỦA TUẦN', 'TIER #': 'BẬC #', ' · TIER #': ' · BẬC #',
     'Defeat the boss within # s': 'Hạ trùm trong # giây', 'Boss HP ×#': 'Máu trùm ×#', 'ALL # BOSSES AT TIER #': 'ĐỦ # TRÙM Ở BẬC #', 'CLAIMED': 'ĐÃ NHẬN',
     '+1 TICKET': '+1 VÉ', 'HUNT · 1 TICKET': 'SĂN · 1 VÉ', 'PRACTICE': 'LUYỆN TẬP', 'Defeat a boss once to hunt it.': 'Hạ một trùm một lần để săn nó.',
-    '# / # CLEARED': 'ĐÃ QUA # / #', 'WAVES #–#': 'WAVE #–#', 'BOSS': 'TRÙM', 'START · TRIAL #': 'BẮT ĐẦU · THỬ THÁCH #',
+    '# / # CLEARED': 'ĐÃ QUA # / #', 'WAVES #–#': 'ĐỢT #–#', 'BOSS': 'TRÙM', 'START · TRIAL #': 'CHƠI THỬ THÁCH #', 'WAVES #–# · BOSS': 'ĐỢT #–# · TRÙM',
     'First Stand': 'Trận Đầu', 'Boss Gate': 'Cổng Trùm', 'Swarm Line': 'Tuyến Bầy', 'Giant Steps': 'Bước Khổng Lồ', 'Sky Storm': 'Bão Trời',
     'FLOOR': 'TẦNG', 'TRIAL': 'THỬ THÁCH', 'TIER': 'BẬC', 'TICKETS': 'VÉ', 'PRACTICE · NO REWARD': 'LUYỆN TẬP · KHÔNG THƯỞNG',
     'FIRST CLEAR REWARDS': 'THƯỞNG LẦN ĐẦU', 'NO REWARD · ALREADY CLEARED': 'KHÔNG THƯỞNG · ĐÃ QUA', 'NO REWARD': 'KHÔNG THƯỞNG',
@@ -627,7 +627,7 @@ const CDUI = {
     'Floor # cleared': 'Đã qua tầng #', 'Trial # cleared': 'Đã qua thử thách #', 'Hunt tier # cleared': 'Đã thắng bậc #',
     'Time up — the boss survived': 'Hết giờ — trùm còn sống', 'The boss escaped': 'Trùm đã thoát',
     'FLOOR # · #/#': 'TẦNG # · #/#', 'TRIAL # · #/#': 'THỬ THÁCH # · #/#', 'TIER # · #/#': 'BẬC # · #/#', 'TIER # · PRACTICE · #/#': 'BẬC # · LUYỆN TẬP · #/#', 'BOSS TIME #s': 'GIỜ TRÙM #s',
-    'BOSS HUNT · TIER #': 'SĂN TRÙM · BẬC #', 'FLOOR # · WAVE #/#': 'TẦNG # · WAVE #/#', 'TRIAL # · WAVE #/#': 'THỬ THÁCH # · WAVE #/#', 'TIER # · #s': 'BẬC # · #s', 'TIER # · PRACTICE · #s': 'BẬC # · LUYỆN TẬP · #s',
+    'BOSS HUNT · TIER #': 'SĂN TRÙM · BẬC #',  'TIER # · #s': 'BẬC # · #s', 'TIER # · PRACTICE · #s': 'BẬC # · LUYỆN TẬP · #s',
     'Unlocks after defeating # different bosses': 'Mở sau khi hạ # trùm khác nhau', '# BOSSES': '# TRÙM',
     'Red Seal': 'Ấn Đỏ', 'YOU HAVE #/#': 'ĐANG CÓ #/#', 'RED SEAL': 'ẤN ĐỎ',
     'Pick # Mythic card: +# copy. Costs # Red Crystals and #,# gold.': 'Chọn # thẻ Cổ đại: +# bản. Tốn # Tinh thể Đỏ và #.# vàng.',
