@@ -801,3 +801,13 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - Hình TẠM: đổi màu ảnh Lõi Khởi Sinh (+45° sắc độ → khung vàng): `congap_de/_nong/_phu/_vien`, `nho/congap`, `glyph/congap`. Prompt ảnh thật (master-first): `docs/demo-hop-tuong/tuvan/congap/PROMPT.md`. Ảnh chụp 390×844: `docs/demo-hop-tuong/tuvan/congap/ban-goi.jpg`.
 - Bot (`/tmp/simcb/do.js` + post.js, cấp thẻ 8, 24 hạt) bộ Vàng canon/aten/railgun/dongbo + ụ ĐB thứ 5: vughep 43.6 · **congap 45.5** · sinhdoi 45.6 · tudo 37.9 → ngang Twin Maker, không vượt dải Vàng mạnh (~45).
 - Test: `node tools/thap-kt-cong-ap.js` (29/29: lượt = sao, gọi 11 s 1★ trong bộ miễn phí, hết lượt ở lại, bàn đầy giữ lượt, Merge King +1 / vàng +2, +★ sau khi hết lượt, −★ trừ lượt (không âm), ghép / Copycat ra ụ mới, đá / băng dừng, tất định, cờ online, không Math.random).
+
+## claude/demo-hop-tuong — dịu VFX: hiệu ứng không che kín quái/đường (09/11)
+- Người dùng: nổ lớn, vùng độc, cầu vồng, tường, mìn, tia, số sát thương… phủ kín đường, không thấy quái. Chỉ hình, KHÔNG đổi luật. `?diu=0` tắt để so (hằng `DIU` trong `render.js`).
+- Lớp vùng phủ nền (mọi `HU.*.duoi`: vũng/mây độc, cầu vồng, vệt lửa Rồng, vệt Ember, mìn, băng Blizzard, sương/xem Overlord… + hố đen) vẽ vào canvas lớp riêng rồi đổ xuống dưới quái với alpha 0.55.
+- Lớp trên quái (tường, nổ dải khung, tia chiêu Orbital/Overlord/Leviathan/Rồng/Nhật Thực…, hạt, vòng sóng) vẽ vào lớp riêng → khoét mềm quanh từng quái (destination-out bằng chấm fx_cham_trang, quái 60 %, trùm 40 %) → đổ lên với alpha 0.88. Lớp chỉ dùng dải canvas tới hết đường + 90 px.
+- Thanh máu quái/trùm gom lại vẽ SAU mọi lớp hiệu ứng (`REN.sauThanh`) → luôn đọc được.
+- Nổ: trần cỡ 46/88/170 → 40/74/140 px, đời 0.26/0.45/0.65 → 0.22/0.30/0.45 s (dải trùm vẫn ≥ 0.6 s); nổ trúng riêng ụ 36/64/110 → 32/56/92 px, ≤ 0.24/0.32/0.42 s; tối đa 28 dải nổ trên đường cùng lúc (bỏ nổ nhỏ cũ nhất). Trần sáng dải nổ 0.82 → 0.7, vòng sóng 0.85 → 0.6, chớp màn ≤ 0.2 (vẽ ≤ 0.14).
+- Số sát thương: nhỏ hơn 15 % (chí mạng ×1.3 thay ×1.6), gộp số trùng chỗ trong 0.25 s / 34×24 px (trước 0.15 s / 24×18), tối đa 14 số cùng lúc (bỏ số cũ nhất), trần chữ 48 → 32.
+- Dấu trạng thái trên thân quái: chậm 0.85 → 0.42, độc/cháy 0.85 → 0.6, đóng băng 0.8 → 0.62 (cả đường bị Blizzard làm chậm vẫn thấy quái).
+- Kiểm: 390×844 đợt 33–34, 15 ụ AoE 6★ (mortar, vungdoc, cauvong, min, blackhole, orbital, bomhen, wallgen, baotuyet, soi, nhatthuc, overlord, leviathan, ronglua, lualien) + ~48 quái; FPS headless (CPU, dpr 1.5): trước 24–28, sau 22–24 (A/B cùng trang ≈ −2…3 fps do 2 lần đổ lớp). solo/coop/pvp không lỗi console.

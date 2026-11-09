@@ -9,7 +9,7 @@ const FX = {
   rung: 0, rungX: 0, rungY: 0,
   chop: 0, chopMau: '#fff',
   MAX_HAT: 320, giam: 1, // giam: tỉ lệ giữ hạt (2×/3× sinh hạt nhanh hơn → bớt bằng xác suất để mật độ như 1×)
-  MAX_CHU: 48, MAX_ANIM: 90, // trần chữ nổi / dải nổ (trước 06/11 hai trần này nằm nhầm trong chú thích → không giới hạn: nhiều skill cùng lúc = hàng trăm dải nổ 1 khung)
+  MAX_CHU: 32, MAX_ANIM: 90, MAX_NO: 28, MAX_SO: 14, // MAX_NO: trần dải nổ trên đường cùng lúc (không tính chớp nòng) · MAX_SO: trần số sát thương thường cùng lúc (claude/diu-vfx) // trần chữ nổi / dải nổ (trước 06/11 hai trần này nằm nhầm trong chú thích → không giới hạn: nhiều skill cùng lúc = hàng trăm dải nổ 1 khung)
   _kho: [], // kho tái dùng hạt
 
   reset() { this.hat.length = 0; this.chu.length = 0; this.anim.length = 0; this.vong.length = 0; this.rung = 0; this.chop = 0; },
@@ -41,8 +41,12 @@ const FX = {
     if ((!kieu || kieu === 'crit') && typeof s === 'string' && /^\d+$/.test(s)) {
       for (let i = this.chu.length - 1; i >= 0; i--) {
         const c = this.chu[i];
-        if (c.t < 0.15 && c.kieu === (kieu || '') && c.mau === (mau || '#fff') && c.gop && Math.abs(c.x - x) < 24 && Math.abs(c.y - y) < 18) { c.s = String(+c.s + +s); return c; }
+        if (c.t < 0.25 && c.kieu === (kieu || '') && c.mau === (mau || '#fff') && c.gop && Math.abs(c.x - x) < 34 && Math.abs(c.y - y) < 24) { c.s = String(+c.s + +s); return c; }
       }
+    }
+    if ((!kieu || kieu === 'crit') && typeof s === 'string' && /^\d+$/.test(s)) { // bàn đông: giữ ≤ MAX_SO số sát thương, bỏ số cũ nhất (claude/diu-vfx)
+      let n = 0, i0 = -1; for (let i = 0; i < this.chu.length; i++) if (this.chu[i].gop) { n++; if (i0 < 0) i0 = i; }
+      if (n >= this.MAX_SO && i0 >= 0) this.chu.splice(i0, 1);
     }
     if (this.chu.length >= this.MAX_CHU) this.chu.shift();
     this.chu.push({ x, y, s, mau: mau || '#fff', co: co || 13, t: 0, song: kieu === 'to' ? 1.1 : kieu === 'nhan' ? 1.3 : kieu === 'crit' ? 0.6 : !kieu ? 0.5 : 0.8, kieu: kieu || '', gop: (!kieu || kieu === 'crit') && typeof s === 'string' && /^\d+$/.test(s) });
@@ -67,7 +71,11 @@ const FX = {
     return kq;
   },
   _no(ten, x, y, co, song, goc, bam) {
-    if (this.anim.length >= this.MAX_ANIM) { const i = this.anim.findIndex(A => A.co < 70); this.anim.splice(i >= 0 ? i : 0, 1); } // đầy: bỏ dải nổ NHỎ cũ nhất (giữ nổ lớn của chiêu)
+    if (this.anim.length >= this.MAX_ANIM) { const i = this.anim.findIndex(A => A.co < 70); this.anim.splice(i >= 0 ? i : 0, 1); }
+    if (ten !== 'chop_nong') { // dịu VFX: ≤ MAX_NO dải nổ trên đường cùng lúc → bỏ nổ NHỎ cũ nhất (ưu tiên nổ mới / nổ lớn)
+      let n = 0, i0 = -1; for (let i = 0; i < this.anim.length; i++) { const A = this.anim[i]; if (A.ten === 'chop_nong' || A.mot === 'no') continue; n++; if (i0 < 0 && A.co < 70) i0 = i; }
+      if (n >= this.MAX_NO && i0 >= 0) this.anim.splice(i0, 1);
+    } // đầy: bỏ dải nổ NHỎ cũ nhất (giữ nổ lớn của chiêu)
     // hiệu ứng v2 theo ụ (fxu.js): chớp nòng / nổ trúng riêng của ụ đang bắn — 1 ảnh tĩnh, code chỉ phóng/xoay/mờ
     const U = typeof FXU !== 'undefined' && typeof G !== 'undefined' && G.dangBan;
     if (U) {
@@ -77,8 +85,8 @@ const FX = {
     // ngân sách hiệu ứng (tư vấn C): trúng đòn thường ≤ ~0.75 ô & ≤ 0.26 s; đòn lớn ≤ ~1.4 ô & ≤ 0.45 s
     if (ten !== 'chop_nong') {
       const cap = co >= 140 ? 2 : co >= 70 ? 1 : 0; // 2 = chiêu lớn / trùm / ụ đỏ: giữ chỗ cho cảnh hoành tráng
-      co = Math.min(co, [46, 88, 170][cap]);
-      song = Math.min(song || 0.42, [0.26, 0.45, 0.65][cap]);
+      co = Math.min(co, [40, 74, 140][cap]); // dịu VFX (claude/diu-vfx): trước 46/88/170 px, 0.26/0.45/0.65 s
+      song = Math.min(song || 0.42, [0.22, 0.3, 0.45][cap]);
       // dải chiêu trùm 16 khung (fx_trum_<id>): ≥ 0,6 s (~27 khung/giây) — trần 0,26 s làm 16 khung chớp qua như nháy (giat_skill: Patch Titan)
       if (ten.startsWith('trum_')) song = Math.max(song, 0.6);
     }
@@ -100,8 +108,8 @@ const FX = {
       if (T.buf && T.o != null) { A.T = T; A.dg = gocLech(T.goc, A.goc); }
     } else {
       const cap = co >= 140 ? 2 : co >= 70 ? 1 : 0; // giữ ngân sách cỡ như FX.no, nhưng sống ≥ 0.2 s cho dễ đọc
-      A.co = Math.min(co * 0.7, [36, 64, 110][cap]) * (cf.kt || 1); // ảnh đã cắt sát (dải cũ có lề) → nhỏ hơn số đường kính cũ
-      A.song = clamp(song || 0.3, 0.2, [0.3, 0.45, 0.6][cap]);
+      A.co = Math.min(co * 0.7, [32, 56, 92][cap]) * (cf.kt || 1); // dịu VFX: trước 36/64/110 // ảnh đã cắt sát (dải cũ có lề) → nhỏ hơn số đường kính cũ
+      A.song = clamp(song || 0.3, 0.18, [0.24, 0.32, 0.42][cap]); // dịu VFX: trước 0.2–0.3/0.45/0.6 s
       // góc xoay ngẫu nhiên lấy từ toạ độ (KHÔNG Math.random): FX.no gộp dải theo A.t (chỉ chạy theo nhịp vẽ) → gọi Math.random ở đây làm lệch RNG luật giữa 30/60 FPS (thap-kt-anim, online lockstep)
       { const h = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453; A.goc = (h - Math.floor(h)) * 6.28; }
     }
@@ -109,7 +117,8 @@ const FX = {
   },
   vong1(x, y, r0, r1, mau, song, day) { r1 = Math.min(r1, 70); r0 = Math.min(r0, 70); song = Math.min(song || 0.45, 0.4); this.vong.push({ x, y, r0, r1, mau, t: 0, song: song || 0.45, day: day || 3 }); },
   lac(m) { this.rung = Math.min(8, Math.max(this.rung, m * 0.7)); },
-  sang(m, mau) { this.chop = Math.max(this.chop, Math.min(0.3, m)); this.chopMau = mau || '#fff'; },
+  sang(m, mau) { this.chop = Math.max(this.chop, Math.min(0.2, m)); // dịu VFX: chớp màn ≤ 0.2 (trước 0.3)
+    this.chopMau = mau || '#fff'; },
 
   capNhat(dt) {
     for (let i = this.hat.length - 1; i >= 0; i--) {
