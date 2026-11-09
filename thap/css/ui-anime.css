@@ -108,3 +108,213 @@ html.ua body #wrap #hm .hm-tab small { color: #B8C3E6 !important; }
 html.ua body #wrap #hm .hm-tk #tk-chip span { min-width: 0; }
 html.ua body #wrap #hm .hm-tk #tk-chip b, html.ua body #wrap #hm .hm-tk #tk-chip small { white-space: nowrap !important; overflow: hidden; text-overflow: ellipsis; }
 html.ua body #wrap #chon .kt-nut > b { white-space: nowrap; }
+
+/* ================= BỘ BÀI + BỘ SƯU TẬP: thẻ dọc KHUNG BẬC (ha_khung_*, cùng khung khay trận) =================
+   Khung 212×350: thân = trái 7,5 % · rộng 85 % · trên 21,4 % · đáy 97,5 % (tools/thap-cat-ui2.py) → hộp thẻ = THÂN (tỉ lệ 0,6766);
+   ảnh khung tràn ra ngoài hộp (vương miện Vàng / lửa Đỏ nhô lên trên, khe hàng đủ chỗ). Trong thân: cửa sổ chân dung
+   trái 7,2 % · trên 3,3 % · rộng 85,6 % · cao 82 %; dải tên tối ở đáy 15 %; vòng tròn góc trên-phải (tâm 86 % / 5 %) = LV.
+   Hợp đồng kéo-thả (QUY-TAC-HINH §10) giữ nguyên: chỉ đổi hình, lớp phủ mới pointer-events:none. */
+html.ua body #wrap #chon #chon-luoi .luoi { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; column-gap: 8px !important; row-gap: 22px !important; padding-top: 16px; }
+html.ua body #wrap #chon.bst #chon-luoi .luoi { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; column-gap: 12px !important; row-gap: 28px !important; }
+html.ua body #wrap #chon #chon-luoi .c.ot { aspect-ratio: .6766 !important; height: auto !important; overflow: visible !important; contain-intrinsic-size: auto 72px auto 106px; }
+html.ua body #wrap #chon #chon-luoi .c.ot > img.kh, html.ua body #wrap #chon #chon-luoi .c.ot > .ot-p { display: none !important; }
+html.ua body #wrap #chon #chon-luoi .c.ot > img.ov.ov { position: absolute !important; left: -8.82% !important; top: -28.12% !important; width: 117.65% !important; height: 131.4% !important; max-width: none !important; max-height: none !important;
+  margin: 0 !important; z-index: 4 !important; pointer-events: none !important; object-fit: fill !important; transform: none !important; scale: none !important; clip-path: none !important; filter: none !important; content: url(../assets/ha_khung_trang.webp?v=772184c5); }
+
+
+
+
+html.ua body #wrap #chon #chon-luoi .c.ot > img.anh, html.ua.co-khung body #wrap #chon #chon-luoi .c.ot.co-kh > img.anh {
+  left: 7.2% !important; top: 3.3% !important; width: 85.6% !important; height: 82% !important; border-radius: 2px; }
+/* LV trong vòng tròn góc trên-phải; số bản sao (0/2) trong dải tên đáy */
+html.ua body #wrap #chon #chon-luoi .c .tb-lv { left: auto !important; right: 0 !important; top: 0 !important; width: 28%; text-align: center; font-size: 9px !important; line-height: 1 !important; letter-spacing: -.04em; z-index: 9; }
+html.ua body #wrap #chon.bst #chon-luoi .c .tb-lv { font-size: 11px !important; top: .5% !important; }
+html.ua body #wrap #chon #chon-luoi .c .tb-sb { left: 10% !important; right: 10% !important; bottom: 2.5% !important; height: 12px !important; }
+html.ua body #wrap #chon.bst #chon-luoi .c .tb-sb { height: 15px !important; bottom: 2% !important; }
+/* nút (i): góc trên-trái (vòng tròn phải dành cho LV) — vùng chạm 48 giữ nguyên */
+html.ua body #wrap #chon #chon-luoi .c .the-i { right: auto !important; left: -5px !important; top: -7px !important; width: 20px; height: 20px; }
+html.ua body #wrap #chon #chon-luoi .c .the-i img { width: 20px; height: 20px; }
+html.ua body #wrap #chon #chon-luoi .c .the-i::before { left: -10px; top: -14px; right: -16px; bottom: -14px; }
+html.ua body #wrap #chon #chon-luoi .c.ot .up-q { width: 50% !important; height: 34% !important; }
+html.ua body #wrap #chon #chon-luoi .c.ot > .sapco { bottom: 15% !important; left: 10% !important; z-index: 9 !important; }
+/* 5 ô bộ bài: cùng thẻ dọc khung bậc */
+html.ua body #wrap #chon #chon-bo { height: auto !important; min-height: 0 !important; padding: 18px 0 4px !important; align-items: flex-end !important; gap: 8px !important; justify-content: space-between !important; }
+html.ua body #wrap #chon #chon-bo .o-bo { flex: 1 1 0 !important; width: auto !important; height: auto !important; aspect-ratio: .6766; overflow: visible !important; position: relative; }
+html.ua body #wrap #chon #chon-bo .o-bo.ot > img.ov.ov, html.ua.co-khung body #wrap #chon #chon-bo .o-bo.co-kh.ot > img.ov.ov {
+  left: -8.82% !important; top: -28.12% !important; width: 117.65% !important; height: 131.4% !important; max-width: none !important; object-fit: fill !important; z-index: 4 !important; pointer-events: none !important; }
+html.ua body #wrap #chon #chon-bo .o-bo.ot > img:not(.ov):not(.kh):not(.gl):not(.dk-vien) { left: 7.2% !important; top: 3.3% !important; width: 85.6% !important; height: 82% !important; }
+html.ua body #wrap #chon #chon-bo .o-bo.ot > img.kh, html.ua body #wrap #chon #chon-bo .o-bo.ot > .ot-p { display: none !important; }
+/* thẻ có viền tràn: bỏ content-visibility (nó cắt vẽ ra ngoài hộp) */
+html.ua body #wrap #chon #chon-luoi .c.ot { content-visibility: visible !important; }
+html.ua body #wrap #chon #chon-bo .o-bo.ot > img.ov.ov { content: url(../assets/ha_khung_trang.webp?v=772184c5); }
+html.ua body #wrap #chon #chon-luoi .c.ot[data-otb="xanh"] > img.ov.ov, html.ua body #wrap #chon #chon-bo .o-bo.ot[data-otb="xanh"] > img.ov.ov { content: url(../assets/ha_khung_xanh.webp?v=5cbca510); }
+html.ua body #wrap #chon #chon-luoi .c.ot[data-otb="tim"] > img.ov.ov, html.ua body #wrap #chon #chon-bo .o-bo.ot[data-otb="tim"] > img.ov.ov { content: url(../assets/ha_khung_tim.webp?v=85f75157); }
+html.ua body #wrap #chon #chon-luoi .c.ot[data-otb="vang"] > img.ov.ov, html.ua body #wrap #chon #chon-bo .o-bo.ot[data-otb="vang"] > img.ov.ov { content: url(../assets/ha_khung_vang.webp?v=08db6d20); }
+html.ua body #wrap #chon #chon-luoi .c.ot[data-otb="do"] > img.ov.ov, html.ua body #wrap #chon #chon-bo .o-bo.ot[data-otb="do"] > img.ov.ov { content: url(../assets/ha_khung_do.webp?v=4fa2f176); }
+html.ua body #wrap #chon #chon-bo { padding-top: 30px !important; }
+/* đầu màn (BUILD DECK / COLLECTION): tấm chàm vát góc thay băng thép */
+html.ua body #wrap #chon .dk-dau { border: 0 solid transparent !important; border-image: var(--ua-t) / 16px 20px stretch !important; padding: 0 6px !important; }
+html.ua body #wrap #chon .dk-dau .dk-tde { color: #F7F8FF; text-shadow: 0 1px 2px #000; }
+/* băng chỉ huy + nút CHANGE */
+html.ua body #wrap #chon .dkd-cmd { border-image: var(--ua-o) / 14px 16px stretch !important; }
+html.ua body #wrap #chon .dkd-cmd-chu b { color: #FFB866 !important; }
+html.ua body #wrap #chon .dkd-cmd-doi { border-image: var(--ua-p) / 12px 16px stretch !important; color: #F7F8FF !important; padding: 0 16px !important; }
+/* ô tìm + 3 chip xếp */
+html.ua body #wrap #chon .dk-o { border-image: var(--ua-p) / 14px 20px stretch !important; padding-left: 14px !important; }
+html.ua body #wrap #chon .dk-o .dk-o-ic { width: 26px !important; height: 26px !important; }
+html.ua body #wrap #chon .dkd-xep { gap: 4px !important; }
+html.ua body #wrap #chon .dkd-xep .dkd-x { padding: 0 12px !important; border-image-width: 12px 14px !important; font-size: 12px !important; letter-spacing: .02em !important; }
+html.ua body #wrap #chon .dk-dem, html.ua body #wrap #chon .dkd-nhan { color: #B8C3E6; }
+html.ua body #wrap #chon .dk-dem .dk-chu { color: #71E4EE; }
+/* bộ sưu tập: tên ụ ở dải tên đáy khung, thanh bản sao lên mép dưới cửa sổ */
+html.ua body #wrap #chon.bst #chon-luoi .c.ot > .ten { display: block !important; position: absolute !important; left: 9% !important; right: 9% !important; bottom: 2.5% !important; top: auto !important; height: 11% !important; z-index: 9 !important;
+  margin: 0 !important; padding: 0 !important; background: none !important; border: 0 !important; display: block !important; text-align: center !important;
+  font: 700 11px/1.15 var(--f-chu) !important; color: #F7F8FF !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis; text-shadow: 0 1px 1px #000 !important; transform: none !important; }
+html.ua body #wrap #chon.bst #chon-luoi .c .tb-sb { bottom: 15.5% !important; left: 12% !important; right: 12% !important; height: 14px !important; }
+html.ua body #wrap #chon .dkd-cmd { height: 68px !important; }
+html.ua body #wrap #chon.bst #chon-luoi .c.ot > .ten { bottom: 4% !important; height: 9% !important; }
+html.ua body #wrap #chon #chon-luoi .c.ot.chon .up-q { background-position: left 8% top 30% !important; }
+/* PLAY màn bộ bài khi chưa đủ 5 (dkcham .dc-tat): nút phụ chàm, chữ nhạt — không giả nút chính */
+html.ua body #wrap #chon button.hm-choi.dc-tat { border-image-source: url(../assets/ua_nut_phu.webp?v=5eb74425) !important; border-image-slice: 36 60 fill !important; }
+html.ua body #wrap #chon button.hm-choi.dc-tat b, html.ua body #wrap #chon button.hm-choi.dc-tat small { color: #B8C3E6 !important; }
+/* ô bộ bài trống: ô vát góc chàm (ua_o) + nút tròn cộng (ua_nut_tron) — thay khung thép + ốc */
+html.ua body #wrap #chon #chon-bo .o-bo:not([data-id]) { background: none !important; border: 0 solid transparent !important; border-image: var(--ua-o) / 14px 14px stretch !important; }
+html.ua body #wrap #chon #chon-bo .o-bo:not([data-id]) > img.dc-cong { content: url(../assets/ua_nut_tron.webp?v=e7aded9e); width: 34px !important; height: 36px !important; opacity: .9; }
+/* bộ bài: 5 ô gọn hơn (rộng 62) để lưới bắt đầu cao hơn — vuốt dọc từ hàng thẻ thứ 2 vẫn là cuộn (dkkeo: kéo lên quá mép lưới = kéo thẻ) */
+html.ua body #wrap #chon #chon-bo { justify-content: center !important; gap: 12px !important; padding-top: 24px !important; }
+html.ua body #wrap #chon #chon-bo .o-bo { flex: 0 0 62px !important; width: 62px !important; }
+html.ua body #wrap #chon #chon-luoi .luoi { padding-top: 8px; }
+/* tiêu đề nhóm bậc trên lưới (ẩn ở HUD mượt A) — hiện lại: tên bậc + đếm, nhóm còn khoá: "Unlocks at Pilot Level N" */
+html.ua body #wrap #chon:not(.hd-khoa) #chon-luoi > .nhom { display: flex !important; position: static; height: 30px; margin: 10px 2px 0; padding: 0 12px; gap: 8px; background: none;
+  border: 0 solid transparent; border-image: var(--ua-p) / 12px 16px stretch; flex-wrap: nowrap; white-space: nowrap; overflow: hidden; }
+html.ua body #wrap #chon #chon-luoi > .nhom b { font: 800 13px/1 var(--f-hien); letter-spacing: .08em; }
+html.ua body #wrap #chon #chon-luoi > .nhom span { font: 700 12px/1 var(--f-chu); color: #B8C3E6; }
+html.ua body #wrap #chon #chon-luoi > .nhom em.ua-mo { font: 800 12px/1 var(--f-chu); font-style: normal; color: #FFB866; margin-left: auto; overflow: hidden; text-overflow: ellipsis; }
+html.ua body #wrap #chon #chon-luoi > .nhom.ua-khoa span { display: none; }
+html.ua body #wrap #chon #chon-luoi > .nhom .nh-i { width: 16px; height: 16px; }
+html.ua body #wrap #chon .dkd-nhan i { font-style: normal; color: #B8C3E6; }
+/* thẻ ụ khoá: vẫn thấy HÌNH (xám nhẹ) + TÊN + khung bậc; nhãn "PILOT LV n" 1 dòng ở đáy cửa sổ (không che mặt); không thanh bản sao */
+html.ua body #wrap #chon #chon-luoi .c.ot.tt-khoa > img.anh, html.ua body #wrap #chon #chon-luoi .c.ot.khoa > img.anh { filter: grayscale(.6) brightness(.78) !important; }
+html.ua body #wrap #chon #chon-luoi .c.tt-khoa .tb-sb { display: none !important; }
+html.ua body #wrap #chon #chon-luoi .c.tt-khoa .tb-w { opacity: 1 !important; }
+html.ua body #wrap #chon #chon-luoi .c.ot.tt-khoa > .ten { display: block !important; position: absolute !important; left: 9% !important; right: 9% !important; bottom: 4% !important; top: auto !important; height: 9% !important; z-index: 9 !important;
+  margin: 0 !important; padding: 0 !important; background: none !important; border: 0 !important; text-align: center !important; line-height: 1.1 !important; display: block !important; padding-top: 1px !important;
+  font: 700 10px/1.1 var(--f-chu) !important; color: #F7F8FF !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis; text-shadow: 0 1px 1px #000 !important; transform: none !important; }
+html.ua body #wrap #chon.bst #chon-luoi .c.ot.tt-khoa > .ten { font-size: 11px !important; }
+html.ua body #wrap #chon #chon-luoi .c .tt-khoa-n { top: auto !important; bottom: 15% !important; left: 4% !important; right: 4% !important; height: auto; padding: 4px 0 !important; flex-direction: column !important; justify-content: center; gap: 1px !important;
+  border: 0 solid transparent; border-image: var(--ua-p) / 9px 10px stretch; z-index: 9 !important; }
+html.ua body #wrap #chon #chon-luoi .c .tt-khoa-n b { font: 800 10.5px/1.05 var(--f-hien) !important; color: #FFB866 !important; letter-spacing: 0 !important; white-space: nowrap; }
+html.ua body #wrap #chon.bst #chon-luoi .c .tt-khoa-n b { font-size: 12px !important; }
+html.ua body #wrap #chon #chon-luoi .c .tt-khoa-n small { display: none; }
+/* màn bộ bài gọn dọc (lưới bắt đầu cao hơn → hàng thẻ thứ 2 nằm trong vùng vuốt cuộn) */
+html.ua body #wrap #chon .dkd-cmd { height: 62px !important; border-image-width: 11px 14px !important; }
+html.ua body #wrap #chon:not(.bst) #chon-luoi > .nhom { height: 26px; margin-top: 4px; }
+html.ua body #wrap #chon:not(.bst) #chon-luoi .luoi { padding-top: 2px; row-gap: 18px !important; }
+html.ua body #wrap #chon #chon-bo { padding-top: 20px !important; }
+/* nhóm Tím/Vàng/Đỏ: khung có rune/vương miện/lửa nhô lên → chừa khe dưới tiêu đề */
+html.ua body #wrap #chon #chon-luoi > .nhom[data-uab="tim"], html.ua body #wrap #chon #chon-luoi > .nhom[data-uab="vang"], html.ua body #wrap #chon #chon-luoi > .nhom[data-uab="do"] { margin-bottom: 14px; }
+
+/* ================= TRANG Ụ / TRANG CHỈ HUY (#up) ================= */
+html.ua body #wrap #up .up-nen { background-image: url(../assets/ua_nen.jpg?v=18124db2) !important; background-size: cover !important; background-position: center top !important; }
+/* nút dưới: thêm/dùng = nút chính cam đào; bỏ khỏi bộ / không dùng được = nút phụ chàm */
+html.ua body #wrap #up.up7 .up-nut { border-image: var(--ua-a) / 22px 42px stretch !important; color: #172040 !important; text-shadow: none !important; filter: none !important; }
+html.ua body #wrap #up.up7 .up-nut .up-nut-chu, html.ua body #wrap #up.up7 .up-nut .up-nut-so { color: #172040 !important; text-shadow: none !important; }
+html.ua body #wrap #up.up7 .up-nut.bo, html.ua body #wrap #up.up7 .up-nut:disabled { border-image: var(--ua-b) / 18px 30px stretch !important; color: #F7F8FF !important; opacity: 1 !important; }
+html.ua body #wrap #up.up7 .up-nut.bo .up-nut-chu, html.ua body #wrap #up.up7 .up-nut.bo .up-nut-so { color: #F7F8FF !important; }
+html.ua body #wrap #up.up7 .up-nut:disabled .up-nut-chu, html.ua body #wrap #up.up7 .up-nut:disabled .up-nut-so { color: #B8C3E6 !important; }
+/* cấp thẻ + LEVEL UP (hành động chính khi đủ bản sao + vàng) */
+html.ua body #wrap #up .tb-cap { border: 0 solid transparent !important; border-image: var(--ua-o) / 14px 16px stretch !important; }
+html.ua body #wrap #up .tb-nut { border: 0 solid transparent !important; border-image: var(--ua-a) / 14px 26px stretch !important; color: #172040 !important; text-shadow: none !important; }
+html.ua body #wrap #up .tb-nut * { color: #172040 !important; text-shadow: none !important; }
+html.ua body #wrap #up .tb-nut:disabled { border-image: var(--ua-b) / 13px 22px stretch !important; color: #B8C3E6 !important; filter: none !important; opacity: 1 !important; }
+html.ua body #wrap #up .tb-nut:disabled * { color: #B8C3E6 !important; }
+html.ua body #wrap #up .tb-sb { border: 0 !important; border-image: none !important; background: url(../assets/ha_mau_ranh.png?v=c483d997) 0 50% / 100% 100% no-repeat !important; }
+html.ua body #wrap #up .tb-sb .tb-day img { content: url(../assets/ha_mau_xanh.png?v=c60bd74a); object-fit: fill; }
+html.ua body #wrap #up .tb-sb b { text-shadow: 0 1px 2px #000, 0 0 3px #000 !important; color: #F7F8FF !important; }
+/* tấm thông tin: NEXT LEVEL, bảng phụ, hàng mốc, thẻ liên quan, chip */
+html.ua body #wrap #up .up-sau { border-image: var(--ua-t) / 12px 14px stretch !important; }
+html.ua body #wrap #up.up7 .up-spec div, html.ua body #wrap #up.up7 .up-kn, html.ua body #wrap #up.up7 .up-hang-ts { border-image: var(--ua-t) / 11px 13px stretch !important; }
+html.ua body #wrap #up .up-tam { border-image: var(--ua-t) / 20px 22px stretch !important; }
+html.ua body #wrap #up .up-bang, html.ua body #wrap #up .up-the { border-image: var(--ua-o) / 12px 12px stretch !important; }
+html.ua body #wrap #up .up-hang.moc { border-image: var(--ua-t) / 11px 13px stretch !important; }
+html.ua body #wrap #up .up-so1 > span { border-image: var(--ua-p) / 10px 14px stretch !important; }
+html.ua body #wrap #up .nac > button { border-image: var(--ua-p) / 10px 12px stretch !important; }
+html.ua body #wrap #up .nac > .cur { border-image: var(--ua-pb) / 10px 12px stretch !important; }
+html.ua body #wrap #up .up-spec div .up-tang { bottom: 12px !important; right: 14px !important; text-shadow: 0 1px 2px #000; }
+/* xem nhanh (bảng trượt khi chạm thẻ): chân dung thẻ dọc khung bậc như lưới */
+html.ua body #wrap .hm-xem-po.ot { width: 80px !important; height: auto !important; aspect-ratio: .6766; margin-top: 18px; overflow: visible !important; }
+html.ua body #wrap .hm-xem-po.ot > img:first-child:not(.ov) { position: absolute; left: 7.2% !important; top: 3.3% !important; width: 85.6% !important; height: 82% !important; }
+html.ua body #wrap .hm-xem-po.ot > img.ov { position: absolute !important; left: -8.82% !important; top: -28.12% !important; width: 117.65% !important; height: 131.4% !important; max-width: none !important; object-fit: fill !important; z-index: 2; pointer-events: none; content: url(../assets/ha_khung_trang.webp?v=772184c5); }
+html.ua body #wrap .hm-xem-po.ot[data-otb="xanh"] > img.ov { content: url(../assets/ha_khung_xanh.webp?v=5cbca510); }
+html.ua body #wrap .hm-xem-po.ot[data-otb="tim"] > img.ov { content: url(../assets/ha_khung_tim.webp?v=85f75157); }
+html.ua body #wrap .hm-xem-po.ot[data-otb="vang"] > img.ov { content: url(../assets/ha_khung_vang.webp?v=08db6d20); }
+html.ua body #wrap .hm-xem-po.ot[data-otb="do"] > img.ov { content: url(../assets/ha_khung_do.webp?v=4fa2f176); }
+/* nút trong bảng trượt: chữ dài (VI "THÊM VÀO BỘ BÀI") vừa nút */
+html.ua body #wrap .hm-tam .hm-cai2 .hm-nut2 { font-size: 13.5px !important; letter-spacing: .02em !important; padding: 0 16px !important; white-space: nowrap; }
+
+/* ================= CỬA HÀNG / VÒNG QUAY / NHIỆM VỤ / SỰ KIỆN (#kt, js/kinhte-ui.js) ================= */
+html.ua body #wrap #kt .kt-o, html.ua body #wrap #kt .kt-rc { border-image: var(--ua-o) / 14px 14px stretch !important; }
+html.ua body #wrap #kt .kt-o.hiem, html.ua body #wrap #kt .kt-rc-than { border-image: var(--ua-t) / 16px 18px stretch !important; }
+html.ua body #wrap #kt .kt-o small, html.ua body #wrap #kt .kt-rc small { color: #B8C3E6 !important; }
+html.ua body #wrap #kt .kt-muc b { color: #E9CCA0 !important; }
+html.ua body #wrap #kt .kt-dau > b { color: #F7F8FF; text-shadow: 0 1px 2px #000; }
+/* nút trong ô (mua / FREE): nút chính cam đào nhỏ — bớt vát góc để giá vừa */
+html.ua body #wrap #chon #kt .hm-nut2.vang { border-image-width: 12px 20px !important; }
+html.ua body #wrap #chon #kt .hm-nut2:not(.vang) { border-image-width: 11px 18px !important; }
+html.ua body #wrap #chon #kt .kt-gia.thieu { color: #8A0F24 !important; } /* thiếu tiền trên nút cam: đỏ đậm ≥ 4.5:1 */
+/* 4 thẻ dưới: thẻ đang mở = pill cyan, còn lại pill chàm */
+html.ua body #wrap #chon #kt .kt-tab button { border-image: var(--ua-p) / 14px 20px stretch !important; color: #F7F8FF !important; }
+html.ua body #wrap #chon #kt .kt-tab button.vang { border-image: var(--ua-pb) / 14px 20px stretch !important; color: #172040 !important; }
+html.ua body #wrap #chon #kt .kt-tab button.vang b { color: #172040 !important; }
+/* điểm danh 7 ngày: ô vát góc; hôm nay = tấm sáng */
+html.ua body #wrap #kt .kt-dn-o { border-image: var(--ua-o) / 9px 9px stretch !important; }
+html.ua body #wrap #kt .kt-dn-o.nay { border-image: var(--ua-t) / 10px 10px stretch !important; }
+html.ua body #wrap #kt .kt-dn-o small { color: #B8C3E6 !important; }
+/* hàng nhiệm vụ / mốc / lò rèn: tấm chàm vát góc (giữ bố cục cũ: ổ thưởng trái, nút phải) */
+html.ua body #wrap #kt .kt-h { border-image: var(--ua-t) / 13px 15px stretch !important; border-width: 12px 100px 12px 76px !important; outline: 0; }
+html.ua body #wrap #kt .kt-h.xong { border-image: var(--ua-t) / 13px 15px stretch !important; }
+html.ua body #wrap #kt .kt-h > .kt-r { background: url(../assets/ua_nut_tron.webp?v=e7aded9e) center / 54px 57px no-repeat; left: -70px !important; top: -8px !important; width: 60px !important; height: 64px !important; }
+html.ua body #wrap #chon #kt .kt-h .kt-slot { right: -92px !important; top: 2px !important; width: 82px !important; height: 34px !important; border: 0 solid transparent !important; border-image: var(--ua-p) / 12px 16px stretch !important; color: #B8C3E6 !important; }
+html.ua body #wrap #chon #kt .kt-h .kt-slot.vang { border-image: var(--ua-a) / 12px 22px stretch !important; color: #172040 !important; }
+html.ua body #wrap #kt .kt-h .kt-tick { right: -72px !important; top: -4px !important; width: 40px !important; }
+html.ua body #wrap #kt .kt-h-g > b { color: #F7F8FF !important; }
+html.ua body #wrap #kt .kt-h-g .tb-sb { border: 0 !important; border-image: none !important; background: url(../assets/ha_mau_ranh.png?v=c483d997) 0 50% / 100% 100% no-repeat !important; }
+html.ua body #wrap #kt .kt-h-g .tb-sb .tb-day img { content: url(../assets/ha_mau_xanh.png?v=c60bd74a); object-fit: fill; }
+html.ua body #wrap #kt .tb-sb b { color: #F7F8FF !important; text-shadow: 0 1px 2px #000, 0 0 3px #000 !important; }
+/* băng DAILY SPECIALS: tạm = tấm chàm + icon cửa hàng (ảnh băng anime riêng: PROMPT-B3.md) — bỏ khung thép của shop_banner */
+html.ua body #wrap #kt .kt-bn { height: 84px; border: 0 solid transparent; border-image: var(--ua-t) / 18px 22px stretch; }
+html.ua body #wrap #kt .kt-bn > img { content: url(../assets/ua_ic_shop.webp?v=8a7cc84b); position: absolute; right: 18px; top: 50%; width: 70px !important; height: 70px !important; margin-top: -35px; object-fit: contain; filter: drop-shadow(0 2px 3px #000a); } /* vetay-ok: png — bóng theo alpha của chính ảnh */
+html.ua body #wrap #kt .kt-bn b { color: #FFB866 !important; }
+/* hộp thoại cửa hàng (tỉ lệ rương, nhận thưởng, mở khoá…): tấm chàm */
+html.ua body #wrap #kt .kt-phu-tam { border-image: var(--ua-t) / 20px 22px stretch !important; }
+html.ua body #wrap #kt .kt-phu.kt-mo .kt-phu-tam { border-image: none !important; }
+/* sự kiện: băng ụ nổi bật (khung vàng-thép) → tạm tấm chàm (ảnh băng anime: PROMPT-B3.md); thanh điểm teal */
+html.ua body #wrap #kt .kt-skd { border: 0 solid transparent; border-image: var(--ua-t) / 18px 22px stretch; aspect-ratio: auto; min-height: 104px; padding-left: 18px; }
+html.ua body #wrap #kt .kt-skd > .kt-skd-bn { display: none !important; }
+html.ua body #wrap #kt .kt-skp .tb-sb { border: 0 !important; border-image: none !important; background: url(../assets/ha_mau_ranh.png?v=c483d997) 0 50% / 100% 100% no-repeat !important; }
+html.ua body #wrap #kt .tb-day img, html.ua body #wrap #chon #chon-luoi .tb-day img { content: url(../assets/ha_mau_xanh.png?v=c60bd74a); object-fit: fill; }
+/* thanh bản sao trên thẻ lưới: rãnh + mức teal (thay nhãn thép h2_tag + dải cam) */
+html.ua body #wrap #chon #chon-luoi .c .tb-sb { border: 0 !important; border-image: none !important; background: url(../assets/ha_mau_ranh.png?v=c483d997) 0 50% / 100% 100% no-repeat !important; }
+
+/* ================= TRÙM (TX) ================= */
+html.ua body #wrap .tx-o { border-image: var(--ua-t) / 12px 14px stretch !important; }
+
+/* ================= HỒ SƠ PHI CÔNG / ONLINE (.onl-bang, sảnh #onl-sanh) ================= */
+html.ua body .onl-bang { border-image: var(--ua-t) / 22px 24px stretch !important; }
+html.ua body .onl-bang .bang-ten { color: #F7F8FF; }
+html.ua body .onl-bang .nut, html.ua body #onl-sanh .nut { border-image: var(--ua-b) / 12px 22px stretch !important; color: #F7F8FF !important; text-shadow: 0 1px 2px #000 !important; }
+html.ua body .onl-bang .nut.chinh, html.ua body #onl-sanh .nut.chinh { border-image: var(--ua-a) / 13px 26px stretch !important; color: #172040 !important; text-shadow: none !important; }
+html.ua body #onl-ma, html.ua body #tk-ten, html.ua body .tk-so > div { border-image: var(--ua-p) / 12px 16px stretch !important; }
+html.ua body #onl-sanh .s7-moi { border-image: var(--ua-t) / 20px 22px stretch !important; }
+/* lớp phủ "xoay dọc" */
+html.ua body #xoay-doc .xd-tam { border-image: var(--ua-t) / 22px 24px stretch !important; }
+/* bảng lên cấp / mở khoá ở HOME (#tt-phu, tientrinh.js) — cùng tấm hộp thoại */
+html.ua body #wrap #tt-phu .kt-phu-tam { border-image: var(--ua-t) / 20px 22px stretch !important; }
+html.ua body #wrap #tt-phu .kt-phu-t, html.ua body #wrap #kt .kt-phu-t { color: #FFB866 !important; }
+html.ua body #wrap #tt-phu small, html.ua body #wrap #kt .kt-phu-tam small { color: #B8C3E6; }
+/* nhắc nhanh ở menu (UI.nhac): pill chàm thay nhãn thép sọc đỏ */
+html.ua body #wrap #chon:not([hidden]) ~ #chon-goi-nhac { border-image: url(../assets/ua_pill_tat.webp?v=7011ead0) 40 62 fill / 13px 20px stretch !important; padding: 10px 24px !important; color: #F7F8FF !important; text-shadow: 0 1px 2px #000 !important; }
+/* chữ dài (VI): thẻ dưới cửa hàng 1 dòng; nút cài đặt vừa khung */
+html.ua body #wrap #chon #kt .kt-tab button { border-image-width: 14px 15px !important; padding: 0 6px !important; white-space: nowrap; }
+html.ua body #wrap #chon #kt .kt-tab b { font-size: 12px !important; letter-spacing: .02em !important; }
+html.ua body #wrap .hm-tam-cai .hm-cai2 .hm-nut2, html.ua body #hm-mo .hm-tam-cai .hm-cai2 .hm-nut2 { font-size: 12.5px !important; padding: 0 14px !important; border-image-width: 14px 20px !important; white-space: normal; line-height: 1.1; }

@@ -648,6 +648,9 @@ const SD_CY = SD_Y0 + SD_CAO - 22;
 // ---------- vẽ bằng ẢNH (QUY-TAC-HINH.md): code chỉ đặt vị trí / xoay / phóng / mờ ảnh PNG + chữ số ----------
 const SD_IC = { toc: 'ic_toc', dmg: 'ic_dmg', crit: 'ic_crit', cdmg: 'ic_crit', cham: 'ic_cham', chet: 'ic_chet', mana: 'ic_mana', khien: 'ic_khien', taylo: 'ic_taylo' }; // ký hiệu buff → ảnh icon có sẵn
 const sdIm = (ten) => { try { return REN.img(ten); } catch (e) { return null; } };
+// MANA teal (giao diện anime B3, js/ui-anime.js): icon lục giác ua_ts_mana + chữ teal sáng; tắt anime → ngọc tím cũ
+function SD_MANA() { return (typeof UA !== 'undefined' && UA.bat) ? 'ua_ts_mana' : 'ui_mana'; }
+function SD_MANA_CHU() { return (typeof UA !== 'undefined' && UA.bat) ? '#4FEBD6' : '#e6c8ff'; }
 function sdVe(x, ten, cx, cy, w, h, rot) {
   const im = sdIm(ten); if (!im) return false;
   h = h || w * im.height / im.width;
@@ -761,12 +764,12 @@ SD.veLop = function (x) {
   if (ks.mana) {
     const mx = 384, my = SD_Y0 + 20;
     sdVe(x, 'ui_gia', mx, my, 88, 34);
-    sdVe(x, 'ui_mana', mx - 28, my, 22);
+    sdVe(x, SD_MANA(), mx - 28, my, 22);
     sdChu(x, String(Math.round(B.mana)), mx + 8, my + 1, '#f1e6ff', 15);
     this.soMana = this.soMana.filter(o => now - o.t0 < 900);
     for (const o of this.soMana) {
       const u = VX.eo((now - o.t0) / 900), px = o.x + (mx - 10 - o.x) * u, py = o.y + (my - o.y) * u - Math.sin(u * Math.PI) * 30;
-      x.globalAlpha = 1 - Math.max(0, u - 0.8) * 5; sdVe(x, 'ui_mana', px - 18, py, 14); sdChu(x, '+' + o.n, px + 2, py, '#e6c8ff', 14); x.globalAlpha = 1;
+      x.globalAlpha = 1 - Math.max(0, u - 0.8) * 5; sdVe(x, SD_MANA(), px - 18, py, 14); sdChu(x, '+' + o.n, px + 2, py, SD_MANA_CHU(), 14); x.globalAlpha = 1;
     }
   }
   // 13) hồi chiêu chỉ huy (Cooldown Horn): ảnh ui_gia + chân dung + số giây
@@ -794,7 +797,7 @@ SD.veNutMV = function (x, B, now) {
   x.save(); x.beginPath(); x.arc(cx, cy, 21 * nh, 0, Math.PI * 2); x.clip(); sdVe(x, d.anh, cx, cy + 2, 46 * nh); x.restore(); // vetay-ok: mask — mặt nạ cắt/mờ dần ảnh PNG
   sdVe(x, 'ui_nut_trieu', cx, cy, 56 * nh);
   const cd = B.mv.cd, chu = cd > 0 ? Math.ceil(cd) + 's' : d.gia + '';
-  if (cd > 0) sdChu(x, chu, cx, cy + 36, '#cfe8ff', 12); else { sdVe(x, 'ui_mana', cx - 13, cy + 36, 13); sdChu(x, String(B.mv.gia), cx + 5, cy + 36, '#e6c8ff', 12); }
+  if (cd > 0) sdChu(x, chu, cx, cy + 36, '#cfe8ff', 12); else { sdVe(x, SD_MANA(), cx - 13, cy + 36, 13); sdChu(x, String(B.mv.gia), cx + 5, cy + 36, SD_MANA_CHU(), 12); }
   if (B.cuong > 0) sdChu(x, 'Rage ' + Math.ceil(B.cuong) + 's', cx, cy - 36, '#ff8a6a', 12);
   if (B.khien > 0) sdChu(x, 'Shield ' + Math.ceil(B.khien) + 's', cx, cy - 36, '#bfe8ff', 12);
   if (this.t > tc - 0.9 && this.t < tc + 0.5) {

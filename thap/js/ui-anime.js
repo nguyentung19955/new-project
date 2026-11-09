@@ -67,7 +67,8 @@ const UA = {
       const u = im.getAttribute('src') || im.getAttribute('data-tm-src'); if (!u) continue;
       const m = /assets\/([a-z0-9_]+)\.(?:png|webp)/.exec(u); if (!m || !this.DOI[m[1]]) continue;
       if (im.closest('#duoi, #top, #bo-the, #the-mv, #mana-hop')) continue; // HUD trận: phiên hud-anime lo
-      const moi = this.a(this.DOI[m[1]]);
+      // tiêu đề nhóm HỌ (ui.js .nh-i) dùng ngọc tím làm hoạ tiết, không phải MANA → icon bộ sưu tập
+      const moi = this.a(m[1] === 'h2_ngoc' && im.classList.contains('nh-i') ? 'ua_ic_bst' : this.DOI[m[1]]);
       if (!im.dataset.uaCu) im.dataset.uaCu = u;
       if (im.hasAttribute('src')) im.src = moi; else im.setAttribute('data-tm-src', moi);
     }
@@ -93,13 +94,40 @@ const UA = {
     const cap = document.getElementById('tt-cap');
     if (cap && !cap.querySelector('.ua-xp')) cap.insertAdjacentHTML('afterbegin', '<img class="ua-xp" src="' + this.a('ua_ts_xp') + '" alt="" draggable="false">');
   },
+  // ---- lưới bộ bài / bộ sưu tập: tiêu đề nhóm bậc ("EPIC · Unlocks at Pilot Level 3") + nhãn đếm "PLAYABLE n · TOTAL m" ----
+  nhom() {
+    if (!this.bat) return;
+    document.querySelectorAll('#chon-luoi > .nhom').forEach(h => {
+      let l = h.nextElementSibling; while (l && !l.classList.contains('luoi')) l = l.nextElementSibling;
+      const c = l && l.querySelector('.c[data-id]'); if (!c) return;
+      const b = c.dataset.otb || (typeof THEBAI !== 'undefined' ? THEBAI.bac(c.dataset.id) : '');
+      if (h.dataset.uab !== b) h.dataset.uab = b;
+      const k = !!l.querySelector('.c.tt-khoa'); // nhóm còn ụ khoá theo cấp phi công
+      let e = h.querySelector(':scope > em.ua-mo');
+      const chu = k && typeof TT !== 'undefined' && TT.dk ? 'Unlocks at ' + TT.dk(b) : '';
+      if (!chu) { if (e) e.remove(); h.classList.remove('ua-khoa'); return; }
+      if (!e) { e = document.createElement('em'); e.className = 'ua-mo'; h.appendChild(e); }
+      if (e._c !== chu) { e._c = chu; e.textContent = chu; }
+      h.classList.add('ua-khoa');
+    });
+  },
+  dem() {
+    if (!this.bat) return;
+    const l = document.getElementById('chon-luoi'), nh = document.getElementById('dkd-nhan'); if (!l || !nh) return;
+    let tong = 0; for (const r of (typeof G !== 'undefined' && G.roster) || []) if (SKILLS[r.id]) tong++;
+    const n = [...l.querySelectorAll('.c[data-id]')].filter(c => !c.hidden && c.style.display !== 'none' && !c.classList.contains('khoa')).length;
+    const h = '<b>PLAYABLE</b> <span>' + n + '</span> <i>·</i> <b>TOTAL</b> <span>' + tong + '</span>';
+    if (nh.dataset.ua !== n + '/' + tong || !nh.querySelector('i')) { nh.dataset.ua = n + '/' + tong; nh.innerHTML = h; }
+  },
   boc() {
+    if (typeof DKD !== 'undefined' && !DKD._ua) { DKD._ua = true; const g = DKD.dem.bind(DKD); DKD.dem = function () { const r = g(); try { UA.dem(); } catch (e) { } return r; }; }
+    if (typeof TTUI !== 'undefined' && !TTUI._ua) { TTUI._ua = true; const g = TTUI.capLuoi.bind(TTUI); TTUI.capLuoi = function () { const r = g(); try { UA.nhom(); UA.dem(); } catch (e) { } return r; }; }
     if (typeof HM !== 'undefined' && !HM._ua) {
       HM._ua = true;
       const g = HM.veHome.bind(HM);
       HM.veHome = function () { const r = g(); UA.veHome(); return r; };
     }
-    this.veHome();
+    this.veHome(); this.nhom(); this.dem();
   },
 };
 UA.batDau();
