@@ -1050,3 +1050,4 @@ Tiền tố: *"Same style as attached game screenshot, chunky sci-fi industrial 
 | raw | cỡ / lưới | prompt ngắn (nền magenta #FF00FF đặc, same style as attached, no text) | thay cho (cỡ CSS lớn nhất) |
 |---|---|---|---|
 | raw_tt_khoa | 1024×512, 1 hàng × 2 (ô 512) | 1 "Chunky sci-fi padlock icon, gunmetal body with brass shackle and a small glowing amber keyhole, thick dark outline, front view" · 2 same padlock opened (shackle lifted), small cyan glow | `TTA.khoa` = '' (thẻ ụ khoá trên lưới bộ bài, 24×24 → cắt 72×72; ô 2 cho thông báo mở khoá 22×22) |
+- (09/11, khoá tính năng theo cấp) `raw_tt_khoa` ô 1 cũng dùng cho nhãn khoá trên nút SHOP/SPIN ở HOME, hàng GAME MODE, nút rương / lò rèn khoá (`TTUI.tnNhan`, 20×20 CSS → cắt 60×60; chung tệp 72×72 là đủ). Chưa có ảnh → chỉ chữ "LV n".

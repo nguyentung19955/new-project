@@ -9,6 +9,11 @@
 //    Cấp đã có lúc chuyển không phát thưởng lại (không cộng tiền ồ ạt).
 //  · HÀNH TRÌNH 7 NGÀY (mục tiêu = KẾT QUẢ, không nói cách; không có Đỏ) · NHIỆM VỤ TUẦN (mở cấp 8, 5 việc × 20 ngọc + đủ 5 = 40 ngọc + 1 bản Vàng).
 //  · Lưu: turret_kt.cp (khoá mới, giá trị mặc định, không xoá gì); gộp hồ sơ Firebase: XP/cấp/đếm lấy lớn nhất, cờ đã nhận OR.
+//  · KHOÁ TÍNH NĂNG theo cấp (THIET-KE §2.2): CO-OP sau hướng dẫn · PVP / nhiệm vụ ngày / cửa hàng / vòng quay cấp 2 · Rương Vàng cấp 3 ·
+//    ONLINE cấp 4 · nhiệm vụ tuần cấp 8 · Lò rèn (Sử thi→Vàng) + Ấn Vàng cấp 10 · Rương Thần thoại + Lò rèn Đỏ theo điều kiện Đỏ (cấp 12 + kỷ lục 30).
+//    Nút khoá: tối + nhãn "LV n" (điều kiện), chạm = 1 dòng điều kiện mở (không hướng dẫn cách chơi); mở được → báo trong bảng lên cấp.
+//    Người chơi cũ (cp.cu > 0): giữ ONLINE (kể cả đang trong phòng / nhận lời mời) + Lò rèn nếu đã từng rèn + Rương Thần thoại nếu đã từng mở rương.
+//    Lối vào khác cũng theo khoá: link mời phòng (?room=) khi chưa đủ cấp → báo điều kiện, không vào phòng; phòng đang chơi dở / sảnh tải lại → không chặn.
 //  Hình: chỉ ảnh có sẵn (khung hàng nhiệm vụ, thanh tai_day, khung thẻ) — ảnh ổ khoá chờ gen (TTA.khoa = '' → chỉ chữ; HINH-VE-CODE-AUDIT.md).
 'use strict';
 
@@ -34,6 +39,12 @@ const TTC = {
     { r: { chon: { bac: 'vang', n: 2 } }, v: [['wave', 30, 'Reach wave 30'], ['trumKhac', 4, 'Defeat 4 different bosses'], ['nangV', 1, 'Level up a Legendary card']] },
   ],
   // NHIỆM VỤ TUẦN (reset thứ Hai, mở cấp 8): mỗi việc 20 ngọc, đủ 5 = 40 ngọc + 1 bản Vàng ngẫu nhiên → +140 ngọc/tuần
+  // KHOÁ TÍNH NĂNG: cap = cấp phi công · hd = xong hướng dẫn · do = điều kiện Đỏ (cấp 12 + kỷ lục 30). ten: tên trong bảng mở khoá.
+  tn: {
+    coop: { hd: 1, ten: 'CO-OP' }, pvp: { cap: 2, ten: 'PVP' }, nvd: { cap: 2, ten: 'DAILY QUESTS' }, shop: { cap: 2, ten: 'SHOP' }, vq: { cap: 2, ten: 'LUCKY SPIN' },
+    ruVang: { cap: 3, ten: 'GOLD CHEST' }, online: { cap: 4, ten: 'ONLINE' }, nvt: { cap: 8, ten: 'WEEKLY QUESTS' },
+    ren: { cap: 10, ten: 'SHARD FORGE' }, an: { cap: 10, ten: 'LEGENDARY SEAL' }, ruThan: { do: 1, ten: 'MYTHIC CHEST' }, renDo: { do: 1, ten: 'MYTHIC FORGE' },
+  },
   nvtCap: 8, nvtR: { ngoc: 20 }, nvtBonus: { ngoc: 40, the: { bac: 'vang', n: 1 } },
   nvt: [
     { id: 'tran', can: 15, ten: 'Play 15 battles' },
@@ -84,12 +95,15 @@ const TT = {
   st() {
     const s = KT.doc(); let t = s.cp;
     if (!t || typeof t !== 'object' || Array.isArray(t)) { t = s.cp = this.taoMoi(s); try { localStorage.setItem(KT.KEY, JSON.stringify(s)); } catch (e) { } }
+    const thieu = (k) => !t[k] || typeof t[k] !== 'object' || Array.isArray(t[k]), thieuG = thieu('giuTn'), thieuB = thieu('tnBao');
     t.xp = Math.max(0, Math.floor(+t.xp || 0)); t.nhanCap = Math.max(1, t.nhanCap | 0); t.dv = Math.max(0, t.dv | 0); t.qv = t.qv ? 1 : 0; t.cu = t.cu | 0;
-    for (const k of ['giu', 'daMo', 'dem', 'trk', 'nvt']) if (!t[k] || typeof t[k] !== 'object' || Array.isArray(t[k])) t[k] = {};
+    for (const k of ['giu', 'daMo', 'dem', 'trk', 'nvt', 'giuTn', 'tnBao']) if (!t[k] || typeof t[k] !== 'object' || Array.isArray(t[k])) t[k] = {};
     if (!Array.isArray(t.bao)) t.bao = [];
     if (!t.hj || typeof t.hj !== 'object') t.hj = { ngay0: KT.soNgay(KT.ngay()), nhan: {}, chon: 1 };
     if (!t.hj.nhan || typeof t.hj.nhan !== 'object') t.hj.nhan = {};
     if (!(t.hj.ngay0 > 0)) t.hj.ngay0 = KT.soNgay(KT.ngay());
+    if (thieuG) t.giuTn = this.giuTnTinh(t);
+    if (thieuB) for (const k in TTC.tn) if (this.tnMo(k)) t.tnBao[k] = 1; // tính năng đang mở lúc có khoá mới: không báo lại
     return t;
   },
 
@@ -110,18 +124,39 @@ const TT = {
     try { return fn(); } finally { G.roster = goc; }
   },
 
+  // ---------- khoá tính năng ----------
+  // người chơi cũ (đã quy đổi cấp): giữ thứ có thể đang dùng — ONLINE luôn giữ; Lò rèn nếu đã rèn; Rương Thần thoại nếu đã mở rương
+  giuTnTinh(t) {
+    if (!(t.cu > 0)) return {};
+    const g = { online: 1 }, s = KT.doc();
+    if (s.mh && (s.mh.renN | 0) > 0) { g.ren = 1; g.renDo = 1; g.an = 1; }
+    if (s.ru && ((s.ru.mo | 0) > 0 || (s.tk.ruong | 0) > 0)) g.ruThan = 1;
+    return g;
+  },
+  hdXong() { try { return typeof HD === 'undefined' || HD.moKhoa(); } catch (e) { return true; } },
+  tnMo(k) {
+    const c = TTC.tn[k]; if (!c) return true;
+    if (this.st().giuTn[k]) return true;
+    if (c.hd) return this.hdXong() || this.cap() >= 2;
+    if (c.do) return this.bacMo('do');
+    return this.cap() >= c.cap;
+  },
+  tnDk(k) { const c = TTC.tn[k] || {}; return c.do ? this.dk('do') : 'Pilot Level ' + c.cap; },
+  tnChu(k) { const c = TTC.tn[k] || {}; return c.hd ? 'Unlocks after the tutorial' : 'Unlocks at ' + this.tnDk(k); },
+
   // ---------- phát thưởng ----------
   gom(ra, x) { if (!x) return ra; ra.vang += x.vang || 0; ra.ngoc += x.ngoc || 0; ra.the.push(...(x.the || [])); if (x.ruong) ra.the.push(...x.ruong.the.map(c => ({ id: c.id, n: c.n }))); return ra; },
   phat(ds, khoa, nguon) { const ra = { vang: 0, ngoc: 0, the: [] }; ds.forEach((r, i) => this.gom(ra, KT.cho(r, khoa + ':' + i, nguon || 'level'))); return ra; },
   // lên cấp (gọi sau khi cộng XP): phát thưởng các cấp mới, mở bậc mới, xếp thông báo
   xetCap() {
-    const t = this.st(), L = this.cap(), bao = { cap: [], ra: { vang: 0, ngoc: 0, the: [] }, mo: [], qv: 0 };
+    const t = this.st(), L = this.cap(), bao = { cap: [], ra: { vang: 0, ngoc: 0, the: [] }, mo: [], tn: [], qv: 0 };
     for (let l = t.nhanCap + 1; l <= L; l++) { this.gom(bao.ra, this.phat(TTC.thuongCap(l), 'cap' + l)); bao.cap.push(l); }
     if (L > t.nhanCap) t.nhanCap = L;
     if (L >= TTC.capMax) { const co = Math.floor((t.xp - this.xpTong(TTC.capMax)) / TTC.danhVong.xp); while (t.dv < co) { t.dv++; this.gom(bao.ra, this.phat(TTC.danhVong.r, 'dv' + t.dv)); bao.dv = t.dv; } }
     for (const b of ['tim', 'vang', 'do']) if (!t.daMo[b] && this.bacMo(b)) { t.daMo[b] = 1; bao.mo.push(b); }
+    for (const k in TTC.tn) if (!t.tnBao[k] && this.tnMo(k)) { t.tnBao[k] = 1; if (!TTC.tn[k].hd) bao.tn.push(k); } // CO-OP mở theo hướng dẫn: không báo
     if (bao.cap.includes(TTC.quaVang.cap) && !t.qv) bao.qv = 1;
-    if (bao.cap.length || bao.mo.length || bao.dv) { t.bao.push(bao); if (t.bao.length > 6) t.bao.splice(0, t.bao.length - 6); }
+    if (bao.cap.length || bao.mo.length || bao.tn.length || bao.dv) { t.bao.push(bao); if (t.bao.length > 6) t.bao.splice(0, t.bao.length - 6); }
     return bao;
   },
   // chọn 1 trong 3 (tất định theo hạt giống): ưu tiên thẻ chưa max
@@ -197,7 +232,7 @@ const TT = {
       if (!y || typeof y !== 'object') continue;
       t.xp = Math.max(t.xp, Math.floor(+y.xp || 0)); t.nhanCap = Math.max(t.nhanCap, y.nhanCap | 0); t.dv = Math.max(t.dv, y.dv | 0);
       t.qv = t.qv || (y.qv ? 1 : 0); t.cu = Math.max(t.cu, y.cu | 0);
-      for (const k of ['giu', 'daMo', 'trk']) for (const i in (y[k] || {})) if (y[k][i]) t[k][i] = 1;
+      for (const k of ['giu', 'daMo', 'trk', 'giuTn', 'tnBao']) for (const i in (y[k] || {})) if (y[k][i]) t[k][i] = 1;
       for (const i in (y.dem || {})) t.dem[i] = Math.max(t.dem[i] | 0, y.dem[i] | 0);
       if (y.hj) { if (y.hj.ngay0 > 0) t.hj.ngay0 = Math.min(t.hj.ngay0, y.hj.ngay0); for (const i in (y.hj.nhan || {})) if (y.hj.nhan[i]) t.hj.nhan[i] = 1; }
       if (y.nvt && y.nvt.tuan === KT.tuan()) { const e = this.nvtSt(); for (const i in (y.nvt.tien || {})) e.tien[i] = Math.max(e.tien[i] | 0, y.nvt.tien[i] | 0); for (const i in (y.nvt.nhan || {})) if (y.nvt.nhan[i]) e.nhan[i] = 1; e.bonus = e.bonus || (y.nvt.bonus ? 1 : 0); }
@@ -246,11 +281,12 @@ const TTUI = {
   bao() {
     const t = TT.st(); if (!t.bao.length) return false;
     const ds = t.bao.splice(0); KT.luu(true);
-    const ra = { vang: 0, ngoc: 0, the: [] }, cap = [], mo = []; let qv = 0, dv = 0;
-    for (const b of ds) { TT.gom(ra, b.ra); cap.push(...(b.cap || [])); mo.push(...(b.mo || [])); if (b.qv) qv = 1; if (b.dv) dv = b.dv; }
-    let h = '<b class="kt-phu-t">' + (cap.length ? 'PILOT LEVEL ' + Math.max(...cap) : 'PRESTIGE ' + dv) + '</b>';
+    const ra = { vang: 0, ngoc: 0, the: [] }, cap = [], mo = [], tn = []; let qv = 0, dv = 0;
+    for (const b of ds) { TT.gom(ra, b.ra); cap.push(...(b.cap || [])); mo.push(...(b.mo || [])); tn.push(...(b.tn || [])); if (b.qv) qv = 1; if (b.dv) dv = b.dv; }
+    let h = '<b class="kt-phu-t">' + (cap.length ? 'PILOT LEVEL ' + Math.max(...cap) : dv ? 'PRESTIGE ' + dv : 'UNLOCKED') + '</b>';
     if (ra.vang || ra.ngoc || ra.the.length) h += '<div class="kt-nhan">' + this.dsThuong(ra) + '</div>';
     if (mo.length) h += '<p class="tt-mo"><small>NEW TURRETS UNLOCKED</small>' + mo.map(b => '<span class="tt-mo-b b-' + b + '"><img src="' + KTUI.a('ngoc_' + b) + '" alt="">' + this.TIER(b) + '</span>').join('') + '</p>';
+    if (tn.length) h += '<p class="tt-mo tt-mo-tn"><small>NEW FEATURES UNLOCKED</small>' + tn.map(k => '<span class="tt-mo-b">' + TTC.tn[k].ten + '</span>').join('') + '</p>';
     if (qv && !t.qv) h += '<p class="kt-chu">Level ' + TTC.quaVang.cap + ' gift: pick 1 of 3 Legendary cards.</p><button class="hm-nut2 vang kt-ok" data-act="tt-qvmo"><b>PICK</b></button>';
     try { SND.nang(5); } catch (e) { }
     this.phu(h + this.nutOk(), 'kt-nh tt-bao');
@@ -310,6 +346,34 @@ const TTUI = {
     return c;
   },
   capLuoi() { document.querySelectorAll('#chon-luoi .c[data-id]').forEach(c => this.ganKhoa(c, c.dataset.id)); },
+
+  // ---------- khoá tính năng: nhãn điều kiện + thông báo 1 dòng ----------
+  tnNhan(k) { const c = TTC.tn[k] || {}; return (TTA.khoa ? '<img class="tt-khoa-i" src="' + KTUI.a(TTA.khoa) + '" alt="" draggable="false">' : '') + (c.hd ? '<b>TUTORIAL</b>' : '<b>LV ' + (c.do ? TTC.moBac.do : c.cap) + '</b>' + (c.do ? '<small>WAVE ' + TTC.doWave + '</small>' : '')); },
+  toast(s) { try { SND.nut(); } catch (e) { } try { UI.nhac(s); const c = document.getElementById('chon-goi-nhac'); if (c) c.style.zIndex = 70; } catch (e) { } },
+  // nút thay cho nút mua/rèn khi khoá (kinhte-ui.js / manh.js gọi KTUI.khoaNut): '' = đã mở
+  khoaNut(id, cls) {
+    const k = { 'ru:vang': 'ruVang', 'ru:than': 'ruThan', 'ren:tv': 'ren', 'ren:vd': 'renDo', 'ren:an': 'an' }[id];
+    if (!k || TT.tnMo(k)) return '';
+    return '<button class="' + (cls || 'kt-slot') + ' tt-khoa-nut" data-act="tt-khoa" data-k="' + k + '" aria-label="Locked">' + this.tnNhan(k) + '</button>';
+  },
+  // nút có sẵn (HOME, thanh dưới cửa hàng, bảng chế độ): tối + nhãn điều kiện
+  ganTn(el, k) {
+    if (!el) return;
+    const kh = !TT.tnMo(k); el.classList.toggle('tt-khoa-tn', kh);
+    let n = el.querySelector(':scope > .tt-khoa-b');
+    if (!kh) { if (n) n.remove(); return; }
+    const h = this.tnNhan(k);
+    if (!n) { n = document.createElement('span'); n.className = 'tt-khoa-b'; el.appendChild(n); }
+    if (n._h !== h) { n._h = h; n.innerHTML = h; }
+  },
+  capTn() {
+    document.querySelectorAll('#chon .kt-nut[data-tab], #kt .kt-tab button[data-tab]').forEach(b => { if (TTC.tn[b.dataset.tab]) this.ganTn(b, b.dataset.tab); });
+    document.querySelectorAll('#hm-tam .hm-chec[data-che]').forEach(b => { if (TTC.tn[b.dataset.che]) this.ganTn(b, b.dataset.che); });
+  },
+  // link mời phòng ONLINE khi chưa đủ cấp: báo điều kiện ở HOME (không vào phòng)
+  baoMoi() {
+    this.phu('<b class="kt-phu-t">ONLINE</b><p class="kt-chu">' + TT.tnChu('online') + '</p><button class="hm-nut2 vang kt-ok" data-act="tt-moi-ok"><b>OK</b></button>', 'kt-tl tt-moi');
+  },
 };
 
 (function () {
@@ -381,6 +445,77 @@ const TTUI = {
     };
   }
 
+  // ---- KHOÁ TÍNH NĂNG (THIET-KE §2.2): luật (chặn cả lời gọi thẳng) + giao diện ----
+  const tnK = (k) => !TT.tnMo(k);
+  const chan = (k) => { TTUI.toast(TT.tnChu(k)); return null; };
+  { const g = KT.spMua; KT.spMua = function () { return tnK('shop') ? chan('shop') : g.apply(this, arguments); }; }
+  if (KT.doi) { const g = KT.doi; KT.doi = function () { return tnK('shop') ? chan('shop') : g.apply(this, arguments); }; }
+  { const g = KT.moRuong; KT.moRuong = function (k, mienPhi) { const tn = { thuong: 'shop', vang: 'ruVang', than: 'ruThan' }[k]; if (!mienPhi && tn && tnK(tn)) return chan(tn); return g.apply(this, arguments); }; } // rương thưởng (mienPhi) không chặn
+  { const g = KT.vqQuay; KT.vqQuay = function () { return tnK('vq') ? chan('vq') : g.apply(this, arguments); }; }
+  for (const f of ['nvNhan', 'nvBonus', 'nvDoi']) if (KT[f]) { const g = KT[f]; KT[f] = function () { return tnK('nvd') ? chan('nvd') : g.apply(this, arguments); }; }
+  if (typeof MH !== 'undefined') {
+    { const g = MH.ren; MH.ren = function (k) { const tn = k === 'vd' ? 'renDo' : 'ren'; return tnK(tn) ? chan(tn) : g.apply(this, arguments); }; }
+    { const g = MH.an; MH.an = function () { return tnK('an') ? chan('an') : g.apply(this, arguments); }; }
+  }
+  { // chấm đỏ: tính năng khoá không báo có quà
+    const g = KT.coNhan;
+    KT.coNhan = function () {
+      const c = g.apply(this, arguments);
+      try {
+        if (tnK('shop')) c.shop = false; if (tnK('vq')) c.vq = false;
+        if (tnK('nvd') && c.nv) c.nv = !!(KT.dn().duoc || KT.tt().some(a => a.xong && !a.da) || (typeof MH !== 'undefined' && MH.coNhan()) || TT.coNhan());
+      } catch (e) { }
+      return c;
+    };
+  }
+  if (typeof KTUI !== 'undefined') {
+    KTUI.khoaNut = (id, cls) => { try { return TTUI.khoaNut(id, cls); } catch (e) { return ''; } };
+    const mt = KTUI.moTab;
+    KTUI.moTab = function (k) {
+      const tab = k && this.TAB[k] ? k : this.tab;
+      if (TTC.tn[tab] && tnK(tab)) { if (k) { TTUI.toast(TT.tnChu(tab)); return; } this.tab = 'nv'; }
+      const x = mt.apply(this, this.tab === 'nv' && !k ? ['nv'] : arguments); try { TTUI.capTn(); } catch (e) { } return x;
+    };
+    // tab NHIỆM VỤ: mục nhiệm vụ ngày khoá → chỉ tiêu đề + điều kiện
+    const vnv0 = KTUI.ve_nv;
+    KTUI.ve_nv = function () {
+      const h = vnv0.apply(this, arguments); if (!tnK('nvd')) return h;
+      const i = h.indexOf('<div class="kt-muc"><b>DAILY QUESTS'); if (i < 0) return h;
+      const j = h.indexOf('<div class="kt-muc">', i + 10);
+      return h.slice(0, i) + this.muc('DAILY QUESTS', 'UNLOCKS AT PILOT LEVEL ' + TTC.tn.nvd.cap) + (j < 0 ? '' : h.slice(j));
+    };
+  }
+  if (typeof HM !== 'undefined') {
+    const mc = HM.moChe; HM.moChe = function () { const x = mc.apply(this, arguments); try { TTUI.capTn(); } catch (e) { } return x; };
+    const cc = HM.chonChe; HM.chonChe = function (k) { if (TTC.tn[k] && tnK(k)) { TTUI.toast(TT.tnChu(k)); return; } return cc.apply(this, arguments); };
+    const ch = HM.choi; HM.choi = function () { if (TTC.tn[this.che] && tnK(this.che)) { TTUI.toast(TT.tnChu(this.che)); return; } return ch.apply(this, arguments); };
+  }
+  if (typeof UI !== 'undefined') { // chế độ đã lưu mà đang khoá (vd. bộ cũ lưu CO-OP trước hướng dẫn) → SOLO
+    const ui = UI.init;
+    UI.init = async function () {
+      const r = await ui.apply(this, arguments);
+      try { if (typeof HM !== 'undefined' && TTC.tn[HM.che] && tnK(HM.che) && !G.debug.mode) { HM.che = 'solo'; if (UI.che !== 'solo' && TTC.tn[UI.che] && tnK(UI.che)) UI.che = 'solo'; HM.ve(); } } catch (e) { }
+      return r;
+    };
+  }
+  // nút chế độ cũ (.che) — pha capture trước ui.js
+  window.addEventListener('click', (e) => {
+    const el = e.target.closest && e.target.closest('[data-act="che"]'); if (!el) return;
+    const k = el.dataset.che; if (TTC.tn[k] && tnK(k)) { e.stopImmediatePropagation(); e.preventDefault(); TTUI.toast(TT.tnChu(k)); }
+  }, true);
+  // ONLINE: bảng tạo/vào phòng + link mời theo khoá; đang ở trong phòng (sảnh / trận dở / vào lại) thì không chặn
+  if (typeof ONL !== 'undefined') {
+    const trong = () => !!(ONL.code || ONL.dangTran);
+    for (const f of ['moBang', 'taoPhong', 'vaoPhong']) { const g = ONL[f]; if (g) ONL[f] = function () { if (!trong() && tnK('online')) return chan('online'); return g.apply(this, arguments); }; }
+    const vm = ONL.vaoTuMoi;
+    ONL.vaoTuMoi = function (c) {
+      if (!tnK('online')) return vm.apply(this, arguments);
+      this._moi = null; try { this.boMaKhoiURL(); } catch (e) { }
+      const tai = typeof TAI !== 'undefined' && TAI.bootP ? TAI.bootP : Promise.resolve();
+      tai.then(() => setTimeout(() => { try { TTUI.baoMoi(); } catch (e) { } }, 200));
+    };
+  }
+
   // ---- giao diện: HOME, tab NHIỆM VỤ, màn kết quả ----
   if (typeof KTUI !== 'undefined') {
     const vnv = KTUI.ve_nv;
@@ -404,7 +539,7 @@ const TTUI = {
       return x;
     };
     const cn = KTUI.capNhat;
-    KTUI.capNhat = function () { const x = cn.apply(this, arguments); try { TTUI.veHome(); } catch (e) { } return x; };
+    KTUI.capNhat = function () { const x = cn.apply(this, arguments); try { TTUI.veHome(); TTUI.capTn(); } catch (e) { } return x; };
   }
   document.addEventListener('click', (e) => {
     const b = e.target.closest && e.target.closest('[data-act^="tt-"]'); if (!b || b.disabled) return;
@@ -412,6 +547,8 @@ const TTUI = {
     e.stopPropagation();
     const veLai = () => { try { if (KTUI.mo) KTUI.ve(); KTUI.capNhat(); TBUI.capLuoi(); } catch (er) { } };
     if (a === 'tt-dong') { TTUI.dong(); veLai(); }
+    else if (a === 'tt-khoa') TTUI.toast(TT.tnChu(b.dataset.k));
+    else if (a === 'tt-moi-ok') { nut(); TTUI.dong(); veLai(); try { if (!TT.hdXong() && !(G.ban && G.ban.length)) HD.batDau(); } catch (er) { } }
     else if (a === 'tt-hjd') { nut(); TTUI.hjChon = +b.dataset.id; veLai(); }
     else if (a === 'tt-hjb') {
       const d = TT.hjDs()[+b.dataset.id - 1]; if (!d) return;

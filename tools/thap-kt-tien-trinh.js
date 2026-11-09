@@ -5,6 +5,8 @@
 //  ✓ hành trình 7 ngày: mở theo ngày, nhận 1 lần, chọn 1 trong 3 chỉ nhận thẻ hợp lệ, không có Đỏ
 //  ✓ nhiệm vụ ngày lọc theo kỷ lục (thay "Reach wave 30" của người chưa đạt) + đổi 1 lần/ngày · nhiệm vụ tuần (cấp 8, 140 ngọc/tuần)
 //  ✓ túi thưởng trần 14 (wave 68) · Đỏ vào thẻ trong bộ ~37% · mốc Đỏ sự kiện 3 600 · Ấn Vàng 6:1 + 20 000 vàng, 1/tuần · bộ đếm bảo hiểm
+//  ✓ khoá tính năng (§2.2): người mới khoá CO-OP/PVP/cửa hàng/vòng quay/ONLINE/lò rèn · xong hướng dẫn mở CO-OP · cấp 2/3/4/10/12+w30 mở đúng
+//    + bảng mở khoá · link mời ONLINE khi chưa cấp 4 → báo điều kiện, không vào phòng · người cũ giữ ONLINE / lò rèn đã dùng
 //  ✓ gộp hồ sơ Firebase (XP lớn nhất, cờ OR, bản mạng cũ chưa có cấp → quy đổi) · không lỗi trang · ảnh 390×844
 // Chạy: python3 -m http.server 8765 (gốc repo) · NODE_PATH=/opt/npm-tools/node_modules node tools/thap-kt-tien-trinh.js [BASE]  (ảnh: SHOTS=… mặc định /tmp/thap-tien-trinh)
 'use strict';
@@ -21,7 +23,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   const p = await ctx.newPage(); const errs = [];
   p.on('pageerror', e => errs.push(e.message));
   const vao = async (ls) => {
-    await p.goto(BASE + '?notut=1', { waitUntil: 'commit' });
+    await p.goto(new URL('/', BASE).href, { waitUntil: 'load' }); // xoá lưu ở trang KHÔNG chạy game (trang game cũ ghi lại bản lưu khi rời trang)
     await p.evaluate((ls) => { localStorage.clear(); for (const k in ls) localStorage.setItem(k, typeof ls[k] === 'string' ? ls[k] : JSON.stringify(ls[k])); }, ls || {});
     await p.goto(BASE + '?notut=1', { waitUntil: 'load' });
     await p.waitForFunction(() => typeof TAI !== 'undefined' && !TAI.cho && typeof TT !== 'undefined' && G.roster && G.roster.length, null, { timeout: 60000 });
@@ -200,6 +202,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   ok(r.skDo === '3600' && /1700:(?!DO)/.test(r.sk) && /2300:/.test(r.sk), 'sự kiện tuần: mốc Đỏ 1 700 → 3 600, thêm mốc 2 300', r.sk);
   r = await p.evaluate(() => {
     const o = {}, vd = KT.dsBac('vang'), d = THEBAI.doc();
+    o.khoa9 = TT.cap() < 10 && MH.an(vd[5]) === null; TT.st().xp = TT.xpTong(10); TT.xetCap(); // Ấn Vàng mở ở cấp 10
     for (const id of vd) d.c[id] = { lv: THE.lvDau.vang, n: 0 };
     d.c[vd[0]] = { lv: 17, n: 2 }; // thẻ MAX: lấy trước
     d.c[vd[1]] = { lv: 9, n: 3 }; d.c[vd[2]] = { lv: 9, n: 3 };
@@ -213,7 +216,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     d.c[vd[3]] = { lv: 9, n: 0 }; d.c[vd[4]] = { lv: 9, n: 5 };
     return o;
   });
-  ok(r.thieuVang && r.duoc && r.ra && r.tuan2, 'Ấn Vàng: 6 bản Vàng thừa (thẻ MAX → ngoài bộ → trong bộ) + 20 000 vàng → 1 bản tự chọn, 1 lần/tuần', JSON.stringify(r));
+  ok(r.khoa9 && r.thieuVang && r.duoc && r.ra && r.tuan2, 'Ấn Vàng (khoá dưới cấp 10): 6 bản Vàng thừa (thẻ MAX → ngoài bộ → trong bộ) + 20 000 vàng → 1 bản tự chọn, 1 lần/tuần', JSON.stringify(r));
   r = await p.evaluate(async () => { const s = KT.doc(); s.ru.pv = 3; s.ru.pd = 17; KTUI.moTab('shop'); await new Promise(r => setTimeout(r, 200)); const c = document.querySelector('#kt .kt-rc-vang small'); const e = [...document.querySelectorAll('#kt .kt-muc')].find(x => /CHESTS/.test(x.textContent)); e && e.scrollIntoView(); return c && c.textContent; });
   ok(/Legendary in ≤ 7/.test(r) && /Mythic in ≤ 103/.test(r), 'Rương Vàng hiện bộ đếm bảo hiểm Vàng + Đỏ', r);
   await chup('shop-baohiem-an');
@@ -246,6 +249,90 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   await chup('home-cap6-chon');
   r = await p.evaluate(() => { const b = document.querySelector('#tt-phu [data-act="tt-qvc"]'); const id = b && b.dataset.id, n0 = id && THEBAI.the(id).n; b && b.click(); return { id, ok: !!id && THEBAI.the(id).n === n0 + 1 && TT.st().qv === 1 }; });
   ok(r.ok, 'chọn quà cấp 6 → +1 bản thẻ Vàng đã chọn', JSON.stringify(r));
+
+  // ---- 11. khoá tính năng theo cấp (THIET-KE §2.2) ----
+  await vao({});
+  r = await p.evaluate(async () => {
+    const w = (ms) => new Promise(r => setTimeout(r, ms)), o = {}, ks = Object.keys(TTC.tn);
+    o.mo = ks.filter(k => TT.tnMo(k)).join();
+    HM.chonChe('coop'); o.cheCoop = HM.che; HM.chonChe('online'); o.cheOnl = HM.che;
+    KTUI.moTab('shop'); o.shopMo = KTUI.mo; KTUI.moTab('vq'); o.vqMo = KTUI.mo;
+    o.quay = KT.vqQuay(false) === null; o.ru = KT.moRuong('thuong') === null; o.ruFree = !!KT.moRuong('thuong', true); o.sp = KT.spMua(0) === null;
+    o.onl = (ONL.moBang(), !document.getElementById('onl-bang') || document.getElementById('onl-bang').hidden);
+    const nut = document.querySelector('#chon .kt-nut[data-tab="shop"]'); o.nut = !!nut && nut.classList.contains('tt-khoa-tn') && /LV 2/.test(nut.textContent);
+    document.querySelector('[data-act=hm-che]').click(); await w(400);
+    o.che = [...document.querySelectorAll('#hm-tam .hm-chec.tt-khoa-tn')].map(b => b.dataset.che).join();
+    document.querySelector('#hm-tam .hm-chec[data-che="online"]').click(); await w(100);
+    o.toast = (document.getElementById('chon-goi-nhac') || {}).textContent; o.che2 = HM.che;
+    return o;
+  });
+  ok(r.mo === '' && r.cheCoop === 'solo' && r.cheOnl === 'solo' && !r.shopMo && !r.vqMo && r.quay && r.ru && r.ruFree && r.sp && r.onl && r.nut && r.che === 'coop,pvp,online' && /Pilot Level 4/.test(r.toast) && r.che2 === 'solo',
+    'người mới (chưa xong hướng dẫn): khoá CO-OP/PVP/ONLINE/cửa hàng/vòng quay/rương (rương thưởng vẫn mở), nút tối + "LV 2", chạm → điều kiện', JSON.stringify(r));
+  await chup('khoa-1-che-moi');
+  await p.evaluate(() => HM.dong(true)); await chup('khoa-0-home-moi');
+  r = await p.evaluate(async () => {
+    const w = (ms) => new Promise(r => setTimeout(r, ms)), o = {}, t = TT.st(), mo = () => Object.keys(TTC.tn).filter(k => TT.tnMo(k)).join();
+    HD.st.xong = true; HD.luu(); o.hd = mo();
+    t.xp = TT.xpTong(2); const b2 = TT.xetCap(); o.c2 = mo(); o.bao2 = b2.tn.join();
+    HM.chonChe('pvp'); o.chePvp = HM.che; HM.chonChe('solo');
+    KTUI.moTab('shop'); await w(200); o.shopMo = KTUI.mo;
+    o.ruV = !!document.querySelector('#kt .kt-rc-vang.tt-khoa-h [data-act="tt-khoa"]') && !document.querySelector('#kt [data-act="kt-ru"][data-k="vang"]') && !!document.querySelector('#kt [data-act="kt-ru"][data-k="thuong"]');
+    o.ren = document.querySelectorAll('#kt .mh-ren.tt-khoa-h [data-act="tt-khoa"]').length;
+    o.ruVLogic = KT.moRuong('vang') === null;
+    t.xp = TT.xpTong(3); TT.xetCap(); o.c3 = TT.tnMo('ruVang'); KTUI.ve(); o.ruV3 = !!document.querySelector('#kt [data-act="kt-ru"][data-k="vang"]');
+    KTUI.dong();
+    return o;
+  });
+  ok(r.hd === 'coop' && r.c2 === 'coop,pvp,nvd,shop,vq' && r.bao2 === 'pvp,nvd,shop,vq' && r.chePvp === 'pvp' && r.shopMo && r.ruV && r.ren === 3 && r.ruVLogic && r.c3 && r.ruV3,
+    'xong hướng dẫn → CO-OP · cấp 2 → PVP/nhiệm vụ ngày/cửa hàng/vòng quay (báo mở khoá) · Rương Vàng cấp 3 · lò rèn còn khoá', JSON.stringify(r));
+  await p.evaluate(() => { const t = TT.st(); t.bao = []; t.xp = TT.xpTong(2); KT.luu(true); HM.ve(); KTUI.capNhat(); });
+  await chup('khoa-2-home-cap2');
+  await p.evaluate(async () => { KTUI.moTab('shop'); await new Promise(r => setTimeout(r, 200)); const e = [...document.querySelectorAll('#kt .kt-muc')].find(x => /CHESTS/.test(x.textContent)); e && e.scrollIntoView(); });
+  await chup('khoa-3-shop-cap2');
+  await p.evaluate(() => { const e = [...document.querySelectorAll('#kt .kt-muc')].find(x => /FORGE/.test(x.textContent)); e && e.scrollIntoView(); });
+  await chup('khoa-4-lorem-cap2');
+  await p.evaluate(() => KTUI.dong());
+  r = await p.evaluate(async () => {
+    const o = {}, t = TT.st();
+    t.xp = TT.xpTong(4); const b4 = TT.xetCap(); o.onl = TT.tnMo('online'); o.bao4 = b4.tn.join(); HM.chonChe('online'); o.che = HM.che; HM.chonChe('solo');
+    t.xp = TT.xpTong(10); const b10 = TT.xetCap(); o.bao10 = b10.tn.join(); o.ren = TT.tnMo('ren') && TT.tnMo('an') && !TT.tnMo('renDo') && !TT.tnMo('ruThan');
+    KTUI.moTab('shop'); await new Promise(r => setTimeout(r, 200));
+    o.renUi = document.querySelectorAll('#kt .mh-ren.tt-khoa-h').length === 1 && !!document.querySelector('#kt [data-act="kt-mhr"][data-id="tv"]') && !!document.querySelector('#kt [data-act="kt-mha"]') && !!document.querySelector('#kt .kt-rc-than.tt-khoa-h');
+    KT.doc().tk.wave = 30; t.xp = TT.xpTong(12); const b12 = TT.xetCap(); o.bao12 = b12.tn.join(); KTUI.ve(); o.do = TT.tnMo('renDo') && TT.tnMo('ruThan') && !document.querySelector('#kt .tt-khoa-h');
+    KTUI.dong(); t.bao = []; KT.doc().tk.wave = 0; t.xp = TT.xpTong(4); KT.luu(true); HM.ve(); KTUI.capNhat();
+    return o;
+  });
+  ok(r.onl && r.bao4 === 'online' && r.che === 'online' && r.bao10 === 'nvt,ren,an' && r.ren && r.renUi && r.bao12 === 'ruThan,renDo' && r.do,
+    'cấp 4 → ONLINE · cấp 10 → lò rèn + Ấn Vàng (Lò rèn Đỏ / Rương Thần thoại còn khoá) · cấp 12 + kỷ lục 30 → mở hết', JSON.stringify(r));
+  await chup('khoa-5-home-cap4');
+  await p.evaluate(async () => { const t = TT.st(); t.xp = TT.xpTong(10); KT.luu(true); KTUI.moTab('shop'); await new Promise(r => setTimeout(r, 200)); const e = [...document.querySelectorAll('#kt .kt-muc')].find(x => /FORGE/.test(x.textContent)); e && e.scrollIntoView(); });
+  await chup('khoa-6-lorem-cap10');
+  await p.evaluate(() => { const e = document.querySelector('#kt .kt-rc-than'); e && e.scrollIntoView({ block: 'center' }); });
+  await chup('khoa-7-shop-cap10');
+  // thông báo mở khoá ở HOME
+  await p.evaluate(() => { KTUI.dong(); const t = TT.st(); t.xp = TT.xpTong(2) - 1; t.nhanCap = 1; t.tnBao = { coop: 1 }; KT.luu(true); KT.batTran('solo'); KT.ketTran({ wave: 5 }, { trum: 0, che: 'solo' }); });
+  await sleep(1500);
+  r = await p.evaluate(() => { const pp = document.getElementById('tt-phu'); return pp && !pp.hidden && /NEW FEATURES UNLOCKED/.test(pp.textContent) && /SHOP/.test(pp.textContent) && /LUCKY SPIN/.test(pp.textContent); });
+  ok(r, 'lên cấp 2 ở HOME: bảng lên cấp ghi tính năng mới mở');
+  await chup('khoa-8-bao-cap2');
+  // link mời ONLINE khi chưa cấp 4 → báo điều kiện, không vào phòng
+  await p.goto(new URL('/', BASE).href, { waitUntil: 'load' });
+  await p.evaluate(() => localStorage.clear());
+  await p.goto(BASE + '?room=ABCD', { waitUntil: 'load' });
+  await p.waitForFunction(() => typeof TAI !== 'undefined' && !TAI.cho && typeof TT !== 'undefined' && G.roster && G.roster.length, null, { timeout: 60000 });
+  await sleep(1500);
+  r = await p.evaluate(() => { const pp = document.getElementById('tt-phu'); return { bao: !!pp && !pp.hidden && /ONLINE/.test(pp.textContent) && /Pilot Level 4/.test(pp.textContent), code: ONL.code, url: location.search, tran: !!(G.ban && G.ban.length) }; });
+  ok(r.bao && !r.code && !/room/.test(r.url) && !r.tran, 'người mới mở link mời ONLINE (?room=) khi chưa cấp 4: báo điều kiện, không vào phòng, bỏ mã khỏi địa chỉ', JSON.stringify(r));
+  await chup('khoa-9-moi-online');
+  r = await p.evaluate(async () => { document.querySelector('#tt-phu [data-act="tt-moi-ok"]').click(); await new Promise(r => setTimeout(r, 800)); return { hd: !!HD.dang }; });
+  ok(r.hd, 'bấm OK → vào hướng dẫn (người mới chưa chơi)', JSON.stringify(r));
+  // người chơi cũ: ONLINE giữ (kể cả cấp 3) + lò rèn đã từng dùng giữ
+  await vao({ turret_best: { solo: { wave: 12 } }, turret_kt: { v: 1, mh: { sw: 12, moc: {}, tr: {}, trn: {}, bo: 0, ren: { tuan: 0, n: {} }, renN: 2 } } });
+  r = await p.evaluate(() => ({ cap: TT.cap(), cu: TT.st().cu, onl: TT.tnMo('online'), ren: TT.tnMo('ren'), renDo: TT.tnMo('renDo'), an: TT.tnMo('an'), shop: TT.tnMo('shop'), coop: TT.tnMo('coop') }));
+  ok(r.cap === 5 && r.cu === 5 && r.onl && r.ren && r.renDo && r.shop && r.coop, 'người cũ (cấp 5): CO-OP/cửa hàng mở, ONLINE giữ, lò rèn đã dùng giữ (cả Lò rèn Đỏ)', JSON.stringify(r));
+  await vao(HD);
+  r = await p.evaluate(() => ({ cap: TT.cap(), onl: TT.tnMo('online'), ren: TT.tnMo('ren'), ruV: TT.tnMo('ruVang'), pvp: TT.tnMo('pvp') }));
+  ok(r.cap === 3 && r.onl && !r.ren && r.ruV && r.pvp, 'người cũ cấp 3 (chưa rèn): ONLINE giữ, PVP/Rương Vàng mở, lò rèn khoá tới cấp 10', JSON.stringify(r));
 
   ok(errs.length === 0, 'không lỗi trang', errs.slice(0, 3).join(' | '));
   await b.close();

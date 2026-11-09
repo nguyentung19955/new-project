@@ -5621,5 +5621,10 @@
 "TURRETS LOCKED": "Ụ ĐANG KHOÁ",
 "Finish the short tutorial (or skip it) to unlock Common and Rare turrets.": "Hoàn thành hướng dẫn ngắn (hoặc bỏ qua) để mở ụ Thường và Hiếm.",
 "Same turret + same ★ = merge: a RANDOM turret from your deck with +#★.": "Cùng ụ + cùng ★ = ghép: ra 1 ụ NGẪU NHIÊN trong bộ bài, +#★.",
-"Make # turrets of #★+ in total": "Tạo tổng cộng # ụ từ #★ trở lên"
+"Make # turrets of #★+ in total": "Tạo tổng cộng # ụ từ #★ trở lên",
+"Unlocks after the tutorial": "Mở sau khi xong hướng dẫn",
+"TUTORIAL": "HƯỚNG DẪN",
+"NEW FEATURES UNLOCKED": "MỞ KHOÁ TÍNH NĂNG MỚI",
+"UNLOCKED": "ĐÃ MỞ KHOÁ",
+"MYTHIC FORGE": "LÒ RÈN THẦN THOẠI"
 }

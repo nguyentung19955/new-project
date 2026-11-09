@@ -143,15 +143,16 @@ const MHUI = {
     let h = KTUI.muc('SHARD FORGE', 'RESETS MONDAY');
     for (const c of MH.renDs()) {
       const q = { t: c.dung, can: c.tuan };
-      const nut = '<button class="kt-slot' + (c.duoc ? ' vang' : '') + '" data-act="kt-mhr" data-id="' + c.k + '"' + (c.duoc ? '' : ' disabled') + '><b>' + (c.con ? 'TRADE' : 'DONE') + '</b></button>';
-      h += '<div class="kt-h mh-ren">' + this.icBac(c.ra, 1) + '<div class="kt-h-g"><b>' + c.can + ' copies of one <span>' + TIERS[c.tu].ten + '</span> ' + this.chip(c.tu, c.can) + '</b>' +
+      const kh = KTUI.khoaNut ? KTUI.khoaNut('ren:' + c.k, 'kt-slot') : ''; // khoá theo cấp (tientrinh.js)
+      const nut = kh || '<button class="kt-slot' + (c.duoc ? ' vang' : '') + '" data-act="kt-mhr" data-id="' + c.k + '"' + (c.duoc ? '' : ' disabled') + '><b>' + (c.con ? 'TRADE' : 'DONE') + '</b></button>';
+      h += '<div class="kt-h mh-ren' + (kh ? ' tt-khoa-h' : '') + '">' + this.icBac(c.ra, 1) + '<div class="kt-h-g"><b>' + c.can + ' copies of one <span>' + TIERS[c.tu].ten + '</span> ' + this.chip(c.tu, c.can) + '</b>' +
         '<small class="mh-gia"><img src="' + KTUI.a(KTA.vang) + '" alt="">' + KTUI.so(c.gia) + ' · ' + q.t + '/' + q.can + ' THIS WEEK</small></div>' + nut + '</div>';
     }
     // ẤN VÀNG: 6 bản Vàng thừa + 20 000 vàng → 1 bản Vàng tự chọn
-    const a = MH.anTt(), C = MHC.an;
-    h += '<div class="kt-h mh-ren mh-an">' + this.icBac('vang', 1) + '<div class="kt-h-g"><b>Legendary Seal ' + this.chip('vang', C.can) + ' → 1 of your choice</b>' +
+    const a = MH.anTt(), C = MHC.an, kh = KTUI.khoaNut ? KTUI.khoaNut('ren:an', 'kt-slot') : '';
+    h += '<div class="kt-h mh-ren mh-an' + (kh ? ' tt-khoa-h' : '') + '">' + this.icBac('vang', 1) + '<div class="kt-h-g"><b>Legendary Seal ' + this.chip('vang', C.can) + ' → 1 of your choice</b>' +
       '<small class="mh-gia"><img src="' + KTUI.a(KTA.vang) + '" alt="">' + KTUI.so(C.gia) + ' · ' + a.dung + '/' + C.tuan + ' THIS WEEK · YOU HAVE ' + a.co + '</small></div>' +
-      '<button class="kt-slot' + (a.duoc ? ' vang' : '') + '" data-act="kt-mha" data-id="an"' + (a.duoc ? '' : ' disabled') + '><b>' + (a.con ? 'PICK' : 'DONE') + '</b></button></div>';
+      (kh || '<button class="kt-slot' + (a.duoc ? ' vang' : '') + '" data-act="kt-mha" data-id="an"' + (a.duoc ? '' : ' disabled') + '><b>' + (a.con ? 'PICK' : 'DONE') + '</b></button>') + '</div>';
     return h;
   },
   chonAn() { // bảng chọn thẻ Vàng đích (thẻ nào cũng được, kể cả chưa có bản)

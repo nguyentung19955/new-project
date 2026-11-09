@@ -23,6 +23,7 @@ const KTUI = {
   so: (v) => Math.floor(v).toLocaleString('en-US'),
   el: (id) => document.getElementById(id),
   TAB: { shop: 'SHOP', vq: 'SPIN', nv: 'QUESTS', sk: 'EVENT' },
+  khoaNut: () => '', // tientrinh.js thay: nút "LV n" khi rương / lò rèn chưa mở theo cấp
   ten: (id) => { const r = (typeof G !== 'undefined' && G.rosterMap[id]) || {}; return (typeof NN !== 'undefined' && NN.vi && NN.vi() && r.ten_vi) || r.ten || id; }, // Tiếng Việt: tên Việt (roster ten_vi) — rà soát 09/11
 
   // ---------- dựng khung 1 lần ----------
@@ -110,9 +111,10 @@ const KTUI = {
       const C = KTC.ruong[k];
       // bộ đếm bảo hiểm (tien-trinh §6.1): Vàng chắc chắn sau N rương · Đỏ chắc chắn sau M rương (đã có s.ru.pv/pd)
       const phu = k === 'vang' ? 'Legendary in ≤ ' + (C.pityV - s.ru.pv) + '<br>Mythic in ≤ ' + (C.pityD - s.ru.pd) : k === 'than' ? '1 Mythic + 2 Legendary' : C.so + ' cards';
-      h += '<div class="kt-rc kt-rc-' + k + '"><button class="hm-ic hm-ic1 kt-i" data-act="kt-tile" data-k="' + k + '" aria-label="Odds"><img src="' + this.a(KTA.tin) + '" alt=""></button>' +
+      const kh = this.khoaNut('ru:' + k, 'hm-nut2'); // khoá theo cấp (tientrinh.js): nút điều kiện thay nút mua
+      h += '<div class="kt-rc kt-rc-' + k + (kh ? ' tt-khoa-h' : '') + '"><button class="hm-ic hm-ic1 kt-i" data-act="kt-tile" data-k="' + k + '" aria-label="Odds"><img src="' + this.a(KTA.tin) + '" alt=""></button>' +
         '<img class="kt-rc-anh" src="' + this.a(KTA.ru[k]) + '" alt=""><b>' + C.ten + '</b><small>' + phu + '</small>' +
-        '<button class="hm-nut2 vang" data-act="kt-ru" data-k="' + k + '">' + this.gia(C.gia, !KT.du(C.gia)) + '</button></div>';
+        (kh || '<button class="hm-nut2 vang" data-act="kt-ru" data-k="' + k + '">' + this.gia(C.gia, !KT.du(C.gia)) + '</button>') + '</div>';
     }
     h += '</div>' + this.muc('GOLD') + '<div class="kt-doi">';
     KTC.doiVang.forEach((o, i) => { h += '<div class="kt-o kt-o-doi"><span class="kt-r"><img src="' + this.a(KTA.vang) + '" alt=""><b>' + this.so(o.vang) + '</b></span><button class="hm-nut2 vang" data-act="kt-doi" data-i="' + i + '">' + this.gia({ ngoc: o.ngoc }, KT.ngoc < o.ngoc) + '</button></div>'; });
