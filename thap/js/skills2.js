@@ -563,7 +563,7 @@ SKILLS.khien = { // Máy Khiên (Mona) — HỖ TRỢ (đợt vai trò): ụ k�
 SKILLS.hopbi = { // Hộp Bí Ẩn (Daron): sau 47 s biến thành ụ ngẫu nhiên 1–7 sao
   vai: 'db', dmg: 0, toc: 0, napMau: '#c77dff',
   can: (T) => (ms(T, 3) ? 46 : 58) - 58 + knThe(G.ban[T.ban], 'hopbi'), // 3★ QUICK OPEN · cấp thẻ: −1 s/cấp · 47/37 → 58/46 (đo bậc 06/11)
-  mo: (T) => 'Opens in ' + Math.max(0, SKILLS.hopbi.can(T) - T.tuoi).toFixed(0) + 's → random ' + Math.max(ms(T, 7) ? 5 : ms(T, 5) ? 3 : 1, Math.min(6, T.sao | 0)) + '–' + (ms(T, 7) ? 7 : 6) + '★ turret',
+  mo: (T) => 'Opens in ' + Math.max(0, SKILLS.hopbi.can(T) - T.tuoi).toFixed(0) + 's → random ' + Math.max(ms(T, 7) ? 5 : ms(T, 5) ? 3 : 1, Math.min(6, T.sao | 0)) + '–7★ turret',
   gocDau: (T, t) => -Math.PI / 2, // VFX P3: bỏ lắc ảnh hộp — sắp mở = tia sáng rỉ ra (hạt) / tờ p3_hopbi
   capNhat(G, B, T) {
     T.nap = Math.min(1, T.tuoi / this.can(T));
@@ -571,7 +571,7 @@ SKILLS.hopbi = { // Hộp Bí Ẩn (Daron): sau 47 s biến thành ụ ngẫu nh
       if (B.net && typeof ONS !== 'undefined' && ONS.on) return true; // bàn con rối online: chờ ảnh chụp bàn của bạn (không tự quay ụ khác máy bạn)
       const toiThieu = Math.max(ms(T, 7) ? 5 : ms(T, 5) ? 3 : 1, Math.min(6, T.sao | 0)); // 5★ LUCKY BOX · 7★ TOP PRIZE · sàn = ★ của hộp (BAO-CAO Mức 3)
       const r = rngLuat(B, 19, T.o), bo = deckTru(B, ['hopbi']); // RNG luật có hạt (NT9)
-      const sao = toiThieu + Math.floor(r() * ((ms(T, 7) ? 8 : 7) - toiThieu)), /* 1–6★ (7★ hộp: 5–7★) — đo bậc 06/11 */ N = chuyenU(B, T, bo[Math.floor(r() * bo.length)], sao, true);
+      const sao = toiThieu + Math.floor(r() * (8 - toiThieu)), /* mọi hộp ra tới 7★ (người dùng chốt 09/11); sàn: 7★ hộp 5★, 5★ hộp 3★ */ N = chuyenU(B, T, bo[Math.floor(r() * bo.length)], sao, true);
       VX.hen(0.5, () => nhanU(N, 'BOX OPEN: ' + sao + '★ ' + (TEXT.turret[N.id] ? TEXT.turret[N.id].name.toUpperCase() : ''), '#c77dff', true)); SND.ghep();
     } else if (Math.random() < 0.02 + T.nap * 0.1) { const c = tamU(T); FX.hat1('lua', c.x + rnd(-12, 12), c.y + rnd(-12, 6), 0, -30, 0.5, 6, '#c77dff'); }
     return true;
