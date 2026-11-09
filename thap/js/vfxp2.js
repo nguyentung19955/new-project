@@ -125,10 +125,13 @@ HU.p2fx = {
 //  Có tờ: sương cuộn vào (0–3) → loé + vòng gai băng (4–7) → băng lan sàn (8–12) → tan (13–15), 1.1 s. Chưa có: dải fx_bang_vo chạy khung + sàn băng đứng yên mờ dần.
 (function () {
   if (typeof HU === 'undefined' || !HU.gBaoLuoi) return;
-  const T0 = 'p2_cryo', ve0 = HU.gBaoLuoi.ve, P = [[0, 0.12, 0, 3], [0.12, 0.36, 4, 7], [0.36, 0.8, 8, 12], [0.8, 1.1, 13, 15]];
+  // 09/11 (tuvan/anim-bac — dịu): tờ băng từng phủ kín đường ~0,8 s → rút còn 0,85 s (gọn 0,7 s), pha "băng lan sàn" (khung 8–12) mờ còn ~50%,
+  //   tan nhanh — loé + vòng gai băng (khung 4–7) giữ nguyên độ đậm cho khoảnh khắc "đã"; chữ ký Đỏ (dosig.js bông tuyết) vẽ trên.
+  const T0 = 'p2_cryo', ve0 = HU.gBaoLuoi.ve, P = [[0, 0.1, 0, 3], [0.1, 0.3, 4, 7], [0.3, 0.62, 8, 12], [0.62, 0.85, 13, 15]];
+  const aSan = (t) => t < 0.3 ? 1 : t < 0.42 ? 1 - 0.48 * (t - 0.3) / 0.12 : 0.52; // độ đậm theo pha: loé đủ, sàn băng ~50%
   HU.gBaoLuoi.ve = function (ctx, o, R) {
     if (!GFX.coDOM) return;
-    if (P2.co(T0)) { if (o.song < 1.1) o.song = P2.gon() ? 0.8 : 1.1; P2.k(ctx, T0, P2.f(o.t, P), o.x, o.y, o.r * 2 / VUNG_ANH.p2_cryo, Math.min(1, (o.song - o.t) / 0.2), 0, true); return; } // băng lan sàn (khung 8–11) chạm đúng mép vùng đóng băng o.r
+    if (P2.co(T0)) { if (o.song < 0.85) o.song = P2.gon() ? 0.7 : 0.85; P2.k(ctx, T0, P2.f(o.t, P), o.x, o.y, o.r * 2 / VUNG_ANH.p2_cryo, Math.min(1, (o.song - o.t) / 0.2) * aSan(o.t), 0, true); return; } // băng lan sàn (khung 8–11) chạm đúng mép vùng đóng băng o.r
     const u = o.t / o.song; if (!REN.img('fx_bang_vo')) return ve0.call(this, ctx, o, R);
     ctx.globalCompositeOperation = 'lighter';
     veSanBang(ctx, o.x, o.y, o.r, (1 - u) * 0.85, 0);

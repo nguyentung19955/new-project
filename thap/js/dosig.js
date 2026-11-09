@@ -91,6 +91,12 @@ const DSG = {
   vg(ctx, x, y, r, w, mau, al) { if (this._nhe && r * PX.K_VONG > this.LON) return; PX.vong(ctx, x, y, r, w, mau, al); },
   ch(ctx, x, y, co, mau, al) { if (this._nhe && co > this.LON) return; PX.cham(ctx, x, y, co, mau, al); },
   im(ctx, im, x, y, w, h, goc, al) { if (this._nhe && w > this.LON) return; PX.ve(ctx, im, x, y, w, h, goc, al); },
+  // LOÉ LỚN lúc trúng (Hố Đen nghiền / Overlord thiên lôi) — dịu 09/11 (trận đông che cả cụm quái ~0,3 s):
+  //   quầng lớn ×0,8 cỡ, alpha 0,8 → 0,45, tắt sau 0,22 s; thêm lõi nóng nhỏ (0,4 cỡ, 0,85) 0,16 s để giữ cú "đã"; trận đông (bản nhẹ) bỏ quầng lớn.
+  loeLon(ctx, x, y, co, mau, t, dai) {
+    if (!this._nhe) this.ch(ctx, x, y, co * 0.8, mau, 0.45 * this.loe(t / Math.min(0.22, dai), 0.15, 0.85));
+    this.ch(ctx, x, y, co * 0.4, '#ffffff', 0.85 * this.loe(t / 0.16, 0.2, 0.8));
+  },
   conTren(T) { return T && G.ban[T.ban] && G.ban[T.ban].t[T.o] === T; },
 
   // quét G.hu + trạng thái ụ Đỏ mỗi khung vẽ (chỉ đọc)
@@ -132,6 +138,16 @@ const DSG = {
   },
   // cung sáng (HU.cungSang) không mang ụ → ụ Khởi Sinh có tâm trùng điểm đầu cung
   timKhoiSinh(x, y) { for (const B of G.ban) for (const T of B.t) if (T && T.id === 'khoisinh') { const c = tamU(T); if (Math.abs(c.x - x) < 3 && Math.abs(c.y - y) < 3) return T; } return null; },
+  // độ mạnh BÁO TRƯỚC 0..1 (09/11 sau đổi TỰ KÍCH — commit 335decc86): ụ TỰ KÍCH (game.js TU_KICH) nổ ngay khi nạp đầy → báo trước
+  //   phải chạy TRƯỚC lúc đầy: tăng dần từ nạp 80% → 100% (chiêu nổ đúng lúc báo trước đạt đỉnh; đầy mà chưa đáng dùng = giữ đỉnh).
+  //   Ụ BẤM TAY (Black Hole, Arcane Cascade): chỉ khi đầy (= sẵn sàng chạm). Tích tụ MV.tichTu nhường lại từ 80% (MV.kBao) → không đôi.
+  BAO_TU: 0.8,
+  qBao(T) {
+    const sk = SKILLS[T.id]; if (!sk || !(T.sao >= 3 || sk.chuDongMoiSao)) return 0;
+    const p = T.nap || 0;
+    if (typeof laTuKich === 'function' && laTuKich(T.id)) return p >= 1 ? 1 : p > this.BAO_TU ? (p - this.BAO_TU) / (1 - this.BAO_TU) : 0;
+    return p >= 1 ? 1 : 0;
+  },
   // BÁO TRƯỚC theo trạng thái (vẽ mỗi khung, không lưu)
   veBao(ctx) {
     for (const B of G.ban) for (const T of B.t) {
@@ -183,40 +199,40 @@ DSG.BAO = {
   },
   // Lò Băng: 6 tinh thể sương quay chậm quanh lò khi ICE STORM sẵn sàng
   lophanung(ctx, T, B, c, k) {
-    if (!(T.nap >= 1)) return; ctx.globalCompositeOperation = 'lighter';
-    for (let i = 0; i < 6; i++) { const a = G.t * 0.9 + i * Math.PI / 3; PX.sao(ctx, c.x + Math.cos(a) * 30 * k, c.y + Math.sin(a) * 30 * k, 11 * k, '#bff4ff', 0.6, a); }
+    const q = this.qBao(T); if (!q) return; ctx.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < 6; i++) { const a = G.t * 0.9 + i * Math.PI / 3; PX.sao(ctx, c.x + Math.cos(a) * 30 * k, c.y + Math.sin(a) * 30 * k, 11 * k * (0.6 + 0.4 * q), '#bff4ff', 0.6 * q, a); }
   },
   // Ngai: 12 vạch giờ quanh ngai, 1 vạch sáng chạy NGƯỢC chiều kim (tích tắc) khi REWIND sẵn sàng
   ngaithoigian(ctx, T, B, c, k) {
-    if (!(T.nap >= 1 && T.sao >= 3)) return; ctx.globalCompositeOperation = 'lighter';
+    const q = this.qBao(T); if (!q) return; ctx.globalCompositeOperation = 'lighter';
     const cur = 11 - (Math.floor(G.t * 4) % 12);
-    for (let i = 0; i < 12; i++) { const a = -Math.PI / 2 + i * Math.PI / 6, r = 31 * k; this.ch(ctx, c.x + Math.cos(a) * r, c.y + Math.sin(a) * r, (i === cur ? 13 : 5) * k, i === cur ? '#ffd27a' : '#ff2a3a', i === cur ? 0.95 : 0.45); }
+    for (let i = 0; i < 12; i++) { const a = -Math.PI / 2 + i * Math.PI / 6, r = 31 * k; this.ch(ctx, c.x + Math.cos(a) * r, c.y + Math.sin(a) * r, (i === cur ? 13 : 5) * k, i === cur ? '#ffd27a' : '#ff2a3a', q * (i === cur ? 0.95 : 0.45)); }
   },
   // Chúa Tổ: lục giác hổ phách xoay chậm quanh tổ khi SWARM sẵn sàng
   chuato(ctx, T, B, c, k) {
-    if (!(T.nap >= 1 && T.sao >= 3)) return; ctx.globalCompositeOperation = 'lighter';
-    this.dagiac(ctx, c.x, c.y, 32 * k, 6, G.t * 0.6, 1.4, '#ffb43a', 0.55);
+    const q = this.qBao(T); if (!q) return; ctx.globalCompositeOperation = 'lighter';
+    this.dagiac(ctx, c.x, c.y, 32 * k * (0.8 + 0.2 * q), 6, G.t * 0.6, 1.4, '#ffb43a', 0.55 * q);
   },
   // Leviathan: bong bóng nổi lên từ thân khi TIDAL BREATH sẵn sàng
   leviathan(ctx, T, B, c, k) {
-    if (!(T.nap >= 1 && T.sao >= 3)) return; ctx.globalCompositeOperation = 'lighter';
-    for (let i = 0; i < 4; i++) { const ph = (G.t * 0.7 + i / 4) % 1, x = c.x + Math.sin(i * 2.1 + G.t * 2) * 14 * k; this.vg(ctx, x, c.y + 10 * k - ph * 40 * k, (3 + 2 * ph) * k, 2, '#bff4ff', 0.7 * (1 - ph)); }
+    const q = this.qBao(T); if (!q) return; ctx.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < 4; i++) { const ph = (G.t * 0.7 + i / 4) % 1, x = c.x + Math.sin(i * 2.1 + G.t * 2) * 14 * k; this.vg(ctx, x, c.y + 10 * k - ph * 40 * k, (3 + 2 * ph) * k, 2, '#bff4ff', 0.7 * q * (1 - ph)); }
   },
   // Khởi Sinh: 3 cánh sen bay vòng khi GENESIS sẵn sàng
   khoisinh(ctx, T, B, c, k) {
-    if (!(T.nap >= 1 && T.sao >= 3)) return; ctx.globalCompositeOperation = 'lighter';
-    for (let i = 0; i < 3; i++) { const a = G.t * 1.2 + i * 2.094; PX.ve(ctx, this.anh('fx_la', '#ff8ab0'), c.x + Math.cos(a) * 28 * k, c.y + Math.sin(a) * 28 * k, 12 * k, 12 * k, a + Math.PI / 2, 0.7); }
+    const q = this.qBao(T); if (!q) return; ctx.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < 3; i++) { const a = G.t * 1.2 + i * 2.094; PX.ve(ctx, this.anh('fx_la', '#ff8ab0'), c.x + Math.cos(a) * 28 * k, c.y + Math.sin(a) * 28 * k, 12 * k, 12 * k, a + Math.PI / 2, 0.7 * q); }
   },
   // Rồng Máy: than lửa bốc lên + hơi nóng khi DRAGON DIVE sẵn sàng
   ronglua(ctx, T, B, c, k) {
-    if (!(T.nap >= 1 && T.sao >= 3)) return; ctx.globalCompositeOperation = 'lighter';
-    this.ch(ctx, c.x, c.y, 50 * k, '#ff5a1a', 0.28);
-    for (let i = 0; i < 4; i++) { const ph = (G.t * 0.9 + i / 4) % 1; PX.ve(ctx, this.anh('fx_than', '#ff8a2a'), c.x + Math.sin(i * 1.7 + G.t * 3) * 16 * k, c.y - ph * 44 * k, 10 * k * (1 - ph * 0.5), 9 * k, -Math.PI / 2, 0.8 * (1 - ph)); }
+    const q = this.qBao(T); if (!q) return; ctx.globalCompositeOperation = 'lighter';
+    this.ch(ctx, c.x, c.y, 50 * k, '#ff5a1a', 0.28 * q);
+    for (let i = 0; i < 4; i++) { const ph = (G.t * 0.9 + i / 4) % 1; PX.ve(ctx, this.anh('fx_than', '#ff8a2a'), c.x + Math.sin(i * 1.7 + G.t * 3) * 16 * k, c.y - ph * 44 * k, 10 * k * (1 - ph * 0.5), 9 * k, -Math.PI / 2, 0.8 * q * (1 - ph)); }
   },
   // Thác Mana: 3 giọt mana bay vòng khi MANA FLOOD sẵn sàng
   thacmana(ctx, T, B, c, k) {
-    if (!(T.nap >= 1 && T.sao >= 3) || T.thacT > 0) return; ctx.globalCompositeOperation = 'lighter';
-    for (let i = 0; i < 3; i++) { const a = -G.t * 1.5 + i * 2.094; PX.ve(ctx, this.anh('fx_giot_nuoc', '#b48cff'), c.x + Math.cos(a) * 27 * k, c.y + Math.sin(a) * 27 * k, 9 * k, 10 * k, a, 0.75); }
+    if (T.thacT > 0) return; const q = this.qBao(T); if (!q) return; ctx.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < 3; i++) { const a = -G.t * 1.5 + i * 2.094; PX.ve(ctx, this.anh('fx_giot_nuoc', '#b48cff'), c.x + Math.cos(a) * 27 * k, c.y + Math.sin(a) * 27 * k, 9 * k, 10 * k, a, 0.75 * q); }
   },
 };
 
@@ -260,7 +276,7 @@ DSG.SIG = {
     },
     ve(ctx, e, k) {
       const t = e.t, R = e.R; ctx.globalCompositeOperation = 'lighter';
-      this.ch(ctx, e.x, e.y, R * 1.5, '#f0d8ff', 0.75 * this.loe(t / 0.3, 0.15, 0.85));
+      this.loeLon(ctx, e.x, e.y, R * 1.5, '#f0d8ff', t, 0.3); // (dịu 09/11: loé ngắn, lõi nóng nhỏ giữ cú "đã")
       for (let i = 0; i < 2; i++) { const u = (t - i * 0.08) / 0.45; if (u > 0 && u < 1) this.vg(ctx, e.x, e.y, R * (0.3 + 1.0 * this.e3(u)), 3, i ? '#b04bff' : '#ffffff', 0.85 * (1 - u)); }
       const u = t / 0.5; if (u < 1) { const s = R * (0.6 + 1.6 * this.e3(u)); this.im(ctx, this.anh('fx_song_xung', '#c070ff'), e.x, e.y, s, s, t * 2, 0.75 * (1 - u)); }
       if (!this.gon()) this.vg(ctx, e.x, e.y, R * 1.05, 2, '#7a2cff', 0.3 * (1 - t)); // dư âm: vết vành mờ
@@ -286,7 +302,7 @@ DSG.SIG = {
         PX.tia(ctx, e.x, e.y - 300, e.x, e.y, 7, '#ffffff', a * 0.55);
       }
       // loé trúng + vòng xung gai + 2 vòng
-      this.ch(ctx, e.x, e.y, R * 1.7, '#ffe0e4', 0.8 * this.loe(t / 0.32, 0.12, 0.88));
+      this.loeLon(ctx, e.x, e.y, R * 1.7, '#ffe0e4', t, 0.32);
       const u = t / 0.45; if (u < 1) { const s = R * (0.5 + 1.5 * this.e3(u)); this.im(ctx, this.anh('fx_song_xung', '#ff3a5a'), e.x, e.y, s, s, 0.3, 0.85 * (1 - u)); }
       for (let i = 0; i < 2; i++) { const v = (t - 0.04 - i * 0.1) / 0.5; if (v > 0 && v < 1) this.vg(ctx, e.x, e.y, R * (0.2 + 0.95 * this.e3(v)), 3, i ? '#ff2a4a' : '#ffffff', 0.8 * (1 - v)); }
       // vết nứt đất: sáng đỏ rồi nguội; điện bò dọc vết nứt
