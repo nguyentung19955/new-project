@@ -11,7 +11,7 @@ function taoMoiTruong(hat) {
   let s = hat || 12345;
   const M = Object.create(Math); M.random = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; };
   const ctx = { console, Math: M, JSON, Set, Map, Promise, Object, Array, Number, String, Infinity, NaN, isFinite, parseInt, parseFloat, Symbol, Proxy, Reflect, Error,
-    setTimeout: (f) => { ctx._cho.push(f); }, clearTimeout: noop, _cho: [], performance: { now: () => 0 }, localStorage: { getItem: () => null, setItem: noop } };
+    setTimeout: (f) => { ctx._cho.push(f); }, clearTimeout: noop, _cho: [], performance: { now: () => 0 }, location: { search: '', hash: '' }, localStorage: { getItem: () => null, setItem: noop } };
   ctx.window = ctx; ctx.document = undefined;
   ctx.addEventListener = noop;
   ctx.SND = new Proxy({}, { get: () => noop });
@@ -461,26 +461,26 @@ chay('combo', () => {
 });
 
 // =====================================================================================================
-// 18) CHRONO LOCK — mỗi ky s khoá quái đầu (không trùm) dai s; mở khoá nổ no% sát thương đã dồn (40 px); trùm: ½ thời gian, chậm 50%, nổ ½
+// 18) HOURGLASS / ĐỒNG HỒ CÁT (Ụ sáng tạo mẫu 09/11, id khoathoigian): lật mỗi 9 s (3★ 8 s) → 3 s quái trong dải HÀNG chậm 45%
+//     (tinh anh 30%, trùm 20%), ụ Tấn công cùng hàng +30% tốc; 5★ thêm dải cột; 7★ 0,5 s đầu quái thường đứng yên. Không sát thương.
 // =====================================================================================================
 chay('khoathoigian', () => {
-  khongCrit(true);
-  const KY = [9, 8.5, 8, 7.5, 7, 6.5, 6], DAI = [1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.5], NO = [0.3, 0.35, 0.4, 0.45, 0.5, 0.6, 0.75];
   for (const s of [1, 3, 5, 7]) {
-    moi('solo', ['khoathoigian', 'lien', 'canon', 'set', 'tia']); const T = dat(2, 'khoathoigian', s); ctx._T = T;
-    const E = quai(310), E2 = quai(300); ctx._E = [E, E2];
-    let t1 = null, tHet = null;
-    buoc(KY[s - 1] + DAI[s - 1] + 0.5, (x) => { R('_T.cd = 1e9'); const k = R('!!_E[0].khoaHu'); if (k && t1 == null) { t1 = x; xoaSum(); R('G.dangBan = null; trung(_E[0], 1000, { T: null, B: G.ban[0] })'); } if (!k && t1 != null && tHet == null) tHet = x; });
-    const per = R('_E.map(E => G._per.get(E) || 0)'), burst = NO[s - 1] * 1000;
-    const ky = KY[s - 1] / (s >= 3 ? 1.2 : 1), mo = R('SKILLS.khoathoigian.mo(_T)');
-    ghi('khoathoigian', s + '★: locks the lead enemy every ' + f2(ky) + 's (' + KY[s - 1] + 's' + (s >= 3 ? ' ÷ QUICK HANDS 1.2' : '') + ') for ' + DAI[s - 1] + 's, release bursts ' + pc(NO[s - 1]) + ' of stored damage (40 px); tap text shows the real period',
-      'lock at ' + (t1 == null ? 'never' : f2(t1 + dt)) + 's for ' + (tHet == null ? '?' : f2(tHet - t1)) + 's · burst ' + f2(per[0] - 1000) + ' / neighbour ' + f2(per[1]) + ' · text "' + mo.slice(0, 16) + '…"',
-      mo.includes('Every ' + ky.toFixed(1) + 's') && t1 != null && Math.abs(t1 + dt - ky) < 0.1 && tHet != null && Math.abs(tHet - t1 - DAI[s - 1]) < 0.1 && gan(per[0] - 1000, burst) && gan(per[1], burst), s === 3 ? 'fixed text: 3★+ QUICK HANDS (+20% speed) also shortens the lock cycle; text showed the base period' : '');
+    moi('solo', ['khoathoigian', 'lien', 'canon', 'set', 'tia']); const T = dat(5, 'khoathoigian', s); dat(7, 'lien', 1); dat(2, 'lien', 1); ctx._T = T;
+    const sDai = R(`(() => { const p = G.duong[0], c = G.ban[0].o[5]; for (let x = 0; x < p.len; x += 1) { const [px, py] = viTri(p, x); if (Math.abs(py - c.y) < 2 && px < c.x) return x; } return 0; })()`);
+    const E = quai(sDai), E2 = quai(104), Q = quai(sDai + 6, { to: true }); ctx._E = [E, E2, Q];
+    const ky = s >= 3 ? 8 : 9; let tLat = null, cham = null, toc = null, chan = null;
+    buoc(ky + 1.5, (x) => { if (tLat == null && R('_T.cat > 0')) { tLat = x; } if (tLat != null && x - tLat > 0.2 && x - tLat < 0.25 && cham == null) { cham = R('_E.map(E => +E.cham.toFixed(2))'); toc = R('[G.ban[0].t[7].buf.toc, G.ban[0].t[2].buf.toc]'); chan = R('_E[0].chan > 0'); } });
+    buoc(3);
+    const sau = R('_E[0].cham');
+    ghi('khoathoigian', s + '★: flips every ' + ky + 's; 3s: row band 45% slow (elite 30%), row Attack turret +30% fire rate, other row not' + (s >= 5 ? ', column band too' : '') + (s >= 7 ? ', first 0.5s stop' : ''),
+      'flip at ' + (tLat == null ? 'never' : (tLat + dt).toFixed(2)) + 's · slow row/other/elite ' + (cham || []).join('/') + ' · fire rate row ' + (toc ? toc[0].toFixed(2) + ' vs ' + toc[1].toFixed(2) : '?') + ' · after ' + sau + (s >= 7 ? ' · stop ' + chan : ''),
+      tLat != null && Math.abs(tLat + dt - ky) < 0.1 && cham && gan(cham[0], 0.45) && gan(cham[2], 0.3) && (s >= 5 ? true : cham[1] === 0) && toc && toc[0] - toc[1] > 0.29 && sau === 0 && (s < 7 || chan));
   }
-  moi('solo', ['khoathoigian', 'lien', 'canon', 'set', 'tia']); const T = dat(2, 'khoathoigian', 5); const E = quai(300, { trum: true }); ctx._T = T; ctx._E = E;
-  R('SKILLS.khoathoigian.khoa(G, G.ban[0], _T, 5)'); const o = R('G.hu.find(h => h.k === "khoa")');
-  ghi('khoathoigian', 'boss: half lock time, 50% slow, half burst', 'lock ' + f2(o.song) + 's · burst ' + pc(o.pct), gan(o.song, 1) && gan(o.pct, 0.25));
-  khongCrit(false);
+  moi('solo', ['khoathoigian', 'lien', 'canon', 'set', 'tia']); const T = dat(5, 'khoathoigian', 1); ctx._T = T;
+  const sDai = R(`(() => { const p = G.duong[0], c = G.ban[0].o[5]; for (let x = 0; x < p.len; x += 1) { const [px, py] = viTri(p, x); if (Math.abs(py - c.y) < 2 && px < c.x) return x; } return 0; })()`);
+  const B = quai(sDai, { trum: true }); ctx._E = [B]; R('_T.dh = 8.9'); buoc(0.4);
+  ghi('khoathoigian', 'boss in the band: 20% slow, no damage dealt', 'slow ' + R('_E[0].cham') + ' · damage ' + R('Math.round(1e9 - _E[0].hp)'), gan(R('_E[0].cham'), 0.2) && R('_E[0].hp') === 1e9);
 });
 
 // =====================================================================================================
@@ -599,11 +599,11 @@ chay('tuongtac', () => {
   ghi('tuongtac', 'Chiller 7★ next to Storm Gun: its hits slow ≤35% (boss ≤15%)', ch.map(pc).join(' / '), ch[0] > 0 && ch[0] <= 0.35 + 1e-9 && ch[1] > 0 && ch[1] <= 0.15 + 1e-9);
   // RAGE ×2 trên mọi ụ tím bắn
   let sai = [];
-  for (const id of ['cuongno', 'lienket', 'no5', 'bao', 'anhsang', 'nayda', 'combo', 'docton', 'khoathoigian', 'santhuong', 'nhanban', 'kepha', 'xaotron', 'epxung', 'nhieusong']) {
+  for (const id of ['cuongno', 'lienket', 'no5', 'bao', 'anhsang', 'nayda', 'combo', 'docton', 'santhuong', 'nhanban', 'kepha', 'xaotron', 'epxung', 'nhieusong']) {
     moi('solo', [id, 'lien', 'canon', 'set', 'tia']); const T2 = dat(2, id, 3); const E2 = quai(300); const d0 = motPhat(T2, E2, 1.5); R('G.ban[0].cuong = 99'); const d1 = motPhat(T2, E2, 1.5);
     if (!gan(d1, 2 * d0)) sai.push(id + ' ×' + f2(d1 / d0));
   }
-  ghi('tuongtac', 'Archfiend RAGE: +100% damage on every Epic shot (15 shooters)', sai.length ? sai.join(', ') : 'all ×2.00', !sai.length);
+  ghi('tuongtac', 'Archfiend RAGE: +100% damage on every Epic shot (14 shooters — Hourglass does not shoot)', sai.length ? sai.join(', ') : 'all ×2.00', !sai.length);
   khongCrit(false);
   // DPS tăng theo sao (không buff): 1★ < 3★ < 5★ < 7★ và 7★ ≥ 4× 1★
   const bang = [];

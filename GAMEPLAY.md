@@ -3,6 +3,15 @@
 > Game merge tower-defense trong `thap/`. Luật game và bàn giao: `docs/demo-hop-tuong/ban-giao/BAN-GIAO.md`, luật code/hình: `thap/QUY-TAC-HINH.md`.
 > Mỗi session thêm một mục `## claude/<tên-nhánh> — …` ở CUỐI file (file gộp kiểu union, không xung đột).
 
+## claude/demo-hop-tuong — Ụ sáng tạo: 3 ụ mẫu làm thử (09/11)
+- Theo `docs/demo-hop-tuong/tuvan/u-sang-tao/DE-XUAT.md` §6 (người dùng "Ok"): thay cơ chế + hình + tên, GIỮ id/bậc/khoá lưu (bộ sưu tập, cấp thẻ, bộ bài không mất).
+- **Iaido Katana / Kiếm Rút Nhanh** (`sungluc`, Trắng): chém quái đầu trong dải HÀNG hoặc CỘT của ô (kéo ra tới đường) 40 ST / 1,8 s, trúng tức thì; ngoài dải chỉ chọc 45%. 3★ dải 1,5 ô +20% nhịp · 5★ +25% ST, trúng thêm quái thứ 2 trong dải · 7★ thêm ×1,3 ST, nhịp 1,4 s. Hình: kiếm trong vỏ xoay theo mục tiêu, rung khi quái vào dải, rút lưỡi → vung → tra vỏ, vệt chém.
+- **Bee Hive / Tổ Ong** (`phun`, Trắng): 2 + ⌊★/2⌋ ong; ong bay tới quái ngẫu nhiên (rngLuat có hạt), đốt 14 ST rồi bay về, nghỉ 0,25 s. Đặt sát đường đốt dày hơn. 3★ quái bay ×1,5 · 5★ đốt chậm 10% 1 s · 7★ bay 340 px/s. Ong ở nhà bay vòng quanh tổ.
+- **Hourglass / Đồng Hồ Cát** (`khoathoigian`, Tím, ĐB): mỗi 9 s (3★ 8 s) tự lật → 3 s quái trong dải hàng chậm 45% (tinh anh 30%, trùm 20%), ụ Tấn công cùng hàng +30% tốc bắn; 5★ thêm cột · 7★ 0,5 s đầu quái thường đứng yên. Không gây sát thương (bỏ "khoá + nổ").
+- Không sát thương lan; không Math.random trong luật; VFX nhẹ (chỉ vẽ ảnh PNG, không blur/shadow).
+- Ảnh ChatGPT: `docs/demo-hop-tuong/thap-art/raw_usangtao_<id>.png` (bộ phận) + `_cd` (chân dung) → `assets/usk_* uto_* udh_*`, `pilot_/pn/hero/nho/glyph` của 3 ụ.
+- Cân bằng: bảng so DPS ghi ở DE-XUAT mục 8. Test sửa theo cơ chế mới: `tools/thap-kt-kynang-tx.js` (phun, sungluc; ụ "bắn nặng" chung đổi sang Sniper/Gatling), `tools/thap-kt-kynang-tim.js` (Đồng Hồ Cát; sửa harness thiếu `location`).
+
 ## claude/demo-hop-tuong — Ember trần theo cấp, La Bàn/Prism mạnh theo stack
 - Người dùng chốt (09/11 16:46). Số đo trước/sau: `docs/demo-hop-tuong/tocban/CONG-DON-EMBER-LABAN-PRISM.md` mục "Lần 2 — đã áp dụng".
 - **Ember (Lửa Thập Tự):** trần lửa CỨNG theo cấp thẻ: LV9 90, +12 mỗi cấp, LV17 186. Lửa thừa bị mất (sinh, truyền khi rời bàn, ghép). Bù: ST gốc 24 → 30, tốc 1.5 → 1.8. Tấm đếm và mô tả hiện "n/trần" (vd 186/186, sáng khi đầy). Trang ụ: dòng "Trần lửa 90 → 102" ở hàng cấp thẻ.

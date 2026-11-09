@@ -243,3 +243,40 @@ Chọn 3 ụ đại diện 3 nhóm (vũ khí / sinh vật / đồ vật bẻ lu�
 - **Hình:** ụ + chân dung + **bản pixel** theo quy chuẩn pixel; giữ đường vẽ dự phòng (ụ chưa có hình mới vẽ hình cũ). Prompt ảnh nên viết theo cột "Hình dung" + "CD" ở trên.
 - **Tất định:** mỗi ụ dùng ngẫu nhiên ghi muối `rngLuat` mới vào bảng muối (không trùng muối 37 của Dice Gun…).
 - **Thứ tự gợi ý:** 3 ụ mẫu §6 → người dùng chơi thử duyệt "cảm giác" → làm theo bậc Trắng → Xanh → Tím, mỗi đợt 4–6 ụ; đo DPS bằng `tools/thap-sim-tier.js` để giữ hệ số bậc.
+
+---
+
+## 8. Làm thử (09/11) — 3 ụ mẫu ĐÃ VÀO GAME (giữ id/bậc/khoá lưu)
+
+Code: `thap/js/skills2.js` (`SKILLS.phun`, `SKILLS.sungluc`, `HU.toOng/ongDot/kiemChem`), `thap/js/skills3.js` (`SKILLS.khoathoigian`, `HU.dhDai`, `KY_NANG_CAP.khoathoigian`), mốc riêng 3/5/7★ trong `phattrien.js MOC_RIENG` (thay mốc chung — đã gộp phần +tốc/+ST của mốc chung vào mốc riêng). Hình: ảnh ChatGPT `thap-art/raw_usangtao_<id>.png` (tấm bộ phận) + `raw_usangtao_<id>_cd.png` (chân dung) → `assets/usk_*`, `uto_*`, `udh_*`, `pilot_/pn/hero/nho/glyph`.
+
+| Ụ | Số liệu cuối |
+|---|---|
+| **Iaido Katana** (`sungluc`) | 40 ST / 1,8 s, trúng tức thì; dải hàng/cột rộng 1 ô (3★ 1,5 ô); ngoài dải chọc 45%; chí mạng +10% · 3★ +20% nhịp · 5★ +25% ST + nhát trong dải trúng thêm quái thứ 2 (100%) · 7★ ×1,3 ST nữa + nhịp 1,4 s |
+| **Bee Hive** (`phun`) | 2 + ⌊★/2⌋ ong · 14 ST/vết đốt · bay 260 px/s (7★ 340) · nghỉ 0,25 s · chọn quái `rngLuat` muối 131 (ưu tiên quái chưa có ong nhắm) · tốc bay/nghỉ × tốc bắn · 3★ quái bay ×1,5 · 5★ đốt làm chậm 10% 1 s |
+| **Hourglass** (`khoathoigian`) | lật mỗi 9 s (3★ 8 s) cố định · 3 s cát chậm: quái trong dải hàng chậm 45% (tinh anh 30%, trùm 20%; cấp thẻ 45→55,8%) · ụ Tấn công cùng hàng +30% tốc (qua `HOTRO.apDung`) · 5★ thêm cột · 7★ 0,5 s đầu quái thường đứng yên · không ST |
+
+**So DPS** (`tools/thap-sim-vaitro.js dpsBan`, ụ ở ô 2, 30 s; "đơn" = 1 quái trâu chạy vòng, "đông" = ≤10 quái):
+
+| Ụ (Trắng) | 1★ đơn / đông | 3★ | 5★ | 7★ |
+|---|---|---|---|---|
+| Liên Thanh `lien` | 19 / 20 | 70 / 70 | 176 / 177 | 483 / 470 |
+| Pháo May Rủi `xucxac` | 21 / 26 | 65 / 72 | 142 / 144 | 325 / 342 |
+| Bắn Tỉa `tia` | 28 / 29 | 76 / 73 | 181 / 166 | 413 / 341 |
+| **Kiếm Rút Nhanh** | 15 / 20 | 53 / 67 | 116 / 255 | 242 / 634 |
+| **Tổ Ong** (ô 2, cách đường ~95 px) | 18 / 17 | 62 / 69 | 151 / 160 | 373 / 370 |
+| Tổ Ong ô góc 0 (sát đường) / ô giữa 7 | 24 / 20 · 18 / 16 | 78 / 72 · 63 / 63 | 190 / 183 · 155 / 136 | 437 / 414 · 342 / 344 |
+
+→ Tổ Ong nằm giữa các ụ Trắng cùng sao, đặt sát đường mạnh hơn ~30%. Kiếm: 1 quái chạy vòng thì yếu (phần lớn thời gian ở ngoài dải, chọc 45%), đông quái từ 5★ mạnh (2 mục tiêu) — đúng ý "chỗ đặt quyết định".
+
+**Đồng Hồ Cát** (ĐB Tím, ô 5 cùng hàng với 4 ụ Tấn công lien/canon/set/tia cùng sao — % DPS tăng của cả nhóm, so ụ Tím hỗ trợ kề):
+
+| | 1★ đơn / đông | 3★ | 5★ |
+|---|---|---|---|
+| Đồng Hồ Cát | +5% / +7% | +8% / +14% | +2% / +56% (cột 5★ phủ đường trên + dưới) |
+| Focus Lens `thaukinh` (kề) | −5% / +4% | −3% / +13% | +7% / +35% |
+| Reaper Pillar `tuthan` (kề) | −4% / −1% | +3% / +11% | −2% / +11% |
+
+Cộng thêm khống chế (chậm 45% · 3 s / 9 s ≈ 33% thời gian) mà bảng DPS không tính. Sim có nhiễu ±5%.
+
+**Tất định:** không `Math.random` trong luật 3 ụ (ong = trạng thái `T.ong`, bước cố định 1/60 s; chọn quái `rngLuat`); 2 mô phỏng cùng hạt cho cùng tổng sát thương + cùng chuỗi mục tiêu ong.
