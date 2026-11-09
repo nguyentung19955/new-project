@@ -230,6 +230,7 @@ const ONS = {
     if (T.id === 'tienhoa' && T.chay) f += 'X'; // trứng cháy
     if (T.id === 'ronglua' && T.nhiet > 0) f += 'H' + Math.round(T.nhiet * 100) + ';'; // Rồng Máy: nhiệt lò (×100, giữ 2 số lẻ)
     if (T.id === 'cobac' && T.cbS) f += 'z' + T.cbS + ';'; // Lucky Slot: sao đã quay (bàn con rối không tự quay)
+    if (T.id === 'thacmana' && T.thacT > 0) f += 'U' + Math.round(T.thacT * 100) + ';V' + Math.round(T.thacS || 0) + ';'; // Arcane Cascade: MANA FLOOD còn (×100) + mana đã xả
     // AUDIT F14 (09/11): MỌI cộng dồn riêng ụ + trạng thái trên thân đi theo cờ ô → bàn con rối khớp máy chủ bàn
     if (T.id === 'leviathan' && T.vuc) f += 'v' + T.vuc + ';'; // Leviathan: ABYSS
     if (T.id === 'cuuvi') { if (T.duoi) f += 'd' + T.duoi + ';'; if (T.xaN) f += 'f' + T.xaN + ';'; } // Nine-Tail: đuôi + số lần xả (đột phá)
@@ -264,6 +265,7 @@ const ONS = {
     if (T.id === 'tienhoa') T.chay = c.includes('X');
     if (T.id === 'ronglua') T.nhiet = so('H') / 100;
     if (T.id === 'cobac') T.cbS = so('z');
+    if (T.id === 'thacmana') { T.thacT = so('U') / 100; T.thacS = so('V'); if (!(T.thacT > 0)) T.thacP = 0; }
     // AUDIT F14: cộng dồn riêng ụ + trạng thái trên thân (xem oTT)
     if (T.id === 'leviathan') T.vuc = so('v');
     if (T.id === 'cuuvi') { T.duoi = so('d'); T.xaN = so('f'); }
