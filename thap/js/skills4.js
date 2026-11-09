@@ -6,7 +6,7 @@ const giaiDoanSao = (T) => (T.sao >= 7 ? 3 : T.sao >= 4 ? 2 : 1);
 const ttSao = (mau, ten, dk) => ({ mau, khongAnh: true, ten, dk, gd: (T) => ({ s: giaiDoanSao(T), p: (T.sao - 1) / 6, v: [0.5] }) });
 
 // =====================================================================================================
-// G3 · NEMESIS — Vàng TC: bắn quái nhiều máu nhất, mỗi phát +p% máu tối đa (trùm tối đa 0.8%).
+// G3 · NEMESIS — Vàng TC: bắn quái nhiều máu nhất, mỗi phát +p% máu tối đa (trùm tối đa 1.2%).
 //      PHÁN QUYẾT (người dùng duyệt 08/11 — CHATGPT-SPEC §12): cứ 10 phát TRÚNG TRỰC TIẾP của chính ụ này (nổ lan/DoT không tính),
 //      đếm quái THƯỜNG vs TINH ANH (quái to) + TRÙM: thường nhiều hơn → +4% tốc bắn vĩnh viễn (trần +40%);
 //      tinh anh/trùm nhiều hơn hoặc HOÀ 5–5 → +6% sát thương vĩnh viễn (trần +60%). Cấp thẻ: +0.2 / +0.3 điểm % mỗi cấp trên 9 (trần giữ nguyên).
@@ -14,11 +14,11 @@ const ttSao = (mau, ten, dk) => ({ mau, khongAnh: true, ten, dk, gd: (T) => ({ s
 // =====================================================================================================
 SKILLS.nemesis = {
   vai: 'tc', dmg: 26, toc: 0.8, nham: 'mau',
-  TRAN_TOC: 0.40, TRAN_DMG: 0.60,
-  p: (T) => sao7(T, [0.003, 0.004, 0.005, 0.006, 0.008, 0.01, 0.012]),
+  TRAN_TOC: 0.60, TRAN_DMG: 1.00, TRAN_TRUM: 0.012, // 09/11 gánh hậu kỳ: trần 40%/60% → 60%/100%, % máu 0.3–1.2% → 0.5–2%, trùm 0.8% → 1.2%
+  p: (T) => sao7(T, [0.005, 0.006, 0.008, 0.01, 0.012, 0.015, 0.02]),
   buocToc: (T) => 0.04 + 0.002 * capThe9(G.ban[T.ban], 'nemesis'),
   buocDmg: (T) => 0.06 + 0.003 * capThe9(G.ban[T.ban], 'nemesis'),
-  mo: (T) => '+' + (SKILLS.nemesis.p(T) * 100).toFixed(1) + '% max HP per hit' + (SKILLS.nemesis.p(T) > 0.008 ? ' (bosses 0.8%)' : '') + ' · VERDICT every 10 hits (' + ((T && T.nmDem) || 0) + '/10): more normal enemies → +' + +(SKILLS.nemesis.buocToc(T) * 100).toFixed(1) + '% fire rate (now +' + Math.round(((T && T.nmToc) || 0) * 100) + '%, cap 40%); more elites/bosses or a tie → +' + +(SKILLS.nemesis.buocDmg(T) * 100).toFixed(1) + '% damage (now +' + Math.round(((T && T.nmDmg) || 0) * 100) + '%, cap 60%)',
+  mo: (T) => '+' + (SKILLS.nemesis.p(T) * 100).toFixed(1) + '% max HP per hit' + (SKILLS.nemesis.p(T) > SKILLS.nemesis.TRAN_TRUM ? ' (bosses ' + SKILLS.nemesis.TRAN_TRUM * 100 + '%)' : '') + ' · VERDICT every 10 hits (' + ((T && T.nmDem) || 0) + '/10): more normal enemies → +' + +(SKILLS.nemesis.buocToc(T) * 100).toFixed(1) + '% fire rate (now +' + Math.round(((T && T.nmToc) || 0) * 100) + '%, cap ' + Math.round(SKILLS.nemesis.TRAN_TOC * 100) + '%); more elites/bosses or a tie → +' + +(SKILLS.nemesis.buocDmg(T) * 100).toFixed(1) + '% damage (now +' + Math.round(((T && T.nmDmg) || 0) * 100) + '%, cap ' + Math.round(SKILLS.nemesis.TRAN_DMG * 100) + '%)',
   sinh(G, T) { T.nmDem = 0; T.nmN = 0; T.nmE = 0; T.nmToc = 0; T.nmDmg = 0; },
   capNhat(G, B, T) { T.buf.toc += T.nmToc || 0; T.buf.dmg += T.nmDmg || 0; return false; },
   ban(G, B, T, E) {
@@ -27,7 +27,7 @@ SKILLS.nemesis = {
     this.danh(G, B, T, E);
   },
   danh(G, B, T, E) {
-    const phan = Math.min(E.trum ? 0.008 : 1, this.p(T)) * E.max, tinh = !!(E.trum || E.d.to); // phân loại LÚC TRÚNG
+    const phan = Math.min(E.trum ? this.TRAN_TRUM : 1, this.p(T)) * E.max, tinh = !!(E.trum || E.d.to); // phân loại LÚC TRÚNG
     trung(E, dmgU(T) + phan, { B, mau: '#c8d4e6' });
     this.ghi(T, tinh);
   },

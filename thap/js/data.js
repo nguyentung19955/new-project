@@ -119,7 +119,22 @@ function mvArt(id) {
 }
 
 // máu quái theo wave (tăng nhanh dần như DCDW)
-function mauWave(w) { return Math.round(80 * Math.pow(1.15, w - 1) + 30 * w); }
+// HẬU KỲ (09/11 — người dùng: "tầm round 30 hơn 30 là gãy"): sau wave MAU_GAY máu tăng ×MAU_TANG_SAU mỗi wave (trước ×1.15 mãi → ×4 mỗi 10 wave,
+//   bàn đã max sao/power-up không theo kịp, trùm 30/40 lọt 2 tim). PVP giữ ×1.15 (nhịp ĐỘT TỬ từ wave 30 không đổi). Số đo trước/sau: GAMEPLAY.md.
+const MAU_GAY = 25, MAU_TANG_SAU = 1.12;
+function mauWave(w) {
+  const pvp = typeof G !== 'undefined' && G.che === 'pvp';
+  const m = pvp || w <= MAU_GAY ? Math.pow(1.15, w - 1) : Math.pow(1.15, MAU_GAY - 1) * Math.pow(MAU_TANG_SAU, w - MAU_GAY);
+  return Math.round(80 * m + 30 * w);
+}
+// GÁNH HẬU KỲ: ụ Tấn công VÀNG / ĐỎ được +k sát thương mỗi wave sau wave HAU_KY.tu (nhân riêng trong dmgU — gồm cả đòn kỹ năng / chủ động dùng dmgU)
+//   wave 40: Vàng ×1.70, Đỏ ×1.80 · wave 50: ×2.05 / ×2.20 · wave 60: ×2.40 / ×2.60. Tất định (chỉ theo G.wave), mọi chế độ.
+const HAU_KY = { tu: 20, vang: 0.035, do: 0.04 };
+function heHauKy(T) {
+  const k = T && HAU_KY[T.bac], sk = T && typeof SKILLS !== 'undefined' && SKILLS[T.id];
+  if (!k || !sk || sk.vai !== 'tc' || typeof G === 'undefined') return 1;
+  return 1 + k * Math.max(0, (G.wave | 0) - HAU_KY.tu);
+}
 // mana khi giết
 function manaGiet(w) { return 10 + 2 * (w - 1); }
 
