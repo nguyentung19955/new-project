@@ -121,20 +121,35 @@ function mvArt(id) {
 // máu quái theo wave (tăng nhanh dần như DCDW)
 // HẬU KỲ (09/11 — người dùng: "tầm round 30 hơn 30 là gãy"): sau wave MAU_GAY máu tăng ×MAU_TANG_SAU mỗi wave (trước ×1.15 mãi → ×4 mỗi 10 wave,
 //   bàn đã max sao/power-up không theo kịp, trùm 30/40 lọt 2 tim). PVP giữ ×1.15 (nhịp ĐỘT TỬ từ wave 30 không đổi). Số đo trước/sau: GAMEPLAY.md.
-const MAU_GAY = 25, MAU_TANG_SAU = 1.12;
+//   10/11 (tư vấn ChatGPT, người dùng duyệt): 3 đoạn — w ≤ 25 ×1.15 · 26–40 ×1.12 · ≥ 41 ×1.08 mỗi wave.
+const MAU_GAY = 25, MAU_TANG_SAU = 1.12, MAU_GAY2 = 40, MAU_TANG_SAU2 = 1.08;
 function mauWave(w) {
   const pvp = typeof G !== 'undefined' && G.che === 'pvp';
-  const m = pvp || w <= MAU_GAY ? Math.pow(1.15, w - 1) : Math.pow(1.15, MAU_GAY - 1) * Math.pow(MAU_TANG_SAU, w - MAU_GAY);
+  let m;
+  if (pvp || w <= MAU_GAY) m = Math.pow(1.15, w - 1);
+  else if (w <= MAU_GAY2) m = Math.pow(1.15, MAU_GAY - 1) * Math.pow(MAU_TANG_SAU, w - MAU_GAY);
+  else m = Math.pow(1.15, MAU_GAY - 1) * Math.pow(MAU_TANG_SAU, MAU_GAY2 - MAU_GAY) * Math.pow(MAU_TANG_SAU2, w - MAU_GAY2);
   return Math.round(80 * m + 30 * w);
 }
 // GÁNH HẬU KỲ: ụ Tấn công VÀNG / ĐỎ được +k sát thương mỗi wave sau wave HAU_KY.tu (nhân riêng trong dmgU — gồm cả đòn kỹ năng / chủ động dùng dmgU)
-//   wave 40: Vàng ×1.70, Đỏ ×1.80 · wave 50: ×2.05 / ×2.20 · wave 60: ×2.40 / ×2.60. Tất định (chỉ theo G.wave), mọi chế độ.
-const HAU_KY = { tu: 20, vang: 0.035, do: 0.04 };
+//   wave ≤ 40 tuyến tính (wave 40: Vàng ×1.70, Đỏ ×1.80); sau wave 40 (10/11, khớp máu ×1.08) nhân mũ: Vàng ×1.02, Đỏ ×1.023 mỗi wave
+//   (wave 50: ×2.07 / ×2.26 · wave 60: ×2.53 / ×2.83). Tất định (chỉ theo G.wave), mọi chế độ.
+const HAU_KY = { tu: 20, vang: 0.035, do: 0.04, tu2: 40, mu: { vang: 1.02, do: 1.023 } };
 function heHauKy(T) {
   const k = T && HAU_KY[T.bac], sk = T && typeof SKILLS !== 'undefined' && SKILLS[T.id];
   if (!k || !sk || sk.vai !== 'tc' || typeof G === 'undefined') return 1;
-  return 1 + k * Math.max(0, (G.wave | 0) - HAU_KY.tu);
+  const w = G.wave | 0;
+  if (w <= HAU_KY.tu2) return 1 + k * Math.max(0, w - HAU_KY.tu);
+  return (1 + k * (HAU_KY.tu2 - HAU_KY.tu)) * Math.pow(HAU_KY.mu[T.bac], w - HAU_KY.tu2);
 }
+// TĂNG TRƯỞNG THEO SAO (10/11, tư vấn ChatGPT, người dùng duyệt): ụ Tấn công bắn thường — ST ×(1 + 0.50/★) (7★ ×4, trước ×6.1),
+//   tốc bắn +10.5 điểm %/★ cộng vào nhóm tốc (cùng mốc 3★ +20% → 7★ ×1.83, trước ×1.2) → DPS 7★ giữ ~×9.5. tocSao riêng (Liên Thanh, Súng Phun…) vẫn nhân thêm.
+//   SAO_CU: giữ hệ số cũ (ST ×(1 + 0.85/★), không thêm tốc) — Rồng Máy, Thuỷ Quái (người dùng chốt) + ụ mà chu kỳ là cơ chế (không theo tốc bắn).
+const SAO_ST = 0.5, SAO_ST_CU = 0.85, SAO_TOC = 0.105;
+const SAO_CU = new Set(['ronglua', 'leviathan', 'wallgen', 'chuato', 'min', 'blackhole']);
+function saoMoi(id) { const sk = typeof SKILLS !== 'undefined' && SKILLS[id]; return !!sk && sk.vai === 'tc' && !SAO_CU.has(id); }
+function heSaoST(id, sao) { return 1 + (saoMoi(id) ? SAO_ST : SAO_ST_CU) * ((sao | 0) - 1); }
+function heSaoToc(T) { return T && saoMoi(T.id) ? SAO_TOC * ((T.sao | 0) - 1) : 0; }
 // mana khi giết
 function manaGiet(w) { return 10 + 2 * (w - 1); }
 

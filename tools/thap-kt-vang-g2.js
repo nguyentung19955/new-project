@@ -106,8 +106,8 @@ console.log('Quantum Choir — Harmony (hopca)');
 tran(['hopca', 'lien', 'canon', 'bang', 'tia']);
 R(`var h = dat(7, 'hopca', 2); dat(2, 'lien', 2); dat(6, 'canon', 2); dat(8, 'bang', 1); dat(1, 'tia', 2); cn();`);
 ok(R('SKILLS.hopca.hoa(B, h)') === 2, 'đếm 2 ụ KỀ cùng sao (chéo / khác sao không tính)');
-ok(gan(R('h.buf.dmg'), 2 * R('SKILLS.hopca.HOA_DMG')) && gan(R('h.buf.cdmg'), 0.16) && gan(R('h.buf.toc'), 0), '2 Harmony: +2×HOA_DMG ST, +16% ST chí mạng');
-R(`dat(12, 'set', 2, T => T.st.bang = 99); cn();`); ok(R('SKILLS.hopca.hoa(B, h)') === 3 && gan(R('h.buf.toc'), 0.3), 'ụ băng vẫn tính · 3 Harmony: +30% tốc');
+ok(gan(R('h.buf.dmg'), 2 * R('SKILLS.hopca.HOA_DMG')) && gan(R('h.buf.cdmg'), 0.16) && gan((R('h.buf.toc') - R('heSaoToc(h)')), 0), '2 Harmony: +2×HOA_DMG ST, +16% ST chí mạng');
+R(`dat(12, 'set', 2, T => T.st.bang = 99); cn();`); ok(R('SKILLS.hopca.hoa(B, h)') === 3 && gan((R('h.buf.toc') - R('heSaoToc(h)')), 0.3), 'ụ băng vẫn tính · 3 Harmony: +30% tốc');
 R(`B.t[8] = null; dat(8, 'lien', 2, T => T.st.da = true); cn();`); ok(R('SKILLS.hopca.hoa(B, h)') === 3, 'ô đá không tính');
 R(`B.t[8] = null; dat(8, 'lien', 2); cn();`); ok(R('SKILLS.hopca.hoa(B, h)') === 4 && gan(R('h.buf.cdmg'), 0.32 + 0.5), '4 Harmony: +50% ST chí mạng thêm');
 R(`B.t.fill(null); var h7 = dat(7, 'hopca', 7); cn();`); ok(gan(R('h7.buf.toc') - R('(function(){ const b = h7.buf.toc; h7.buf.toc = 0; mocBuf(B); const m = h7.buf.toc; h7.buf.toc = b; return m; })()'), 0.25), '7★: +25% tốc (ngoài mốc sao chung)');
@@ -139,7 +139,7 @@ R(`var d1 = dat(0, 'loren', 1, T => { T.dang = 'dmg'; T.lo = 14; }), L = dat(5, 
 ok(gan(R('L.anv.v'), 0.5208) && gan(R('L.buf.dmg'), 0.5208, 1e-4) && !R('B.t[0]'), 'B5-4: LV17 14 cộng dồn rèn ST → +52.08% ST, Anvil mất');
 R(`var d2 = dat(1, 'loren', 1, T => { T.dang = 'toc'; T.lo = 14; }); ghep(B, d2, L); cn();`);
 ok(R('L.anv.k') === 'toc' && gan(R('L.anv.v'), 0.3472) && gan(R('L.buf.dmg'), 0, 1e-9), 'LV17 rèn tốc 14 → +34.72% tốc; chỉ 1 loại buff / ụ (thay buff ST)');
-R(`L.st.da = true; cn();`); ok(gan(R('L.buf.toc'), 0, 1e-9), 'ụ hoá đá: buff tắt'); R('L.st.da = false');
+R(`L.st.da = true; cn();`); ok(gan((R('L.buf.toc') - R('heSaoToc(L)')), 0, 1e-9), 'ụ hoá đá: buff tắt'); R('L.st.da = false');
 R(`B.t.fill(null); B.capThe = {}; var p1 = dat(5, 'lien', 2, T => T.anv = { k: 'dmg', v: 0.42 }), p2 = dat(6, 'lien', 2, T => T.anv = { k: 'dmg', v: 0.27 }); B.deck = ['canon']; var con = ghep(B, p1, p2);`);
 ok(R('con') && !R('con.anv'), 'B5-4 (09/11 Q2 = A): 2 ụ có buff Anvil ghép THƯỜNG → ụ con là ụ MỚI, không mang buff');
 R(`B.t.fill(null); var e1 = dat(0, 'loren', 2, T => { T.dang = 'dmg'; }), e2 = dat(1, 'loren', 2, T => { T.dang = 'toc'; });`);
@@ -170,7 +170,7 @@ R('B.t[2] = null; B.t[3] = null; B.t[4] = null; B.t[9] = null;'); R(`ghep(B, M, 
 R(`M.mh.con = 10; T4.sao = 5; cn();`); ok(gan(R('M.mh.con'), 13 - 1 / 30, 1e-3), 'mục tiêu +1★ → +3 s');
 R(`T4.st.bang = 2; var c0 = M.mh.con; cn(); cn();`); ok(gan(R('M.mh.con'), R('c0')), 'mục tiêu đóng băng: dừng đếm'); R('T4.st.bang = 0;');
 R(`M.mh.con = 0.01; cn();`); ok(!R('B.t[8]') && R('M.mau') === 25, 'nuốt 5★ → +25 Máu, ô trống');
-R(`cn();`); ok(gan(R('M.buf.dmg'), 25 * 0.05 + 0.15, 1e-6) && gan(R('M.buf.toc'), 25 * 0.006) && gan(R('M.buf.crit'), 25 * 0.002) && gan(R('M.buf.cdmg'), 25 * 0.03), '25 Máu (dạng 2): +140% ST, +15% tốc, +5% chí mạng, +75% ST chí mạng cho CHÍNH nó');
+R(`cn();`); ok(gan(R('M.buf.dmg'), 25 * 0.05 + 0.15, 1e-6) && gan((R('M.buf.toc') - R('heSaoToc(M)')), 25 * 0.006) && gan(R('M.buf.crit'), 25 * 0.002) && gan(R('M.buf.cdmg'), 25 * 0.03), '25 Máu (dạng 2): +140% ST, +15% tốc, +5% chí mạng, +75% ST chí mạng cho CHÍNH nó');
 ok(R('[0, 19, 20, 49, 50, 99, 100, 199, 200, 999].map(n => SKILLS.mauhut.dang({ mau: n })).join()') === '0,0,1,1,2,2,3,3,4,4', 'mốc dạng 20 / 50 / 100 / 200, không trần');
 R(`M.mau = 5000; cn();`); ok(R('critU(M)') === 1, 'Máu rất cao: chí mạng ≤ 100%');
 R(`M.mau = 100; M.mhN = 0; G.quai.length = 0; var nv = 0; var _hu = G.hu.push.bind(G.hu); G.hu.push = (o) => { if (o && o.k === 'mhNova') nv++; return _hu(o); };
@@ -190,8 +190,8 @@ R(`dat(8, 'railgun', 2); cn();`); ok(gan(R('s0.buf.dmg'), 0.65), 'hàng 4/5: +65
 R(`dat(9, 'railgun', 2); cn();`); ok(gan(R('s0.buf.dmg'), 2.0), 'hàng 5/5: +200%');
 R(`B.t[9].st.da = true; cn();`); ok(gan(R('s0.buf.dmg'), 0.65), 'B5-15: 1 ô đá → 4/5 = +65%');
 R(`B.t[9].st.da = false; B.t[9].st.bang = 9; cn();`); ok(gan(R('s0.buf.dmg'), 2.0), 'ụ băng vẫn tính');
-R(`dat(0, 'railgun', 2); cn();`); ok(gan(R('s0.buf.toc'), 0.35), 'cột 2/3: +35% tốc');
-R(`dat(10, 'railgun', 2); cn();`); ok(gan(R('s0.buf.toc'), 1.5), 'cột 3/3: +150% tốc');
+R(`dat(0, 'railgun', 2); cn();`); ok(gan((R('s0.buf.toc') - R('heSaoToc(s0)')), 0.35), 'cột 2/3: +35% tốc');
+R(`dat(10, 'railgun', 2); cn();`); ok(gan((R('s0.buf.toc') - R('heSaoToc(s0)')), 1.5), 'cột 3/3: +150% tốc');
 ok(R("TEXT.turret.railgun.name") === 'Salvo Battery', 'đổi tên Salvo Battery');
 
 console.log('Trứng Evolver (tienhoa)');
@@ -210,7 +210,7 @@ console.log('Hero Foundry (xuonganh)');
 tran(['xuonganh', 'lien', 'canon', 'bang', 'tia'], { xuonganh: 8 });
 R(`dat(3, 'xuonganh', 1); dat(8, 'xuonganh', 1); B.deck = ['lien']; ghep(B, B.t[3], B.t[8]); cn();`);
 ok(R('B.hero.length === 1 && B.hero[0].o === 8') && gan(R('B.hero[0].het - G.t'), 25), 'ô ANH HÙNG = ô ghép, 25 s, 1 ô / bàn');
-ok(gan(R('B.t[8].buf.toc'), 0.992, 1e-3) && gan(R('B.t[8].buf.cdmg'), 0.372, 1e-3), 'LV17: +99.2% tốc, +37.2% ST chí mạng');
+ok(gan((R('B.t[8].buf.toc') - R('heSaoToc(B.t[8])')), 0.992, 1e-3) && gan(R('B.t[8].buf.cdmg'), 0.372, 1e-3), 'LV17: +99.2% tốc, +37.2% ST chí mạng');
 
 console.log('Chữ kỹ năng (mo) không lỗi + tiếng Anh đơn giản');
 tran(['lualien', 'hopca', 'luutru', 'loren', 'bienmau']);

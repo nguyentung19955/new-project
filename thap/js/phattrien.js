@@ -129,6 +129,7 @@ const mocChung = (T, n) => T.sao >= n && !(MOC_RIENG[T.id] && MOC_RIENG[T.id][n]
 // gọi mỗi bước cho từng bàn, SAU khi reset buff (game.js capNhatBan)
 function mocBuf(B) {
   for (const T of B.t) if (T && mocChung(T, 3) && loaiMoc(T.id) !== 'ht') T.buf.toc += 0.2;
+  for (const T of B.t) if (T) { const v = heSaoToc(T); if (v) T.buf.toc += v; } // tốc theo sao (data.js, 10/11)
 }
 // hệ số hào quang hỗ trợ theo mốc chung
 const heSoHT = () => 1; // đợt vai trò: mốc sao của ụ hỗ trợ đã nằm trong đường cong HOTRO.K (hotro.js) — không nhân thêm

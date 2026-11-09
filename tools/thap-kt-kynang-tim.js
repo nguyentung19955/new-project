@@ -76,7 +76,7 @@ function motPhat(T, E, thoiGian) {
 function dps(T0) { xoaSum(); buoc(T0); return tong() / T0; }
 const dmgU = (T) => { ctx._T = T; return R('dmgU(_T)'); };
 const tocU = (T) => { ctx._T = T; return R('tocU(_T)'); };
-const hs = (id, sao, extra) => R(`(SKILLS['${id}'].dmg) * TIERS.tim.hs * (1 + 0.85 * (${sao} - 1))`) * (extra || 1);
+const hs = (id, sao, extra) => R(`(SKILLS['${id}'].dmg) * TIERS.tim.hs * heSaoST('${id}', ${sao})`) * (extra || 1);
 const mocDmg = (id, sao) => { ctx._x = [id, sao]; return R(`heSoMocDmg({ id: _x[0], sao: _x[1] })`); };
 
 // =====================================================================================================
@@ -92,7 +92,7 @@ chay('chung', () => {
   let sai = [];
   for (const id of TIM) for (const s of [1, 3, 5, 7]) {
     ctx._x = [id]; R(`G.ban[0].deck = [_x[0], 'lien', 'canon', 'set', 'tia']; G.ban[0].lv[_x[0]] = 1;`);
-    const T = dat(2, id, s), d = dmgU(T), k = R(`SKILLS['${id}'].dmg`) * 1.65 * (1 + 0.85 * (s - 1)) * mocDmg(id, s);
+    const T = dat(2, id, s), d = dmgU(T), k = R(`SKILLS['${id}'].dmg`) * 1.65 * R(`heSaoST('${id}', ${s})`) * mocDmg(id, s);
     if (!gan(d, k)) sai.push(id + '@' + s + ' ' + f2(d) + '≠' + f2(k));
     R('G.ban[0].t[2] = null');
   }
