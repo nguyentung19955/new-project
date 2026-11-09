@@ -13,8 +13,8 @@ Làm **lần lượt từng giai đoạn**, giai đoạn trước xong (đã ki�
 | B1 | Tư vấn ChatGPT hướng hình ảnh anime (HUD trận, HOME, màn phụ) + ảnh mockup → anh chốt hướng | 09/11 15:00 | **xong 09/11 14:00** — anh chốt bản PHA A+B (mockup-C-pha.jpg) + bảng màu Royal Twilight (mockup-D, BANG-MAU.md); asset HUD/bàn/khung bậc đã có (raw_ui2_*) |
 | B2 | Làm lại HUD trận theo hướng anime đã chốt (thanh trên, nút Summon/mana, khay thẻ, banner trùm) | 11/11 18:00 | **xong 09/11 16:45** (xuất bản) |
 | B3 | HOME + bộ bài + bộ sưu tập + trang ụ + cửa hàng/nhiệm vụ theo cùng hướng | 13/11 18:00 | **xong 09/11** (HUD trận + các màn ngoài trận anime + ảnh mới — vòng quay, rương, băng shop/sự kiện, tấm hộp thoại, ổ khoá, nền màn tải — đã xuất bản) |
-| C | Tiến trình đợt 2: Leo Tháp 100 tầng, Săn Trùm, Tinh thể Đỏ + Ấn Đỏ, thử thách ngắn 3–5 phút cho người mới | 16/11 18:00 | **xong 09/11** (chờ xuất bản) — thiết kế `tuvan/che-do-c/THIET-KE.md`; Leo Tháp d6fb7b6 · Săn Trùm 763fba9 · Ấn Đỏ 6d94547 · Thử thách ngắn (commit này) |
-| D | Tiến trình đợt 3: Thử thách tuần (bộ cố định, công bằng), Vô tận sau wave 70 + bảng xếp hạng | 19/11 18:00 | chờ |
+| C | Tiến trình đợt 2: Leo Tháp 100 tầng, Săn Trùm, Tinh thể Đỏ + Ấn Đỏ, thử thách ngắn 3–5 phút cho người mới | 16/11 18:00 | **xong 09/11** (đã xuất bản) — thiết kế `tuvan/che-do-c/THIET-KE.md`; Leo Tháp d6fb7b6 · Săn Trùm 763fba9 · Ấn Đỏ 6d94547 · Thử thách ngắn 795ebe7 |
+| D | Tiến trình đợt 3: Thử thách tuần (bộ cố định, công bằng), Vô tận sau wave 70 + bảng xếp hạng | 19/11 18:00 | **đang làm** (từ 09/11) — thiết kế `tuvan/che-do-d/THIET-KE.md`; rules bảng xếp hạng: đề xuất §3.2 (chờ anh triển khai) |
 | E | Tiến trình đợt 4: sự kiện xoay 4 tuần (Lễ hội Họ / Đột Biến / Đại Săn Trùm / Bốc Bài), thang mốc, cửa hàng sự kiện (Đỏ của tuần 3.500 xu), rương Featured | 23/11 18:00 | chờ |
 | F | Nền tảng trước khi thu phí: tài khoản + lưu đám mây an toàn, ví/sổ giao dịch phía server, chống gian lận nhận thưởng, analytics D1/D7/D30 | 30/11 18:00 | chờ |
 | G | Thương mại hoá thử (Season Pass, gói khởi đầu, IAP, công bố tỉ lệ) | sau F, lên lịch lại | chờ |
