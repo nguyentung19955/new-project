@@ -3,6 +3,11 @@
 > Game merge tower-defense trong `thap/`. Luật game và bàn giao: `docs/demo-hop-tuong/ban-giao/BAN-GIAO.md`, luật code/hình: `thap/QUY-TAC-HINH.md`.
 > Mỗi session thêm một mục `## claude/<tên-nhánh> — …` ở CUỐI file (file gộp kiểu union, không xung đột).
 
+## claude/demo-hop-tuong — Solo/Leo Tháp: đường không che bàn nữa (09/11)
+- Người dùng (iPhone): "Đường che mất bàn". Chế độ 1 bàn (Solo, Leo Tháp, Săn Trùm, Thử thách) dùng chung `boCuc('solo')`: khay 408 cũ đè ray trong làn trên/dưới (kể cả độ dày 3D) và chìa ra dưới cột cổng/lõi.
+- `data.js` BC_SOLO: khay 330×195 (ô ~57×49, vẫn to hơn PVP), nằm gọn trong chữ C, hở ~10–12 px mỗi phía (tính cả độ dày 3D); cổng/lõi ở cột phải, ngoài khay; giữ tâm dọc cũ. Độ dài LUẬT làn giữ 1061 (`dai`) → thời gian quái đi hết làn y như cũ. PVP/Co-op không đổi.
+- `render.js` veDoanDuong: bỏ hàng điểm ảnh tối ở đầu ảnh đường (vạch tối dọc mảnh ở mỗi mối nối mảnh đường) + mảnh sau đè mảnh trước 0.75 px.
+
 ## claude/demo-hop-tuong — Star Lift: bỏ nâng sao miễn phí (09/11)
 - Người dùng chốt: BỎ hẳn nấc sao của Star Lift (5★ STAR PIP mỗi 2 wave, 7★ STAR SURGE, chữ "★ PIP x/3" / "+1★ STAR LIFT"). Giữ ụ: id `nangsao`, bậc Tím, ảnh, nhóm gacha.
 - Bù: tốc bắn cả 4 ô kề +10%/★ → **+12%/★** (ụ kề sao thấp nhất ×1,5) — thẻ "Rate buff" 12% (LV max 17,4%). Mốc: 3★ LIFT +36%, 5★ HIGH LIFT +60%, 7★ SKY LIFT +84%.
