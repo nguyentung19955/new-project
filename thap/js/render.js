@@ -93,7 +93,10 @@ const REN = {
     const a = typeof vungAT === 'function' ? vungAT() : { t: 0, r: 0, b: 0, l: 0 }, cw = Math.max(1, vw - a.l - a.r), ch = Math.max(1, vh - a.t - a.b); // vùng an toàn tai thỏ (index.html vungAT)
     this.s = Math.min(cw / W, ch / H);
     const thuc = devicePixelRatio || 1;
-    this.dpr = Math.max(1, Math.min(this.dprMax || 3, G.debug && G.debug.dpr ? G.debug.dpr : thuc));
+    // sửa gấp 09/11 (nóng máy iPhone, docs/demo-hop-tuong/tuvan/hieu-nang/BAO-CAO.md): iOS vẽ canvas trận tối đa 2× — ở 3× mỗi khung
+    //   xoá/vẽ/đổ lớp ~15 M điểm ảnh (2× ~7 M) suốt trận; máy không tụt khung (60 Hz vẫn kịp) nên tự lùi ở doKhung không bao giờ chạy → GPU gồng, nóng.
+    //   ?dpr=N (kiểm thử) vẫn ép được mọi mức.
+    this.dpr = G.debug && G.debug.dpr ? Math.max(1, Math.min(3, G.debug.dpr)) : Math.max(1, Math.min(this.dprMax || (this.laIOS ? 2 : 3), thuc));
     const wrap = document.getElementById('wrap');
     // đặt khung ở toạ độ NGUYÊN điểm ảnh thiết bị (không dùng translate -50%): lệch nửa điểm ảnh làm trình duyệt
     // nội suy lại cả canvas lẫn chữ → nhoè toàn màn
