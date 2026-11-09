@@ -1052,3 +1052,8 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - Bảng ENDLESS: luật + mốc tuần + bảng xếp hạng tuần / mọi thời đại (chưa có rules Firebase → "NOT CONNECTED" + kỷ lục cá nhân).
 - Sửa kèm: ảnh rương Huyền thoại / Cổ đại / Rương Trận bị vỡ (`assets/undefined.png`) trên giao diện anime — `ui-anime.js` thay `KTA.ru` mất bí danh hh/su/cd/tran.
 - Lưu: `turret_kt.cd.vt`, `turret_kt.cd.lb` (khoá con mới). Kiểm: `tools/thap-kt-vo-tan.js`.
+
+## claude/demo-hop-tuong — Ụ anime Royal Twilight: rà 97 ụ + vẽ lại nhóm Trắng (09/11)
+- Rà soát: `docs/demo-hop-tuong/tuvan/ra-soat-anime-u/BANG.md` (+ tờ liên hoàn preview theo bậc, icon cũ). 57 ụ lệch tông (Trắng/Xanh/Tím + 4 Vàng), 14 ụ grow-up thiếu hình dạng 2/3, 3 hiệu ứng còn vẽ canvas (Sói vuốt, thân Hydra, vệt Prism).
+- Vẽ lại 14 ụ Trắng (xucxac lien phun sungluc bang doc mana tia set maychem phagiap bua nam bomhen): bệ bát giác viền vàng + thân indigo + ngọc trắng ngọc trai, đầu xoay giữ ý tưởng cũ. Ảnh ChatGPT `thap-art/raw_anime_u_trang1..5.png` (3 hàng × 4 cột: lắp sẵn/bệ/đầu/huy hiệu) → `tools/thap-cat-anime-u.py` (dựng lại tấm 2×2 rồi gọi đúng `thap-cat-umod.py`) → `<id>_de/_vien/_nong/_phu`, `nho/<id>.png`, số cỡ trong `artscale.js`.
+- Không đổi id, luật, thời gian, ngẫu nhiên; hoạt ảnh giữ nhóm chuyển động cũ (anim-meta.js).
