@@ -6,7 +6,8 @@
   docs/demo-hop-tuong/thap-art/raw_ui2_ban.png       → ha_nen.jpg (trời hoàng hôn + vòng phép, KHÔNG lấy đường/bàn trong ảnh),
                                                        ha_khay (mặt bàn 5×3 — kéo theo toạ độ ô THẬT KHAY_COT/KHAY_HANG của data.js),
                                                        ha_duong (đoạn đường thẳng, không mũi tên) + ha_goc (góc: uốn cong chính đoạn thẳng)
-  ảnh có sẵn → ha_mana (tinh thể mana đổi tím → teal #25D6C0, TẠM — chờ icon lục giác tia sét, xem huong-anime/PROMPT-HUD2.md),
+  docs/demo-hop-tuong/thap-art/raw_ui2_icon_taisan.png → ha_mana (icon MANA lục giác teal #25D6C0 tia sét)
+  ảnh có sẵn →
                ha_ic_dung / ha_ic_toc (cắt hình 2 vạch / mũi tên khỏi phím thép cũ), ha_mau_trum (thanh máu trùm #D55BEA phân đoạn).
 Khoá magenta (tach_nen của thap-cat-hinh.py) → xén → thu Lanczos nhân-trước-alpha về 3× cỡ CSS lớn nhất (không vượt ảnh gốc).
 Chạy: python3 tools/thap-cat-ui2.py   (ghi thap/assets/ha_*.png|jpg + tờ xem docs/demo-hop-tuong/tuvan/huong-anime/cat_ui2.jpg)
@@ -195,9 +196,14 @@ def doi_mau(im, dich_hue, sat=1.0, val=1.0):
     return Image.fromarray(np.dstack([rgb, (a[..., 3] * 255).astype(np.uint8)]), 'RGBA')
 
 
-# mana: tinh thể tím ui_mana (hue ~275°) → teal #25D6C0 (hue 173°)
-mana = doi_mau(Image.open(A % 'ui_mana'), -100, 1.05, 1.0)
-luu(thu(xen(mana), 96), 'ha_mana.png', 'TẠM: tinh thể mana teal (chờ icon lục giác tia sét)')
+# mana: icon MANA lục giác teal tia sét (raw_ui2_icon_taisan.png, ô 1/6 — ChatGPT 09/11, thap-art/ANH-SINH-0911.md)
+ts = tach_nen(raw('raw_ui2_icon_taisan.png').crop((0, 120, 380, 560)), 'tim')
+al = np.asarray(ts)[..., 3] > 60
+lab, n = nd.label(al)
+k = np.argmax(nd.sum(al, lab, range(1, n + 1))) + 1
+ys, xs = np.nonzero(nd.binary_dilation(lab == k, iterations=4))
+mana = ts.crop((xs.min(), ys.min(), xs.max() + 1, ys.max() + 1))
+luu(thu(mana, 96), 'ha_mana.png', 'icon mana lục giác teal tia sét (Ø ≤ 32 css)')
 # ký hiệu phím: cắt phần vạch / mũi tên bạc giữa phím thép cũ
 for src, ten, hop in [('h2_phim_dung_cho', 'ha_ic_dung', None), ('h2_phim_toc_cho', 'ha_ic_toc', None)]:
     im = Image.open(A % src).convert('RGBA')

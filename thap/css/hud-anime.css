@@ -1,0 +1,185 @@
+/* TURRET MERGE — HUD TRẬN ANIME "Royal Twilight" (B2 09/11, js/hud-anime.js). Chỉ có hiệu lực khi html.ha2 (mọi ảnh ha_* đã tải).
+   Bảng màu (huong-anime/BANG-MAU.md): nền #10162F · panel #212B50 · viền champagne #E9CCA0 · nhấn cyan #71E4EE · CTA #FFB866/chữ #172040 ·
+   chữ #F7F8FF · cảnh báo #FF5E80 · mana teal #25D6C0 · máu trùm #D55BEA. Toạ độ = khung 430×860 (#wrap). Nạp CUỐI để thắng các lớp HUD cũ. */
+html.ha2 body #wrap { background: #10162F; }
+
+/* ================= THANH TRÊN (56 px ≈ 51 px màn 390) ================= */
+html.ha2 body #wrap #top { left: 0 !important; right: auto !important; top: 2px !important; width: 430px !important; height: 56px !important; padding: 0 !important;
+  background: url(../assets/ha_top.png) center / 100% 100% no-repeat !important; border: 0 !important; border-image: none !important; box-shadow: none !important; display: block !important; }
+html.ha2 body #wrap #top::before, html.ha2 body #wrap #top::after { content: none !important; display: none !important; }
+/* khoang trái: ĐỢT N */
+html.ha2 body #wrap #top #tb-wave { position: absolute !important; left: 30px !important; top: 13px !important; width: 82px !important; height: 31px !important; margin: 0 !important; padding: 0 !important;
+  display: flex !important; align-items: center !important; justify-content: center !important; gap: 5px !important; background: none !important; border: 0 !important; transform: none !important; }
+html.ha2 body #wrap #top #tb-wave::before, html.ha2 body #wrap #top #tb-wave::after, html.ha2 body #wrap #top #tb-wave .ht-ic { display: none !important; }
+html.ha2 body #wrap #top #tb-wave span { position: static !important; font: 800 11px/1 'TM UI', sans-serif !important; color: #E9CCA0 !important; letter-spacing: .04em; text-transform: uppercase; text-shadow: 0 1px 2px #000 !important; transform: none !important; }
+html.ha2 body #wrap #top #tb-wave b { position: static !important; font: 800 22px/1 'TM Display', sans-serif !important; color: #F7F8FF !important; text-shadow: 0 1px 3px #000, 0 0 8px rgba(113,228,238,.35) !important; transform: none !important; }
+/* khoang giữa: tên trùm / "Trùm sau N" + thanh phân đoạn + % máu / đếm ngược */
+html.ha2 body #wrap #top #tb-giua { position: absolute !important; left: 120px !important; top: 12px !important; width: 190px !important; height: 33px !important; margin: 0 !important; padding: 0 !important;
+  background: none !important; border: 0 !important; display: block !important; transform: none !important; animation: none !important; }
+html.ha2 body #wrap #top #tb-giua::before, html.ha2 body #wrap #top #tb-giua::after { display: none !important; }
+html.ha2 body #wrap #top #tb-trum { position: absolute !important; left: 0 !important; right: 0 !important; top: 2px !important; height: 15px !important; margin: 0 !important; padding: 0 !important; display: block !important;
+  background: none !important; border: 0 !important; transform: none !important; animation: none !important; }
+html.ha2 body #wrap #top #tb-trum > img, html.ha2 body #wrap #top #tb-trum .vt-chip, html.ha2 body #wrap #top #tb-trum::before, html.ha2 body #wrap #top #tb-trum::after { display: none !important; }
+html.ha2 body #wrap #top #tb-trum-chu { position: absolute !important; left: 0 !important; right: 0 !important; top: 0 !important; display: block !important; text-align: center !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: clip !important;
+  font: 800 12.5px/15px 'TM UI', sans-serif !important; letter-spacing: .03em; color: #F7F8FF !important; text-transform: uppercase; text-shadow: 0 1px 2px #000 !important; transform: none !important; animation: none !important; }
+html.ha2 body #wrap #top #tb-seg, html.ha2 body #wrap #top #tb-trum-mau { display: none !important; }
+html.ha2 body #wrap #top #ha-thanh { position: absolute; left: 6px; right: 40px; top: 20px; height: 8px; background: url(../assets/ha_mau_ranh.png) 0 0 / 100% 100% no-repeat; }
+html.ha2 body #wrap #top #ha-thanh .f { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: url(../assets/ha_mau_xanh.png) 0 0 / 178px 8px no-repeat; transition: width .25s linear; }
+html.ha2 body #wrap #top #ha-thanh.trum .f { background-image: url(../assets/ha_mau_trum.png); }
+html.ha2 body #wrap #top #ha-so { position: absolute; right: 2px; top: 16px; width: 36px; text-align: right; font: 800 12px/15px 'TM Display', sans-serif; font-style: normal; color: #71E4EE; text-shadow: 0 1px 2px #000; white-space: nowrap; }
+html.ha2 body #wrap #top #ha-so.trum { color: #F1A9FF; }
+/* khoang phải: tim N/3 (PVP: BẠN + tấm treo ĐỐI THỦ; CO-OP: tấm treo CHUNG) */
+html.ha2 body #wrap #top #tb-tim { position: absolute !important; left: 322px !important; top: 13px !important; width: 80px !important; height: 31px !important; margin: 0 !important; padding: 0 !important;
+  display: flex !important; align-items: center !important; justify-content: center !important; gap: 2px !important; background: none !important; border: 0 !important; transform: none !important; }
+html.ha2 body #wrap #top #tb-tim::before, html.ha2 body #wrap #top #tb-tim::after { display: none !important; content: none !important; }
+html.ha2 body #wrap #top #tb-tim .ht-tim, html.ha2 body #wrap #top #ht-phu .ht-tim { position: static !important; width: 17px !important; height: 15px !important; margin: 0 2px 0 0 !important; filter: none !important; }
+html.ha2 body #wrap #top #tb-tim .ht-n, html.ha2 body #wrap #top #ht-phu .ht-n { position: static !important; font: 800 21px/1 'TM Display', sans-serif !important; color: #F7F8FF !important; text-shadow: 0 1px 3px #000 !important; }
+html.ha2 body #wrap #top #tb-tim .ht-n.nguy, html.ha2 body #wrap #top #ht-phu .ht-n.nguy { color: #FF5E80 !important; }
+html.ha2 body #wrap #top #tb-tim .ht-max, html.ha2 body #wrap #top #ht-phu .ht-max { position: static !important; font: 800 12px/1 'TM Display', sans-serif !important; color: #B8C0E0 !important; align-self: flex-end; margin-bottom: 6px; }
+html.ha2 body #wrap #top #tb-tim .ht-ai { position: static !important; font: 800 9px/1 'TM UI', sans-serif !important; color: #71E4EE !important; margin-right: 3px !important; text-transform: uppercase; }
+html.ha2 body #wrap #top #ht-phu { position: absolute !important; right: 26px !important; left: auto !important; top: 52px !important; height: 22px !important; width: auto !important; min-width: 70px; padding: 0 10px !important;
+  display: flex !important; align-items: center !important; justify-content: center !important; gap: 2px !important; background: url(../assets/ha_o_rong.png) center / 100% 100% no-repeat !important; border: 0 !important; border-image: none !important; box-shadow: none !important; transform: none !important; }
+html.ha2 body #wrap #top #ht-phu[hidden] { display: none !important; }
+html.ha2 body #wrap #top #ht-phu::before, html.ha2 body #wrap #top #ht-phu::after { display: none !important; }
+html.ha2 body #wrap #top #ht-phu .ht-ai { font: 800 9px/1 'TM UI', sans-serif !important; color: #FF8FA6 !important; margin-right: 3px !important; text-transform: uppercase; position: static !important; }
+html.ha2 body #wrap #top #ht-phu.xanh .ht-ai { color: #71E4EE !important; }
+html.ha2 body #wrap #top #ht-phu .ht-tim { width: 12px !important; height: 11px !important; }
+html.ha2 body #wrap #top #ht-phu .ht-n { font-size: 14px !important; }
+html.ha2 body #wrap #top #ht-phu .ht-max { font-size: 9px !important; margin-bottom: 3px; }
+
+/* ================= BĂNG BÁO CHIÊU TRÙM (1 dòng, 330×36) — thay băng cũ #canh-bao ================= */
+html.ha2 body #wrap #canh-bao { display: none !important; }
+html.ha2 body #wrap #ha-cb { position: absolute; left: 50px; width: 330px; height: 36px; top: 580px; z-index: 6; pointer-events: none;
+  background: url(../assets/ha_canh.png) center / 100% 100% no-repeat; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 0 30px; box-sizing: border-box; }
+html.ha2 body #wrap #ha-cb[hidden] { display: none; }
+html.ha2 body #wrap #ha-cb.hep { left: 12px; width: 270px; padding: 0 24px; gap: 8px; }
+html.ha2 body #wrap #ha-cb.hep b { font-size: 12px; }
+html.ha2 body #wrap #ha-cb b { flex: 0 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; font: 800 13px/1 'TM UI', sans-serif; letter-spacing: .04em; color: #F7F8FF; text-transform: uppercase; text-shadow: 0 1px 2px #000; }
+html.ha2 body #wrap #ha-cb em { flex: 0 0 auto; font: 800 16px/1 'TM Display', sans-serif; font-style: normal; color: #FF5E80; text-shadow: 0 1px 2px #000; }
+html.ha2 body #wrap #ha-cb em:empty { display: none; }
+html.ha2 body #wrap #ha-cb.dang em { animation: ha-nhip .5s ease-in-out infinite alternate; }
+@keyframes ha-nhip { from { opacity: 1; } to { opacity: .45; } }
+
+/* băng WAVE N (0,7 s đầu mỗi đợt): nền tấm rộng xanh, bỏ băng thép */
+html.ha2 body #wrap #bang-wave .bw-dai { background: url(../assets/ha_o_rong.png) center / 100% 100% no-repeat !important; border: 0 !important; border-image: none !important; box-shadow: none !important; }
+html.ha2 body #wrap #bang-wave .bw-dai::before, html.ha2 body #wrap #bang-wave .bw-dai::after { display: none !important; }
+html.ha2 body #wrap #bang-wave .bw-dai b { color: #F7F8FF !important; text-shadow: 0 2px 4px #000 !important; }
+html.ha2 body #wrap #bang-wave .bw-dai span { color: #71E4EE !important; }
+
+/* ================= ĐÁY (192 px: hàng nút 668–740 · khay thẻ 744–853) ================= */
+html.ha2 body #wrap #duoi { height: 192px !important; padding: 0 !important; background: none !important; border: 0 !important; border-image: none !important; box-shadow: none !important; display: block !important; }
+html.ha2 body #wrap #duoi::before, html.ha2 body #wrap #duoi::after { display: none !important; content: none !important; }
+/* ô mana: số lớn + tinh thể teal */
+html.ha2 body #wrap #duoi #mana-hop { position: absolute !important; left: 23px !important; top: 14px !important; width: 130px !important; height: 44px !important; margin: 0 !important; padding: 0 14px 0 12px !important; box-sizing: border-box !important;
+  display: flex !important; align-items: center !important; justify-content: space-between !important; background: url(../assets/ha_o_rong.png) center / 100% 100% no-repeat !important; border: 0 !important; border-image: none !important; box-shadow: none !important; transform: none !important; }
+html.ha2 body #wrap #duoi #mana-hop::before, html.ha2 body #wrap #duoi #mana-hop::after { display: none !important; }
+html.ha2 body #wrap #duoi #mana-hop img { position: static !important; width: 24px !important; height: 26px !important; margin: 0 !important; content: url(../assets/ha_mana.png) !important; filter: drop-shadow(0 0 3px rgba(37,214,192,.45)) !important; transform: none !important; }
+html.ha2 body #wrap #duoi #mana { position: static !important; font: 800 25px/1 'TM Display', sans-serif !important; color: #F7F8FF !important; text-shadow: 0 1px 3px #000 !important; letter-spacing: 0 !important; white-space: nowrap !important; transform: none !important; max-width: 84px; overflow: hidden; text-align: right; }
+html.ha2 body #wrap #duoi #mana.nay { color: #9FFFF2 !important; }
+/* SUMMON tròn Ø~80 (ảnh vòng + ngọc), chữ + giá bên trong */
+html.ha2 body #wrap #duoi #nut-trieu { position: absolute !important; left: 173px !important; top: -8px !important; width: 84px !important; height: 94px !important; margin: 0 !important; padding: 0 !important;
+  background: url(../assets/ha_trieu.png) center / 100% 100% no-repeat !important; border: 0 !important; border-image: none !important; box-shadow: none !important; transform: none; filter: none !important; }
+html.ha2 body #wrap #duoi #nut-trieu::before, html.ha2 body #wrap #duoi #nut-trieu::after, html.ha2 body #wrap #duoi #nut-trieu .tr-led, html.ha2 body #wrap #duoi #nut-trieu .tr-cap::before, html.ha2 body #wrap #duoi #nut-trieu .tr-cap::after, html.ha2 body #wrap #duoi #nut-trieu .tr-cap > img { display: none !important; content: none !important; }
+html.ha2 body #wrap #duoi #nut-trieu .tr-cap { position: absolute !important; inset: 0 !important; width: auto !important; height: auto !important; margin: 0 !important; padding: 0 !important; display: block !important; background: none !important; border: 0 !important; transform: none !important; }
+html.ha2 body #wrap #duoi #nut-trieu .tr-chu { position: absolute !important; left: 16px !important; right: 16px !important; top: 30px !important; height: 34px !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; gap: 1px !important; transform: none !important; margin: 0 !important; }
+html.ha2 body #wrap #duoi #nut-trieu .tr-ten { position: static !important; font: 800 10.5px/1 'TM UI', sans-serif !important; letter-spacing: .02em; color: #172040 !important; text-shadow: none !important; text-transform: uppercase; white-space: nowrap !important; transform: none !important; }
+html.ha2 body #wrap #duoi #nut-trieu .tr-gia { position: static !important; display: flex !important; align-items: center !important; gap: 2px !important; transform: none !important; margin: 0 !important; background: none !important; }
+html.ha2 body #wrap #duoi #nut-trieu .tr-gia img { position: static !important; width: 13px !important; height: 14px !important; content: url(../assets/ha_mana.png) !important; filter: none !important; margin: 0 !important; }
+html.ha2 body #wrap #duoi #nut-trieu .tr-gia b { position: static !important; font: 800 17px/1 'TM Display', sans-serif !important; color: #172040 !important; text-shadow: none !important; }
+html.ha2 body #wrap #duoi #nut-trieu .tn-full { position: static !important; display: none !important; font: 800 9px/1.05 'TM UI', sans-serif !important; color: #172040 !important; text-align: center; text-transform: uppercase; text-shadow: none !important; }
+html.ha2 body #wrap #duoi #nut-trieu .tn-full b { display: block; color: #172040 !important; font: inherit !important; }
+html.ha2 body #wrap #duoi #nut-trieu.tn-day .tn-full { display: block !important; }
+html.ha2 body #wrap #duoi #nut-trieu.tn-day .tr-ten, html.ha2 body #wrap #duoi #nut-trieu.tn-day .tr-gia { display: none !important; }
+html.ha2 body #wrap #duoi #nut-trieu.thieu, html.ha2 body #wrap #duoi #nut-trieu.tn-day { filter: saturate(.3) brightness(.62) !important; }
+html.ha2 body #wrap #duoi #nut-trieu.thieu .tr-gia b { color: #7A1030 !important; }
+html.ha2 body #wrap #duoi #nut-trieu:active { transform: translateY(2px) !important; }
+/* 2× · tạm dừng: tấm vuông + ký hiệu; bật = viền sáng cyan (ảnh phóng sáng) + chữ cyan */
+html.ha2 body #wrap #duoi .nut-cot { position: absolute !important; left: 279px !important; top: 8px !important; width: 128px !important; height: 56px !important; margin: 0 !important; padding: 0 !important; display: flex !important; gap: 8px !important; flex-direction: row !important; background: none !important; transform: none !important; }
+html.ha2 body #wrap #duoi .nut-cot .nut-nho { position: relative !important; left: auto !important; top: auto !important; width: 60px !important; height: 56px !important; min-width: 0 !important; margin: 0 !important; padding: 0 !important; flex: 0 0 60px !important;
+  background: url(../assets/ha_o_vuong.png) center / 100% 100% no-repeat !important; border: 0 !important; border-image: none !important; box-shadow: none !important; font-size: 0 !important; color: transparent !important; transform: none; filter: none !important; }
+html.ha2 body #wrap #duoi .nut-cot .nut-nho::before { content: '' !important; position: absolute !important; left: 50% !important; top: 47% !important; width: 26px !important; height: 25px !important; transform: translate(-50%, -50%) !important;
+  background: url(../assets/ha_ic_dung.png) center / contain no-repeat !important; display: block !important; border: 0 !important; filter: none !important; opacity: .92; }
+html.ha2 body #wrap #duoi .nut-cot #nut-tocdo::before { background-image: url(../assets/ha_ic_toc.png) !important; width: 30px !important; height: 18px !important; top: 38% !important; }
+html.ha2 body #wrap #duoi .nut-cot .nut-nho::after { content: none !important; display: none !important; }
+html.ha2 body #wrap #duoi .nut-cot #nut-tocdo::after { content: attr(data-x) !important; display: block !important; position: absolute !important; left: 0 !important; right: 0 !important; top: auto !important; bottom: 10px !important; width: auto !important; height: auto !important; transform: none !important;
+  background: none !important; border: 0 !important; border-image: none !important; font: 800 12px/1 'TM Display', sans-serif !important; color: #B8C0E0 !important; text-align: center !important; text-shadow: 0 1px 2px #000 !important; }
+html.ha2 body #wrap #duoi .nut-cot .nut-nho.bat { filter: brightness(1.25) drop-shadow(0 0 5px rgba(113,228,238,.9)) !important; }
+html.ha2 body #wrap #duoi .nut-cot #nut-tocdo.bat::after { color: #71E4EE !important; }
+html.ha2 body #wrap #duoi .nut-cot .nut-nho:active { transform: translateY(2px) !important; }
+
+/* ---- khay 5 thẻ: khung bậc ha_khung_<bac> 212×350 (thân: trái 7,5% · rộng 85% · trên 21,4% · đáy 97,5%) ---- */
+html.ha2 body #wrap #duoi #bo-the { position: absolute !important; left: 19px !important; top: 76px !important; width: 310px !important; height: 109px !important; margin: 0 !important; padding: 0 !important;
+  display: block !important; background: none !important; border: 0 !important; border-image: none !important; box-shadow: none !important; transform: none !important; overflow: visible !important; }
+html.ha2 body #wrap #duoi #bo-the::before, html.ha2 body #wrap #duoi #bo-the::after { display: none !important; content: none !important; }
+html.ha2 body #wrap #duoi #bo-the .the { position: absolute !important; top: 0 !important; width: 66px !important; height: 109px !important; margin: 0 !important; padding: 0 !important; min-width: 0 !important;
+  background: none !important; border: 0 !important; border-image: none !important; box-shadow: none !important; outline: 0 !important; transform: none; filter: none !important; overflow: visible !important; }
+html.ha2 body #wrap #duoi #bo-the .the:nth-child(1) { left: 0 !important; }
+html.ha2 body #wrap #duoi #bo-the .the:nth-child(2) { left: 61px !important; }
+html.ha2 body #wrap #duoi #bo-the .the:nth-child(3) { left: 122px !important; }
+html.ha2 body #wrap #duoi #bo-the .the:nth-child(4) { left: 183px !important; }
+html.ha2 body #wrap #duoi #bo-the .the:nth-child(5) { left: 244px !important; }
+html.ha2 body #wrap #duoi #bo-the .the::before, html.ha2 body #wrap #duoi #bo-the .the::after,
+html.ha2 body #wrap #duoi #bo-the .the > img.kh, html.ha2 body #wrap #duoi #bo-the .the > img.ov, html.ha2 body #wrap #duoi #bo-the .the .h2-vai, html.ha2 body #wrap #duoi #bo-the .the > .ic { display: none !important; }
+/* chân dung trong ô cửa sổ khung (giữa 2 viền, trên dải giá) */
+html.ha2 body #wrap #duoi #bo-the .the > img.anh { position: absolute !important; left: 9px !important; top: 26px !important; width: 48px !important; height: 68px !important; right: auto !important; bottom: auto !important; margin: 0 !important;
+  object-fit: cover !important; object-position: 50% 22% !important; scale: none !important; translate: none !important; transform: none !important; clip-path: none !important; border-radius: 2px !important; filter: none !important; opacity: 1 !important; }
+html.ha2 body #wrap #duoi #bo-the .the > img.ha-kh { position: absolute !important; left: 0 !important; top: 0 !important; right: auto !important; bottom: auto !important; width: 66px !important; height: 109px !important; max-width: none !important; max-height: none !important; margin: 0 !important; pointer-events: none; z-index: 2 !important; transform: none !important; scale: none !important; translate: none !important; clip-path: none !important; filter: none !important; opacity: 1 !important; object-fit: fill !important; border-radius: 0 !important; }
+/* +cấp: trong vòng tròn góc trên-phải của khung */
+html.ha2 body #wrap #duoi #bo-the .the .lv { translate: none !important; scale: none !important; position: absolute !important; left: 47px !important; top: 21px !important; width: 15px !important; height: 15px !important; margin: 0 !important; padding: 0 !important; z-index: 3 !important;
+  display: flex !important; align-items: center !important; justify-content: center !important; background: none !important; border: 0 !important; box-shadow: none !important; transform: none !important;
+  font: 800 9px/1 'TM Display', sans-serif !important; color: #F7F8FF !important; text-shadow: 0 1px 1px #000 !important; letter-spacing: -.02em; }
+html.ha2 body #wrap #duoi #bo-the .the .lv::before, html.ha2 body #wrap #duoi #bo-the .the .lv::after { display: none !important; }
+html.ha2 body #wrap #duoi #bo-the .the .lv.lv-max { font-size: 0 !important; } /* MAX: đọc ở dải giá */
+/* dải giá (thanh tối đáy khung): icon mana teal + số */
+html.ha2 body #wrap #duoi #bo-the .the .gia { translate: none !important; scale: none !important; position: absolute !important; left: 8px !important; right: 8px !important; top: auto !important; bottom: 5px !important; height: 11px !important; width: auto !important; margin: 0 !important; padding: 0 !important; z-index: 3 !important;
+  display: flex !important; align-items: center !important; justify-content: center !important; gap: 2px !important; background: none !important; border: 0 !important; border-image: none !important; box-shadow: none !important; transform: none !important; }
+html.ha2 body #wrap #duoi #bo-the .the .gia::before, html.ha2 body #wrap #duoi #bo-the .the .gia::after { display: none !important; }
+html.ha2 body #wrap #duoi #bo-the .the .gia img { position: static !important; width: 9px !important; height: 10px !important; margin: 0 !important; content: url(../assets/ha_mana.png) !important; filter: none !important; transform: none !important; }
+html.ha2 body #wrap #duoi #bo-the .the .gia b { position: static !important; font: 800 11px/1 'TM Display', sans-serif !important; color: #F7F8FF !important; text-shadow: 0 1px 1px #000 !important; transform: none !important; }
+html.ha2 body #wrap #duoi #bo-the .the.thieu .gia b { color: #FF5E80 !important; }
+html.ha2 body #wrap #duoi #bo-the .the.thieu .gia img { opacity: .55; }
+html.ha2 body #wrap #duoi #bo-the .the.max .gia img { display: none !important; }
+html.ha2 body #wrap #duoi #bo-the .the.max .gia b { color: #FFD65B !important; font-size: 10px !important; }
+/* số ụ loại này trên bàn: chữ nhỏ góc dưới-trái chân dung (bỏ tấm thép) */
+html.ha2 body #wrap #duoi #bo-the .the .dem-u { position: absolute !important; left: 9px !important; top: auto !important; bottom: 17px !important; right: auto !important; width: auto !important; height: 13px !important; margin: 0 !important; padding: 0 3px !important; z-index: 3 !important;
+  display: flex !important; align-items: center !important; background: rgba(16,22,47,.78) !important; border: 0 !important; border-image: none !important; border-radius: 0 3px 0 0 !important; box-shadow: none !important; transform: none !important; }
+html.ha2 body #wrap #duoi #bo-the .the .dem-u img { display: none !important; }
+html.ha2 body #wrap #duoi #bo-the .the .dem-u b { position: static !important; font: 800 10px/1 'TM Display', sans-serif !important; color: #B8C0E0 !important; text-shadow: none !important; }
+html.ha2 body #wrap #duoi #bo-the .the .dem-u b::before { content: '×'; font-size: 8px; margin-right: 1px; }
+html.ha2 body #wrap #duoi #bo-the .the:active { transform: translateY(2px) !important; }
+
+/* ---- thẻ chỉ huy (khung vuông vàng 72×68): chân dung + giá; hồi chiêu = phủ tối + số giây to ---- */
+html.ha2 body #wrap #duoi #the-mv { position: absolute !important; left: 335px !important; right: auto !important; top: 103px !important; bottom: auto !important; width: 72px !important; height: 68px !important; margin: 0 !important; padding: 0 !important;
+  background: none !important; border: 0 !important; border-image: none !important; box-shadow: none !important; outline: 0 !important; overflow: visible !important; transform: none; filter: none !important; }
+html.ha2 body #wrap #duoi #the-mv::before, html.ha2 body #wrap #duoi #the-mv::after,
+html.ha2 body #wrap #duoi #the-mv > img.kh, html.ha2 body #wrap #duoi #the-mv > img.ov, html.ha2 body #wrap #duoi #the-mv > .ot-mien, html.ha2 body #wrap #duoi #the-mv > .cht-glow, html.ha2 body #wrap #duoi #the-mv .mv-ten,
+html.ha2 body #wrap #duoi #the-mv .cht-khoa, html.ha2 body #wrap #duoi #the-mv .tn-thanh, html.ha2 body #wrap #duoi #the-mv .mv-anh .ki, html.ha2 body #wrap #duoi #the-mv .cht-vong > img { display: none !important; }
+html.ha2 body #wrap #duoi #the-mv .mv-ic { position: absolute !important; left: 8px !important; top: 8px !important; width: 56px !important; height: 52px !important; margin: 0 !important; padding: 0 !important; overflow: hidden !important; z-index: 3 !important; border-radius: 0 !important; background: #212B50 !important; border: 0 !important; transform: none !important; translate: none !important; scale: none !important;
+  clip-path: polygon(13% 0, 87% 0, 100% 14%, 100% 86%, 87% 100%, 13% 100%, 0 86%, 0 14%) !important; } /* cửa sổ bát giác của khung vuông (ảnh khung có lòng xanh đặc → chân dung nằm TRÊN khung, cắt theo cửa sổ) */
+html.ha2 body #wrap #duoi #the-mv .mv-anh { position: absolute !important; inset: 0 !important; width: auto !important; height: auto !important; margin: 0 !important; background: none !important; border: 0 !important; transform: none !important; }
+html.ha2 body #wrap #duoi #the-mv .mv-anh .po { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; height: 100% !important; object-fit: cover !important; object-position: 50% 18% !important; scale: none !important; translate: none !important; transform: none !important; clip-path: none !important; filter: none !important; opacity: 1 !important; }
+html.ha2 body #wrap #duoi #the-mv > img.ha-kh { position: absolute !important; left: 0 !important; top: 0 !important; right: auto !important; bottom: auto !important; width: 72px !important; height: 68px !important; max-width: none !important; max-height: none !important; margin: 0 !important; pointer-events: none; z-index: 2 !important; transform: none !important; scale: none !important; translate: none !important; clip-path: none !important; filter: none !important; opacity: 1 !important; object-fit: fill !important; border-radius: 0 !important; }
+html.ha2 body #wrap #duoi #the-mv .mv-cd { display: block !important; position: absolute !important; left: 8px !important; right: 8px !important; bottom: 8px !important; top: auto !important; width: auto !important; max-height: 52px; margin: 0 !important; z-index: 4 !important; translate: none !important; scale: none !important; transform: none !important; background: rgba(10,14,32,.72) !important; border: 0 !important; border-radius: 0 0 4px 4px !important; box-shadow: none !important; }
+html.ha2 body #wrap #duoi #the-mv .mv-gia { translate: none !important; scale: none !important; position: absolute !important; left: 5px !important; right: 5px !important; top: auto !important; bottom: -3px !important; height: 15px !important; width: auto !important; margin: 0 !important; padding: 0 !important; z-index: 6 !important;
+  display: flex !important; align-items: center !important; justify-content: center !important; gap: 2px !important; background: rgba(16,22,47,.86) !important; border: 0 !important; border-image: none !important; border-radius: 4px !important; box-shadow: none !important; transform: none !important; }
+html.ha2 body #wrap #duoi #the-mv .mv-gia::before, html.ha2 body #wrap #duoi #the-mv .mv-gia::after { display: none !important; content: none !important; }
+html.ha2 body #wrap #duoi #the-mv .mv-gia img { position: static !important; width: 10px !important; height: 11px !important; margin: 0 !important; content: url(../assets/ha_mana.png) !important; filter: none !important; transform: none !important; }
+html.ha2 body #wrap #duoi #the-mv .mv-gia b { position: static !important; font: 800 calc(var(--cht-gs, 15px) * .8)/1 'TM Display', sans-serif !important; color: #F7F8FF !important; text-shadow: 0 1px 1px #000 !important; transform: none !important; }
+html.ha2 body #wrap #duoi #the-mv .cht-x { position: static !important; font: 800 8px/1 'TM Display', sans-serif !important; font-style: normal !important; color: #FFB866 !important; background: none !important; margin: 0 0 0 1px !important; transform: none !important; }
+html.ha2 body #wrap #duoi #the-mv.cht-thieu .mv-gia b, html.ha2 body #wrap #duoi #the-mv.thieu:not(.cht-hoi) .mv-gia b { color: #FF5E80 !important; }
+html.ha2 body #wrap #duoi #the-mv.cht-thieu .mv-ic, html.ha2 body #wrap #duoi #the-mv.cht-day .mv-ic { filter: saturate(.45) brightness(.7) !important; }
+/* hồi chiêu: số giây giữa chân dung */
+html.ha2 body #wrap #duoi #the-mv .cht-vong.cd { position: absolute !important; left: 8px !important; top: 8px !important; width: 56px !important; height: 44px !important; right: auto !important; margin: 0 !important; z-index: 5 !important; translate: none !important; scale: none !important; display: flex !important; align-items: center !important; justify-content: center !important; background: none !important; border: 0 !important; transform: none !important; }
+html.ha2 body #wrap #duoi #the-mv .cht-vong.cd[hidden] { display: none !important; }
+html.ha2 body #wrap #duoi #the-mv .cht-vong.cd b { position: static !important; font: 800 21px/1 'TM Display', sans-serif !important; color: #F7F8FF !important; text-shadow: 0 1px 3px #000, 0 0 6px rgba(0,0,0,.8) !important; transform: none !important; }
+/* tác dụng (RAGE / HOLY SHIELD…): số giây còn lại góc trên-trái, xanh "buff" */
+html.ha2 body #wrap #duoi #the-mv .cht-vong.tac { translate: none !important; scale: none !important; position: absolute !important; left: 4px !important; top: 2px !important; width: auto !important; height: 14px !important; right: auto !important; margin: 0 !important; padding: 0 4px !important; z-index: 4 !important; display: flex !important; align-items: center !important;
+  background: rgba(16,22,47,.86) !important; border-radius: 4px !important; border: 0 !important; transform: none !important; }
+html.ha2 body #wrap #duoi #the-mv .cht-vong.tac[hidden] { display: none !important; }
+html.ha2 body #wrap #duoi #the-mv .cht-vong.tac b { position: static !important; font: 800 10px/1 'TM Display', sans-serif !important; color: #46DFA6 !important; text-shadow: none !important; transform: none !important; }
+html.ha2 body #wrap #duoi #the-mv .tn-cd, html.ha2 body #wrap #duoi #the-mv .tn-full { z-index: 6 !important; }
+html.ha2 body #wrap #duoi #the-mv:active { transform: translateY(2px) !important; }
+html.ha2 body #wrap #duoi #bo-the .the .dem-u[data-n="0"] { display: none !important; }
+/* PVP: chữ VS giữa 2 bàn — tấm indigo viền vàng thay tấm thép đỏ */
+html.ha2 body #wrap #tvb-vs { border: 0 !important; border-image: none !important; background: url(../assets/ha_o_rong.png) center / 100% 100% no-repeat !important; color: #FFB866 !important; font-family: 'TM Display', sans-serif !important; width: 62px !important; margin-left: -31px !important; }
+html.ha2 body #wrap #ha-cb.vs:not([hidden]) ~ #tvb-vs, html.ha2 body #wrap #tvb-vs:has(~ #ha-cb.vs:not([hidden])) { visibility: hidden !important; }
