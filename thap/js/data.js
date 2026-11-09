@@ -148,7 +148,22 @@ function heHauKy(T) {
 const SAO_ST = 0.5, SAO_ST_CU = 0.85, SAO_TOC = 0.105;
 const SAO_CU = new Set(['ronglua', 'leviathan', 'wallgen', 'chuato', 'min', 'blackhole']);
 function saoMoi(id) { const sk = typeof SKILLS !== 'undefined' && SKILLS[id]; return !!sk && sk.vai === 'tc' && !SAO_CU.has(id); }
-function heSaoST(id, sao) { return 1 + (saoMoi(id) ? SAO_ST : SAO_ST_CU) * ((sao | 0) - 1); }
+function heSaoST(id, sao) { return (1 + (saoMoi(id) ? SAO_ST : SAO_ST_CU) * ((sao | 0) - 1)) * heDoNen(id, sao); }
+// 09/11 (lần 2) NỀN KHỞI ĐIỂM ĐỎ (người dùng: "vàng bắt đầu từ level 9 còn đỏ từ level 11 … chỉ số của đỏ phải mạnh hơn rõ rệt lệch 2 cấp"):
+//   cấp thẻ tính TỪ cấp đầu của bậc (B.capThe = số cấp trên LV9 / LV11) nên lợi thế 2 cấp chỉ nằm ở TIERS.hs (Đỏ ×1.27 Vàng) — đo
+//   (tools/thap-do-vang-do.js) Đỏ trung vị chỉ ≈0.9× Vàng tốt nhất ở 3★, ≈1.0–1.3× ở 5★ (7★ đã ≈1.9× vì cơ chế Đỏ đánh lan/gom tăng theo sao).
+//   → ụ Tấn công ĐỎ: ST × (goc − doc × (max(tu, sao) − tu)): 1–3★ ×1.8 · 4★ ×1.6 · 5★ ×1.4 · 6★ ×1.2 · 7★ ×1 (7★ giữ nguyên). Tất định, chỉ theo sao.
+//   Leviathan KHÔNG thêm riêng: Leviathan sao cao vừa ghép (VỰC SÂU về 0) yếu nhưng VỰC SÂU kỳ vọng trong trận (≈20 điểm wave 30, ≈100 wave 40,
+//   ≈190 wave 50) đưa nó lên 2–10× Vàng tốt nhất từ wave 40; thử dốc riêng 0.1 (7★ ×1.4) làm bộ Leviathan chạm wave 70 5/18 trận (trước 3/18) → bỏ.
+//   docRieng: chỗ chỉnh dốc riêng từng ụ nếu cần (để trống).
+//   Dùng trong heSaoST → dmgU / hsU / statThuc (số hiển thị = số đánh thật). Ụ Đỏ không phải Tấn công: không đổi (tiến triển theo KY_NANG_CAP).
+const DO_NEN = { goc: 1.8, doc: 0.2, tu: 3, docRieng: {} };
+function heDoNen(id, sao) {
+  const r = typeof G !== 'undefined' && G.rosterMap && G.rosterMap[id], sk = typeof SKILLS !== 'undefined' && SKILLS[id];
+  if (!r || r.bac !== 'do' || !sk || sk.vai !== 'tc') return 1;
+  const doc = DO_NEN.docRieng[id] != null ? DO_NEN.docRieng[id] : DO_NEN.doc;
+  return DO_NEN.goc - doc * (Math.min(LUAT.saoMax, Math.max(DO_NEN.tu, sao | 0)) - DO_NEN.tu);
+}
 function heSaoToc(T) { return T && saoMoi(T.id) ? SAO_TOC * ((T.sao | 0) - 1) : 0; }
 // mana khi giết
 function manaGiet(w) { return 10 + 2 * (w - 1); }

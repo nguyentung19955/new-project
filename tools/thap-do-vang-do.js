@@ -21,7 +21,7 @@ function dps(ctx, id, sao, cap, wave, T0, max, hs) {
   ctx._a = [id, sao, cap, wave];
   R(ctx, `{ const [id, sao, cap, wave] = _a; G.debug = { auto: false }; batDau('solo', ['lien', 'canon', 'set', 'tia', 'mana'], 'hero'); G.cho = 1e9; G.wave = wave;
     const B = G.ban[0]; B.tim = 1e9; B.mana = 600; B.capThe = {}; B.capThe[id] = cap; B.lv = B.lv || {}; B.lv[id] = 4;
-    const T = sinhU(taoU(B, id, sao, 2)); B.t[2] = T; G._T = T; G._sum = 0; G._q = 0; }`);
+    const T = sinhU(taoU(B, id, sao, 2)); if (typeof _epThuc === 'boolean') T.thuc = _epThuc; if (id === 'leviathan' && typeof _vucKV === 'number') T.vuc = _vucKV; B.t[2] = T; G._T = T; G._sum = 0; G._q = 0; }`);
   if (!ctx._lotVong) { ctx._lotVong = 1; R(ctx, 'const _lotSim = lot; lot = function (E) { if (G._vong) { E.s = 0; return; } return _lotSim(E); };'); }
   R(ctx, 'G._vong = true;');
   const dt = 1 / 30; let cd = 0, toc = 0;
@@ -35,6 +35,9 @@ function dps(ctx, id, sao, cap, wave, T0, max, hs) {
   R(ctx, 'G._vong = false;');
   return { d: R(ctx, 'G._sum') / T0, toc };
 }
+// VỰC SÂU kỳ vọng của Leviathan theo wave (09/11 lần 2): trung vị điểm của Leviathan mạnh nhất trên bàn ở mốc wave, trận SOLO bot (bộ Thường / Vàng / Tím,
+//   cấp thẻ 0, 18 trận — docs/demo-hop-tuong/tocban/DO-VANG-DO.md). VUC=0 để tắt (đo từ 0 điểm như cũ).
+const VUC_KV = process.env.VUC === '0' ? null : { 20: 8, 30: 20, 40: 80, 50: 180 };
 const gm = (a, b) => Math.sqrt(Math.max(1e-6, a) * Math.max(1e-6, b));
 function doTatCa(nhanh, chi) {
   const CTX = [4242, 777, 31337].map(h => taoMoiTruong(h)), ctx = CTX[0];
@@ -43,16 +46,28 @@ function doTatCa(nhanh, chi) {
   let ds = R(ctx, `G.roster.filter(r => SKILLS[r.id] && SKILLS[r.id].vai === 'tc' && ['tim', 'vang', 'do'].includes(r.bac)).map(r => ({ id: r.id, bac: r.bac, ten: TEXT.turret[r.id] ? TEXT.turret[r.id].name : r.id }))`);
   if (chi) ds = ds.filter(u => chi.includes(u.id));
   const capMax = { tim: 9, vang: 8, do: 6 };
-  const T0 = nhanh ? 14 : 24, SAO = [3, 5, 7], WAVE = nhanh ? [30] : [20, 30, 40, 50], CAP = ['dau', 'max'];
+  const T0 = +process.env.T0 || (nhanh ? 14 : 24), SAO = process.env.SAO ? process.env.SAO.split(',').map(Number) : [3, 5, 7], WAVE = nhanh ? [30] : process.env.WAVE ? process.env.WAVE.split(',').map(Number) : [20, 30, 40, 50], CAP = ['dau', 'max'];
   const m20 = R(ctx, 'mauWave(20)');
   for (const u of ds) {
     u.r = {};
     for (const c of CAP) for (const s of SAO) for (const w of WAVE) {
       const cap = c === 'dau' ? 0 : capMax[u.bac], k = (1 + 0.85 * (s - 1)) * m20 / R(ctx, `mauWave(${w})`);
       // trung vị 3 hạt giống: ụ có dạng quay lúc sinh (Sói thức tỉnh, màu Prism…) không làm lệch số đo
-      const A = CTX.map(x => dps(x, u.id, s, cap, w, T0, 1, 400 * k)), Bq = CTX.map(x => dps(x, u.id, s, cap, w, T0, 10, 25 * k));
-      const don = med3(A.map(q => q.d)), dong = med3(Bq.map(q => q.d));
-      u.r[c + s + 'w' + w] = { don, dong, p: gm(don, dong), toc: A[0].toc };
+      const do1 = () => { const A = CTX.map(x => dps(x, u.id, s, cap, w, T0, 1, 400 * k)), Bq = CTX.map(x => dps(x, u.id, s, cap, w, T0, 10, 25 * k)); return { don: med3(A.map(q => q.d)), dong: med3(Bq.map(q => q.d)), toc: A[0].toc }; };
+      let x;
+      if (u.id === 'soi') {
+        // 09/11 lần 2 (Đỏ hơn Vàng rõ rệt): Sói quay Thường/Thức tỉnh lúc sinh → trung vị 3 hạt lúc ra bản này lúc bản kia (Vàng tốt nhất nhảy ×1.6–3 giữa các wave).
+        //   Đo CẢ HAI bản (ép T.thuc) rồi lấy KỲ VỌNG theo tỉ lệ thức tỉnh ở cấp thẻ đó (SKILLS.soi.tiLe).
+        for (const c2 of CTX) c2._epThuc = false; const n = do1(); for (const c2 of CTX) c2._epThuc = true; const t = do1(); for (const c2 of CTX) c2._epThuc = undefined;
+        const q = R(ctx, `(() => { batDau('solo', ['soi'], 'hero'); const B = G.ban[0]; B.capThe = { soi: ${cap} }; B.lv = B.lv || {}; B.lv.soi = 4; return SKILLS.soi.tiLe(B); })()`);
+        x = { don: (1 - q) * n.don + q * t.don, dong: (1 - q) * n.dong + q * t.dong, toc: n.toc, q };
+      } else if (u.id === 'leviathan' && VUC_KV) {
+        // VỰC SÂU cộng dồn không trần (+4%/điểm, riêng từng ụ, ghép = về 0): bài 24 s chỉ được vài điểm → đặt sẵn số điểm KỲ VỌNG ở wave đó
+        //   (Leviathan trên bàn trong các trận SOLO mô phỏng — xem VUC_KV) → u.rKV. Bảng chính (u.r, trung vị Đỏ) vẫn tính TỪ 0 điểm như cũ (thận trọng).
+        x = do1(); for (const c2 of CTX) c2._vucKV = VUC_KV[w] || 0; const y = do1(); for (const c2 of CTX) c2._vucKV = undefined;
+        u.rKV = u.rKV || {}; u.rKV[c + s + 'w' + w] = { don: y.don, dong: y.dong, p: gm(y.don, y.dong), vuc: VUC_KV[w] || 0 };
+      } else x = do1();
+      u.r[c + s + 'w' + w] = { don: x.don, dong: x.dong, p: gm(x.don, x.dong), toc: x.toc };
     }
     process.stderr.write(u.id + ' ');
   }
@@ -69,19 +84,39 @@ function bang(d, khoa) {
 // Nemesis = đòn % máu tối đa / hạ gục: bài thử quái trâu làm phồng ảo (như thap-sim-tier.js THEO_BO) → không tính vào "Vàng tốt nhất" (Prism Thief cũng vậy)
 const NGOAI = ['nemesis', 'bienmau']; // Prism Thief: dạng màu quay lúc sinh → số đo nhảy ×10 giữa các hạt
 function tomTat(d) {
-  const L = [], keys = Object.keys(d.ds[0].r);
-  L.push('| kịch bản | Tím TV | Vàng TV | Vàng top-3 TB | Vàng tốt nhất | Đỏ TV | Đỏ thấp nhất | Vàng TV / Tím TV | Đỏ TV / Vàng TV | Đỏ TV / Vàng tốt nhất |', '|---|---|---|---|---|---|---|---|---|---|');
+  const L = [], keys = Object.keys(d.ds[0].r), lev = d.ds.find(u => u.id === 'leviathan' && u.rKV);
+  L.push('| kịch bản | Tím TV | Vàng TV | Vàng top-3 TB | Vàng tốt nhất | Đỏ TV | Đỏ thấp nhất | Vàng TV / Tím TV | Đỏ TV / Vàng TV | **Đỏ TV / Vàng tốt nhất** | Đỏ thấp nhất / Vàng tốt nhất' + (lev ? ' | Leviathan (VỰC SÂU kỳ vọng) / Vàng tốt nhất' : '') + ' |',
+    '|---|---|---|---|---|---|---|---|---|---|---|' + (lev ? '---|' : ''));
   const med = (a) => { const b = a.slice().sort((x, y) => x - y), n = b.length; return !n ? 0 : n % 2 ? b[(n - 1) / 2] : (b[n / 2 - 1] + b[n / 2]) / 2; };
   for (const k of keys) {
     const g = (bac, bo) => d.ds.filter(u => u.bac === bac && !(bo && NGOAI.includes(u.id))).map(u => u.r[k].p);
     const t = g('tim'), v = g('vang'), v2 = g('vang', 1).sort((a, b) => b - a), r = g('do'), top3 = (v2[0] + v2[1] + v2[2]) / 3;
-    L.push('| ' + k + ' | ' + Math.round(med(t)) + ' | ' + Math.round(med(v)) + ' | ' + Math.round(top3) + ' | ' + Math.round(v2[0]) + ' | ' + Math.round(med(r)) + ' | ' + Math.round(Math.min(...r)) + ' | ' + (med(v) / med(t)).toFixed(2) + ' | ' + (med(r) / med(v)).toFixed(2) + ' | ' + (med(r) / v2[0]).toFixed(2) + ' |');
+    const tenV = (d.ds.find(u => u.bac === 'vang' && u.r[k].p === v2[0]) || {}).id, rMin = Math.min(...r), tenR = (d.ds.find(u => u.bac === 'do' && u.r[k].p === rMin) || {}).id;
+    L.push('| ' + k + ' | ' + Math.round(med(t)) + ' | ' + Math.round(med(v)) + ' | ' + Math.round(top3) + ' | ' + Math.round(v2[0]) + ' ' + tenV + ' | ' + Math.round(med(r)) + ' | ' + Math.round(rMin) + ' ' + tenR + ' | ' + (med(v) / med(t)).toFixed(2) + ' | ' + (med(r) / med(v)).toFixed(2) + ' | **' + (med(r) / v2[0]).toFixed(2) + '** | ' + (rMin / v2[0]).toFixed(2) + (lev ? ' | ' + (lev.rKV[k].p / v2[0]).toFixed(2) + ' (' + lev.rKV[k].vuc + ' điểm)' : '') + ' |');
+  }
+  // trung bình theo nhóm kịch bản (dau3 … max7)
+  const nhom = {};
+  for (const k of keys) {
+    const vb = Math.max(...d.ds.filter(u => u.bac === 'vang' && !NGOAI.includes(u.id)).map(u => u.r[k].p)), r = d.ds.filter(u => u.bac === 'do').map(u => u.r[k].p);
+    (nhom[k.split('w')[0]] = nhom[k.split('w')[0]] || []).push(med(r) / vb);
+  }
+  L.push('', 'Trung bình 4 wave — Đỏ TV / Vàng tốt nhất: ' + Object.entries(nhom).map(([k, a]) => k + ' ' + (a.reduce((x, y) => x + y, 0) / a.length).toFixed(2)).join(' · '));
+  return L.join('\n');
+}
+// từng ụ Đỏ / Vàng tốt nhất theo kịch bản (bảng ma trận)
+function tungDo(d) {
+  const keys = Object.keys(d.ds[0].r), dd = d.ds.filter(u => u.bac === 'do');
+  const L = ['| kịch bản | ' + dd.map(u => (TEXT_TEN[u.id] || u.id)).join(' | ') + (dd.some(u => u.rKV) ? ' | Leviathan VỰC SÂU kỳ vọng' : '') + ' |', '|---|' + dd.map(() => '---|').join('') + (dd.some(u => u.rKV) ? '---|' : '')];
+  for (const k of keys) {
+    const vb = Math.max(...d.ds.filter(u => u.bac === 'vang' && !NGOAI.includes(u.id)).map(u => u.r[k].p)), lev = dd.find(u => u.rKV);
+    L.push('| ' + k + ' | ' + dd.map(u => (u.r[k].p / vb).toFixed(2)).join(' | ') + (lev ? ' | ' + (lev.rKV[k].p / vb).toFixed(2) : '') + ' |');
   }
   return L.join('\n');
 }
+const TEXT_TEN = { blackhole: 'Black Hole', overlord: 'Overlord', chuato: 'Hive Queen', leviathan: 'Leviathan (từ 0)', ronglua: 'Wyrm Engine', thacmana: 'Arcane Cascade' };
 if (require.main === module) {
   const a = process.argv.slice(2), nhanh = a.includes('nhanh'), chiA = a.find(x => x.startsWith('chi=')), bangA = a.find(x => x.startsWith('bang='));
-  if (bangA) { const d = JSON.parse(fs.readFileSync(bangA.slice(5))); console.log(tomTat(d)); for (const k of (a.find(x => x.startsWith('khoa=')) || 'khoa=max5w30').slice(5).split(',')) console.log('\n### ' + k + '\n\n' + bang(d, k)); }
+  if (bangA) { const d = JSON.parse(fs.readFileSync(bangA.slice(5))); console.log(tomTat(d)); if (a.includes('tungdo')) console.log('\n' + tungDo(d)); for (const k of (a.find(x => x.startsWith('khoa=')) || 'khoa=max5w30').slice(5).split(',')) console.log('\n### ' + k + '\n\n' + bang(d, k)); }
   else {
     const ra = a.find(x => x.endsWith('.json')) || '/tmp/do-vang-do.json';
     const d = doTatCa(nhanh, chiA && chiA.slice(4).split(','));
@@ -89,4 +124,4 @@ if (require.main === module) {
     console.log(tomTat(d));
   }
 }
-module.exports = { doTatCa, bang, tomTat };
+module.exports = { doTatCa, bang, tomTat, tungDo };

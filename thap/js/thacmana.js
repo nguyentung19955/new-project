@@ -17,7 +17,7 @@
 'use strict';
 
 SKILLS.thacmana = {
-  vai: 'tc', dmg: 13, toc: 1.0, nham: 'dau', napMau: '#9a7bff', // 09/11 đo bot: 15 → 13 sau đợt tăng trưởng sao mới (giữ dưới bộ Rồng/Thuỷ Quái)
+  vai: 'tc', dmg: 20, toc: 1.0, nham: 'dau', napMau: '#9a7bff', // 09/11 đo bot: 15 → 13 sau đợt tăng trưởng sao mới · 09/11 lần 2 (Đỏ hơn Vàng rõ rệt): 13 → 20 — ụ Đỏ yếu nhất (≈0.6× Vàng tốt nhất ở 3–5★, docs/demo-hop-tuong/tocban/DO-VANG-DO.md)
   cd: 30, NAY: 125, GIAM: 0.9, SAN: 0.5, K: 0.5,
   XA: 0.2, XA_MIN: 50, THAC_T: 4, THAC_NHIP: 0.5, THAC_K: 0.8, THAC_TOC: 0.5,
   LAN: [[0, 1], [100, 2], [300, 3], [600, 4], [1000, 5], [2000, 6], [4000, 8]], // [ngưỡng mana, số quái trúng]
