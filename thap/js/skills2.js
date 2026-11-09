@@ -10,7 +10,7 @@
 const lvU = (T) => G.ban[T.ban].lv[T.id] || 1;
 const conTren = (T) => { const B = G.ban[T.ban]; return !!B && B.t[T.o] === T; };
 // hệ số sức mạnh không kèm buff (dùng cho hiệu ứng khi ghép, drone…)
-const hsU = (id, sao, B) => (SKILLS[id].dmg || 10) * TIERS[G.rosterMap[id].bac].hs * (1 + 0.85 * (sao - 1)) * hsLv(B, id);
+const hsU = (id, sao, B) => (SKILLS[id].dmg || 10) * TIERS[G.rosterMap[id].bac].hs * heSaoST(id, sao) * hsLv(B, id);
 // nhãn kỹ năng ngắn hiện trên ụ khi kỹ năng kích hoạt
 function nhanU(T, s, mau, ep) {
   return; // BỎ nhãn chữ nổi trên ô (SHATTER ×5, CLONE +1…) — người dùng: vô dụng, rối bàn; buff/kỹ năng đã có hiệu ứng ảnh ChatGPT. Chỉ giữ số sát thương + tấm kết quả ghép.
@@ -89,7 +89,8 @@ SKILLS.xucxac = { // Pháo May Rủi (Fenrir): sát thương ngẫu nhiên 3–3
   ban(G, B, T, E) {
     giat(T, 0.9); const [x, y] = chopNong(T, 26); phutKhoi(x, y, 1); SND.phao();
     const chac = !!T._critChac; if (chac) T._critChac = false; // Crit Antenna 7★: cú chắc chắn chí mạng = cú tối đa (không nhân đôi thêm)
-    const crit = chac || Math.random() < critU(T), roll = crit ? 300 : 3 + rint(298), dmg = dmgU(T) * (crit ? 1.5 : roll / 100);
+    const r = rngLuat(B, 37, T.o), crit = chac || r() < critU(T), roll = crit ? 300 : 3 + Math.floor(r() * 298), // RNG luật có hạt (10/11, thay Math.random)
+      dmg = dmgU(T) * (crit ? 1.5 : roll / 100);
     // chí mạng: 150% × (2 + sát thương chí mạng) = 300% (+ Hammer/Focus Lens)
     danThang(B, T, E, 'dan_phao', 520, 15, (G, d, M) => {
       if (M) trung(M, dmg, { B, crit, mau: roll >= 240 ? '#ffd23f' : roll < 40 ? '#9aa6b4' : '#ffffff' });
@@ -129,7 +130,7 @@ SKILLS.maychem = { // Máy Chém (Scaffold): xác suất giết ngay quái nhỏ
     const dmg = dmgU(T), tl = this.tile(T);
     danThang(B, T, E, 'dan_tia', 600, 18, (G, d, M) => {
       if (!M) return;
-      if (!M.trum && !M.d.to && Math.random() < tl) {
+      if (!M.trum && !M.d.to && rngLuat(B, 41, T.o)() < tl) { // RNG luật có hạt (10/11)
         G.hu.push({ k: 'chem', t: 0, song: 0.4, x: M.x, y: M.y });
         trung(M, M.hp + 1, { B, crit: false, mau: '#ff4b3e' }); VX.chem(M); SND.no(0.3);
       } else trung(M, dmg, { B });
@@ -404,9 +405,9 @@ SKILLS.min = { // Bệ Rải Mìn (Ptah): rải mìn trên đường; đôi khi 
     T.nap = Math.min(1, T.nap + dt * nhipU(T) / this.ky(T));
     const soMin = G.hu.filter(o => o.k === 'min' && o.T === T).length;
     if (T.nap >= 1 && E && soMin < 6) {
-      const Q = pick(ds), p = G.duong[Q.p], [px, py] = viTri(p, Math.min(p.len - 16, Q.s + rnd(30, 110)));
+      const rm = rngLuat(B, 43, T.o), Q = ds[Math.floor(rm() * ds.length)], p = G.duong[Q.p], [px, py] = viTri(p, Math.min(p.len - 16, Q.s + 30 + rm() * 80)); // RNG luật có hạt (10/11)
       T.nap = 0; T.minDich = [px, py]; giat(T, 0.9); const [x, y] = chopNong(T, 20); SND.nap();
-      const sao3 = Math.random() < 0.03 + 0.005 * (T.sao - 1), dmg = dmgU(T) * 7 * (sao3 ? 3 : 1);
+      const sao3 = rm() < 0.03 + 0.005 * (T.sao - 1), dmg = dmgU(T) * 7 * (sao3 ? 3 : 1);
       banDan({ img: 'dan_phao', x, y, px, py, sp: 240, co: 15, cong: 50, B, T,
         trung(G, d) { G.hu.push({ k: 'min', t: 0, song: 30, x: d.x, y: d.y, r: 36, dmg, B, T, sao3 }); FX.bui(d.x, d.y, 4, 5); } });
       if (sao3) nhanU(T, 'STAR MINE ×3!', '#ffd23f', true);
@@ -669,16 +670,18 @@ SKILLS.no5 = { // Nỏ Năm Nhịp (Amor): phát thứ 5 bắn 3 mũi tên nổ
     for (let i = 0; i < 5; i++) PX.cham(ctx, (i - 2) * 6, S * 0.47, 7, i < k ? '#ff8af0' : '#555555', al * (i < k ? 1 : 0.3)); // chấm nhịp = fx_cham_trang tô màu
   },
 };
-SKILLS.bao = { // Súng Bão (Pantheon): trúng tức thì, cực nhanh; chậm lại khi đứng cạnh ụ cùng loại
+SKILLS.bao = { // Súng Bão (Pantheon): trúng tức thì, cực nhanh · 10/11 (tư vấn ChatGPT): BỎ phạt −15%/ụ kề cùng loại; mỗi Súng Bão kề +5 điểm % nảy (gốc 20%)
+  NAY: 0.2, NAY_KE: 0.05,
+  ke(B, T) { return keCan(B, T.o).filter(N => N && N.id === 'bao' && !N.st.da).length; },
+  nay(B, T) { return this.NAY + this.NAY_KE * this.ke(B, T); },
   vai: 'tc', dmg: 5.2, toc: 4.5, tocSao: 0.05, nham: 'dau',
-  mo(T) { const n = keCan(G.ban[T.ban], T.o).filter(N => N && N.id === 'bao' && !N.st.da).length; return 'Instant hits ' + tocU(T).toFixed(1) + '/s · 20% arc to a 2nd enemy' + (n ? ' · next to ' + n + ' ' + TEXT.turret.bao.name + ': −' + Math.min(30, n * 15) + '% speed' : ''); },
-  capNhat(G, B, T) { const n = keCan(B, T.o).filter(N => N && N.id === 'bao' && !N.st.da).length; T.buf.toc -= Math.min(0.3, 0.15 * n); return false; }, // −30%/ụ kề → −15%/ụ, tối đa −30% (BAO-CAO Mức 3)
+  mo(T) { const B = G.ban[T.ban], n = B ? this.ke(B, T) : 0; return 'Instant hits ' + tocU(T).toFixed(1) + '/s · ' + Math.round((B ? this.nay(B, T) : this.NAY) * 100) + '% arc to a 2nd enemy · each touching ' + TEXT.turret.bao.name + ' +5% arc' + (n ? ' (now ' + n + ')' : ''); },
   ban(G, B, T, E) {
     giat(T, 0.3); const [x, y] = dauNong(T); FX.no('chop_nong', x, y, 20, 0.05, T.goc); SND.set();
     trung(E, dmgU(T), { B, mau: '#9ffcff' });
     G.hu.push({ k: 'tiaTia', t: 0, song: 0.09, x0: x, y0: y, x1: E.x, y1: E.y, mau: '#9ffcff' });
     if (Math.random() < 0.4) FX.no('dien', E.x, E.y, 26, 0.15);
-    if (Math.random() < 0.2) { // ARC: tia sét nảy sang quái gần nhất (cơ chế mới của bậc TÍM họ Energy)
+    if (rngLuat(B, 31, T.o)() < this.nay(B, T)) { // RNG luật có hạt (10/11) · ARC: tia sét nảy sang quái gần nhất (cơ chế mới của bậc TÍM họ Energy)
       let Q = null, best = 96; for (const X of dsMucTieu(B)) if (X !== E && !X.chet) { const dd = Math.hypot(X.x - E.x, X.y - E.y); if (dd < best) { best = dd; Q = X; } }
       if (Q) { trung(Q, dmgU(T) * 0.7, { B, mau: '#9ffcff' }); G.hu.push({ k: 'set', t: 0, song: 0.16, x: E.x, y: E.y, ds: [{ Q, x: Q.x, y: Q.y }], seed: Math.random() * 999 }); }
     }

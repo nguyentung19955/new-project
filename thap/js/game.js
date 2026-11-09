@@ -329,7 +329,7 @@ var CONG_GOP = true;
 const heJP = () => 1; // (jackpot thời hạn cũ đã bỏ 08/11 — giữ tên cho kiểu đo CONG_GOP=false)
 function dmgU(T, them) {
   const sk = SKILLS[T.id], B = G.ban[T.ban];
-  let d = (sk.dmg || 0) * TIERS[T.bac].hs * (1 + 0.85 * (T.sao - 1)) * hsLv(B, T.id);
+  let d = (sk.dmg || 0) * TIERS[T.bac].hs * heSaoST(T.id, T.sao) * hsLv(B, T.id); // hệ số sao: data.js heSaoST
   const mi = T.aurora > 0 ? knThe(B, 'mimic') / 100 : 0; // Mimic: +50% ở cấp đầu, tăng theo cấp thẻ Mimic
   d *= 1 + T.buf.dmg + (them || 0) + (CONG_GOP ? mi : 0); // them: +% riêng của đòn (số Pháo La Bàn) — cùng nhóm sát thương
   if (!CONG_GOP) d *= (1 + mi) * heJP(T, 'dmg');

@@ -10,7 +10,7 @@ function statThuc(T) {
   const sk = SKILLS[T.id] || {}, B = G.ban[T.ban], ten = (X) => (G.rosterMap[X.id] ? G.rosterMap[X.id].ten : X.id);
   const lv = (B && B.lv[T.id]) || 1;
   // gốc: sao + cấp, chưa buff (đúng phần đầu của dmgU / tocU)
-  const goc = (sk.dmg || 0) * TIERS[T.bac].hs * (1 + 0.85 * (T.sao - 1)) * hsLv(B, T.id);
+  const goc = (sk.dmg || 0) * TIERS[T.bac].hs * heSaoST(T.id, T.sao) * hsLv(B, T.id);
   const tocGoc = (sk.toc || 1) * (sk.tocSao ? 1 + sk.tocSao * (T.sao - 1) : 1);
   const dmg = sk.dmg ? dmgU(T) : 0, toc = sk.dmg ? tocU(T) : 0;
   const luon = !!(sk.luonCrit && sk.luonCrit(T));
@@ -34,6 +34,7 @@ function statThuc(T) {
   let tuToc = T.buf.toc - tong.toc;
   if (T.tocT > 0) { tuToc -= T.tocV; ds.push({ k: 'toc', ic: 'tam', txt: pc(T.tocV) + ' rate · speed boost ' + Math.ceil(T.tocT) + 's' }); }
   if (typeof mocChung === 'function' && mocChung(T, 3) && loaiMoc(T.id) !== 'ht') { tuToc -= 0.2; ds.push({ k: 'toc', ic: 'toc', txt: '+20% rate · 3★ milestone' }); }
+  { const ts = typeof heSaoToc === 'function' ? heSaoToc(T) : 0; if (ts > 0) { tuToc -= ts; ds.push({ k: 'toc', ic: 'toc', txt: pc(ts) + ' rate · star speed' }); } }
   if (T.epxung > 0) ds.push({ k: 'toc', ic: 'toc', txt: pc(T.epxung) + ' rate · Overclock' });
   // ngăn quả Lucky Slot (jackpot.js CB): cùng nhóm cộng — tách khỏi phần 'tự có'
   let jpD = 0;

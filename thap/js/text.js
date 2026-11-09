@@ -106,7 +106,7 @@ const TEXT = {
     xaotron:    { name: 'Scrambler',     skill: 'Merge 2 Scramblers. PvP: rival turrets are shuffled into other types. Co-op: lone ally turrets become mergeable. Solo: your lone turrets become mergeable' },
     epxung:     { name: 'Overclock',     skill: 'Drag it onto a same-star shooting turret: that turret shoots +90% faster. You can do it again: it Stacks' },
     no5:        { name: 'Fifth Shot',    skill: 'Counts its shots. Every 5th shot fires 3 bolts that explode' },
-    bao:        { name: 'Storm Gun',     skill: 'Hits at once, very fast. Some hits jump to a 2nd enemy. Shoots slower next to another Storm Gun' },
+    bao:        { name: 'Storm Gun',     skill: 'Hits at once, very fast. Some hits jump to a 2nd enemy (20%). Each Storm Gun touching it adds +5% jump chance' },
     anhsang:    { name: 'Lighthouse',    skill: 'Light orbs fill up over time. When full, it Summons a free 1★ turret' },
     aten:       { name: 'Purifier',      skill: 'Deals ×4 damage to poisoned enemies. Enemies it kills explode and hit enemies nearby. Tip: pair with Venom or Toxic Pool' },
     dongbo:     { name: 'Sync Cannon',   skill: 'Support: EVERY Attack turret with the same ★ anywhere on your board deals more damage (no need to touch). PvP: rival turrets deal less damage' },
