@@ -2,23 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="tm-ver" content="a766a83a54">
+  <meta name="tm-ver" content="6cf85c7e9c">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#16171a">
-  <title>TURRET MERGE</title>
+  <title>ASTRAL ARSENAL</title>
   <!-- ICON APP (ảnh đại diện, ChatGPT raw_app_icon.png → tools/thap-icon.py). Đường dẫn TƯƠNG ĐỐI: chạy cả GitHub Pages /new-project/thap/ lẫn turret-merge.web.app -->
-  <meta name="apple-mobile-web-app-title" content="Turret Merge">
-  <meta name="application-name" content="Turret Merge">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/icon/favicon-32.png?v=b2ff34d1">
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/icon/favicon-16.png?v=05258d15">
-  <link rel="icon" type="image/png" sizes="192x192" href="assets/icon/icon-192.png?v=20c5dd95">
+  <meta name="apple-mobile-web-app-title" content="Astral Arsenal">
+  <meta name="application-name" content="Astral Arsenal">
+  <meta name="description" content="Astral Arsenal: Merge Defense — anime fantasy-tech merge tower defense: summon, merge and command magic-powered crystal cannons.">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icon/favicon-32.png?v=54ca1051">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/icon/favicon-16.png?v=ea4a17c1">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icon/icon-192.png?v=40e2698f">
   <link rel="icon" href="assets/icon/favicon.ico" sizes="48x48">
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/icon/icon-180.png?v=5a16727c">
-  <link rel="apple-touch-icon" sizes="167x167" href="assets/icon/icon-167.png?v=983fc343">
-  <link rel="apple-touch-icon" sizes="152x152" href="assets/icon/icon-152.png?v=0150f2ef">
-  <link rel="apple-touch-icon" sizes="120x120" href="assets/icon/icon-120.png?v=e3961423">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icon/icon-180.png?v=f332d288">
+  <link rel="apple-touch-icon" sizes="167x167" href="assets/icon/icon-167.png?v=cf489417">
+  <link rel="apple-touch-icon" sizes="152x152" href="assets/icon/icon-152.png?v=913dc33f">
+  <link rel="apple-touch-icon" sizes="120x120" href="assets/icon/icon-120.png?v=08dc539b">
   <link rel="manifest" href="manifest.webmanifest">
   <!-- KHỞI ĐỘNG NHANH (tư vấn khởi động): màn tải hiện NGAY từ HTML + CSS nội tuyến dưới đây; mọi css/js của game nằm trong
        <template id="tm-nap"> và được nạp bởi đoạn script cuối trang (thanh % chạy từ yêu cầu đầu tiên, theo byte).
@@ -26,7 +27,7 @@
   <link rel="preload" href="assets/tai_khung.webp?v=7509ba33" as="image">
   <link rel="preload" href="assets/tai_day.png?v=c4c087bd" as="image">
   <link rel="preload" href="assets/nen_menu.jpg?v=34f795d7" as="image">
-  <link rel="preload" href="assets/logo.webp?v=d6964dd9" as="image">
+  <link rel="preload" href="assets/logo_aa.webp?v=5c125e2e" as="image">
   <style id="tm-tai-css">
     @font-face { font-family: 'TM Display'; font-weight: 100 900; font-display: swap; src: url(assets/fonts/oxanium/oxanium-latin-800-normal.woff2) format('woff2'); }
     html, body { margin: 0; height: 100%; background: #16171a; overflow: hidden; }
@@ -35,7 +36,7 @@
     #tai[hidden] { display: none; }
     #tai:not(.san) .tai-giua { visibility: hidden; } /* đợi logo + khung (script dưới #tai) */
     #tai .tai-giua { display: flex; flex-direction: column; align-items: center; gap: 18px; width: 340px; transform: scale(var(--tk, 1)); }
-    #tai .tai-logo { width: 290px; aspect-ratio: 704 / 288; background: url(assets/logo.webp?v=d6964dd9) center / contain no-repeat; filter: drop-shadow(0 3px 0 #000a); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
+    #tai .tai-logo { width: 290px; aspect-ratio: 960 / 387; background: url(assets/logo_aa.webp?v=5c125e2e) center / contain no-repeat; filter: drop-shadow(0 3px 0 #000a); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
     #tai .tai-thanh { position: relative; width: 330px; height: 34px; box-sizing: border-box; border-style: solid; border-width: 0; border-image: url(assets/tai_khung.webp?v=7509ba33) 36.9 69 36.9 70 fill / 12px 23px stretch; } /* GIỐNG HỆT css/taitai.css (trước: lát 14 22 ≠ 36.9 58 → khung đổi hình giữa chừng) */
     #tai .tai-day { position: absolute; left: 11px; right: 11px; top: 9px; bottom: 10px; overflow: hidden; clip-path: inset(0 calc(100% - var(--p, 0%)) 0 0); transition: clip-path .2s; }
     #tai .tai-day img { position: absolute; left: 0; top: 0; display: block; width: 100%; height: 100%; object-fit: fill; }
@@ -51,7 +52,7 @@
   <script>(function () {
     // logo + khung thanh hiện CÙNG LÚC khi ảnh đã giải mã (không bật logo/khung lẻ từng cái); quá 1,5 s thì hiện luôn
     (function () { var t = document.getElementById('tai'), n = 2, hien = function () { if (t) t.classList.add('san'); }, xong = function () { if (--n <= 0) hien(); };
-      ['assets/logo.webp?v=d6964dd9', 'assets/tai_khung.webp?v=7509ba33'].forEach(function (u) { var im = new Image(); im.onload = im.onerror = function () { (im.decode ? im.decode() : Promise.resolve()).then(xong, xong); }; im.src = u; });
+      ['assets/logo_aa.webp?v=5c125e2e', 'assets/tai_khung.webp?v=7509ba33'].forEach(function (u) { var im = new Image(); im.onload = im.onerror = function () { (im.decode ? im.decode() : Promise.resolve()).then(xong, xong); }; im.src = u; });
       setTimeout(hien, 1500); })();
     var vw = innerWidth || 390, vh = innerHeight || 844; document.documentElement.style.setProperty('--tk', Math.max(0.8, Math.min(1.6, vw / 430, vh / 640)).toFixed(3));
     // ảnh chỉ huy lớn của HOME (home.js) — tải SONG SONG với js thay vì đợi js chạy xong
@@ -137,7 +138,7 @@
           <div class="hm-tien" id="hm-tien"><span>BEST</span><b id="hm-best">0</b></div>
           <button class="hm-ic hm-ic1" data-act="hm-cai" aria-label="Settings"><img src="assets/p7_ic_caidat.webp?v=6183698b" alt=""></button>
         </div>
-        <img class="hm-logo" src="assets/logo.webp?v=d6964dd9" alt="TURRET MERGE">
+        <img class="hm-logo" src="assets/logo_aa.webp?v=5c125e2e" alt="ASTRAL ARSENAL">
         <div class="hm-duoi">
           <button class="hm-che" data-act="hm-che" id="hm-che"><img id="hm-che-ic" src="assets/ic_solo.webp?v=2c431b86" alt=""><span><small>MODE</small><b id="hm-che-ten">SOLO</b></span><em>CHANGE</em></button>
           <button class="hm-choi" data-act="hm-choi" id="hm-choi"><b>PLAY</b><small id="hm-choi-phu"></small></button>
@@ -205,11 +206,11 @@
   <link rel="stylesheet" href="css/fonts.css?v=481b56a5" data-b="3665">
   <link rel="stylesheet" href="css/game.css?v=a1855dd4" data-b="28932">
   <link rel="stylesheet" href="css/hud.css?v=0c8ae23a" data-b="12328">
-  <link rel="stylesheet" href="css/anhgen.css?v=9b9ed8d3" data-b="6823">
+  <link rel="stylesheet" href="css/anhgen.css?v=e81a02c7" data-b="6826">
   <link rel="stylesheet" href="css/statthuc.css?v=7e22cbb8" data-b="5532">
   <link rel="stylesheet" href="css/unitpage.css?v=2a14622c" data-b="19542">
   <link rel="stylesheet" href="css/pass2.css?v=ca74d981" data-b="10068">
-  <link rel="stylesheet" href="css/taitai.css?v=774784e5" data-b="5353">
+  <link rel="stylesheet" href="css/taitai.css?v=9c803664" data-b="5356">
   <link rel="stylesheet" href="css/hud2.css?v=c40b233b" data-b="21984">
   <link rel="stylesheet" href="css/vaotran.css?v=de81be68" data-b="7036">
   <link rel="stylesheet" href="css/tien.css?v=430a9adf" data-b="4252">
@@ -250,21 +251,21 @@
   <link rel="stylesheet" href="css/rasoat.css?v=070c3bb7" data-b="6703"> <!-- rà soát thiết kế 09/11: lớp phủ xoay dọc, nút "i" trên thẻ, sàn cỡ chữ 12px, vùng chạm ≥48 (≈44 px màn 390) -->
   <link rel="stylesheet" href="css/hud-anime.css?v=55e74bac" data-b="38779"> <!-- HUD TRẬN ANIME Royal Twilight (B2 09/11, js/hud-anime.js): chỉ khi html.ha2 — nạp cuối -->
   <link rel="stylesheet" href="css/ui-anime.css?v=a3cb0d06" data-b="13024"> <!-- GIAO DIỆN NGOÀI TRẬN ANIME Royal Twilight (B3 09/11, js/ui-anime.js): chỉ khi html.ua — nạp cuối -->
-  <script src="js/ver-anh.js?v=f7280644"></script>
+  <script src="js/ver-anh.js?v=dea0b277"></script>
   <script src="js/donet.js?v=34c51606" data-b="2659"></script>
   <script src="js/font.js?v=26e0ac3d" data-b="1038"></script>
   <script src="js/taitai-anh.js?v=2adc1d8e" data-b="24519"></script>
-  <script src="js/taitai.js?v=fea3fc08" data-b="40644"></script>
+  <script src="js/taitai.js?v=d78c8642" data-b="40647"></script>
   <script src="js/meta.js?v=a2b9397d" data-b="35099"></script>
   <script src="js/text.js?v=42bf9876" data-b="29907"></script>
-  <script src="js/ngonngu-vi.js?v=1dcfc63e" data-b="633424"></script> <!-- từ điển Tiếng Việt (VI_DICH / VI_MAU) -->
-  <script src="js/ngonngu.js?v=353ca939" data-b="15052"></script> <!-- Cài đặt → LANGUAGE: English / Tiếng Việt -->
+  <script src="js/ngonngu-vi.js?v=c69a6863" data-b="633438"></script> <!-- từ điển Tiếng Việt (VI_DICH / VI_MAU) -->
+  <script src="js/ngonngu.js?v=cb73527c" data-b="15054"></script> <!-- Cài đặt → LANGUAGE: English / Tiếng Việt -->
   <script src="js/data.js?v=aa80f748" data-b="34361"></script>
   <script src="js/thebai.js?v=da6cf074" data-b="11985"></script> <!-- cấp thẻ ngoài trận kiểu DCDW (bản sao + vàng) -->
   <script src="js/fx.js?v=78425457" data-b="10870"></script>
   <script src="js/tiervfx.js?v=8ece9e79" data-b="6044"></script>
   <script src="js/nhac.js?v=b2d9bde7" data-b="31905"></script>
-  <script src="js/sound.js?v=d43e5956" data-b="86426"></script>
+  <script src="js/sound.js?v=7c09bb24" data-b="86428"></script>
   <script src="js/game.js?v=74795423" data-b="77566"></script>
   <script src="js/chihuy.js?v=a43291df" data-b="5364"></script>
   <script src="js/chihuy-moi.js?v=247fa65d" data-b="18050"></script> <!-- chỉ huy mới 08/11: QUICK TUNE · DRAG NET · TWIN SIGNAL · CROSSFIRE · NEXUS LINK -->
@@ -323,7 +324,7 @@
   <script src="js/online/firebase-config.js?v=9e21ce47" data-b="926"></script>
   <script src="js/online/net.js?v=4f6e110f" data-b="13773"></script>
   <script src="js/online/taikhoan.js?v=1c9ac284" data-b="7664"></script>
-  <script src="js/online/phong.js?v=5b8c5a98" data-b="28195"></script>
+  <script src="js/online/phong.js?v=a5353398" data-b="28199"></script>
   <script src="js/online/dongbo.js?v=4541c971" data-b="47518"></script>
   <script src="js/online/chat.js?v=854bcec4" data-b="13962"></script>
   <script src="js/online/khoidong.js?v=cfccd26c" data-b="1475"></script>
@@ -357,7 +358,7 @@
   <script src="js/cm-meta.js?v=abff3927" data-b="163"></script> <script src="js/comoi.js?v=693860e5" data-b="11454"></script> <!-- CƠ CHẾ MỚI đợt 1: Pháo La Bàn (mũi tên + số), Lửa Thập Tự (vệt lửa hàng/cột), Drone Kéo Xa (dây kéo) — tuvan/co-che-moi -->
   <script src="js/anim-meta.js?v=446bf8a6" data-b="4648"></script>
   <script src="js/anim.js?v=ac865e8e" data-b="18067"></script> <!-- ANIMATION HYBRID: ụ sống — thở, tụ lực, giật/hồi lò xo, muzzle socket, nhóm chuyển động 93 ụ (tuvan/anim) -->
-  <script src="js/rasoat.js?v=d033b3e9" data-b="6813"></script> <!-- rà soát thiết kế 09/11: khoá dọc (lớp phủ + tạm dừng trận), nút "i" mở chi tiết ụ -->
+  <script src="js/rasoat.js?v=9ac209a5" data-b="6815"></script> <!-- rà soát thiết kế 09/11: khoá dọc (lớp phủ + tạm dừng trận), nút "i" mở chi tiết ụ -->
   <script src="js/hud-anime.js?v=34b6c8e6" data-b="15634"></script> <!-- HUD TRẬN ANIME Royal Twilight (tuvan/huong-anime): thanh trên, nền/bàn/đường, băng chiêu trùm, đáy + khung bậc; thiếu ảnh → HUD cũ -->
   <script src="js/ui-anime.js?v=c5b9dd22" data-b="6916"></script> <!-- GIAO DIỆN NGOÀI TRẬN ANIME (tuvan/huong-anime): HOME, bộ bài, bộ sưu tập, trang ụ, cửa hàng, nhiệm vụ…; thiếu ảnh → giao diện cũ -->
   </template>

@@ -1,7 +1,7 @@
 // TURRET MERGE — TỪ ĐIỂN TIẾNG VIỆT — TỆP SINH TỰ ĐỘNG, đừng sửa tay.
 // Nguồn: docs/demo-hop-tuong/tuvan/ngonngu/vi.json → python3 tools/thap-vi-dung.py. Dùng bởi js/ngonngu.js (Cài đặt → LANGUAGE).
 'use strict';
-const VI_GIU = [" +#% ST bom, +# bom.", " +#% ST bom.", " +#% mana.", " song sinh #% → #%", " · LV#", " · Tay nhanh.", "# bom", "# · Con non", "# · Nova", "#%: +#★", "#TC · # HT", "#★ · LV#", "#★ · LV# · ", "#★ · LV# · +# mana / # s", ") · @ + @ → @ +#", "+# ABYSS", "+# mana / # s", "+# mana / #s", "+#% ST", "+#% mana", "ABCDEFGHJKLMNPQRSTUVWXYZ", "ABYSS #", "ABYSS #/#", "ARCHIVE #", "Abyss #", "Abyss # (+#% ST)", "Abyss #/#", "Abyss #/# (+#% ST)", "Archive # → +#% ST", "Archive #/# → +#% ST", "Archive #–#", "Archive #–# / #–# / #–#", "Archive #–# / #–# / #–#.", "Archive + Archive: # xung × #%", "Armor Breaker", "BLOOD RITE", "Big Splitter", "Black Hole", "Blood Circuit", "Blood Rite", "Blood Rite +#% → +#%", "Bounty Beacon", "Buff ×#", "CHUNG", "CMD-#", "CO-OP", "Chain Link", "Chrono Lock", "Chrono Throne", "Co-op", "Combo", "Combo #–#", "Combo +#% → +#%", "Cooldown Horn", "Crit Antenna", "Cryo Reactor", "Dice Gun", "Energy Cannon", "FREEZER", "Fifth Shot", "Focus Lens", "Fusion Archive", "Fusion Mixer", "GOOGLE", "Genesis Core", "Giao diện / triệu hồi / ghép", "HIVE MOTHER", "Hero Foundry", "Hive Queen", "Holy Halo", "INPUT", "Ice Blade", "Iron Fist", "JACKPOT", "JANUS CUBE", "JOKER", "JOKER KING", "LV # → LV #", "LV#", "LV#+#", "Laser tia liên tục (giữ # s)", "Lone Ace", "MAD CROWN", "MANA", "MAX.", "Mana", "Mana #% → #%", "Mana Core", "Mana Leech", "Mine Layer", "Mirror Gate", "Mystery Box", "NE", "NIGHTMARE", "NOVA", "NS", "NSE", "NSW", "NSWE", "NW", "NWE", "OCTOPUS EYES", "OK", "OPTION", "Overclock +#% → +#%", "Overlord siêu sấm", "PATCH TITAN", "PRISM WARDEN", "PVP", "Prism Thief", "PvP", "Quantum Choir", "Reaper Pillar", "Resonance Grid", "SCRIPT", "SE", "SOLO", "SOLO · CO-OP", "SOLO · PVP", "SPAN", "STAR LEECH", "STATIC JAMMER", "STYLE", "SW", "SWE", "Scrap Forge", "Shield Gen", "Solo", "Spawnling", "Splitter", "Star Breaker", "Star Cannon", "Star Lift", "Storm Gun", "Sync Cannon", "TBUI", "TEXTAREA", "TIENUI", "TITLE", "TM-#", "TURRET MERGE", "TWIN CORE", "Time Bomb", "Toxic Pool", "VS", "Vamp", "Vamp +#% → +#%", "WE", "Wave TRÙM", "Wild Link", "Wyrm Engine", "abyss #", "af_dahlia", "af_eve", "af_hero", "anhsang", "aten", "ban", "bang", "bao", "baotuyet", "bienmau", "blackhole", "bomhen", "bua", "canon", "cauvong", "chimang", "chuato", "combo", "cuong", "cuongno", "cuuvi", "dichchuyen", "doc", "docton", "dongbo", "drone", "epxung", "fx_cuongno_hieu", "guongcong", "haoquang", "hasao", "hopbi", "hopca", "hutmana", "hydra", "kepha", "khien", "khoathoigian", "khoisinh", "khuech", "kiembang", "lanhgia", "laser", "leviathan", "lien", "lienket", "loa", "lophanung", "loren", "lualien", "luoicheo", "luutru", "mana", "marionette", "mauhut", "maychem", "mimic", "min", "mortar", "nam", "nangYeu", "nangluong", "nangsao", "nayda", "nemesis", "ngaithoigian", "ngoisao", "nguyenrua", "nhanban", "nhanmana", "nhatthuc", "nhieusong", "nho", "no#", "orbital", "overlord", "pandora", "phagiap", "phun", "pierce", "radar", "railgun", "ronglua", "santhuong", "saochep", "set", "shield", "sinhdoi", "soi", "song sinh", "song sinh #% → #%", "sungluc", "sup_khien", "tach", "taylo", "thanhdia", "thaukinh", "tia", "tienhoa", "tron", "tuthan", "ui_thuong", "vughep", "vungdoc", "wallgen", "xaotron", "xucxac", "xuonganh", "≥# → Supernova"];
+const VI_GIU = [" +#% ST bom, +# bom.", " +#% ST bom.", " +#% mana.", " song sinh #% → #%", " · LV#", " · Tay nhanh.", "# bom", "# · Con non", "# · Nova", "#%: +#★", "#TC · # HT", "#★ · LV#", "#★ · LV# · ", "#★ · LV# · +# mana / # s", ") · @ + @ → @ +#", "+# ABYSS", "+# mana / # s", "+# mana / #s", "+#% ST", "+#% mana", "ABCDEFGHJKLMNPQRSTUVWXYZ", "ABYSS #", "ABYSS #/#", "ARCHIVE #", "ASTRAL ARSENAL", "Abyss #", "Abyss # (+#% ST)", "Abyss #/#", "Abyss #/# (+#% ST)", "Archive # → +#% ST", "Archive #/# → +#% ST", "Archive #–#", "Archive #–# / #–# / #–#", "Archive #–# / #–# / #–#.", "Archive + Archive: # xung × #%", "Armor Breaker", "BLOOD RITE", "Big Splitter", "Black Hole", "Blood Circuit", "Blood Rite", "Blood Rite +#% → +#%", "Bounty Beacon", "Buff ×#", "CHUNG", "CMD-#", "CO-OP", "Chain Link", "Chrono Lock", "Chrono Throne", "Co-op", "Combo", "Combo #–#", "Combo +#% → +#%", "Cooldown Horn", "Crit Antenna", "Cryo Reactor", "Dice Gun", "Energy Cannon", "FREEZER", "Fifth Shot", "Focus Lens", "Fusion Archive", "Fusion Mixer", "GOOGLE", "Genesis Core", "Giao diện / triệu hồi / ghép", "HIVE MOTHER", "Hero Foundry", "Hive Queen", "Holy Halo", "INPUT", "Ice Blade", "Iron Fist", "JACKPOT", "JANUS CUBE", "JOKER", "JOKER KING", "LV # → LV #", "LV#", "LV#+#", "Laser tia liên tục (giữ # s)", "Lone Ace", "MAD CROWN", "MANA", "MAX.", "Mana", "Mana #% → #%", "Mana Core", "Mana Leech", "Mine Layer", "Mirror Gate", "Mystery Box", "NE", "NIGHTMARE", "NOVA", "NS", "NSE", "NSW", "NSWE", "NW", "NWE", "OCTOPUS EYES", "OK", "OPTION", "Overclock +#% → +#%", "Overlord siêu sấm", "PATCH TITAN", "PRISM WARDEN", "PVP", "Prism Thief", "PvP", "Quantum Choir", "Reaper Pillar", "Resonance Grid", "SCRIPT", "SE", "SOLO", "SOLO · CO-OP", "SOLO · PVP", "SPAN", "STAR LEECH", "STATIC JAMMER", "STYLE", "SW", "SWE", "Scrap Forge", "Shield Gen", "Solo", "Spawnling", "Splitter", "Star Breaker", "Star Cannon", "Star Lift", "Storm Gun", "Sync Cannon", "TBUI", "TEXTAREA", "TIENUI", "TITLE", "TM-#", "TWIN CORE", "Time Bomb", "Toxic Pool", "VS", "Vamp", "Vamp +#% → +#%", "WE", "Wave TRÙM", "Wild Link", "Wyrm Engine", "abyss #", "af_dahlia", "af_eve", "af_hero", "anhsang", "aten", "ban", "bang", "bao", "baotuyet", "bienmau", "blackhole", "bomhen", "bua", "canon", "cauvong", "chimang", "chuato", "combo", "cuong", "cuongno", "cuuvi", "dichchuyen", "doc", "docton", "dongbo", "drone", "epxung", "fx_cuongno_hieu", "guongcong", "haoquang", "hasao", "hopbi", "hopca", "hutmana", "hydra", "kepha", "khien", "khoathoigian", "khoisinh", "khuech", "kiembang", "lanhgia", "laser", "leviathan", "lien", "lienket", "loa", "lophanung", "loren", "lualien", "luoicheo", "luutru", "mana", "marionette", "mauhut", "maychem", "mimic", "min", "mortar", "nam", "nangYeu", "nangluong", "nangsao", "nayda", "nemesis", "ngaithoigian", "ngoisao", "nguyenrua", "nhanban", "nhanmana", "nhatthuc", "nhieusong", "nho", "no#", "orbital", "overlord", "pandora", "phagiap", "phun", "pierce", "radar", "railgun", "ronglua", "santhuong", "saochep", "set", "shield", "sinhdoi", "soi", "song sinh", "song sinh #% → #%", "sungluc", "sup_khien", "tach", "taylo", "thanhdia", "thaukinh", "tia", "tienhoa", "tron", "tuthan", "ui_thuong", "vughep", "vungdoc", "wallgen", "xaotron", "xucxac", "xuonganh", "≥# → Supernova"];
 const VI_DICH = {};
 const VI_MAU = {
 " # drones: a #-drone volley gets +#% damage.": " # drone: loạt # drone +#% sát thương.",
@@ -1282,6 +1282,7 @@ const VI_MAU = {
 "APPEARS": "XUẤT HIỆN",
 "ARMORED DRAGON": "RỒNG GIÁP",
 "ASCENDING": "ĐANG THĂNG CẤP",
+"ASTRAL ARSENAL · SFX LAB": "ASTRAL ARSENAL · PHÒNG THỬ ÂM THANH",
 "ATTACK ": "TẤN CÔNG ",
 "AWAKENED": "THỨC TỈNH",
 "AWAKENED (#s+ by card level after an @ merge, every @ on the board): a salvo of #–# sky bombs every #s (#s from #★), # px blasts": "THỨC TỈNH (#s+ theo cấp thẻ sau khi ghép @, mọi @ trên bàn): loạt #–# bom trời mỗi #s (#s từ #★), nổ # px",
@@ -1394,6 +1395,7 @@ const VI_MAU = {
 "Arrow →": "Mũi tên →",
 "Arrow ↓": "Mũi tên ↓",
 "Arrows at #°: the target keeps its arrow and number, +#★. The dragged number is lost.": "Mũi tên vuông góc (#°): ụ đích giữ mũi tên và số, +#★. Số của ụ kéo mất.",
+"Astral Arsenal is played in portrait only": "Astral Arsenal chỉ chơi ở màn dọc",
 "At #": "Ở #",
 "At #★ the bomb fizzles: no": "Ở #★ bom xịt: không",
 "At #★ the bomb fizzles: no skill, just a #★ turret (losing a star restarts it)": "Ở #★ bom xịt: không có kỹ năng, chỉ là ụ #★ (mất sao sẽ đếm lại)",
@@ -2931,7 +2933,7 @@ const VI_MAU = {
 "Jams # turrets (supports first): no fire, no merge, no aura # s": "Gây nhiễu # ụ (ưu tiên hỗ trợ): không bắn, không ghép, không hào quang # s",
 "Jams # turrets — supports first": "Gây nhiễu # ụ — ưu tiên ụ Hỗ trợ",
 "Jams rival turrets": "Gây nhiễu ụ đối thủ",
-"Join my TURRET MERGE co-op room ": "Vào phòng co-op TURRET MERGE của tôi ",
+"Join my ASTRAL ARSENAL co-op room ": "Vào phòng co-op ASTRAL ARSENAL của tôi ",
 "Joining": "Đang vào",
 "Joins the card skill (tap the Hydra card, costs mana): shots twice as fast": "Nhận kỹ năng thẻ (chạm thẻ Hydra, tốn mana): bắn nhanh gấp đôi",
 "Joins the card skill (tap the Hydra card, costs mana): shots twice as fast.": "Nhận kỹ năng thẻ (chạm thẻ Hydra, tốn mana): bắn nhanh gấp đôi.",
@@ -4392,7 +4394,6 @@ const VI_MAU = {
 "TRY NEXT": "THỬ TIẾP",
 "TUNED AURA": "HÀO QUANG CỘNG HƯỞNG",
 "TURN ON": "BẬT",
-"TURRET MERGE · SFX LAB": "TURRET MERGE · PHÒNG THỬ ÂM THANH",
 "TURRETS": "Ụ",
 "TURRETS LOCKED": "Ụ ĐANG KHOÁ",
 "TUTORIAL": "HƯỚNG DẪN",
@@ -4577,7 +4578,6 @@ const VI_MAU = {
 "Turns # random turrets into random deck types (same star)": "Biến # ụ ngẫu nhiên thành loại ngẫu nhiên trong bộ bài (giữ sao)",
 "Turns # turret to stone (stone only merges with same-star stone → a higher stone)": "Hóa đá # ụ (đá chỉ ghép với đá cùng sao → đá sao cao hơn)",
 "Turns # turrets into random types": "Biến # ụ thành loại ngẫu nhiên",
-"Turret Merge is played in portrait only": "Turret Merge chỉ chơi ở màn dọc",
 "Turret file": "Hồ sơ ụ",
 "Turret file ": "Hồ sơ ụ ",
 "Turrets on the board when you cast. Frozen or stone turrets miss out": "Ụ đang trên bàn lúc dùng. Ụ bị băng hoặc hoá đá không được",

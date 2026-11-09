@@ -353,9 +353,9 @@ const ONL = {
   // link mời: ?room=ABCD (máy nhận mở → vào thẳng sảnh, xem vaoTuMoi)
   linkMoi() { return location.origin + location.pathname + '?room=' + this.code; },
   chiaSe() {
-    const url = this.linkMoi(), text = 'Join my TURRET MERGE co-op room ' + this.code;
+    const url = this.linkMoi(), text = 'Join my ASTRAL ARSENAL co-op room ' + this.code;
     const xong = (s) => this.baoLoi(s);
-    if (navigator.share) navigator.share({ title: 'TURRET MERGE co-op', text, url }).catch(() => { });
+    if (navigator.share) navigator.share({ title: 'ASTRAL ARSENAL co-op', text, url }).catch(() => { });
     else if (navigator.clipboard) navigator.clipboard.writeText(text + ' ' + url).then(() => xong('Invite link copied'), () => xong(url));
     else xong(url);
   },

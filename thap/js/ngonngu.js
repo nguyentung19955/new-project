@@ -147,7 +147,7 @@ const NN = (function () {
     });
     ob.observe(goc, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['placeholder'] });
     if (document.body) dichNut(document.body);
-    document.title = 'TURRET MERGE';
+    document.title = 'ASTRAL ARSENAL';
   }
   // ---------- phông Việt cho TM Display (Oxanium không có dấu Việt): Chakra Petch 700 — cùng chất sci-fi góc cạnh ----------
   function mocPhong() {

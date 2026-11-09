@@ -51,7 +51,7 @@
 
 /* ---------- màn chọn bộ bài ---------- */
 /* logo (M1): ảnh thay chữ — chữ vẫn trong DOM (ẩn đi) cho trình đọc màn hình; dòng phụ giữ chữ */
-.logo b { width: 260px; max-width: 72vw; aspect-ratio: 704 / 288; margin: 0 auto; background: url(../assets/logo.webp?v=d6964dd9) center / contain no-repeat;
+.logo b { width: 260px; max-width: 72vw; aspect-ratio: 960 / 387; margin: 0 auto; background: url(../assets/logo_aa.webp?v=5c125e2e) center / contain no-repeat;
   color: transparent; text-shadow: none; font-size: 0; filter: drop-shadow(0 3px 0 #000a); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 .logo span { display: block; margin-top: -2px; }
 /* ô bộ bài trống (M5): hốc thẻ thép thay viền đứt */

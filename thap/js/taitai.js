@@ -150,7 +150,7 @@ const TAI = {
     const d = this.ds();
     for (const u of this.ANH_TAI) d.them(u);
     if (!this.xem) {
-      d.them('assets/nen_menu.jpg'); d.them('assets/logo.webp?v=d6964dd9'); d.them('assets/khung_bang.webp?v=24d6a27d');
+      d.them('assets/nen_menu.jpg'); d.them('assets/logo_aa.webp?v=5c125e2e'); d.them('assets/khung_bang.webp?v=24d6a27d');
       // ảnh JS chèn ở màn UI (pass 4 vẽ tay): sao trong chữ, ngọc/vòng độ hiếm, huy chương chỉ huy, mũi tên grow-up, thông báo nổi
       for (const n of ['sao_chu', 'mui_tiep', 'h2_ngoc', 'h2_mv_huy', 'h2_tam_do'].concat(...(typeof TIER_LIST !== 'undefined' ? TIER_LIST : []).map(b => ['ngoc_' + b, 'tier_ring_' + b]))) d.them(anhUrl(n));
       // ảnh trong mọi file CSS (khung, nút, HUD…)

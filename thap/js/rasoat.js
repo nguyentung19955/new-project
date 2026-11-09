@@ -22,7 +22,7 @@ const XD = {
     let el = document.getElementById('xoay-doc'); if (el) return el;
     el = document.createElement('div'); el.id = 'xoay-doc'; el.hidden = true; el.setAttribute('role', 'alertdialog'); el.setAttribute('aria-live', 'assertive');
     el.innerHTML = '<div class="xd-tam"><span class="xd-ic"><img src="' + this.IC + '" alt="" draggable="false"></span>' +
-      '<span class="xd-chu"><b data-nn-giu="1">' + this.t('ROTATE TO PLAY') + '</b><span data-nn-giu="1">' + this.t('Turret Merge is played in portrait only') + '</span>' +
+      '<span class="xd-chu"><b data-nn-giu="1">' + this.t('ROTATE TO PLAY') + '</b><span data-nn-giu="1">' + this.t('Astral Arsenal is played in portrait only') + '</span>' +
       '<small data-nn-giu="1" hidden>' + this.t('The battle is paused until you rotate back') + '</small></span></div>';
     // nuốt mọi chạm khi đang phủ (không chạm xuyên xuống bàn chơi)
     for (const ev of ['pointerdown', 'pointerup', 'click', 'touchstart', 'touchmove']) el.addEventListener(ev, (e) => { e.stopPropagation(); if (e.cancelable && ev !== 'touchstart') e.preventDefault(); }, { passive: false });

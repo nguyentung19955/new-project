@@ -9,7 +9,7 @@ body > #tai .tai-giua, body > #matmang .mm-bang { transform: scale(var(--tk, 1))
 html.dang-tai, html.dang-tai body { background: #16171a url(../assets/nen_menu.jpg?v=34f795d7) center / cover no-repeat; }
 #tai[hidden] { display: none; }
 #tai .tai-giua { display: flex; flex-direction: column; align-items: center; gap: 18px; width: 340px; }
-#tai .tai-logo { width: 290px; aspect-ratio: 704 / 288; background: url(../assets/logo.webp?v=d6964dd9) center / contain no-repeat; filter: drop-shadow(0 3px 0 #000a); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
+#tai .tai-logo { width: 290px; aspect-ratio: 960 / 387; background: url(../assets/logo_aa.webp?v=5c125e2e) center / contain no-repeat; filter: drop-shadow(0 3px 0 #000a); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 #tai .tai-thanh { position: relative; width: 330px; height: 34px; border-style: solid; border-width: 0;
   border-image: url(../assets/tai_khung.webp?v=7509ba33) 36.9 69 36.9 70 fill / 12px 23px stretch; }
 /* tai_khung.png = hud_trum_khung.png bỏ đoạn giữa có 2 miếng vàng (ghép 2 nửa của chính ảnh ChatGPT): cạnh trên/dưới đều → kéo dài 9 lát

@@ -899,7 +899,7 @@ if (/[?&]sfxlab\b/.test(location.search)) (() => {
       '#sfxlab .vol{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0;align-items:center}#sfxlab .vol label{flex:1 1 140px;font-size:13px;color:#8aa0bf}#sfxlab input[type=range]{width:100%;accent-color:#38e8ff}';
     const st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
     const d = document.createElement('div'); d.id = 'sfxlab';
-    d.innerHTML = '<h1>TURRET MERGE · SFX LAB</h1><p>Chạm để nghe (âm được máy tạo trực tiếp bằng Web Audio). Bật tiếng máy / tắt chế độ im lặng. <a style="color:#38e8ff" href="./">← Về game</a></p>' +
+    d.innerHTML = '<h1>ASTRAL ARSENAL · SFX LAB</h1><p>Chạm để nghe (âm được máy tạo trực tiếp bằng Web Audio). Bật tiếng máy / tắt chế độ im lặng. <a style="color:#38e8ff" href="./">← Về game</a></p>' +
       '<div class="top"><button data-x="sfx"></button><button data-x="nhac"></button><button data-x="tran">▶ Trận giả lập 10 s</button></div>' +
       '<div class="vol"><label>Âm lượng NHẠC <input type="range" min="0" max="100" data-v="nhac"></label><label>Âm lượng SFX <input type="range" min="0" max="100" data-v="sfx"></label></div>' +
       '<h2>🎵 NHẠC — máy phát (darksynth cyberpunk thích ứng, tạo trực tiếp)</h2><div class="l">' +
