@@ -201,38 +201,50 @@ const DUONG_RONG = 46; // bề rộng đường đi
 // không giãn dọc (giãn làm ảnh đầu ụ vượt ngưỡng mip → tốn khung hình). Bàn đồng đội (CO-OP) / đối thủ (PVP) thu gọn 300 px ở trên, vẫn đọc được.
 // Vùng an toàn: thanh trên ≤ 48, khay dưới ≥ 674; dải xem nhanh SOLO 610–668 (không chồng ô nào).
 const BC_TO = { tw: 408, tx: 22, kv: 1 }, BC_GON = { tw: 300, tx: 92 };
+const BC_DOI = { tw: 355, tx: 64, ys: 92, e: 30, g: 38, dai: 685 }; // CO-OP: 2 bàn cùng cỡ (xem boCuc) · g 38: lõi (cao ~68) lọt khe 2 bàn · dai = độ dài luật làn (bố cục cũ 308 + 377)
+// PVP chữ C: bàn nằm giữa 2 làn dọc (x 50..380) · day = tâm cổng/lõi bàn mình (chừa hàng tim mình + hàng nút đáy) · g = tâm làn ngang → mép bàn
+//   · kc = khoảng 2 tâm làn ngang giữa (46 + thanh mảnh đợt/trùm 28 + khe) · trên cùng: dải bộ bài + tim đối thủ (hud-anime.js)
+const BC_PVP = { tw: 314, tx: 58, day: 586, g: 31, kc: 80, dai: 666 };
 function boCuc(che) {
   const tw = BC_TO.tw, tx = BC_TO.tx;
   const lx = 27; // tâm làn trái
   const toH = (k) => Math.round(tw * KHAY_TL * k);
   const gw = BC_GON.tw, gx = BC_GON.tx, gh = Math.round(gw * KHAY_TL);
   if (che === 'coop') {
-    // bàn trên = ĐỒNG ĐỘI (gọn), bàn dưới = MÌNH (to); 2 cổng (trên/dưới) đi vào → gặp ở khe giữa → hành lang chung → lõi bên phải
-    const th = toH(1), y1 = 98, gy = y1 + gh + 33, y2 = gy + 33;
-    const cuoi = y2 + th + 34;
+    // 09/11 (người dùng: "cho bàn bên kia to bằng bàn bên này"): 2 bàn CÙNG CỠ (BC_DOI), xếp đối xứng qua hành lang chung —
+    // bàn trên = ĐỒNG ĐỘI, bàn dưới = MÌNH; 2 cổng (trên/dưới) cách mép bàn e, hành lang cách mép bàn g → 2 nhánh DÀI BẰNG NHAU
+    // (online: máy bạn kia thấy bàn mình ở trên → làn của mỗi người dài như nhau trên cả 2 máy, không lệch như bố cục cũ 220/308).
+    // Vừa khung 430×860 (mọi cỡ màn dọc chỉ phóng khung này): cổng trên ys dưới thanh trên + dải thẻ đồng đội, cổng dưới ≤ 650 (trên hàng nút đáy).
+    // Độ dài LUẬT mỗi nhánh giữ = làn của mình ở bố cục cũ (dai 685, game.js taoDuong) → nhịp trận co-op không đổi dù bàn nhỏ lại.
+    const w = BC_DOI.tw, x = BC_DOI.tx, h = Math.round(w * KHAY_TL);
+    const y1 = BC_DOI.ys + BC_DOI.e, gy = y1 + h + BC_DOI.g, y2 = gy + BC_DOI.g, cuoi = y2 + h + BC_DOI.e;
     return {
       ban: [
-        { x: tx, y: y2, w: tw, h: th, ai: false, ten: TEXT.ui.you },
-        { x: gx, y: y1, w: gw, h: gh, ai: true, ten: TEXT.ui.ally, gon: true },
+        { x, y: y2, w, h, ai: false, ten: TEXT.ui.you },
+        { x, y: y1, w, h, ai: true, ten: TEXT.ui.ally },
       ],
       duong: [
-        { pts: [[lx, cuoi], [lx, gy], [W - 26, gy]], ban: 0, nhap: 1 },  // nhánh dưới (của mình)
-        { pts: [[lx, y1 - 10], [lx, gy], [W - 26, gy]], ban: 1, nhap: 1 }, // nhánh trên (đồng đội)
+        { pts: [[lx, cuoi], [lx, gy], [W - 26, gy]], ban: 0, nhap: 1, dai: BC_DOI.dai }, // nhánh dưới (của mình)
+        { pts: [[lx, BC_DOI.ys], [lx, gy], [W - 26, gy]], ban: 1, nhap: 1, dai: BC_DOI.dai }, // nhánh trên (đồng đội) — dài bằng nhánh dưới
       ],
       chung: true,
     };
   }
   if (che === 'pvp') {
-    // bàn trên = ĐỐI THỦ (gọn), bàn dưới = MÌNH (to); mỗi bàn một đường riêng
-    const th = toH(1), y1 = 104, y2 = y1 + gh + 72;
+    // 09/11 (người dùng: "pvp thì đường đi của quái là hình chữ C … bên đối thủ thì đối xứng"): 2 bàn CÙNG CỠ (BC_PVP), mỗi bàn một làn
+    // ôm 3 cạnh — BÀN MÌNH (dưới): cổng GÓC DƯỚI TRÁI → lên cạnh trái → ngang cạnh trên → xuống cạnh phải → lõi GÓC DƯỚI PHẢI;
+    // BÀN ĐỐI THỦ (trên) đối xứng gương: cổng góc trên trái → xuống → ngang cạnh dưới → lên → lõi góc trên phải. 2 làn ngang ở giữa.
+    // Độ dài LUẬT giữ như làn của mình ở bố cục cũ (dai = 666: 289 dọc + 377 ngang) → nhịp trận không đổi; cả 2 bên cùng độ dài (tất định).
+    const P = BC_PVP, w = P.tw, x = P.tx, h = Math.round(w * KHAY_TL), rx = W - lx;
+    const cuoi = P.day, y2 = cuoi - h, yt = y2 - P.g, yb = yt - P.kc, y1 = yb - P.g - h;
     return {
       ban: [
-        { x: tx, y: y2, w: tw, h: th, ai: false, ten: TEXT.ui.you },
-        { x: gx, y: y1, w: gw, h: gh, ai: true, ten: TEXT.ui.rival, gon: true },
+        { x, y: y2, w, h, ai: false, ten: TEXT.ui.you },
+        { x, y: y1, w, h, ai: true, ten: TEXT.ui.rival },
       ],
       duong: [
-        { pts: [[lx, y2 - 22], [lx, y2 + th + 26], [W - 26, y2 + th + 26]], ban: 0 },
-        { pts: [[lx, y1 - 22], [lx, y1 + gh + 26], [W - 26, y1 + gh + 26]], ban: 1 },
+        { pts: [[lx, cuoi], [lx, yt], [rx, yt], [rx, cuoi]], ban: 0, dai: P.dai },
+        { pts: [[lx, y1], [lx, yb], [rx, yb], [rx, y1]], ban: 1, dai: P.dai },
       ],
     };
   }

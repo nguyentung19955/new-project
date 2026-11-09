@@ -558,6 +558,7 @@ const REN = {
     for (const B of G.ban) {
       x.save(); // (bỏ bóng đổ code dưới khay — khung khay PNG đã có viền tối)
       const kh = this.diu('khay', 0.22, 0.72, 0.6);
+      if (kh && this.bongKhay) this.bongKhay(x, kh, B); // HUD anime (hud-anime.js): bóng đổ + mặt bên dày của khay (chiều sâu 3D)
       if (kh) { try { x.drawImage(this.mip(kh, B.h * k), B.x, B.y, B.w, B.h); } catch (e) { x.drawImage(kh, B.x, B.y, B.w, B.h); this._diuTam = true; } } else { du = false; }
       x.restore();
     }
@@ -591,6 +592,7 @@ const REN = {
       y.drawImage(n3, jx - R, jy - R, DUONG_RONG, DUONG_RONG);
     }
     x.save(); x.setTransform(1, 0, 0, 1, 0, 0);
+    if (this.bongDuong) this.bongDuong(x, lp, k); // HUD anime: bóng đổ cả lớp đường (1 lần)
     x.drawImage(lp, 0, 0); x.restore();
     lp.width = lp.height = 0; // lớp đường chỉ là trung gian: trả bộ nhớ ngay (giữ đối tượng để dùng lại)
     this._choNen = !du || this._diuTam;
