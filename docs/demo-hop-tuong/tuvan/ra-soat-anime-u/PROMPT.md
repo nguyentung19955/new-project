@@ -47,3 +47,9 @@ Kèm ảnh `refd_<id>` (icon hiện tại + 3 đầu dạng CŨ `_s1.._s3_v1` l�
 - orbital (làm lại cả hình chính, bệ vàng vuông): vệ tinh cánh gập → anten uplink + vòng quỹ đạo → cánh mở + khoang bom sáng
 - dongbo (làm lại cả hình chính, kèm `ref_dongbo_moi` = hàng 2 tấm vang1): 3 bánh răng mờ → vòng teal nối 3 trục → bánh răng thứ 4 + quầng vàng
 Quy tắc cắt GIU_CHINH: dạng 2/3 không nhỏ hơn dạng 1 (K ≥ K1 × 1,04^n).
+- cuongno: 2 nòng mắt đỏ mờ → RAGE mắt cam + tàn lửa → FRENZY nòng đỏ-trắng, sừng lửa
+- lienket: pháo quấn xích → dây xích tím rủ từ nòng → 2 xích xoáy + gai vàng
+
+## Tấm HIỆU ỨNG `raw_anime_u_fx1.png` (2 hàng × 3 cột, kèm `ref_fx1` = icon Sói/Hydra + đầu Hydra)
+"EFFECT sprite sheet … Row 1: three parallel curved CLAW SLASH marks, pure WHITE glowing energy (tintable) · circular SHOCKWAVE thin white ring with speed streaks · small white star hit spark. Row 2: HYDRA BODY top-down: round emerald scaled coil, gold rim, jade gem centre · same body AWAKENED · empty."
+Cắt: `tools/thap-cat-anime-fx.py` (ảnh tô màu fx_* ép RGB trắng để bỏ ám hồng).

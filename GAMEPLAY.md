@@ -1074,3 +1074,7 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 ## claude/demo-hop-tuong — Ụ anime: BIẾN HÌNH 3 dạng thêm 6 ụ + Orbital/Sync Cannon vẽ lại (10/11)
 - Đầu dạng 1/2/3 mới: overlord, lophanung, ngaithoigian, hopbi (giữ hình chính) · orbital, dongbo (vẽ lại cả hình chính bệ vàng vuông góc vương miện từ hàng 1 tấm biến hình). Ảnh `thap-art/raw_anime_u_dang_<id>.png`; số trong `artscale.js` STAGE_ANIME. Ảnh soát: `tuvan/ra-soat-anime-u/bien_hinh_do.jpg`, `bien_hinh_hopbi_dongbo.jpg`.
 - Chuẩn bị bỏ 2 hình vẽ canvas: Hydra thân (`skills3.js` veThan) và vuốt Sói (`skills2.js` HU.soiLan) — dùng ảnh `hydra_than` / `fx_soi_vuot` + `fx_vong_mong` tô màu khi có ảnh, chưa có ảnh thì vẽ như cũ.
+
+## claude/demo-hop-tuong — Ụ anime: biến hình cuongno/lienket + bỏ vẽ canvas vuốt Sói & thân Hydra (10/11)
+- Đầu dạng 1/2/3 mới cho cuongno, lienket → đủ 11/11 ụ grow-up có hình riêng từng dạng (`tuvan/ra-soat-anime-u/bien_hinh_*.jpg`).
+- Ảnh hiệu ứng ChatGPT `thap-art/raw_anime_u_fx1.png` → `tools/thap-cat-anime-fx.py` → `fx_soi_vuot` (vuốt trắng, tô màu theo trạng thái), `hydra_than` (thân Hydra ngọc lục bảo), dự trữ `fx_soi_song`, `hydra_than_tt`. `skills2.js` HU.soiLan: vòng = `fx_vong_mong` tô màu + vuốt = `fx_soi_vuot` (bộ đệm theo màu); `skills3.js` veThan: ảnh `hydra_than` (bản xám khi hoá đá). Vẫn giữ đường vẽ cũ khi ảnh chưa tải.

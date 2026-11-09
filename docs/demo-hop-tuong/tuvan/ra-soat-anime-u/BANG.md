@@ -54,10 +54,10 @@
 | 30 | loa Cooldown Horn | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | **ĐÃ LÀM** (raw_anime_u_xanh1–6) |
 | 31 | hutmana Mana Leech | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | gatling | 4 | **ĐÃ LÀM** (raw_anime_u_xanh1–6) |
 | 32 | min Mine Layer | Xanh | LỆCH NẶNG: kim loại xám công nghiệp, không khung vàng/indigo | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | poison | 5 | **ĐÃ LÀM** (raw_anime_u_xanh1–6) |
-| 33 | cuongno Berserker | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | cannon | 8 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
+| 33 | cuongno Berserker | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | GROW-UP 3 dạng | **ĐÃ CÓ** dạng 1/2/3 (raw_anime_u_dang_cuongno, STAGE_ANIME) | cannon | 8 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
 | 34 | baotuyet Blizzard | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | ice | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
 | 35 | nhanban Cloner | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | evolver | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
-| 36 | lienket Chain Link | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | chain | 8 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
+| 36 | lienket Chain Link | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | GROW-UP 3 dạng | **ĐÃ CÓ** dạng 1/2/3 (raw_anime_u_dang_lienket, STAGE_ANIME) | chain | 8 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
 | 37 | kepha Jammer | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
 | 38 | taylo Cleanser | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
 | 39 | khien Shield Gen | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
@@ -77,7 +77,7 @@
 | 53 | hasao Star Breaker | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | — |
 | 54 | saochep Copycat | Vàng | lệch vừa: phẳng/hoạt hình đơn sắc, thiếu khung vàng | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | evolver | 4 | **ĐÃ LÀM** (raw_anime_u_vang2) |
 | 55 | ngoisao Star Cannon | Vàng | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | **ĐÃ CÓ** dạng 1/2/3 (raw_anime_u_dang_ngoisao, STAGE_ANIME) | nang | 8 | — |
-| 56 | soi Werewolf | Vàng | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng + thức tỉnh | có (đầu riêng theo trạng thái trong skills) | cannon | 8 · HU.soiLan vẽ code (vòng + 3 vết vuốt) | — |
+| 56 | soi Werewolf | Vàng | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng + thức tỉnh | có (đầu riêng theo trạng thái trong skills) | cannon | 8 · vuốt lan: **ĐÃ thay** fx_vong_mong + fx_soi_vuot tô màu | — |
 | 57 | tienhoa Evolver | Vàng | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | có (đầu riêng theo trạng thái trong skills) | evolver | 9 | — |
 | 58 | cauvong Rainbow | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | — |
 | 59 | wallgen Wall Projector | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | nang | 5 | — |
@@ -89,7 +89,7 @@
 | 65 | nayda Ricochet | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | cannon | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
 | 66 | combo Combo Core | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | revolver | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
 | 67 | khoathoigian Chrono Lock | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | chrono | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
-| 68 | hydra Hydra | Vàng | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | có (đầu riêng theo trạng thái trong skills) | cannon | 10 · thân Hydra vẽ code (gradient + vòng) skills3 veThan | — |
+| 68 | hydra Hydra | Vàng | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | có (đầu riêng theo trạng thái trong skills) | cannon | 10 · thân Hydra: **ĐÃ thay** ảnh hydra_than | — |
 | 69 | cuuvi Nine-Tail | Vàng | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | **ĐÃ CÓ** dạng 1/2/3 (raw_anime_u_dang_cuuvi, STAGE_ANIME) | cannon | 9 | — |
 | 70 | pandora Pandora Vault | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | portal | 4 | — |
 | 71 | luoicheo Resonance Grid | Vàng | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | **ĐÃ CÓ** dạng 1/2/3 (raw_anime_u_dang_luoicheo, STAGE_ANIME) | support | 8 | — |
@@ -123,5 +123,6 @@
 ## Thứ tự làm (bước 2)
 1. Trắng 14 → **xong** · Xanh 17 → **xong** (`raw_anime_u_xanh1..6`) · Tím 22 → **xong** (`raw_anime_u_tim1..7` + `vang1` hàng 1) (tấm `thap-art/raw_anime_u_trang1..5.png`, cắt `tools/thap-cat-anime-u.py`).
 2. Xanh 17 (6 tấm) → Tím 22 (8 tấm) → Vàng 4 (2 tấm).
-3. Biến hình 11 ụ grow-up (xong: cuuvi ngoisao luoicheo overlord lophanung ngaithoigian hopbi orbital dongbo): mỗi ụ 1 hàng (dạng 1/2/3 cùng bệ) → `<id>_nong_s1..s3` + trả id về `STAGE_K`.
-4. Hiệu ứng vẽ tay: Sói (vuốt), Hydra (thân), Prism (vệt) → PNG nướng sẵn.
+3. Biến hình 11 ụ grow-up → **xong cả 11**: mỗi ụ 1 hàng (dạng 1/2/3 cùng bệ) → `<id>_nong_s1..s3` + trả id về `STAGE_K`.
+4. Hiệu ứng vẽ tay: Sói (vuốt), Hydra (thân), Prism (vệt) → **xong** (ảnh `raw_anime_u_fx1` + `fx_laser_tia` có sẵn; còn đường vẽ dự phòng khi ảnh chưa tải).
+5. Còn lại (chưa làm): HUD/UI code — viên NEW `css/sohuu.css`, dải `css/demkn.css`; ảnh `fx_soi_song`, `hydra_than_tt` đã cắt sẵn chưa dùng.

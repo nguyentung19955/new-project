@@ -1353,7 +1353,7 @@ HU.soiLan = { // Sói Máy — ĐÁNH LAN: sóng xung tròn + 3 vết vuốt ch�
     if (R.img('fx_vong_mong') && R.img('fx_soi_vuot')) { // anime-u: vòng = fx_vong_mong tô màu, 3 vết vuốt = ảnh fx_soi_vuot (bộ đệm theo màu, không vẽ path)
       ctx.save(); ctx.globalCompositeOperation = 'lighter';
       ctx.globalAlpha = 0.9 * (1 - u); R.anhGiua(ctx, R.toMauA('fx_vong_mong', mau, 0.85), o.x, o.y, 2 * r * (0.3 + 0.7 * e));
-      ctx.globalAlpha = 1 - u; R.anhGiua(ctx, R.toMauA('fx_soi_vuot', mau, o.tt ? 0.55 : 0.45), o.x, o.y, r * (o.tt ? 1.5 : 1.3) * Math.min(1, 0.4 + u * 4), (o.goc || 0) + 0.7);
+      ctx.globalAlpha = 1 - u; R.anhGiua(ctx, R.toMauA('fx_soi_vuot', mau, 0.8), o.x, o.y, r * (o.tt ? 1.5 : 1.3) * Math.min(1, 0.4 + u * 4), (o.goc || 0) + 0.7);
       ctx.restore(); return;
     }
     ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round';
