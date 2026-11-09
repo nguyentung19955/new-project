@@ -3,11 +3,13 @@
 > Game merge tower-defense trong `thap/`. Luật game và bàn giao: `docs/demo-hop-tuong/ban-giao/BAN-GIAO.md`, luật code/hình: `thap/QUY-TAC-HINH.md`.
 > Mỗi session thêm một mục `## claude/<tên-nhánh> — …` ở CUỐI file (file gộp kiểu union, không xung đột).
 
-## claude/demo-hop-tuong — ụ không bắn (09/11)
-- Ụ không có sát thương (25 ụ: Cổng Ấp Nở, Máy Mana, Hộp Bí Ẩn, Trứng Tiến Hoá, Đe Rèn, Lõi Khởi Sinh + các ụ Hỗ trợ) KHÔNG BAO GIỜ bắn/gây sát thương: đã kiểm Solo/PVP/Co-op, buff dồn, ghép, Wild Link, Mimic, Copycat.
-- Trang ụ: Tầm bắn của ụ không bắn không còn "Toàn đường đi". Không có vùng → "—"; ụ hỗ trợ ghi vùng thật (4 ô kề / 4 ô chéo / Cả bàn / 4 ô kề + đường đi). Máy Mana: "Tăng —". Vệ Tinh: Mục tiêu "Kiểu riêng".
-- Bảng chạm ngoài trận: "Không bắn" thay "ST gốc 0".
-- Test: `tools/thap-kt-u-khong-ban.js` (có trong hoiquy). Báo cáo: docs/demo-hop-tuong/tuvan/u-khong-ban/BAO-CAO.md
+## claude/demo-hop-tuong — sửa gấp ảnh ụ Vàng mất trên iPhone (09/11)
+- Lỗi: trên iPhone, Ember và Cổng Ấp Nở chỉ còn vòng cam / quầng + nhãn, mất cả bệ lẫn đầu ụ.
+- Nguyên nhân gốc: Safari iOS vượt trần bộ nhớ canvas (hoặc chép ảnh chưa giải mã) thì canvas dựng ra vẫn "hợp lệ" nhưng TRONG SUỐT. Bộ đệm (REN.cache / REN.anh._cv) giữ ảnh rỗng đó VĨNH VIỄN, nên ụ nào được dựng lại đúng lúc đó mất hình tới khi mở lại app. Giả lập trên Chromium (canvas dựng ra rỗng trong 2,5 s) cho ra y hệt ảnh người dùng chụp.
+- Sửa (render.js, hud2.js, taitai.js): ảnh chép / thân ụ / đầu / bóng đầu / viền bậc / huy hiệu sao dựng xong thì kiểm 1 lần (thu về 16×16, đọc alpha). Rỗng thì không giữ, vẽ như đang tải, dựng lại lùi dần 0,5 → 8 s. REN.rongN đếm; ?debug&log=1 in [rong].
+- TAI.giao chỉ trao ảnh đã giải mã.
+- Lớp hiệu ứng toàn màn (lopFx) chỉ cao bằng dải được dùng, để bớt bộ nhớ canvas; hình không đổi.
+- Gameplay không đổi.
 
 ## claude/demo-hop-tuong — chỉ 2 ụ bấm tay (09/11)
 - **Chỉ Black Hole (`blackhole`) và Arcane Cascade / Thác Mana (`thacmana`) còn chạm ụ khi nạp đầy.** 9 ụ khác TỰ KÍCH khi đầy (sức mạnh giữ nguyên): Chrono Throne, Holy Halo (đã rời roster), Hive Queen, Leviathan, Genesis Core, Wyrm Engine, Cryo Reactor, Hydra (bỏ chạm thẻ khay — tự kích hoạt chung khi đông quái và đủ mana, luật AI cũ), Evolver (trứng cháy tự tái chế +20 mana). Danh sách ở `game.js` `TU_KICH` (hoặc cờ `SKILLS[id].tuKich`).

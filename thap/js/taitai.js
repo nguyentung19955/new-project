@@ -83,6 +83,7 @@ const TAI = {
   },
   // ảnh canvas: trao Image đã giải mã cho REN (REN.img chép sang canvas ở lần vẽ đầu)
   giao(ten, im) {
+    if (!im || !(im.complete && im.naturalWidth > 0)) return; // sửa gấp 09/11: chỉ trao ảnh ĐÃ giải mã (decode() xong, có kích thước) — REN không chép ảnh rỗng
     const a = REN.anh[ten];
     if (a && (a._cv || (a.complete && a.naturalWidth && !a._loi))) return;
     if (a) { clearTimeout(a._hen); a.onload = a.onerror = null; }
