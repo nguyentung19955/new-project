@@ -913,3 +913,10 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
   - Đáy: ô mana số lớn + icon teal; SUMMON tròn Ø~84 có giá bên trong (thiếu mana / bàn đầy = xám); 2× (chữ 1×/2×/3×, bật = viền sáng cyan) và tạm dừng (bật khi đang dừng); khay 5 thẻ khung bậc trắng/xanh/tím/vàng/đỏ, +cấp trong vòng tròn khung, giá mana ở dải đáy (thiếu = đỏ #FF5E80, tối đa = MAX vàng), số ụ trên bàn ×N; chỉ huy khung vuông vàng, hồi chiêu = phủ tối + số giây to, giá ×N.
   - Số bay +mana teal #4FEBD6 (FX.chu1 kiểu mana) + icon teal trên canvas; nhãn bàn ĐỐI THỦ/BẠN và chữ VS dùng tấm indigo viền vàng.
 - Còn lại (ghi trong báo cáo): cổng sinh/lõi thủ vẫn ảnh thép cũ, ngã ba co-op (duong_nga3) cũ, bảng tạm dừng/kết quả cũ; mana tím ngoài trận để B3. Prompt ảnh còn thiếu: tuvan/huong-anime/PROMPT-HUD2.md.
+
+## claude/demo-hop-tuong — cân bằng Lucky Slot (09/11)
+
+- Người dùng: Lucky Slot (Máy Xèng, Đỏ) "tốc đánh cộng thêm không bằng, chơi khó". Đo (`tools/thap-do-vang-do.js` nay nạp `jackpot.js` — trước bỏ sót Lucky Slot; `CB=n` đặt sẵn điểm quả): lúc mới quay (0 điểm) chỉ 0.63–0.95× Vàng tốt nhất, cần ~8 điểm/quả (≈ wave 15–20, mỗi lần xuất hiện chỉ ≈ +0.57 điểm Dưa hấu) mới bằng trung vị Đỏ, nhưng điểm kỳ vọng wave 20–50 (13–25) lại 3.2–5× — đường cong quá dốc, may rủi (wave 20: 5–19 điểm).
+- Sửa `jackpot.js`: mỗi ngăn có sẵn **10 điểm** (`CB.KHOI`, số trên khay vẫn là điểm quay được); mỗi điểm cam 5 → 2.5 % ST · Dưa hấu 3.5 → **5 %** tốc (trần +150 % giữ) · nho 17 → 6 % ST chí mạng. 0 điểm: +25 % ST · +42 % tốc · +60 % ST chí mạng.
+- Lucky Slot / Vàng tốt nhất: 0 điểm 0.63–0.95 → **1.23–1.69** · 4 điểm 1.01–1.43 → 1.46–2.10 · kỳ vọng 3.21–4.95 → 2.64–4.10 (Đỏ trung vị 1.58–1.93; Overlord 2.2–3.2). Tốc 3★ lúc mới quay 1.62 → 2.11 phát/s (Ember 0 lửa 2.26). Chi tiết `docs/demo-hop-tuong/tocban/LUCKY-SLOT.md`.
+- Mô tả + vi.json: "Every fruit starts with 10 bonus points" / "Mỗi loại quả có sẵn # điểm". Test `thap-kt-co-bac` thêm ca 0 điểm vẫn có buff + mô tả; sửa ca "súng tăng sao" lỗi sẵn (dùng `heSaoST`, đã gồm nền Đỏ).

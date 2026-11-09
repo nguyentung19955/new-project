@@ -13,7 +13,7 @@ const { taoMoiTruong: taoGoc, R } = require('./thap-sim-vaitro.js');
 function taoMoiTruong(hat) {
   const ctx = taoGoc(hat);
   vm.runInContext("if (typeof SUP === 'undefined') { var SUP = {}, SUP_LOAI = {}, SUP_GIA = {}; }", ctx);
-  for (const f of ['vangmoi1', 'skills7']) { const p = path.join(__dirname, '..', 'thap', 'js', f + '.js'); if (fs.existsSync(p)) vm.runInContext(fs.readFileSync(p, 'utf8'), ctx, { filename: f + '.js' }); }
+  for (const f of ['vangmoi1', 'skills7', 'jackpot']) { const p = path.join(__dirname, '..', 'thap', 'js', f + '.js'); if (fs.existsSync(p)) vm.runInContext(fs.readFileSync(p, 'utf8'), ctx, { filename: f + '.js' }); }
   return ctx;
 }
 const DUNG_CD = `{ const B = G.ban[0]; for (const T of B.t) if (T) { const sk = SKILLS[T.id]; if (sk.chuDong && T.nap >= 1) sk.chuDong(G, B, T); } }`;
@@ -21,7 +21,8 @@ function dps(ctx, id, sao, cap, wave, T0, max, hs) {
   ctx._a = [id, sao, cap, wave];
   R(ctx, `{ const [id, sao, cap, wave] = _a; G.debug = { auto: false }; batDau('solo', ['lien', 'canon', 'set', 'tia', 'mana'], 'hero'); G.cho = 1e9; G.wave = wave;
     const B = G.ban[0]; B.tim = 1e9; B.mana = 600; B.capThe = {}; B.capThe[id] = cap; B.lv = B.lv || {}; B.lv[id] = 4;
-    const T = sinhU(taoU(B, id, sao, 2)); if (typeof _epThuc === 'boolean') T.thuc = _epThuc; if (id === 'leviathan' && typeof _vucKV === 'number') T.vuc = _vucKV; B.t[2] = T; G._T = T; G._sum = 0; G._q = 0; }`);
+    const T = sinhU(taoU(B, id, sao, 2)); if (typeof _epThuc === 'boolean') T.thuc = _epThuc; if (id === 'leviathan' && typeof _vucKV === 'number') T.vuc = _vucKV;
+    if (id === 'cobac') { const n = typeof _cbKV === 'number' ? _cbKV : 0; B.cb = [n, n, n]; T.cbS = sao; T.cbQuay = 0; } B.t[2] = T; G._T = T; G._sum = 0; G._q = 0; }`);
   if (!ctx._lotVong) { ctx._lotVong = 1; R(ctx, 'const _lotSim = lot; lot = function (E) { if (G._vong) { E.s = 0; return; } return _lotSim(E); };'); }
   R(ctx, 'G._vong = true;');
   const dt = 1 / 30; let cd = 0, toc = 0;
@@ -38,6 +39,10 @@ function dps(ctx, id, sao, cap, wave, T0, max, hs) {
 // VỰC SÂU kỳ vọng của Leviathan theo wave (09/11 lần 2): trung vị điểm của Leviathan mạnh nhất trên bàn ở mốc wave, trận SOLO bot (bộ Thường / Vàng / Tím,
 //   cấp thẻ 0, 18 trận — docs/demo-hop-tuong/tocban/DO-VANG-DO.md). VUC=0 để tắt (đo từ 0 điểm như cũ).
 const VUC_KV = process.env.VUC === '0' ? null : { 20: 8, 30: 20, 40: 80, 50: 180 };
+// Lucky Slot (cobac, 09/11): điểm quả KỲ VỌNG mỗi ngăn theo wave — trận SOLO bot (tools/thap-sim-co-bac.js, 16 trận: bộ 1/5 Thường + 1/5 Vàng),
+//   trung bình điểm Dưa hấu ≈ 13 / 18 / 23 / 25 ở wave 20 / 30 / 40 / 50 (3 ngăn gần bằng nhau). Đặt sẵn [n, n, n], ụ đã quay xong (không mất 1,5–2 s quay).
+//   CB=0 → đo từ 0 điểm · CB=n → n điểm mỗi ngăn ở mọi wave. Bảng chính dùng kỳ vọng (Lucky Slot luôn có điểm ngay khi xuất hiện — khác Leviathan).
+const CB_KV = process.env.CB === '0' ? null : process.env.CB ? { 20: +process.env.CB, 30: +process.env.CB, 40: +process.env.CB, 50: +process.env.CB } : { 20: 13, 30: 18, 40: 23, 50: 25 }; // CB=n: mọi wave n điểm/ngăn (vd vận đen)
 const gm = (a, b) => Math.sqrt(Math.max(1e-6, a) * Math.max(1e-6, b));
 function doTatCa(nhanh, chi) {
   const CTX = [4242, 777, 31337].map(h => taoMoiTruong(h)), ctx = CTX[0];
@@ -66,8 +71,9 @@ function doTatCa(nhanh, chi) {
         //   (Leviathan trên bàn trong các trận SOLO mô phỏng — xem VUC_KV) → u.rKV. Bảng chính (u.r, trung vị Đỏ) vẫn tính TỪ 0 điểm như cũ (thận trọng).
         x = do1(); for (const c2 of CTX) c2._vucKV = VUC_KV[w] || 0; const y = do1(); for (const c2 of CTX) c2._vucKV = undefined;
         u.rKV = u.rKV || {}; u.rKV[c + s + 'w' + w] = { don: y.don, dong: y.dong, p: gm(y.don, y.dong), vuc: VUC_KV[w] || 0 };
-      } else x = do1();
-      u.r[c + s + 'w' + w] = { don: x.don, dong: x.dong, p: gm(x.don, x.dong), toc: x.toc };
+      } else if (u.id === 'cobac') { for (const c2 of CTX) c2._cbKV = CB_KV ? CB_KV[w] || 0 : 0; x = do1(); for (const c2 of CTX) c2._cbKV = undefined; x.cb = CB_KV ? CB_KV[w] || 0 : 0; }
+      else x = do1();
+      u.r[c + s + 'w' + w] = { don: x.don, dong: x.dong, p: gm(x.don, x.dong), toc: x.toc, cb: x.cb };
     }
     process.stderr.write(u.id + ' ');
   }
@@ -113,7 +119,7 @@ function tungDo(d) {
   }
   return L.join('\n');
 }
-const TEXT_TEN = { blackhole: 'Black Hole', overlord: 'Overlord', chuato: 'Hive Queen', leviathan: 'Leviathan (từ 0)', ronglua: 'Wyrm Engine', thacmana: 'Arcane Cascade' };
+const TEXT_TEN = { blackhole: 'Black Hole', overlord: 'Overlord', chuato: 'Hive Queen', leviathan: 'Leviathan (từ 0)', ronglua: 'Wyrm Engine', thacmana: 'Arcane Cascade', cobac: 'Lucky Slot' };
 if (require.main === module) {
   const a = process.argv.slice(2), nhanh = a.includes('nhanh'), chiA = a.find(x => x.startsWith('chi=')), bangA = a.find(x => x.startsWith('bang='));
   if (bangA) { const d = JSON.parse(fs.readFileSync(bangA.slice(5))); console.log(tomTat(d)); if (a.includes('tungdo')) console.log('\n' + tungDo(d)); for (const k of (a.find(x => x.startsWith('khoa=')) || 'khoa=max5w30').slice(5).split(',')) console.log('\n### ' + k + '\n\n' + bang(d, k)); }
