@@ -24,7 +24,10 @@ const MHC = {
     { k: 'tv', tu: 'tim', can: 30, gia: 2000, ra: 'vang', tuan: 3 },
     { k: 'vd', tu: 'vang', can: 10, gia: 10000, ra: 'do', tuan: 1 },
   ],
-  nv: { id: 'wave30', ten: 'Reach wave 30', can: 30, k: 'wave', max: 1, r: { the: { bac: 'vang', n: 1 } } },
+  nv: { id: 'wave30', ten: 'Reach wave 30', can: 30, k: 'wave', max: 1, kl: 28, r: { the: { bac: 'vang', n: 1 } } }, // kl: chỉ vào bể khi kỷ lục ≥ 28 (tien-trinh §3.4)
+  // ẤN VÀNG (tien-trinh §6.3, người dùng chốt 6:1): 6 bản Vàng thừa (nhiều thẻ, trừ thẻ đích) + 20 000 vàng → 1 bản Vàng TỰ CHỌN, 1 lần/tuần.
+  //  Bản lấy tự động theo thứ tự: thẻ đã MAX → thẻ ngoài bộ bài → thẻ trong bộ; trong mỗi nhóm lấy chồng nhiều bản trước.
+  an: { k: 'an', can: 6, gia: 20000, tuan: 1 },
 };
 
 const MH = {
@@ -64,6 +67,30 @@ const MH = {
   boNhan() { const m = this.st(); if (m.bo || !this.boXong()) return null; m.bo = 1; const ra = this.phat([MHC.trumDu], 'mhb'); KT.luu(); return ra; },
   // ---------- 4) lò rèn ----------
   renTuan() { const m = this.st(), t = KT.tuan(); if (m.ren.tuan !== t) m.ren = { tuan: t, n: {} }; return m.ren; },
+  // ---------- ẤN VÀNG ----------
+  anNguon(dich) { // danh sách bản sẽ lấy: [{id, n}] (tổng = can) hoặc null nếu thiếu
+    const bo = (typeof UI !== 'undefined' && UI.chon) || [], ds = KT.dsBac('vang').filter(id => id !== dich).map(id => ({ id, t: THEBAI.the(id) })).filter(x => x.t.n > 0);
+    const nhom = (x) => (x.t.max ? 0 : bo.includes(x.id) ? 2 : 1);
+    ds.sort((a, b) => nhom(a) - nhom(b) || b.t.n - a.t.n || (a.id < b.id ? -1 : 1));
+    let con = MHC.an.can; const lay = [];
+    for (const x of ds) { if (!con) break; const n = Math.min(con, x.t.n); lay.push({ id: x.id, n }); con -= n; }
+    return con ? null : lay;
+  },
+  anTong() { return KT.dsBac('vang').reduce((a, id) => a + THEBAI.the(id).n, 0); },
+  anTt() {
+    const rt = this.renTuan(), dung = rt.n.an | 0, con = Math.max(0, MHC.an.tuan - dung), co = this.anTong();
+    return { dung, con, co, duVang: KT.vang >= MHC.an.gia, duoc: con > 0 && co >= MHC.an.can && KT.vang >= MHC.an.gia && KT.dsBac('vang').some(id => !!this.anNguon(id)) };
+  },
+  an(dich) {
+    const t = this.anTt(); if (!t.duoc || !KT.dsBac('vang').includes(dich)) return null;
+    const lay = this.anNguon(dich); if (!lay) return null;
+    const m = this.st(), rt = this.renTuan();
+    for (const x of lay) KT.themBan(x.id, -x.n);
+    KT.cong('vang', -MHC.an.gia, 'exchange');
+    rt.n.an = (rt.n.an | 0) + 1; m.renN++;
+    const ra = this.phat([{ the: { id: dich, n: 1 } }], 'mha' + m.renN);
+    KT.luu(); return Object.assign(ra, { lay });
+  },
   renDs() {
     const rt = this.renTuan(), vang = KT.vang;
     return MHC.ren.map(c => {
@@ -120,7 +147,17 @@ const MHUI = {
       h += '<div class="kt-h mh-ren">' + this.icBac(c.ra, 1) + '<div class="kt-h-g"><b>' + c.can + ' copies of one <span>' + TIERS[c.tu].ten + '</span> ' + this.chip(c.tu, c.can) + '</b>' +
         '<small class="mh-gia"><img src="' + KTUI.a(KTA.vang) + '" alt="">' + KTUI.so(c.gia) + ' · ' + q.t + '/' + q.can + ' THIS WEEK</small></div>' + nut + '</div>';
     }
+    // ẤN VÀNG: 6 bản Vàng thừa + 20 000 vàng → 1 bản Vàng tự chọn
+    const a = MH.anTt(), C = MHC.an;
+    h += '<div class="kt-h mh-ren mh-an">' + this.icBac('vang', 1) + '<div class="kt-h-g"><b>Legendary Seal ' + this.chip('vang', C.can) + ' → 1 of your choice</b>' +
+      '<small class="mh-gia"><img src="' + KTUI.a(KTA.vang) + '" alt="">' + KTUI.so(C.gia) + ' · ' + a.dung + '/' + C.tuan + ' THIS WEEK · YOU HAVE ' + a.co + '</small></div>' +
+      '<button class="kt-slot' + (a.duoc ? ' vang' : '') + '" data-act="kt-mha" data-id="an"' + (a.duoc ? '' : ' disabled') + '><b>' + (a.con ? 'PICK' : 'DONE') + '</b></button></div>';
     return h;
+  },
+  chonAn() { // bảng chọn thẻ Vàng đích (thẻ nào cũng được, kể cả chưa có bản)
+    const ds = KT.dsBac('vang').filter(id => !!MH.anNguon(id)).map(id => '<button class="mh-the" data-act="kt-mhan" data-id="' + id + '">' + OT.mini(id) + '<b>×' + THEBAI.the(id).n + '</b><small>' + KTUI.ten(id) + '</small></button>').join('');
+    KTUI.phu('<b class="kt-phu-t">LEGENDARY SEAL</b><p class="kt-chu">Trade ' + MHC.an.can + ' spare Legendary copies + ' + KTUI.so(MHC.an.gia) + ' gold → 1 copy of the Legendary you pick. Spare copies come from maxed cards first, then cards outside your deck.</p><div class="mh-chon">' + ds + '</div>' +
+      '<button class="hm-nut2 kt-ok" data-act="kt-phu-dong"><b>CANCEL</b></button>', 'kt-tl mh-p');
   },
   chon(k) { // bảng chọn thẻ đem rèn
     const c = MH.renDs().find(x => x.k === k); if (!c) return;
@@ -141,8 +178,8 @@ const MHUI = {
   },
   // trang ụ: thẻ Vàng/Đỏ ghi "kiếm ở đâu"
   NGUON: {
-    vang: 'Battle rewards · Gold Chest · Daily Specials · Solo wave 20–70 · first boss kills · daily quest · Shard Forge',
-    do: 'Mythic / Gold Chest · Daily Specials (~1 day a week) · Solo wave 50, 60, 70 · defeat all bosses · event 1,700 pts · Shard Forge',
+    vang: 'Battle rewards · Gold Chest · Daily Specials · Solo wave 20–70 · first boss kills · daily quest · Shard Forge · Legendary Seal',
+    do: 'Mythic / Gold Chest · Daily Specials (~1 day a week) · Solo wave 50, 60, 70 · defeat all bosses · event 3,600 pts · Shard Forge',
   },
   nguon(id) { const b = THEBAI.bac(id); return this.NGUON[b] ? '<div class="mh-nguon"><small>WHERE TO GET</small><span>' + this.NGUON[b] + '</span></div>' : ''; },
 };
@@ -208,6 +245,8 @@ const MHUI = {
     else if (a === 'kt-mht') { const ra = MH.trumNhan(); KTUI.ve(); KTUI.nhan(ra); }
     else if (a === 'kt-mhb') { const ra = MH.boNhan(); KTUI.ve(); KTUI.nhan(ra); }
     else if (a === 'kt-mhr') { try { SND.nut(); } catch (er) { } MHUI.chon(b.dataset.id); }
+    else if (a === 'kt-mha') { try { SND.nut(); } catch (er) { } MHUI.chonAn(); }
+    else if (a === 'kt-mhan') { const ra = MH.an(b.dataset.id); KTUI.dongPhu(); KTUI.ve(); if (ra) KTUI.nhan(ra, 'SEALED'); try { TBUI.capLuoi(); } catch (er) { } }
     else if (a === 'kt-mhc') { const ra = MH.ren(b.dataset.k, b.dataset.id); KTUI.dongPhu(); KTUI.ve(); if (ra) KTUI.nhan(ra, 'FORGED'); try { TBUI.capLuoi(); } catch (er) { } }
   });
 })();
