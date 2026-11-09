@@ -9,6 +9,7 @@ const BASE = process.argv[2] || 'http://localhost:8765/thap/', Q = process.argv[
   await p.goto(`${BASE}?mode=solo&deck=${deck}&wave=6&fill=5&mana=99999&notut=1${Q}`, { waitUntil: 'load' });
   await p.waitForFunction(() => typeof G !== 'undefined' && G.ban && G.ban[0] && G.duong && G.duong.length && !TAI.cho, null, { timeout: 40000 });
   await p.waitForTimeout(5000);
+  if (process.env.X) await p.evaluate(process.env.X); // thử nghiệm tách phần (vd X='DSG.MAX_HAT=0')
   const cdp = await p.context().newCDPSession(p); await cdp.send('Emulation.setCPUThrottlingRate', { rate: 4 });
   const kq = await p.evaluate(() => {
     const B = G.ban[0], p0 = G.duong.find(q => q.ban === B.i) || G.duong[0]; B.tim = 1e9; G.dung = true;
@@ -20,14 +21,18 @@ const BASE = process.argv[2] || 'http://localhost:8765/thap/', Q = process.argv[
     sinh();
     for (let i = 0; i < 6; i++) { chupTruoc(); capNhat(BUOC); }
     for (let f = 0; f < 50; f++) { if (f % 40 === 0) for (const T of B.t) if (T) T.nap = 1; let n = Math.round(1 / 60 / BUOC) || 1; while (n--) { chupTruoc(); capNhat(BUOC); } FX.capNhat(1 / 60); REN.ve(1 / 60, 1); } // làm ấm (giải mã ảnh, dựng dải) — đo trạng thái ổn định
-    let dsgMs = 0; if (typeof DSG !== 'undefined' && DSG.bat) { const v0 = DSG.ve; DSG.ve = function () { const a = performance.now(); try { return v0.apply(this, arguments); } finally { dsgMs += performance.now() - a; } }; } // thời gian riêng của chữ ký Đỏ
+    // đo riêng chữ ký Đỏ: thời gian CPU trong DSG.ve + DIỆN TÍCH ĐIỂM ẢNH vẽ (drawImage, đã nhân ma trận) — điểm ảnh là phần tốn khi raster
+    //   (đồng hồ khung trên máy chung bị nhiễu tải nặng; tỉ lệ điểm ảnh DSG / cả khung thì tất định)
+    let dsgMs = 0, trong = false, pxDsg = 0, pxAll = 0; const P = CanvasRenderingContext2D.prototype, di = P.drawImage;
+    P.drawImage = function (...a) { const m = this.getTransform(), sc = Math.abs(m.a * m.d - m.b * m.c), w = a.length >= 5 ? a[a.length - 2] : a[0].width, h = a.length >= 5 ? a[a.length - 1] : a[0].height, px = Math.abs(w * h * sc) * (this.globalAlpha > 0.01 ? 1 : 0); pxAll += px; if (trong) pxDsg += px; return di.apply(this, a); };
+    if (typeof DSG !== 'undefined' && DSG.bat) { const v0 = DSG.ve; DSG.ve = function () { const a = performance.now(); trong = true; try { return v0.apply(this, arguments); } finally { trong = false; dsgMs += performance.now() - a; } }; }
     const ts = [];
     for (let f = 0; f < 120; f++) {
       if (f % 40 === 0) { for (const T of B.t) if (T) { T.nap = 1; if (SKILLS[T.id].chuDong) try { SKILLS[T.id].chuDong(G, B, T); } catch (e) { } } if (G.quai.filter(E => !E.chet).length < 15) sinh(); }
       const t0 = performance.now(); let n = Math.round(1 / 60 / BUOC) || 1; while (n--) { chupTruoc(); capNhat(BUOC); } FX.capNhat(1 / 60); REN.ve(1 / 60, 1); ts.push(performance.now() - t0);
     }
     ts.sort((a, b) => a - b); const q = (x) => +ts[Math.floor(x * (ts.length - 1))].toFixed(2);
-    return { dsgTb: +(dsgMs / ts.length).toFixed(2), dsgPhan: +(100 * dsgMs / ts.reduce((a, b) => a + b, 0)).toFixed(1) + '%', hatMax: typeof DSG !== 'undefined' ? DSG.MAX_HAT : 0, p50: q(0.5), p95: q(0.95), max: q(1), tb: +(ts.reduce((a, b) => a + b, 0) / ts.length).toFixed(2), hu: G.hu.length };
+    return { pxDsgKhung: Math.round(pxDsg / ts.length), pxKhung: Math.round(pxAll / ts.length), pxPhan: +(100 * pxDsg / Math.max(1, pxAll)).toFixed(1) + '%', dsgTb: +(dsgMs / ts.length).toFixed(2), dsgPhan: +(100 * dsgMs / ts.reduce((a, b) => a + b, 0)).toFixed(1) + '%', hatMax: typeof DSG !== 'undefined' ? DSG.MAX_HAT : 0, p50: q(0.5), p95: q(0.95), max: q(1), tb: +(ts.reduce((a, b) => a + b, 0) / ts.length).toFixed(2), hu: G.hu.length };
   });
   console.log(JSON.stringify({ Q, ...kq, errs }));
   await b.close();
