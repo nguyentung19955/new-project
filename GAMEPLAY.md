@@ -1018,3 +1018,10 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - **Ấn Đỏ** — SHOP → LÒ RÈN MẢNH, hàng dưới Ấn Vàng (cùng khuôn): **15 Tinh thể + 50 000 vàng → 1 bản Đỏ tự chọn**, chỉ chọn trong các Đỏ đã mở / đã có (bể rơi). Khoá theo điều kiện Đỏ (cấp 12 + kỷ lục wave 30) như Lò rèn Đỏ. Không giới hạn tuần.
 - Gộp hồ sơ Firebase: tinh thể lấy lớn nhất; cờ Tháp / Săn Trùm / Thử thách OR.
 - Test: `tools/thap-kt-an-do.js` (mới).
+
+## claude/demo-hop-tuong — Giai đoạn C (4/4): THỬ THÁCH NGẮN (09/11)
+- **QUICK TRIALS** mở ngay sau hướng dẫn: 6 thử thách cố định 3–5 phút, mở lần lượt (thắng cái trước mới mở cái sau), bộ bài tự chọn, mục tiêu chỉ nói kết quả.
+  1 First Stand (wave 1–8) · 2 Boss Gate (6–10, trùm wave 10) · 3 Swarm Line (8–13, Horde) · 4 Giant Steps (10–15, Giants) · 5 Glass Core (12–17, 1 tim) · 6 Sky Storm (15–20, trùm, Sky Raid + Swift).
+- Thưởng lần đầu: Rương Thường ×3 · Rương Vàng ×2 · 70 ngọc · 2 000 vàng; 20 XP mỗi thử thách. Kết quả: NEXT TRIAL / RETRY TRIAL. Thanh trên "TRIAL n · k/N" (đếm đúng số wave của từng trận, không cố định 5).
+- KE-HOACH: giai đoạn C xong (chờ xuất bản).
+- Test: `tools/thap-kt-thu-thach.js` (mới); chạy lại thap-leo, san-trum, an-do, tien-trinh, so-huu, shop, manh — đều đạt.
