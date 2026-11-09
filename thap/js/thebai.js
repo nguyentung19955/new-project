@@ -107,7 +107,8 @@ const THEBAI = {
     const vang = 10 * wave + 40 * (m.trum || 0) + (k && k.thang ? 150 : 0);
     // tiến trình đợt 1 (tuvan/tien-trinh §3.3): trần 14 lượt (đạt ở wave 68) thay vì 10 lượt ở wave 36 — wave ≤ 36 không đổi
     const luot = THEBAI.soLuot(wave);
-    const co = (G.roster || []).filter(r => SKILLS[r.id]);
+    // gacha thu thập (sohuu.js): phần "thẻ bất kỳ" chỉ rơi ụ trong BỂ RƠI (đã mở theo cấp phi công hoặc đã có); bậc chưa có ụ → bỏ lượt như cũ
+    const co = (G.roster || []).filter(r => SKILLS[r.id] && (typeof SH === 'undefined' || SH.trongPool(r.id)));
     const gom = {};
     for (let i = 0; i < luot; i++) {
       const b = this.rut(rng);
@@ -119,10 +120,11 @@ const THEBAI = {
     }
     const d = this.doc();
     if (typeof KT !== 'undefined' && KT.cong) KT.cong('vang', vang, 'battle'); else d.vang += vang; // mối nối tiền tệ (kinhte.js)
-    for (const id in gom) { const t = this.the(id); d.c[id] = { lv: t.lv, n: t.n + gom[id] }; }
+    const moi = {}; // thẻ chưa có trước trận → "NEW!" (Rương Trận)
+    for (const id in gom) { if (typeof SH !== 'undefined' && SH.themCo(id)) moi[id] = 1; const t = this.the(id); d.c[id] = { lv: t.lv, n: t.n + gom[id] }; }
     delete d.moi;
     this.luu();
-    m._thuong = { vang, the: Object.entries(gom).map(([id, n]) => ({ id, n })).sort((a, b) => TIERS[this.bac(b.id)].thuTu - TIERS[this.bac(a.id)].thuTu) };
+    m._thuong = { vang, the: Object.entries(gom).map(([id, n]) => ({ id, n, bac: this.bac(id), moi: moi[id] ? 1 : 0 })).sort((a, b) => TIERS[this.bac(b.id)].thuTu - TIERS[this.bac(a.id)].thuTu) };
     return m._thuong;
   },
 };

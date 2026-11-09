@@ -30,12 +30,13 @@ const TTC = {
   // HÀNH TRÌNH 7 NGÀY: [khoá đếm, cần, chữ, (mục tiêu thay thế cùng độ khó)] — đếm từ lúc bắt đầu hành trình (người chơi cũ cũng phải chơi để đạt).
   //  Ngày đã qua vẫn làm bù được (đếm cộng dồn, không hết hạn). Ngày 5/6 dễ nghẽn (tư vấn tien-trinh/CHATGPT-THU-PHI.md) → đạt 1 trong 2 mục tiêu.
   hj: [
-    { r: { vang: 500, ngoc: 30, the: { bac: 'xanh', n: 10 } }, v: [['trum', 1, 'Defeat the wave 10 boss'], ['tran', 3, 'Play 3 battles'], ['wave', 15, 'Reach wave 15']] },
+    // gacha thu thập (09/11): ngày 1 = Rương Thường (thay 10 bản Xanh lẻ) + quà ụ Berserker; ngày 4 / 6 thêm quà ụ cụ thể (SHC.qua, sohuu.js)
+    { r: { vang: 500, ngoc: 30, ruong: 'thuong', tang: 'hj1' }, v: [['trum', 1, 'Defeat the wave 10 boss'], ['tran', 3, 'Play 3 battles'], ['wave', 15, 'Reach wave 15']] },
     { r: { vang: 800, ngoc: 30, ruong: 'thuong' }, v: [['wave', 18, 'Reach wave 18'], ['sao', 4, 'Have a 4★ turret'], ['nang', 2, 'Level up 2 cards']] },
     { r: { ngoc: 40, chon: { bac: 'tim', n: 4 } }, v: [['coop', 1, 'Finish a CO-OP battle'], ['trumKhac', 2, 'Defeat 2 different bosses'], ['wave', 20, 'Reach wave 20']] },
-    { r: { vang: 1500, ngoc: 40 }, v: [['wave', 22, 'Reach wave 22'], ['sao', 5, 'Have a 5★ turret'], ['sp', 1, 'Buy a Daily Specials item']] },
+    { r: { vang: 1500, ngoc: 40, tang: 'hj4' }, v: [['wave', 22, 'Reach wave 22'], ['sao', 5, 'Have a 5★ turret'], ['sp', 1, 'Buy a Daily Specials item']] },
     { r: { ruong: 'vang' }, v: [['wave', 25, 'Reach wave 25'], ['trumMax', 2, 'Defeat the wave 20 boss'], ['sao5x', 2, 'Have two 5★ turrets at once', ['sao5t', 6, 'Make 6 turrets of 5★+ in total']]] },
-    { r: { vang: 2000, ngoc: 50 }, v: [['pvp', 1, 'Play a PVP battle'], ['nvd', 3, 'Complete 3 daily quests'], ['cap', 9, 'Reach Pilot Level 9', ['tran', 25, 'Play 25 battles']]] },
+    { r: { vang: 2000, ngoc: 50, tang: 'hj6' }, v: [['pvp', 1, 'Play a PVP battle'], ['nvd', 3, 'Complete 3 daily quests'], ['cap', 9, 'Reach Pilot Level 9', ['tran', 25, 'Play 25 battles']]] },
     { r: { chon: { bac: 'vang', n: 2 } }, v: [['wave', 30, 'Reach wave 30'], ['trumKhac', 4, 'Defeat 4 different bosses'], ['nangV', 1, 'Level up a Legendary card']] },
   ],
   // NHIỆM VỤ TUẦN (reset thứ Hai, mở cấp 8): mỗi việc 20 ngọc, đủ 5 = 40 ngọc + 1 bản Vàng ngẫu nhiên → +140 ngọc/tuần
@@ -45,7 +46,7 @@ const TTC = {
     ruVang: { cap: 3, ten: 'GOLD CHEST' }, online: { cap: 4, ten: 'ONLINE' }, nvt: { cap: 8, ten: 'WEEKLY QUESTS' },
     ren: { cap: 10, ten: 'SHARD FORGE' }, an: { cap: 10, ten: 'LEGENDARY SEAL' }, ruThan: { do: 1, ten: 'MYTHIC CHEST' }, renDo: { do: 1, ten: 'MYTHIC FORGE' },
   },
-  nvtCap: 8, nvtR: { ngoc: 20 }, nvtBonus: { ngoc: 40, the: { bac: 'vang', n: 1 } },
+  nvtCap: 8, nvtR: { ngoc: 20 }, nvtBonus: { ngoc: 40, ruong: 'hh', n: 1 }, // gacha thu thập: 1 bản Vàng → Rương Huyền thoại (1 Vàng)
   nvt: [
     { id: 'tran', can: 15, ten: 'Play 15 battles' },
     { id: 'trum', can: 8, ten: 'Defeat 8 bosses' },
@@ -112,11 +113,12 @@ const TT = {
   bacMo(b) { return this.bacMoVoi(b, this.cap()); },
   khoa(id) {
     if (!id || typeof SKILLS === 'undefined' || !SKILLS[id]) return false;
+    if (typeof SH !== 'undefined') return !SH.co(id); // gacha thu thập: chỉ ụ ĐÃ SỞ HỮU dùng được (sohuu.js; giu + ụ có bản sao + ụ khởi đầu)
     const t = this.st(); if (t.giu[id]) return false;
     return !this.bacMo(THEBAI.bac(id));
   },
   dk(b) { return b === 'do' ? 'Pilot Level ' + TTC.moBac.do + ' and best wave ' + TTC.doWave : 'Pilot Level ' + TTC.moBac[b]; },
-  chuKhoa(id) { return 'Unlocks at ' + this.dk(THEBAI.bac(id)); },
+  chuKhoa(id) { return typeof SH !== 'undefined' ? SH.chuKhoa(id) : 'Unlocks at ' + this.dk(THEBAI.bac(id)); },
   locMo(ds) { return (ds || []).filter(id => !this.khoa(id)); },
   // chạy fn với G.roster chỉ còn ụ đã mở (bộ ngẫu nhiên của NGƯỜI CHƠI; bộ máy co-op/PVP không đổi)
   voiMo(fn) {
@@ -145,7 +147,12 @@ const TT = {
   tnChu(k) { const c = TTC.tn[k] || {}; return c.hd ? 'Unlocks after the tutorial' : 'Unlocks at ' + this.tnDk(k); },
 
   // ---------- phát thưởng ----------
-  gom(ra, x) { if (!x) return ra; ra.vang += x.vang || 0; ra.ngoc += x.ngoc || 0; ra.the.push(...(x.the || [])); if (x.ruong) ra.the.push(...x.ruong.the.map(c => ({ id: c.id, n: c.n }))); return ra; },
+  gom(ra, x) {
+    if (!x) return ra; ra.vang += x.vang || 0; ra.ngoc += x.ngoc || 0; ra.the.push(...(x.the || []));
+    const ru = (x.ruong ? [x.ruong] : []).concat(x.ru || []); // rương: giữ kết quả để MỞ RƯƠNG (lật thẻ) — gacha thu thập
+    for (const y of ru) { ra.the.push(...y.the.map(c => ({ id: c.id, n: c.n, moi: c.moi }))); (ra.ru = ra.ru || []).push(y); }
+    return ra;
+  },
   phat(ds, khoa, nguon) { const ra = { vang: 0, ngoc: 0, the: [] }; ds.forEach((r, i) => this.gom(ra, KT.cho(r, khoa + ':' + i, nguon || 'level'))); return ra; },
   // lên cấp (gọi sau khi cộng XP): phát thưởng các cấp mới, mở bậc mới, xếp thông báo
   xetCap() {
@@ -153,15 +160,16 @@ const TT = {
     for (let l = t.nhanCap + 1; l <= L; l++) { this.gom(bao.ra, this.phat(TTC.thuongCap(l), 'cap' + l)); bao.cap.push(l); }
     if (L > t.nhanCap) t.nhanCap = L;
     if (L >= TTC.capMax) { const co = Math.floor((t.xp - this.xpTong(TTC.capMax)) / TTC.danhVong.xp); while (t.dv < co) { t.dv++; this.gom(bao.ra, this.phat(TTC.danhVong.r, 'dv' + t.dv)); bao.dv = t.dv; } }
-    for (const b of ['tim', 'vang', 'do']) if (!t.daMo[b] && this.bacMo(b)) { t.daMo[b] = 1; bao.mo.push(b); }
+    for (const b of ['tim', 'vang', 'do']) if (!t.daMo[b] && this.bacMo(b)) { t.daMo[b] = 1; if (typeof SH === 'undefined') bao.mo.push(b); }
+    if (typeof SH !== 'undefined') { const nh = SH.baoMoi(); if (nh.length) bao.nhom = nh; } // gacha thu thập: NHÓM ụ vừa vào bể rơi (hình + tên trên bảng lên cấp)
     for (const k in TTC.tn) if (!t.tnBao[k] && this.tnMo(k)) { t.tnBao[k] = 1; if (!TTC.tn[k].hd) bao.tn.push(k); } // CO-OP mở theo hướng dẫn: không báo
     if (bao.cap.includes(TTC.quaVang.cap) && !t.qv) bao.qv = 1;
-    if (bao.cap.length || bao.mo.length || bao.tn.length || bao.dv) { t.bao.push(bao); if (t.bao.length > 6) t.bao.splice(0, t.bao.length - 6); }
+    if (bao.cap.length || bao.mo.length || bao.tn.length || bao.dv || bao.nhom) { t.bao.push(bao); if (t.bao.length > 6) t.bao.splice(0, t.bao.length - 6); }
     return bao;
   },
   // chọn 1 trong 3 (tất định theo hạt giống): ưu tiên thẻ chưa max
   ba(bac, khoa) {
-    const ds = KT.dsBac(bac); if (!ds.length) return [];
+    const ds = KT.dsPool ? KT.dsPool(bac) : KT.dsBac(bac); if (!ds.length) return []; // chỉ ụ đã mở / đã có (gacha thu thập)
     const r = KT.rng(KT.bam(KT.doc().pid + ':chon:' + khoa)), chua = ds.filter(id => !THEBAI.the(id).max), bo = (chua.length >= 3 ? chua : ds).slice(), ra = [];
     while (ra.length < 3 && bo.length) ra.push(bo.splice(Math.floor(r() * bo.length), 1)[0]);
     return ra;
@@ -186,6 +194,10 @@ const TT = {
     this.st().hj.nhan[ngay] = 1;
     const ds = []; if (r.vang) ds.push({ vang: r.vang }); if (r.ngoc) ds.push({ ngoc: r.ngoc }); if (r.the) ds.push({ the: r.the }); if (r.ruong) ds.push({ ruong: r.ruong });
     const ra = this.phat(ds, 'hj' + ngay, 'journey');
+    if (r.tang && typeof SH !== 'undefined') { // quà ụ cụ thể: lật như 1 rương "GIFT" (đứng đầu hàng mở rương)
+      const moi = !SH.co(SHC.qua[r.tang]), x = SH.tang(r.tang);
+      if (x) { ra.the.push(Object.assign({ moi: moi ? 1 : 0 }, x)); (ra.ru = ra.ru || []).unshift({ k: 'qua', ten: 'GIFT', the: [{ id: x.id, n: x.n, bac: THEBAI.bac(x.id), moi: moi ? 1 : 0 }] }); }
+    }
     if (r.chon) { KT.themBan(chonId, r.chon.n); ra.the.push({ id: chonId, n: r.chon.n }); }
     KT.luu(); return ra;
   },
@@ -200,7 +212,7 @@ const TT = {
   nvtDs() { const e = this.nvtSt(); return TTC.nvt.map(q => { const n = Math.min(q.can, e.tien[q.id] | 0); return Object.assign({}, q, { t: n, xong: n >= q.can, da: !!e.nhan[q.id] }); }); },
   nvtCong(id, v) { if (!this.nvtMo() || !v) return; const e = this.nvtSt(); e.tien[id] = (e.tien[id] | 0) + v; },
   nvtNhan(id) { const q = this.nvtDs().find(x => x.id === id); if (!q || !q.xong || q.da || !this.nvtMo()) return null; this.nvtSt().nhan[id] = 1; const ra = KT.cho(TTC.nvtR, 'nvt' + id, 'quest'); KT.luu(); return ra; },
-  nvtBonus() { const e = this.nvtSt(); if (e.bonus || !this.nvtMo() || !this.nvtDs().every(q => q.da)) return null; e.bonus = 1; const ra = this.phat([{ ngoc: TTC.nvtBonus.ngoc }, { the: TTC.nvtBonus.the }], 'nvtb' + e.tuan, 'quest'); KT.luu(); return ra; },
+  nvtBonus() { const e = this.nvtSt(); if (e.bonus || !this.nvtMo() || !this.nvtDs().every(q => q.da)) return null; e.bonus = 1; const ra = this.phat([{ ngoc: TTC.nvtBonus.ngoc }, { ruong: TTC.nvtBonus.ruong, n: TTC.nvtBonus.n }], 'nvtb' + e.tuan, 'quest'); KT.luu(); return ra; },
 
   // ---------- hết trận ----------
   ketTran(k, m, klTruoc, tran, trums) {
@@ -247,6 +259,7 @@ const TT = {
 };
 
 // ===================================================== GIAO DIỆN =====================================================
+const r_qua = (r) => (r && r.tang && typeof SHC !== 'undefined' ? SHC.qua[r.tang] : null); // ụ quà cụ thể của 1 phần thưởng hành trình
 const TTUI = {
   hjChon: 0, // ngày đang xem ở mục Hành trình (0 = tự chọn ngày đầu tiên chưa nhận)
   TIER: (b) => ({ trang: 'COMMON', xanh: 'RARE', tim: 'EPIC', vang: 'LEGENDARY', do: 'MYTHIC' }[b] || b), // tên bậc tiếng Anh cố định → ngonngu.js dịch cả câu (TIERS.ten đã dịch sẵn sẽ làm câu lẫn Việt/Anh)
@@ -259,16 +272,22 @@ const TTUI = {
     try { OT.quet(p); } catch (e) { }
     return p;
   },
-  dong() { const p = document.getElementById('tt-phu'); if (p) { p.hidden = true; p.innerHTML = ''; } if (typeof KTUI !== 'undefined' && KTUI.mo) { KTUI.dongPhu(); KTUI.ve(); } },
+  dong() { const p = document.getElementById('tt-phu'); if (p) { p.hidden = true; p.innerHTML = ''; } if (typeof KTUI !== 'undefined') { clearTimeout(KTUI._lat); KTUI._ruong = null; if (KTUI.mo) { KTUI.dongPhu(); KTUI.ve(); } } },
   nutOk(chu) { return '<button class="hm-nut2 vang kt-ok" data-act="tt-dong"><b>' + (chu || 'OK') + '</b></button>'; },
   dsThuong(ra) {
     const ds = []; if (ra.vang) ds.push(KTUI.rIc({ vang: ra.vang })); if (ra.ngoc) ds.push(KTUI.rIc({ ngoc: ra.ngoc }));
     const gom = {}; for (const x of ra.the || []) gom[x.id] = (gom[x.id] || 0) + x.n;
-    for (const id in gom) ds.push('<span class="kt-r kt-r-the">' + OT.mini(id) + '<b>×' + gom[id] + '</b><small>' + KTUI.ten(id) + '</small></span>');
+    const moi = {}; for (const x of ra.the || []) if (x.moi) moi[x.id] = 1;
+    for (const id in gom) ds.push('<span class="kt-r kt-r-the">' + OT.mini(id) + '<b>×' + gom[id] + '</b><small>' + KTUI.ten(id) + '</small>' + (moi[id] && typeof SHUI !== 'undefined' ? SHUI.moi : '') + '</span>');
     return ds.join('');
   },
   nhan(ra, tde) {
-    if (!ra) return; try { SND.nang(3); } catch (e) { }
+    if (!ra) return;
+    if (ra.ru && ra.ru.length && typeof KTUI !== 'undefined') { // có rương → MỞ RƯƠNG (lật thẻ) ngay trong lớp phủ hiện tại
+      if (KTUI.mo) KTUI.nhan(ra, tde); else KTUI.nhan(ra, tde, { phu: (h, c) => this.phu(h, c), dong: 'tt-dong' });
+      return;
+    }
+    try { SND.nang(3); } catch (e) { }
     this.phu('<b class="kt-phu-t">' + (tde || 'YOU GOT') + '</b><div class="kt-nhan">' + this.dsThuong(ra) + '</div>' + this.nutOk(), 'kt-nh');
     try { TBUI.capLuoi(); } catch (e) { }
   },
@@ -281,15 +300,18 @@ const TTUI = {
   bao() {
     const t = TT.st(); if (!t.bao.length) return false;
     const ds = t.bao.splice(0); KT.luu(true);
-    const ra = { vang: 0, ngoc: 0, the: [] }, cap = [], mo = [], tn = []; let qv = 0, dv = 0;
-    for (const b of ds) { TT.gom(ra, b.ra); cap.push(...(b.cap || [])); mo.push(...(b.mo || [])); tn.push(...(b.tn || [])); if (b.qv) qv = 1; if (b.dv) dv = b.dv; }
+    const ra = { vang: 0, ngoc: 0, the: [] }, cap = [], mo = [], tn = [], nhom = []; let qv = 0, dv = 0;
+    for (const b of ds) { TT.gom(ra, b.ra); cap.push(...(b.cap || [])); mo.push(...(b.mo || [])); tn.push(...(b.tn || [])); nhom.push(...(b.nhom || [])); if (b.qv) qv = 1; if (b.dv) dv = b.dv; }
+    const ru = ra.ru || []; delete ra.ru; this._ru = ru; // rương của phần thưởng cấp: nút OPEN CHEST (lật thẻ)
+    if (ru.length) { const trong = new Set(); for (const y of ru) for (const c of y.the) trong.add(c.id); ra.the = ra.the.filter(x => !trong.has(x.id)); }
     let h = '<b class="kt-phu-t">' + (cap.length ? 'PILOT LEVEL ' + Math.max(...cap) : dv ? 'PRESTIGE ' + dv : 'UNLOCKED') + '</b>';
-    if (ra.vang || ra.ngoc || ra.the.length) h += '<div class="kt-nhan">' + this.dsThuong(ra) + '</div>';
+    if (ra.vang || ra.ngoc || ra.the.length || ru.length) h += '<div class="kt-nhan">' + this.dsThuong(ra) + ru.map(y => KTUI.rIc({ ruong: y.k })).join('') + '</div>';
+    if (nhom.length && typeof SHUI !== 'undefined') h += '<div class="tt-mo sh-nhom"><small>NEW TURRETS IN CHESTS</small>' + SHUI.dsU(nhom) + '</div>';
     if (mo.length) h += '<p class="tt-mo"><small>NEW TURRETS UNLOCKED</small>' + mo.map(b => '<span class="tt-mo-b b-' + b + '"><img src="' + KTUI.a('ngoc_' + b) + '" alt="">' + this.TIER(b) + '</span>').join('') + '</p>';
     if (tn.length) h += '<p class="tt-mo tt-mo-tn"><small>NEW FEATURES UNLOCKED</small>' + tn.map(k => '<span class="tt-mo-b">' + TTC.tn[k].ten + '</span>').join('') + '</p>';
     if (qv && !t.qv) h += '<p class="kt-chu">Level ' + TTC.quaVang.cap + ' gift: pick 1 of 3 Legendary cards.</p><button class="hm-nut2 vang kt-ok" data-act="tt-qvmo"><b>PICK</b></button>';
     try { SND.nang(5); } catch (e) { }
-    this.phu(h + this.nutOk(), 'kt-nh tt-bao');
+    this.phu(h + (ru.length ? '<button class="hm-nut2 vang kt-ok" data-act="tt-ru"><b>OPEN CHEST' + (ru.length > 1 ? ' ×' + ru.length : '') + '</b></button>' : this.nutOk()), 'kt-nh tt-bao');
     try { TBUI.capLuoi(); } catch (e) { }
     return true;
   },
@@ -319,8 +341,8 @@ const TTUI = {
     for (const v of d.v) h += '<div class="kt-h tt-v' + (v.xong ? ' da' : '') + '"><span class="kt-r tt-so"><b>' + (d.v.indexOf(v) + 1) + '</b></span><div class="kt-h-g"><b>' + v.ten + '</b>' + TBUI.thanh({ n: v.t, can: v.can, max: false }) +
       (v.alt ? '<small class="tt-hoac"><i>or</i><span>' + v.alt.ten + '</span><em>' + KTUI.so(v.alt.t) + '/' + KTUI.so(v.alt.can) + '</em></small>' : '') + '</div>' +
       (v.xong ? '<img class="kt-tick" src="' + KTUI.a(KTA.xong) + '" alt="Done">' : '<button class="kt-slot" disabled><b>' + KTUI.so(v.t) + '/' + KTUI.so(v.can) + '</b></button>') + '</div>';
-    const r = d.r, ic = r.chon ? { the: { bac: r.chon.bac, n: r.chon.n } } : r.ruong ? { ruong: r.ruong } : r.the ? r : r.ngoc && !r.vang ? { ngoc: r.ngoc } : { vang: r.vang };
-    const ten = ['Day ' + d.ngay + ' reward', r.vang ? KTUI.rTen({ vang: r.vang }) : '', r.ngoc ? KTUI.rTen({ ngoc: r.ngoc }) : '', r.ruong ? KTUI.rTen({ ruong: r.ruong }) : '', r.the ? KTUI.rTen({ the: r.the }) : '', r.chon ? 'Pick 1 of 3 ' + this.TIER(r.chon.bac) + ' ×' + r.chon.n : ''].filter(Boolean).join(' · '); // ' · ' → ngonngu.js dịch từng đoạn
+    const qua = r_qua(d.r), r = d.r, ic = qua ? { the: { id: qua, n: 1 } } : r.chon ? { the: { bac: r.chon.bac, n: r.chon.n } } : r.ruong ? { ruong: r.ruong } : r.the ? r : r.ngoc && !r.vang ? { ngoc: r.ngoc } : { vang: r.vang };
+    const ten = ['Day ' + d.ngay + ' reward', r.vang ? KTUI.rTen({ vang: r.vang }) : '', r.ngoc ? KTUI.rTen({ ngoc: r.ngoc }) : '', r.ruong ? KTUI.rTen({ ruong: r.ruong }) : '', r.the ? KTUI.rTen({ the: r.the }) : '', r.chon ? 'Pick 1 of 3 ' + this.TIER(r.chon.bac) + ' ×' + r.chon.n : '', qua ? 'Gift: ' + KTUI.ten(qua) : ''].filter(Boolean).join(' · '); // ' · ' → ngonngu.js dịch từng đoạn
     if (!d.mo) h += '<p class="kt-chu tt-khoa-ngay">' + (d.ngay === mo + 1 ? 'Opens in <span data-dh="ngay"></span>' : 'Opens on day ' + d.ngay) + '</p>';
     h += KTUI.hangNv(ten, { t: d.v.filter(v => v.xong).length, can: 3, xong: d.mo && d.xong, da: d.da }, ic, 'tt-hjb', d.ngay);
     return h;
@@ -330,17 +352,20 @@ const TTUI = {
     if (!TT.nvtMo()) return h;
     const ds = TT.nvtDs(), e = TT.nvtSt();
     for (const q of ds) h += KTUI.hangNv(q.ten, q, TTC.nvtR, 'tt-nvt', q.id);
-    h += KTUI.hangNv('Complete all ' + ds.length + ' weekly quests', { t: ds.filter(q => q.da).length, can: ds.length, xong: ds.every(q => q.da), da: !!e.bonus }, { the: TTC.nvtBonus.the }, 'tt-nvtb', 'b');
+    h += KTUI.hangNv('Complete all ' + ds.length + ' weekly quests', { t: ds.filter(q => q.da).length, can: ds.length, xong: ds.every(q => q.da), da: !!e.bonus }, { ruong: TTC.nvtBonus.ruong }, 'tt-nvtb', 'b');
     return h;
   },
-  // thẻ ụ khoá trên lưới bộ bài / bộ sưu tập: tối + ổ khoá (ảnh, khi có) + điều kiện
+  // thẻ ụ khoá trên lưới bộ bài / bộ sưu tập. Gacha thu thập (sohuu.js): 3 trạng thái — ĐÃ CÓ (bình thường) ·
+  //  CHƯA CÓ (sh-chua: mờ + nguồn kiếm) · CHƯA MỞ (sh-khoa: mờ + "PILOT LV n"); ụ mới nhận chưa xem → sh-moi-c (nhãn NEW!)
   ganKhoa(c, id) {
     if (!c) return c;
-    const k = TT.khoa(id); // thêm cả 'khoa' (lớp sẵn có: không kéo, ẩn LV/nút i, đếm 'chơi được' bỏ qua) — chỉ gỡ 'khoa' do mình gắn
+    const k = TT.khoa(id), sh = k && typeof SH !== 'undefined' ? SH.tt(id) : ''; // thêm cả 'khoa' (lớp sẵn có: không kéo, ẩn LV/nút i, đếm 'chơi được' bỏ qua) — chỉ gỡ 'khoa' do mình gắn
     if (k) c.classList.add('tt-khoa', 'khoa'); else if (c.classList.contains('tt-khoa')) c.classList.remove('tt-khoa', 'khoa');
+    c.classList.toggle('sh-chua', sh === 'chua'); c.classList.toggle('sh-khoa', sh === 'khoa');
+    c.classList.toggle('sh-moi-c', !k && typeof SH !== 'undefined' && !!SH.st().moi[id]);
     let n = c.querySelector(':scope > .tt-khoa-n');
     if (!k) { if (n) n.remove(); return c; }
-    const b = THEBAI.bac(id), h = (TTA.khoa ? '<img class="tt-khoa-i" src="' + KTUI.a(TTA.khoa) + '" alt="" draggable="false">' : '') + '<b>PILOT</b><b>LV ' + TTC.moBac[b] + '</b>' + (b === 'do' ? '<small>WAVE ' + TTC.doWave + '</small>' : '');
+    const b = THEBAI.bac(id), h = sh ? SHUI.nhan(id) : (TTA.khoa ? '<img class="tt-khoa-i" src="' + KTUI.a(TTA.khoa) + '" alt="" draggable="false">' : '') + '<b>PILOT</b><b>LV ' + TTC.moBac[b] + '</b>' + (b === 'do' ? '<small>WAVE ' + TTC.doWave + '</small>' : '');
     if (!n) { n = document.createElement('span'); n.className = 'tt-khoa-n'; c.appendChild(n); }
     if (n._h !== h) { n._h = h; n.innerHTML = h; }
     return c;
@@ -440,7 +465,14 @@ const TTUI = {
     const cn = UP.capNutBo;
     UP.capNutBo = function () {
       const x = cn.apply(this, arguments);
-      try { if (!this.mv && this.id && TT.khoa(this.id) && !UI.chon.includes(this.id)) { const nut = this.el.querySelector('.up-nut'); nut.querySelector('.up-nut-chu').textContent = (typeof UP_TXT !== 'undefined' && UP_TXT.locked) || 'Locked'; nut.querySelector('.up-nut-so').textContent = TT.dk(THEBAI.bac(this.id)); nut.disabled = true; nut.classList.remove('bo'); } } catch (e) { }
+      try {
+        if (!this.mv && this.id && TT.khoa(this.id) && !UI.chon.includes(this.id)) {
+          const nut = this.el.querySelector('.up-nut'), sh = typeof SH !== 'undefined' ? SH.tt(this.id) : 'khoa';
+          nut.querySelector('.up-nut-chu').textContent = sh === 'chua' ? 'Not owned' : (typeof UP_TXT !== 'undefined' && UP_TXT.locked) || 'Locked';
+          nut.querySelector('.up-nut-so').textContent = sh === 'chua' ? SH.nguon(this.id) : typeof SH !== 'undefined' ? SH.dk(this.id) : TT.dk(THEBAI.bac(this.id));
+          nut.disabled = true; nut.classList.remove('bo');
+        }
+      } catch (e) { }
       return x;
     };
   }
@@ -547,6 +579,7 @@ const TTUI = {
     e.stopPropagation();
     const veLai = () => { try { if (KTUI.mo) KTUI.ve(); KTUI.capNhat(); TBUI.capLuoi(); } catch (er) { } };
     if (a === 'tt-dong') { TTUI.dong(); veLai(); }
+    else if (a === 'tt-ru') { nut(); const ru = TTUI._ru || []; TTUI._ru = null; if (ru.length) KTUI.nhan({ vang: 0, ngoc: 0, the: [], ru }, '', { phu: (h, c) => TTUI.phu(h, c), dong: 'tt-dong' }); else { TTUI.dong(); veLai(); } }
     else if (a === 'tt-khoa') TTUI.toast(TT.tnChu(b.dataset.k));
     else if (a === 'tt-moi-ok') { nut(); TTUI.dong(); veLai(); try { if (!TT.hdXong() && !(G.ban && G.ban.length)) HD.batDau(); } catch (er) { } }
     else if (a === 'tt-hjd') { nut(); TTUI.hjChon = +b.dataset.id; veLai(); }

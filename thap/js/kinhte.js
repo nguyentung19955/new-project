@@ -20,13 +20,18 @@ const KTC = {
     thuong: { ten: 'NORMAL CHEST', gia: { vang: 2000 }, so: 6, tiLe: { trang: 62, xanh: 29, tim: 8.5, vang: 0.5, do: 0 } },
     vang: { ten: 'GOLD CHEST', gia: { ngoc: 500 }, so: 8, tiLe: { trang: 44, xanh: 36, tim: 16, vang: 3.8, do: 0.2 }, bao: { tim: 1 }, pityV: 10, pityD: 120 },
     than: { ten: 'MYTHIC CHEST', gia: { ngoc: 6000 }, so: 12, tiLe: { trang: 30, xanh: 38, tim: 24, vang: 7, do: 1 }, bao: { do: 1, vang: 2 } },
+    // RƯƠNG "VỎ" của phần thưởng (gacha thu thập 09/11 — tuvan/gacha-thu-thap/BANG-MO-NHOM.md §3): không bán (ban: 0).
+    //  co = ô cố định: n (tham số khi phát, mặc định 1) bản Vàng nổi bật của tuần / Vàng / Đỏ trong bể rơi + 'so' thẻ thấp ngẫu nhiên.
+    su: { ten: 'EVENT CHEST', ban: 0, so: 3, tiLe: { trang: 35, xanh: 40, tim: 25 }, co: 'su' },
+    hh: { ten: 'LEGENDARY CHEST', ban: 0, so: 2, tiLe: { trang: 40, xanh: 40, tim: 20 }, co: 'vang' },
+    cd: { ten: 'ANCIENT CHEST', ban: 0, so: 2, tiLe: { xanh: 40, tim: 60 }, co: 'do' },
   },
   ruongBan: { trang: [4, 8], xanh: [2, 4], tim: [1, 2], vang: [1, 1], do: [1, 1] },
   doiVang: [{ ngoc: 100, vang: 1000 }, { ngoc: 500, vang: 5500 }, { ngoc: 1500, vang: 18000 }],
   // ---- Vòng quay 8 ô (trọng số; JACKPOT: miễn phí 0,5 = Huyền thoại · lượt ngọc 1,0 = 70% Huyền thoại / 30% Cổ đại) ----
   vq: [
     { r: { vang: 200 }, w: 30 }, { r: { the: { bac: 'trang', n: 10 } }, w: 16 }, { r: { ngoc: 10 }, w: 14 }, { r: { vang: 800 }, w: 14 },
-    { r: { the: { bac: 'xanh', n: 4 } }, w: 12 }, { r: { ngoc: 40 }, w: 6 }, { r: { the: { bac: 'tim', n: 2 } }, w: 7.5 }, { r: { the: { bac: 'vang', n: 1 } }, w: 0.5, wTra: 1.0, jack: 1 },
+    { r: { the: { bac: 'xanh', n: 4 } }, w: 12 }, { r: { ngoc: 40 }, w: 6 }, { r: { the: { bac: 'tim', n: 2 } }, w: 7.5 }, { r: { ruong: 'hh', n: 1 }, w: 0.5, wTra: 1.0, jack: 1 },
   ],
   vqGia: 100, vqMax: 5,
   // ---- Nhiệm vụ ngày ----
@@ -62,10 +67,10 @@ const KTC = {
   // ---- Sự kiện tuần: điểm mỗi trận = wave + 10 nếu thắng + 5/trùm (tối đa 60) ----
   skMax: 60,
   sk: [
-    [40, { vang: 500 }], [100, { the: { su: 1, n: 1 } }], [180, { ruong: 'thuong' }], [280, { ngoc: 30 }], [400, { the: { su: 1, n: 1 } }],
-    [550, { ruong: 'vang' }], [750, { ngoc: 60 }], [1000, { the: { su: 1, n: 2 } }], [1300, { ruong: 'vang' }],
+    [40, { vang: 500 }], [100, { ruong: 'su', n: 1 }], [180, { ruong: 'thuong' }], [280, { ngoc: 30 }], [400, { ruong: 'su', n: 1 }],
+    [550, { ruong: 'vang' }], [750, { ngoc: 60 }], [1000, { ruong: 'su', n: 2 }], [1300, { ruong: 'vang' }],
     // tiến trình đợt 1 (tuvan/tien-trinh §5.5): mốc Đỏ 1 700 → 3 600; mốc 1 700 cũ = 3 000 vàng + 1 bản Vàng ngẫu nhiên; thêm mốc 2 300 = 50 ngọc
-    [1700, { vang: 3000, the: { bac: 'vang', n: 1 } }], [2300, { ngoc: 50 }], [3600, { the: { bac: 'do', n: 1 } }],
+    [1700, { vang: 3000, ruong: 'hh', n: 1 }], [2300, { ngoc: 50 }], [3600, { ruong: 'cd', n: 1 }], // gacha thu thập: thẻ ngẫu nhiên → rương "vỏ" (cùng lượng Vàng/Đỏ)
   ],
 };
 
@@ -125,14 +130,18 @@ const KT = {
 
   // ---------- bộ sưu tập ----------
   dsBac(b) { return (typeof G !== 'undefined' && G.roster || []).filter(r => SKILLS[r.id] && r.bac === b).map(r => r.id).sort(); },
-  // chọn thẻ của 1 bậc (ưu tiên thẻ chưa max) bằng rng cho trước
+  // BỂ RƠI (gacha thu thập, sohuu.js): ụ đã mở theo cấp phi công hoặc đã có; chưa có sohuu.js → mọi ụ của bậc
+  dsPool(b) { return typeof SH !== 'undefined' ? SH.pool(b) : this.dsBac(b); },
+  // bậc thực rơi: bậc b nếu bể có ụ, không thì lùi xuống bậc thấp hơn gần nhất có ụ (không mất lượt)
+  bacCo(b) { for (let i = TIER_LIST.indexOf(b); i >= 0; i--) if (this.dsPool(TIER_LIST[i]).length) return TIER_LIST[i]; return null; },
+  // chọn thẻ của 1 bậc trong bể rơi (ưu tiên thẻ chưa max) bằng rng cho trước
   chonThe(b, r) {
-    const ds = this.dsBac(b); if (!ds.length) return null;
-    const chua = ds.filter(id => !THEBAI.the(id).max), bo = chua.length ? chua : ds;
+    const bb = this.bacCo(b); if (!bb) return null;
+    const ds = this.dsPool(bb), chua = ds.filter(id => !THEBAI.the(id).max), bo = chua.length ? chua : ds;
     return bo[Math.floor(r() * bo.length)];
   },
-  suKien() { // ụ Huyền thoại nổi bật của tuần (như nhau với mọi người chơi)
-    const ds = this.dsBac('vang'); if (!ds.length) return null;
+  suKien() { // ụ Huyền thoại nổi bật của tuần: tất định theo tuần, trong các Vàng đã mở của người chơi (cùng cấp → cùng ụ)
+    const ds = this.dsPool('vang'); if (!ds.length) return null;
     const t = this.tuan(); return ds[this.bam('su:' + t) % ds.length];
   },
   // ---------- MỐI NỐI TIỀN TỆ (sẵn cho bán ngọc sau này — người dùng 06/11: "sau này đẩy lên store", CHƯA có mã thanh toán) ----------
@@ -157,10 +166,10 @@ const KT = {
       if (!id && r.the.bac) id = this.chonThe(r.the.bac, this.rng(this.bam(this.s.pid + ':' + (khoa || 'q') + ':' + this.s.n)));
       if (id) { this.themBan(id, r.the.n || 1); ra.the.push({ id, n: r.the.n || 1 }); }
     }
-    if (r.ruong) ra.ruong = this.moRuong(r.ruong, true);
+    if (r.ruong) ra.ruong = this.moRuong(r.ruong, true, r.n);
     return ra;
   },
-  themBan(id, n) { const d = THEBAI.doc(), t = THEBAI.the(id); d.c[id] = { lv: t.lv, n: t.n + n }; },
+  themBan(id, n) { const d = THEBAI.doc(), t = THEBAI.the(id); d.c[id] = { lv: t.lv, n: t.n + n }; if (n > 0 && typeof SH !== 'undefined') SH.themCo(id); },
 
   // ---------- DAILY SPECIALS ----------
   spTao(ngay) {
@@ -188,9 +197,11 @@ const KT = {
 
   // ---------- RƯƠNG (gacha) ----------
   rutBac(tiLe, r) { let x = r() * 100; for (const b of TIER_LIST) { const w = tiLe[b] || 0; if (x < w) return b; x -= w; } return 'trang'; },
-  moRuong(k, mienPhi) {
+  // n = số ô cố định của rương "vỏ" (su/hh/cd). Bậc rơi ra mà bể bậc đó trống → lùi xuống bậc thấp hơn có ụ (bacCo).
+  //  Bảo hiểm Vàng / Đỏ chỉ đếm khi bể đã có ụ Vàng / Đỏ (người chơi chưa mở thì không "tiêu" bảo hiểm). Thẻ chưa có → moi: 1 ("NEW!").
+  moRuong(k, mienPhi, n) {
     const C = KTC.ruong[k], s = this.doc(); if (!C) return null;
-    if (!mienPhi && !this.tra(C.gia)) return null;
+    if (!mienPhi && (C.ban === 0 || !this.tra(C.gia))) return null;
     const r = this.rng(this.bam(s.pid + ':ru:' + s.ru.mo + ':' + k));
     const bac = []; for (let i = 0; i < C.so; i++) bac.push(this.rutBac(C.tiLe, r));
     const tt = (b) => TIERS[b].thuTu, dat = (b) => { // thay thẻ thấp nhất bằng bậc b
@@ -203,15 +214,20 @@ const KT = {
       for (let i = 0; i < bac.length && can && co() < can; i++) dat(b);
     }
     let pityV = false, pityD = false;
-    if (C.pityD) { if (!bac.includes('do') && s.ru.pd + 1 >= C.pityD) { dat('do'); pityD = true; } s.ru.pd = bac.includes('do') ? 0 : s.ru.pd + 1; }
-    if (C.pityV) { if (dem('vang') === 0 && s.ru.pv + 1 >= C.pityV) { dat('vang'); pityV = true; } s.ru.pv = dem('vang') ? 0 : s.ru.pv + 1; }
-    const gom = {};
-    for (const b of bac) { const id = this.chonThe(b, r); if (!id) continue; const [a, c] = KTC.ruongBan[b]; gom[id] = (gom[id] || 0) + a + Math.floor(r() * (c - a + 1)); }
-    const the = Object.entries(gom).map(([id, n]) => ({ id, n, bac: THEBAI.bac(id) })).sort((a, b) => tt(a.bac) - tt(b.bac));
+    const coV = this.dsPool('vang').length > 0, coD = this.dsPool('do').length > 0;
+    if (C.pityD && coD) { if (!bac.includes('do') && s.ru.pd + 1 >= C.pityD) { dat('do'); pityD = true; } s.ru.pd = bac.includes('do') ? 0 : s.ru.pd + 1; }
+    if (C.pityV && coV) { if (dem('vang') === 0 && s.ru.pv + 1 >= C.pityV) { dat('vang'); pityV = true; } s.ru.pv = dem('vang') ? 0 : s.ru.pv + 1; }
+    const gom = {}, them = (id, so) => { gom[id] = (gom[id] || 0) + so; };
+    for (const b of bac) { const id = this.chonThe(b, r); if (!id) continue; const [a, c] = KTC.ruongBan[THEBAI.bac(id)]; them(id, a + Math.floor(r() * (c - a + 1))); }
+    for (let i = 0; C.co && i < Math.max(1, n | 0); i++) { // ô cố định: bản Vàng nổi bật / Vàng / Đỏ (1 bản mỗi ô)
+      const id = C.co === 'su' ? (this.suKien() || this.chonThe('vang', r)) : this.chonThe(C.co, r);
+      if (id) { const bb = THEBAI.bac(id), [a, c] = KTC.ruongBan[bb]; them(id, bb === C.co || C.co === 'su' ? 1 : a + Math.floor(r() * (c - a + 1))); }
+    }
+    const the = Object.entries(gom).map(([id, n]) => ({ id, n, bac: THEBAI.bac(id), moi: typeof SH !== 'undefined' && !SH.co(id) ? 1 : 0 })).sort((a, b) => tt(a.bac) - tt(b.bac));
     for (const x of the) this.themBan(x.id, x.n);
     s.ru.mo++; s.tk.ruong++;
     if (!mienPhi) this.luu();
-    return { k, the, pityV, pityD };
+    return { k, the, pityV, pityD, n: C.co ? Math.max(1, n | 0) : 0 };
   },
   // xác suất CÓ ÍT NHẤT 1 thẻ bậc ≥ b trong 1 rương (để hiện cho người chơi)
   coIt(k, b) { const C = KTC.ruong[k]; let p = 0; for (const x of TIER_LIST) if (TIERS[x].thuTu >= TIERS[b].thuTu) p += C.tiLe[x] || 0; return 1 - Math.pow(1 - p / 100, C.so); },
@@ -227,7 +243,7 @@ const KT = {
     const w = KTC.vq.map(o => tra && o.wTra ? o.wTra : o.w), tong = w.reduce((a, b) => a + b, 0);
     let x = r() * tong, o = 0; while (o < w.length - 1 && x >= w[o]) { x -= w[o]; o++; }
     let rw = KTC.vq[o].r;
-    if (KTC.vq[o].jack && tra && r() < 0.3) rw = { the: { bac: 'do', n: 1 } };
+    if (KTC.vq[o].jack && tra && r() < 0.3) rw = { ruong: 'cd', n: 1 };
     const ra = this.cho(rw, 'vq' + v.ngay + (tra ? 't' + v.tra : 'f'), 'wheel');
     this.luu(); return { o, ra };
   },

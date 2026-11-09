@@ -45,14 +45,14 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     KT.batTran('solo'); const c = KT.ketTran({ wave: 40, thang: true }, { trum: 4, che: 'solo' });
     o.xp2 = c.tt.xp; o.cap2 = TT.cap(); o.xpTong = t.xp;
     o.dv = KT.vang - v0 - (10 * 20 + 40 * 2) - (10 * 40 + 40 * 4 + 150); o.dn = KT.ngoc - n0;
-    o.bao = t.bao.length; o.moTim = TT.bacMo('tim'); o.lenTim = (t.bao[t.bao.length - 1] || {}).mo;
+    o.bao = t.bao.length; o.moTim = TT.bacMo('tim'); o.lenTim = t.bao.flatMap(x => x.nhom || []); // gacha thu thập: báo NHÓM ụ (cấp 2 + 3) thay vì cả bậc
     return o;
   });
   ok(r.cu === 0 && r.cap === 1 && r.mo.join() === 'true,true,false,false,false' && r.khoaVang && !r.khoaTrang, 'người mới: cấp 1, Trắng/Xanh mở, Tím/Vàng/Đỏ khoá', JSON.stringify(r));
   ok(r.xp1 === 26 && r.xp2 === 62 && r.xpTong === 88 && r.cap1 === 1 && r.cap2 === 3, 'XP = wave + 3×trùm + 10 thắng (26, 62) → cấp 3 ở 85 XP', JSON.stringify(r));
   // KT.ketTran không cộng túi thưởng (thebai.js làm) → chỉ còn thưởng cấp 2 + 3 = 150·2 + 150·3 vàng, 40 ngọc
   r.dv2 = r.dv + (10 * 20 + 40 * 2) + (10 * 40 + 40 * 4 + 150);
-  ok(r.dv2 === 750 && r.dn === 40 && r.moTim && r.lenTim && r.lenTim.includes('tim'), 'thưởng cấp 2–3 (750 vàng, 40 ngọc) + thông báo mở Tím', JSON.stringify(r));
+  ok(r.dv2 === 750 && r.dn === 40 && r.moTim && r.lenTim && ['phun', 'kiembang', 'cuongno', 'chimang'].every(id => r.lenTim.includes(id)), 'thưởng cấp 2–3 (750 vàng, 40 ngọc) + báo nhóm ụ cấp 2 + 3 (Scatter, Ice Blade, Berserker…)', JSON.stringify(r));
   await chup('home-cap');
   // thông báo lên cấp hiện ở HOME
   r = await p.evaluate(async () => { await new Promise(r => setTimeout(r, 1200)); const pp = document.getElementById('tt-phu'); return { hien: !!pp && !pp.hidden, chu: pp && pp.textContent.slice(0, 80), con: TT.st().bao.length }; });
@@ -67,7 +67,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     const ba = TT.ba('vang', 'qv'); o.ba = ba.length === 3 && ba.every(id => THEBAI.bac(id) === 'vang');
     o.sai = TT.qvNhan(KT.dsBac('do')[0]) === null; const n0 = THEBAI.the(ba[1]).n; o.dung = !!TT.qvNhan(ba[1]) && THEBAI.the(ba[1]).n === n0 + 1; o.lan2 = TT.qvNhan(ba[0]) === null;
     KT.doc().tk.wave = 20; MH.st().sw = 20; t.xp = TT.xpTong(12); TT.xetCap(); o.do12 = TT.bacMo('do'); // kỷ lục < 30 → Đỏ còn khoá
-    KT.doc().tk.wave = 30; o.do30 = TT.bacMo('do'); const bb = TT.xetCap(); o.baoDo = bb.mo.includes('do');
+    KT.doc().tk.wave = 30; o.do30 = TT.bacMo('do'); const bb = TT.xetCap(); o.baoDo = (bb.nhom || []).includes('lophanung') && !(bb.nhom || []).includes('overlord'); // Đỏ cấp 12 (Cryo Reactor) vào bể khi đủ wave 30
     o.cap5Ruong = TTC.thuongCap(5).some(x => x.ruong === 'vang') && TTC.thuongCap(4).length === 1;
     return o;
   });
@@ -116,10 +116,10 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     o.ngay1 = TT.hjNgay(); o.d2khoa = !TT.hjDs()[1].mo;
     o.chuaXong = TT.hjNhan(1) === null;
     for (let i = 0; i < 3; i++) { KT.batTran('solo'); KT.ketTran({ wave: 16, thang: false }, { trum: 1, che: 'solo' }); }
-    o.xong1 = TT.hjDs()[0].xong; const v0 = KT.vang, n0 = KT.ngoc; const ra = TT.hjNhan(1); o.ra = !!ra && KT.vang - v0 === 500 && KT.ngoc - n0 === 30 && ra.the.length === 1 && THEBAI.bac(ra.the[0].id) === 'xanh';
+    o.xong1 = TT.hjDs()[0].xong; const v0 = KT.vang, n0 = KT.ngoc; const ra = TT.hjNhan(1); o.ra = !!ra && KT.vang - v0 === 500 && KT.ngoc - n0 === 30 && ra.ru && ra.ru.length === 2 && ra.ru[0].k === 'qua' && ra.ru[1].k === 'thuong' && ra.the.some(x => x.id === 'cuongno') && SH.co('cuongno'); // gacha thu thập: quà Berserker + Rương Thường
     o.lan2 = TT.hjNhan(1) === null;
     // ngày 3: chọn 1 trong 3 Sử thi
-    t.dem.coop = 1; t.trk = { a: 1, b: 1 }; t.dem.wave = 20; o.d3khoa = TT.hjNhan(3, TT.ba('tim', 'hj3')[0]) === null; // ngày 3 chưa mở
+    t.dem.coop = 1; t.trk = { a: 1, b: 1 }; t.dem.wave = 20; t.xp = Math.max(t.xp, TT.xpTong(5)); /* cấp 5: bể Tím đủ 3+ ụ cho chọn 1 trong 3 */ o.d3khoa = TT.hjNhan(3, TT.ba('tim', 'hj3')[0]) === null; // ngày 3 chưa mở
     const bay = KT._bay; KT._bay = () => new Date(Date.now() + 2 * 864e5 + 3600e3); o.ngay3 = TT.hjNgay();
     const ba = TT.ba('tim', 'hj3'); o.ba = ba.length === 3 && ba.every(id => THEBAI.bac(id) === 'tim');
     o.sai = TT.hjNhan(3, KT.dsBac('tim').find(id => !ba.includes(id))) === null;
@@ -129,7 +129,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     o.koCach = TTC.hj.every(d => d.v.every(v => !/jackpot|resonan|link|mana|cộng hưởng/i.test(v[2])));
     return o;
   });
-  ok(r.ngay1 === 1 && r.d2khoa && r.chuaXong && r.xong1 && r.ra && r.lan2, 'hành trình ngày 1: 3 việc → 500 vàng + 30 ngọc + 10 bản Xanh, nhận 1 lần; ngày 2 khoá', JSON.stringify(r));
+  ok(r.ngay1 === 1 && r.d2khoa && r.chuaXong && r.xong1 && r.ra && r.lan2, 'hành trình ngày 1: 3 việc → 500 vàng + 30 ngọc + quà Berserker + Rương Thường, nhận 1 lần; ngày 2 khoá', JSON.stringify(r));
   ok(r.d3khoa && r.ngay3 === 3 && r.ba && r.sai && r.dung && r.khongDo && r.koCach, 'ngày 3 mở theo lịch, chọn 1 trong 3 Sử thi (chỉ thẻ hợp lệ, +4 bản), không có Đỏ, việc chỉ nêu kết quả', JSON.stringify(r));
   await p.evaluate(() => { KTUI.moTab('nv'); });
   await chup('nhiemvu-hanhtrinh');
@@ -189,12 +189,13 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     const o = {};
     o.luot = [1, 10, 20, 30, 36, 44, 52, 60, 68, 90].map(w => THEBAI.soLuot(w)).join();
     // Đỏ trong bộ: ép mọi lượt ra Đỏ, đếm phần rơi vào thẻ Đỏ trong bộ
+    const xp0 = TT.st().xp, w0 = KT.doc().tk.wave; TT.st().xp = TT.xpTong(24); KT.doc().tk.wave = Math.max(w0, 30); // mở hết nhóm → phần "thẻ bất kỳ" chia đủ 10 Đỏ
     const goc = THE.tiLe, dd = KT.dsBac('do'), d0 = dd[0]; THE.tiLe = [['do', 100]]; let trong = 0, tong = 0;
     const mr = Math.random; let sd = 7; Math.random = () => { sd = (sd * 16807) % 2147483647; return sd / 2147483647; };
     for (let i = 0; i < 300; i++) { const m = { deck: [d0, 'tia', 'lien', 'bang', 'set'], che: 'solo' }; const before = THEBAI.the(d0).n; const x = THEBAI.thuong({ wave: 40 }, m); for (const t of x.the) tong += t.n; trong += THEBAI.the(d0).n - before; }
-    Math.random = mr; THE.tiLe = goc; o.tiDo = trong / tong; o.lyThuyet = 0.3 + 0.7 / dd.length;
-    o.sk = KTC.sk.map(([d, r]) => d + ':' + (r.the && r.the.bac === 'do' ? 'DO' : '')).join(' ');
-    o.skDo = KTC.sk.filter(([d, r]) => r.the && r.the.bac === 'do').map(x => x[0]).join();
+    Math.random = mr; THE.tiLe = goc; o.tiDo = trong / tong; o.lyThuyet = 0.3 + 0.7 / dd.length; TT.st().xp = xp0; KT.doc().tk.wave = w0;
+    o.sk = KTC.sk.map(([d, r]) => d + ':' + ((r.the && r.the.bac === 'do') || r.ruong === 'cd' ? 'DO' : '')).join(' ');
+    o.skDo = KTC.sk.filter(([d, r]) => (r.the && r.the.bac === 'do') || r.ruong === 'cd').map(x => x[0]).join();
     return o;
   });
   ok(r.luot === '1,3,6,8,10,11,12,13,14,14', 'túi thưởng: 3/6/8/10 ở wave 10/20/30/36, 11/12/13 ở 44/52/60, trần 14 ở 68+', r.luot);

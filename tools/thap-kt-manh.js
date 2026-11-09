@@ -58,7 +58,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   ok(r.sw === 72 && r.moc === '20,30,40,50,60,70' && r.tr === 'freezer,hive,leech' && r.renN >= 1, 'gộp hồ sơ: OR cờ + kỷ lục lớn nhất', JSON.stringify(r));
 
   // Đỏ hiếm hơn
-  r = await p.evaluate(() => { let v = 0, d = 0; for (const o of MHC.moc) for (const x of o.r) { if (x.the.bac === 'vang') v += x.the.n; else d += x.the.n; } return { v, d, ren: MHC.ren.find(c => c.ra === 'do').tuan < MHC.ren.find(c => c.ra === 'vang').tuan, bo: MHC.trumDu.the.n }; });
+  r = await p.evaluate(() => { let v = 0, d = 0; for (const o of MHC.moc) for (const x of o.r) { if (x.ruong === 'hh') v += x.n; else if (x.ruong === 'cd') d += x.n; } return { v, d, ren: MHC.ren.find(c => c.ra === 'do').tuan < MHC.ren.find(c => c.ra === 'vang').tuan, bo: MHC.trumDu.ruong === 'cd' ? MHC.trumDu.n : 0 }; }); // gacha thu thập: mốc = Rương Huyền thoại (n Vàng) / Cổ đại (n Đỏ)
   ok(r.d * 4 <= r.v && r.ren && r.bo === 1, 'Đỏ hiếm hơn: mốc Vàng ' + r.v + ' / Đỏ ' + r.d + ', lò rèn Đỏ 1/tuần', JSON.stringify(r));
   ok(!errs.length, 'không lỗi trang', errs.slice(0, 3).join(' | '));
   await b.close();

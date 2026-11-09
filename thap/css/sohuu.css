@@ -1,0 +1,58 @@
+/* ASTRAL ARSENAL — GACHA THU THẬP (js/sohuu.js): 3 trạng thái thẻ lưới · NEW! · nhóm ụ vừa mở (bảng lên cấp) · lật thẻ Đỏ · Rương Trận ở màn kết quả.
+   Chỉ chữ/số + bộ lọc CSS trên ảnh có sẵn (QUY-TAC-HINH.md) — không ảnh mới; ổ khoá vẽ bằng 2 khối CSS nhỏ (chưa có ảnh ổ khoá, TTA.khoa = ''). */
+
+/* ---- thẻ lưới: CHƯA CÓ (mờ nhẹ, nhãn nguồn) · CHƯA MỞ (tối hơn, ổ khoá + cấp) ---- */
+html body #chon #chon-luoi .c.sh-chua > img.anh, html body #chon #chon-luoi .c.ot.sh-chua > img.anh { filter: grayscale(.55) brightness(.62); }
+html body #chon #chon-luoi .c.sh-khoa > img.anh, html body #chon #chon-luoi .c.ot.sh-khoa > img.anh { filter: grayscale(.95) brightness(.36); }
+#chon #chon-luoi .c.sh-chua .tt-khoa-n, #chon #chon-luoi .c.sh-khoa .tt-khoa-n { top: 22%; padding: 0 2px; }
+#chon #chon-luoi .c.sh-chua .tt-khoa-n b.sh-chua-t { font-size: 8.5px; color: #e8edf7; letter-spacing: 0; white-space: nowrap; }
+#chon #chon-luoi .c.sh-chua .tt-khoa-n small { max-width: 100%; font-size: 8px; line-height: 1.1; letter-spacing: 0; color: #9fd8ff; white-space: normal; overflow-wrap: anywhere; }
+/* ổ khoá CSS: thân + quai */
+.sh-o { position: relative; display: block; width: 14px; height: 11px; margin: 7px auto 2px; border-radius: 2px; background: #ffd677; box-shadow: 0 1px 0 #000, 0 0 3px #000; }
+.sh-o::before { content: ''; position: absolute; left: 2.5px; top: -7px; width: 9px; height: 9px; box-sizing: border-box; border: 2.5px solid #ffd677; border-bottom: 0; border-radius: 6px 6px 0 0; }
+.sh-o::after { content: ''; position: absolute; left: 6px; top: 3px; width: 2px; height: 4px; border-radius: 1px; background: #3a2a12; }
+
+/* ---- NEW! (thẻ mới trong rương / túi trận / lưới) ---- */
+.sh-moi { position: absolute; right: -4px; top: -6px; z-index: 6; padding: 1px 5px 2px; border-radius: 7px; font: 900 10px/1.1 var(--f-hien, sans-serif); font-style: normal; letter-spacing: .04em;
+  color: #fff; background: linear-gradient(#ff5d7a, #e0244f); box-shadow: 0 1px 0 #000, 0 0 6px #ff4d6dcc; pointer-events: none; animation: sh-nhay 1.1s ease-in-out infinite alternate; }
+@keyframes sh-nhay { from { transform: scale(1); } to { transform: scale(1.12); } }
+@media (prefers-reduced-motion: reduce) { .sh-moi { animation: none; } }
+.kt-r-the, .kt-lat-m, .tb-kq-t { position: relative; }
+#chon #chon-luoi .c.sh-moi-c::after { content: 'NEW!'; position: absolute; right: 2px; top: 2px; z-index: 6; padding: 1px 4px; border-radius: 6px; font: 900 9px/1.1 var(--f-hien, sans-serif);
+  color: #fff; background: linear-gradient(#ff5d7a, #e0244f); box-shadow: 0 1px 0 #000; pointer-events: none; }
+.sh-moi-dem { color: #ff8fa5; font-weight: 800; letter-spacing: .06em; }
+.kt-r-ru { position: relative; }
+.kt-r-ru > b { position: absolute; right: -2px; bottom: -2px; font: 900 12px/1 var(--f-hien, sans-serif); color: #fff; text-shadow: 0 1px 0 #000, 0 0 3px #000; }
+
+/* ---- mở rương: thẻ Đỏ nổi bật (quầng đỏ mạnh + rung khung) ---- */
+.kt-lat.sh-do.mo { z-index: 2; }
+.kt-lat.sh-do.mo .kt-lat-q { filter: hue-rotate(-40deg) saturate(2.2) brightness(1.25); transform: scale(1.35); opacity: 1; }
+.kt-lat.sh-do.mo .kt-lat-m { animation: sh-do 1.2s ease-in-out infinite alternate; }
+@keyframes sh-do { from { filter: drop-shadow(0 0 4px #ff3b3b); } to { filter: drop-shadow(0 0 14px #ff2a2a) brightness(1.15); } }
+.kt-mr.sh-rung { animation: sh-rung .38s ease-out; }
+@keyframes sh-rung { 0%, 100% { transform: none; } 20% { transform: translate(-4px, 1px); } 40% { transform: translate(4px, -1px); } 60% { transform: translate(-3px, 0); } 80% { transform: translate(2px, 1px); } }
+@media (prefers-reduced-motion: reduce) { .kt-lat.sh-do.mo .kt-lat-m, .kt-mr.sh-rung { animation: none; } }
+.kt-lat.sh-moi-the.mo { z-index: 1; }
+.sh-them { margin-top: 2px; }
+
+/* ---- bảng lên cấp: nhóm ụ vừa vào rương ---- */
+.sh-nhom { flex-direction: column; gap: 6px; }
+.sh-ds { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 10px; max-width: 340px; }
+.sh-u { display: flex; flex-direction: column; align-items: center; gap: 3px; width: 64px; }
+html body #wrap .sh-u .ot-mini { width: 54px; height: 54px; }
+.sh-u small { font: 800 10px/1.1 var(--f-hien, sans-serif); color: var(--m-chu, #eee); text-align: center; letter-spacing: .02em; overflow-wrap: anywhere; }
+.sh-u.b-do small { color: #ff8a8a; }
+.sh-u.b-vang small { color: #ffd677; }
+
+/* ---- xếp theo cấp phi công: tiêu đề nhóm khoá mờ ---- */
+#chon-luoi .nhom.sh-nh-khoa b, #chon-luoi .nhom.sh-nh-khoa .nh-i { opacity: .6; }
+#chon-luoi .nhom.sh-nh span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sh-chips small { opacity: .7; margin-left: 3px; }
+
+/* ---- màn kết quả: Rương Trận + lớp mở rương ---- */
+.sh-kq-ru { position: relative; flex: none; display: inline-flex; flex-direction: column; align-items: center; justify-content: flex-end; width: 50px; height: 50px; padding: 0; border: 0; background: none; cursor: pointer; }
+.sh-kq-ru img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; animation: sh-nhay 1s ease-in-out infinite alternate; }
+.sh-kq-ru b { position: relative; z-index: 1; font: 900 10px/1 var(--f-hien, sans-serif); color: #fff; text-shadow: 0 1px 0 #000, 0 0 4px #000; letter-spacing: .05em; }
+#wrap > .sh-phu { position: absolute; inset: 0; z-index: 40; }
+#wrap > .sh-phu .kt-ok { width: 160px; min-height: 48px; margin-top: 4px; }
+#wrap > .sh-phu > .kt-phu-nen { background: #000e; }
