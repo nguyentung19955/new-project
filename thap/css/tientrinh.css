@@ -1,0 +1,48 @@
+/* TIẾN TRÌNH ĐỢT 1 (js/tientrinh.js): cấp phi công ở HOME, ụ khoá trên lưới bộ bài, hành trình 7 ngày, nhiệm vụ tuần, thông báo lên cấp.
+   Chỉ ảnh có sẵn (thanh tai_day/h2_tag qua .tb-sb, khung hàng nhiệm vụ, ngọc bậc); code chỉ đặt chữ/số, vị trí, mờ/lọc màu (QUY-TAC-HINH 1–3). */
+#hm .tt-cap { position: absolute; left: var(--le, 14px); top: 63px; z-index: 3; display: flex; align-items: center; gap: 6px; width: 126px; height: 18px; padding: 0; background: none; border: 0; cursor: pointer; }
+#hm .tt-cap > b { flex: none; font: 800 13px/1 var(--f-hien); letter-spacing: .04em; color: var(--m-vang, #ffd677); text-shadow: 0 1px 0 #000, 0 0 4px #000; }
+#hm .tt-cap .tb-sb { flex: 1; min-width: 0; height: 13px; }
+#hm .tt-cap .tb-sb b { font-size: 9px; }
+
+/* lớp phủ ở HOME (cùng kiểu .kt-phu của màn cửa hàng) */
+#chon > .tt-phu { z-index: 40; }
+#tt-phu .kt-ok { width: 160px; min-height: 48px; margin-top: 4px; }
+html body #wrap #tt-phu .kt-nhan .ot-mini { width: 60px; height: 60px; }
+#tt-phu .mh-the, #chon #kt .tt-the { position: relative; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 0; background: none; border: 0; color: var(--m-chu); cursor: pointer; }
+html body #wrap #tt-phu .mh-the .ot-mini, html body #wrap #kt .tt-the .ot-mini { width: 64px; height: 64px; }
+.tt-chon { grid-template-columns: repeat(3, minmax(0, 1fr)); width: min(300px, 76vw); }
+.tt-mo { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px 12px; margin: 2px 0; }
+.tt-mo small { flex-basis: 100%; text-align: center; font: 800 11px/1 var(--f-hien); letter-spacing: .1em; color: var(--m-mo); }
+.tt-mo-b { display: inline-flex; align-items: center; gap: 4px; font: 800 14px/1 var(--f-hien); color: var(--m-chu); }
+.tt-mo-b img { width: 22px; height: 22px; object-fit: contain; }
+
+/* tab NHIỆM VỤ: cấp phi công + hành trình */
+.tt-box { display: flex; align-items: center; gap: 12px; margin: 0 4px 8px; }
+.tt-L { flex: none; min-width: 58px; font: 800 22px/1 var(--f-hien); color: var(--m-vang, #ffd677); text-shadow: 0 1px 0 #000; }
+.tt-box-g { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.tt-box-g .tb-sb { height: 16px; }
+.tt-box-g small { font: 700 11px/1.25 var(--f-chu); color: var(--m-mo); }
+.tt-ngay { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; margin: 0 2px 8px; }
+#chon #kt .tt-ngay .hm-nut2 { position: relative; height: 38px; min-width: 0; padding: 0; }
+#chon #kt .tt-ngay .hm-nut2 b { font: 800 15px/1 var(--f-hien); }
+#chon #kt .tt-ngay .hm-nut2.da { opacity: .5; }
+#chon #kt .tt-ngay .hm-nut2.khoa { opacity: .4; }
+#chon #kt .tt-ngay .kt-cham { top: 1px; right: 2px; width: 11px; height: 11px; }
+.kt-h.tt-v > .tt-so b { font: 800 18px/1 var(--f-hien); color: var(--m-mo); }
+.tt-khoa-ngay { margin: 0 4px 6px; text-align: center; }
+#chon #kt .kt-nvd { display: inline; margin-left: 6px; padding: 0; background: none; border: 0; font: 800 10px/1 var(--f-hien); letter-spacing: .06em; color: #8fd0ff; text-decoration: underline; cursor: pointer; vertical-align: 1px; }
+
+/* ụ khoá trên lưới bộ bài / bộ sưu tập: chân dung tối + điều kiện mở (chỉ chữ cho tới khi có ảnh ổ khoá) */
+html body #chon #chon-luoi .c.tt-khoa > img.anh, html body #chon #chon-luoi .c.ot.tt-khoa > img.anh { filter: grayscale(.85) brightness(.5); }
+#chon #chon-luoi .c.tt-khoa .tb-w { opacity: .5; }
+.tt-khoa-n { position: absolute; left: 0; right: 0; top: 26%; z-index: 4; display: flex; flex-direction: column; align-items: center; gap: 1px; pointer-events: none; text-align: center; }
+.tt-khoa-n b { font: 800 11px/1.05 var(--f-hien); letter-spacing: .04em; color: #ffd677; text-shadow: 0 1px 0 #000, 0 0 3px #000, 0 0 3px #000; }
+.tt-khoa-n small { font: 800 9px/1 var(--f-hien); color: #ffb35a; text-shadow: 0 1px 0 #000, 0 0 3px #000; }
+.tt-khoa-i { width: 24px; height: 24px; object-fit: contain; margin-bottom: 1px; }
+
+/* hành trình ngày 5/6: mục tiêu thay thế cùng độ khó ("hoặc …") dưới thanh tiến độ */
+.tt-hoac { display: flex; align-items: baseline; gap: 5px; min-width: 0; margin-top: 2px; font: 700 12px/1.2 var(--f-chu); color: var(--m-mo); }
+.tt-hoac i { flex: none; font: 800 11px/1 var(--f-hien); font-style: normal; letter-spacing: .06em; text-transform: uppercase; color: #8fd0ff; }
+.tt-hoac span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tt-hoac em { flex: none; font-style: normal; font-weight: 800; color: var(--m-chu); }
