@@ -1,0 +1,54 @@
+/* GIAI ĐOẠN D (js/chedo-d.js): bảng VÔ TẬN / THỬ THÁCH TUẦN (trong #tt-phu, cùng khung chế độ C: cd-dau / cd-ct / cd-nut) + bảng xếp hạng
+   + hỏi ở wave 70 + khối kết quả. Chỉ ảnh có sẵn (ua_o, ua_tam, ua_pill_*, ua_ic_sk, ua_ts_mana…). Royal Twilight (ui-anime.css).
+   Hiệu năng (nóng iPhone): KHÔNG filter blur / drop-shadow, KHÔNG animation liên tục. */
+#tt-phu.cdd-p .kt-phu-tam { width: 400px; gap: 8px; max-height: calc(100% - 24px); }
+/* mốc tuần */
+.cdd-moc { display: flex; gap: 4px; align-self: stretch; justify-content: center; }
+.cdd-m { position: relative; flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 5px 2px 4px;
+  border: 0 solid transparent; border-image: url(../assets/ua_o.png) 52 fill / 10px 12px stretch; }
+.cdd-m > small { font: 800 9px/1 var(--f-chu, sans-serif); color: #E9CCA0; letter-spacing: .04em; white-space: nowrap; }
+.cdd-m > i { display: flex; flex-wrap: wrap; justify-content: center; font-style: normal; }
+.cdd-m .kt-r { transform: scale(.8); margin: -4px -4px; min-width: 0; }
+.cdd-m.da { opacity: .55; }
+.cdd-m .cdd-tick { position: absolute; right: 1px; bottom: 1px; width: 16px; height: 16px; object-fit: contain; }
+/* bộ tuần: 5 ụ + chỉ huy */
+.cdd-bo { display: flex; gap: 5px; align-self: stretch; align-items: center; justify-content: center; }
+.cdd-u { width: 54px; height: 54px; flex: none; display: flex; align-items: center; justify-content: center; border: 0 solid transparent; border-image: url(../assets/ua_o.png) 52 fill / 10px 12px stretch; }
+.cdd-u .ot-mini { width: 44px; height: 44px; }
+.cdd-mv { display: flex; flex-direction: column; align-items: center; gap: 2px; width: 64px; flex: none; }
+.cdd-mv img { width: 40px; height: 40px; object-fit: contain; }
+.cdd-mv small { font: 700 9px/1.1 var(--f-chu, sans-serif); color: #B8C3E6; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+#tt-phu.cdd-tw .cd-so span { min-width: 0; }
+/* bảng xếp hạng */
+.cdd-bxh { align-self: stretch; display: flex; flex-direction: column; gap: 5px; }
+.cdd-tab { display: flex; gap: 4px; }
+#tt-phu .cdd-tab .cdd-tb { flex: 1; height: 30px; padding: 0 6px; font: 800 11px/1 var(--f-hien, sans-serif); letter-spacing: .06em; color: #F7F8FF; background: none;
+  border: 0 solid transparent; border-image: url(../assets/ua_pill_tat.png) 40 62 fill / 8px 12px stretch; }
+#tt-phu .cdd-tab .cdd-tb.on { border-image-source: url(../assets/ua_pill_bat.png); color: #172040; }
+.cdd-ds { display: flex; flex-direction: column; gap: 3px; max-height: 168px; overflow-y: auto; padding: 6px 8px;
+  border: 0 solid transparent; border-image: url(../assets/ua_tam.png) 50 fill / 12px 14px stretch; }
+.cdd-h { display: flex; align-items: center; gap: 8px; min-height: 30px; padding: 0 4px; border-radius: 4px; }
+.cdd-h > i { width: 26px; flex: none; font: 900 13px/1 var(--f-hien, sans-serif); font-style: normal; color: #E9CCA0; text-align: center; }
+.cdd-h > img { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; flex: none; }
+.cdd-h > b { flex: 1; min-width: 0; font: 800 13px/1.1 var(--f-hien, sans-serif); color: #F7F8FF; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cdd-h > em { flex: none; font: 800 12px/1 var(--f-hien, sans-serif); font-style: normal; color: #71E4EE; }
+.cdd-h.toi { background: rgba(113, 228, 238, .14); }
+.cdd-off, .cdd-cho { margin: 2px 0; font: 700 11px/1.3 var(--f-chu, sans-serif); color: #B8C3E6; text-align: center; }
+.cdd-off { color: #E9CCA0; letter-spacing: .05em; }
+/* hỏi ở wave 70 (trong trận, đè bàn) */
+#cdd-hoi { z-index: 40; }
+#cdd-hoi .kt-phu-nen { background: rgba(8, 10, 28, .72); }
+#cdd-hoi .kt-phu-tam { width: 360px; gap: 10px; }
+/* màn kết quả */
+#ketqua .cdd-kq { display: flex; flex-direction: column; align-items: center; gap: 4px; margin-top: 4px; }
+#ketqua .cdd-kq > small { font: 800 11px/1.2 var(--f-chu, sans-serif); color: #E9CCA0; letter-spacing: .08em; }
+#ketqua .cdd-kq-so { display: flex; align-items: center; gap: 6px; }
+#ketqua .cdd-kq-so > img { width: 30px; height: 30px; object-fit: contain; }
+#ketqua .cdd-kq-so span { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 68px; padding: 6px 8px 5px;
+  border: 0 solid transparent; border-image: url(../assets/ua_o.png) 52 fill / 10px 12px stretch; }
+#ketqua .cdd-kq-so small { font: 800 9px/1 var(--f-chu, sans-serif); color: #B8C3E6; letter-spacing: .05em; white-space: nowrap; }
+#ketqua .cdd-kq-so b { font: 900 17px/1 var(--f-hien, sans-serif); color: #F7F8FF; }
+#ketqua .cdd-kq-so em { position: absolute; right: -4px; top: -6px; padding: 1px 4px; border-radius: 3px; background: #71E4EE; color: #172040; font: 900 8px/1.2 var(--f-chu, sans-serif); font-style: normal; }
+/* bảng GAME MODE có 9 chế độ: gọn thêm để vừa màn */
+#hm-tam.hm-tam-che .hm-ds { gap: 6px; }
+#hm-tam.hm-tam-che .hm-chec { min-height: 60px; }

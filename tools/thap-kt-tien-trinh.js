@@ -1,4 +1,5 @@
 // (giai đoạn C — chedo-c.js: thêm khoá QUICK TRIALS sau hướng dẫn · TOWER CLIMB cấp 5 · BOSS HUNT 3 trùm)
+// (giai đoạn D — chedo-d.js: thêm khoá ENDLESS sau tầng 100 Leo Tháp; WEEKLY CHALLENGE cấp 8 khi bật CDDC.tw.bat)
 // TURRET MERGE — KIỂM TIẾN TRÌNH ĐỢT 1 (js/tientrinh.js + chỉnh kinhte.js / thebai.js / manh.js) — tuvan/tien-trinh/THIET-KE.md
 //  ✓ người mới: cấp 1, Trắng/Xanh mở, Tím/Vàng/Đỏ khoá; XP = wave + 3×trùm + 10 thắng; lên cấp phát thưởng 1 lần; cấp 3/6/12 mở Tím/Vàng/Đỏ (Đỏ cần kỷ lục 30)
 //  ✓ bộ bài không nhận ụ khoá (UI.chonU, DK.loi, chạm thẻ lưới), thẻ khoá có nhãn điều kiện, bộ ngẫu nhiên chỉ ra ụ đã mở
@@ -268,7 +269,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     o.toast = (document.getElementById('chon-goi-nhac') || {}).textContent; o.che2 = HM.che;
     return o;
   });
-  ok(r.mo === '' && r.cheCoop === 'solo' && r.cheOnl === 'solo' && !r.shopMo && !r.vqMo && r.quay && r.ru && r.ruFree && r.sp && r.onl && r.nut && r.che === 'coop,pvp,online,thu,thap,san' && /Pilot Level 4/.test(r.toast) && r.che2 === 'solo',
+  ok(r.mo === '' && r.cheCoop === 'solo' && r.cheOnl === 'solo' && !r.shopMo && !r.vqMo && r.quay && r.ru && r.ruFree && r.sp && r.onl && r.nut && r.che === 'coop,pvp,online,thu,thap,san,vt' && /Pilot Level 4/.test(r.toast) && r.che2 === 'solo',
     'người mới (chưa xong hướng dẫn): khoá CO-OP/PVP/ONLINE/cửa hàng/vòng quay/rương (rương thưởng vẫn mở), nút tối + "LV 2", chạm → điều kiện', JSON.stringify(r));
   await chup('khoa-1-che-moi');
   await p.evaluate(() => HM.dong(true)); await chup('khoa-0-home-moi');

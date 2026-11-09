@@ -1042,3 +1042,13 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - Thưởng lần đầu: Rương Thường ×3 · Rương Vàng ×2 · 70 ngọc · 2 000 vàng; 20 XP mỗi thử thách. Kết quả: NEXT TRIAL / RETRY TRIAL. Thanh trên "TRIAL n · k/N" (đếm đúng số wave của từng trận, không cố định 5).
 - KE-HOACH: giai đoạn C xong (chờ xuất bản).
 - Test: `tools/thap-kt-thu-thach.js` (mới); chạy lại thap-leo, san-trum, an-do, tien-trinh, so-huu, shop, manh — đều đạt.
+
+## claude/demo-hop-tuong — giai đoạn D (1/3): VÔ TẬN nối tiếp tầng 100 Leo Tháp (09/11)
+- Thiết kế: `docs/demo-hop-tuong/tuvan/che-do-d/THIET-KE.md` §1. Mã: `thap/js/chedo-d.js` + `thap/css/chedo-d.css` (khung chung cả giai đoạn D, hook vào chedo-c.js không sửa file đó).
+- Trả lời "có endless chưa": trước đây chưa. Giờ: thắng **tầng 100 Leo Tháp** → bảng "FLOOR 100 CLEARED" (FINISH / ENDLESS); ENDLESS = đánh tiếp trên cùng bàn từ wave 71 (giữ máu ×3 của tầng 100).
+  GAME MODE → **ENDLESS** (mở sau khi qua tầng 100): START = tầng 100, qua tầng tự vào Vô tận.
+- Luật: trùm mỗi 5 wave (71–90), mỗi 2 wave (91–100), mọi wave từ 101; từ 101 +1 đột biến mỗi 10 wave (bốc theo tuần, như nhau mọi người). Tất định (rngHat, không Math.random).
+- Hết tim / bỏ cuộc = hết lượt, vẫn tính qua tầng 100 + điểm Vô tận (wave đạt được). Mốc tuần 1 lần: 80 = 2 000 vàng · 90 = 30 ngọc · 100 = 1 Tinh thể Đỏ · 110 = 50 ngọc · 120 = Rương Huyền thoại.
+- Bảng ENDLESS: luật + mốc tuần + bảng xếp hạng tuần / mọi thời đại (chưa có rules Firebase → "NOT CONNECTED" + kỷ lục cá nhân).
+- Sửa kèm: ảnh rương Huyền thoại / Cổ đại / Rương Trận bị vỡ (`assets/undefined.png`) trên giao diện anime — `ui-anime.js` thay `KTA.ru` mất bí danh hh/su/cd/tran.
+- Lưu: `turret_kt.cd.vt`, `turret_kt.cd.lb` (khoá con mới). Kiểm: `tools/thap-kt-vo-tan.js`.

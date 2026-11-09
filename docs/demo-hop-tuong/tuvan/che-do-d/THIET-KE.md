@@ -1,37 +1,43 @@
-# GIAI ĐOẠN D — THỬ THÁCH TUẦN · VÔ TẬN (SAU WAVE 70) · BẢNG XẾP HẠNG (thiết kế 09/11/2026)
+# GIAI ĐOẠN D — THỬ THÁCH TUẦN · VÔ TẬN (SAU TẦNG 100 LEO THÁP) · BẢNG XẾP HẠNG (thiết kế 09/11/2026, sửa 09/11 tối)
 
 > Nguồn: `tuvan/tien-trinh/THIET-KE.md` §4.3 (Thử thách tuần), §4.4 (Vô tận), N5–N6 (nhãn nguồn, chỉ xem bảng xếp hạng) ·
 > khung chế độ C `tuvan/che-do-c/THIET-KE.md` (GAME MODE, RNG có hạt, khoá con `turret_kt.cd.*`, Tinh thể Đỏ) ·
 > gacha `tuvan/gacha-thu-thap/BANG-MO-NHOM.md` (thưởng = rương, chỉ ụ trong bể rơi). Mã: `thap/js/chedo-d.js` + `thap/css/chedo-d.css`.
-> Trả lời người dùng: *"Có chế độ endless khi qua level nào đó chưa"* — trước giai đoạn D **chưa có** (Solo dừng ở wave 70). Giai đoạn D thêm Vô tận.
+> Trả lời người dùng: *"Có chế độ endless khi qua level nào đó chưa"* — trước giai đoạn D **chưa có**. Giai đoạn D thêm Vô tận.
+> **Đổi hướng 09/11 (người dùng)**: BỎ Solo — **Leo Tháp** là chế độ một mình chính; Vô tận mở **sau tầng 100** và **đánh tiếp từ đó**
+> (bản đầu của tài liệu này ghi "Solo qua wave 70" — đã thay). Việc bỏ Solo + đổi điều kiện "wave 30" sang tầng tháp do phiên khác làm sau.
 > Mọi số = đề xuất ban đầu; đo lại khi có dữ liệu người chơi.
 
 ## 0. Nguyên tắc (giữ triết lý người dùng)
 
 - **Vừa đủ khó**, không cầm tay chỉ việc: màn chọn chỉ nêu **luật** + **mốc**; không gợi ý bộ bài / cách vượt.
 - **Đỏ hiếm**: không chế độ nào rơi bản Đỏ. Mỗi chế độ cho **tối đa 1 Tinh thể Đỏ / tuần** (mốc khó) → Ấn Đỏ (15 tinh thể).
-- **Thưởng theo MỐC TUYỆT ĐỐI** (1 lần / tuần), **không theo thứ hạng** → điểm giả trên bảng xếp hạng không đổi ra tài nguyên (N6).
+- **Thưởng theo MỐC TUYỆT ĐỐI** (1 lần / tuần, ghi cờ TRƯỚC khi phát), **không theo thứ hạng** → điểm giả trên bảng xếp hạng không đổi ra tài nguyên (N6).
 - **Tất định**: wave sinh bằng `rngHat` có hạt; code chế độ D **không gọi `Math.random`**; VFX không đổi gameplay.
 - Không sát thương lan/tràn mới, không đột biến móc vào sát thương (chỉ luật lúc SINH quái — bảng `CDC.dot` của chế độ C).
-- Không đổi khoá lưu cũ: khoá con mới `turret_kt.cd.vt` (Vô tận) và `turret_kt.cd.tw` (Thử thách tuần).
+- Không đổi khoá lưu cũ: khoá con mới `turret_kt.cd.vt` (Vô tận), `turret_kt.cd.tw` (Thử thách tuần), `turret_kt.cd.lb` (điểm chờ gửi).
 
-## 1. VÔ TẬN (ENDLESS) — sau wave 70 của Solo
+## 1. VÔ TẬN (ENDLESS) — nối tiếp tầng 100 Leo Tháp
 
-**Mở**: thắng Solo (qua wave 70) — đúng lúc đó là lúc mở, nên không cần khoá theo cấp.
+**Mở**: đã qua tầng 100 Leo Tháp (`CD.st().thap.max ≥ 100`) — lần thắng tầng 100 đầu tiên chính là lúc mở.
 
 | Mục | Luật |
 |---|---|
-| Vào | (a) Solo qua wave 70 → bảng **"WAVE 70 CLEARED"**: `FINISH` (thắng như cũ) hoặc `ENDLESS` (đánh tiếp, trận dừng lại tới khi chọn). (b) GAME MODE → **ENDLESS** (mở sau lần thắng Solo đầu): trận Solo bình thường, qua wave 70 **tự vào Vô tận** không hỏi |
-| Bàn / bộ bài | Giữ nguyên bàn Solo đang có (bộ tự chọn, cấp thẻ thật) — Vô tận là **Solo kéo dài**, không bàn mới |
-| Máu quái | Theo đường cong Solo sẵn có (`mauWave`: ×1,08 mỗi wave sau wave 40) — không thêm hệ số |
-| Trùm | wave 71–90: mỗi **5** wave (75, 80, 85, 90) · 91–100: mỗi **2** wave (92 … 100) · từ 101: **mỗi wave 1 trùm** + nửa wave quái thường. Trùm bốc tất định từ bể `trumBe(w)` theo hạt trận, không lặp liền |
-| Đột biến | từ wave 101, **+1 đột biến mỗi 10 wave** (101, 111, 121 …), bốc tất định theo (tuần, chặng) trong {Swift, Thick Hide, Horde, Giants, Sky Raid} — giống nhau với mọi người trong tuần |
-| Kết thúc | hết tim, hoặc bỏ cuộc trong menu tạm dừng → **vẫn tính THẮNG Solo** (đã qua 70) + điểm Vô tận |
+| Vào | (a) Thắng tầng 100 (wave 66–70) → bảng **"FLOOR 100 CLEARED"**: `FINISH` (qua tầng như cũ) hoặc `ENDLESS` (đánh tiếp, trận dừng tới khi chọn). (b) GAME MODE → **ENDLESS** → START = đánh tầng 100, qua tầng **tự vào Vô tận** không hỏi |
+| Bàn / bộ bài | Giữ nguyên bàn tầng 100 (bộ tự chọn, cấp thẻ thật, mana/tim đang có) — Vô tận là **tầng 100 kéo dài**, không bàn mới |
+| Máu quái | giữ hệ số tầng 100 (**×3,0**) + đường cong `mauWave` (×1,08 mỗi wave) — wave 71 không dễ hơn wave 70 |
+| Trùm | wave 71–90: mỗi **5** wave (75 … 90) · 91–100: mỗi **2** wave (92 … 100) · từ 101: **mỗi wave 1 trùm** + tối đa 12 quái thường. Trùm bốc tất định từ `trumBe(w)` theo hạt trận, không lặp liền, máu trùm cũng ×3 |
+| Đột biến | từ wave 101, **+1 đột biến mỗi 10 wave** (101, 111, 121 …), bốc tất định theo (tuần, chặng) trong {Swift, Thick Hide, Horde, Giants, Sky Raid} — như nhau với mọi người trong tuần |
+| Kết thúc | hết tim, hoặc bỏ cuộc trong menu tạm dừng → **vẫn tính QUA TẦNG 100** (thưởng lần đầu nếu chưa nhận) + điểm Vô tận |
 | Điểm | **wave đạt được** (wave đang đánh khi kết thúc); hoà → thời gian trận ngắn hơn đứng trên |
-| Túi trận | công thức Solo, trần 14 lượt (không lượt vô hạn) — §3.3 tiến trình |
+| Không tính | như trận chế độ C: không kỷ lục Solo, không Rương Trận / nhiệm vụ theo wave / điểm sự kiện |
 
 **Mốc tuần** (1 lần / tuần, theo kỷ lục tuần): wave **80** = 2 000 vàng · **90** = 30 ngọc · **100** = **1 Tinh thể Đỏ** · **110** = 50 ngọc · **120** = **Rương Huyền thoại** (1 bản Vàng bảo đảm, chỉ ụ trong bể). Nhãn nguồn `endless`.
 Lưu: `turret_kt.cd.vt = { best, bestT, tuan, tBest, tBestT, nhan{} }`.
+
+**Chỗ hook vào `chedo-c.js`** (không sửa file đó): đọc `CD.st().thap.max` (mở khoá) · `CD.vao('thap', 100)` (vào từ GAME MODE) · `G.cd` của tầng 100 (giữ `hsQ`, ghi đột biến bằng `CD.apDot`) ·
+`CD.dsQuai` (sinh quái) · bọc `ketThuc` (CD.kiem gọi `ketThuc(true)` khi hết tầng → hỏi / bỏ qua khi đang Vô tận) · bọc `wavMoi`, `trumCuaWave`, `coTrum`, `HT.theoDoi`, `UI.capNhat` (nạp sau chedo-c.js) ·
+màn kết quả: `CDUI.ketQua` (thưởng lần đầu tầng 100) chạy trước, khối ENDLESS nối sau.
 
 ## 2. THỬ THÁCH TUẦN (WEEKLY CHALLENGE) — mở Cấp phi công 8
 
@@ -118,7 +124,7 @@ Người Thường (wave Solo 25–35) gần như chỉ lấy mốc 15/25 của 
 | Chế độ | Mở | Nơi vào |
 |---|---|---|
 | Thử thách tuần | Cấp 8 | HOME → GAME MODE → WEEKLY CHALLENGE → PLAY (bảng: bộ tuần, đột biến, mốc, bảng xếp hạng, START) |
-| Vô tận | thắng Solo | Solo wave 70 → ENDLESS · hoặc GAME MODE → ENDLESS → PLAY (bảng: luật, mốc, bảng xếp hạng, START) |
+| Vô tận | qua tầng 100 Leo Tháp | thắng tầng 100 → ENDLESS · hoặc GAME MODE → ENDLESS → PLAY (bảng: luật, mốc, bảng xếp hạng, START · FLOOR 100) |
 
 Hình (chỉ ảnh có sẵn, phong cách Royal Twilight `ua_*`): Thử thách tuần = `ua_ic_su` (lịch sự kiện) · Vô tận = `ua_ic_trum`… (xem mã `CDD.ICON`).
 Không filter blur / drop-shadow động; animation liên tục chỉ transform/opacity (lỗi nóng iPhone).

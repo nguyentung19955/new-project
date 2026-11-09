@@ -51,7 +51,7 @@ const UA = {
         c.kta = { vang: KTA.vang, ngoc: KTA.ngoc, xong: KTA.xong, tin: KTA.tin, lui: KTA.lui, nut: Object.assign({}, KTA.nut), banh: KTA.banh, banhKhung: KTA.banhKhung, mui: KTA.mui, ru: Object.assign({}, KTA.ru), ruMo: Object.assign({}, KTA.ruMo), bannerSk: KTA.bannerSk };
         KTA.vang = 'ua_ts_vang'; KTA.ngoc = 'ua_ts_ngoc'; KTA.xong = 'ua_ic_tick'; KTA.tin = 'ua_ic_tin'; KTA.lui = 'ua_ic_lui';
         KTA.banh = 'ua_vq_banh'; KTA.banhKhung = 'ua_vq_khung'; KTA.mui = 'ua_vq_mui'; // vòng quay anime (raw_ui3_vongquay)
-        KTA.ru = { thuong: 'ua_ru_thuong', vang: 'ua_ru_vang', than: 'ua_ru_than' }; KTA.ruMo = { thuong: 'ua_ru_thuong_mo', vang: 'ua_ru_vang_mo', than: 'ua_ru_than_mo' }; // rương anime (raw_ui3_ruong)
+        KTA.ru = { thuong: 'ua_ru_thuong', vang: 'ua_ru_vang', than: 'ua_ru_than', su: 'ua_ru_vang', hh: 'ua_ru_vang', cd: 'ua_ru_than', tran: 'ua_ru_thuong' }; KTA.ruMo = { thuong: 'ua_ru_thuong_mo', vang: 'ua_ru_vang_mo', than: 'ua_ru_than_mo', su: 'ua_ru_vang_mo', hh: 'ua_ru_vang_mo', cd: 'ua_ru_than_mo', tran: 'ua_ru_thuong_mo' }; // giữ bí danh su/hh/cd/tran (rương Huyền thoại / Cổ đại / Trận — thiếu thì ảnh vỡ 'undefined.png') // rương anime (raw_ui3_ruong)
         KTA.bannerSk = 'ua_bn_sk';
         KTA.nut = { shop: 'ua_ic_shop', vq: 'ua_ic_vq', nv: 'ua_ic_nv', sk: 'ua_ic_sk' };
       }
