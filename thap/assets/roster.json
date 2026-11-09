@@ -103,9 +103,9 @@
   "ten": "Armor Breaker",
   "bac": "trang",
   "dcdw": "Freya",
-  "kyNang": "Support: every 3s exposes the lead + toughest enemy; Attack neighbours hit them +13%",
+  "kyNang": "Support: every 3s exposes the lead + toughest enemy; Attack neighbours hit them harder (+13% at 1★ → +31% at 7★)",
   "ten_vi": "Phá Giáp",
-  "kyNang_vi": "Hỗ trợ: mỗi 3 s làm LỘ quái đầu + quái trâu nhất; ụ Tấn công kề +13% vào quái bị lộ"
+  "kyNang_vi": "Hỗ trợ: mỗi 3 s làm LỘ quái đầu + quái trâu nhất; ụ Tấn công kề đánh quái bị lộ mạnh hơn (+13% ở 1★ → +31% ở 7★)"
  },
  {
   "id": "bua",
@@ -184,9 +184,9 @@
   "ten": "Radar",
   "bac": "xanh",
   "dcdw": "Kirinus",
-  "kyNang": "Support: +fire rate for N/E/S/W neighbours (18% at 1★ → 42% at 7★)",
+  "kyNang": "Support: +fire rate for N/E/S/W neighbours (20% at 1★ → 46% at 7★)",
   "ten_vi": "Radar",
-  "kyNang_vi": "Hỗ trợ: +tốc bắn cho 4 ô kề (18% ở 1★ → 42% ở 7★)"
+  "kyNang_vi": "Hỗ trợ: +tốc bắn cho 4 ô kề (20% ở 1★ → 46% ở 7★)"
  },
  {
   "id": "drone",
@@ -328,27 +328,27 @@
   "ten": "Jammer",
   "bac": "tim",
   "dcdw": "Myrina",
-  "kyNang": "On merge: PVP slows rival turrets; Co-op speeds allies",
+  "kyNang": "On merge: PVP slows rival turrets; Co-op speeds allies; Solo speeds your own turrets",
   "ten_vi": "Kẹp Phá",
-  "kyNang_vi": "Khi GHÉP: PVP làm chậm ụ đối thủ; co-op tăng tốc ụ đồng đội"
+  "kyNang_vi": "Khi GHÉP: PVP làm chậm ụ đối thủ; co-op tăng tốc ụ đồng đội; Solo tăng tốc ụ của mình"
  },
  {
   "id": "taylo",
   "ten": "Cleanser",
   "bac": "tim",
   "dcdw": "Gemina",
-  "kyNang": "Support: every 12s cleanses 2 neighbours; nothing to clean = +18% damage",
+  "kyNang": "Support: every 12s (5★: 9s) cleanses up to 2 neighbours (3 at 5★) of freeze/stone/burn/clamp; nothing to clean → neighbours +damage",
   "ten_vi": "Máy Tẩy Lỗi",
-  "kyNang_vi": "Hỗ trợ: mỗi 12 s tẩy hiệu ứng xấu cho 2 ụ kề; không có gì để tẩy → ụ kề +8% sát thương"
+  "kyNang_vi": "Hỗ trợ: mỗi 12 s (5★: 9 s) tẩy băng/đá/cháy/kẹp cho tối đa 2 ụ kề (5★: 3); không có gì để tẩy → ụ kề +sát thương"
  },
  {
   "id": "khien",
   "ten": "Shield Gen",
   "bac": "tim",
   "dcdw": "Mona",
-  "kyNang": "Support: neighbours get a 1-hit control shield, recharging every 18s",
+  "kyNang": "Support: every 18s (shorter at higher ★) N/E/S/W neighbours get a 1-hit shield vs boss/rival control (no stacking)",
   "ten_vi": "Máy Khiên",
-  "kyNang_vi": "Hỗ trợ: ụ kề có khiên chặn 1 lần khống chế, sạc lại 18 s"
+  "kyNang_vi": "Hỗ trợ: mỗi 18 s (sao cao nhanh hơn) 4 ô kề nhận khiên chặn 1 lần khống chế của trùm/đối thủ (không cộng dồn)"
  },
  {
   "id": "hopbi",
@@ -364,9 +364,9 @@
   "ten": "Star Lift",
   "bac": "tim",
   "dcdw": "Brownie",
-  "kyNang": "Support: all 4 neighbours fire faster (+10% per ★, lowest-star one ×1.5, max +50%); 5★ grants star pips",
+  "kyNang": "Support: all 4 N/E/S/W neighbours +fire rate, the lowest-star one ×1.5; 5★: every 2 waves it gets a star pip (3 pips = +1★)",
   "ten_vi": "Bệ Nâng Sao",
-  "kyNang_vi": "Hỗ trợ: cả 4 ụ kề bắn nhanh hơn (+10% mỗi ★, ụ ít sao nhất ×1,5, tối đa +50%); 5★ cho nấc sao mỗi 2 wave"
+  "kyNang_vi": "Hỗ trợ: cả 4 ô kề +tốc bắn, ụ kề sao thấp nhất ×1,5; 5★: mỗi 2 wave ụ đó nhận 1 nấc sao (3 nấc = +1★)"
  },
  {
   "id": "tuthan",
@@ -382,9 +382,9 @@
   "ten": "Scrambler",
   "bac": "tim",
   "dcdw": "Neban",
-  "kyNang": "On merge: PVP shuffles rival turrets",
+  "kyNang": "On merge: PVP shuffles rival turrets; Co-op/Solo turns lone turrets into mergeable pairs",
   "ten_vi": "Máy Xáo Trộn",
-  "kyNang_vi": "Khi GHÉP: PVP đổi ngẫu nhiên ụ đối thủ"
+  "kyNang_vi": "Khi GHÉP: PVP đổi ngẫu nhiên ụ đối thủ; Co-op/Solo biến ụ lẻ thành cặp ghép được"
  },
  {
   "id": "epxung",
@@ -712,9 +712,9 @@
   "ten": "Signal Jammer",
   "bac": "tim",
   "dcdw": "Cain / Neban",
-  "kyNang": "On merge: PVP jams rival turrets; Co-op gives ally a free summon",
+  "kyNang": "On merge: PVP jams rival turrets; Co-op: ally's next summon is free; Solo: slows all enemies",
   "ten_vi": "Máy Nhiễu Sóng",
-  "kyNang_vi": "Khi GHÉP: PVP nhiễu ụ đối thủ; Co-op đồng đội triệu hồi miễn phí",
+  "kyNang_vi": "Khi GHÉP: PVP nhiễu ụ đối thủ; Co-op đồng đội triệu hồi miễn phí; Solo làm chậm mọi quái",
   "vai": "db",
   "ho": "guard",
   "moi": "TUONG-MOI-20"
@@ -888,9 +888,9 @@
   "ten": "Hex Saboteur",
   "bac": "vang",
   "dcdw": "Guiltyne",
-  "kyNang": "Ghép: PVP nguyền ụ đối thủ −1★; Co-op ụ đồng đội +1★",
+  "kyNang": "Merge: PVP hexes a rival turret −1★; Co-op gives an ally turret +1★; Solo slows the lead enemy and makes it take more damage",
   "ten_vi": "Kẻ Nguyền",
-  "kyNang_vi": "Ghép: PVP nguyền ụ đối thủ −1★; Co-op ụ đồng đội +1★",
+  "kyNang_vi": "Ghép: PVP nguyền ụ đối thủ −1★; Co-op ụ đồng đội +1★; Solo làm chậm quái đầu và khiến nó nhận thêm sát thương",
   "vai": "db",
   "ho": "guard",
   "moi": "VANG-2"

@@ -2250,6 +2250,7 @@ const VI_MAU = {
 "Egg: hatches after #s + #s per ★ (#★ burns into a #★ egg)": "Trứng: nở sau # s + # s mỗi ★ (#★ cháy thành trứng #★)",
 "Egg: hatches after #s + #s per ★ (#★ burns into a #★ egg).": "Trứng: nở sau # s + # s mỗi ★ (#★ cháy thành trứng #★).",
 "Ember": "Lửa nhỏ",
+"Ember + Ember merged into an Ember: a NEW Ember with 0 flames": "Ember + Ember ghép ra Ember: Ember MỚI, 0 lửa",
 "Ember: under # flames": "Lửa nhỏ: dưới # lửa",
 "Embers that stay (stone, frozen, transformed, lost a star) keep their flames": "ụ vẫn ở lại (hoá đá, đóng băng, bị biến hình, bị trừ sao) giữ nguyên lửa",
 "Empty slot": "Ô trống",
