@@ -11,20 +11,21 @@
 
 const MHC = {
   moc: [ // mốc wave Solo (lần đầu)
-    { w: 20, r: [{ the: { bac: 'vang', n: 1 } }] },
-    { w: 30, r: [{ the: { bac: 'vang', n: 2 } }] },
-    { w: 40, r: [{ the: { bac: 'vang', n: 3 } }] },
-    { w: 50, r: [{ the: { bac: 'vang', n: 3 } }, { the: { bac: 'do', n: 1 } }] },
-    { w: 60, r: [{ the: { bac: 'vang', n: 4 } }, { the: { bac: 'do', n: 1 } }] },
-    { w: 70, r: [{ the: { bac: 'vang', n: 5 } }, { the: { bac: 'do', n: 2 } }] },
+    // gacha thu thập (09/11): bản Vàng / Đỏ ngẫu nhiên → RƯƠNG HUYỀN THOẠI (hh) / CỔ ĐẠI (cd) cùng số bản (KTC.ruong, tuvan/gacha-thu-thap §4)
+    { w: 20, r: [{ ruong: 'hh', n: 1 }] },
+    { w: 30, r: [{ ruong: 'hh', n: 2 }] },
+    { w: 40, r: [{ ruong: 'hh', n: 3 }] },
+    { w: 50, r: [{ ruong: 'hh', n: 3 }, { ruong: 'cd', n: 1 }] },
+    { w: 60, r: [{ ruong: 'hh', n: 4 }, { ruong: 'cd', n: 1 }] },
+    { w: 70, r: [{ ruong: 'hh', n: 5 }, { ruong: 'cd', n: 2 }] },
   ],
-  trum: { the: { bac: 'vang', n: 1 } },   // mỗi trùm hạ lần đầu
-  trumDu: { the: { bac: 'do', n: 1 } },   // hạ đủ mọi trùm
+  trum: { ruong: 'hh', n: 1 },   // mỗi trùm hạ lần đầu
+  trumDu: { ruong: 'cd', n: 1 },   // hạ đủ mọi trùm
   ren: [
     { k: 'tv', tu: 'tim', can: 30, gia: 2000, ra: 'vang', tuan: 3 },
     { k: 'vd', tu: 'vang', can: 10, gia: 10000, ra: 'do', tuan: 1 },
   ],
-  nv: { id: 'wave30', ten: 'Reach wave 30', can: 30, k: 'wave', max: 1, kl: 28, r: { the: { bac: 'vang', n: 1 } } }, // kl: chỉ vào bể khi kỷ lục ≥ 28 (tien-trinh §3.4)
+  nv: { id: 'wave30', ten: 'Reach wave 30', can: 30, k: 'wave', max: 1, kl: 28, r: { ruong: 'hh', n: 1 } }, // kl: chỉ vào bể khi kỷ lục ≥ 28 (tien-trinh §3.4)
   // ẤN VÀNG (tien-trinh §6.3, người dùng chốt 6:1): 6 bản Vàng thừa (nhiều thẻ, trừ thẻ đích) + 20 000 vàng → 1 bản Vàng TỰ CHỌN, 1 lần/tuần.
   //  Bản lấy tự động theo thứ tự: thẻ đã MAX → thẻ ngoài bộ bài → thẻ trong bộ; trong mỗi nhóm lấy chồng nhiều bản trước.
   an: { k: 'an', can: 6, gia: 20000, tuan: 1 },
@@ -46,7 +47,7 @@ const MH = {
     m.sw = Math.max(0, m.sw | 0); m.bo = m.bo ? 1 : 0; m.renN = Math.max(0, m.renN | 0);
     return m;
   },
-  gop(ra, x) { ra.vang += x.vang || 0; ra.ngoc += x.ngoc || 0; ra.the.push(...(x.the || [])); return ra; },
+  gop(ra, x) { ra.vang += x.vang || 0; ra.ngoc += x.ngoc || 0; ra.the.push(...(x.the || [])); if (x.ruong) { ra.the.push(...x.ruong.the); (ra.ru = ra.ru || []).push(x.ruong); } for (const y of x.ru || []) { ra.the.push(...y.the); (ra.ru = ra.ru || []).push(y); } return ra; },
   phat(ds, khoa) { const ra = { vang: 0, ngoc: 0, the: [] }; ds.forEach((r, i) => this.gop(ra, KT.cho(r, khoa + ':' + i, 'achieve'))); return ra; },
   // ---------- 1) mốc wave Solo ----------
   mocDs() { const m = this.st(); return MHC.moc.map(o => ({ w: o.w, r: o.r, t: Math.min(o.w, m.sw), can: o.w, xong: m.sw >= o.w, da: !!m.moc[o.w] })); },
@@ -79,10 +80,10 @@ const MH = {
   anTong() { return KT.dsBac('vang').reduce((a, id) => a + THEBAI.the(id).n, 0); },
   anTt() {
     const rt = this.renTuan(), dung = rt.n.an | 0, con = Math.max(0, MHC.an.tuan - dung), co = this.anTong();
-    return { dung, con, co, duVang: KT.vang >= MHC.an.gia, duoc: con > 0 && co >= MHC.an.can && KT.vang >= MHC.an.gia && KT.dsBac('vang').some(id => !!this.anNguon(id)) };
+    return { dung, con, co, duVang: KT.vang >= MHC.an.gia, duoc: con > 0 && co >= MHC.an.can && KT.vang >= MHC.an.gia && KT.dsPool('vang').some(id => !!this.anNguon(id)) };
   },
   an(dich) {
-    const t = this.anTt(); if (!t.duoc || !KT.dsBac('vang').includes(dich)) return null;
+    const t = this.anTt(); if (!t.duoc || !KT.dsPool('vang').includes(dich)) return null; // chỉ chọn ụ đã mở / đã có (gacha thu thập)
     const lay = this.anNguon(dich); if (!lay) return null;
     const m = this.st(), rt = this.renTuan();
     for (const x of lay) KT.themBan(x.id, -x.n);
@@ -126,6 +127,7 @@ const MHUI = {
   chip(b, n) { return '<i class="mh-chip"><img src="' + KTUI.a('ngoc_' + b) + '" alt="' + TIERS[b].ten + '">×' + n + '</i>'; }, // ngọc bậc (như bảng tổng mở rương)
   // 1 hàng như hàng nhiệm vụ: ổ tròn = phần thưởng hiếm nhất, phần còn lại thành chip nhỏ cạnh tên
   hang(ten, q, ds, act, id) {
+    ds = ds.map(r => (r.ruong ? { the: { bac: { hh: 'vang', cd: 'do', su: 'vang' }[r.ruong] || 'tim', n: r.n || 1 } } : r)); // rương vỏ: hiện bậc + số bản bảo đảm
     const tt = (r) => TIERS[r.the.bac].thuTu, chinh = ds.slice().sort((a, b) => tt(b) - tt(a))[0], phu = ds.filter(r => r !== chinh);
     const nut = q.da ? '<img class="kt-tick" src="' + KTUI.a(KTA.xong) + '" alt="Claimed">' : '<button class="kt-slot' + (q.xong ? ' vang' : '') + '" data-act="' + act + '" data-id="' + id + '"' + (q.xong ? '' : ' disabled') + '><b>' + (q.xong ? 'CLAIM' : KTUI.so(q.t) + '/' + KTUI.so(q.can)) + '</b></button>';
     return '<div class="kt-h' + (q.da ? ' da' : q.xong ? ' xong' : '') + '">' + this.icBac(chinh.the.bac, chinh.the.n) + '<div class="kt-h-g"><b>' + ten + (phu.length ? ' ' + phu.map(r => this.chip(r.the.bac, r.the.n)).join('') : '') + '</b>' + TBUI.thanh({ n: q.t, can: q.can, max: false }) + '</div>' + nut + '</div>';
@@ -156,7 +158,7 @@ const MHUI = {
     return h;
   },
   chonAn() { // bảng chọn thẻ Vàng đích (thẻ nào cũng được, kể cả chưa có bản)
-    const ds = KT.dsBac('vang').filter(id => !!MH.anNguon(id)).map(id => '<button class="mh-the" data-act="kt-mhan" data-id="' + id + '">' + OT.mini(id) + '<b>×' + THEBAI.the(id).n + '</b><small>' + KTUI.ten(id) + '</small></button>').join('');
+    const ds = KT.dsPool('vang').filter(id => !!MH.anNguon(id)).map(id => '<button class="mh-the" data-act="kt-mhan" data-id="' + id + '">' + OT.mini(id) + '<b>×' + THEBAI.the(id).n + '</b><small>' + KTUI.ten(id) + '</small></button>').join('');
     KTUI.phu('<b class="kt-phu-t">LEGENDARY SEAL</b><p class="kt-chu">Trade ' + MHC.an.can + ' spare Legendary copies + ' + KTUI.so(MHC.an.gia) + ' gold → 1 copy of the Legendary you pick. Spare copies come from maxed cards first, then cards outside your deck.</p><div class="mh-chon">' + ds + '</div>' +
       '<button class="hm-nut2 kt-ok" data-act="kt-phu-dong"><b>CANCEL</b></button>', 'kt-tl mh-p');
   },

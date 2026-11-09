@@ -8,8 +8,9 @@
 'use strict';
 const KTA = {
   vang: 'shop_vang', ngoc: 'shop_ngoc', cham: 'ngoc_do', xong: 'p7_ic_xong', tin: 'p7_ic_tin', lui: 'p7_ic_lui',
-  ru: { thuong: 'shop_ru_thuong', vang: 'shop_ru_vang', than: 'shop_ru_than' },       // rương đóng (raw_shop_ruong — tools/thap-lap-shop.py)
-  ruMo: { thuong: 'shop_ru_thuong_mo', vang: 'shop_ru_vang_mo', than: 'shop_ru_than_mo' }, // rương mở
+  // rương "vỏ" thưởng (gacha thu thập 09/11): dùng lại ảnh rương có sẵn — Sự kiện/Huyền thoại = rương Vàng, Cổ đại = rương Thần thoại; Rương Trận = rương Thường
+  ru: { thuong: 'shop_ru_thuong', vang: 'shop_ru_vang', than: 'shop_ru_than', su: 'shop_ru_vang', hh: 'shop_ru_vang', cd: 'shop_ru_than', tran: 'shop_ru_thuong' },       // rương đóng (raw_shop_ruong — tools/thap-lap-shop.py)
+  ruMo: { thuong: 'shop_ru_thuong_mo', vang: 'shop_ru_vang_mo', than: 'shop_ru_than_mo', su: 'shop_ru_vang_mo', hh: 'shop_ru_vang_mo', cd: 'shop_ru_than_mo', tran: 'shop_ru_thuong_mo' }, // rương mở
   fx: 'shop_fx_mo',                                                                      // dải 16 khung bung sáng (raw_shop_fx_mo)
   khe: 'p1_ruong_khe',                                                                               // khe sáng nắp rương (nhịp 2): '' = chưa có ảnh → chỉ rương sáng lên; chờ raw_p1_ruong_khe (tuvan/vfx/CAN-VE-p1.json)
   bung: 'h2_burst', sao: 'ui_sao', quang: 'fx_vong_lv', lung: 'p7_o_trong', o: 'p7_o_co', oSang: 'p7_o_doi',
@@ -78,7 +79,7 @@ const KTUI = {
   rIc(r) {
     if (r.vang) return '<span class="kt-r"><img src="' + this.a(KTA.vang) + '" alt=""><b>' + this.so(r.vang) + '</b></span>';
     if (r.ngoc) return '<span class="kt-r"><img src="' + this.a(KTA.ngoc) + '" alt=""><b>' + this.so(r.ngoc) + '</b></span>';
-    if (r.ruong) return '<span class="kt-r kt-r-ru"><img src="' + this.a(KTA.ru[r.ruong]) + '" alt="' + KTC.ruong[r.ruong].ten + '"></span>';
+    if (r.ruong) return '<span class="kt-r kt-r-ru kt-r-ru-' + r.ruong + '"><img src="' + this.a(KTA.ru[r.ruong]) + '" alt="' + KTC.ruong[r.ruong].ten + '">' + ((r.n | 0) > 1 ? '<b>×' + r.n + '</b>' : '') + '</span>';
     if (r.the) {
       const id = r.the.id || (r.the.su ? KT.suKien() : null);
       if (id) return '<span class="kt-r kt-r-the">' + OT.mini(id) + '<b>×' + r.the.n + '</b></span>';
@@ -87,12 +88,12 @@ const KTUI = {
     return '';
   },
   rTen(r) {
-    if (r.vang) return this.so(r.vang) + ' gold'; if (r.ngoc) return this.so(r.ngoc) + ' gems'; if (r.ruong) return KTC.ruong[r.ruong].ten.toLowerCase().replace(/^./, c => c.toUpperCase());
+    if (r.vang) return this.so(r.vang) + ' gold'; if (r.ngoc) return this.so(r.ngoc) + ' gems'; if (r.ruong) return KTC.ruong[r.ruong].ten.toLowerCase().replace(/^./, c => c.toUpperCase()) + ((r.n | 0) > 1 ? ' ×' + r.n : '');
     if (r.the) { const id = r.the.id || (r.the.su ? KT.suKien() : null); return (id ? this.ten(id) : 'Random ' + ({ trang: 'common', xanh: 'rare', tim: 'epic', vang: 'legendary', do: 'mythic' }[r.the.bac] || r.the.bac)) + ' ×' + r.the.n; } // tên bậc tiếng Anh cố định → ngonngu.js dịch được ('Random legendary ×#')
     return '';
   },
   rTen2(r) { // nhiều phần thưởng trong 1 mốc (vd. 3 000 vàng + 1 bản Vàng): 'A + B'
-    const ds = []; if (r.vang) ds.push({ vang: r.vang }); if (r.ngoc) ds.push({ ngoc: r.ngoc }); if (r.ruong) ds.push({ ruong: r.ruong }); if (r.the) ds.push({ the: r.the });
+    const ds = []; if (r.vang) ds.push({ vang: r.vang }); if (r.ngoc) ds.push({ ngoc: r.ngoc }); if (r.ruong) ds.push({ ruong: r.ruong, n: r.n }); if (r.the) ds.push({ the: r.the });
     return ds.map(x => this.rTen(x)).join(' · ');
   },
   muc(t, phu) { return '<div class="kt-muc"><b>' + t + '</b>' + (phu ? '<small>' + phu + '</small>' : '') + '</div>'; },
@@ -108,7 +109,7 @@ const KTUI = {
     }
     h += '</div>' + this.muc('CHESTS') + '<div class="kt-ru">';
     for (const k in KTC.ruong) {
-      const C = KTC.ruong[k];
+      const C = KTC.ruong[k]; if (C.ban === 0) continue; // rương "vỏ" thưởng: không bán
       // bộ đếm bảo hiểm (tien-trinh §6.1): Vàng chắc chắn sau N rương · Đỏ chắc chắn sau M rương (đã có s.ru.pv/pd)
       const phu = k === 'vang' ? 'Legendary in ≤ ' + (C.pityV - s.ru.pv) + '<br>Mythic in ≤ ' + (C.pityD - s.ru.pd) : k === 'than' ? '1 Mythic + 2 Legendary' : C.so + ' cards';
       const kh = this.khoaNut('ru:' + k, 'hm-nut2'); // khoá theo cấp (tientrinh.js): nút điều kiện thay nút mua
@@ -188,9 +189,10 @@ const KTUI = {
     this.phu(h + '<button class="hm-nut2 vang kt-ok" data-act="kt-phu-dong"><b>OK</b></button>', 'kt-tl');
   },
   // bảng nhận thưởng (gộp vàng/ngọc/thẻ)
-  nhan(ra, tde) {
+  nhan(ra, tde, opt) {
     if (!ra) return;
-    if (ra.ruong) { this.moRuongAnim(ra.ruong, ra); return; }
+    const ru = ra.ru && ra.ru.length ? ra.ru : ra.ruong ? [ra.ruong] : [];
+    if (ru.length) { this.moRuongAnim(ru[0], ra, Object.assign({ sau: ru.slice(1) }, opt)); return; } // nhiều rương: mở lần lượt
     const ds = []; if (ra.vang) ds.push(this.rIc({ vang: ra.vang })); if (ra.ngoc) ds.push(this.rIc({ ngoc: ra.ngoc }));
     for (const x of ra.the || []) ds.push('<span class="kt-r kt-r-the">' + OT.mini(x.id) + '<b>×' + x.n + '</b><small>' + this.ten(x.id) + '</small></span>');
     try { SND.nang(3); } catch (e) { }
@@ -198,29 +200,33 @@ const KTUI = {
   },
   // MỞ RƯƠNG 4 nhịp (REVIEW-VFX-93 §VI.H, tuvan/vfx/p1): chốt bật 0,28 s → khe sáng 0,28 s (rương VÀNG/THẦN 0,42 s) → nắp mở + bung
   //  → thẻ bay ra khỏi rương rồi lật 0,24 s/thẻ → tổng; chạm = bỏ qua. Trước đây lắc 0,9 s mới mở.
-  moRuongAnim(r, them) {
+  //  opt (gacha thu thập 09/11): { phu: hàm dựng lớp phủ (mặc định #kt-phu; HOME dùng #tt-phu, màn kết quả dùng lớp riêng), dong: data-act nút OK,
+  //  sau: rương mở tiếp (nhiều rương trong 1 phần thưởng) }. Thẻ chưa có → "NEW!"; thẻ Đỏ: quầng + rung riêng (sh-do).
+  moRuongAnim(r, them, opt) {
+    opt = opt || {};
     const giam = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    this._ruong = { r, b: 0, them };
-    const the = r.the.map((x, i) => '<span class="kt-lat b-' + x.bac + '" data-i="' + i + '"><img class="kt-lat-q" src="' + this.a(KTA.quang) + '" alt=""><img class="kt-lat-l" src="' + this.a(KTA.lung) + '" alt=""><span class="kt-lat-m">' + OT.mini(x.id) + '<b>×' + x.n + '</b></span></span>').join('');
-    const p = this.phu('<div class="kt-mr" data-act="kt-boqua"><div class="kt-mr-ru"><span class="kt-mr-fx"><img src="' + this.a(KTA.fx) + '" alt=""></span><img class="kt-mr-anh" src="' + this.a(KTA.ru[r.k]) + '" alt="">' + (KTA.khe ? '<img class="kt-mr-khe" src="' + this.a(KTA.khe) + '" alt="">' : '') + '</div>' +
-      '<b class="kt-phu-t">' + KTC.ruong[r.k].ten + '</b><div class="kt-mr-the">' + the + '</div><small class="kt-mr-cham">TAP TO SKIP</small>' +
+    const ten = r.ten || (KTC.ruong[r.k] || {}).ten || '';
+    const the = r.the.map((x, i) => '<span class="kt-lat b-' + x.bac + (x.moi ? ' sh-moi-the' : '') + (x.bac === 'do' ? ' sh-do' : '') + '" data-i="' + i + '"><img class="kt-lat-q" src="' + this.a(KTA.quang) + '" alt=""><img class="kt-lat-l" src="' + this.a(KTA.lung) + '" alt=""><span class="kt-lat-m">' + OT.mini(x.id) + '<b>×' + x.n + '</b>' + (x.moi && typeof SHUI !== 'undefined' ? SHUI.moi : '') + '</span></span>').join('');
+    const p = (opt.phu || ((h, c) => this.phu(h, c)))('<div class="kt-mr" data-act="kt-boqua"><div class="kt-mr-ru"><span class="kt-mr-fx"><img src="' + this.a(KTA.fx) + '" alt=""></span><img class="kt-mr-anh" src="' + this.a(KTA.ru[r.k] || KTA.ru.thuong) + '" alt="">' + (KTA.khe ? '<img class="kt-mr-khe" src="' + this.a(KTA.khe) + '" alt="">' : '') + '</div>' +
+      '<b class="kt-phu-t">' + ten + '</b><div class="kt-mr-the">' + the + '</div><small class="kt-mr-cham">TAP TO SKIP</small>' +
       '<div class="kt-mr-tong" hidden></div></div>', 'kt-mo');
+    this._ruong = { r, b: 0, them, opt, p };
     const mr = p.querySelector('.kt-mr');
-    const hiem = r.k !== 'thuong', T1 = giam ? 40 : 280, T2 = giam ? 40 : hiem ? 420 : 280;
+    const hiem = r.k !== 'thuong' && r.k !== 'tran', T1 = giam ? 40 : 280, T2 = giam ? 40 : hiem ? 420 : 280;
     mr.classList.add('chot'); try { SND.nut(); } catch (e) { }
     const lat = (i) => {
       const c = mr.querySelectorAll('.kt-lat'); if (!this._ruong || this._ruong.r !== r) return;
       if (i >= c.length) return this.tongRuong();
       c[i].classList.add('mo'); this._ruong.b = i + 1;
-      try { const b = r.the[i].bac; if (b === 'vang' || b === 'do') SND.nang(5); else SND.nut(); } catch (e) { }
-      this._lat = setTimeout(() => lat(i + 1), giam ? 60 : 240);
+      try { const b = r.the[i].bac; if (b === 'do') { SND.nang(6); mr.classList.remove('sh-rung'); void mr.offsetWidth; mr.classList.add('sh-rung'); } else if (b === 'vang') SND.nang(5); else SND.nut(); } catch (e) { }
+      this._lat = setTimeout(() => lat(i + 1), giam ? 60 : r.the[i].bac === 'do' ? 700 : 240); // Đỏ: dừng lâu hơn
     };
     this._lat = setTimeout(() => {
       if (!this._ruong || this._ruong.r !== r) return;
       mr.classList.remove('chot'); mr.classList.add('khe'); try { SND.nang(hiem ? 3 : 2); } catch (e) { }
       this._lat = setTimeout(() => {
         if (!this._ruong || this._ruong.r !== r) return;
-        mr.classList.remove('khe'); mr.classList.add('bung', 'bay'); this.el('kt-phu').querySelector('.kt-mr-anh').src = this.a(KTA.ruMo[r.k]);
+        mr.classList.remove('khe'); mr.classList.add('bung', 'bay'); mr.querySelector('.kt-mr-anh').src = this.a(KTA.ruMo[r.k] || KTA.ruMo.thuong);
         this._lat = setTimeout(() => lat(0), giam ? 50 : 360);
       }, T2);
     }, T1);
@@ -228,24 +234,29 @@ const KTUI = {
   boQua() {
     const x = this._ruong; if (!x) return;
     clearTimeout(this._lat);
-    const mr = this.el('kt-phu').querySelector('.kt-mr'); if (!mr) return;
+    const mr = x.p && x.p.querySelector('.kt-mr'); if (!mr) return;
     if (mr.querySelector('.kt-mr-tong:not([hidden])')) return;
     mr.classList.remove('lac', 'chot', 'khe'); mr.classList.add('bung', 'bay');
-    mr.querySelector('.kt-mr-anh').src = this.a(KTA.ruMo[x.r.k]);
+    mr.querySelector('.kt-mr-anh').src = this.a(KTA.ruMo[x.r.k] || KTA.ruMo.thuong);
     mr.querySelectorAll('.kt-lat').forEach(c => c.classList.add('mo'));
     this.tongRuong();
   },
   tongRuong() {
     const x = this._ruong; if (!x) return;
-    const mr = this.el('kt-phu').querySelector('.kt-mr'), t = mr.querySelector('.kt-mr-tong');
+    const mr = x.p.querySelector('.kt-mr'), t = mr.querySelector('.kt-mr-tong');
     const dem = {}; for (const c of x.r.the) dem[c.bac] = (dem[c.bac] || 0) + c.n;
     let h = '<div class="kt-mr-dem">' + TIER_LIST.filter(b => dem[b]).map(b => '<span class="b-' + b + '"><img src="' + this.a('ngoc_' + b) + '" alt="">' + TIERS[b].ten + ' ×' + dem[b] + '</span>').join('') + '</div>';
+    const moi = x.r.the.filter(c => c.moi).length; if (moi) h += '<small class="sh-moi-dem">NEW TURRETS: ' + moi + '</small>';
     if (x.r.pityV) h += '<small>Pity: Legendary guaranteed!</small>';
     if (x.r.pityD) h += '<small>Pity: Mythic guaranteed!</small>';
-    t.innerHTML = h + '<button class="hm-nut2 vang kt-ok" data-act="kt-phu-dong"><b>OK</b></button>';
+    const sau = (x.opt && x.opt.sau) || [];
+    if (!sau.length && x.them && (x.them.vang || x.them.ngoc)) h += '<div class="kt-nhan sh-them">' + (x.them.vang ? this.rIc({ vang: x.them.vang }) : '') + (x.them.ngoc ? this.rIc({ ngoc: x.them.ngoc }) : '') + '</div>'; // vàng/ngọc đi kèm rương
+    const ok = sau.length ? '<button class="hm-nut2 vang kt-ok" data-act="kt-ru-sau"><b>NEXT CHEST</b></button>' : '<button class="hm-nut2 vang kt-ok" data-act="' + ((x.opt && x.opt.dong) || 'kt-phu-dong') + '"><b>OK</b></button>';
+    t.innerHTML = h + ok;
     t.hidden = false; mr.classList.add('xong'); mr.removeAttribute('data-act');
     try { TBUI.capLuoi(); } catch (e) { }
   },
+  ruSau() { const x = this._ruong; if (!x || !x.opt || !x.opt.sau || !x.opt.sau.length) return; const o = Object.assign({}, x.opt, { sau: x.opt.sau.slice(1) }); clearTimeout(this._lat); this.moRuongAnim(x.opt.sau[0], x.them, o); },
   // vòng quay: quay tới ô o (ô o nằm dưới mũi tên ở đỉnh)
   quay(tra) {
     if (this._quay) return;
@@ -272,8 +283,9 @@ const KTUI = {
       case 'kt-mo': nut(); this.moTab(b.dataset.tab); break;
       case 'kt-dong': nut(); this.dong(); break;
       case 'kt-tab': nut(); this.moTab(b.dataset.tab); break;
-      case 'kt-phu-dong': if (this._ruong && !this.el('kt-phu').querySelector('.kt-mr-tong:not([hidden])')) { this.boQua(); break; } this.dongPhu(); this.ve(); break;
+      case 'kt-phu-dong': if (this._ruong && this._ruong.p && this._ruong.p.querySelector('.kt-mr') && !this._ruong.p.querySelector('.kt-mr-tong:not([hidden])')) { this.boQua(); break; } this.dongPhu(); this.ve(); break;
       case 'kt-boqua': this.boQua(); break;
+      case 'kt-ru-sau': nut(); this.ruSau(); break;
       case 'kt-tile': nut(); this.tiLe(b.dataset.k); break;
       case 'kt-sp': { const ra = KT.spMua(+b.dataset.i); if (ra) { this.ve(); this.nhan(ra); } else this.lac(b); break; }
       case 'kt-ru': { const r = KT.moRuong(b.dataset.k); if (r) { this.ve(); this.moRuongAnim(r); } else this.lac(b); break; }

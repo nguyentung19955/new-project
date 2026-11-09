@@ -130,7 +130,7 @@ const HD = {
     // xong hướng dẫn: hạ (hoặc vượt qua) trùm wave 10
     if (G.wave >= this.WAVE_TRUM && !G.laTrum && !G.quai.some(e => e.trum && !e.chet)) {
       this.st.xong = true; this.luu(); this.ketTut = true;
-      ketThuc(true, 'Tutorial cleared — Common and Rare turrets unlocked'); // rà phần đã bỏ: hết "mở cả 85 ụ" — sau hướng dẫn chỉ mở Trắng + Xanh (tientrinh.js)
+      ketThuc(true, 'Tutorial cleared — gift: Ice Blade joins your collection'); // rà phần đã bỏ: hết "mở cả 85 ụ" — sau hướng dẫn chỉ mở Trắng + Xanh (tientrinh.js)
       this.dang = false; this.an(); this.hienGon(false); this.boChi(); return;
     }
     if (!b) return;

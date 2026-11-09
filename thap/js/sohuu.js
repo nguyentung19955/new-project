@@ -45,10 +45,7 @@ const SHC = {
     24: { ten: 'Wild Cards', ds: ['tudo', 'pandora', 'cobac'] },
   },
   // nhãn nguồn kiếm (thẻ CHƯA CÓ) theo bậc — chỉ nêu nơi rơi, không nêu cách chơi
-  nguon: {
-    trang: 'Chests · Battle chest', xanh: 'Chests · Battle chest', tim: 'Gold Chest · Battle chest',
-    vang: 'Gold Chest · Event', do: 'Mythic Chest · Rare drop',
-  },
+  nguon: { trang: 'Any chest', xanh: 'Any chest', tim: 'Gold Chest', vang: 'Gold Chest · Event', do: 'Mythic Chest' },
 };
 
 const SH = {
@@ -107,6 +104,7 @@ const SH = {
   // ụ vừa vào bể rơi mà chưa báo (lên cấp / đạt wave 30 cho Đỏ) → đánh dấu đã báo
   baoMoi() {
     const h = this.st(), ra = [];
+    if (!this.dsCo().length) return ra; // chưa nạp danh sách ụ
     if (h.chuyen) { for (const id of this.dsCo()) if (this.mo(id)) h.bao[id] = 1; delete h.chuyen; return ra; }
     for (const id of this.dsCo()) if (!h.bao[id] && this.mo(id)) { h.bao[id] = 1; if (this.capMo(id) > 1) ra.push(id); }
     return ra.sort((a, b) => this.capMo(a) - this.capMo(b) || TIERS[THEBAI.bac(a)].thuTu - TIERS[THEBAI.bac(b)].thuTu);
@@ -138,4 +136,178 @@ const SHUI = {
   dsU(ds) { return '<span class="sh-ds">' + ds.map(id => '<span class="sh-u b-' + THEBAI.bac(id) + '">' + OT.mini(id) + '<small>' + this.ten(id) + '</small></span>').join('') + '</span>'; },
   // nhãn "NEW!" cho thẻ mới trong rương / túi trận
   moi: '<i class="sh-moi">NEW!</i>',
+
+  // lớp phủ MỞ RƯƠNG ở màn kết quả (Rương Trận + rương mốc/trùm vừa nhận)
+  phuKq(html, cls) {
+    const kq = document.getElementById('wrap'); if (!kq) return null; // trong #wrap, trên #ketqua (z 22) và mọi bảng giới thiệu trong trận
+    let p = document.getElementById('sh-phu');
+    if (!p) { p = document.createElement('div'); p.id = 'sh-phu'; kq.appendChild(p); }
+    p.className = 'kt-phu sh-phu ' + (cls || ''); p.innerHTML = '<div class="kt-phu-nen"></div><div class="kt-phu-tam">' + html + '</div>'; p.hidden = false;
+    try { OT.quet(p); } catch (e) { }
+    return p;
+  },
+  dongKq() { const p = document.getElementById('sh-phu'); if (p) { p.hidden = true; p.innerHTML = ''; } try { clearTimeout(KTUI._lat); KTUI._ruong = null; } catch (e) { } },
+  // Rương Trận ở ô REWARDS của màn kết quả: ảnh rương + nút OPEN; thẻ mới có "NEW!"
+  veKq(r) {
+    const d = document.querySelector('#ketqua .tb-kq'); if (!d || !r) return;
+    this._kq = r;
+    d.querySelectorAll('.tb-kq-t:not(.mh-kq-t)').forEach((e, i) => { const x = r.the[i]; if (x && x.moi && !e.querySelector('.sh-moi')) e.insertAdjacentHTML('beforeend', this.moi); });
+    if (!d.querySelector('.sh-kq-ru')) {
+      const h = d.querySelector('.tb-kq-h');
+      const b = '<button class="sh-kq-ru" data-act="sh-kq-mo" aria-label="Open battle chest"><img src="' + KTUI.a(KTA.ru.tran) + '" alt=""><b>OPEN</b></button>';
+      if (h) h.insertAdjacentHTML('afterbegin', b);
+    }
+  },
+  moKq() {
+    const r = this._kq; if (!r) return;
+    const tran = { k: 'tran', ten: 'BATTLE CHEST', the: r.the.map(x => ({ id: x.id, n: x.n, bac: x.bac || THEBAI.bac(x.id), moi: x.moi })).sort((a, b) => TIERS[a.bac].thuTu - TIERS[b.bac].thuTu) };
+    KTUI.nhan({ vang: r.vang, ngoc: 0, the: [], ru: [tran].concat(this._kqRu || []) }, '', { phu: (h, c) => this.phuKq(h, c), dong: 'sh-dong' });
+  },
 };
+
+(function () {
+  if (typeof KT === 'undefined' || typeof THEBAI === 'undefined' || typeof TT === 'undefined') return;
+  if (!KT.NGUON.includes('gift')) KT.NGUON.splice(KT.NGUON.length - 1, 0, 'gift');
+  // khởi tạo sau khi nạp danh sách ụ: chuyển bản lưu (người cũ giữ ụ) + đánh dấu nhóm đang mở là đã báo
+  const sanSang = () => { try { SH.st(); SH.baoMoi(); KT.luu(true); } catch (e) { console.error('SH', e); } };
+  if (typeof UI !== 'undefined' && UI.init) { const g = UI.init; UI.init = async function () { const r = await g.apply(this, arguments); sanSang(); try { UI.veChon(); } catch (e) { } return r; }; }
+  // gộp hồ sơ Firebase: sở hữu / đã báo / quà = OR
+  const gop = KT.gop;
+  KT.gop = function (o) {
+    let a = null, b = null; try { a = JSON.parse(JSON.stringify(SH.st())); b = o && o.kt && o.kt.sh; } catch (e) { }
+    const x = gop.apply(this, arguments);
+    try { const s = KT.doc(); if (!s.sh || typeof s.sh !== 'object') s.sh = a; SH.gop(a, b || null); KT.luu(true); } catch (e) { console.error('SH', e); }
+    return x;
+  };
+  // trang ụ: xem rồi → bỏ nhãn NEW
+  if (typeof UP !== 'undefined' && UP.mo) { const g = UP.mo; UP.mo = function (id) { try { const h = SH.st(); if (h.moi[id]) { delete h.moi[id]; KT.luu(true); } } catch (e) { } return g.apply(this, arguments); }; }
+  // HOME: số ụ ĐÃ CÓ trên nút bộ sưu tập
+  if (typeof HM !== 'undefined' && HM.veHome) {
+    const g = HM.veHome;
+    HM.veHome = function () { const x = g.apply(this, arguments); try { const e = document.getElementById('hm-bst-so'), d = SH.dem(); if (e && d.tong) e.textContent = d.co + '/' + d.tong + ' TURRETS'; } catch (er) { } return x; };
+  }
+  // ---- màn bộ bài / bộ sưu tập: lọc ĐÃ CÓ / CHƯA CÓ / CHƯA MỞ + xếp theo CẤP PHI CÔNG + đếm ----
+  if (typeof BOBAI !== 'undefined') {
+    const ap = BOBAI.ap;
+    BOBAI.ap = function () {
+      const x = ap.apply(this, arguments);
+      try {
+        const loc = SH.st().loc, luoi = document.getElementById('chon-luoi'); if (!luoi || loc === 'all') return x;
+        let tong = 0;
+        luoi.querySelectorAll('.luoi').forEach(g => {
+          let n = 0;
+          g.querySelectorAll('.c[data-id]').forEach(c => { if (!c.hidden && SH.tt(c.dataset.id) !== loc) c.hidden = true; if (!c.hidden) n++; });
+          g.hidden = !n; tong += n; const h = g.previousElementSibling; if (h && h.classList.contains('nhom')) h.hidden = !n;
+        });
+        let ko = document.getElementById('bb-trong');
+        if (!tong) { if (!ko) { ko = document.createElement('div'); ko.id = 'bb-trong'; luoi.appendChild(ko); } ko.textContent = 'No turret matches. Open FILTER and tap RESET.'; ko.hidden = false; }
+        else if (ko) ko.hidden = true;
+      } catch (e) { console.error('SH', e); }
+      return x;
+    };
+  }
+  if (typeof UI !== 'undefined' && UI.veChon) {
+    const vc = UI.veChon;
+    UI.veChon = function () {
+      if (this.xep !== 'cap') return vc.apply(this, arguments);
+      this.xep = 'bac'; let x; try { x = vc.apply(this, arguments); } finally { this.xep = 'cap'; }
+      try { // XẾP THEO CẤP PHI CÔNG: mỗi nhóm 1 tiêu đề "PILOT LV n · chủ đề · đã có x/y"
+        const luoi = document.getElementById('chon-luoi'); if (!luoi) return x;
+        luoi.querySelectorAll(':scope > .nhom, :scope > .luoi').forEach(e => e.remove());
+        const L = TT.cap(), ds = SH.dsCo(), con = new Set(ds), ten = (id) => (G.rosterMap[id] || {}).ten || id;
+        const caps = Object.keys(SHC.nhom).map(Number).sort((a, b) => a - b);
+        const nhom = caps.map(c => [c, SH.nhomCap(c)]);
+        const le = ds.filter(id => !SH.capMo(id)); if (le.length) nhom.push([0, le]);
+        for (const [c, rs] of nhom) {
+          if (!rs.length) continue; rs.forEach(id => con.delete(id));
+          const h = document.createElement('div'), mo = c && c <= L, co = rs.filter(id => SH.co(id)).length;
+          h.className = 'nhom sh-nh' + (mo ? '' : ' sh-nh-khoa'); h.style.setProperty('--m', mo ? '#ffd677' : '#8a93a6');
+          h.innerHTML = '<img class="nh-i" src="assets/ui_lv.png" alt=""><b>' + (c ? 'PILOT LV ' + c : 'OTHER') + '</b><span>' + (c ? SHC.nhom[c].ten + ' · ' : '') + co + '/' + rs.length + ' OWNED</span>';
+          luoi.appendChild(h);
+          const g = document.createElement('div'); g.className = 'luoi';
+          for (const id of rs.slice().sort((a, b) => TIERS[THEBAI.bac(a)].thuTu - TIERS[THEBAI.bac(b)].thuTu || ten(a).localeCompare(ten(b), 'en'))) g.appendChild(this.theChon(G.rosterMap[id]));
+          luoi.appendChild(g);
+        }
+        const ko = document.getElementById('bb-trong'); if (ko) luoi.appendChild(ko);
+        this.veBoChon();
+        BOBAI.ap(); TBUI.capLuoi(); TTUI.capLuoi();
+        requestAnimationFrame(() => luoi.querySelectorAll('.ten').forEach(e => fitText(e, 10.5, 7)));
+        if (typeof DKD !== 'undefined') DKD.ve();
+      } catch (e) { console.error('SH', e); }
+      return x;
+    };
+  }
+  if (typeof DKD !== 'undefined' && DKD.dem) {
+    const dm = DKD.dem;
+    DKD.dem = function () {
+      const x = dm.apply(this, arguments);
+      try { const nh = document.getElementById('dkd-nhan'), d = SH.dem(); if (nh) nh.innerHTML = '<b>OWNED</b> <span>' + d.co + '</span> · <b>UNLOCKED</b> <span>' + d.mo + '</span> · <b>TOTAL</b> <span>' + d.tong + '</span>'; } catch (e) { }
+      return x;
+    };
+  }
+  if (typeof HM !== 'undefined' && HM.moLoc) {
+    const ml = HM.moLoc;
+    HM.moLoc = function () {
+      const x = ml.apply(this, arguments);
+      try {
+        const tam = document.getElementById('hm-tam'), loc = SH.st().loc, chip = (k, t) => '<button class="hm-chip' + (loc === k ? ' on' : '') + '" data-act="sh-loc" data-k="' + k + '">' + t + '</button>';
+        const nh = [...tam.querySelectorAll('.hm-loc-nh')].find(e => e.textContent.trim() === 'SORT' || e.textContent.trim() === 'SẮP XẾP') || tam.querySelectorAll('.hm-loc-nh')[2];
+        if (nh && !tam.querySelector('[data-act="sh-loc"]')) {
+          const d = SH.dem();
+          nh.insertAdjacentHTML('beforebegin', '<div class="hm-loc-nh">COLLECTION</div><div class="hm-chips c2 sh-chips">' + chip('all', 'ALL') + chip('co', 'OWNED <small>' + d.co + '</small>') + chip('chua', 'NOT OWNED <small>' + (d.mo - d.co) + '</small>') + chip('khoa', 'LOCKED <small>' + (d.tong - d.mo) + '</small>') + '</div>');
+          const xep = nh.nextElementSibling; if (xep && !xep.querySelector('[data-k="cap"]')) { xep.insertAdjacentHTML('beforeend', '<button class="hm-chip' + (UI.xep === 'cap' ? ' on' : '') + '" data-act="hm-loc-xep" data-k="cap">PILOT LV</button>'); xep.classList.replace('c3', 'c2'); }
+        }
+        const v = tam.querySelector('.hm-cai2 .vang'); if (v) v.textContent = HM.soLoc();
+      } catch (e) { console.error('SH', e); }
+      return x;
+    };
+  }
+  // ---- màn kết quả: Rương Trận (mở bằng lật thẻ) + rương mốc / trùm vừa nhận ----
+  if (typeof TBUI !== 'undefined' && TBUI.veThuong) {
+    const vt = TBUI.veThuong;
+    TBUI.veThuong = function (k) { const x = vt.apply(this, arguments); try { SHUI._kqRu = []; const m = typeof KQ !== 'undefined' && KQ.m; SHUI.veKq(m && m._thuong); } catch (e) { console.error('SH', e); } return x; };
+  }
+  if (typeof KTUI !== 'undefined' && KTUI.veKetQua) {
+    const vk = KTUI.veKetQua;
+    KTUI.veKetQua = function (r) { const x = vk.apply(this, arguments); try { SHUI._kqRu = []; for (const g of (r && r.mh) || []) SHUI._kqRu.push(...((g.ra && g.ra.ru) || [])); } catch (e) { } return x; };
+  }
+  // giao diện anime B3 (ui-anime.js, UA): nhãn đếm + tiêu đề nhóm bậc theo SỞ HỮU (thay "PLAYABLE n" / "Unlocks at Pilot Level n" của khoá bậc cũ)
+  const uaBoc = () => {
+    if (typeof UA === 'undefined' || UA._sh) return; UA._sh = 1;
+    UA.dem = function () {
+      if (!this.bat) return;
+      const nh = document.getElementById('dkd-nhan'); if (!nh) return;
+      const d = SH.dem(), k = d.co + '/' + d.mo + '/' + d.tong;
+      if (nh.dataset.ua !== k || !nh.querySelector('i')) { nh.dataset.ua = k; nh.innerHTML = '<b>OWNED</b> <span>' + d.co + '</span> <i>·</i> <b>UNLOCKED</b> <span>' + d.mo + '</span> <i>·</i> <b>TOTAL</b> <span>' + d.tong + '</span>'; }
+    };
+    UA.nhom = function () {
+      if (!this.bat) return;
+      document.querySelectorAll('#chon-luoi > .nhom:not(.sh-nh)').forEach(h => {
+        let l = h.nextElementSibling; while (l && !l.classList.contains('luoi')) l = l.nextElementSibling;
+        const ds = l ? [...l.querySelectorAll('.c[data-id]')].map(c => c.dataset.id) : []; if (!ds.length) return;
+        const b = THEBAI.bac(ds[0]); if (h.dataset.uab !== b) h.dataset.uab = b;
+        const co = ds.filter(id => SH.co(id)).length, chu = co < ds.length ? co + '/' + ds.length + ' OWNED' : '';
+        let e = h.querySelector(':scope > em.ua-mo');
+        if (!chu) { if (e) e.remove(); h.classList.remove('ua-khoa'); return; }
+        if (!e) { e = document.createElement('em'); e.className = 'ua-mo'; h.appendChild(e); }
+        if (e._c !== chu) { e._c = chu; e.textContent = chu; }
+        h.classList.toggle('ua-khoa', co === 0);
+      });
+    };
+    try { UA.nhom(); UA.dem(); } catch (e) { }
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => setTimeout(uaBoc, 0)); else uaBoc();
+  if (typeof batDau === 'function') { const g = batDau; batDau = function () { try { SHUI.dongKq(); } catch (e) { } return g.apply(this, arguments); }; } // vào trận mới: đóng lớp Rương Trận
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest && e.target.closest('[data-act^="sh-"]'); if (!b || b.disabled) return;
+    const a = b.dataset.act; e.stopPropagation();
+    try { SND.nut(); } catch (er) { }
+    if (a === 'sh-kq-mo') SHUI.moKq();
+    else if (a === 'sh-dong') SHUI.dongKq();
+    else if (a === 'sh-loc') { SH.st().loc = b.dataset.k; KT.luu(true); BOBAI.ap(); HM.locLai(); }
+  });
+  // quà hướng dẫn (Ice Blade): tặng lặng lẽ khi đã xong / bỏ qua hướng dẫn — không bật bảng (tránh chồng bảng lên cấp); thẻ có nhãn NEW! trong bộ sưu tập
+  setInterval(() => {
+    try { const h = SH.st(); if (h.qua.hd || !TT.hdXong() || !G.roster || !G.roster.length) return; if (SH.tang('hd')) { KT.luu(true); TBUI.capLuoi(); TTUI.capLuoi(); } } catch (e) { }
+  }, 900);
+})();
