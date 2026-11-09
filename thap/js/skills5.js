@@ -6,11 +6,11 @@
 
 const sao7r = (T, ds) => ds[clamp(T.sao, 1, 7) - 1];
 const gdSao = (T) => (T.sao >= 7 ? 3 : T.sao >= 4 ? 2 : 1);
-// nạp kỹ năng chủ động (từ 3★) + AI / người chơi để quá 5–6 s thì tự dùng khi đáng
+// nạp kỹ năng chủ động (từ 3★) — ụ tự kích (game.js TU_KICH) nổ chiêu ngay khi đầy & đáng; 2 ụ bấm tay chờ chạm
 function napChuDong(G, B, T, dt, cd, sk) {
   if (T.sao < 3) { T.nap = 0; return; }
   T.nap = Math.min(1, T.nap + dt / cd);
-  if (T.nap >= 1) { T.napDay = (T.napDay || 0) + dt; if (!B.ai && T.napDay > 6 && sk.aiNen(G, B, T)) sk.chuDong(G, B, T); } else T.napDay = 0;
+  if (T.nap >= 1) { T.napDay = (T.napDay || 0) + dt; if (!B.ai && T.napDay > 6 && laTuKich(T.id) && sk.aiNen(G, B, T)) sk.chuDong(G, B, T); } else T.napDay = 0; // ụ bấm tay (Arcane Cascade): không tự dùng · ụ tự kích: game.js tuKichBan đã kích ngay khi đầy
 }
 
 // =====================================================================================================
@@ -463,8 +463,7 @@ SKILLS.ronglua = {
   // AI: lao khi có trùm, khi lò ≥ 200, hoặc đông quái và lò ≥ 100 · người chơi để đầy: chỉ tự lao khi có TRÙM (giữ lò là quyết định của người chơi)
   aiNen(G, B, T) {
     if (G.quai.some(E => E.trum && !E.chet && banDuocQuai(B, E))) return true;
-    if (!B.ai) return false;
-    const n = this.nhiet(T); return n >= 200 || (n >= 100 && dsMucTieu(B).filter(E => !E.chet).length >= 6);
+    const n = this.nhiet(T); // 09/11: tự kích cho mọi bàn (trước: người chơi chỉ tự phát khi có trùm) return n >= 200 || (n >= 100 && dsMucTieu(B).filter(E => !E.chet).length >= 6);
   },
   chuDong(G, B, T) {
     if (T.nap < 1 || T.sao < 3) return false;

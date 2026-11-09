@@ -107,7 +107,8 @@ function veGauge(ctx, T, S, al, R) {
   // Vòng DUY NHẤT quanh ụ = vòng xanh lá nạp chiêu (PX.vongHoi), chỉ khi ụ có chiêu nạp được (MV.coNap — cùng luật render.js cho ụ thường).
   const t = VX.t;
   ctx.save();
-  if (typeof MV !== 'undefined' ? MV.coNap(T) : (SKILLS[T.id] && SKILLS[T.id].chuDong && T.sao >= 3)) {
+  if (typeof MV !== 'undefined' && MV.tichTu) MV.tichTu(ctx, T, S, al, typeof REN !== 'undefined' && typeof REN.t === 'number' ? REN.t : t); // giờ vẽ (chạy cả khi tạm dừng) — cùng nhịp ụ thường // 09/11: TÍCH TỤ thay vòng xanh (motvong.js)
+  else if (typeof MV !== 'undefined' ? MV.coNap(T) : (SKILLS[T.id] && SKILLS[T.id].chuDong && T.sao >= 3)) {
     PX.vongHoi(ctx, T, T.nap, S * 0.41, al, t, !!(SKILLS[T.id] && SKILLS[T.id].chuDong)); // cùng cỡ/kiểu vòng của ụ thường (render.js)
   }
   ctx.restore(); ctx.globalAlpha = al; ctx.globalCompositeOperation = 'source-over';

@@ -3,6 +3,13 @@
 > Game merge tower-defense trong `thap/`. Luật game và bàn giao: `docs/demo-hop-tuong/ban-giao/BAN-GIAO.md`, luật code/hình: `thap/QUY-TAC-HINH.md`.
 > Mỗi session thêm một mục `## claude/<tên-nhánh> — …` ở CUỐI file (file gộp kiểu union, không xung đột).
 
+## claude/demo-hop-tuong — chỉ 2 ụ bấm tay (09/11)
+- **Chỉ Black Hole (`blackhole`) và Arcane Cascade / Thác Mana (`thacmana`) còn chạm ụ khi nạp đầy.** 9 ụ khác TỰ KÍCH khi đầy (sức mạnh giữ nguyên): Chrono Throne, Holy Halo (đã rời roster), Hive Queen, Leviathan, Genesis Core, Wyrm Engine, Cryo Reactor, Hydra (bỏ chạm thẻ khay — tự kích hoạt chung khi đông quái và đủ mana, luật AI cũ), Evolver (trứng cháy tự tái chế +20 mana). Danh sách ở `game.js` `TU_KICH` (hoặc cờ `SKILLS[id].tuKich`).
+- Điều kiện tự kích (mọi bàn, mỗi khung sau `capNhatU` — `tuKichBan`): nạp đầy + đủ 3★ + không đá/băng + `aiNen` (luật AI cũ: Chrono — trùm/quái gần cuối; Hive — ≥2 drone và ≥3 quái; Leviathan/Hydra — ≥6/5 quái hoặc trùm; Cryo — ≥5 quái trong tầm hoặc trùm; Wyrm — trùm, hoặc nhiệt ≥ 200 / ≥ 100 khi ≥ 6 quái (trước đây người chơi chỉ khi có trùm); Genesis — có ô kề trống, trừ 30 mana như cũ). `napChuDong` không còn tự dùng chiêu Arcane Cascade sau 6 s.
+- Online tất định: tự kích chạy trong mô phỏng ở cả hai máy (chỉ trạng thái mô phỏng, không Math.random / giờ thật); `G._tuKich` → dongbo.js không gửi gói 'cd'/'hy'; gói 'cd'/'hy' của ụ tự kích bị bỏ qua (không kích đôi). Màn demo kỹ năng giữ mốc nổ theo kịch bản, không vẽ tay chạm.
+- **Bỏ vòng xanh nạp chiêu + icon chạm** cho mọi ụ có chiêu nạp. Thay bằng **TÍCH TỤ** trên thân ụ (`MV.tichTu`, motvong.js): lõi sáng dần theo màu ụ, hạt năng lượng hút vào tâm dày dần (≤ 9 hạt), đập nhịp khi ≥ 85%, đầy = "căng đầy" (lõi đập đều, hạt xoáy quanh — ụ bấm tay tự lộ là bấm được), lúc ra chiêu = XẢ (loé + sóng toả 0.45 s). Chỉ ảnh PNG (fx_cham_trang / fx_vong_mong tô màu), nhiễu theo id ụ + thời gian. Giữ đường vẽ dự phòng (vòng cũ khi thiếu MV). ~0.7 ms/khung cho 15 ụ đang tích.
+- Chữ: mô tả / mốc sao / demo / bảng ụ của ụ tự kích đổi "TAP when full" → "AUTO when full" (bản Việt "tự kích khi đầy", sinh kèm từ khoá cũ — `MV.doiChu`). Dải xem nhanh: "Lõi sáng: tích tụ …". Kiểm: `node tools/thap-kt-tu-kich.js`; ảnh: `tools/thap-chup-tichtu.js`.
+
 ## claude/demo-hop-tuong — TURRET MERGE (thap/): ảnh ụ súng ChatGPT + hoạt ảnh "juicy" (04/11)
 - Ụ súng dùng ảnh `thap/assets/<id>_de.png` (đế) + `<id>_nong.png` (đầu súng, nòng hướng phải, xoay quanh tâm ảnh); đầu súng chuẩn hoá theo vành đế bằng số đo từng ảnh (`ART` trong render.js); hình vẽ code chỉ còn làm dự phòng.
 - Sao = chấm kiểu mặt xúc xắc 1–7 trên vành đế (chấm giữa nằm trên tâm đầu súng). Bóng tiếp xúc + bóng đầu súng, ánh sáng cố định từ trên-trái.

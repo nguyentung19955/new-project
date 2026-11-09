@@ -103,7 +103,7 @@ const HB = {
     else if (kn) kn._lev = null;
     // Evolver: dòng kỹ năng = giải thích trứng sống (giây còn lại / trứng cháy chạm +20 mana) — trước chỉ "Does not shoot."
     const EV = X && X.T && X.T.id === 'tienhoa' && G.ban[X.T.ban] && G.ban[X.T.ban].t[X.T.o] === X.T ? X.T : null;
-    if (kn && EV) { const S = SKILLS.tienhoa, s = S.chay(EV) ? 'Burnt egg: tap it for +' + S.MANA + ' mana' : 'Hatches in ' + Math.ceil(S.con(EV)) + 's → +1★ turret · 7★ burns: tap +' + S.MANA + ' mana';
+    if (kn && EV) { const S = SKILLS.tienhoa, s = S.chay(EV) ? 'Burnt egg: recycles itself for +' + S.MANA + ' mana' : 'Hatches in ' + Math.ceil(S.con(EV)) + 's → +1★ turret · 7★ burns: auto +' + S.MANA + ' mana'; // 09/11: trứng cháy tự tái chế (game.js TU_KICH)
       if (kn._ev !== s) { kn._ev = s; kn.textContent = s; } }
     else if (kn) kn._ev = null;
     // Prism Thief HỢP THỂ: dòng kỹ năng = mặt nạ 4 màu sống (số hợp thể, +% ST, cộng dồn) thay chữ chung của ụ đơn (skills7.js)

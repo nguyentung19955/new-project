@@ -129,7 +129,7 @@ function upCheDo(id) {
   if (co) L.push(['Co-op', upSC(co[1].trim()) || 'Helps your ally.']);
   if (so) L.push(['Solo', upSC(so[1].trim())]);
   if (!L.length) L.push(['All modes', 'Works the same in solo, co-op and PvP.']);
-  if (r && r.bac === 'do') L.push(['Mythic', 'Max 1 Mythic per deck.' + (sk.chuDong ? ' Tap it on the board when charged to fire its active skill (some unlock it at 3★).' : '')]);
+  if (r && r.bac === 'do') L.push(['Mythic', 'Max 1 Mythic per deck.' + (sk.chuDong ? (typeof laTuKich === 'function' && laTuKich(id) ? ' Its active skill fires by itself when charged (some unlock it at 3★).' : ' Tap it on the board when charged to fire its active skill (only Black Hole and Arcane Cascade; others fire by themselves).') : '')]);
   if (sk.vai === 'tc') L.push(['Deck tip', 'Take at least 2 attack turrets.']);
   return L;
 }

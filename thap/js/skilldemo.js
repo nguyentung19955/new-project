@@ -575,7 +575,7 @@ SD.tick = function (dt) {
     const T = this.T, sk = SKILLS[this.id];
     if (T && B.t[T.o] === T && sk.chuDong && !sdKhoa()) {
       T.nap = 1; try { sk.chuDong(G, B, T); } catch (e) { }
-      const c = B.o[T.o]; if (!sk.theKich) this.tay = { x: c.x, y: c.y, t0: this.t, keo: null }; // Hydra: kỹ năng bật từ THẺ khay, không chạm ụ
+      const c = B.o[T.o]; if (!sk.theKich && !(typeof laTuKich === 'function' && laTuKich(this.id))) this.tay = { x: c.x, y: c.y, t0: this.t, keo: null }; // ụ tự kích: không vẽ tay chạm // Hydra: kỹ năng bật từ THẺ khay, không chạm ụ
     }
   }
   if (ks.them) ks.them.forEach(([tt, fn], i) => { if (!this.themXong[i] && this.t >= tt) { this.themXong[i] = true; try { this.voiDoi(() => fn(B, this.D, this.T)); } catch (e) { console.error(e); } } });
@@ -805,7 +805,7 @@ SD.cauChu = function () {
   const ks = this.ks, T = this.T || {}; const s = this.sao;
   const c = ks.c[this.cIdx]; if (!c) return null;
   let v = c[1]; if (typeof v === 'function') { try { v = v(T, T.sao || s); } catch (e) { v = ''; } }
-  if (ks.cham && ks.cham.includes(c[0]) && sdKhoa()) v = 'Tap skill unlocks at 3★';
+  if (ks.cham && ks.cham.includes(c[0]) && sdKhoa()) v = typeof laTuKich === 'function' && laTuKich(SD.id) ? 'Auto skill unlocks at 3★' : 'Tap skill unlocks at 3★';
   return { chu: sdSC(v), t0: c[0], dau: c[2] && c[2].dau };
 };
 SD.mocChu = function () { // mốc sao đã mở ở sao đang xem (cuối vòng)
@@ -856,5 +856,13 @@ SD.veChu = function (x, now) {
 };
 
 // ===================================================== khởi động trong iframe =====================================================
+// 09/11 (chỉ 2 ụ bấm tay): kịch bản các ụ TỰ KÍCH — chữ "Tap…" → tự kích (MV.doiChu); mốc 'cham' vẫn là lúc chiêu nổ trong demo
+if (typeof MV !== 'undefined' && MV.doiChu && typeof laTuKich === 'function') {
+  const d = (v) => (typeof v === 'function' ? function () { return MV.doiChu(v.apply(this, arguments)); } : MV.doiChu(v));
+  for (const id in SD_K) if (laTuKich(id) && SD_K[id].c) SD_K[id].c = SD_K[id].c.map(c => { const n = c.slice(); n[1] = d(c[1]); return n; });
+  for (const id in SD_GD) if (laTuKich(id) && Array.isArray(SD_GD[id])) SD_GD[id] = SD_GD[id].map(d);
+  for (const id in SD_MO) if (laTuKich(id)) SD_MO[id] = d(SD_MO[id]);
+  for (const k of Object.keys(SD_MOC_NGAN)) { const k2 = MV.doiChu(k); if (k2 !== k) SD_MOC_NGAN[k2] = MV.doiChu(SD_MOC_NGAN[k]); }
+}
 SD.moc();
 window.SD = SD;
