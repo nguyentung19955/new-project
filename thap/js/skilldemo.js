@@ -204,9 +204,11 @@ const SD_K = {
   nemesis: { q: Q.trum('janus', 99, 40).concat(Q.hang(2, 210, 40, 3)), c: [[0.2, 'Every 10 hits: a VERDICT'], [2.4, 'More elites or bosses: +damage forever', { ev: 'hit', cham: 0.5 }]] },
   // Lucky Slot (jackpot.js, máy xèng 3 ô): ụ giữa ra 3 quả khác nhau → tự quay lại → cặp DƯA (+1); 4,4 s Lucky Slot thứ 2 xuất hiện → 3 NHO = JACKPOT
   //   (chuỗi ép qua G._cbEp — clip, không đổi luật trận)
-  cobac: { kieu: 'tc', q: Q.hang(5, 180, 40, 8), truoc: (T, B) => { if (B) { B.cb = [0, 0, 0]; B.cbN = 0; B.cbV = null; } G._cbEp = [[[0, 1, 2], [1, 1, 0]], [[2, 2, 2]]]; if (T) T.cbS = 0; },
-    them: [[4.4, (B, D, T) => { if (!T || B.t[8]) return; const N = sinhU(taoU(B, 'cobac', T.sao, 8)); N.goc = -Math.PI / 2; B.t[8] = N; VX.trieu(N); }]],
-    c: [[0.2, 'Spins 3 fruit reels when it appears'], [1.95, 'No match: it spins again'], [3.8, 'A pair: +1 point to that fruit', { cham: 0.5 }], [4.6, 'Orange = damage · Watermelon = speed · Grape = crit damage'], [6.35, '3 of a kind: JACKPOT! +2 to all fruits', { cham: 0.6 }], [7.6, 'Every Lucky Slot shares the points']], dai: 9 },
+  //   8,2 s: cả 3 quả đạt CB.TIA[0] → 2 tia · 10,2 s: đạt CB.TIA[1] → 3 tia (ép điểm cho clip; quái đi tiếp từ 7,4 s)
+  cobac: { kieu: 'tc', q: Q.hang(5, 180, 40, 8).concat(Q.dong(10, 0.35, 7, 'bo', 7.4)), truoc: (T, B) => { if (B) { B.cb = [0, 0, 0]; B.cbN = 0; B.cbV = null; } G._cbEp = [[[0, 1, 2], [1, 1, 0]], [[2, 2, 2]]]; if (T) T.cbS = 0; },
+    them: [[4.4, (B, D, T) => { if (!T || B.t[8]) return; const N = sinhU(taoU(B, 'cobac', T.sao, 8)); N.goc = -Math.PI / 2; B.t[8] = N; VX.trieu(N); }],
+      [8.2, (B) => { B.cb = [CB.TIA[0], CB.TIA[0], CB.TIA[0]]; B.cbV = B.cb.slice(); }], [10.2, (B) => { B.cb = [CB.TIA[1], CB.TIA[1], CB.TIA[1]]; B.cbV = B.cb.slice(); }]],
+    c: [[0.2, 'Spins 3 fruit reels when it appears'], [1.95, 'No match: it spins again'], [3.8, 'A pair: +1 point to that fruit', { cham: 0.5 }], [4.6, 'Orange = damage · Watermelon = speed · Grape = crit damage'], [6.35, '3 of a kind: JACKPOT! +2 to all fruits', { cham: 0.6 }], [7.0, 'Every Lucky Slot shares the points'], [8.2, () => 'All 3 fruits at ' + CB.TIA[0] + ': 2 beams', { cham: 0.5 }], [10.2, () => 'All 3 fruits at ' + CB.TIA[1] + ': 3 beams', { cham: 0.5 }]], dai: 12 },
   docton: { q: Q.dong(8, 0.5, 4), them: [[4.2, (B) => { const N = sinhU(taoU(B, 'lien', SD.sao, 8)); B.t[8] = N; VX.trieu(N); }]], c: [[0.2, 'Alone: shoots ×2 faster'], [4.2, 'A Neighbour stops the bonus', { cham: 0.6 }]] },
   thaukinh: { kieu: 'ht', may: [1.8, 3.4, 'ke'], q: Q.hang(5, 200, 30, 8), c: [[0.2, 'Neighbours’ crits hit harder'], [1.8, 'Crits go through enemies', { cham: 0.5 }]] },
   nhieusong: { kieu: 'ghep', doi: [[4, 'canon', 3], [9, 'tia', 4], [14, 'set', 3]], c: [[0.2, 'Merge two Signal Jammers'], [2.5, 'Rival turrets get jammed', { cham: 0.7 }], [3.6, 'Jammed: −40% fire rate']] },
@@ -381,7 +383,7 @@ const SD_MO = {
   cauvong: (T) => 'Neighbours +' + Math.round(SKILLS.cauvong.k(T) * 100) + '% vs enemies on it',
   ngaithoigian: (T) => 'Enemies slow up to ' + Math.round(SKILLS.ngaithoigian.sMax(T) * 100) + '%',
   hydra: (T) => T.sao + (T.sao > 1 ? ' heads' : ' head') + ', ' + Math.round(SKILLS.hydra.vien(T) * 100) + '% damage each',
-  cobac: () => 'Pair +1 · 3 of a kind: JACKPOT +2 all',
+  cobac: () => 'Pair +1 · 3 of a kind: JACKPOT +2 all · all fruits ' + CB.TIA[0] + '/' + CB.TIA[1] + ': 2/3 beams',
   chuato: (T) => 'Up to ' + T.sao + ' drones',
   leviathan: () => 'ABYSS: +4% damage each, no cap',
   khoisinh: (T) => '+1★ to a neighbour every ' + SKILLS.khoisinh.g(T) + 's',
