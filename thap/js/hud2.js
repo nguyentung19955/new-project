@@ -174,6 +174,7 @@ const HUD2 = {
         //   7★ (người dùng 'Vàng viền đỏ đi'): 1 sao VÀNG to (hh_sao1) VIỀN ĐỎ + quầng sáng; nhịp sáng vẽ ở REN.veHuyHieu.
         const E = 1.7, k = this.s * this.dpr, N = Math.max(8, Math.round(d * E * k)), key = 'hh7|' + n + '|' + N;
         let c = this.cGet(key); if (c) return c;
+        if (this.choRong && this.choRong(key)) return null;
         c = document.createElement('canvas'); c.width = c.height = N;
         const x = this.c2d(c), q = N / (d * E), mw = d * 1.6 * q, mh = d * (n >= 7 ? 0.68 : n === 1 ? 0.5 : 1.0) * q, SAO_PX = [0, 0, 85, 60, 85, 55, 52, 0][Math.max(1, Math.min(7, n | 0))];
         // cỡ 1 sao: hàng đơn (2–4★) 0.46d · 2 hàng (5★, 6★) 0.38d cho thấp lại · 7★ cao 0.68d (REN.saoDay: đáy trên bàn)
@@ -190,6 +191,7 @@ const HUD2 = {
           x.drawImage(t, X0, Y0);
         } else this.veNho(x, sa, 0, 0, sa.width, sa.height, X0, Y0, w, h);
         c._E = E; c._hh = h / (q * d); c._v7 = n >= 7; // _hh: cao hàng sao (đơn vị d) cho REN.veHuyHieuTren
+        if (this.laRong && this.laRong(c) && this.boRong(key)) { c.width = c.height = 0; return null; } // sửa gấp 09/11: dựng ra rỗng (iPhone hết bộ nhớ canvas) → không giữ, thử lại
         return this.cSet(key, c);
       }
       const anh = this.img(n >= 7 ? 'h2_sao_sang' : 'h2_sao');

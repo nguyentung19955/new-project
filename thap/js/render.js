@@ -57,7 +57,34 @@ const REN = {
     if (this._cachePx > this.nganSach() || Object.keys(this.cache).length > 900) { this._cacheCu = this.cache; this.cache = {}; this._cachePx = c.width * c.height; }
     return (this.cache[key] = c);
   },
-  donCache() { this.cache = {}; this._cacheCu = {}; this._cachePx = 0; if (this._nongCo) this._nongCo.clear(); },
+  donCache() { this.cache = {}; this._cacheCu = {}; this._cachePx = 0; if (this._nongCo) this._nongCo.clear(); if (this._rongDs) this._rongDs.clear(); },
+  // ---------- ẢNH DỰNG RA RỖNG (sửa gấp 09/11 — iPhone: Ember / Cổng Ấp Nở mất thân + đầu, chỉ còn vòng/nhãn) ----------
+  // Safari iOS: vượt trần tổng bộ nhớ canvas → canvas mới vẫn có ngữ cảnh nhưng lệnh vẽ KHÔNG có tác dụng; chép ảnh chưa giải mã → trong suốt.
+  // Ảnh rỗng đó từng được giữ VĨNH VIỄN (REN.cache / REN.anh._cv) → ụ mất hình tới khi mở lại app.
+  // Nay: ảnh chép / thân / đầu / bóng / viền / huy hiệu sao dựng xong kiểm 1 LẦN (thu về 16×16, đọc alpha). Rỗng → không giữ, trả null
+  // (đường "đang tải" như cũ), dựng lại lùi dần 0,5 → 8 s. Quá RONG_MAX lần (~5 phút) thì thôi. ?debug&log=1 in [rong]; REN.rongN đếm.
+  rongN: 0, _rongDs: new Map(), RONG_MAX: 40,
+  laRong(c) {
+    if (!c || !c.width || !c.height || typeof document === 'undefined') return false;
+    try {
+      let k = this._rk;
+      if (!k) { const t = document.createElement('canvas'); t.width = t.height = 16; k = this._rk = t.getContext('2d', { willReadFrequently: true }); if (!k) return false; }
+      k.setTransform(1, 0, 0, 1, 0, 0); k.globalAlpha = 1; k.globalCompositeOperation = 'source-over'; k.clearRect(0, 0, 16, 16);
+      k.drawImage(c, 0, 0, 16, 16);
+      k.fillStyle = '#fff'; k.fillRect(15, 15, 1, 1); // vetay-ok: kiểm — điểm mốc: canvas kiểm tự hỏng thì không kết luận
+      const p = k.getImageData(0, 0, 16, 16).data;
+      if (p[1023] === 0) return false;
+      for (let i = 3; i < 1020; i += 4) if (p[i] > 0) return false;
+      return true;
+    } catch (e) { return false; }
+  },
+  choRong(key) { const r = this._rongDs.get(key); return !!r && r.n <= this.RONG_MAX && performance.now() < r.t; },
+  // ghi 1 lần dựng rỗng; true = bỏ ảnh này (còn trong số lần thử), false = đã thử quá nhiều → chấp nhận
+  boRong(key) {
+    const r = this._rongDs.get(key) || { n: 0, t: 0 }; r.n++; r.t = performance.now() + Math.min(8000, 500 * 2 ** Math.min(4, r.n - 1)); this._rongDs.set(key, r);
+    this.rongN++; if (G.debug && G.debug.log) console.warn('[rong]', key, r.n, JSON.stringify(this.boNho()));
+    return r.n <= this.RONG_MAX;
+  },
   // Độ phân giải vẽ = đúng mật độ điểm ảnh thật của máy (tối đa 3×). Trước đây kẹp 2× → máy 3× (iPhone, nhiều Android)
   // phải phóng ảnh 1.5× → mọi hình mềm nhoè, viền răng cưa. Máy yếu (khung > 18 ms kéo dài) tự lùi về 2×.
   coLai() {
@@ -201,10 +228,13 @@ const REN = {
     if (a._cv) return a._cv;
     if (!(a.complete && a.naturalWidth && !a._loi)) return null;
     // chép sang canvas 1 lần: vẽ từ canvas không đụng bộ nhớ đệm giải mã ảnh của trình duyệt (bị dọn → giải mã lại mỗi khung)
+    const kr = 'img|' + ten; // mọi ảnh chép sang canvas đều kiểm (1 lần / ảnh — rẻ hơn chính lần chép)
+    if (this.choRong(kr)) return null; // bản chép trước bị rỗng: đợi tới lượt thử lại
     const c = document.createElement('canvas'); c.width = a.naturalWidth; c.height = a.naturalHeight;
     const x = c.getContext('2d');
     if (!x) { c.width = c.height = 0; return a; } // hết trần bộ nhớ canvas: vẽ thẳng từ ảnh còn hơn trả null
     this.min(x).drawImage(a, 0, 0);
+    if (this.laRong(c)) { c.width = c.height = 0; return this.boRong(kr) ? null : a; } // chép ra rỗng (chưa giải mã / hết bộ nhớ canvas): KHÔNG giữ; thử quá nhiều → vẽ thẳng từ ảnh
     // bỏ đối tượng Image (bản giải mã của trình duyệt) → chỉ còn 1 bản điểm ảnh trong bộ nhớ thay vì 2
     a.onload = a.onerror = null;
     this.anh[ten] = { _cv: c, complete: true, naturalWidth: c.width, naturalHeight: c.height };
@@ -250,6 +280,7 @@ const REN = {
       const b = this.co(ten, px, ''); if (!b) return null;
       return this.cSet(key, this.toBien(b, bien));
     }
+    if (this.choRong(key)) return null;
     const a = this.img(ten);
     if (!a) return null;
     const w = a.width, h = a.height, nw = Math.max(2, Math.round(n * w / Math.max(w, h))), nh = Math.max(2, Math.round(n * h / Math.max(w, h)));
@@ -257,6 +288,7 @@ const REN = {
     const x = this.c2d(c);
     if (bien === 'den') { x.filter = 'blur(' + Math.max(1, n / 40) + 'px)'; this.veNho(x, a, 0, 0, w, h, 0, 0, nw, nh); x.filter = 'none'; x.globalCompositeOperation = 'source-in'; x.fillStyle = 'rgba(0,0,0,.55)'; x.fillRect(0, 0, nw, nh); } // vetay-ok: png (bóng = ảnh tô đen)
     else this.veNho(x, a, 0, 0, w, h, 0, 0, nw, nh);
+    if (this.laRong(c) && this.boRong(key)) { c.width = c.height = 0; return null; } // dựng ra rỗng: không giữ (vẽ vòng tải, thử lại sau)
     return this.cSet(key, c);
   },
   // bản trắng (source-in) / xám (độ sáng) của 1 canvas đã thu nhỏ
@@ -721,10 +753,12 @@ const REN = {
     const cv = this.cv; let L = this._lop;
     if (!L) { L = this._lop = document.createElement('canvas'); this._lopX = L.getContext('2d'); }
     const x = this._lopX;
-    if (L.width !== cv.width || L.height !== cv.height) { L.width = cv.width; L.height = cv.height; this.min(x); x.lineCap = 'round'; x.lineJoin = 'round'; }
     // chỉ dùng dải trên của canvas tới hết đường + lề (hiệu ứng nằm trên đường/bàn; dải thẻ bài phía dưới không cần) → bớt điểm ảnh xoá/đổ mỗi khung
     if (this._lopD !== G.duong) { this._lopD = G.duong; let my = 0; for (const p of G.duong) for (const q of p.pts) my = Math.max(my, q.y !== undefined ? q.y : q[1]); this._lopY = my > 0 ? my + 90 : H; }
-    this._lopH = Math.min(L.height, Math.ceil((this._lopY + 10) * this.s * this.dpr));
+    // sửa gấp 09/11 (bộ nhớ canvas iPhone): lớp chỉ CAO bằng dải được đổ lên (trước: cả màn, phần dưới không bao giờ dùng) → hình y hệt, bớt điểm ảnh
+    const lh = Math.min(cv.height, Math.ceil((this._lopY + 10) * this.s * this.dpr));
+    if (L.width !== cv.width || L.height !== lh) { L.width = cv.width; L.height = lh; this.min(x); x.lineCap = 'round'; x.lineJoin = 'round'; }
+    this._lopH = lh;
     x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; x.globalCompositeOperation = 'source-over'; x.clearRect(0, 0, L.width, this._lopH);
     x.setTransform(this.ctx.getTransform());
     return x;
@@ -1052,6 +1086,7 @@ const REN = {
   dauBong(ten, D, da) {
     const k = this.s * this.dpr, n = Math.max(2, Math.round(D * k)), key = 'db|' + ten + '|' + n + '|' + (da ? 1 : 0);
     let c = this.cGet(key); if (c) return c;
+    if (this.choRong(key)) return null;
     const a = this.co(ten, D, da ? 'xam' : ''); if (!a) return null;
     const pad = Math.ceil(n * 0.12), N = n + pad * 2;
     c = document.createElement('canvas'); c.width = c.height = N;
@@ -1060,6 +1095,7 @@ const REN = {
     x.globalCompositeOperation = 'source-in'; x.fillStyle = 'rgba(0,0,0,.6)'; x.fillRect(0, 0, N, N); // vetay-ok: png (bóng đầu súng = ảnh tô đen)
     x.globalCompositeOperation = 'source-over'; x.drawImage(a, ox, oy);
     c.sc = N / n;
+    if (this.laRong(c) && this.boRong(key)) { c.width = c.height = 0; return null; } // rỗng → veDauLop vẽ bản không bóng (REN.co)
     return this.cSet(key, c);
   },
   // thân ụ dựng sẵn: BỆ CHUNG trung tính (de_chung.png, mọi ụ như nhau) + viên ngọc độ hiếm nhỏ ở mép bệ.
@@ -1083,6 +1119,7 @@ const REN = {
     const vb = rieng && this.VIEN_ON ? this.vienBac(vId, T.bac, da) : null, vCho = vb === 0; // 0 = ảnh viền đang tải → vẽ tạm không viền, không giữ cache
     const k = this.s * this.dpr, n = Math.round(S * 1.5 * k), key = 'than|' + (rieng || '') + '|' + T.bac + '|' + (da ? 1 : 0) + '|' + n + (bong ? '|b' : '') + '|' + km + (lbVe ? '|lb' + lbVe : '');
     let c = vCho ? null : this.cGet(key); if (c) return c;
+    if (this.choRong(key)) return null; // lần dựng trước ra rỗng: đợi tới lượt thử lại
     let de = da ? this.banXam(ten) : this.img(ten);
     if (!de && !(this.anh[ten] && this.anh[ten]._loi)) return null; // còn đang tải
     if (!de) return null; // KHÔNG vẽ bệ code (đang tải → vòng xoay PNG)
@@ -1099,6 +1136,7 @@ const REN = {
     const lbCho = !!lbVe && !CM.veDe(x, this, lbVe, SD, da); // mũi tên sáng theo hướng (ảnh PNG) — ảnh chưa tải: vẽ tạm, chưa giữ đệm
     // (bỏ vòng màu khoá vẽ code quanh bệ — QUY-TAC-HINH 1/4; nhận diện = biểu tượng vai trò PNG góc ô)
     // (BỎ vòng bậc tier_ring_<bac> quanh bệ — người dùng 2026-11-06: đầu ụ đã thể hiện bậc; mọi chế độ / bóng kéo / bảng kết quả đều qua hàm này)
+    if (this.laRong(c) && this.boRong(key)) { c.width = c.height = 0; return null; } // thân dựng ra rỗng (iPhone hết bộ nhớ canvas): không giữ
     return vCho || lbCho ? c : this.cSet(key, c);
   },
   // VIỀN BẬC: <id>_vien.png (trắng, vát sẵn — tools/thap-cat-umod.py) tô màu bậc 1 lần (multiply giữ vát kim loại) → giữ trong REN.anh như DOTPHA.tenVong.
@@ -1108,6 +1146,7 @@ const REN = {
   vienBac(id, bac, da) {
     const b = da || !this.MAU_VIEN[bac] ? 'trang' : bac, k = id + '_vien~' + b;
     const co = this.anh[k]; if (co) return co._cv;
+    if (this.choRong(k)) return 0;
     const a = this.img(id + '_vien'); if (!a) return this.anh[id + '_vien'] && this.anh[id + '_vien']._loi ? null : 0;
     if (typeof document === 'undefined') return null;
     const c = document.createElement('canvas'); c.width = a.naturalWidth || a.width; c.height = a.naturalHeight || a.height; const x = c.getContext('2d'); if (!x) return null;
@@ -1116,6 +1155,7 @@ const REN = {
     x.globalCompositeOperation = 'destination-in'; x.drawImage(a, 0, 0); // giữ đúng alpha ảnh viền
     if (b === 'vang' || b === 'do') { x.globalCompositeOperation = 'lighter'; x.globalAlpha = 0.22; x.drawImage(a, 0, 0); x.globalAlpha = 1; } // ánh kim
     x.globalCompositeOperation = 'source-over';
+    if (this.laRong(c) && this.boRong(k)) { c.width = c.height = 0; return 0; } // viền tô ra rỗng: coi như đang tải (không giữ)
     c.dw = c.width - 24; // cạnh ảnh bệ gốc (viền = bệ + 12 px mỗi phía — VIEN_PAD của tools/thap-cat-umod.py)
     this.anh[k] = { _cv: c, complete: true, naturalWidth: c.width, naturalHeight: c.height }; if (this.CO_DINH) this.CO_DINH.add(k);
     return c;
@@ -1127,6 +1167,7 @@ const REN = {
     if (!anh) return null; // chưa tải: không vẽ lục giác code
     const k = this.s * this.dpr, N = Math.max(8, Math.round(d * 1.5 * k)), key = 'hh2|' + n + '|' + N + (anh ? '|a' : '');
     let c = this.cGet(key); if (c) return c;
+    if (this.choRong(key)) return null;
     c = document.createElement('canvas'); c.width = c.height = N;
     const x = this.c2d(c), q = N / (d * 1.5); x.scale(q, q); x.translate(d * 0.75, d * 0.75);
     const R = d / 2;
@@ -1142,6 +1183,7 @@ const REN = {
       x.font = '800 ' + f + 'px ' + FONT.display; x.textAlign = 'center'; x.textBaseline = 'middle';
       x.lineWidth = R * 0.22; x.strokeStyle = '#05070a'; x.strokeText(n, 0, R * 0.09);
       x.fillStyle = '#fff6df'; x.fillText(n, 0, R * 0.09);
+      if (this.laRong(c) && this.boRong(key)) { c.width = c.height = 0; return null; } // huy hiệu sao dựng ra rỗng: không giữ
       return this.cSet(key, c);
     }
   },
