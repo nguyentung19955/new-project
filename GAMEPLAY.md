@@ -704,3 +704,10 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 ## claude/demo-hop-tuong — RNG có hạt cho xác suất trong kỹ năng (10/11)
 - Đổi Math.random → `rngLuat(B, muối, ô)` (tất định online): Súng Bão nảy (31), Xúc Xắc chí mạng + cuộn 3–300% (37), Máy Chém giết ngay (41), Mìn chọn chỗ + mìn sao (43), Cửu Vĩ thêm đuôi 5★ (47).
 - Còn Math.random trong luật (chưa sửa — đụng lõi): chí mạng chung `trung()` (game.js), và `pick/rnd/rint` (Math.random) khi chọn mục tiêu ngẫu nhiên (`quaiNgauNhien`, Mortar…) trong skills*.js.
+
+## claude/demo-hop-tuong — HOME: xem thông tin 12 TRÙM (09/11)
+- Người dùng: "không có phần xem thông tin về boss ở màn hình bên ngoài". Trước đây chỉ có băng giới thiệu trùm trong trận (vaotran.js) — không có màn ngoài nào (kể cả ẩn).
+- HOME: nút thứ 3 **BOSSES / TRÙM** cạnh DECK · COLLECTION (hàng .hm-tab 3 cột). Chạm → bảng trượt (HM.mo) danh sách 12 trùm theo TRUM_POOL: chân dung `trum_<id>_portrait.png`, tên Anh (+ tên Việt khi chọn Tiếng Việt), tên chiêu + mô tả (TRUM.kn/mo — chữ thật của code), "FROM WAVE N" (trumTuWave) và máu ở wave đó.
+- Chạm 1 trùm → chi tiết: chiêu (CHỦ ĐỘNG / BỊ ĐỘNG / KHI BỊ HẠ) + nhịp tung chiêu max(6, 10 − wave/15) s, báo 1.4 s; xuất hiện (Solo & PvP ngẫu nhiên từ wave N; Co-op thứ tự cố định wave 10–50); máu ở wave N/30/50/70 theo công thức sinhTrum (mauWave × 30 × (1 + w/35) × hệ số TRUM_MOI.hp, không tính PvP đột tử); mọi trùm: lọt −2 mạng, hạ = mana ×12. Nút ALL BOSSES quay lại.
+- "Chưa gặp": kỷ lục wave (TK.ho / tm_hoso / KT tk.wave) < wave xuất hiện → chân dung mờ + "REACH WAVE N" (vẫn đọc được).
+- File: `thap/js/trumxem.js`, `thap/css/trumxem.css` (chỉ tấm/nút PNG có sẵn), index.html nạp 2 file; 17 khoá dịch mới trong vi.json → ngonngu-vi.js. Act `tx-*` (home.js nuốt act `hm-*` lạ).

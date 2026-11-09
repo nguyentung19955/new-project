@@ -5458,5 +5458,22 @@
 "each touching @ +#% arc (now #)": "mỗi Súng Bão kề +#% nảy (đang có #)",
 "each touching @ +#% arc": "mỗi Súng Bão kề +#% nảy",
 "· star speed": "· tốc theo sao",
-"+#% rate · star speed": "+#% tốc · tốc theo sao"
+"+#% rate · star speed": "+#% tốc · tốc theo sao",
+"# BOSSES": "# TRÙM",
+"A boss every # waves · tap one for details": "Mỗi # đợt có một trùm · chạm để xem chi tiết",
+"FROM WAVE #": "TỪ ĐỢT #",
+"REACH WAVE #": "ĐẠT ĐỢT #",
+"SKILL": "CHIÊU",
+"ACTIVE": "CHỦ ĐỘNG",
+"PASSIVE": "BỊ ĐỘNG",
+"ON DEATH": "KHI BỊ HẠ",
+"APPEARS": "XUẤT HIỆN",
+"HP BY WAVE": "MÁU THEO ĐỢT",
+"EVERY BOSS": "MỌI TRÙM",
+"ALL BOSSES": "TẤT CẢ TRÙM",
+"Casts every # s · red target marks # s before": "Tung chiêu mỗi # s · dấu ngắm đỏ hiện trước # s",
+"Solo & PvP: random boss from wave #": "Solo & PvP: trùm ngẫu nhiên từ đợt #",
+"Co-op: wave #": "Co-op: đợt #",
+"Gets through: −# lives": "Lọt qua: −# mạng",
+"Defeat: ×# kill mana": "Hạ gục: mana ×#"
 }
