@@ -608,8 +608,10 @@ const REN = {
     if (!th) { x.restore(); return; } // ảnh đường chưa tải: không vẽ thay
     const tl = th.height * (DUONG_RONG / th.width);
     for (let y = 0; y < L; y += tl) {
-      const h = Math.min(tl, L - y);
-      x.drawImage(th, 0, 0, th.width, th.height * (h / tl), -DUONG_RONG / 2, y, DUONG_RONG, h);
+      // "vạch tối dọc mảnh" trên làn (09/11, ảnh người dùng): hàng điểm ảnh 1 của ảnh đường (ha_duong 104×152) tối hẳn → mỗi mối nối
+      // mảnh hiện 1 vạch tối → bỏ 2 hàng đầu ảnh (c0); mảnh sau đè mảnh trước 0.75 px (mối nối toạ độ lẻ không hở nửa trong suốt)
+      const c0 = th.height * 2 / 152, h = Math.min(tl, L - y), hv = Math.min(h + 0.75, L - y);
+      x.drawImage(th, 0, c0, th.width, (th.height - c0) * (h / tl), -DUONG_RONG / 2, y, DUONG_RONG, hv);
     }
     x.restore();
   },

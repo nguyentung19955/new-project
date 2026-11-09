@@ -206,6 +206,10 @@ const BC_DOI = { tw: 356, tx: 64, ys: 88, e: 30, g: 38, dai: 685, lx: 30, lo: 34
 // PVP chữ C: bàn nằm giữa 2 làn dọc (x 50..380) · day = tâm cổng/lõi bàn mình (chừa hàng tim mình + hàng nút đáy) · g = tâm làn ngang → mép bàn
 //   · kc = khoảng 2 tâm làn ngang giữa: 46 + KHE RỘNG (thanh mảnh đợt/trùm/♥ mình 28 nằm giữa, cách mỗi làn ~13) → 2 làn tách rõ, không thành 1 vòng kín
 //   · lx = tâm 2 làn dọc (cổng/lõi Ø56 không lẹm mép khung) · trên cùng: dải bộ bài + tim đối thủ (hud-anime.js)
+// SOLO chữ C (09/11): khay 330 (ô ~57×49, vẫn to hơn PVP 308) · tx 45 → mép khay thấy được 57.5 (ảnh khay trong suốt 34/900 mỗi bên trái)
+//   cách ray trong làn trái (lx 24 + 23 = 47) ~10 · mép phải 366 < mép trái lõi/cổng (W − rx − 30 = 374) · gt/gd = tâm làn trên/dưới → mép khay
+//   (trên 32: hở ~11 tới viền khay; dưới 40: hở ~12 sau độ dày 3D 5) · tam = tâm dọc cả cụm (như bố cục cũ) · dai = độ dài luật làn cũ
+const BC_SOLO = { tw: 330, tx: 45, lx: 24, rx: 26, gt: 32, gd: 40, tam: 354.5, dai: 1061 };
 const BC_PVP = { tw: 308, tx: 61, day: 616, g: 31, kc: 100, dai: 666, lx: 30 };
 function boCuc(che) {
   const tw = BC_TO.tw, tx = BC_TO.tx;
@@ -250,12 +254,15 @@ function boCuc(che) {
       ],
     };
   }
-  // SOLO: một bàn giữa vùng chơi (48–604), đường hình chữ U ôm 3 cạnh bàn (trên → trái → dưới) như Random Dice
-  // rà soát 09/11: hạ bàn thêm 28 (57 → 85) → khoảng trống trên (HUD → đường) và dưới (đường → khay) gần bằng nhau, đáy đường 531 < dải xem nhanh 610
-  const th = toH(BC_TO.kv), y = Math.round((48 + 604) / 2 - (th + 112) / 2 + 85);
+  // SOLO (cả Leo Tháp / Săn Trùm / Thử thách): một bàn giữa vùng chơi, đường chữ C ôm 3 cạnh bàn (trên → trái → dưới) như Random Dice.
+  // 09/11 (người dùng: "Đường che mất bàn"): khay 408 cũ đè ray trong 2 làn + chìa ra dưới cột cổng/lõi → khay nằm GỌN TRONG chữ C (BC_SOLO),
+  // hở đều ~10 px mỗi phía (tính cả độ dày 3D 5 px dưới khay); cổng/lõi ở cột phải, ngoài khay. Giữ tâm dọc cũ (354.5).
+  // Độ dài LUẬT làn giữ như bố cục cũ (dai 1061 = 377 + 307 + 377) → thời gian quái đi hết làn không đổi.
+  const S = BC_SOLO, sw = S.tw, sx = S.tx, sh = Math.round(sw * KHAY_TL), sl = S.lx, sr = W - S.rx;
+  const sy = Math.round(S.tam - (sh + S.gd - S.gt) / 2), yt = sy - S.gt, yd = sy + sh + S.gd;
   return {
-    ban: [{ x: tx, y, w: tw, h: th, ai: false, ten: TEXT.ui.you }],
-    duong: [{ pts: [[W - 26, y - 34], [lx, y - 34], [lx, y + th + 32], [W - 26, y + th + 32]], ban: 0 }],
+    ban: [{ x: sx, y: sy, w: sw, h: sh, ai: false, ten: TEXT.ui.you }],
+    duong: [{ pts: [[sr, yt], [sl, yt], [sl, yd], [sr, yd]], ban: 0, dai: S.dai }],
   };
 }
 
