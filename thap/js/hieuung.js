@@ -522,5 +522,42 @@ VX.salvo = {
 (function () {
   const td = VX.theoDoi; VX.theoDoi = function () { const r = td.apply(this, arguments); try { VX.salvo.theoDoi(); } catch (e) { } return r; };
   if (typeof REN !== 'undefined') { const vo = REN.veO; REN.veO = function (ctx) { try { VX.salvo.veDuoi(ctx); } catch (e) { } return vo.apply(this, arguments); }; }
-  if (typeof SKILLS !== 'undefined' && SKILLS.railgun && !SKILLS.railgun.sangDau) SKILLS.railgun.sangDau = (T) => VX.salvo.sang(T);
+  if (typeof SKILLS !== 'undefined' && SKILLS.railgun && !SKILLS.railgun.sangDau) SKILLS.railgun.sangDau = (T) => VX.salvo.sang(T);  if (typeof SKILLS !== 'undefined' && SKILLS.railgun && !SKILLS.railgun.veThem) { SKILLS.railgun.veThem = (ctx, T, S, al, R, B) => VX.salvo.veMui(ctx, T, S, al, R, B); SKILLS.railgun.veThemTren = true; }
+  if (typeof REN !== 'undefined') { if (REN.CO_DINH) REN.CO_DINH.add('mui_tiep'); try { REN.img('mui_tiep'); } catch (e) { } }
 })();
+// ---------- SALVO: MŨI TÊN TĂNG trong khung ô (09/11, người dùng: bỏ nhãn "⚔ 5/5 » 3/3" dưới ụ, thay bằng hiệu ứng) ----------
+//  · hàng có thưởng (3/5 trở lên → +sát thương) = mũi tên ĐỎ chạy từ dưới lên · cột có thưởng (2/3 trở lên → +tốc bắn) = mũi tên XANH
+//  · mức cao (hàng 5/5, cột 3/3) = 2 làn mũi tên + chạy nhanh hơn; đỏ/xanh xen kẽ làn + lệch pha để không chồng nhau
+//  · mũi tên = ảnh mui_tiep (PNG) xoay lên + tô màu 1 lần (source-atop, như BVX.tenVong); mờ dần khi lên gần đỉnh; nằm gọn trong ô
+//  · vẽ TRÊN đầu súng (veThemTren) nhưng nhỏ + mờ để không che ụ; sao/huy hiệu ở lớp trên nữa. Chỉ hình, không đổi gameplay.
+VX.salvo.MAU_MUI = { dmg: '#ff2a1f', toc: '#1fb4ff', den: '#05070a' }; // den: lót tối cho mũi tên tách khỏi đầu súng vàng
+VX.salvo.anhMui = function (k) {
+  const key = 'mui_tiep~salvo_' + k; if (typeof REN === 'undefined' || !REN.anh) return null;
+  if (REN.anh[key]) return REN.img(key);
+  const a = REN.img('mui_tiep'); if (!a || !a.width || typeof document === 'undefined') return null;
+  const c = document.createElement('canvas'); c.width = a.width; c.height = a.height; const x = c.getContext('2d'); if (!x) return null;
+  x.drawImage(a, 0, 0); x.globalCompositeOperation = k === 'den' ? 'source-atop' : 'color'; x.fillStyle = this.MAU_MUI[k]; x.fillRect(0, 0, c.width, c.height); // vetay-ok: png (mũi tên tô màu buff — giữ sáng tối của ảnh)
+  x.globalCompositeOperation = 'destination-in'; x.drawImage(a, 0, 0); // giữ đúng viền alpha của ảnh
+  REN.anh[key] = { _cv: c, complete: true, naturalWidth: c.width, naturalHeight: c.height }; if (REN.CO_DINH) REN.CO_DINH.add(key); return REN.img(key);
+};
+VX.salvo.veMui = function (ctx, T, S, al, R, B) {
+  if (!T || T.st.da || !B || !B.t || typeof SKILLS === 'undefined') return;
+  const K = SKILLS.railgun, b = K.bingo(B, T), lan = [];
+  const hD = (K.HANG[b.ngang] || 0) > 0, hT = (K.COT[b.doc] || 0) > 0; if (!hD && !hT) return;
+  const nD = hD ? (b.ngang >= 5 ? 2 : 1) : 0, nT = hT ? (b.doc >= 3 ? 2 : 1) : 0;
+  for (let i = 0; i < Math.max(nD, nT); i++) { if (i < nD) lan.push('dmg'); if (i < nT) lan.push('toc'); } // xen kẽ đỏ / xanh
+  const n = lan.length, w = S * 0.19, y0 = S * 0.34, y1 = -S * 0.38, t = VX.t;
+  for (let i = 0; i < n; i++) {
+    const k = lan[i], im = this.anhMui(k); if (!im) continue;
+    const max = k === 'dmg' ? b.ngang >= 5 : b.doc >= 3, P = max ? 0.85 : 1.25;
+    const x = n === 1 ? 0 : -S * 0.32 + (S * 0.64) * i / (n - 1);
+    const u = ((t / P + i * 0.37 + (k === 'toc' ? 0.5 : 0)) % 1 + 1) % 1; // lệch pha theo làn
+    const y = y0 + (y1 - y0) * u, a = Math.min(1, u / 0.15) * Math.pow(1 - u, 1.3); // hiện nhanh ở đáy, mờ dần ở đầu
+    const hh = w * im.width / im.height; // ảnh hướng phải → xoay lên: cao = rộng ảnh
+    const lot = this.anhMui('den'), m = (q, s) => R.mip ? R.mip(q, s * R.s * R.dpr) : q;
+    ctx.save(); ctx.translate(x, y); ctx.rotate(-Math.PI / 2);
+    if (lot) { ctx.globalAlpha = al * a * 0.6; ctx.drawImage(m(lot, hh * 1.3), -hh * 0.65, -w * 0.65, hh * 1.3, w * 1.3); } // lót tối
+    ctx.globalAlpha = al * a * (max ? 1 : 0.88); ctx.drawImage(m(im, hh), -hh / 2, -w / 2, hh, w); ctx.restore();
+  }
+  ctx.globalAlpha = al;
+};

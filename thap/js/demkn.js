@@ -14,12 +14,7 @@ const DEMKN = {
     lienket(T, B) { const n = SKILLS.lienket.nhom(B, T); return n >= 2 ? { m: [{ ic: 'ic_dmg', s: '×' + n }] } : null; },
     dongbo(T, B) { const n = SKILLS.dongbo.dem(B, T); return n > 0 ? { m: [{ ic: 'ic_dmg', s: '×' + n }], sang: n >= 3 } : null; },
     luoicheo(T) { const n = SKILLS.luoicheo.dem(T); return n > 0 ? { m: [{ ic: 'ic_dmg', s: n + '/' + oCheo(T.o).length }], sang: SKILLS.luoicheo.du(T) } : null; }, // ô mép: 2/2 = cộng hưởng ×1.3
-    railgun(T, B) {
-      const b = SKILLS.railgun.bingo(B, T), m = [];
-      if (b.ngang >= 2) m.push({ ic: 'ic_dmg', s: b.ngang + '/5' }); // tiến độ tới hàng ĐẦY Railgun (chỉ hàng đầy mới có thưởng)
-      if (b.doc >= 2) m.push({ ic: 'ic_toc', s: b.doc + '/3' });
-      return m.length ? { m, sang: b.ngang >= 5 || b.doc >= 3 } : null;
-    },
+    // railgun (Salvo): BỎ nhãn ⚔ n/5 » n/3 dưới ụ (09/11) — thay bằng mũi tên đỏ/xanh chạy trong ô (hieuung.js VX.salvo.veMui)
     cuuvi(T) { const n = T.duoi || 0; return n > 0 ? { m: [{ ic: 'ic_chet', s: n + '/9' }], sang: n >= 8 } : null; },
     tienhoa(T) { const S = SKILLS.tienhoa; if (S.chay(T)) return { m: [{ ic: 'ic_mana', s: '+' + S.MANA }], sang: true }; return { m: [{ ic: 'trung_1', s: Math.ceil(S.con(T)) + 's' }] }; }, // trứng: giây tới lúc nở · trứng cháy: chạm = +20 mana
     mauhut(T) { return T.mh ? { m: [{ ic: 'mauhut_phu', s: Math.ceil(Math.max(0, T.mh.con)) + 's' }] } : null; }, // Mạch Máu: chỉ giây còn lại tới lúc nuốt (số Máu ở góc trên-phải — skills7.js MH_SO)
