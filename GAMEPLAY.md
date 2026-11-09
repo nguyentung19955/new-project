@@ -1012,3 +1012,9 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - Thưởng lần đầu mỗi (trùm, bậc): 300 vàng (b1–3) · 1 000 vàng + 15 ngọc (b4–6) · Rương Huyền thoại (b7) · 2 000 vàng + 30 ngọc (b8–10); XP 5 + 2b. Đủ 12 trùm cùng bậc: Rương Thường (b1–3) / Rương Vàng (b4–6) / Rương Huyền thoại 3 Vàng (b7) / 2 Tinh thể Đỏ (b10).
 - **Trùm của tuần** (`KT.tuan() % 12`, như nhau với mọi người): bậc cao nhất thắng trong tuần → b3 2 000 vàng · b5 50 ngọc · b7 Rương Huyền thoại · b9 1 Tinh thể Đỏ (1 lần/tuần).
 - Test: `tools/thap-kt-san-trum.js` (mới) + `thap-kt-thap-leo` đạt.
+
+## claude/demo-hop-tuong — Giai đoạn C (3/4): TINH THỂ ĐỎ + ẤN ĐỎ (09/11)
+- **Tinh thể Đỏ** (`turret_kt.mh.tt`, ảnh `ua_ts_do`): chỉ từ mốc khó — Leo Tháp tầng 50 (3) / 100 (5), Săn Trùm đủ 12 trùm bậc 10 (2), Trùm của tuần bậc 9 (1/tuần). Không rơi từ đăng nhập / quay / nhiệm vụ.
+- **Ấn Đỏ** — SHOP → LÒ RÈN MẢNH, hàng dưới Ấn Vàng (cùng khuôn): **15 Tinh thể + 50 000 vàng → 1 bản Đỏ tự chọn**, chỉ chọn trong các Đỏ đã mở / đã có (bể rơi). Khoá theo điều kiện Đỏ (cấp 12 + kỷ lục wave 30) như Lò rèn Đỏ. Không giới hạn tuần.
+- Gộp hồ sơ Firebase: tinh thể lấy lớn nhất; cờ Tháp / Săn Trùm / Thử thách OR.
+- Test: `tools/thap-kt-an-do.js` (mới).
