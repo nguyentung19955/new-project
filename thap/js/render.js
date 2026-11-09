@@ -987,8 +987,7 @@ const REN = {
       ctx.globalAlpha = al;
       const hs = A ? A.huy : 1; // huy hiệu sao bật nảy lúc lộ kết quả ghép
       // biểu tượng loại (trên-trái) + số sao (trên-phải): vẽ SAU đạn/hiệu ứng (lớp huy hiệu) → không bị che
-      // ảnh thân + đầu đều chưa sẵn (đang tải / giải mã treo) → không vẽ huy hiệu sao: tránh ngôi sao lơ lửng trên ô trông như trống (người dùng 08/11, Fusion Archive lần đầu)
-      if (hs > 0.02 && (than || dau || tuVe || o.ghost)) { const h = ND.xep(T, x, y + oy, C, hs, al, B); h.dong = hs !== 1 || kS !== 1; if (this._hang && !o.ghost) this._hang.push(h); else ND.veHuyHieu(ctx, h); }
+      if (hs > 0.02) { const h = ND.xep(T, x, y + oy, C, hs, al, B); h.dong = hs !== 1 || kS !== 1; if (this._hang && !o.ghost) this._hang.push(h); else ND.veHuyHieu(ctx, h); }
       const k2 = C / Math.min(B.cw, B.ch);
       // buff: không còn ký hiệu nhỏ trên ô — hiện bằng hào quang ảnh quanh đầu súng (buffvfx.js), số chỉ ở bảng chạm
     }

@@ -173,9 +173,24 @@
       a._chuaGiai = true;
       // giải mã xong giữa trận → chép sang canvas trong hàng nóng luôn (không đợi lần vẽ đầu = đúng lúc ra chiêu)
       const xong = () => { a._chuaGiai = false; if (trongTran() || (G.ban && G.ban.length)) xep('cp|' + ten, () => REN.img(ten)); };
-      // decode() treo (Safari iOS: ảnh lớn / trang vừa quay lại từ nền) → _chuaGiai kẹt mãi, REN.img trả null tới khi mở lại app
-      // (người dùng 08/11: "chơi tướng mới phải thoát ra vào lại mới load được") → quá 1,5 s thì thôi đợi, chép thẳng (img gốc)
-      a.addEventListener('load', () => { a._tVe = now(); let x = false; const x1 = () => { if (!x) { x = true; xong(); } }; try { a.decode().then(x1, x1); } catch (e) { x1(); } setTimeout(x1, 1500); }, { once: true });
+      // decode() treo / lỗi (Safari iOS: ảnh lớn, đầu trận nhiều ảnh cùng giải mã, trang vừa quay lại từ nền):
+      // TRƯỚC 09/11: quá 1,5 s thì chép thẳng ảnh CHƯA giải mã → Safari vẽ RỖNG → canvas trong suốt bị giữ VĨNH VIỄN (REN.anh._cv;
+      // TAI.giao/sanSang thấy _cv là coi như xong) → ụ CHƯA TỪNG CHƠI vào trận chỉ còn ngôi sao (Fusion Archive, người dùng 09/11).
+      // NAY: không bao giờ chép ảnh chưa giải mã — treo quá 6 s / decode lỗi → bỏ Image đó, TẢI LẠI bản mới (?r=) rồi giải mã lại;
+      // sau 3 lần vẫn hỏng mới chép thẳng (cách cũ) để không kẹt null mãi (08/11: "chơi tướng mới phải thoát ra vào lại").
+      a.addEventListener('load', () => {
+        a._tVe = now(); let x = false;
+        const ok = () => { if (!x) { x = true; xong(); } };
+        const hong = () => {
+          if (x) return; x = true;
+          if (REN.anh[ten] !== a) return;
+          if ((a._lan || 0) >= 3) { xong(); return; }
+          a.onload = a.onerror = null; a._chuaGiai = false; clearTimeout(a._hen);
+          REN.taiAnh(ten, (a._lan || 0) + 1); // Image mới (_chuaGiai = true) thay chỗ — REN.img trả null tới khi bản mới giải mã xong
+        };
+        try { a.decode().then(ok, hong); } catch (e) { ok(); }
+        setTimeout(hong, 6000);
+      }, { once: true });
       a.addEventListener('error', () => { a._chuaGiai = false; }, { once: true });
     }
     return a;
@@ -184,7 +199,7 @@
   REN.img = function (ten) {
     const a = this.anh[ten];
     if (!a || a._cv) return imgGoc.apply(this, arguments);
-    if (a._chuaGiai && !(a._tVe && now() - a._tVe > 1500)) return null;
+    if (a._chuaGiai) return null; // chưa giải mã xong: KHÔNG chép (Safari chép ảnh chưa giải mã = canvas rỗng giữ vĩnh viễn)
     a._chuaGiai = false;
     if (!(a.complete && a.naturalWidth && !a._loi)) return imgGoc.apply(this, arguments);
     // lần đầu dùng: chép ảnh đã giải mã sang canvas (ảnh lớn: vài ms) — tính vào ngân sách khung; hết ngân sách → chép trong hàng nóng
