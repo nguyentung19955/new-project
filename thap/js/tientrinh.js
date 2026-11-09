@@ -22,14 +22,15 @@ const TTC = {
   thuongCap: (L) => (L % 5 === 0 ? [{ vang: 150 * L, ngoc: 20 }, { ruong: 'vang' }] : [{ vang: 150 * L, ngoc: 20 }]),
   danhVong: { xp: 1000, r: [{ vang: 300 }, { ruong: 'thuong' }] },
   quaVang: { cap: 6, bac: 'vang', n: 1 },
-  // HÀNH TRÌNH 7 NGÀY: [khoá đếm, cần, chữ] — đếm từ lúc bắt đầu hành trình (người chơi cũ cũng phải chơi để đạt)
+  // HÀNH TRÌNH 7 NGÀY: [khoá đếm, cần, chữ, (mục tiêu thay thế cùng độ khó)] — đếm từ lúc bắt đầu hành trình (người chơi cũ cũng phải chơi để đạt).
+  //  Ngày đã qua vẫn làm bù được (đếm cộng dồn, không hết hạn). Ngày 5/6 dễ nghẽn (tư vấn tien-trinh/CHATGPT-THU-PHI.md) → đạt 1 trong 2 mục tiêu.
   hj: [
     { r: { vang: 500, ngoc: 30, the: { bac: 'xanh', n: 10 } }, v: [['trum', 1, 'Defeat the wave 10 boss'], ['tran', 3, 'Play 3 battles'], ['wave', 15, 'Reach wave 15']] },
     { r: { vang: 800, ngoc: 30, ruong: 'thuong' }, v: [['wave', 18, 'Reach wave 18'], ['sao', 4, 'Have a 4★ turret'], ['nang', 2, 'Level up 2 cards']] },
     { r: { ngoc: 40, chon: { bac: 'tim', n: 4 } }, v: [['coop', 1, 'Finish a CO-OP battle'], ['trumKhac', 2, 'Defeat 2 different bosses'], ['wave', 20, 'Reach wave 20']] },
     { r: { vang: 1500, ngoc: 40 }, v: [['wave', 22, 'Reach wave 22'], ['sao', 5, 'Have a 5★ turret'], ['sp', 1, 'Buy a Daily Specials item']] },
-    { r: { ruong: 'vang' }, v: [['wave', 25, 'Reach wave 25'], ['trumMax', 2, 'Defeat the wave 20 boss'], ['sao5x', 2, 'Have two 5★ turrets at once']] },
-    { r: { vang: 2000, ngoc: 50 }, v: [['pvp', 1, 'Play a PVP battle'], ['nvd', 3, 'Complete 3 daily quests'], ['cap', 9, 'Reach Pilot Level 9']] },
+    { r: { ruong: 'vang' }, v: [['wave', 25, 'Reach wave 25'], ['trumMax', 2, 'Defeat the wave 20 boss'], ['sao5x', 2, 'Have two 5★ turrets at once', ['sao5t', 6, 'Make 6 turrets of 5★+ in total']]] },
+    { r: { vang: 2000, ngoc: 50 }, v: [['pvp', 1, 'Play a PVP battle'], ['nvd', 3, 'Complete 3 daily quests'], ['cap', 9, 'Reach Pilot Level 9', ['tran', 25, 'Play 25 battles']]] },
     { r: { chon: { bac: 'vang', n: 2 } }, v: [['wave', 30, 'Reach wave 30'], ['trumKhac', 4, 'Defeat 4 different bosses'], ['nangV', 1, 'Level up a Legendary card']] },
   ],
   // NHIỆM VỤ TUẦN (reset thứ Hai, mở cấp 8): mỗi việc 20 ngọc, đủ 5 = 40 ngọc + 1 bản Vàng ngẫu nhiên → +140 ngọc/tuần
@@ -137,7 +138,8 @@ const TT = {
   hjDs() {
     const t = this.st(), mo = this.hjNgay();
     return TTC.hj.map((d, i) => {
-      const v = d.v.map(([k, can, ten]) => { const n = Math.min(can, this.giaTri(k)); return { k, can, ten, t: n, xong: n >= can }; });
+      const mt = ([k, can, ten]) => { const n = Math.min(can, this.giaTri(k)); return { k, can, ten, t: n, xong: n >= can }; };
+      const v = d.v.map(x => { const a = mt(x); if (x[3]) { a.alt = mt(x[3]); a.xong = a.xong || a.alt.xong; } return a; }); // có mục tiêu thay thế: đạt 1 trong 2
       return { i, ngay: i + 1, r: d.r, v, mo: i + 1 <= mo, xong: v.every(x => x.xong), da: !!t.hj.nhan[i + 1] };
     });
   },
@@ -172,7 +174,7 @@ const TT = {
     const xp = wave + 3 * trum + (thang ? 10 : 0), capTruoc = this.cap();
     t.xp += xp;
     const d = t.dem, mx = (key, v) => { d[key] = Math.max(d[key] | 0, v | 0); }, cg = (key, v) => { d[key] = (d[key] | 0) + (v | 0); };
-    cg('tran', 1); cg('trum', trum); mx('wave', wave); mx('trumMax', trum); mx('sao', tr.sao); mx('sao5x', tr.s5);
+    cg('tran', 1); cg('trum', trum); cg('sao5t', (tran && tran.sao5) | 0); mx('wave', wave); mx('trumMax', trum); mx('sao', tr.sao); mx('sao5x', tr.s5);
     if (che === 'coop' || che === 'online') cg('coop', 1); if (che === 'pvp') cg('pvp', 1);
     for (const id of trums || []) t.trk[id] = 1;
     this.nvtCong('tran', 1); this.nvtCong('trum', trum); this.nvtCong('sao5', (tran && tran.sao5) | 0);
@@ -278,7 +280,8 @@ const TTUI = {
     h += '<div class="tt-ngay">' + ds.map(d => '<button class="hm-nut2' + (d.ngay === sel ? ' vang' : '') + (d.da ? ' da' : '') + (d.mo ? '' : ' khoa') + '" data-act="tt-hjd" data-id="' + d.ngay + '" aria-pressed="' + (d.ngay === sel) + '" aria-label="Day ' + d.ngay + '"><b>' + d.ngay + '</b>' +
       (d.mo && d.xong && !d.da ? '<img class="kt-cham" src="' + KTUI.a(KTA.cham) + '" alt="">' : '') + '</button>').join('') + '</div>';
     const d = ds[sel - 1];
-    for (const v of d.v) h += '<div class="kt-h tt-v' + (v.xong ? ' da' : '') + '"><span class="kt-r tt-so"><b>' + (d.v.indexOf(v) + 1) + '</b></span><div class="kt-h-g"><b>' + v.ten + '</b>' + TBUI.thanh({ n: v.t, can: v.can, max: false }) + '</div>' +
+    for (const v of d.v) h += '<div class="kt-h tt-v' + (v.xong ? ' da' : '') + '"><span class="kt-r tt-so"><b>' + (d.v.indexOf(v) + 1) + '</b></span><div class="kt-h-g"><b>' + v.ten + '</b>' + TBUI.thanh({ n: v.t, can: v.can, max: false }) +
+      (v.alt ? '<small class="tt-hoac"><i>or</i><span>' + v.alt.ten + '</span><em>' + KTUI.so(v.alt.t) + '/' + KTUI.so(v.alt.can) + '</em></small>' : '') + '</div>' +
       (v.xong ? '<img class="kt-tick" src="' + KTUI.a(KTA.xong) + '" alt="Done">' : '<button class="kt-slot" disabled><b>' + KTUI.so(v.t) + '/' + KTUI.so(v.can) + '</b></button>') + '</div>';
     const r = d.r, ic = r.chon ? { the: { bac: r.chon.bac, n: r.chon.n } } : r.ruong ? { ruong: r.ruong } : r.the ? r : r.ngoc && !r.vang ? { ngoc: r.ngoc } : { vang: r.vang };
     const ten = ['Day ' + d.ngay + ' reward', r.vang ? KTUI.rTen({ vang: r.vang }) : '', r.ngoc ? KTUI.rTen({ ngoc: r.ngoc }) : '', r.ruong ? KTUI.rTen({ ruong: r.ruong }) : '', r.the ? KTUI.rTen({ the: r.the }) : '', r.chon ? 'Pick 1 of 3 ' + this.TIER(r.chon.bac) + ' ×' + r.chon.n : ''].filter(Boolean).join(' · '); // ' · ' → ngonngu.js dịch từng đoạn
@@ -364,7 +367,8 @@ const TTUI = {
   }
   if (typeof DK !== 'undefined' && DK.loi) { const l = DK.loi; DK.loi = function (deck, id) { if (TT.khoa(id) && !(deck || []).includes(id)) return TT.chuKhoa(id); return l.apply(this, arguments); }; }
   if (typeof DC !== 'undefined') {
-    if (DC.chamThe) { const ct = DC.chamThe; DC.chamThe = function (c) { const id = c && c.dataset && c.dataset.id; if (id && TT.khoa(id) && !UI.chon.includes(id)) { this.am(); this.rung([12, 40, 12]); UI.nhac(TT.chuKhoa(id)); return; } return ct.apply(this, arguments); }; }
+    // chạm ụ khoá: mở trang chi tiết (xem kỹ năng/chỉ số được, nút "Locked" + điều kiện — không bán mở sớm), không vào bộ
+    if (DC.chamThe) { const ct = DC.chamThe; DC.chamThe = function (c) { const id = c && c.dataset && c.dataset.id; if (id && TT.khoa(id) && !UI.chon.includes(id)) { this.am(); if (typeof UP !== 'undefined' && UP.mo) UP.mo(id, c); else UI.nhac(TT.chuKhoa(id)); return; } return ct.apply(this, arguments); }; }
     if (DC.ngauNhien) { const nn = DC.ngauNhien; DC.ngauNhien = function () { return TT.voiMo(() => nn.apply(this, arguments)); }; }
   }
   if (typeof BOBAI !== 'undefined' && BOBAI.hopLe) { const hl = BOBAI.hopLe; BOBAI.hopLe = function (a) { return hl.apply(this, arguments) && a.deck.every(id => !TT.khoa(id)); }; }

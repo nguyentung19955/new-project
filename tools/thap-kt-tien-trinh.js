@@ -82,10 +82,15 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     document.querySelector('[data-act=hm-deck]').click(); await new Promise(r => setTimeout(r, 400));
     const c = document.querySelector('#chon-luoi .c[data-id="' + v + '"]'); o.the = !!c && c.classList.contains('tt-khoa') && /PILOT/.test(c.textContent) && /LV 6/.test(c.textContent);
     DC.chamThe(c); o.cham = UI.chon.includes(v);
+    await new Promise(r => setTimeout(r, 500)); // chạm ụ khoá → trang chi tiết mở (xem được), nút "Locked" + điều kiện, bấm không được
+    const nut = UP.el && UP.el.querySelector('.up-nut'); o.xem = UP.id === v && !!nut && nut.disabled && /Pilot Level 6/.test(nut.textContent);
+    try { UP.dong(); } catch (e) { } await new Promise(r => setTimeout(r, 300));
     for (let i = 0; i < 20; i++) { UI.chon = []; DC.o = [null, null, null, null, null]; DC.ngauNhien(); if (UI.chon.some(id => TT.khoa(id))) o.nn = 1; }
     return o;
   });
-  ok(r.cap === 3 && r.khoa && !r.chonU && /Pilot Level 6/.test(r.loi) && r.loiTrang === '' && r.the && !r.cham && !r.nn, 'bộ bài: ụ khoá không vào được (chọn/kéo/chạm), thẻ khoá ghi "PILOT LV 6", RANDOM chỉ ra ụ đã mở', JSON.stringify(r));
+  ok(r.cap === 3 && r.khoa && !r.chonU && /Pilot Level 6/.test(r.loi) && r.loiTrang === '' && r.the && !r.cham && r.xem && !r.nn, 'bộ bài: ụ khoá không vào được (chọn/kéo/chạm), chạm → trang chi tiết xem được (nút Locked), thẻ khoá ghi "PILOT LV 6", RANDOM chỉ ra ụ đã mở', JSON.stringify(r));
+  await p.evaluate(() => { const v = KT.dsBac('vang')[0]; DC.chamThe(document.querySelector('#chon-luoi .c[data-id="' + v + '"]')); });
+  await chup('up-khoa'); await p.evaluate(() => { try { UP.dong(); } catch (e) { } });
   await p.evaluate(() => { const c = document.querySelector('#chon-luoi .c.tt-khoa'); c && c.scrollIntoView({ block: 'center' }); });
   await chup('bobai-khoa');
 
@@ -126,6 +131,27 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   ok(r.d3khoa && r.ngay3 === 3 && r.ba && r.sai && r.dung && r.khongDo && r.koCach, 'ngày 3 mở theo lịch, chọn 1 trong 3 Sử thi (chỉ thẻ hợp lệ, +4 bản), không có Đỏ, việc chỉ nêu kết quả', JSON.stringify(r));
   await p.evaluate(() => { KTUI.moTab('nv'); });
   await chup('nhiemvu-hanhtrinh');
+
+  // ---- 5b. ngày 5/6: mục tiêu thay thế cùng độ khó + làm bù ngày đã qua (tư vấn CHATGPT-THU-PHI.md) ----
+  r = await p.evaluate(() => {
+    const o = {}, t = TT.st(), bay = KT._bay;
+    KT._bay = () => new Date(Date.now() + 7 * 864e5 + 3600e3); // đã sang ngày 8: ngày 5/6 vẫn làm bù được
+    t.dem.wave = 25; t.dem.trumMax = 2; t.dem.sao5x = 1; t.dem.sao5t = 0;
+    o.d5chua = !TT.hjDs()[4].xong;
+    for (let i = 0; i < 3; i++) { KT.batTran('solo'); KT.tran.sao5 = 2; KT.ketTran({ wave: 12, thang: false }, { trum: 0, che: 'solo' }); } // 6 ụ 5★ cộng dồn, chưa từng có 2 ụ 5★ cùng lúc
+    const d5 = TT.hjDs()[4]; o.sao5t = t.dem.sao5t; o.d5 = d5.mo && d5.xong && d5.v[2].alt && d5.v[2].alt.xong && !(d5.v[2].t >= d5.v[2].can);
+    o.d5nhan = !!TT.hjNhan(5);
+    t.dem.pvp = 1; t.dem.nvd = 3; t.dem.tran = 24; o.d6chua = !TT.hjDs()[5].xong && TT.cap() < 9;
+    t.dem.tran = 25; o.d6 = TT.hjDs()[5].xong && TT.cap() < 9; o.d6nhan = !!TT.hjNhan(6);
+    o.chiNgay56 = TTC.hj.filter(d => d.v.some(v => v[3])).length === 2 && !!TTC.hj[4].v[2][3] && !!TTC.hj[5].v[2][3];
+    o.altKoCach = TTC.hj.every(d => d.v.every(v => !v[3] || !/jackpot|resonan|link|mana/i.test(v[3][2])));
+    KT._bay = bay; TTUI.hjChon = 5; KTUI.moTab('nv');
+    o.hoac = !!document.querySelector('#kt .tt-hoac');
+    return o;
+  });
+  ok(r.d5chua && r.sao5t === 6 && r.d5 && r.d5nhan && r.d6chua && r.d6 && r.d6nhan && r.chiNgay56 && r.altKoCach && r.hoac, 'ngày 5/6 có mục tiêu thay thế (6 ụ 5★ cộng dồn / 25 trận), làm bù sau ngày 7 được, hiện dòng "or …"', JSON.stringify(r));
+  await p.evaluate(() => { TT.st().hj.nhan[5] = 0; delete TT.st().hj.nhan[5]; TTUI.hjChon = 5; KTUI.ve(); const e = document.querySelector('#kt .tt-hoac'); if (e) e.scrollIntoView({ block: 'center' }); });
+  await chup('nhiemvu-ngay5');
 
   // ---- 6. nhiệm vụ ngày lọc + đổi ----
   r = await p.evaluate(() => {

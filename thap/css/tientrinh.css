@@ -40,3 +40,9 @@ html body #chon #chon-luoi .c.tt-khoa > img.anh, html body #chon #chon-luoi .c.o
 .tt-khoa-n b { font: 800 11px/1.05 var(--f-hien); letter-spacing: .04em; color: #ffd677; text-shadow: 0 1px 0 #000, 0 0 3px #000, 0 0 3px #000; }
 .tt-khoa-n small { font: 800 9px/1 var(--f-hien); color: #ffb35a; text-shadow: 0 1px 0 #000, 0 0 3px #000; }
 .tt-khoa-i { width: 24px; height: 24px; object-fit: contain; margin-bottom: 1px; }
+
+/* hành trình ngày 5/6: mục tiêu thay thế cùng độ khó ("hoặc …") dưới thanh tiến độ */
+.tt-hoac { display: flex; align-items: baseline; gap: 5px; min-width: 0; margin-top: 2px; font: 700 12px/1.2 var(--f-chu); color: var(--m-mo); }
+.tt-hoac i { flex: none; font: 800 11px/1 var(--f-hien); font-style: normal; letter-spacing: .06em; text-transform: uppercase; color: #8fd0ff; }
+.tt-hoac span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tt-hoac em { flex: none; font-style: normal; font-weight: 800; color: var(--m-chu); }

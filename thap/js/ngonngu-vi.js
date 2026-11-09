@@ -3063,6 +3063,7 @@ const VI_MAU = {
 "MYTHIC CHEST": "RƯƠNG THẦN THOẠI",
 "Machine gun": "Súng máy",
 "Make # turrets of #★+": "Tạo # ụ từ #★ trở lên",
+"Make # turrets of #★+ in total": "Tạo tổng cộng # ụ từ #★ trở lên",
 "Makes hunter drones": "Sinh drone săn quái",
 "Makes hunter drones that attack enemies. From #★, tap when full: SWARM — all drones dive and explode": "Sinh drone săn quái. Từ #★, chạm khi đầy: BẦY ONG — mọi drone lao xuống nổ",
 "Makes hunter drones that attack enemies. From #★, tap when full: swarm — all drones dive and explode.": "Sinh drone săn quái. Từ #★, chạm khi đầy: BẦY ONG — mọi drone lao xuống nổ.",
