@@ -28,21 +28,21 @@
  },
  {
   "id": "phun",
-  "ten": "Scatter",
+  "ten": "Bee Hive",
   "bac": "trang",
-  "dcdw": "Hairball",
-  "kyNang": "Rapid fire at random enemies",
-  "ten_vi": "Súng Phun Loạn",
-  "kyNang_vi": "Bắn cực nhanh vào quái ngẫu nhiên"
+  "dcdw": "Bee Hive (Ụ sáng tạo)",
+  "kyNang": "Bees fly to random enemies, sting once, fly home",
+  "ten_vi": "Tổ Ong",
+  "kyNang_vi": "Ong bay tới quái ngẫu nhiên, đốt 1 phát rồi bay về tổ"
  },
  {
   "id": "sungluc",
-  "ten": "Revolver",
+  "ten": "Iaido Katana",
   "bac": "trang",
-  "dcdw": "Girl detective",
-  "kyNang": "One heavy shot at the lead enemy",
-  "ten_vi": "Súng Lục",
-  "kyNang_vi": "Một phát sát thương lớn vào quái đầu"
+  "dcdw": "Iaido Katana (Ụ sáng tạo)",
+  "kyNang": "Slashes the lead enemy in its row/column band",
+  "ten_vi": "Kiếm Rút Nhanh",
+  "kyNang_vi": "Chém quái đầu trong dải hàng/cột của nó"
  },
  {
   "id": "bang",
@@ -601,12 +601,12 @@
  },
  {
   "id": "khoathoigian",
-  "ten": "Chrono Lock",
+  "ten": "Hourglass",
   "bac": "tim",
-  "dcdw": "Freezer / Mayauel",
-  "kyNang": "Freezes the lead enemy in time; stored damage bursts on release",
-  "ten_vi": "Khoá Thời Gian",
-  "kyNang_vi": "Khoá quái đầu trong thời gian; mở khoá nổ phần sát thương đã dồn",
+  "dcdw": "Hourglass (Ụ sáng tạo)",
+  "kyNang": "Flips every 9s: row enemies 45% slower, row turrets +30% fire rate for 3s",
+  "ten_vi": "Đồng Hồ Cát",
+  "kyNang_vi": "Cứ 9 s lật: 3 s quái cùng hàng chậm 45%, ụ cùng hàng +30% tốc bắn",
   "vai": "db",
   "ho": "trap",
   "moi": "TUONG-MOI-20"
