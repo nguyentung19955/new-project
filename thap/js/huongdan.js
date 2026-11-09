@@ -130,7 +130,7 @@ const HD = {
     // xong hướng dẫn: hạ (hoặc vượt qua) trùm wave 10
     if (G.wave >= this.WAVE_TRUM && !G.laTrum && !G.quai.some(e => e.trum && !e.chet)) {
       this.st.xong = true; this.luu(); this.ketTut = true;
-      ketThuc(true, 'Tutorial cleared — all 85 turrets unlocked');
+      ketThuc(true, 'Tutorial cleared — Common and Rare turrets unlocked'); // rà phần đã bỏ: hết "mở cả 85 ụ" — sau hướng dẫn chỉ mở Trắng + Xanh (tientrinh.js)
       this.dang = false; this.an(); this.hienGon(false); this.boChi(); return;
     }
     if (!b) return;
@@ -195,7 +195,7 @@ const HD = {
     if (a === 'hd-boqua') { e.stopPropagation(); HD.boQua(); if (UI.veChon) UI.veChon(); }
   }, true);
 
-  // lần đầu mở game: vào thẳng trận hướng dẫn (không bắt chọn 5/85)
+  // lần đầu mở game: vào thẳng trận hướng dẫn (không bắt chọn bộ bài)
   const initGoc = UI.init;
   UI.init = async function () {
     const r = await initGoc.apply(this, arguments);

@@ -208,7 +208,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     ds.push('fx_summon', 'fx_merge', 'fx_starup', 'fx_evolve', 'fx_link', 'fx_bingo', 'fx_awaken');
     for (const b of bans) if (b.mv && MAVUONG[b.mv.id]) ds.push(MAVUONG[b.mv.id].anh); // chân dung chỉ huy (cut-in) — chỉ chỉ huy đang ra trận
     for (const b of bans) for (const id of b.deck) { ds.push(id + '_nong', 'nho/' + id); if (REN.DE_RIENG && REN.DE_RIENG[id]) { ds.push(id + '_de', id + '_vien'); if (window.PHU_GIUA && PHU_GIUA[id]) ds.push(id + '_phu'); } /* ụ module: bệ riêng (+ phần phụ tại trục) */ if (laGrow(id) && STAGE_K[id]) ds.push(id + '_nong_s1', id + '_nong_s2', id + '_nong_s3'); if (id === 'tienhoa' && typeof EVO !== 'undefined') for (const k in EVO.co) if (EVO.co[k]) ds.push(k); } // Evolver: bom hẹn giờ / nổ hụt / xác bom (growfx.js EVO)
-    if (bans.some(b => b.deck.includes('sinhdoi'))) ds.push('fx_sinhdoi_hieu'); // biểu tượng sinh đôi (VX.sinhDoi)
+    // (bỏ nạp fx_sinhdoi_hieu: biểu tượng sinh đôi nổi trên ô đã bỏ 08/11, hieuung.js không vẽ nữa)
     for (const b of bans) for (const id of b.deck) ds.push('glyph/' + id); // biểu tượng nhận diện (ảnh ChatGPT, bóng trắng)
     // ảnh ChatGPT thay hình vẽ code trên canvas: huy hiệu sao, ngọc độ hiếm, icon buff, lõi hư, mũi tên đường, bảng tên bàn
     ds.push('sao_hex', 'sao_hex7', 'ngoc_trang', 'ngoc_xanh', 'ngoc_tim', 'ngoc_vang', 'ngoc_do', 'loi_hu1', 'loi_hu2', 'duong_mui', 'hud_ten_ban', 'fx_vong_lv', 'vong_xich', 'fx_vong_trieu', 'hat_tuyet', 'pandora_dia', 'hu_hoden', 'hu_khoa', 'hu_luoicua', 'hu_manhguong', 'hu_trangkhuyet', 'hu_min', 'hu_cauvong',
