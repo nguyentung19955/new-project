@@ -1,4 +1,4 @@
-# KINH TẾ — Cửa hàng / Rương / Vòng quay / Nhiệm vụ / Sự kiện / Cấp thẻ (cập nhật 09/11/2026)
+# KINH TẾ — Cửa hàng / Rương / Vòng quay / Nhiệm vụ / Sự kiện / Cấp thẻ / Cấp phi công (cập nhật 09/11/2026 — tiến trình đợt 1)
 
 Mã: `thap/js/thebai.js` (cấp thẻ: bản sao + vàng mỗi cấp, túi thưởng trận), `thap/js/kinhte.js` (cửa hàng, rương, quay, nhiệm vụ, điểm danh, thành tựu, sự kiện),
 `thap/js/manh.js` (nguồn mảnh Vàng/Đỏ thêm 09/11), giao diện `thap/js/kinhte-ui.js` + `thap/css/kinhte.css`; kiểm `tools/thap-kt-shop.js`, `tools/thap-kt-manh.js`.
@@ -20,10 +20,10 @@ Theo yêu cầu người dùng (`YEU-CAU-NGUOI-DUNG.md`): **thẻ ĐỎ (Mythic)
 
 ## 2. Số trong game
 
-**Túi thưởng cuối trận** (`THEBAI.thuong`): vàng = 10×wave + 40×trùm + 150 nếu thắng; số lượt rút = 1 + ⌊wave/4⌋, **tối đa 10 (đạt từ wave 36)**;
+**Túi thưởng cuối trận** (`THEBAI.thuong`): vàng = 10×wave + 40×trùm + 150 nếu thắng; số lượt rút (`THEBAI.soLuot`) = min(14, 1 + ⌊min(w,36)/4⌋ + ⌊max(0,w−36)/8⌋) — wave ≤ 36 như cũ, **trần 14 ở wave 68** (tiến trình đợt 1, trước: trần 10 ở wave 36);
 độ hiếm mỗi lượt **58 / 29 / 11 / 1,8 / 0,2 %**; bản sao mỗi lượt Thường 3–6 · Hiếm 2–4 · Sử thi 1–2 · Vàng/Đỏ 1.
-Mỗi lượt 50% lấy thẻ cùng bậc **trong bộ bài vừa chơi** (bộ 5 thẻ), 50% thẻ bất kỳ cùng bậc → thẻ trong bộ lên nhanh hơn nhiều
-(bộ có 2 Vàng: 1 thẻ Vàng cụ thể nhận 0,5/2 + 0,5/32 ≈ 27% số bản Vàng rơi ra; bộ có 1 Đỏ: 0,5 + 0,5/10 = 55% số bản Đỏ).
+Mỗi lượt 50% lấy thẻ cùng bậc **trong bộ bài vừa chơi** (bộ 5 thẻ), 50% thẻ bất kỳ cùng bậc — riêng **Đỏ 30% / 70%** (tiến trình đợt 1) → thẻ trong bộ lên nhanh hơn
+(bộ có 2 Vàng: 1 thẻ Vàng cụ thể nhận 0,5/2 + 0,5/32 ≈ 27% số bản Vàng rơi ra; bộ có 1 Đỏ: 0,3 + 0,7/10 = **37%** số bản Đỏ, trước 55%).
 Roster hiện có: Thường 14 · Hiếm 17 · Sử thi 22 · **Vàng 32 · Đỏ 10** (đã bỏ Hào Quang). Trùm mỗi 10 wave; Solo thắng = qua wave 70 (`LUAT.waveMax`).
 Phần thưởng thẻ "ngẫu nhiên theo bậc" (rương, mốc, lò rèn, nhiệm vụ) chọn đều trong các thẻ **chưa MAX** của bậc đó (`KT.chonThe`).
 
@@ -45,8 +45,13 @@ Bản sao mỗi thẻ: Thường 4–8, Hiếm 2–4, Sử thi 1–2, Huyền th
 (miễn phí 0,5% = 1 bản Huyền thoại; lượt ngọc 1,0% → 70% Huyền thoại / 30% Cổ đại = **0,3% Cổ đại**, không có ở lượt miễn phí).
 
 **Ngọc chỉ kiếm bằng chơi**: nhiệm vụ ngày — bể 10 (4 cái 300–400 vàng · 5 cái 10–15 ngọc · "Reach wave 30" = 1 bản Vàng), chọn 3/ngày, +20 ngọc đủ 3;
+**lọc theo kỷ lục** (mọi chế độ): "Reach wave 15" khi kỷ lục ≥ 12 · "Defeat 2 bosses" ≥ 20 · "Reach wave 30" ≥ 28 (danh sách hôm nay đã lưu có nhiệm vụ vượt kỷ lục → thay ngay); **đổi 1 nhiệm vụ chưa xong/ngày** (miễn phí);
+**nhiệm vụ tuần** (mở cấp phi công 8, reset thứ Hai): 15 trận · 8 trùm · 3 trận kết thúc ≥ kỷ lục − 5 · 10 ụ 5★+ · 12 nhiệm vụ ngày — mỗi việc 20 ngọc, đủ 5 = 40 ngọc + 1 bản Vàng ngẫu nhiên (**+140 ngọc/tuần**);
 điểm danh 7 ngày (300 vàng, 10, Rương Thường, 20, 1 000 vàng, 30, Rương Vàng — không bảo đảm Cổ đại); thành tựu 1 lần (490 ngọc tổng);
-sự kiện tuần (30 ngọc mốc 280 + 60 ngọc mốc 750). Điểm sự kiện mỗi trận = wave + 10 nếu thắng + 5/trùm, **tối đa 60** (chạm trần từ ~wave 45).
+sự kiện tuần (30 ngọc mốc 280 + 60 ngọc mốc 750 + 50 ngọc mốc 2 300). Điểm sự kiện mỗi trận = wave + 10 nếu thắng + 5/trùm, **tối đa 60** (chạm trần từ ~wave 45).
+Thang sự kiện (tiến trình đợt 1): 40 · 100 · 180 · 280 · 400 · 550 · 750 · 1 000 · 1 300 · **1 700 = 3 000 vàng + 1 bản Vàng ngẫu nhiên** · 2 300 = 50 ngọc · **3 600 = 1 bản Đỏ** (trước: Đỏ ở 1 700).
+**Ấn Vàng** (Lò rèn, `MH.an`): **6 bản Vàng thừa** (nhiều thẻ, trừ thẻ đích; lấy thẻ đã MAX trước → thẻ ngoài bộ → thẻ trong bộ, chồng nhiều trước) + **20 000 vàng → 1 bản Vàng TỰ CHỌN**, 1 lần/tuần (người dùng chốt 6:1).
+**Bảo hiểm rương**: nút Rương Vàng hiện cả 2 bộ đếm "Legendary in ≤ N" + "Mythic in ≤ M" (`s.ru.pv/pd`). **Không dùng năng lượng.**
 
 **Cấp thẻ** (`THE` trong thebai.js): cấp đầu Thường 1 · Hiếm 3 · Sử thi 6 · Vàng 9 · Đỏ 11; tối đa **LV15** (Thường/Hiếm/Sử thi) · **LV17** (Vàng/Đỏ).
 Vàng cho cấp L → L+1 theo cấp TUYỆT ĐỐI (mọi bậc chung một bảng): 20 · 50 · 100 · 200 · 400 · 800 · 1 500 · 2 500 · 4 000 · 6 000 · 9 000 · 13 000 · 18 000 · 25 000 · 35 000 · 50 000.
@@ -154,7 +159,7 @@ Riêng người chơi Thường muốn mua bản Đỏ ở Specials (60 000 ≈ 
 | Rương Thần thoại rất đắt | 6 000 ngọc ≈ 13 tuần dành ngọc | ✓ ≥ 5 000 |
 | Daily Specials đỏ hiếm + đắt | ~1 ngày/tuần, 60 000 vàng (≈ 20 ngày vàng Thường / ≈ 9 ngày Giỏi) | ✓ ≤ 1/7 ngày, ≥ 50 000 |
 | Vòng quay: đỏ nhỏ, chỉ lượt ngọc | 0,3%/lượt ngọc, 0 ở lượt miễn phí | ✓ |
-| Sự kiện tuần ≤ 1 bản đỏ ở cuối | chỉ mốc 10/10 (1 700 điểm; trần 60 điểm/trận → ≥ 29 trận/tuần) | ✓ (nhưng xem §9: người chơi giỏi tới mỗi tuần) |
+| Sự kiện tuần ≤ 1 bản đỏ ở cuối | chỉ mốc cuối (**3 600 điểm** từ tiến trình đợt 1; trần 60 điểm/trận → ≥ 60 trận/tuần) | ✓ (nhưng xem §9: người chơi giỏi tới mỗi tuần) |
 
 **Đỏ bất kỳ / tuần**: Thường ~0,6–0,9 bản (≈ 1 bản mỗi 8–12 ngày), Giỏi ~2,2–3 bản (túi trận 1,1 + sự kiện 1 + Specials/lò rèn).
 **1 thẻ Đỏ cụ thể tới LV17**: Thường ~1,5 năm, Giỏi ~8 tháng. **Vàng cụ thể tới LV17**: Thường ~9–10 tháng, Giỏi ~5 tháng. Sử thi trở xuống: dễ hơn (đúng yêu cầu).
@@ -175,7 +180,7 @@ Người dùng: "các cơ chế kiếm thêm mảnh ụ Vàng, Đỏ — Đỏ s
 Một lần tối đa: 30 Vàng + 5 Đỏ. Thường xuyên thêm: ~2,1 Vàng/tuần (nhiệm vụ) + tối đa 3 Vàng + 1 Đỏ/tuần (lò rèn, tốn bản sao + vàng).
 Lưu `turret_kt.mh = { sw, moc, tr, trn, bo, ren: {tuan, n}, renN }`; gộp hồ sơ: cờ OR, `sw`/bộ đếm lấy lớn nhất.
 
-## 9. Điểm bất hợp lý cần người dùng quyết (09/11 — chỉ ghi, chưa sửa code)
+## 9. Điểm bất hợp lý cần người dùng quyết (09/11) — **mục 1, 2, 3, 4 (một phần: Ấn Vàng), 6 (một phần: nhiệm vụ tuần), 7 đã sửa ở tiến trình đợt 1 (§10)**
 
 1. **Mốc Đỏ sự kiện quá dễ với người chơi giỏi**: trần 60 điểm/trận đạt từ wave ~45 → 1 700 điểm chỉ cần ~29 trận/tuần (~4/ngày). Giỏi nhận **1 Đỏ/tuần = ~52 Đỏ/năm** chỉ từ sự kiện — nguồn Đỏ lớn nhất của họ, ngang túi trận. Thường (wave 30, 5 trận) hụt sát (≈1 600). Gợi ý: nâng mốc cuối (vd 2 500–3 000) hoặc giảm trần điểm/trận.
 2. **Túi thưởng chạm trần 10 lượt ở wave 36**: sau wave 36 chỉ còn +10 vàng/wave; trận wave 60 dài gần gấp đôi trận wave 36 mà bản sao như nhau → người chơi giỏi bị thưởng/phút thấp hơn, lợi thế chỉ đến từ số trận + mốc 1 lần. Gợi ý: nới trần (vd 1 + wave/5, tối đa 14) hoặc thêm lượt theo trùm.
@@ -184,3 +189,23 @@ Lưu `turret_kt.mh = { sw, moc, tr, trn, bo, ren: {tuan, n}, renN }`; gộp hồ
 5. **Vàng (tiền) dư cho người chơi giỏi**: ~48 000 vàng/tuần, cả bộ MAX ~630 000 ≈ 13 tuần trong khi bản sao cần 5–8 tháng → vàng chất đống; chỗ tiêu duy nhất có ý nghĩa là ô Đỏ 60 000 (mua được gần như mỗi tuần). Specials Đỏ vì thế thành nguồn đều ~0,1 bản thẻ cụ thể/tuần. Có thể chấp nhận (thưởng chơi nhiều) hoặc thêm chỗ tiêu vàng.
 6. **Ngọc không theo trình độ**: ~460/tuần ở cả 2 mức (chỉ nhiệm vụ/điểm danh/sự kiện); thành tựu wave 50/70 là 1 lần. Ổn với mục tiêu bán ngọc sau này.
 7. **Nhiệm vụ "Reach wave 30"** khó với người chơi mới/thường dưới wave 30 → hôm trúng nhiệm vụ này mất cả thưởng đủ 3 (+20 ngọc). Gợi ý: không tính nó vào điều kiện "đủ 3", hoặc chỉ đưa vào bể khi kỷ lục ≥ 25.
+
+## 10. Tiến trình đợt 1 (09/11 — `thap/js/tientrinh.js` + chỉnh `kinhte.js` / `thebai.js` / `manh.js`; thiết kế `tuvan/tien-trinh/THIET-KE.md`; kiểm `tools/thap-kt-tien-trinh.js`)
+
+Quyết định người dùng: khoá MỌI bậc theo cấp; Ấn Vàng 6:1; mốc Đỏ sự kiện 3 600; không năng lượng; hành trình không thưởng Đỏ.
+
+| Phần | Số | Ghi chú |
+|---|---|---|
+| XP mỗi trận | wave + 3 × trùm hạ + 10 nếu thắng | mọi chế độ (trừ hướng dẫn / trận thử ?mana=) |
+| XP lên cấp L → L+1 | 20 + 15·L (cấp 2 = 35 · 3 = 85 · 6 = 325 · 8 = 560 · 12 = 1 210 · 30 = 7 105 cộng dồn) | sau cấp 30: mỗi 1 000 XP = Rương Thường + 300 vàng |
+| Thưởng mỗi cấp | 150·L vàng + 20 ngọc; cấp 5/10/15/20/25/30 + Rương Vàng | 1 lần (2→30 ≈ 69 600 vàng · 580 ngọc · 6 Rương Vàng) |
+| Mở bậc ụ | Trắng + Xanh: xong/bỏ qua hướng dẫn · Tím: cấp 3 · **Vàng: cấp 6** (+ quà chọn 1 trong 3 thẻ Vàng × 1) · **Đỏ: cấp 12 VÀ kỷ lục ≥ wave 30** | ụ khoá vẫn xem được (thẻ tối + "PILOT LV n"), không vào bộ bài |
+| Người chơi cũ | cấp khởi điểm theo kỷ lục mọi chế độ: ≥ 30 → 12 · ≥ 20 → 8 · ≥ 10 → 5 · có bản lưu → 3 | ụ trong bộ bài + 6 bộ mẫu lúc chuyển được giữ (`cp.giu`); cấp có sẵn không phát lại thưởng |
+| Hành trình 7 ngày | 3 việc/ngày (chỉ nêu kết quả), ngày N mở sau N−1 ngày lịch, làm bù được | tổng ≈ 4 800 vàng · 190 ngọc · Rương Thường · Rương Vàng · 4 Sử thi (chọn 1/3) · 2 bản Vàng (chọn 1/3) · **0 Đỏ** |
+| Nhiệm vụ tuần | 5 × 20 ngọc + đủ 5 = 40 ngọc + 1 bản Vàng | +140 ngọc/tuần (mở cấp 8) |
+
+Lưu `turret_kt.cp = { v, xp, cu, giu, nhanCap, dv, qv, daMo, bao, hj: {ngay0, nhan}, dem, trk, nvt: {tuan, tien, nhan, bonus} }` (khoá mới; `turret_kt.tt` là cờ thành tựu — không đụng).
+Gộp hồ sơ Firebase: XP / cấp đã thưởng / bộ đếm lấy lớn nhất, cờ (giu, daMo, trùm đã hạ, hành trình, nhiệm vụ tuần) OR, ngày bắt đầu hành trình lấy sớm nhất;
+bản mạng của bản game cũ (chưa có `cp`) → quy đổi theo kỷ lục như người chơi cũ (đổi máy không tụt cấp). Nhãn nguồn mới của `KT.cong`: `level`, `journey`.
+Chưa làm ở đợt 1 (theo thiết kế §2.2): khoá chế độ theo cấp (PVP/ONLINE/Leo Tháp…), khoá Lò rèn ở cấp 10 — người dùng chưa chốt.
+

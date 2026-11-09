@@ -1045,3 +1045,8 @@ Tiền tố: *"Same style as attached game screenshot, chunky sci-fi industrial 
 | raw | cỡ / lưới | prompt ngắn (nền magenta #FF00FF đặc, same style as attached, no text) | thay cho (cỡ CSS lớn nhất) |
 |---|---|---|---|
 | raw_rs_xoay | 1024×512, 1 hàng × 2 (ô 512) | 1 "Chunky sci-fi metal smartphone icon lying sideways with a curved glowing cyan arrow showing it rotating to upright, gunmetal + brass trim, thick dark outline" · 2 same phone standing upright with a small green check glow | icon-192 xoay (76×76 → 228×228) |
+
+### TIẾN TRÌNH ĐỢT 1 (09/11, js/tientrinh.js TTA.khoa) — ổ khoá trên thẻ ụ chưa mở: đang CHỈ CHỮ ("PILOT LV n"), chờ gen
+| raw | cỡ / lưới | prompt ngắn (nền magenta #FF00FF đặc, same style as attached, no text) | thay cho (cỡ CSS lớn nhất) |
+|---|---|---|---|
+| raw_tt_khoa | 1024×512, 1 hàng × 2 (ô 512) | 1 "Chunky sci-fi padlock icon, gunmetal body with brass shackle and a small glowing amber keyhole, thick dark outline, front view" · 2 same padlock opened (shackle lifted), small cyan glow | `TTA.khoa` = '' (thẻ ụ khoá trên lưới bộ bài, 24×24 → cắt 72×72; ô 2 cho thông báo mở khoá 22×22) |
