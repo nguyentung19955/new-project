@@ -496,8 +496,9 @@ if (typeof datKhung !== 'function') window.datKhung = function () {
   const wrap = document.getElementById('wrap'); if (!wrap) return false;
   const vw = innerWidth || document.documentElement.clientWidth, vh = innerHeight || document.documentElement.clientHeight;
   if (!(vw > 0 && vh > 0)) return false;
-  const thuc = devicePixelRatio || 1, s = Math.min(vw / 430, vh / 860);
-  wrap.style.left = Math.round((vw - 430 * s) / 2 * thuc) / thuc + 'px'; wrap.style.top = Math.round((vh - 860 * s) / 2 * thuc) / thuc + 'px';
+  const a = typeof vungAT === 'function' ? vungAT() : { t: 0, r: 0, b: 0, l: 0 }, cw = Math.max(1, vw - a.l - a.r), ch = Math.max(1, vh - a.t - a.b); // vùng an toàn (index.html)
+  const thuc = devicePixelRatio || 1, s = Math.min(cw / 430, ch / 860);
+  wrap.style.left = Math.round((a.l + (cw - 430 * s) / 2) * thuc) / thuc + 'px'; wrap.style.top = Math.round((a.t + (ch - 860 * s) / 2) * thuc) / thuc + 'px';
   wrap.style.transformOrigin = '0 0'; wrap.style.transform = 'scale(' + s + ')';
   return true;
 };

@@ -491,7 +491,8 @@ const UP = {
     if (sk && sk.chuDong) meta.push('ACTIVE');
     if (!sk) meta.push('COMING SOON');
     const tenVi = typeof NN !== 'undefined' && NN.vi() ? NN.tenVi(id) : ''; // Tiếng Việt: tên Việt nhỏ dưới tên riêng tiếng Anh
-    P.push('<div class="up-bien"><div class="up-ten">' + upEsc(ten) + '</div>' + (tenVi ? '<div class="up-tenvi" data-nn-giu="1">' + upEsc(tenVi) + '</div>' : '') + '<div class="up-meta">' + meta.join(' • ') + '</div>' +
+    // rà soát 09/11: Tiếng Việt → tiêu đề = tên Việt, tên riêng tiếng Anh nhỏ bên dưới (trước đây ngược lại → tiêu đề còn tiếng Anh)
+    P.push('<div class="up-bien"><div class="up-ten"' + (tenVi ? ' data-nn-giu="1"' : '') + '>' + upEsc(tenVi || ten) + '</div>' + (tenVi && tenVi !== ten ? '<div class="up-tenvi" data-nn-giu="1">' + upEsc(ten) + '</div>' : '') + '<div class="up-meta">' + meta.join(' • ') + '</div>' +
       '<span class="up-bn-ic"><img class="ic" src="' + iconOf(id) + '" alt=""><img class="up-gl" alt="" hidden></span></div>');
     // 4 thông số 2×2
     const bs = sk ? upBangSao(id) : [];

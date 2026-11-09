@@ -23,7 +23,7 @@ const KTUI = {
   so: (v) => Math.floor(v).toLocaleString('en-US'),
   el: (id) => document.getElementById(id),
   TAB: { shop: 'SHOP', vq: 'SPIN', nv: 'QUESTS', sk: 'EVENT' },
-  ten: (id) => ((typeof G !== 'undefined' && G.rosterMap[id]) || {}).ten || id,
+  ten: (id) => { const r = (typeof G !== 'undefined' && G.rosterMap[id]) || {}; return (typeof NN !== 'undefined' && NN.vi && NN.vi() && r.ten_vi) || r.ten || id; }, // Tiếng Việt: tên Việt (roster ten_vi) — rà soát 09/11
 
   // ---------- dựng khung 1 lần ----------
   dung() {

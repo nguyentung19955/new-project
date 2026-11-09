@@ -57,7 +57,7 @@ html body .tb-sb .tb-day img { position: absolute; left: 0; top: 0; width: 100% 
 #ketqua .tb-kq-t b { position: absolute; right: -6px; bottom: -4px; font: 800 13px/1 var(--f-ui, sans-serif); color: #fff; text-shadow: 0 1px 0 #000, 0 0 2px #000; }
 /* MÀN KẾT QUẢ VỪA MỘT MÀN (06/11, iPhone: thua wave 42 phải cuộn mới thấy nút) — mọi chế độ (solo/co-op/pvp/online, thắng/thua):
    khung 430×860 → nội dung co giãn ở giữa, nút ghim đáy (+ vùng an toàn), thưởng 1 hàng cuộn ngang. Kiểm: tools/thap-kt-ketqua-vua.js */
-#ketqua.kq7 .bang { height: 100%; max-height: 100%; overflow: hidden; padding: calc(40px + env(safe-area-inset-top, 0px)) 18px calc(16px + env(safe-area-inset-bottom, 0px)); justify-content: flex-start; }
+#ketqua.kq7 .bang { height: 100%; max-height: 100%; overflow: hidden; padding: 40px 18px 16px; justify-content: flex-start; } /* vùng an toàn: cả khung #wrap đã co vào trong safe-area (index.html vungAT) */
 #ketqua.kq7 .bang > * { flex-shrink: 0; }
 #ketqua.kq7 .kq-ic { width: 104px; height: 104px; }
 #ketqua.kq7.thua .kq-ic { width: 98px; height: 104px; }

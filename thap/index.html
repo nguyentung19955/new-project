@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="tm-ver" content="eaf7695b6e">
+  <meta name="tm-ver" content="f053c62786">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
@@ -62,12 +62,23 @@
     <script>
     // đặt khung #wrap NGAY khi trình duyệt dựng tới đây (trước 40+ tệp js, phông, ảnh) — F5 / mạng chậm trên iPhone Safari
     // không còn màn đen + nền lệch góc phải dưới. taitai.js / REN.coLai() đặt lại mỗi lần đổi cỡ.
+    // VÙNG AN TOÀN (tai thỏ / Dynamic Island / thanh home): đo env(safe-area-inset-*) bằng 1 phần tử dò; khung 430×860 co vào
+    // phần màn còn lại (viewport-fit=cover) → HUD trên/dưới và mọi màn chính không bị che. Máy không có tai thỏ: 0 → như cũ.
+    window.vungAT = function () {
+      var d = document.getElementById('tm-vat');
+      if (!d) { d = document.createElement('div'); d.id = 'tm-vat'; d.setAttribute('aria-hidden', 'true');
+        d.style.cssText = 'position:fixed;left:0;top:0;width:0;height:0;visibility:hidden;pointer-events:none;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)';
+        (document.body || document.documentElement).appendChild(d); }
+      var c = getComputedStyle(d);
+      return { t: parseFloat(c.paddingTop) || 0, r: parseFloat(c.paddingRight) || 0, b: parseFloat(c.paddingBottom) || 0, l: parseFloat(c.paddingLeft) || 0 };
+    };
     function datKhung() {
       var wrap = document.getElementById('wrap'); if (!wrap) return false;
       var vw = innerWidth || document.documentElement.clientWidth, vh = innerHeight || document.documentElement.clientHeight;
       if (!(vw > 0 && vh > 0)) return false;
-      var thuc = devicePixelRatio || 1, s = Math.min(vw / 430, vh / 860);
-      wrap.style.left = Math.round((vw - 430 * s) / 2 * thuc) / thuc + 'px'; wrap.style.top = Math.round((vh - 860 * s) / 2 * thuc) / thuc + 'px';
+      var a = vungAT(), cw = Math.max(1, vw - a.l - a.r), ch = Math.max(1, vh - a.t - a.b);
+      var thuc = devicePixelRatio || 1, s = Math.min(cw / 430, ch / 860);
+      wrap.style.left = Math.round((a.l + (cw - 430 * s) / 2) * thuc) / thuc + 'px'; wrap.style.top = Math.round((a.t + (ch - 860 * s) / 2) * thuc) / thuc + 'px';
       wrap.style.transformOrigin = '0 0'; wrap.style.transform = 'scale(' + s + ')';
       return true;
     }
@@ -223,7 +234,7 @@
   <link rel="stylesheet" href="css/otoigian.css?v=e758e9de" data-b="21955"> <!-- ô tướng tối giản kiểu DCDW (o-toigian): nạp cuối -->
   <link rel="stylesheet" href="css/dkdcdw.css?v=54669e16" data-b="3662"> <!-- màn xây bộ bài bố cục DCDW -->
   <link rel="stylesheet" href="css/khongvien-mana.css?v=6519363e" data-b="4867"> <!-- bỏ viền/quầng "đủ mana" trên khay trận: nạp cuối -->
-  <link rel="stylesheet" href="css/thebai.css?v=64d29d46" data-b="7626"> <!-- cấp thẻ DCDW -->
+  <link rel="stylesheet" href="css/thebai.css?v=36fa7656" data-b="7635"> <!-- cấp thẻ DCDW -->
   <link rel="stylesheet" href="css/bopopup.css?v=2efcc6e6" data-b="983"> <!-- bỏ chú thích/popup chữ trong trận (DCDW) -->
   <link rel="stylesheet" href="css/nut-trieu.css?v=27b15ffe" data-b="879"> <!-- nút SUMMON luôn hiện (bàn đầy = nút tắt rõ, không còn hốc trống) -->
   <link rel="stylesheet" href="css/tietkiem.css?v=216ce92f" data-b="503"> <!-- gợi ý tiết kiệm pin (js/tietkiem.js) -->
@@ -235,16 +246,17 @@
   <link rel="stylesheet" href="css/kinhte.css?v=dd2de6aa" data-b="18054"> <!-- cửa hàng / rương / vòng quay / nhiệm vụ / sự kiện (js/kinhte-ui.js) -->
   <link rel="stylesheet" href="css/manh.css?v=c66b4df9" data-b="2049"> <!-- nguồn mảnh Vàng/Đỏ (js/manh.js) -->
   <link rel="stylesheet" href="css/trumxem.css?v=d34373b9" data-b="3392"> <!-- xem 12 trùm ở HOME (js/trumxem.js) -->
+  <link rel="stylesheet" href="css/rasoat.css?v=070c3bb7" data-b="6703"> <!-- rà soát thiết kế 09/11: lớp phủ xoay dọc, nút "i" trên thẻ, sàn cỡ chữ 12px, vùng chạm ≥48 (≈44 px màn 390) -->
   <script src="js/ver-anh.js?v=11b85fe9"></script>
   <script src="js/donet.js?v=34c51606" data-b="2659"></script>
   <script src="js/font.js?v=26e0ac3d" data-b="1038"></script>
   <script src="js/taitai-anh.js?v=2adc1d8e" data-b="24519"></script>
-  <script src="js/taitai.js?v=0a96dded" data-b="40260"></script>
+  <script src="js/taitai.js?v=34feed21" data-b="40457"></script>
   <script src="js/meta.js?v=107c8d71" data-b="33968"></script>
   <script src="js/text.js?v=17971b5a" data-b="28778"></script>
-  <script src="js/ngonngu-vi.js?v=58dad9d2" data-b="604758"></script> <!-- từ điển Tiếng Việt (VI_DICH / VI_MAU) -->
+  <script src="js/ngonngu-vi.js?v=20dc2e2a" data-b="605694"></script> <!-- từ điển Tiếng Việt (VI_DICH / VI_MAU) -->
   <script src="js/ngonngu.js?v=353ca939" data-b="15052"></script> <!-- Cài đặt → LANGUAGE: English / Tiếng Việt -->
-  <script src="js/data.js?v=50db9821" data-b="29157"></script>
+  <script src="js/data.js?v=30363ed5" data-b="29351"></script>
   <script src="js/thebai.js?v=8ca4178a" data-b="11631"></script> <!-- cấp thẻ ngoài trận kiểu DCDW (bản sao + vàng) -->
   <script src="js/fx.js?v=78168c08" data-b="9704"></script>
   <script src="js/tiervfx.js?v=bf0ffc12" data-b="5100"></script>
@@ -262,7 +274,7 @@
   <script src="js/skills5.js?v=f77d0ff5" data-b="54363"></script>
   <script src="js/vangmoi1.js?v=1ef14401" data-b="49382"></script> <!-- 4 ụ vàng mới đợt 1: Ember Relay, Quantum Choir, Fusion Archive, Hero Foundry -->
   <script src="js/hotro.js?v=d32fba30" data-b="20081"></script>
-  <script src="js/render.js?v=e3ead9e9" data-b="99926"></script>
+  <script src="js/render.js?v=5dc1832a" data-b="100142"></script>
   <script src="js/corehud.js?v=213c5eae" data-b="8090"></script>
   <script src="js/quaianim.js?v=f3c6f1cc" data-b="73434"></script>
   <script src="js/support.js?v=dacc570a" data-b="10659"></script>
@@ -271,12 +283,12 @@
   <script src="js/skills7.js?v=45a231c6" data-b="46573"></script> <!-- ụ vàng mới đợt 2: Blood Circuit · Hex Saboteur · Sanctum · Prism Thief -->
   <script src="js/jackpot.js?v=71f473e3" data-b="23770"></script> <!-- ụ cờ bạc LUCKY SLOT (cobac, Đỏ): quay xèng quả + JACKPOT — jackpot cũ các ụ khác đã bỏ 08/11 -->
   <script src="js/thacmana.js?v=40f0a854" data-b="10062"></script> <!-- ụ Đỏ mana ARCANE CASCADE (thacmana): bắn nảy theo mana đang có + MANA FLOOD -->
-  <script src="js/ui.js?v=08d41d1e" data-b="45900"></script>
+  <script src="js/ui.js?v=c77e3005" data-b="46110"></script>
   <script src="js/tuongmoi-ui.js?v=f0cadfd8" data-b="1594"></script>
   <script src="js/glyph.js?v=913781ca" data-b="602"></script>
   <script src="js/nhandien.js?v=07a99dc2" data-b="10953"></script>
   <script src="js/statthuc.js?v=ae050dba" data-b="10501"></script>
-  <script src="js/unitpage.js?v=9e7eade5" data-b="66967"></script>
+  <script src="js/unitpage.js?v=14457eb9" data-b="67210"></script>
   <script src="js/growfx.js?v=5cd8726f" data-b="69120"></script>
   <script src="js/buffvfx.js?v=21fcbb16" data-b="13287"></script>
   <script src="js/fxu-meta.js?v=9b0f7d3c" data-b="16756"></script>
@@ -294,7 +306,7 @@
   <script src="js/tien-ui.js?v=2d9861f1" data-b="9187"></script>
   <script src="js/chihuy-the.js?v=3c1ae5df" data-b="4704"></script>
   <script src="js/huongdan.js?v=f5decce2" data-b="13434"></script>
-  <script src="js/bobai.js?v=c2684c53" data-b="9474"></script>
+  <script src="js/bobai.js?v=2f58c704" data-b="9568"></script>
   <script src="js/ketqua.js?v=c5040f66" data-b="7241"></script>
   <script src="js/hudtop.js?v=34512e54" data-b="11031"></script>
   <script src="js/demkn.js?v=8dab6df4" data-b="12135"></script>
@@ -302,8 +314,8 @@
   <script src="js/bangfx.js?v=88b82f21" data-b="6314"></script> <!-- hình chiêu Freezer: mảnh băng bay, bọc băng, vỡ -->
   <script src="js/hudb.js?v=18babafa" data-b="13620"></script>
   <script src="js/home.js?v=d919c8e6" data-b="30229"></script>
-  <script src="js/trumxem.js?v=b2673b76" data-b="7597"></script> <!-- HOME → BOSSES: danh sách + chi tiết 12 trùm (wave, máu, chiêu) -->
-  <script src="js/dkkeo.js?v=9763095c" data-b="21198"></script>
+  <script src="js/trumxem.js?v=c3204351" data-b="8104"></script> <!-- HOME → BOSSES: danh sách + chi tiết 12 trùm (wave, máu, chiêu) -->
+  <script src="js/dkkeo.js?v=94cbeac4" data-b="21275"></script>
   <!-- ONLINE: tài khoản + CO-OP 2 người (Firebase Realtime Database) — SDK chỉ tải khi cần -->
   <script src="js/online/firebase-config.js?v=9e21ce47" data-b="926"></script>
   <script src="js/online/net.js?v=4f6e110f" data-b="13773"></script>
@@ -321,8 +333,8 @@
   <script src="js/ctdeck.js?v=fd4a99c5" data-b="6752"></script> <!-- chi tiết ụ từ màn bộ bài: thêm/bỏ = quay về bộ bài -->
   <script src="js/dkcham.js?v=ace0d1fc" data-b="24649"></script> <!-- chạm màn bộ bài kiểu DCDW: bỏ/thêm/đổi theo ô, giữ = chi tiết, PRESET tự lưu -->
   <script src="js/thebai-ui.js?v=b74aa855" data-b="6922"></script> <!-- LV + thanh bản sao trên thẻ, nút LEVEL UP ở trang ụ, túi thưởng cuối trận -->
-  <script src="js/kinhte.js?v=73279669" data-b="26224"></script> <!-- kinh tế ngoài trận: ngọc, cửa hàng, rương, vòng quay, nhiệm vụ, sự kiện (tuvan/shop/KINH-TE.md) -->
-  <script src="js/kinhte-ui.js?v=230b7b5d" data-b="24792"></script>
+  <script src="js/kinhte.js?v=e62d3efe" data-b="26319"></script> <!-- kinh tế ngoài trận: ngọc, cửa hàng, rương, vòng quay, nhiệm vụ, sự kiện (tuvan/shop/KINH-TE.md) -->
+  <script src="js/kinhte-ui.js?v=5c38ced8" data-b="24945"></script>
   <script src="js/manh.js?v=3bdc3772" data-b="15599"></script> <!-- nguồn mảnh Vàng/Đỏ: mốc wave Solo, trùm lần đầu, lò rèn (js/manh.js) -->
   <script src="js/bopopup.js?v=ec655e82" data-b="7029"></script> <!-- bỏ chú thích/popup chữ trong trận: nạp sau cùng -->
   <script src="js/tietkiem.js?v=79936d0b" data-b="3483"></script> <!-- tiết kiệm pin / chống nóng máy (tuvan/nong) -->
@@ -339,6 +351,7 @@
   <script src="js/cm-meta.js?v=abff3927" data-b="163"></script> <script src="js/comoi.js?v=693860e5" data-b="11454"></script> <!-- CƠ CHẾ MỚI đợt 1: Pháo La Bàn (mũi tên + số), Lửa Thập Tự (vệt lửa hàng/cột), Drone Kéo Xa (dây kéo) — tuvan/co-che-moi -->
   <script src="js/anim-meta.js?v=eb95b1d1" data-b="4629"></script>
   <script src="js/anim.js?v=ac865e8e" data-b="18067"></script> <!-- ANIMATION HYBRID: ụ sống — thở, tụ lực, giật/hồi lò xo, muzzle socket, nhóm chuyển động 93 ụ (tuvan/anim) -->
+  <script src="js/rasoat.js?v=d033b3e9" data-b="6813"></script> <!-- rà soát thiết kế 09/11: khoá dọc (lớp phủ + tạm dừng trận), nút "i" mở chi tiết ụ -->
   </template>
   <script id="tm-nap-js">
   // NẠP KHỞI ĐỘNG + THANH TIẾN ĐỘ THEO BYTE (TDO). css trước (song song) → js (song song, chạy đúng thứ tự). Không chặn vẽ màn tải.

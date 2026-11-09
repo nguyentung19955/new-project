@@ -20,7 +20,7 @@ const DK = {
   bac: (id) => (G.rosterMap[id] && G.rosterMap[id].bac) || 'trang',
   oS() { const a = [...document.querySelectorAll('#chon-bo [data-slot]:not([data-slot="mv"])')]; return a.length ? a : [...document.querySelectorAll('#chon-bo .o-bo')]; },
   oMV: () => document.querySelector('#chon-bo [data-slot="mv"], #chon-bo .o-mv'),
-  theCua(t) { const c = t && t.closest && t.closest('#chon-luoi [data-id]'); return c && !c.closest('[data-act="bb-thu"], [data-act^="hd-"]') ? c : null; },
+  theCua(t) { const c = t && t.closest && t.closest('#chon-luoi [data-id]'); return c && !c.closest('[data-act="bb-thu"], [data-act^="hd-"]') && !t.closest('.the-i') ? c : null; }, // .the-i = nút chi tiết (rasoat.js), không kéo
   oCua(t) { const o = t && t.closest && t.closest('#chon-bo [data-slot][data-id], #chon-bo .o-bo[data-id]'); return o && o.dataset.slot !== 'mv' ? o : null; },
   luoiDK() { const l = document.getElementById('chon-luoi'); return this.moDuoc() && l ? l : null; },
 

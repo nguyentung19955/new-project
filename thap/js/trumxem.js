@@ -36,7 +36,10 @@ const TX = {
   hp() { return typeof NN !== 'undefined' && NN.vi && NN.vi() ? 'MÁU' : 'HP'; },
   anh(id) { return 'assets/trum_' + id + '_portrait.png'; },
   e: (v) => String(v == null ? '' : v).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])),
-  tenVi(id) { return typeof NN !== 'undefined' && NN.vi && NN.vi() && this.VI[id] ? '<i class="tx-vi" data-nn-giu="1">' + this.VI[id] + '</i>' : ''; },
+  // rà soát 09/11: Tiếng Việt → tên chính = tên Việt, tên riêng tiếng Anh nhỏ bên dưới
+  laVi(id) { return typeof NN !== 'undefined' && NN.vi && NN.vi() && !!this.VI[id]; },
+  tenChinh(id) { return this.laVi(id) ? '<b data-nn-giu="1">' + this.VI[id] + '</b>' : '<b>' + this.e(TRUM[id].ten) + '</b>'; },
+  tenVi(id) { return this.laVi(id) ? '<i class="tx-vi" data-nn-giu="1">' + this.e(TRUM[id].ten) + '</i>' : ''; },
 
   moDS() {
     const best = this.best();
@@ -44,10 +47,11 @@ const TX = {
       const T = TRUM[id], w = this.tu(id), khoa = best < w;
       return '<button class="hm-hang tx-hang' + (khoa ? ' khoa' : '') + '" data-act="tx-ct" data-id="' + id + '" style="--tm:' + T.mau + '">' +
         '<span class="tx-po"><img src="' + this.anh(id) + '" alt="" draggable="false"></span>' +
-        '<span class="tx-chu"><b>' + this.e(T.ten) + '</b>' + this.tenVi(id) +
-        '<span class="tx-kn"><em>' + this.e(T.kn) + '</em></span>' +
-        '<small class="tx-mo">' + this.e(T.mo) + '</small></span>' +
-        '<span class="tx-phai"><small>' + (khoa ? 'REACH WAVE ' + w : 'FROM WAVE ' + w) + '</small><i data-nn-giu="1">' + this.hp() + '</i><strong>' + this.so(this.mau(id, w)) + '</strong></span></button>';
+        '<span class="tx-chu">' + this.tenChinh(id) + this.tenVi(id) +
+        // rà soát 09/11: bỏ cột phải "FROM WAVE 10 · HP 22.4K" (giống hệt ở mọi trùm — đã ghi ở tiêu đề / trang chi tiết);
+        // chỉ giữ thông tin KHÁC NHAU: kiểu chiêu khi không phải chủ động thường (ON DEATH / PASSIVE) và mốc mở khi chưa gặp
+        '<span class="tx-kn"><em>' + this.e(T.kn) + '</em>' + (this.KIEU[id] ? '<i>' + this.KIEU[id] + '</i>' : '') + (khoa ? '<i class="tx-khoa-i">REACH WAVE ' + w + '</i>' : '') + '</span>' +
+        '<small class="tx-mo">' + this.e(T.mo) + '</small></span></button>';
     }).join('');
     HM.mo('trum', HM.dau('BOSSES', 'A boss every ' + LUAT.songTrum + ' waves · tap one for details') + '<div class="hm-ds tx-ds">' + hang + '</div>');
   },
@@ -59,7 +63,7 @@ const TX = {
     const dong = (a, b) => '<div class="tx-dong"><span>' + a + '</span><b>' + b + '</b></div>';
     const h = '<div class="tx-ct' + (khoa ? ' khoa' : '') + '" style="--tm:' + T.mau + '">' +
       '<div class="tx-ct-dau"><span class="tx-po tx-po-to"><img src="' + this.anh(id) + '" alt="" draggable="false"></span>' +
-        '<span class="tx-chu"><b>' + this.e(T.ten) + '</b>' + this.tenVi(id) + (khoa ? '<small class="tx-khoa">REACH WAVE ' + w + '</small>' : '') + '</span></div>' +
+        '<span class="tx-chu">' + this.tenChinh(id) + this.tenVi(id) + (khoa ? '<small class="tx-khoa">REACH WAVE ' + w + '</small>' : '') + '</span></div>' +
       '<div class="hm-loc-nh">SKILL</div>' +
       '<div class="tx-o"><div class="tx-kn"><em>' + this.e(T.kn) + '</em><i>' + kieu + '</i></div><p>' + this.e(T.mo) + '</p>' +
         (kieu === 'ACTIVE' ? '<small>Casts every ' + this.nhip(w) + ' s · red target marks 1.4 s before</small>' : '') + '</div>' +

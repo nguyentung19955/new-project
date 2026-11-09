@@ -83,7 +83,7 @@ const KT = {
     if (tuan) { const th = (d.getDay() + 6) % 7; t.setDate(t.getDate() + (6 - th)); }
     return Math.max(0, t - d);
   },
-  dongHo(ms) { const s = Math.floor(ms / 1000), h = Math.floor(s / 3600), m = Math.floor(s / 60) % 60, x = s % 60, p = (v) => (v < 10 ? '0' : '') + v; return h >= 48 ? Math.floor(h / 24) + 'd ' + (h % 24) + 'h' : p(h) + ':' + p(m) + ':' + p(x); },
+  dongHo(ms) { const s = Math.floor(ms / 1000), h = Math.floor(s / 3600), m = Math.floor(s / 60) % 60, x = s % 60, p = (v) => (v < 10 ? '0' : '') + v; return h >= 48 ? (typeof NN !== 'undefined' && NN.vi && NN.vi() ? Math.floor(h / 24) + 'n ' + (h % 24) + 'g' : Math.floor(h / 24) + 'd ' + (h % 24) + 'h') : p(h) + ':' + p(m) + ':' + p(x); },
 
   // ---------- lưu / di chuyển ----------
   moi() { return { v: this.V, pid: Math.random().toString(36).slice(2, 10), n: 0, ngayMax: 0, sp: {}, ru: { pv: 0, pd: 0, mo: 0 }, vq: {}, nv: {}, dn: { ngay: 0, so: 0 }, sk: {}, tt: {}, tk: { thang: 0, trum: 0, sao7: 0, wave: 0, nang: 0, ruong: 0 }, mvMo: {} }; }, // mvMo: chỉ huy đã mở bằng ngọc (08/11)

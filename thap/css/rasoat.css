@@ -1,0 +1,75 @@
+/* RÀ SOÁT THIẾT KẾ 09/11 (canvas rà soát — người dùng duyệt 5 mục). Nạp sau kinhte/trumxem/thebai/dkdcdw → ghi đè.
+   QUY-TAC-HINH: không vẽ vật thể bằng code — chỉ cỡ chữ, vùng chạm (pseudo-element trong suốt), vị trí, ảnh PNG có sẵn
+   (khung_bang, nen_menu, p7_ic_tin, icon-192). Đơn vị: px của khung 430×860 (màn 390 rộng × 0.907) → 12px ≈ 10.9 px màn, 48px ≈ 43.5 px màn. */
+
+/* ---------- 1 · LỚP PHỦ "XOAY DỌC MÁY" (js/rasoat.js) — nằm NGOÀI #wrap, phủ toàn màn ---------- */
+#xoay-doc { position: fixed; inset: 0; z-index: 2147483000; display: flex; align-items: center; justify-content: center;
+  background: #0b0d11 url(../assets/nen_menu.jpg?v=34f795d7) center / cover no-repeat; touch-action: none; user-select: none; -webkit-user-select: none; }
+#xoay-doc[hidden] { display: none; }
+#xoay-doc::before { content: ''; position: absolute; inset: 0; background: #05070bcc; } /* làm tối nền (mặt nạ, không phải vật thể) */
+#xoay-doc .xd-tam { position: relative; box-sizing: border-box; width: min(440px, 86vw); max-height: 88vh; padding: 22px 30px 24px; display: flex; align-items: center; gap: 22px;
+  border: 0 solid transparent; border-width: 26px; border-image: url(../assets/khung_bang.webp?v=24d6a27d) 85.2 fill / 26px stretch; color: #e9edf3; font-family: 'TM UI', 'TM Display', system-ui, sans-serif; }
+#xoay-doc .xd-ic { flex: none; width: 76px; height: 76px; animation: xd-xoay 2.4s ease-in-out infinite; }
+#xoay-doc .xd-ic img { width: 100%; height: 100%; object-fit: contain; display: block; border-radius: 18px; }
+#xoay-doc .xd-chu { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+#xoay-doc .xd-chu b { font: 800 22px/1.1 'TM Display', system-ui, sans-serif; letter-spacing: .06em; color: #ffd677; text-shadow: 0 2px 0 #000; }
+#xoay-doc .xd-chu span { font: 700 15px/1.3 'TM UI', system-ui, sans-serif; }
+#xoay-doc .xd-chu small { font: 600 13px/1.3 'TM UI', system-ui, sans-serif; color: #aab4c3; }
+#xoay-doc .xd-chu small[hidden] { display: none; }
+@keyframes xd-xoay { 0%, 15% { transform: rotate(-90deg); } 45%, 100% { transform: rotate(0deg); } }
+@media (prefers-reduced-motion: reduce) { #xoay-doc .xd-ic { animation: none; } }
+html.xoay-ngang #wrap { visibility: hidden; } /* không lộ cột game 195 px phía sau lớp phủ */
+
+/* ---------- 2 · NÚT "i" TRÊN THẺ Ụ (màn bộ bài / bộ sưu tập) — mở trang chi tiết, vẫn giữ cách giữ thẻ ---------- */
+#chon #chon-luoi .c .the-i { position: absolute; right: -3px; top: -3px; z-index: 9; width: 22px; height: 22px; padding: 0; margin: 0; border: 0; background: none;
+  display: flex; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+#chon #chon-luoi .c .the-i img { width: 22px; height: 22px; object-fit: contain; display: block; pointer-events: none; filter: drop-shadow(0 1px 1px #000); }
+#chon #chon-luoi .c .the-i::before { content: ''; position: absolute; left: -16px; top: -10px; right: -10px; bottom: -16px; } /* vùng chạm 48×48, hình 22 px */
+#chon #chon-luoi .c.khoa .the-i { display: none; }
+
+/* ---------- 3 · SÀN CỠ CHỮ 12px (≈ 11 px màn 390) cho chữ có nghĩa ---------- */
+html body #wrap .kt-nut > b { font-size: 12px; }
+html body #wrap .kt-bn small, html body #wrap .kt-muc small, html body #wrap .kt-skd small, html body #wrap .kt-skp > small, html body #wrap .kt-chu { font-size: 12px; }
+html body #wrap .kt-o > small { font-size: 12px; line-height: 1.15; white-space: normal; text-align: center; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.3em; }
+html body #wrap .kt-rc > small { font-size: 12px; }
+html body #wrap .kt-dn-o small { font-size: 11px; letter-spacing: 0; white-space: nowrap; }
+html body #wrap .kt-dn-o .kt-r > b, html body #wrap .kt-h > .kt-r > b, html body #wrap .kt-r > b { font-size: 12px; }
+html body #wrap .mh-gia { font-size: 12px; }
+html body #wrap .tb-sb b { font-size: 12px; }
+html body #wrap .tb-sb { height: 17px; }
+html body #wrap #chon #chon-luoi .c .tb-lv { font-size: 12px; }
+html body #wrap #chon #chon-luoi .c .tb-sb { height: 15px; }
+html body #wrap #chon #chon-luoi .c .tb-sb b { font-size: 11.5px; }
+html body #wrap #ketqua .tb-kq > small { font-size: 12px; }
+html body #wrap .dkd-pre-t { font-size: 12px; }
+html body #wrap #chon .dkd-cmd-chu small, html body #wrap #chon .dkd-cmd-chu small i { font-size: 12px; }
+html body #wrap #chon .dkd-xep .dkd-x { font-size: 12px; }
+html body #wrap .tx-vi { font-size: 12px; }
+html body #wrap .tx-kn em { font-size: 12px; }
+html body #wrap .tx-kn i { font-size: 11.5px; }
+html body #wrap .tx-kn i.tx-khoa-i { color: #ffb35a; }
+html body #wrap .hm-hang small.tx-mo { font-size: 12px; }
+html body #wrap .tx-dong span { font-size: 12px; }
+html body #wrap .tx-khoa { font-size: 12px; }
+html body #wrap .tx-o small { font-size: 12px; }
+
+/* ---------- 4 · VÙNG CHẠM ≥ 48 (≈ 44 px màn) ---------- */
+:root { --cham: 48px; } /* nút icon (Cài đặt, Lùi, Đóng), chip lọc — trước 44 khung = 40 px màn */
+html body #wrap #chon .dkd-pre { height: 34px; }
+html body #wrap #chon .dkd-pre .dkd-so { position: relative; flex: 1 1 0; width: auto; max-width: 52px; } /* ô bộ mẫu giãn hết hàng (≈ 48 rộng) */
+html body #wrap #chon .dkd-pre .dkd-so::before { content: ''; position: absolute; left: -3px; right: -3px; top: -7px; bottom: -7px; } /* cao 48 */
+html body #wrap #chon .dkd-xep .dkd-x { height: 48px; min-width: 48px; justify-content: center; }
+html body #wrap #chon .dk-chu { min-height: 48px; }
+html body #wrap #chon .dk-loc.hm-ic1 { height: 48px; }
+html body #wrap #bb-khoa .nut-xep { min-height: 44px; }
+html body #wrap #chon #kt .kt-i::before { content: ''; position: absolute; inset: -8px; }
+html body #wrap #chon #kt .kt-slot::before { content: ''; position: absolute; left: -2px; right: -2px; top: -9px; bottom: -9px; }
+html body #wrap .hm-tam-cai .hm-nut2 { min-height: 48px; }
+
+/* ---------- 5 · THÔNG TIN LẶP + BỐ CỤC DỌC ---------- */
+/* dòng nhiệm vụ / sự kiện: số tiến độ đã có ở nút bên phải → bỏ số trong thanh (thanh vẫn cho thấy mức đầy) */
+html body #wrap .kt-h-g .tb-sb b { display: none; }
+html body #wrap .kt-h-g .tb-sb { height: 13px; }
+/* màn kết quả: chia đều khoảng trống trên khối kết quả và trước nút (nút vẫn ghim đáy cho ngón cái) */
+html body #wrap #ketqua.kq7:not(.trung) .bang > :first-child { margin-top: auto; }
+html body #wrap #ketqua.kq7.mo-ct .bang > :first-child { margin-top: 0; }
