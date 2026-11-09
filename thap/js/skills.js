@@ -384,7 +384,7 @@ SKILLS.wallgen = { // Máy Dựng Tường (Cleopatra): định kỳ dựng tư�
     if (tg) { xoayDau(T, null, dt, tg.x, tg.y); return true; }
     const E = quaiDau(B);
     xoayDau(T, E, dt);
-    T.nap += dt * (1 + T.buf.toc) / Math.max(5, 9 - 0.4 * T.sao);
+    T.nap += dt * nhipU(T) / Math.max(5, 9 - 0.4 * T.sao); // 09/11: nhipU (gồm cấp thẻ tốc, Ép Xung) thay 1 + buf.toc
     if (T.nap >= 1 && E) {
       const p = G.duong[E.p], s = Math.min(p.len - 10, E.s + 30);
       const [x, y, goc] = viTri(p, s);
@@ -457,7 +457,7 @@ SKILLS.overlord = { // Overlord (Jacheongbi): nạp chậm, đầy thì bắn si
   capNhat(G, B, T, dt) {
     const E = quaiDau(B);
     xoayDau(T, E, dt);
-    T.nap = Math.min(1, T.nap + dt * (1 + T.buf.toc) / this.napS(T));
+    T.nap = Math.min(1, T.nap + dt * nhipU(T) / this.napS(T)); // 09/11: nhipU (gồm cấp thẻ tốc, Ép Xung) thay 1 + buf.toc
     if (T.nap >= 1 && E) {
       const c = tamU(T);
       if (Math.abs(gocLech(T.goc, Math.atan2(E.y - c.y, E.x - c.x))) > 0.2) return true;

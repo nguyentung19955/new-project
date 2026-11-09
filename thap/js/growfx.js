@@ -295,7 +295,7 @@ P.overlord = () => {
   sk.capNhat = function (G, B, T, dt) {
     const r = cn.call(this, G, B, T, dt);
     if (T.gd === 2) {
-      T._arc = (T._arc == null ? 0.5 : T._arc) - dt * (1 + T.buf.toc);
+      T._arc = (T._arc == null ? 0.5 : T._arc) - dt * nhipU(T); // 09/11: cùng nhịp với Overlord (nhipU)
       if (T._arc <= 0) {
         T._arc = 1.2; const [x, y] = dauNong(T);
         let M = null, best = 180; for (const E of dsMucTieu(B)) if (!E.chet) { const L = Math.hypot(E.x - x, E.y - y); if (L < best) { best = L; M = E; } }

@@ -14,7 +14,7 @@ const TIERS = {
   xanh:  { ten: TEXT.tier.xanh, tenDai: TEXT.tier.xanh,  mau: '#4fb8ff', mau2: '#1f6fd1', hs: 1.3, thuTu: 1 },
   tim:   { ten: TEXT.tier.tim, tenDai: TEXT.tier.tim, mau: '#c77dff', mau2: '#7b2cd6', hs: 2.0, thuTu: 2 },
   vang:  { ten: TEXT.tier.vang, tenDai: TEXT.tier.vang, mau: '#ffd23f', mau2: '#d18b00', hs: 2.6, thuTu: 3 },
-  do:    { ten: TEXT.tier.do, tenDai: TEXT.tier.do, mau: '#ff4b3e', mau2: '#b3121c', hs: 2.7, thuTu: 4 },
+  do:    { ten: TEXT.tier.do, tenDai: TEXT.tier.do, mau: '#ff4b3e', mau2: '#b3121c', hs: 3.3, thuTu: 4 }, // 09/11 (tốc bắn Vàng/Đỏ): 2.7 → 3.3 — trước chỉ hơn Vàng 4% (docs/demo-hop-tuong/tocban/DO-VANG-DO.md)
 };
 const TIER_LIST = ['trang', 'xanh', 'tim', 'vang', 'do'];
 
@@ -235,11 +235,15 @@ function boCuc(che) {
 // CẤP THẺ VÀNG / ĐỎ theo VAI TRÒ (08/11, người dùng duyệt — CHATGPT-SPEC A0): mỗi cấp trên cấp đầu Tấn công +5% ST & +2% tốc bắn,
 //   Hỗ trợ +4% giá trị cơ chế, Đặc biệt / Khống chế +3% (ST của đòn phụ nếu có). Cộng vào cùng nhóm, không nhân kép. Bậc khác: như cũ (THE.pct).
 const CAP_VD = { tc: { dmg: 0.05, toc: 0.02 }, ht: { dmg: 0.04, toc: 0, ht: 0.04 }, db: { dmg: 0.03, toc: 0, db: 0.03 } };
+// 09/11 (tốc bắn Vàng/Đỏ — người dùng: "để có ụ đỏ phải mất rất nhiều công mà kết quả không xứng"): thẻ ĐỎ bắt đầu LV11 nên chỉ có 6 cấp tới LV17
+//   (Vàng 8 cấp) → cùng mức "max thẻ" Đỏ lại được ÍT % hơn Vàng (+30%/+12% so với +40%/+16%). Đỏ: mỗi cấp lớn hơn để max thẻ ≥ Vàng.
+//   TOC_DO: tốc bắn riêng bậc Đỏ cho ụ Tấn công (nhân trong tocThe → áp cả tocU lẫn nhịp tự quản nhipU).
+const CAP_DO = { tc: { dmg: 0.07, toc: 0.03 }, ht: { dmg: 0.055, toc: 0, ht: 0.055 }, db: { dmg: 0.04, toc: 0, db: 0.04 } }, TOC_DO = 1.15;
 function capVD(id) {
   const r = typeof G !== 'undefined' && G.rosterMap && G.rosterMap[id];
   if (!r || (r.bac !== 'vang' && r.bac !== 'do')) return null;
-  const sk = typeof SKILLS !== 'undefined' && SKILLS[id];
-  return CAP_VD[(sk && sk.vai) || 'tc'] || CAP_VD.db;
+  const sk = typeof SKILLS !== 'undefined' && SKILLS[id], bang = r.bac === 'do' ? CAP_DO : CAP_VD;
+  return bang[(sk && sk.vai) || 'tc'] || bang.db;
 }
 function hsThe(B, id) {
   const c = B && B.capThe && B.capThe[id]; if (!c) return 1;
@@ -247,10 +251,14 @@ function hsThe(B, id) {
   const r = typeof G !== 'undefined' && G.rosterMap && G.rosterMap[id];
   return 1 + c * ((typeof THE !== 'undefined' && r && THE.pct[r.bac]) || 0.05);
 }
-// tốc bắn theo cấp thẻ (chỉ ụ Tấn công VÀNG / ĐỎ: +2% mỗi cấp) — tocU() nhân vào
-function tocThe(B, id) { const c = B && B.capThe && B.capThe[id]; if (!c) return 1; const v = capVD(id); return v && v.toc ? 1 + c * v.toc : 1; }
-// hệ số cơ chế Đặc biệt / Khống chế VÀNG / ĐỎ theo cấp thẻ: 1 + 0.03 × số cấp trên cấp đầu (vd. buff Blood Rite, ô anh hùng, Anvil)
-function heDB(B, id) { const c = (B && B.capThe && B.capThe[id]) | 0; return 1 + 0.03 * c; }
+// tốc bắn theo cấp thẻ (chỉ ụ Tấn công VÀNG +2% / ĐỎ +3% mỗi cấp) × tốc bậc Đỏ TOC_DO (ụ Tấn công Đỏ, mọi cấp) — tocU() và nhipU() nhân vào
+function tocThe(B, id) {
+  const v = capVD(id); if (!v || !v.toc) return 1;
+  const c = (B && B.capThe && B.capThe[id]) | 0, r = G.rosterMap[id];
+  return (1 + c * v.toc) * (r.bac === 'do' ? TOC_DO : 1);
+}
+// hệ số cơ chế Đặc biệt / Khống chế VÀNG / ĐỎ theo cấp thẻ: 1 + (Vàng 0.03 · Đỏ 0.04) × số cấp trên cấp đầu (vd. buff Blood Rite, ô anh hùng, Anvil)
+function heDB(B, id) { const c = (B && B.capThe && B.capThe[id]) | 0, v = capVD(id); return 1 + ((v && v.db) || 0.03) * c; }
 // KỸ NĂNG THEO CẤP THẺ (kiểu DCDW: lên cấp làm mạnh CHÍNH kỹ năng của Child, không chỉ sát thương gốc) — docs/demo-hop-tuong/tuvan/kynang_cap/DCDW.md
 //  giá trị = base + buoc × (số cấp đã lên trên cấp đầu), kẹp ở max (buoc âm = giảm, max là sàn). base = giá trị ở CẤP ĐẦU (= y như trước bản này).
 //  06/11 đo bậc (tools/thap-sim-tier.js): base/buoc/max cập nhật theo số mới (hỗ trợ: giá trị 1★ THẬT gồm hệ số bậc HOTRO.BAC; Copycat 70%, Overclock 90%, Mana Doubler 44, Horn 4+2★, Box 58 s)

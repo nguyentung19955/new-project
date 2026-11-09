@@ -182,7 +182,7 @@ SKILLS.leviathan = {
   },
   capNhat(G, B, T, dt) {
     T.buf.dmg += 0.04 * (T.vuc || 0);
-    T.nuot = (T.nuot || 0) + dt * (1 + T.buf.toc);
+    T.nuot = (T.nuot || 0) + dt * nhipU(T); // 09/11: nhịp nuốt theo nhipU (gồm cấp thẻ tốc)
     if (T.nuot >= this.e(T) && !G.hu.some(o => o.k === 'xoay' && o.T === T)) {
       const c = tamU(T);
       const ds = dsMucTieu(B).filter(E => !E.chet && !E.trum && !E.nuotHu && (T.sao >= 4 || !E.d.to) && (T.sao >= 7 || !E.d.bay) && Math.hypot(E.x - c.x, E.y - c.y) < this.TAM + E.d.co * 0.3);
@@ -419,7 +419,7 @@ SKILLS.ronglua = {
     if (n > 0) T.nhiet = n * (1 - this.NGUOI * dt); // lò nguội dần (tất định theo bước cố định)
     xoayDau(T, E, dt);
     T.phun = Math.max(0, (T.phun || 0) - dt);
-    T.tick = (T.tick || 0) - dt * (1 + T.buf.toc) * (this.toc / 5);
+    T.tick = (T.tick || 0) - dt * nhipU(T) * (this.toc / 5); // 09/11: nhipU (gồm cấp thẻ tốc, Ép Xung) thay 1 + buf.toc
     if (E && T.tick <= 0) {
       T.tick = Math.max(0, T.tick + 0.2); T.phun = 0.3; T.banLan++; // cộng dồn: đúng 5 nhịp/s ở mọi tốc độ khung hình
       const gd = mauRong(T), dmg = dmgU(T), to = (Q) => d >= 3 && (Q.d.to || Q.trum) ? 1.3 : 1, mau = gd === 3 ? '#e8f6ff' : gd === 2 ? '#9fd0ff' : '#ffb070';
