@@ -284,11 +284,12 @@ html.ha2 body #wrap #hd .nut-xep { background: none !important; box-shadow: none
 html.ha2 body #wrap #hd .nut-xep:not(.hd-bo) { border-image: url(../assets/ua_nut_chinh.webp?v=54ba97dd) 40 75 fill / 9px 16px stretch !important; color: #172040 !important; text-shadow: none !important; }
 html.ha2 body #wrap #hd .nut-xep::before, html.ha2 body #wrap #hd .nut-xep::after { display: none !important; content: none !important; }
 
-/* 09/11: người dùng — giá năng lượng nâng cấp đè lên viên ngọc giữa tấm đáy khung thẻ → tách: icon mana bên TRÁI ngọc, số bên PHẢI ngọc (đều nằm trong tấm đáy tối), không phủ ngọc/khung */
-html.ha2 body #wrap #duoi #bo-the .the .gia { left: 9px !important; right: 9px !important; justify-content: space-between !important; gap: 0 !important; }
-html.ha2 body #wrap #duoi #bo-the .the .gia img { margin-left: 3px !important; }
-html.ha2 body #wrap #duoi #bo-the .the .gia b { font-size: 10px !important; letter-spacing: -.3px; min-width: 18px; text-align: center; }
-html.ha2 body #wrap #duoi #bo-the .the.max .gia { justify-content: center !important; }
+/* 09/11: người dùng — bỏ viên ngọc giữa tấm đáy khung thẻ (ảnh ha_khung_*.png) → giá năng lượng nâng cấp nằm GIỮA tấm đáy, không che gì */
 /* 09/11: người dùng — nâng cấp tối đa không còn chữ MAX: otoigian.css ẩn .gia khi .max (MAX cũ ở nhãn .lv) mà HUD anime lại ẩn chữ ở .lv → mất cả hai. HUD anime: hiện MAX ở tấm đáy khung (giữa, vàng) */
 html.ha2 body #wrap #duoi #bo-the .the.max .gia { visibility: visible !important; }
 html.ha2 body #wrap #duoi #bo-the .the.max .gia b { font-size: 11px !important; letter-spacing: .5px; text-shadow: 0 0 3px #000, 0 1px 1px #000 !important; }
+/* 09/11: người dùng — điểm 3 quả Lucky Slot không được phủ mặt chân dung thẻ khay → dời xuống TẤM ĐÁY khung (Lucky Slot không có giá nâng cấp nên tấm đáy trống), 1 hàng nhỏ */
+html.ha2 body #wrap #duoi #bo-the .the > .cb-qua { top: auto !important; bottom: 4px !important; left: 7px !important; right: 7px !important; height: 13px !important; gap: 0 !important; z-index: 4 !important; display: flex !important; align-items: center !important; justify-content: space-between !important; }
+html.ha2 body #wrap #duoi #bo-the .the > .cb-qua .cb-q { flex: 0 0 auto !important; flex-direction: row !important; align-items: center !important; justify-content: center !important; gap: 0 !important; }
+html.ha2 body #wrap #duoi #bo-the .the > .cb-qua .cb-q img { width: 8px !important; max-width: 8px !important; filter: none !important; }
+html.ha2 body #wrap #duoi #bo-the .the > .cb-qua .cb-q b { font-size: 10px !important; margin: 0 !important; letter-spacing: -.5px !important; text-shadow: 0 1px 0 #000, 0 0 2px #000 !important; transform: none !important; }
