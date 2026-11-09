@@ -145,30 +145,20 @@ function main() {
     ghi('lien', 'very fast: 4 shots/s, +14% fire rate per ★', SAO.map(s => f(R(ctx, `tocU(Object.assign(taoU(G.ban[0], 'lien', ${s}, 0), {}))`))).join('/') + ' (before 3★ +20%)', gan(R(ctx, `tocU(taoU(G.ban[0], 'lien', 7, 0))`), 4 * 1.84));
     kiemDPS(ctx, 'lien');
   }
-  if (chay('phun')) { // Tổ Ong (Ụ sáng tạo mẫu 09/11): 2 + ⌊★/2⌋ ong, đốt quái ngẫu nhiên (rngLuat) rồi bay về
-    const so = [1, 2, 3, 5, 7].map(s => R(ctx, `SKILLS.phun.soOng({ sao: ${s} })`));
-    ghi('phun', 'bees = 2 + ⌊★/2⌋ (1★ 2 · 3★ 3 · 5★ 4 · 7★ 5)', so.join('/'), so.join() === '2,3,3,4,5');
-    R(ctx, `KT.moi(); KT.dat(2, 'phun', 1); for (let i = 0; i < 4; i++) KT.dung(KT.quai('bo', 40 + i * 60, 3000)); KT.log(1); KT.buoc(12);`);
-    const n = R(ctx, `new Set(G._log.map(x => x.E)).size`), mot = R(ctx, `G._log.every(x => !x.phu) && G._log.length > 0`);
-    ghi('phun', 'stings RANDOM enemies, 1 target per sting (no splash)', n + ' of 4 enemies hit · ' + R(ctx, 'G._log.length') + ' stings', n >= 3 && mot);
-    R(ctx, `KT.moi(); const T = KT.dat(2, 'phun', 3); KT.buoc(2); G._v = T.ong.map(b => b.pha).join('');`);
-    ghi('phun', 'no enemy → bees wait at home', R(ctx, 'G._v'), /^0+$/.test(R(ctx, 'G._v')) && R(ctx, 'G._v').length === 3);
-    const gan0 = doDPS(ctx, [[0, 'phun', 1]], { n: 4 }), xa = doDPS(ctx, [[7, 'phun', 1]], { n: 4 });
-    ghi('phun', 'closer to the path = more stings (corner ô 0 vs centre ô 7)', f(gan0, 1) + ' vs ' + f(xa, 1) + ' DPS', gan0 > xa);
+  if (chay('phun')) {
+    kiemDPS(ctx, 'phun');
+    R(ctx, `KT.moi(); KT.dat(2, 'phun', 1); for (let i = 0; i < 4; i++) KT.quai('bo', 40 + i * 60, 3000); KT.log(1); KT.buoc(10);`);
+    const n = R(ctx, `new Set(G._log.map(x => x.E)).size`);
+    ghi('phun', 'fires at RANDOM enemies (not just the lead)', n + ' of 4 enemies hit', n >= 3);
+    ghi('phun', '5 shots/s, +8%/★', f(R(ctx, `tocU(taoU(G.ban[0], 'phun', 1, 0))`)) + ' → ' + f(R(ctx, `tocU(taoU(G.ban[0], 'phun', 2, 0))`)), gan(R(ctx, `tocU(taoU(G.ban[0], 'phun', 2, 0))`), 5.4));
   }
-  if (chay('sungluc')) { // Kiếm Rút Nhanh (Ụ sáng tạo mẫu 09/11): chém quái đầu trong DẢI hàng/cột; ngoài dải chọc 45%
-    R(ctx, `KT.moi(); const T = KT.dat(2, 'sungluc', 1); const c = G.ban[0].o[2]; const p = G.duong[KT.pi()]; let sv = 0; for (let s = 0; s < p.len; s += 2) { const [x] = viTri(p, s); if (Math.abs(x - c.x) < 5) { sv = s; break; } } const E = KT.dung(KT.quai('bo', sv, 9e4)); KT.buoc(0.5); KT.log(1); KT.buoc(20); G._a = [G._log.length, G._log.filter(x => x.r < x.vao * 1.5).map(x => x.vao / dmgU(T))];`);
-    const a = R(ctx, 'G._a');
-    ghi('sungluc', 'enemy in its column band: full slash 40 every 1.8s', a[0] + ' slashes in 20s · ×' + f(Math.min(...a[1]), 2), a[0] >= 10 && a[0] <= 12 && gan(Math.min(...a[1]), 1));
-    R(ctx, `KT.moi(); const T = KT.dat(7, 'sungluc', 1); const E = KT.dung(KT.quai('bo', 5, 9e4)); KT.buoc(0.5); KT.log(1); KT.buoc(20); G._a = G._log.map(x => x.vao / dmgU(T));`);
-    const b = R(ctx, 'G._a');
-    ghi('sungluc', 'enemy outside the band: 45% poke', b.length + ' pokes · ×' + f(b[0] || 0, 2), b.length > 0 && b.every(x => gan(x, 0.45)));
-    R(ctx, `KT.moi(); const T = KT.dat(2, 'sungluc', 5); const c = G.ban[0].o[2]; const p = G.duong[KT.pi()]; let sv = 0; for (let s = 0; s < p.len; s += 2) { const [x] = viTri(p, s); if (Math.abs(x - c.x) < 5) { sv = s; break; } } KT.dung(KT.quai('bo', sv, 9e4)); KT.dung(KT.quai('bo', sv - 12, 9e4)); KT.dung(KT.quai('bo', 5, 9e4)); KT.buoc(0.5); KT.log(1); KT.buoc(3); G._a = [new Set(G._log.map(x => x.E)).size, G._log.length];`);
-    const c5 = R(ctx, 'G._a');
-    ghi('sungluc', '5★ ISSEN: a band slash also cuts the 2nd enemy in the band (2 targets, no splash)', c5[0] + ' enemies · ' + c5[1] + ' hits', c5[0] === 2);
-    R(ctx, `KT.moi(); KT.dat(2, 'sungluc', 1); const c = G.ban[0].o[2]; const p = G.duong[KT.pi()]; let sv = 0; for (let s = 0; s < p.len; s += 2) { const [x] = viTri(p, s); if (Math.abs(x - c.x) < 5) { sv = s; break; } } KT.dung(KT.quai('bo', sv, 9e4)); KT.log(1); KT.buoc(400);`);
-    const st = R(ctx, `(() => { const n = G._log.length, c = G._log.filter(x => x.r > x.vao * 1.5).length; return [n, c]; })()`);
-    ghi('sungluc', 'instant slash, 20% crit', p(st[1] / st[0]) + ' crits over ' + st[0] + ' slashes', Math.abs(st[1] / st[0] - 0.2) < 0.06);
+  if (chay('sungluc')) {
+    kiemDPS(ctx, 'sungluc');
+    R(ctx, `KT.moi(); KT.dat(2, 'sungluc', 1); KT.quai('bo', 30, 9e4); KT.log(1); KT.buoc(300);`);
+    const st = R(ctx, `(() => { const d = dmgU(G.ban[0].t[2]); const n = G._log.length, c = G._log.filter(x => x.r > d * 1.5).length; return [n, c]; })()`);
+    ghi('sungluc', 'one heavy instant shot, 20% crit', p(st[1] / st[0]) + ' crits over ' + st[0] + ' shots', Math.abs(st[1] / st[0] - 0.2) < 0.05);
+    R(ctx, `KT.moi(); KT.dat(2, 'sungluc', 1); const A = KT.quai('bo', 200, 3000); KT.quai('bo', 60, 3000); KT.log(1); KT.buoc(5); G._a = A.uid;`);
+    ghi('sungluc', 'hits the lead enemy', R(ctx, `G._log.every(x => x.E === G._a)`) ? 'all shots on lead' : 'missed lead', R(ctx, `G._log.length > 0 && G._log.every(x => x.E === G._a)`));
   }
   if (chay('bang')) {
     // Frost: mỗi 6 s đóng băng quái đầu 2 s, trùm 0.6 s, quái to ×0.6, sau đó lạnh 30% 2 s, miễn 3 s, không sát thương
@@ -465,12 +455,12 @@ function main() {
   if (chay('bua')) {
     const v = SAO.map(s => R(ctx, `(() => { KT.moi(); const T = KT.dat(2, 'bua', ${s}); return [SKILLS.bua.crit(T), SKILLS.bua.cd(T), SKILLS.bua.soc(T)]; })()`));
     ghi('bua', 'Attack neighbours +5%×K crit, +30%×K crit damage (cap 50%), stagger 0.2s (7★ 0.35s)', v.map(([a, b, c], i) => SAO[i] + '★ ' + p(a) + '/' + p(Math.min(0.5, b)) + '/' + c + 's').join(' · '), gan(v[0][0], 0.05) && gan(v[0][1], 0.3) && v[2][1] >= 0.5 && v[3][2] === 0.35);
-    R(ctx, `KT.moi(); KT.dat(7, 'bua', 1); KT.dat(2, 'lien', 1); const E = KT.dung(KT.quai('bo', 220, 9e4)); const Q = KT.dung(KT.quai('khong_lo', 200, 9e4)); G._st = 0; G._big = 0; for (let i = 0; i < 60 * 60; i++) { const c = E.chan; KT.buoc(1 / 60); if (E.chan > c + 0.1) G._st++; if (Q.chan > 0.05) G._big++; }`);
+    R(ctx, `KT.moi(); KT.dat(7, 'bua', 1); KT.dat(2, 'sungluc', 1); const E = KT.dung(KT.quai('bo', 220, 9e4)); const Q = KT.dung(KT.quai('khong_lo', 200, 9e4)); G._st = 0; G._big = 0; for (let i = 0; i < 60 * 60; i++) { const c = E.chan; KT.buoc(1 / 60); if (E.chan > c + 0.1) G._st++; if (Q.chan > 0.05) G._big++; }`);
     ghi('bua', 'neighbours’ crits stagger normal enemies (3s immunity)', R(ctx, 'G._st') + ' staggers in 60s', R(ctx, 'G._st') > 2 && R(ctx, 'G._st') <= 20);
-    R(ctx, `KT.moi(); KT.dat(7, 'bua', 1); KT.dat(2, 'tia', 1); const Q = KT.dung(KT.quai('khong_lo', 220, 9e4)); G._big = 0; for (let i = 0; i < 60 * 60; i++) { KT.buoc(1 / 60); if (Q.chan > 0.05) G._big++; } KT.moi(); KT.dat(7, 'bua', 7); KT.dat(2, 'tia', 1); const Q2 = KT.dung(KT.quai('khong_lo', 220, 9e4)); G._big7 = 0; for (let i = 0; i < 60 * 60; i++) { KT.buoc(1 / 60); if (Q2.chan > 0.05) G._big7++; }`);
+    R(ctx, `KT.moi(); KT.dat(7, 'bua', 1); KT.dat(2, 'sungluc', 1); const Q = KT.dung(KT.quai('khong_lo', 220, 9e4)); G._big = 0; for (let i = 0; i < 60 * 60; i++) { KT.buoc(1 / 60); if (Q.chan > 0.05) G._big++; } KT.moi(); KT.dat(7, 'bua', 7); KT.dat(2, 'sungluc', 1); const Q2 = KT.dung(KT.quai('khong_lo', 220, 9e4)); G._big7 = 0; for (let i = 0; i < 60 * 60; i++) { KT.buoc(1 / 60); if (Q2.chan > 0.05) G._big7++; }`);
     ghi('bua', 'big enemies: no stagger below 7★; 7★ QUAKE staggers them too', 'stunned frames 1★ ' + R(ctx, 'G._big') + ' · 7★ ' + R(ctx, 'G._big7'), R(ctx, 'G._big') === 0 && R(ctx, 'G._big7') > 0);
-    R(ctx, `KT.moi(); KT.dat(2, 'tia', 1); KT.dat(7, 'bua', 5); KT.quai('bo', 30, 9e4); KT.buoc(1); KT.log(1); KT.buoc(600); const ds = G._log.map(x => x.r / x.vao); G._k = [Math.max(...ds), ds.filter(x => x > 1.5).length / ds.length];`);
-    ghi('bua', 'measured: Sniper next to Hammer 5★: crit hit ×2.5 (cap), crit rate 29.5%', 'crit ×' + f(R(ctx, 'G._k[0]'), 2) + ', rate ' + p(R(ctx, 'G._k[1]')), gan(R(ctx, 'G._k[0]'), 2.5) && Math.abs(R(ctx, 'G._k[1]') - 0.295) < 0.05);
+    R(ctx, `KT.moi(); KT.dat(2, 'sungluc', 1); KT.dat(7, 'bua', 5); KT.quai('bo', 30, 9e4); KT.buoc(1); KT.log(1); KT.buoc(600); const ds = G._log.map(x => x.r / x.vao); G._k = [Math.max(...ds), ds.filter(x => x > 1.5).length / ds.length];`);
+    ghi('bua', 'measured: Revolver next to Hammer 5★: crit hit ×2.5 (cap), crit rate 29.5%', 'crit ×' + f(R(ctx, 'G._k[0]'), 2) + ', rate ' + p(R(ctx, 'G._k[1]')), gan(R(ctx, 'G._k[0]'), 2.5) && Math.abs(R(ctx, 'G._k[1]') - 0.295) < 0.05);
   }
   // ===================================================== HỆ THỐNG HỖ TRỢ CHUNG (hotro.js) =====================================================
   if (chay('hotro')) {
@@ -486,24 +476,24 @@ function main() {
     ghi('hotro', 'several copies of one support type → only the strongest counts', p(R(ctx, 'G._s')) + ' (7★ alone 28.2%)', gan(R(ctx, 'G._s'), 0.282));
     R(ctx, `KT.moi(); KT.dat(7, 'lien', 1); KT.dat(2, 'radar', 7); KT.dat(6, 'tron', 7); KT.dat(8, 'luoicheo', 1); KT.dat(12, 'nangsao', 7); capNhatBan(G.ban[0], 0); G._s = [G.ban[0].t[7].buf.toc, G.ban[0].t[7].ht.daMax.toc];`);
     ghi('hotro', 'different types add up, fire-rate cap 45%', p(R(ctx, 'G._s[0]')) + ' (cap hit ' + R(ctx, 'G._s[1]') + ')', gan(R(ctx, 'G._s[0]'), 0.45) && R(ctx, 'G._s[1]') === 1);
-    R(ctx, `KT.moi(); KT.dat(7, 'tia', 1); KT.dat(2, 'chimang', 7); KT.dat(6, 'bua', 7); KT.dat(8, 'radar', 5); KT.dat(12, 'thaukinh', 7); capNhatBan(G.ban[0], 0); const T = G.ban[0].t[7]; G._s = [T.buf.crit, T.buf.cdmg, critU(T)];`);
+    R(ctx, `KT.moi(); KT.dat(7, 'sungluc', 1); KT.dat(2, 'chimang', 7); KT.dat(6, 'bua', 7); KT.dat(8, 'radar', 5); KT.dat(12, 'thaukinh', 7); capNhatBan(G.ban[0], 0); const T = G.ban[0].t[7]; G._s = [T.buf.crit, T.buf.cdmg, critU(T)];`);
     ghi('hotro', 'crit +20 points cap, crit damage +50% cap', p(R(ctx, 'G._s[0]')) + ' / ' + p(R(ctx, 'G._s[1]')) + ' (total crit ' + p(R(ctx, 'G._s[2]')) + ')', gan(R(ctx, 'G._s[0]'), 0.2) && gan(R(ctx, 'G._s[1]'), 0.5));
-    R(ctx, `KT.moi(); KT.dat(7, 'tia', 1); KT.dat(2, 'luoicheo', 1); KT.dat(8, 'phagiap', 7); KT.dat(6, 'khuech', 7); KT.dat(12, 'lanhgia', 7); capNhatBan(G.ban[0], 0); const T = G.ban[0].t[7]; const E = KT.dung(KT.quai('bo', 200, 3000)); E.loT = 5; E.cham = 0.2; E.chamT = 5; G._s = [T.buf.dmg, HOTRO.dkHeSo(T, E), HOTRO.dkHeSo(T, E), HOTRO.dkHeSo(T, E)];`);
+    R(ctx, `KT.moi(); KT.dat(7, 'sungluc', 1); KT.dat(2, 'luoicheo', 1); KT.dat(8, 'phagiap', 7); KT.dat(6, 'khuech', 7); KT.dat(12, 'lanhgia', 7); capNhatBan(G.ban[0], 0); const T = G.ban[0].t[7]; const E = KT.dung(KT.quai('bo', 200, 3000)); E.loT = 5; E.cham = 0.2; E.chamT = 5; G._s = [T.buf.dmg, HOTRO.dkHeSo(T, E), HOTRO.dkHeSo(T, E), HOTRO.dkHeSo(T, E)];`);
     ghi('hotro', 'conditional damage (exposed/slowed/stacks) shares the 35% damage cap with plain +damage', 'plain ' + p(R(ctx, 'G._s[0]')) + ' → conditional ×' + R(ctx, 'G._s.slice(1)').map(x => f(x, 3)).join('/'), R(ctx, 'G._s.slice(1)').every(x => x <= 1.35 - R(ctx, 'G._s[0]') + 1e-9 + 1) && gan(R(ctx, 'G._s[3]') + R(ctx, 'G._s[0]'), 1.35));
     R(ctx, `KT.moi(); KT.dat(7, 'lien', 1); KT.dat(2, 'lanhgia', 7); G.ban[0].lv.lanhgia = 5; KT.dat(12, 'lophanung', 7); capNhatBan(G.ban[0], 0); G._s = G.ban[0].t[7].buf.cham;`);
     ghi('hotro', 'slow from supports: strongest only, cap 35%', p(R(ctx, 'G._s')), R(ctx, 'G._s') <= 0.35 + 1e-9);
     R(ctx, `KT.moi(); const E = KT.dung(KT.quai('bo', 200, 3000)); E.vmT = 5; E.vmK = 0.12; E.ywT = 5; E.ywK = 0.1; E.loT = 5; E.loV = 0.08; E.yeu = 5; E.tpT = 5; E.tpK = 0.15; G._v = HOTRO.vuln(E);`);
     ghi('hotro', 'enemy weakness (Venom 12 + Time Bomb 10 + Breaker 7★ 8 + Toxic 15) adds up with no cap (07/11) = 45%', p(R(ctx, 'G._v')), gan(R(ctx, 'G._v'), 0.45));
-    R(ctx, `KT.moi(); const T = KT.dat(7, 'tia', 1); KT.dat(2, 'luoicheo', 7); KT.dat(8, 'khuech', 7); KT.dat(6, 'radar', 7); capNhatBan(G.ban[0], 0); const a = dmgU(T); G.ban[0].cuong = 5; capNhatBan(G.ban[0], 0); G._s = [dmgU(T) / a, T.buf.dmg];`);
+    R(ctx, `KT.moi(); const T = KT.dat(7, 'sungluc', 1); KT.dat(2, 'luoicheo', 7); KT.dat(8, 'khuech', 7); KT.dat(6, 'radar', 7); capNhatBan(G.ban[0], 0); const a = dmgU(T); G.ban[0].cuong = 5; capNhatBan(G.ban[0], 0); G._s = [dmgU(T) / a, T.buf.dmg];`);
     ghi('hotro', 'commander RAGE ×2 stacks on top of capped support buffs (not inside the cap)', '×' + f(R(ctx, 'G._s[0]'), 3) + ' with +' + p(R(ctx, 'G._s[1]')) + ' support damage', gan(R(ctx, 'G._s[0]'), 2));
-    const vong = [[7, 'tia', 1], [2, 'khuech', 7], [6, 'radar', 7], [8, 'tron', 7], [12, 'phagiap', 7]];
+    const vong = [[7, 'sungluc', 1], [2, 'khuech', 7], [6, 'radar', 7], [8, 'tron', 7], [12, 'phagiap', 7]];
     R(ctx, 'KT.moi()'); doDPS(ctx, vong, { truoc: 'G.ban[0].cuong = 1e9;' }); const v1 = ctx._vao;
     doDPS(ctx, vong); const v0 = ctx._vao;
     ghi('hotro', 'measured: full support ring + RAGE → pre-crit damage exactly ×2 (support multipliers unchanged)', '×' + f(v1 / v0, 3), gan(v1 / v0, 2, 0.02));
     // milestones
     const m = R(ctx, `(() => { KT.moi(); const a = KT.dat(0, 'lien', 3), b = KT.dat(4, 'radar', 3), c = KT.dat(10, 'bang', 3), d = KT.dat(14, 'mana', 3); capNhatBan(G.ban[0], 0); return [a.buf.toc, b.buf.toc, heSoMocDmg(KT.dat(2, 'lien', 7)), heSoMocDmg(KT.dat(12, 'radar', 7)), themMocCrit(KT.dat(12, 'radar', 7)), heSoMocDmg(KT.dat(7, 'laser', 5))]; })()`);
     ghi('hotro', 'milestones: 3★ +20% fire (not supports) · 7★ +30% dmg (not supports) · 5★ OVERCHARGE +25% (beam/pool types)', m.map(x => f(x, 2)).join('/'), gan(m[0], 0.2) && m[1] === 0 && gan(m[2], 1.3) && m[3] === 1 && m[4] === 0 && gan(m[5], 1.25));
-    R(ctx, `KT.moi(); const T = KT.dat(2, 'tia', 5); KT.quai('bo', 30, 9e4); KT.buoc(1); T.banLan = 0; G._tt = []; KT.log(1); KT.buoc(20); G._tt = G._log.length;`);
+    R(ctx, `KT.moi(); const T = KT.dat(2, 'sungluc', 5); KT.quai('bo', 30, 9e4); KT.buoc(1); T.banLan = 0; G._tt = []; KT.log(1); KT.buoc(20); G._tt = G._log.length;`);
     ghi('hotro', '5★ DOUBLE TAP: every 4th attack fires twice', R(ctx, 'G._tt') + ' shots in 20s (no DT ' + f(20 * R(ctx, 'tocU(G.ban[0].t[2])'), 0) + ')', Math.abs(R(ctx, 'G._tt') / (20 * R(ctx, 'tocU(G.ban[0].t[2])')) - 4 / 3.12) < 0.06);
     // Resonance Grid diagonal + resonance
     R(ctx, `KT.moi(); KT.dat(7, 'luoicheo', 1); KT.dat(1, 'lien', 1); KT.dat(3, 'lien', 1); KT.dat(11, 'lien', 1); KT.dat(2, 'lien', 1); capNhatBan(G.ban[0], 0); G._a = [G.ban[0].t[1].buf.dmg, G.ban[0].t[2].buf.dmg]; KT.dat(13, 'canon', 1); capNhatBan(G.ban[0], 0); G._b = G.ban[0].t[1].buf.dmg;`);
