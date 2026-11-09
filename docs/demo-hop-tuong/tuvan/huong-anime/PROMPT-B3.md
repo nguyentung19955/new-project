@@ -1,4 +1,6 @@
-# Ảnh còn thiếu cho giao diện NGOÀI TRẬN anime (B3, 09/11) — prompt gen ChatGPT
+# Ảnh cho giao diện NGOÀI TRẬN anime (B3, 09/11) — prompt gen ChatGPT
+
+**ĐÃ GEN 09/11 (cả 7 mục, đạt lần đầu):** raw_ui3_vongquay, raw_ui3_icon_nho, raw_ui3_banner (băng shop + khung băng sự kiện chung 1 tấm), raw_ui3_ruong, raw_ui3_tam, raw_ui3_nen_home (cũng thay nen_menu.jpg của màn tải). Cắt: `tools/thap-cat-ui3.py` mục 7.
 
 Đang dùng ảnh TẠM (cắt từ tấm có sẵn bằng `tools/thap-cat-ui3.py`, hoặc tấm chàm + icon). Gen xong: đặt raw vào
 `docs/demo-hop-tuong/thap-art/raw_ui3_<ten>.png`, thêm bước cắt vào `tools/thap-cat-ui3.py` (ghi đúng tên `thap/assets/ua_*.png`)

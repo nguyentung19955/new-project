@@ -179,6 +179,50 @@ duoi = np.asarray(duoi).astype(np.float32) * 0.55
 ghep_doc(nen, duoi, NH - duoi.shape[0], 120, 0)
 luu(Image.fromarray(np.clip(nen, 0, 255).astype(np.uint8)), 'ua_nen.jpg', 'nền ngoài trận 2× (cover 430×860)')
 
+
+# ---------------- 7. ảnh ChatGPT đợt 2 (raw_ui3_*, 09/11) ----------------
+def co(ten):
+    return os.path.exists(os.path.join(NGUON, ten))
+
+
+def vuong(im):
+    s = max(im.size)
+    v = Image.new('RGBA', (s, s), (0, 0, 0, 0)); v.alpha_composite(im, ((s - im.size[0]) // 2, (s - im.size[1]) // 2))
+    return v
+
+
+if co('raw_ui3_vongquay.png'):
+    V = raw('raw_ui3_vongquay.png')
+    luu(thu(vuong(cat(V, (146, 49, 746, 655))), 600, 600), 'ua_vq_banh.png', 'đĩa vòng quay 8 ô (CSS ~200)')
+    luu(thu(cat(V, (846, 0, 1492, 714), 0), 640), 'ua_vq_khung.png', 'khung vòng + chân đế')
+    luu(thu(cat(V, (1699, 185, 1935, 509)), 120), 'ua_vq_mui.png', 'mũi chỉ xuống')
+if co('raw_ui3_icon_nho.png'):
+    I3 = raw('raw_ui3_icon_nho.png')
+    for ten, hop in zip(['khoa', 'cong', 'tick'], [(91, 33, 642, 688), (806, 84, 1362, 636), (1513, 124, 2116, 627)]):
+        luu(thu(vuong(cat(I3, hop)), 120, 120), 'ua_ic_' + ten + '.png', 'icon nhỏ ≤40 css')
+if co('raw_ui3_ruong.png'):
+    R3 = raw('raw_ui3_ruong.png')
+    HOP = [(51, 89, 487, 444), (543, 72, 987, 452), (1031, 28, 1509, 453), (46, 530, 478, 991), (535, 513, 980, 991), (1052, 470, 1502, 995)]
+    for i, (ten, hop) in enumerate(zip(['thuong', 'vang', 'than', 'thuong_mo', 'vang_mo', 'than_mo'], HOP)):
+        # cùng khung vuông 480 (đáy rương thẳng hàng): đặt sát đáy, giữa ngang
+        im = cat(R3, hop); v = Image.new('RGBA', (480, 480), (0, 0, 0, 0))
+        sc = min(1, 470 / max(im.size)); im = thu(im, round(im.size[0] * sc), round(im.size[1] * sc))
+        v.alpha_composite(im, ((480 - im.size[0]) // 2, 480 - im.size[1] - 5))
+        luu(thu(v, 360, 360), 'ua_ru_' + ten + '.png', 'rương anime (CSS ≤120)')
+if co('raw_ui3_banner.png'):
+    Bn3 = raw('raw_ui3_banner.png')
+    luu(thu(cat(Bn3, (46, 0, 2126, 350), 0), 1200), 'ua_bn_shop.png', 'băng DAILY SPECIALS')
+    luu(thu(cat(Bn3, (46, 390, 2126, 724), 0), 1200), 'ua_bn_sk.png', 'khung băng sự kiện (ô chân dung trái)')
+if co('raw_ui3_tam.png'):
+    luu(thu(cat(raw('raw_ui3_tam.png'), (38, 26, 1498, 952)), 720), 'ua_tam2.png', 'tấm hộp thoại lớn 9 lát')
+if co('raw_ui3_nen_home.png'):
+    Nh = Image.open(os.path.join(NGUON, 'raw_ui3_nen_home.png')).convert('RGB')
+    luu(Nh.resize((860, round(Nh.size[1] * 860 / Nh.size[0])), Image.LANCZOS), 'ua_nen.jpg', 'nền ngoài trận ChatGPT (thay bản ghép)')
+    # màn tải (index.html #tai, taitai.css) dùng nen_menu.jpg 1024×1536: thay bằng cùng nền anime (cover). Ảnh mờ 32×48 nội tuyến trong index.html dựng lại tay khi đổi.
+    sc = max(1024 / Nh.size[0], 1536 / Nh.size[1]); m = Nh.resize((round(Nh.size[0] * sc), round(Nh.size[1] * sc)), Image.LANCZOS)
+    x0, y0 = (m.size[0] - 1024) // 2, (m.size[1] - 1536) // 2
+    luu(m.crop((x0, y0, x0 + 1024, y0 + 1536)), 'nen_menu.jpg', 'nền màn tải anime')
+
 # ---------------- tờ xem ----------------
 if __name__ == '__main__':
     cw = 200

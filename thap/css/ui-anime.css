@@ -15,6 +15,7 @@
   --ua-a: url(../assets/ua_nut_chinh.png) 40 75 fill; --ua-b: url(../assets/ua_nut_phu.png) 36 60 fill;
   --ua-p: url(../assets/ua_pill_tat.png) 40 62 fill; --ua-pb: url(../assets/ua_pill_bat.png) 40 62 fill;
   --ua-t: url(../assets/ua_tam.png) 50 fill; --ua-o: url(../assets/ua_o.png) 52 fill;
+  --ua-t2: url(../assets/ua_tam2.png) 60 44 44 44 fill; /* tấm hộp thoại lớn (vương miện giữa mép trên): rộng ≥ 300 */
 }
 html.ua, html.ua body { background: #10162F; }
 /* token màu cũ trỏ về bảng mới (chữ/nhấn trong mọi màn menu đổi theo) */
@@ -179,7 +180,7 @@ html.ua body #wrap #chon button.hm-choi.dc-tat { border-image-source: url(../ass
 html.ua body #wrap #chon button.hm-choi.dc-tat b, html.ua body #wrap #chon button.hm-choi.dc-tat small { color: #B8C3E6 !important; }
 /* ô bộ bài trống: ô vát góc chàm (ua_o) + nút tròn cộng (ua_nut_tron) — thay khung thép + ốc */
 html.ua body #wrap #chon #chon-bo .o-bo:not([data-id]) { background: none !important; border: 0 solid transparent !important; border-image: var(--ua-o) / 14px 14px stretch !important; }
-html.ua body #wrap #chon #chon-bo .o-bo:not([data-id]) > img.dc-cong { content: url(../assets/ua_nut_tron.png); width: 34px !important; height: 36px !important; opacity: .9; }
+html.ua body #wrap #chon #chon-bo .o-bo:not([data-id]) > img.dc-cong { width: 26px !important; height: 26px !important; margin: -13px 0 0 -13px !important; opacity: .9; }
 /* bộ bài: 5 ô gọn hơn (rộng 62) để lưới bắt đầu cao hơn — vuốt dọc từ hàng thẻ thứ 2 vẫn là cuộn (dkkeo: kéo lên quá mép lưới = kéo thẻ) */
 html.ua body #wrap #chon #chon-bo { justify-content: center !important; gap: 12px !important; padding-top: 24px !important; }
 html.ua body #wrap #chon #chon-bo .o-bo { flex: 0 0 62px !important; width: 62px !important; }
@@ -282,14 +283,16 @@ html.ua body #wrap #kt .kt-h-g .tb-sb { border: 0 !important; border-image: none
 html.ua body #wrap #kt .kt-h-g .tb-sb .tb-day img { content: url(../assets/ha_mau_xanh.png); object-fit: fill; }
 html.ua body #wrap #kt .tb-sb b { color: #F7F8FF !important; text-shadow: 0 1px 2px #000, 0 0 3px #000 !important; }
 /* băng DAILY SPECIALS: tạm = tấm chàm + icon cửa hàng (ảnh băng anime riêng: PROMPT-B3.md) — bỏ khung thép của shop_banner */
-html.ua body #wrap #kt .kt-bn { height: 84px; border: 0 solid transparent; border-image: var(--ua-t) / 18px 22px stretch; }
-html.ua body #wrap #kt .kt-bn > img { content: url(../assets/ua_ic_shop.png); position: absolute; right: 18px; top: 50%; width: 70px !important; height: 70px !important; margin-top: -35px; object-fit: contain; filter: drop-shadow(0 2px 3px #000a); } /* vetay-ok: png — bóng theo alpha của chính ảnh */
+html.ua body #wrap #kt .kt-bn > img { content: url(../assets/ua_bn_shop.png); } /* băng anime: trái trống cho chữ, phải quầy hàng + rương */
 html.ua body #wrap #kt .kt-bn b { color: #FFB866 !important; }
 /* hộp thoại cửa hàng (tỉ lệ rương, nhận thưởng, mở khoá…): tấm chàm */
 html.ua body #wrap #kt .kt-phu-tam { border-image: var(--ua-t) / 20px 22px stretch !important; }
 html.ua body #wrap #kt .kt-phu.kt-mo .kt-phu-tam { border-image: none !important; }
 /* sự kiện: băng ụ nổi bật (khung vàng-thép) → tạm tấm chàm (ảnh băng anime: PROMPT-B3.md); thanh điểm teal */
-html.ua body #wrap #kt .kt-skd { border: 0 solid transparent; border-image: var(--ua-t) / 18px 22px stretch; aspect-ratio: auto; min-height: 104px; padding-left: 18px; }
+html.ua body #wrap #kt .kt-skd { border: 0 solid transparent; border-image: url(../assets/ua_bn_sk.png) 50 60 40 230 fill / 22px 27px 18px 104px stretch; aspect-ratio: auto; height: 112px; padding: 0 0 0 0; gap: 14px; margin-left: 0; }
+html.ua body #wrap #kt .kt-skd { padding-left: 112px !important; }
+html.ua body #wrap #kt .kt-skd .ot-mini { position: absolute !important; left: 38px !important; top: 50% !important; margin-top: -28px !important; width: 56px !important; height: 56px !important; }
+html.ua body #wrap #kt .kt-skd > div { max-width: 62% !important; }
 html.ua body #wrap #kt .kt-skd > .kt-skd-bn { display: none !important; }
 html.ua body #wrap #kt .kt-skp .tb-sb { border: 0 !important; border-image: none !important; background: url(../assets/ha_mau_ranh.png) 0 50% / 100% 100% no-repeat !important; }
 html.ua body #wrap #kt .tb-day img, html.ua body #wrap #chon #chon-luoi .tb-day img { content: url(../assets/ha_mau_xanh.png); object-fit: fill; }
@@ -318,3 +321,30 @@ html.ua body #wrap #chon:not([hidden]) ~ #chon-goi-nhac { border-image: url(../a
 html.ua body #wrap #chon #kt .kt-tab button { border-image-width: 14px 15px !important; padding: 0 6px !important; white-space: nowrap; }
 html.ua body #wrap #chon #kt .kt-tab b { font-size: 12px !important; letter-spacing: .02em !important; }
 html.ua body #wrap .hm-tam-cai .hm-cai2 .hm-nut2, html.ua body #hm-mo .hm-tam-cai .hm-cai2 .hm-nut2 { font-size: 12.5px !important; padding: 0 14px !important; border-image-width: 14px 20px !important; white-space: normal; line-height: 1.1; }
+
+/* ổ khoá (ua_ic_khoa) trên thẻ ụ khoá: góc trên-trái (chỗ nút i, ẩn khi khoá) — không che mặt */
+html.ua body #wrap #chon #chon-luoi .c .tt-khoa-n:has(> img.tt-khoa-i) { display: grid !important; grid-template-columns: auto auto; grid-template-rows: auto auto; column-gap: 2px !important; row-gap: 0 !important; justify-content: center; align-items: center; }
+html.ua body #wrap #chon #chon-luoi .c .tt-khoa-n > img.tt-khoa-i { grid-row: 1 / 3; width: 16px !important; height: 16px !important; margin: 0 !important; }
+html.ua body #wrap #chon.bst #chon-luoi .c .tt-khoa-n > img.tt-khoa-i { width: 20px !important; height: 20px !important; }
+/* nhận xong (ua_ic_tick) ở hàng nhiệm vụ / điểm danh */
+html.ua body #wrap #kt .kt-h .kt-tick { width: 34px !important; right: -68px !important; top: 0 !important; }
+
+/* VÒNG QUAY anime (ua_vq_banh / khung / mui): khung 622×698, tâm vòng (0,4985 W; 0,498 W), lỗ trong ≈ 0,645 W */
+html.ua body #wrap #kt .kt-vq { width: 300px !important; height: 300px !important; margin: 40px auto 120px !important; }
+html.ua body #wrap #kt .kt-vq-khung { left: -50px !important; top: -50px !important; width: 400px !important; z-index: 1; }
+html.ua body #wrap #kt .kt-vq-banh { left: 21px !important; top: 21px !important; right: 21px !important; bottom: 21px !important; }
+html.ua body #wrap #kt .kt-vq-o { transform: rotate(var(--a)) translateY(-82px) !important; }
+html.ua body #wrap #kt .kt-vq-o > .kt-r { left: -28px !important; width: 56px !important; }
+html.ua body #wrap #kt .kt-vq-o .kt-r > img { width: 34px !important; height: 34px !important; }
+html.ua body #wrap #kt .kt-vq-mui { top: -40px !important; width: 34px !important; margin-left: -17px !important; z-index: 2 !important; filter: drop-shadow(0 2px 2px #000a); } /* vetay-ok: png — bóng theo alpha của chính ảnh */
+/* màn danh sách (cửa hàng/nhiệm vụ/sự kiện): nền mờ bớt để chữ trên trời sáng vẫn đọc rõ */
+html.ua body #wrap #kt .kt-nen { opacity: .5 !important; }
+html.ua body #wrap #chon:not(.bst) #chon-luoi .c .tt-khoa-n b { font-size: 9px !important; letter-spacing: -.02em !important; }
+html.ua body #wrap #chon:not(.bst) #chon-luoi .c .tt-khoa-n > img.tt-khoa-i { width: 13px !important; height: 13px !important; }
+html.ua body #wrap #chon:not(.bst) #chon-luoi .c .tt-khoa-n { left: 2% !important; right: 2% !important; }
+/* hộp thoại / bảng trượt lớn: tấm ChatGPT riêng (ua_tam2) */
+html.ua body #wrap .hm-tam, html.ua body #hm-mo .hm-tam, html.ua body #wrap #kt .kt-phu-tam, html.ua body #wrap #tt-phu .kt-phu-tam, html.ua body .onl-bang, html.ua body #xoay-doc .xd-tam { border-image: var(--ua-t2) / 30px 22px 22px 22px stretch !important; }
+html.ua body #wrap #kt .kt-phu.kt-mo .kt-phu-tam { border-image: none !important; }
+html.ua body #wrap #kt .kt-phu-tam, html.ua body #wrap #tt-phu .kt-phu-tam { padding-top: 34px !important; padding-left: 26px !important; padding-right: 26px !important; }
+html.ua body #wrap .hm-tam, html.ua body #hm-mo .hm-tam { padding-top: 28px !important; padding-left: 26px !important; padding-right: 26px !important; }
+html.ua body #wrap .hm-tam-loc .hm-chips.c3 .hm-chip, html.ua body #hm-mo .hm-tam-loc .hm-chips.c3 .hm-chip { font-size: 12px !important; letter-spacing: 0 !important; border-image-width: 12px 13px !important; padding: 0 2px !important; gap: 2px !important; }

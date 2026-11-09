@@ -979,3 +979,4 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - Màn TRÙM, hồ sơ phi công, bảng ONLINE: tấm/nút anime.
 - Bảng lên cấp / mở khoá ở HOME, nhắc nhanh ở menu: tấm/pill anime. Icon tiêu đề nhóm HỌ = icon bộ sưu tập (không dùng ngọc mana). Ảnh còn thiếu (vòng quay, ổ khoá/cộng, băng cửa hàng/sự kiện, rương, tấm lớn, nền HOME riêng): prompt ở `docs/demo-hop-tuong/tuvan/huong-anime/PROMPT-B3.md`.
 - Soát 360/390/430 × EN/VI: sửa chữ VI dài (4 thẻ dưới cửa hàng 1 dòng, nút cài đặt vừa khung), giá thiếu tiền trên nút cam đỏ đậm. Ảnh tổng: `docs/demo-hop-tuong/tuvan/huong-anime/b3-truoc-sau.jpg`.
+- Ảnh ChatGPT mới (raw_ui3_*, gen 09/11): vòng quay anime (đĩa 8 ô + khung + mũi chỉ), ổ khoá / dấu cộng / dấu tích, băng DAILY SPECIALS, khung băng ụ sự kiện (ô chân dung trái), 6 rương (đóng/mở), tấm hộp thoại lớn (bảng trượt, hộp thoại, cài đặt…), nền ngoài trận + nền MÀN TẢI (nen_menu.jpg) anime. Thẻ ụ khoá có ổ khoá trong nhãn "PILOT / LV n".
