@@ -35,6 +35,10 @@ const MV = {
     if (typeof GROW !== 'undefined' && GROW[id] && typeof GROW[id].mau === 'string') return GROW[id].mau;
     try { return tierOf(id).mau; } catch (e) { return '#9fe6ff'; }
   },
+  // ụ Đỏ có BÁO TRƯỚC riêng (dosig.js DSG.BAO, đọc theo cùng thanh nạp): tích tụ lo 0 → 80%, từ 80% → đầy nhường cho báo trước
+  //   (còn 30% — lõi mờ để ụ không "tắt") → không hiện đôi. Black Hole: báo trước đọc hố kế (bhT), khác thanh nạp → giữ tích tụ.
+  coBao(T) { return typeof DSG !== 'undefined' && DSG.bat && T.bac === 'do' && !!DSG.BAO[T.id] && T.id !== 'blackhole'; },
+  kBao(T, p) { const a = T.id === 'overlord' ? 0.7 : 0.8; if (!this.coBao(T) || p <= a) return 1; return 1 - 0.7 * Math.min(1, (p - a) / (1 - a)); }, // Overlord: điện đỏ bò từ 70%
   _tk: new WeakMap(), // trạng thái vẽ theo ụ: { p: nạp khung trước, xa: thời điểm xả }
   TK_HAT: 9, // tối đa hạt mỗi ụ
   // nhiễu cố định theo id ụ + chỉ số (thay Math.random — mọi khung, mọi máy như nhau)
@@ -55,7 +59,7 @@ const MV = {
     if (p > 0.02) {
       const day = p >= 0.999, gan = p >= 0.85;
       const nhip = day ? 0.5 + 0.5 * Math.sin(t * 5.2) : gan ? 0.5 + 0.5 * Math.sin(t * (8 + 10 * (p - 0.85))) : 0; // đập nhịp khi gần đầy · căng đầy: đập đều
-      const k = bang ? 0.45 : 1; // bị băng: tích tụ mờ đi (chiêu không dùng được)
+      const k = (bang ? 0.45 : 1) * this.kBao(T, p); // bị băng: tích tụ mờ đi (chiêu không dùng được) · ụ Đỏ có báo trước riêng: nhường từ 80%
       // 1) lõi sáng dần (quầng PNG tô màu) — nhỏ hơn ô, alpha vừa phải → không che quái
       const r0 = S * (0.48 + 0.4 * p + (gan ? 0.06 * nhip : 0));
       PX.cham(ctx, 0, 0, r0 * 2, m, al * k * (0.12 + 0.4 * p * p + (gan ? 0.12 * nhip : 0)));
@@ -76,10 +80,11 @@ const MV = {
         PX.cham(ctx, x, y, co * (0.7 + 0.5 * h2), i % 3 ? m : '#ffffff', al * k * a1);
       }
     }
-    if (dangXa) { // 3) XẢ: loé + sóng toả ngắn rồi về
-      PX.cham(ctx, 0, 0, S * (1 + 0.9 * e), '#ffffff', al * (1 - e) * 0.55);
-      PX.vong(ctx, 0, 0, S * (0.3 + 0.75 * e), 3, m, al * (1 - e) * 0.9);
-      PX.vong(ctx, 0, 0, S * (0.2 + 0.45 * e), 2, '#ffffff', al * (1 - e) * 0.5);
+    if (dangXa) { // 3) XẢ: loé + sóng toả ngắn rồi về (ụ Đỏ có chữ ký dosig.js: bùng nổ do chữ ký vẽ → xả nhỏ lại, không loé đôi)
+      const ax = this.coBao(T) ? al * 0.45 : al;
+      PX.cham(ctx, 0, 0, S * (1 + 0.9 * e), '#ffffff', ax * (1 - e) * 0.55);
+      PX.vong(ctx, 0, 0, S * (0.3 + 0.75 * e), 3, m, ax * (1 - e) * 0.9);
+      PX.vong(ctx, 0, 0, S * (0.2 + 0.45 * e), 2, '#ffffff', ax * (1 - e) * 0.5);
     }
     ctx.globalCompositeOperation = op; ctx.globalAlpha = al;
   },

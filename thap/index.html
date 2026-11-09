@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="tm-ver" content="f2c2414016">
+  <meta name="tm-ver" content="bb6cf05665">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
@@ -248,7 +248,7 @@
   <link rel="stylesheet" href="css/tientrinh.css?v=f35bb6e2" data-b="6750"> <!-- tiến trình đợt 1: cấp phi công, ụ khoá, hành trình 7 ngày, nhiệm vụ tuần (js/tientrinh.js) -->
   <link rel="stylesheet" href="css/trumxem.css?v=d34373b9" data-b="3392"> <!-- xem 12 trùm ở HOME (js/trumxem.js) -->
   <link rel="stylesheet" href="css/rasoat.css?v=070c3bb7" data-b="6703"> <!-- rà soát thiết kế 09/11: lớp phủ xoay dọc, nút "i" trên thẻ, sàn cỡ chữ 12px, vùng chạm ≥48 (≈44 px màn 390) -->
-  <script src="js/ver-anh.js?v=863c8687"></script>
+  <script src="js/ver-anh.js?v=905d2050"></script>
   <script src="js/donet.js?v=34c51606" data-b="2659"></script>
   <script src="js/font.js?v=26e0ac3d" data-b="1038"></script>
   <script src="js/taitai-anh.js?v=2adc1d8e" data-b="24519"></script>
@@ -260,7 +260,7 @@
   <script src="js/data.js?v=3caa85af" data-b="32148"></script>
   <script src="js/thebai.js?v=da6cf074" data-b="11985"></script> <!-- cấp thẻ ngoài trận kiểu DCDW (bản sao + vàng) -->
   <script src="js/fx.js?v=78425457" data-b="10870"></script>
-  <script src="js/tiervfx.js?v=bf0ffc12" data-b="5100"></script>
+  <script src="js/tiervfx.js?v=8ece9e79" data-b="6044"></script>
   <script src="js/nhac.js?v=b2d9bde7" data-b="31905"></script>
   <script src="js/sound.js?v=d43e5956" data-b="86426"></script>
   <script src="js/game.js?v=cccb90f2" data-b="76895"></script>
@@ -344,12 +344,13 @@
   <script src="js/trumvfx.js?v=38885be0" data-b="20822"></script> <!-- báo chiêu 12 trùm (dấu riêng mỗi chiêu, chặn/trúng) + khoảnh khắc chỉ huy — tuvan/vfx/boss -->
   <script src="js/camgiac.js?v=85c10541" data-b="26995"></script> <!-- cảm giác chạm P1: preset hiệu ứng, giảm chớp, rung tay, mốc sao 3/5/7, trần sáng (tuvan/vfx/p1) -->
   <script src="js/thatso.js?v=e8470569" data-b="16901"></script> <!-- VFX P0: chữ/tooltip = số thật (trần, 7★ ghép, mốc sao), huy hiệu skill tự phát -->
-  <script src="js/motvong.js?v=91922d5f" data-b="27532"></script> <!-- MỘT VÒNG: chỉ vòng xanh nạp chiêu quanh ụ, dạng = ngọc dưới huy hiệu sao, chú thích ở bảng chạm / trang ụ -->
+  <script src="js/motvong.js?v=d2ebe894" data-b="28413"></script> <!-- MỘT VÒNG: chỉ vòng xanh nạp chiêu quanh ụ, dạng = ngọc dưới huy hiệu sao, chú thích ở bảng chạm / trang ụ -->
   <script src="js/p2-meta.js?v=b72e8f01" data-b="603"></script>
-  <script src="js/vfxp2.js?v=c9996358" data-b="18366"></script> <!-- VFX P2: chiêu lớn = tờ 16 khung (báo trước → trúng → dư âm), bỏ ảnh tĩnh rung (tuvan/vfx-p2) -->
+  <script src="js/vfxp2.js?v=566bd675" data-b="18855"></script> <!-- VFX P2: chiêu lớn = tờ 16 khung (báo trước → trúng → dư âm), bỏ ảnh tĩnh rung (tuvan/vfx-p2) -->
   <script src="js/p3-meta.js?v=e0a0753e" data-b="873"></script>
   <script src="js/vfxp3.js?v=ff8de6da" data-b="13344"></script> <!-- VFX P3: 79 ụ còn lại — nổ trúng/chớp nòng = dải dựng sẵn + tia lửa (CG.K3), tờ p3_* khi có, bỏ ảnh tĩnh rung (tuvan/vfx-p3) -->
-  <script src="js/dosig.js?v=d4b0eb43" data-b="41048"></script> <!-- CHỮ KÝ ĐỎ: hiệu ứng chiêu riêng từng ụ Đỏ (báo trước → bùng nổ nhiều lớp → dư âm), chỉ hình, ?dosig=0 tắt (tuvan/anim-bac) -->
+  <script src="js/dosig.js?v=91a77e5f" data-b="45248"></script> <!-- CHỮ KÝ ĐỎ: hiệu ứng chiêu riêng từng ụ Đỏ (báo trước → bùng nổ nhiều lớp → dư âm), chỉ hình, ?dosig=0 tắt (tuvan/anim-bac) -->
+  <script src="js/vangsig.js?v=370c0651" data-b="35502"></script> <!-- CHỮ KÝ VÀNG/TÍM: hình trúng riêng + khoảnh khắc kỹ năng/ghép, không lấn Đỏ, chỉ hình, ?vsig=0 tắt (tuvan/anim-bac) -->
   <script src="js/vfxmoi.js?v=799adbbf" data-b="29482"></script> <!-- rà VFX 07/11: lửa cáo, nổ quỹ đạo, mìn chờ, nổ chùm cối, drone bom, rồng bổ nhào (dải ChatGPT, bản cũ dự phòng) -->
   <script src="js/cm-meta.js?v=abff3927" data-b="163"></script> <script src="js/comoi.js?v=693860e5" data-b="11454"></script> <!-- CƠ CHẾ MỚI đợt 1: Pháo La Bàn (mũi tên + số), Lửa Thập Tự (vệt lửa hàng/cột), Drone Kéo Xa (dây kéo) — tuvan/co-che-moi -->
   <script src="js/anim-meta.js?v=446bf8a6" data-b="4648"></script>

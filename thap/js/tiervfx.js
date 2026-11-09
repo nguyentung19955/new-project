@@ -41,12 +41,23 @@ const TVX = {
     if (!this._cho(T, 'w', crit ? 0.6 : 0.9)) return;
     this.wow(x, y, m, T);
   },
+  // 09/11 (tuvan/anim-bac — dịu trận đông): nhiều ụ Đỏ cùng nổ WOW trong 0,6 s → nổ sau nhỏ/ngắn dần (n = số nổ WOW gần đây):
+  //   n ≤ 1: đủ bộ (khoảnh khắc "đã") · n 2–3: nổ 70%, ngắn 0,3 s, bỏ vòng màu 54 px, 2 than · n ≥ 4: chỉ quầng + vòng trắng nhỏ.
+  //   Than đọng 6 → 4 (đọng trên đường lâu nhất). ?dodiu=0 = bản cũ để so.
+  DIU_WOW: !(typeof location !== 'undefined' && /[?&]dodiu=0\b/.test(location.search)), _wow: [],
   wow(x, y, m, T) {
-    if (T) { const g = G.dangBan; G.dangBan = T; FX.no('no_phao', x, y, 88, 0.4); G.dangBan = g; this.quang(T, x, y, 66, 0.3, m); } // nổ = ảnh trúng riêng của ụ (nổ pháo cam chung chỉ khi ụ chưa có ảnh)
-    else { FX.no('no_phao', x, y, 88, 0.4); FX.no('laser_trung', x, y, 66, 0.3); }
+    let n = 0;
+    if (this.DIU_WOW) { const a = this._wow; if (a.length && G.t < a[a.length - 1]) a.length = 0; while (a.length && G.t - a[0] > 0.6) a.shift(); n = a.length; a.push(G.t); }
+    const nhe = n >= 2, rat = n >= 4, kc = nhe ? 0.7 : 1;
+    if (!rat) {
+      if (T) { const g = G.dangBan; G.dangBan = T; FX.no('no_phao', x, y, 88 * kc, nhe ? 0.3 : 0.4); G.dangBan = g; } // nổ = ảnh trúng riêng của ụ (nổ pháo cam chung chỉ khi ụ chưa có ảnh)
+      else FX.no('no_phao', x, y, 88 * kc, nhe ? 0.3 : 0.4);
+    }
+    if (T) this.quang(T, x, y, 66 * kc, nhe ? 0.24 : 0.3, m); else FX.no('laser_trung', x, y, 66 * kc, 0.3);
     FX.vong1(x, y, 6, 30, '#ffffff', 0.25, 3);
-    FX.vong1(x, y, 10, 54, m, 0.38, 3);
-    for (let i = 0; i < 6; i++) FX.hat1('than', x + rnd(-16, 16), y + rnd(-10, 10), rnd(-14, 14), rnd(-34, -14), 0.6, 5, m); // than đọng = màu nguyên tố (trước: than CAM cho mọi ụ đỏ — Cryo Reactor/Leviathan cũng rơi than lửa)
+    if (!nhe) FX.vong1(x, y, 10, 54, m, 0.38, 3);
+    const nThan = !this.DIU_WOW ? 6 : rat ? 0 : nhe ? 2 : 4;
+    for (let i = 0; i < nThan; i++) FX.hat1('than', x + rnd(-16, 16), y + rnd(-10, 10), rnd(-14, 14), rnd(-34, -14), 0.6, 5, m); // than đọng = màu nguyên tố (trước: than CAM cho mọi ụ đỏ — Cryo Reactor/Leviathan cũng rơi than lửa)
     if (this.duocSang(1.6)) FX.sang(0.08, m);
     if (this.duocLac(0.8)) FX.lac(2);
   },
