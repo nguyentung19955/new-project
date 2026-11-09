@@ -79,9 +79,9 @@ function vm1Fx(id, x, y, w, song, mau) { G.hu.push({ k: 'vm1Fx', t: 0, song: son
 // =====================================================================================================
 SKILLS.lualien = {
   // 09/11 (người dùng: "Lửa Thập Tự 260 lửa, 18k dame mà bắn không nổi" — phát to nhưng chậm, đơn mục tiêu): ST 17 → 24, tốc 1.0 → 1.5,
-  //   lửa còn cho TỐC BẮN trần mềm: +TOC_MAX × n / (n + TOC_K) (10/11 người dùng chốt "tích lửa thì tăng tốc đánh": trần 200% → 300%, K 60 → 40 — 10 lửa +60%, 40 lửa +150%, 100 lửa +214%, 230 lửa +256%, không vượt +300%)
+  //   lửa còn cho TỐC BẮN trần mềm: +TOC_MAX × n / (n + TOC_K) (10 lửa +29%, 60 lửa +100%, 260 lửa +162%, không vượt +200%; 10/11 thử +300% rồi trả lại — thay bằng đạn đổi mục tiêu 1 lần: doiMuc, game.js)
   vai: 'tc', dmg: 24, toc: 1.5, nham: 'dau', napMau: null,
-  DMG: 0.08, CRIT: 0.004, CDMG: 0.04, TOC_MAX: 3.0, TOC_K: 40,
+  DMG: 0.08, CRIT: 0.004, CDMG: 0.04, TOC_MAX: 2.0, TOC_K: 60,
   tocLua(n) { return n > 0 ? this.TOC_MAX * n / (n + this.TOC_K) : 0; },
   tran(T) { return Infinity; }, // KHÔNG TRẦN (08/11) — giữ hàm cho chỗ gọi cũ
   bac: (n) => (n >= 70 ? 4 : n >= 50 ? 3 : n >= 30 ? 2 : n >= 10 ? 1 : 0),
@@ -96,7 +96,7 @@ SKILLS.lualien = {
   ban(G, B, T, E) {
     giat(T, 0.6); const [x, y] = chopNong(T, 22); SND.lien();
     const dmg = dmgU(T), nv = Math.min(8, ((T.lc || 0) / 10) | 0); // nv: chỉ cỡ hình
-    banDan({ img: 'tia_lua', x, y, muc: E, px: E.x, py: E.y, sp: 600, co: 13 + nv * 0.7, B, T, trung: (G, d, M) => { if (M) trung(M, dmg, { B, mau: '#ff9a3a' }); FX.tiaLua(d.x, d.y, 2 + (nv >> 1), '#ff8a2a', 110, 6); } });
+    banDan({ img: 'tia_lua', x, y, muc: E, px: E.x, py: E.y, sp: 600, co: 13 + nv * 0.7, B, T, doiMuc: 1, trung: (G, d, M) => { if (M) trung(M, dmg, { B, mau: '#ff9a3a' }); FX.tiaLua(d.x, d.y, 2 + (nv >> 1), '#ff8a2a', 110, 6); } });
   },
   // ô cùng hàng + cùng cột với ô o (không gồm o), o tăng dần
   chuThap(o) { const c = o % 5, h = (o / 5) | 0, ds = []; for (let i = 0; i < 15; i++) if (i !== o && (i % 5 === c || ((i / 5) | 0) === h)) ds.push(i); return ds; },
