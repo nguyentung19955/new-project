@@ -47,8 +47,14 @@ const HA = {
       if (!k) { k = document.createElement('img'); k.className = 'ha-kh'; k.alt = ''; k.draggable = false; d.appendChild(k); }
       k.src = this.a('ha_khung_' + bac); d.dataset.hab = bac;
     });
-    const te = $('#the-mv');
-    if (te && !te.querySelector('img.ha-kh')) { const k = document.createElement('img'); k.className = 'ha-kh'; k.alt = ''; k.draggable = false; k.src = this.a('ha_o_vuong'); te.appendChild(k); }
+    // chỉ huy: khung theo BẬC chỉ huy (mvBac, như thẻ ụ nhưng to hơn) + vương miện o_mien (giữ của HUD cũ) ở vòng góc trên-phải
+    const te = $('#the-mv'), B = G.ban[0];
+    if (te && B && B.mv) {
+      let k = te.querySelector('img.ha-kh');
+      if (!k) { k = document.createElement('img'); k.className = 'ha-kh'; k.alt = ''; k.draggable = false; te.appendChild(k); }
+      const bm = typeof mvBac === 'function' ? mvBac(B.mv.id) : 'vang';
+      k.src = this.a('ha_khung_' + bm); te.dataset.hab = bm;
+    }
     this._k = {}; this.capNhat();
   },
   dat(el, k, v) { if (!el) return; const c = el._ha || (el._ha = {}); if (c[k] === v) return; c[k] = v; if (k === 'text') el.textContent = v; else if (k === 'hidden') el.hidden = v; else if (k[0] === '.') el.classList.toggle(k.slice(1), v); else el.style.setProperty(k, v); },

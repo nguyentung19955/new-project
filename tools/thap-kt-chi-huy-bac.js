@@ -93,7 +93,7 @@ const otMV = (sel) => `(() => { const e = document.querySelector(${JSON.stringif
       await p.waitForTimeout(1500);
       const the = await p.evaluate(otMV('#the-mv'));
       ok(the && the.b === bac && the.ov.includes('o_vien_' + bac) && the.mien, tag + ' ' + mv + ': thẻ chỉ huy khay trận viền ' + bac, the);
-      const vis = await p.evaluate(() => { const e = document.querySelector('#the-mv > img.ov'); if (!e) return null; const r = e.getBoundingClientRect(); return { w: Math.round(r.width), h: Math.round(r.height), op: getComputedStyle(e).opacity, d: getComputedStyle(e).display }; });
+      const vis = await p.evaluate((bac) => { const ha = document.documentElement.classList.contains('ha2'); /* HUD anime (js/hud-anime.js): khung bậc = img.ha-kh ha_khung_<bậc> */ const e = document.querySelector(ha ? '#the-mv > img.ha-kh' : '#the-mv > img.ov'); if (ha && e && !e.src.includes('ha_khung_' + bac)) return { sai: e.src }; if (!e) return null; const r = e.getBoundingClientRect(); return { w: Math.round(r.width), h: Math.round(r.height), op: getComputedStyle(e).opacity, d: getComputedStyle(e).display }; }, bac);
       ok(vis && vis.w > 20 && vis.d !== 'none' && +vis.op > 0.5, tag + ' ' + mv + ': viền bậc hiện thật', vis);
       const gd = await p.evaluate(() => { const B = G.ban[0]; return [B.mv.gia, MAVUONG[B.mv.id].cd]; });
       ok(gd[0] === LUAT_GOC[mv][0] && gd[1] === LUAT_GOC[mv][1], tag + ' ' + mv + ': giá/hồi chiêu trong trận không đổi', gd);

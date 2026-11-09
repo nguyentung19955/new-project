@@ -71,7 +71,7 @@ module.exports = function doTrang(opt) {
       const xs = getComputedStyle(x);
       // ô tướng tối giản (.ot — js/otoigian.js): chữ LV/đếm nằm TRÊN ẢNH chân dung (kiểu DCDW) — tấm của chữ là ô, chữ phải trong ô (trừ viền 6 %)
       if (x.classList && x.classList.contains('ot')) {
-        const xr = x.getBoundingClientRect(), v = x.querySelector(':scope > img.ov'), vr = v ? v.getBoundingClientRect() : xr, k = vr.width * 0.06;
+        const xr = x.getBoundingClientRect(), v = x.querySelector(':scope > img.ha-kh') || x.querySelector(':scope > img.ov'), vr = v ? v.getBoundingClientRect() : xr, k = vr.width * 0.06;
         if (R.l < vr.left + k - 1 || R.r > vr.right - k + 1 || R.t < xr.top - 1 || R.b > Math.max(vr.bottom, xr.bottom) + 1) { out.chu.push(ten(e) + ' "' + t.slice(0, 24) + '" ra ngoài ô tối giản ' + ten(x)); daBao.add(e); }
         break;
       }

@@ -69,8 +69,8 @@ for y in range(96, 196):
 H2 = Image.fromarray(Ha)
 top = tach_nen(H2.crop((10, 140, 1244, 326)), 'tim')
 top = xen(top)
-# 430 css px rộng × 3 → 1290 > ảnh gốc 1222: giữ cỡ gốc; ép dọc 0.92 (thanh 56 css px thay vì 61 — kim cương không lộ méo)
-luu(thu(top, top.size[0], round(top.size[1] * 0.92)), 'ha_top.png', 'thanh trên: nền #top (100% 100%)')
+# 430 css px rộng × 3 → 1290 > ảnh gốc 1222: giữ cỡ gốc; ép dọc ~0.88 về đúng tỉ lệ khung 430×56 (kim cương không lộ méo)
+luu(thu(top, top.size[0], round(top.size[0] * 56 / 430)), 'ha_top.png', 'thanh trên: nền #top 430×56 (đúng tỉ lệ hiển thị)')
 
 cb = xen(tach_nen(H.crop((30, 372, 1226, 534)), 'tim'))
 luu(thu(cb, 990), 'ha_canh.png', 'băng cảnh báo mảnh 330×~38 css')
@@ -224,7 +224,7 @@ for src, ten, hop in [('h2_phim_dung_cho', 'ha_ic_dung', None), ('h2_phim_toc_ch
 
 # thanh máu trùm phân đoạn (#D55BEA) + thanh tiến độ tới trùm (cyan #71E4EE) + rãnh tối: từ dải sáng tai_day (ChatGPT) đổi màu,
 # cắt 10 khe trong suốt (10 đoạn = 10% máu / 10 wave của chu kỳ trùm)
-day = Image.open(A % 'tai_day').convert('RGBA').resize((300, 20), Image.LANCZOS)
+day = Image.open(A % 'tai_day').convert('RGBA').resize((360, 20), Image.LANCZOS)  # 18:1 = đúng tỉ lệ rãnh 144×8 css
 
 
 def phan_doan(im, n=10, khe=3):
