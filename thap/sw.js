@@ -6,7 +6,7 @@
 //  · KHÔNG đụng: tệp ngoài nguồn (Firebase, CDN), ver.json?t=, tải lại ?r=, ping, yêu cầu Range (âm thanh), POST.
 // V do tools/thap-ver.py dán lúc xuất bản (đổi V → trình duyệt cài SW mới, xoá bộ đệm cũ không băm).
 'use strict';
-const V = '6cf85c7e9c';
+const V = '9655e1bb5b';
 const BAM = 'tm-bam', THO = 'tm-tho-' + V;
 const GOC = new URL('./', self.registration.scope).pathname;
 

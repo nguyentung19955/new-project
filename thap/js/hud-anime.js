@@ -74,10 +74,12 @@ const HA = {
     if (G.che === 'pvp' && B1) {
       const yb = B1.y + B1.h + BC_PVP.g, yt = B0.y - BC_PVP.g;          // 2 làn ngang giữa
       v('--ha-thanh-y', (yb + yt) / 2 - 14);                              // thanh mảnh 28 px giữa 2 mép làn
-      v('--ha-tim-y', B0.y + B0.h + 10);                                  // tim mình: dưới mép bàn mình, trái lõi
-      v('--ha-tim2-y', B1.y - 40);                                        // tim đối thủ: trên mép bàn đối thủ, trái lõi đối thủ
+      v('--ha-tim2-y', B1.y - 41);                                        // tim đối thủ: cuối dải bộ bài đối thủ (♥ mình nằm trong thanh giữa)
       v('--ha-doi-y', B1.y - 50);                                         // dải bộ bài đối thủ
-    } else if (G.che === 'coop' && B1) v('--ha-doi-y', B1.y - 46);
+    }
+    // thẻ chỉ huy: nhãn chữ "SKILL" (vi: CHIÊU) — thẻ thứ 6 có vương miện là kỹ năng chỉ huy
+    const te = $('#the-mv');
+    if (te && !te.querySelector('.ha-cmd')) { const s = document.createElement('span'); s.className = 'ha-cmd'; s.textContent = 'SKILL'; te.appendChild(s); }
   },
   dat(el, k, v) { if (!el) return; const c = el._ha || (el._ha = {}); if (c[k] === v) return; c[k] = v; if (k === 'text') el.textContent = v; else if (k === 'hidden') el.hidden = v; else if (k[0] === '.') el.classList.toggle(k.slice(1), v); else el.style.setProperty(k, v); },
   // mỗi lần UI.capNhat (~30/s): chỉ ghi DOM khi đổi
@@ -114,6 +116,8 @@ const HA = {
         if (cb._b !== B.y + '|' + G.che) { cb._b = B.y + '|' + G.che; this.datCb(cb, B); }
       }
     }
+    // --- vòng góc trên-phải khung thẻ: CẤP POWER-UP trong trận 1…4 (trước để trống ở cấp 1 → trông như huy hiệu rỗng); MAX vẫn đọc ở dải giá
+    for (const d of document.querySelectorAll('#bo-the .the')) { const e = d._lv || d.querySelector('.lv'), lv = B.lv[d.dataset.id] || 1; if (e) { const t = lv >= 5 ? '' : String(lv); if (e.textContent !== t) e.textContent = t; } }
     // --- nút tạm dừng / tốc độ: trạng thái bật rõ
     const nd = $('#nut-tocdo + .nut-nho') || document.querySelector('#duoi [data-act="dung"]');
     this.dat(nd, '.bat', !!G.dung);

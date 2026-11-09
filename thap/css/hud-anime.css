@@ -188,7 +188,7 @@ html.ha2 body #wrap #ha-cb.vs:not([hidden]) ~ #tvb-vs, html.ha2 body #wrap #tvb-
    Bỏ nhãn BẠN / ĐỐI THỦ / ĐỒNG ĐỘI / CHUNG / VS (người dùng 17:44). Không phần tử nào chồng lên bàn / đường / cổng / lõi. */
 html.ha2 body #wrap #tvb-vs { display: none !important; }
 html.ha2 body #wrap #top #tb-tim .ht-ai { display: none !important; }
-html.ha2 body #wrap.ha-coop #top #ht-phu { display: none !important; }
+html.ha2 body #wrap.ha-coop #top #ht-phu, html.ha2 body #wrap.ha-coop #dp-dai { display: none !important; } /* CO-OP: 2 bàn đối xử như nhau — không dải chân dung riêng bàn trên (bộ bài đồng đội xem ở màn vào trận / chạm ụ) */
 html.ha2 body #wrap.ha-cb-on #top { visibility: hidden !important; } /* băng chiêu trùm thay chỗ thanh trong lúc hiện */
 
 /* ---- dải bộ bài đồng đội / đối thủ: tấm indigo viền vàng (ha_o_rong 9 mảnh) + 6 ô chân dung khung vàng (ha_o_vuong) ---- */
@@ -203,28 +203,66 @@ html.ha2 body #wrap #dp-dai .dp-the:nth-of-type(1) { left: 0 !important; } html.
 html.ha2 body #wrap #dp-dai .dp-the:nth-of-type(3) { left: 68px !important; } html.ha2 body #wrap #dp-dai .dp-the:nth-of-type(4) { left: 102px !important; }
 html.ha2 body #wrap #dp-dai .dp-the:nth-of-type(5) { left: 136px !important; } html.ha2 body #wrap #dp-dai .dp-mv { left: 168px !important; top: 6px !important; width: 30px !important; height: 30px !important; border-radius: 0 !important; }
 
-/* ---- PVP: thanh mảnh ĐỢT · TRÙM giữa 2 làn ngang (thay thanh trên 3 khoang) ---- */
+/* ---- PVP: thanh mảnh ĐỢT · TRÙM · ♥ MÌNH giữa KHE 2 làn ngang (không chạm làn) ---- */
 html.ha2 body #wrap.ha-pvp #top { top: var(--ha-thanh-y, 300px) !important; left: 30px !important; width: 370px !important; height: 28px !important; box-sizing: border-box !important;
   background: none !important; border: 0 solid transparent !important; border-width: 0 14px !important; border-image: url(../assets/ha_o_rong.webp?v=c0f71091) 0 46 fill / 0 14px / 0 stretch !important; filter: drop-shadow(0 2px 3px rgba(4,6,20,.6)); z-index: 4; }
-html.ha2 body #wrap.ha-pvp #top #tb-wave { left: 4px !important; top: 0 !important; width: 70px !important; height: 28px !important; }
+html.ha2 body #wrap.ha-pvp #top #tb-wave { left: 2px !important; top: 0 !important; width: 70px !important; height: 28px !important; }
 html.ha2 body #wrap.ha-pvp #top #tb-wave span { font-size: 10px !important; }
 html.ha2 body #wrap.ha-pvp #top #tb-wave b { font-size: 17px !important; }
-html.ha2 body #wrap.ha-pvp #top #tb-giua { left: 82px !important; top: 0 !important; width: 252px !important; height: 28px !important; }
-html.ha2 body #wrap.ha-pvp #top #tb-trum { left: 0 !important; right: auto !important; width: 96px !important; top: 5px !important; height: 18px !important; }
+html.ha2 body #wrap.ha-pvp #top #tb-giua { left: 78px !important; top: 0 !important; width: 196px !important; height: 28px !important; }
+html.ha2 body #wrap.ha-pvp #top #tb-trum { left: 0 !important; right: auto !important; width: 82px !important; top: 5px !important; height: 18px !important; }
 html.ha2 body #wrap.ha-pvp #top #tb-trum-chu { text-align: left !important; font-size: 11px !important; line-height: 18px !important; height: 18px !important; }
-html.ha2 body #wrap.ha-pvp #top #ha-thanh { left: 100px !important; right: 40px !important; top: 10px !important; }
+html.ha2 body #wrap.ha-pvp #top #ha-thanh { left: 84px !important; right: 38px !important; top: 10px !important; }
 html.ha2 body #wrap.ha-pvp #top #ha-so { top: 7px !important; }
-/* tim MÌNH: ngay dưới bàn mình, trái lõi mình · tim ĐỐI THỦ: ngay trên bàn đối thủ, trái lõi đối thủ — chỉ ♥ + số, không tấm/nhãn */
-html.ha2 body #wrap.ha-pvp #top #tb-tim { left: 268px !important; top: calc(var(--ha-tim-y, 600px) - var(--ha-thanh-y, 300px)) !important; width: 72px !important; height: 26px !important; justify-content: flex-end !important; }
-html.ha2 body #wrap.ha-pvp #top #ht-phu { left: 268px !important; right: auto !important; top: calc(var(--ha-tim2-y, 30px) - var(--ha-thanh-y, 300px)) !important; width: 72px !important; min-width: 0 !important; height: 26px !important;
-  border: 0 !important; border-image: none !important; justify-content: flex-end !important; }
+html.ha2 body #wrap.ha-pvp #top #tb-tim { left: 280px !important; top: 1px !important; width: 62px !important; height: 26px !important; justify-content: flex-end !important; }
+html.ha2 body #wrap.ha-pvp #top #tb-tim .ht-n { font-size: 17px !important; }
+html.ha2 body #wrap.ha-pvp #top #tb-tim .ht-tim { width: 14px !important; height: 13px !important; }
+/* ♥ ĐỐI THỦ: cuối dải bộ bài đối thủ (cách lõi đối thủ ≥ 18 px) — chỉ ♥ + số */
+html.ha2 body #wrap.ha-pvp #top #ht-phu { left: 264px !important; right: auto !important; top: calc(var(--ha-tim2-y, 30px) - var(--ha-thanh-y, 300px)) !important; width: 62px !important; min-width: 0 !important; height: 26px !important;
+  border: 0 !important; border-image: none !important; justify-content: flex-start !important; }
 html.ha2 body #wrap.ha-pvp #top #ht-phu .ht-ai { display: none !important; }
 html.ha2 body #wrap.ha-pvp #top #ht-phu .ht-tim { width: 15px !important; height: 14px !important; }
 html.ha2 body #wrap.ha-pvp #top #ht-phu .ht-n { font-size: 19px !important; }
 html.ha2 body #wrap.ha-pvp #top #ht-phu .ht-max { font-size: 11px !important; margin-bottom: 5px; }
-html.ha2 body #wrap.ha-pvp #top #tb-tim .ht-max { display: inline !important; font-size: 11px !important; margin-bottom: 5px; }
+html.ha2 body #wrap.ha-pvp #top #tb-tim .ht-max { display: inline !important; font-size: 10px !important; margin-bottom: 4px; }
 /* ---- chiều sâu 3D đáy: nút / ô / thẻ nổi khỏi nền, bóng đổ xuống (ánh sáng trên-trái) — bóng = chính ảnh làm mờ ---- */
 html.ha2 body #wrap #duoi #mana-hop, html.ha2 body #wrap #duoi .nut-cot .nut-nho:not(.bat), html.ha2 body #wrap #duoi #bo-the .the, html.ha2 body #wrap #duoi #the-mv { filter: drop-shadow(0 4px 3px rgba(3,5,18,.75)) !important; }
 html.ha2 body #wrap #duoi #nut-trieu:not(.thieu):not(.tn-day) { filter: drop-shadow(0 5px 4px rgba(3,5,18,.8)) !important; }
 html.ha2 body #wrap #duoi #nut-trieu.thieu, html.ha2 body #wrap #duoi #nut-trieu.tn-day { filter: saturate(.3) brightness(.62) drop-shadow(0 5px 4px rgba(3,5,18,.8)) !important; }
 html.ha2 body #wrap #top { filter: drop-shadow(0 4px 4px rgba(3,5,18,.6)); }
+
+/* ================= 09/11 (3) CÁC MÀN TRONG TRẬN CÒN LẠI — dùng component chung Royal Twilight của B3 (ua_tam / ua_nut_chinh / ua_nut_phu,
+   tools/thap-cat-ui3.py) để trong trận và ngoài trận cùng một bộ: bảng TẠM DỪNG, màn KẾT QUẢ (solo / co-op / PVP / online), màn VÀO TRẬN ================= */
+/* --- tấm bảng tạm dừng: chàm vát góc viền vàng (thay khung_bang thép). Màn kết quả không có tấm (nền tối toàn màn như cũ) --- */
+html.ha2 body #wrap #dung .bang { background: none !important; box-shadow: none !important;
+  border: 0 solid transparent !important; border-image: url(../assets/ua_tam.webp?v=45cf4b68) 50 fill / 25px stretch !important; filter: drop-shadow(0 8px 10px rgba(3,5,18,.7)); }
+html.ha2 body #wrap #dung .bang::before, html.ha2 body #wrap #dung .bang::after { display: none !important; content: none !important; }
+html.ha2 body #wrap #dung .bang-ten { color: #E9CCA0 !important; text-shadow: 0 2px 3px #000 !important; }
+/* --- nút: phụ = chàm viền cyan · chính (RESUME / RETRY / PLAY AGAIN) = cam đào chữ chàm đậm --- */
+html.ha2 body #wrap #dung .nut, html.ha2 body #wrap #ketqua .nut { background: none !important; box-shadow: none !important; border: 0 solid transparent !important;
+  border-image: url(../assets/ua_nut_phu.webp?v=5eb74425) 36 60 fill / 15px 25px stretch !important; color: #F7F8FF !important; text-shadow: 0 1px 2px #000 !important; filter: drop-shadow(0 3px 3px rgba(3,5,18,.6)); }
+html.ha2 body #wrap #dung .nut.chinh, html.ha2 body #wrap #ketqua .nut.chinh { border-image: url(../assets/ua_nut_chinh.webp?v=54ba97dd) 40 75 fill / 19px 36px stretch !important; color: #172040 !important; text-shadow: 0 1px 0 rgba(255,230,190,.6) !important; }
+html.ha2 body #wrap #dung .nut::before, html.ha2 body #wrap #dung .nut::after, html.ha2 body #wrap #ketqua .nut::before, html.ha2 body #wrap #ketqua .nut::after { display: none !important; content: none !important; }
+/* --- ô số liệu kết quả (BOSSES / BEST / LIVES…): ô vát góc (thay p7_tam thép) --- */
+html.ha2 body #wrap #ketqua .kq-o, html.ha2 body #wrap #ketqua .kq-meo { background: none !important; box-shadow: none !important; border: 0 solid transparent !important; border-image: url(../assets/ua_o.webp?v=47ec89eb) 52 fill / 18px stretch !important; }
+html.ha2 body #wrap #ketqua .kq-o small { color: #B8C3E6 !important; }
+html.ha2 body #wrap #ketqua .kq-o b { color: #F7F8FF !important; }
+/* thua: biểu tượng = lõi pha lê tắt sáng (ha_loi xám, quầng đỏ) thay khiên thép nứt */
+html.ha2 body #wrap #ketqua.thua .kq-ic { content: url(../assets/ha_loi.webp?v=559bc0de) !important; object-fit: contain !important; filter: grayscale(.85) brightness(.6) drop-shadow(0 0 10px rgba(255,94,128,.7)) !important; }
+
+/* --- màn VÀO TRẬN (trùm của trận + bộ bài đồng đội/đối thủ) --- */
+html.ha2 body #wrap #nd-gt .vt-bang.do { border-image: url(../assets/ha_canh.webp?v=dad7a47a) 0 70 fill / 0 26px stretch !important; }
+html.ha2 body #wrap #nd-gt .vt-bang.do b { color: #F7F8FF !important; }
+html.ha2 body #wrap #nd-gt .vt-tt.dau { background: none !important; box-shadow: none !important; border: 0 solid transparent !important; border-image: url(../assets/ua_tam.webp?v=45cf4b68) 50 fill / 25px stretch !important; }
+html.ha2 body #wrap #nd-gt .vt-tt .vt-w { background: none !important; border: 0 solid transparent !important; border-width: 0 14px !important; border-image: url(../assets/ha_o_rong.webp?v=c0f71091) 0 46 fill / 0 14px stretch !important; color: #FFB866 !important; }
+html.ha2 body #wrap #nd-gt .vt-cham b, html.ha2 body #wrap #nd-gt .vt-cham small { color: #172040 !important; text-shadow: none !important; }
+
+/* --- ký hiệu nút đáy: tạm dừng = 2 viên cyan (ha_ic_dung2), tốc độ = mũi tên ››› cyan của đường (duong_mui) — không còn cắt từ phím thép --- */
+html.ha2 body #wrap #duoi .nut-cot .nut-nho::before { background-image: url(../assets/ha_ic_dung2.png?v=3d85163b) !important; width: 24px !important; height: 20px !important; opacity: 1 !important; }
+html.ha2 body #wrap #duoi .nut-cot #nut-tocdo::before { background-image: url(../assets/duong_mui.png?v=bd82535a) !important; width: 34px !important; height: 23px !important; }
+html.ha2 body #wrap #duoi .nut-cot #nut-tocdo:not(.bat)::before { filter: saturate(.35) brightness(.9) !important; }
+
+/* SUMMON: lòng cam đào CTA #FFB866 (ha_trieu_cam — nhuộm chính ảnh) khi bấm được; thiếu mana / bàn đầy = bản kem xám như cũ */
+html.ha2 body #wrap #duoi #nut-trieu:not(.thieu):not(.tn-day) { background-image: url(../assets/ha_trieu_cam.webp?v=c0aab464) !important; }
+/* thẻ chỉ huy: nhãn CHIÊU (chữ) trên vòng vương miện → rõ đây là thẻ kỹ năng chỉ huy, giá mana ở đáy */
+html.ha2 body #wrap #duoi #the-mv .ha-cmd { position: absolute; z-index: 6; left: 6px; top: 17px; padding: 1px 4px; font: 800 8px/1 'TM UI', sans-serif; letter-spacing: .06em; color: #FFB866; text-shadow: 0 1px 1px #000, 0 0 3px #000; pointer-events: none; text-transform: uppercase; }
