@@ -348,3 +348,6 @@ html.ua body #wrap #kt .kt-phu.kt-mo .kt-phu-tam { border-image: none !important
 html.ua body #wrap #kt .kt-phu-tam, html.ua body #wrap #tt-phu .kt-phu-tam { padding-top: 34px !important; padding-left: 26px !important; padding-right: 26px !important; }
 html.ua body #wrap .hm-tam, html.ua body #hm-mo .hm-tam { padding-top: 28px !important; padding-left: 26px !important; padding-right: 26px !important; }
 html.ua body #wrap .hm-tam-loc .hm-chips.c3 .hm-chip, html.ua body #hm-mo .hm-tam-loc .hm-chips.c3 .hm-chip { font-size: 12px !important; letter-spacing: 0 !important; border-image-width: 12px 13px !important; padding: 0 2px !important; gap: 2px !important; }
+
+/* 09/11: người dùng — màn XẾP BỘ BÀI không có nút PLAY (chơi từ HOME) */
+html.ua #chon .dk-choi, #chon #nut-vao.dk-choi { display: none !important; }
