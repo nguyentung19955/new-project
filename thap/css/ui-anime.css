@@ -261,7 +261,7 @@ html.ua body #wrap #kt .kt-dau > b { color: #F7F8FF; text-shadow: 0 1px 2px #000
 /* nút trong ô (mua / FREE): nút chính cam đào nhỏ — bớt vát góc để giá vừa */
 html.ua body #wrap #chon #kt .hm-nut2.vang { border-image-width: 12px 20px !important; }
 html.ua body #wrap #chon #kt .hm-nut2:not(.vang) { border-image-width: 11px 18px !important; }
-html.ua body #wrap #chon #kt .kt-gia.thieu { color: #B0182F !important; } /* thiếu tiền trên nút cam: đỏ đậm ≥ 4.5:1 */
+html.ua body #wrap #chon #kt .kt-gia.thieu { color: #8A0F24 !important; } /* thiếu tiền trên nút cam: đỏ đậm ≥ 4.5:1 */
 /* 4 thẻ dưới: thẻ đang mở = pill cyan, còn lại pill chàm */
 html.ua body #wrap #chon #kt .kt-tab button { border-image: var(--ua-p) / 14px 20px stretch !important; color: #F7F8FF !important; }
 html.ua body #wrap #chon #kt .kt-tab button.vang { border-image: var(--ua-pb) / 14px 20px stretch !important; color: #172040 !important; }
@@ -314,3 +314,7 @@ html.ua body #wrap #tt-phu .kt-phu-t, html.ua body #wrap #kt .kt-phu-t { color: 
 html.ua body #wrap #tt-phu small, html.ua body #wrap #kt .kt-phu-tam small { color: #B8C3E6; }
 /* nhắc nhanh ở menu (UI.nhac): pill chàm thay nhãn thép sọc đỏ */
 html.ua body #wrap #chon:not([hidden]) ~ #chon-goi-nhac { border-image: url(../assets/ua_pill_tat.png) 40 62 fill / 13px 20px stretch !important; padding: 10px 24px !important; color: #F7F8FF !important; text-shadow: 0 1px 2px #000 !important; }
+/* chữ dài (VI): thẻ dưới cửa hàng 1 dòng; nút cài đặt vừa khung */
+html.ua body #wrap #chon #kt .kt-tab button { border-image-width: 14px 15px !important; padding: 0 6px !important; white-space: nowrap; }
+html.ua body #wrap #chon #kt .kt-tab b { font-size: 12px !important; letter-spacing: .02em !important; }
+html.ua body #wrap .hm-tam-cai .hm-cai2 .hm-nut2, html.ua body #hm-mo .hm-tam-cai .hm-cai2 .hm-nut2 { font-size: 12.5px !important; padding: 0 14px !important; border-image-width: 14px 20px !important; white-space: normal; line-height: 1.1; }
