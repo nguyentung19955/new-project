@@ -904,6 +904,8 @@ function capNhatDan(d, dt) {
     if (u >= 1) { d.trung(G, d, null); return true; }
     return false;
   }
+  if (d.doiMuc === 1 && d.muc && d.muc.chet) d.doiMuc = doiMucDan(d) ? 2 : 3; // đạn mất mục tiêu → đổi 1 lần (cờ riêng từng ụ, vd Lửa Thập Tự)
+  if (d.doiMuc === 2) return danBeLai(d, dt);
   if (d.muc && !d.muc.chet) { d.px = d.muc.x; d.py = d.muc.y; }
   const dx = d.px - d.x, dy = d.py - d.y, l = Math.hypot(dx, dy);
   const b = d.sp * dt;
@@ -915,6 +917,37 @@ function capNhatDan(d, dt) {
   return d.t > 3;
 }
 
+// ĐỔI MỤC TIÊU 1 LẦN (10/11, người dùng chốt — Lửa Thập Tự: "đạn bay theo quái đã chết thì mất"): chỉ cho đạn có cờ d.doiMuc = 1.
+//   Chọn quái CÒN SỐNG gần vị trí đạn nhất trong DOI_MUC_R px, nằm trong nón ±DOI_MUC_GOC quanh hướng bay hiện tại (không quay ngược về ụ);
+//   hoà khoảng cách → uid nhỏ (tất định, không Math.random). Không có quái hợp lệ → đạn bay tiếp tới điểm cũ rồi tan như trước.
+const DOI_MUC_R = 60, DOI_MUC_GOC = 1.0, DOI_MUC_RE = 11, DOI_MUC_SONG = 0.7; // px · rad (≈57°) · rad/s bẻ lái · giây tối đa sau khi đổi
+function doiMucDan(d) {
+  const g = Math.atan2(d.py - d.y, d.px - d.x), h = Math.hypot(d.px - d.x, d.py - d.y) > 1 ? g : (d.goc || 0);
+  let m = null, best = DOI_MUC_R * DOI_MUC_R;
+  for (const E of dsMucTieu(d.B)) {
+    if (E.chet) continue;
+    const ex = E.x - d.x, ey = E.y - d.y, q = ex * ex + ey * ey;
+    if (q > best && !(q === best && m && E.uid < m.uid)) continue;
+    if (q > 1 && Math.abs(gocLech(h, Math.atan2(ey, ex))) > DOI_MUC_GOC) continue;
+    if (q < best || !m || E.uid < m.uid) { best = q; m = E; }
+  }
+  if (!m) return false;
+  d.muc = m; d.huong = h; d.tDoi = 0; return true;
+}
+// bay sau khi đổi mục tiêu: giữ tốc độ, hướng xoay dần về mục tiêu (tối đa DOI_MUC_RE rad/s) → đường cong mượt, không dịch chuyển tức thời
+function danBeLai(d, dt) {
+  d.tDoi += dt;
+  const E = d.muc, b = d.sp * dt;
+  if (E && !E.chet) {
+    const ex = E.x - d.x, ey = E.y - d.y, l = Math.hypot(ex, ey);
+    if (l <= b + 8) { d.x = E.x; d.y = E.y; d.trung(G, d, E); return true; }
+    const lech = gocLech(d.huong, Math.atan2(ey, ex)), re = DOI_MUC_RE * dt;
+    d.huong += Math.max(-re, Math.min(re, lech));
+  }
+  d.goc = d.huong; d.x += Math.cos(d.huong) * b; d.y += Math.sin(d.huong) * b;
+  if (!E || E.chet || d.tDoi > DOI_MUC_SONG) { d.trung(G, d, null); return true; } // mục tiêu mới cũng chết / bẻ không kịp → tan
+  return false;
+}
 // TÊN LỬA ĐUỔI (Pháo La Bàn): bay thẳng theo hướng phóng d.dd.g 0,12 s rồi rẽ dần về mục tiêu (tốc độ rẽ + tốc độ bay tăng theo thời gian)
 //   mục tiêu chết → bám quái gần nhất (hoà: uid nhỏ) · không còn quái → nổ tại chỗ sau 0,6 s · chỉ dùng dt + vị trí quái → tất định (online lockstep)
 function danDuoi(d, dt) {
