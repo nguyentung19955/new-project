@@ -3,6 +3,12 @@
 > Game merge tower-defense trong `thap/`. Luật game và bàn giao: `docs/demo-hop-tuong/ban-giao/BAN-GIAO.md`, luật code/hình: `thap/QUY-TAC-HINH.md`.
 > Mỗi session thêm một mục `## claude/<tên-nhánh> — …` ở CUỐI file (file gộp kiểu union, không xung đột).
 
+## claude/demo-hop-tuong — Star Lift: bỏ nâng sao miễn phí (09/11)
+- Người dùng chốt: BỎ hẳn nấc sao của Star Lift (5★ STAR PIP mỗi 2 wave, 7★ STAR SURGE, chữ "★ PIP x/3" / "+1★ STAR LIFT"). Giữ ụ: id `nangsao`, bậc Tím, ảnh, nhóm gacha.
+- Bù: tốc bắn cả 4 ô kề +10%/★ → **+12%/★** (ụ kề sao thấp nhất ×1,5) — thẻ "Rate buff" 12% (LV max 17,4%). Mốc: 3★ LIFT +36%, 5★ HIGH LIFT +60%, 7★ SKY LIFT +84%.
+- Không lấy 14,5%/★ vì đã vượt hỗ trợ Vàng (so Radar/Fusion Mixer; sim-vaitro hotro bão hoà) — số đo: `docs/demo-hop-tuong/tuvan/sao-mien-phi/BAO-CAO.md` mục 3.
+- Chữ EN + VI (text.js, roster, vi.json → ngonngu-vi.js), HUONG-DAN-SKILL-U, CAN-BANG-VAI-TRO. Test: `thap-kt-kynang-tim` mục Star Lift viết lại (4 ô kề, không +★), bỏ dòng Star Lift ở `thap-kt-sao-tai-cho`.
+
 ## claude/demo-hop-tuong — nóng máy iPhone đợt 2 (09/11)
 - Lớp hiệu ứng "dịu VFX" chỉ xoá + đổ vùng có hình (khung bao), lớp rỗng bỏ qua → điểm ảnh/khung PVP 7,5 M → 4,5 M, solo 6,1 M → 2,9 M. Hình y hệt (kiểm 0 điểm ảnh ngoài khung bao).
 - Nút SUMMON không còn ghi lại class 30 lần/s khi thiếu mana / bàn đầy. Bóng drop-shadow HUD giữ nguyên (đo: < 0,3% việc vẽ). Không có animation CSS lặp vô hạn trên HUD trận.

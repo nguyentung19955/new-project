@@ -92,7 +92,7 @@ const MOC_RIENG = {
   tron:      { 5: ['MIXED FIRE', 'Aura ×1.9; 3+ types: +damage'], 7: ['PERFECT BLEND', 'Aura ×2.35; 3+ types: +6% crit'] },
   taylo:     { 5: ['DEEP CLEAN', 'Every 9s, up to 3 turrets'], 7: ['FRESH START', 'Cleansed: +20% fire rate 4s'] },
   khien:     { 3: ['QUICK CHARGE', 'Shields every 16s'], 5: ['FAST CHARGE', 'Shields every 14s'], 7: ['COUNTER SHIELD', 'Every 10s; a block gives +20% fire rate'] },
-  nangsao:   { 3: ['LIFT', 'Aura ×3 (+30% fire rate, lowest +45%)'], 5: ['STAR PIP', 'Every 2 waves a star pip (3 pips = +1★)'], 7: ['STAR SURGE', '2 pips = +1★'] },
+  nangsao:   { 3: ['LIFT', 'Aura ×3 (+36% fire rate, lowest +54%)'], 5: ['HIGH LIFT', 'Aura ×5 (+60% fire rate, lowest +90%)'], 7: ['SKY LIFT', 'Aura ×7 (+84% fire rate, lowest +126%)'] }, // 09/11: bỏ STAR PIP / STAR SURGE (nấc sao miễn phí)
   hasao:     { 5: ['BREAK POINT', 'Aura ×1.9, bigger merge surge'], 7: ['STAR SHATTER', 'Aura ×2.35, merge surge ×2.35'] },
   guongcong: { 5: ['POLISHED', 'Aura ×1.9'], 7: ['TRUE MIRROR', 'Mirror every 15s; reflects onto 2 turrets'] },
   dongbo:    { 5: ['PAIRED FIRE', 'Aura ×1.9; 2+ matched: +fire rate'], 7: ['LOOSE SYNC', 'Aura ×2.35; ±1★ counts as matched'] },

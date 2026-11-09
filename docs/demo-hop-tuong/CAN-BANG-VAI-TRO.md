@@ -29,7 +29,7 @@ Công cụ: `node tools/thap-sim-vaitro.js dem | dps | hotro | deck [n] [solo|co
 | Fusion Mixer (Blender) | Hiếm | Đặc biệt → Hỗ trợ | Ụ Tấn công kề +6% tốc, +2%/loại Tấn công khác nhau (tối đa 12% ở 1★) |
 | Cleanser | Sử thi | Đặc biệt → Hỗ trợ | 12 s tẩy 2 ụ kề; không có gì để tẩy → ụ kề +8% sát thương |
 | Shield Gen | Sử thi | Đặc biệt → Hỗ trợ | Ụ kề có khiên chặn 1 khống chế, sạc lại 18 s, không cộng dồn |
-| Star Lift | Sử thi | Đặc biệt → Hỗ trợ | 2 ụ kề sao thấp nhất +6%/★ tốc (≤30%); 5★: nấc sao mỗi wave (3 nấc = +1★, tối đa 2★/trận) |
+| Star Lift | Sử thi | Đặc biệt → Hỗ trợ | cả 4 ụ kề +12%/★ tốc, ụ kề sao thấp nhất ×1,5 (09/11: bỏ nấc sao miễn phí) |
 | Star Breaker | Huyền thoại | Tấn công → Hỗ trợ | Ụ Tấn công kề +sát thương; ghép cạnh nó → bùng tốc 5 s; PVP: ụ đối thủ đầu tiên lên 5★ mỗi wave −8% tốc 6 s; CO-OP: ụ thấp nhất của đồng đội +8% |
 | Mirror Gate | Huyền thoại | Đặc biệt → Hỗ trợ | Ụ kề kháng khống chế 15%→35%; 20 s: PVP phản 1 hiệu ứng, chặn 1 chiêu trùm, CO-OP chép 1 hiệu ứng ghép ½ sao |
 | Sync Cannon | Huyền thoại | Tấn công → Hỗ trợ | Ụ Tấn công kề CÙNG SAO +sát thương theo số cặp khớp (trần) |

@@ -618,9 +618,9 @@
   Mạnh/yếu: vô hiệu chiêu trùm và đòn phá PVP lên các ụ quý; không tăng sát thương chút nào. Hợp với: Cleanser, Railgun, Chain Link.
 
 ### Star Lift — Bệ Nâng Sao · Sử thi · Hỗ trợ
-- **Skill:** Không bắn. Trong 4 ô thẳng bên cạnh, chọn 2 ụ tấn công/đặc biệt có SAO THẤP NHẤT và cho chúng +6% tốc bắn cho mỗi sao của Star Lift (tối đa 30%). Từ 5★ còn cho nấc sao: mỗi wave, ụ kề sao thấp nhất nhận 1 nấc, đủ nấc thì được +1★.
-- **Trên màn hình thấy gì:** đầu ụ quay chậm, xung sáng vàng tới các ô kề; vòng nạp vàng quanh bệ. Khi nhận nấc: chữ "★ PIP 1/3" vàng trên ụ; đủ nấc: chữ "+1★" to, tia lửa và vòng sáng vàng, có thể kèm hiệu ứng SKILL UP nếu ụ đó chạm mốc. Chạm vào ụ: nhãn "+x% LOW-STAR RATE".
-- **Khi nào biến đổi / kích hoạt:** buff tốc luôn bật; nấc sao trao mỗi khi sang wave mới (bắt đầu từ wave kế tiếp sau khi đạt 5★). Mốc riêng: 3★ LIFT — +18%; 5★ STAR PIP — 3 nấc = +1★; 7★ STAR SURGE — 2 nấc = +1★. Mỗi Star Lift chỉ nâng tối đa 2★ mỗi trận.
+- **Skill:** Không bắn. Cả 4 ô thẳng bên cạnh (ụ tấn công/đặc biệt) bắn nhanh hơn +12% cho mỗi sao của Star Lift; ụ kề có SAO THẤP NHẤT được ×1,5. Không còn nâng sao (09/11 người dùng chốt bỏ nấc sao miễn phí).
+- **Trên màn hình thấy gì:** đầu ụ quay chậm, xung sáng vàng tới các ô kề; vòng nạp vàng quanh bệ. Chạm vào ụ: nhãn "+x% FIRE RATE".
+- **Khi nào biến đổi / kích hoạt:** buff tốc luôn bật. Mốc riêng: 3★ LIFT — +36% (thấp nhất +54%); 5★ HIGH LIFT — +60% (+90%); 7★ SKY LIFT — +84% (+126%).
 - **Sức mạnh:**
   | | 1★ | 4★ | 7★ |
   |---|---|---|---|

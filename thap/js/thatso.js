@@ -157,7 +157,7 @@
   // hàng CARD LV (trang ụ): ụ hỗ trợ có trần → 'cap 22% → 22.3%' (cấp thẻ nới trần — KIEM.md 'Đã quyết' #2); thẻ MAX: 'cap 26%'
   window.THATSO.capThe = (id, t) => {
     const e = id === 'khuech' ? ['amp'] : TRAN_HT[id], r = G.rosterMap && G.rosterMap[id]; if (!e || !r || id === 'lophanung' || !t) return '';
-    const f = (k) => id === 'nangsao' ? 0.5 * (1 + HOTRO.capLvK(r.bac, k)) : HOTRO.tranGoc(r.bac, HOTRO.capLvK(r.bac, k), e[0]), v = (x) => +(x * 100).toFixed(1) + '%'; // Star Lift: trần riêng 50%
+    const f = (k) => HOTRO.tranGoc(r.bac, HOTRO.capLvK(r.bac, k), e[0]), v = (x) => +(x * 100).toFixed(1) + '%'; // Star Lift: không còn trần riêng 50% (bỏ 07/11, SKILLS.nangsao.tran = ∞) — 09/11 thôi hiện 'Cap 50%'
     if (!(f(t.k) < 1)) return ''; // 07/11: không trần (chỉ còn giới hạn tự nhiên: chậm 90%) — không hiện 'cap'
     return 'cap ' + v(f(t.k)) + (t.max ? '' : ' → ' + v(f(t.k + 1)));
   };

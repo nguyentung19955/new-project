@@ -11,7 +11,7 @@ function taoMoiTruong(hat) {
   let s = hat || 12345;
   const M = Object.create(Math); M.random = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; };
   const ctx = { console, Math: M, JSON, Set, Map, Promise, Object, Array, Number, String, Infinity, NaN, isFinite, parseInt, parseFloat, Symbol, Proxy, Reflect, Error,
-    setTimeout: (f) => { ctx._cho.push(f); }, clearTimeout: noop, _cho: [], performance: { now: () => 0 }, localStorage: { getItem: () => null, setItem: noop } };
+    setTimeout: (f) => { ctx._cho.push(f); }, clearTimeout: noop, _cho: [], performance: { now: () => 0 }, location: { search: '', hash: '' }, localStorage: { getItem: () => null, setItem: noop } };
   ctx.window = ctx; ctx.document = undefined;
   ctx.addEventListener = noop;
   ctx.SND = new Proxy({}, { get: () => noop });
@@ -287,21 +287,19 @@ chay('hopbi', () => {
 });
 
 // =====================================================================================================
-// 9) STAR LIFT — HỖ TRỢ: 2 ụ kề SAO THẤP NHẤT +min(30%, 6%×★) tốc · 5★ mỗi wave 1 nấc cho ụ thấp nhất (3 nấc = +1★, 7★: 2), tối đa 2★/trận
+// 9) STAR LIFT — HỖ TRỢ: CẢ 4 ụ kề +12%/★ tốc bắn, ụ kề SAO THẤP NHẤT ×1.5 · 09/11: BỎ nấc sao miễn phí (5★/7★ không còn +★)
 // =====================================================================================================
 chay('nangsao', () => {
   for (const s of [1, 3, 5, 7]) {
-    moi('solo', ['nangsao', 'lien', 'canon', 'set', 'tia']);
-    const T = dat(7, 'nangsao', s); const ke = [[2, 1], [6, 2], [8, 3], [12, 4]].map(([o, sa]) => dat(o, 'lien', sa)); ctx._K = ke;
-    buoc(dt);
-    const b = R('_K.map(X => X.buf.toc - (X.sao >= 3 ? 0.2 : 0))'), k = Math.min(0.3, 0.06 * s);
-    ghi('nangsao', s + '★: only the 2 lowest-star neighbours +' + pc(k) + ' fire rate', b.map(pc).join(' / '), gan(b[0], k) && gan(b[1], k) && Math.abs(b[2]) < 1e-9 && Math.abs(b[3]) < 1e-9);
+    moi('solo', ['nangsao', 'lien', 'canon', 'set', 'tia']); // đo phần tăng so với cùng bàn KHÔNG có Star Lift (trừ mốc sao / buff sẵn của ụ kề)
+    ctx._K = [[2, 1], [6, 2], [8, 3], [12, 4]].map(([o, sa]) => dat(o, 'lien', sa)); buoc(dt); const b0 = R('_K.map(X => X.buf.toc)');
+    dat(7, 'nangsao', s); buoc(dt);
+    const b = R('_K.map(X => X.buf.toc)').map((x, i) => x - b0[i]), k = 0.12 * s;
+    ghi('nangsao', s + '★: all 4 neighbours +' + pc(k) + ' fire rate, lowest-star ×1.5 (+' + pc(k * 1.5) + ')', b.map(pc).join(' / '), gan(b[0], k * 1.5) && gan(b[1], k) && gan(b[2], k) && gan(b[3], k));
     if (s >= 5) {
-      const can = s >= 7 ? 2 : 3; let w0 = 20;
-      for (let w = 1; w <= 8; w++) { R('G.wave = ' + (w0 + w)); buoc(dt); }
-      const r = R('[_K.map(X => X.sao), G.ban[7] ? 0 : 0]')[0], ct = R(`G.ban[0].t[7].pipDa`);
-      const tang = r.reduce((a, x, i) => a + x - (i + 1), 0);
-      ghi('nangsao', s + '★: a star pip each wave (' + can + ' pips = +1★), max 2★ per match', '8 waves → +' + tang + '★ (stars ' + r.join('/') + ', used ' + ct + ')', tang === 2 && ct === 2);
+      for (let w = 1; w <= 8; w++) { R('G.wave = ' + (20 + w)); buoc(dt); }
+      const r = R('_K.map(X => X.sao)'), tang = r.reduce((a, x, i) => a + x - (i + 1), 0);
+      ghi('nangsao', s + '★: no free stars (star pips removed 09/11)', '8 waves → +' + tang + '★ (stars ' + r.join('/') + ')', tang === 0);
     }
   }
 });

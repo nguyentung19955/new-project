@@ -23,7 +23,11 @@ Mốc so sánh — trận không có ụ "cho không" nào (bộ nền): wave ~1
 
 Pandora trước → sau: quà +1★ từ 1/6 → 1/12 lần mở. Trong mô phỏng AI chỉ mở ~4 lần/trận nên cả hai vẫn ra ~0,7★/trận (lần mở đầu vẫn ở vòng có +★); trận dài, mở nhiều (ví dụ 18 lần) thì 3★ → 1–2★.
 
-## 3. Star Lift (Bệ Nâng Sao) — chưa sửa, để người dùng chọn
+## 3. Star Lift (Bệ Nâng Sao) — Người dùng chốt 09/11: bỏ
+
+**Đã làm (09/11):** bỏ hẳn nấc sao / +★ miễn phí của Star Lift (5★ STAR PIP, 7★ STAR SURGE, chữ "★ PIP x/3", "+1★ STAR LIFT"). Giữ ụ (id `nangsao`, bậc Tím, ảnh, vị trí nhóm gacha). Bù: tốc bắn cả 4 ô kề **+10%/★ → +12%/★** (ụ kề sao thấp nhất vẫn ×1,5): 3★ +36% (thấp nhất +54%), 5★ +60% (+90%), 7★ +84% (+126%). Không lấy 14,5%/★: Star Lift (không tính nấc) đã ngang/hơn hỗ trợ tốc Lam (Radar 13%×K×1,5: 5★ +37%) và ≈ "Radar bậc Tím" (5★ +49%); 14,5%/★ cho 5★ +72%, vượt cả mức Vàng (5★ +57%). `tools/thap-sim-vaitro.js hotro 60` bão hoà (quái 2/s) nên Star Lift ở 10/12/14,5% đều nằm cụm trên của Tím (+36…46% 3★, +50…55% 5★), không thành ụ rác.
+
+Phân tích cũ (trước khi chốt):
 
 Hiện tại: từ 5★, cứ 2 wave ụ kề thấp sao nhất được 1 nấc; 3 nấc = +1★ (7★: 2 nấc). Tức 1 Star Lift ≥5★ cho **+1★ mỗi 6 wave** (7★: mỗi 4 wave), không giới hạn số lần, nâng được tới 7★. Mô phỏng: AI không đưa Star Lift lên 5★ trước khi thua nên đo được 0; tính tay: có Star Lift 5★ từ wave 15 → tới wave 50 thêm ~6★ cho ụ kề, tới wave 70 ~9★.
 
@@ -65,7 +69,7 @@ Ghép thường = 2 ụ cùng loại cùng sao → 1 ụ **ngẫu nhiên trong b
 | **Genesis Core** (Lõi Khởi Sinh) | Đỏ | Mỗi 12 s (nhanh hơn theo cấp thẻ) | **+1★ cho ô kề thấp sao nhất**; số lần = sao lúc xuất hiện, hết thì vỡ. Từ 3★ chạm (30 mana): gọi 1 ụ 1★ | **+40★** (rất nhiều Genesis 1★ cho 1 lần rồi vỡ) | Không (chạm: 30) | **Cao** (lớn nhất) |
 | **Evolver** (Trứng Tiến Hoá) | Vàng | Trứng nở sau 10 s + 2 s/★ | Thành **ụ ngẫu nhiên +1★**; trứng 6★ cháy thành 7★ không nở → chạm +20 mana | ~21 lần, **+21★** | Không | **Cao** |
 | **Mystery Box** (Hộp Bí Ẩn) | Tím | Sau 58 s (từ 3★: 46 s) | Thành ụ ngẫu nhiên **1–6★** (không thấp hơn sao hộp; 5★: ≥3★; 7★: 5–7★) — hộp 1★ có thể ra 6★ | ~4 lần, **+8★** | Không | **Cao** (mỗi lần trung bình +2★) |
-| **Star Lift** (Bệ Nâng Sao) | Tím | Từ 5★: mỗi 2 wave 1 nấc | 3 nấc = +1★ cho ô kề thấp nhất (7★: 2 nấc) | — (AI chưa tới 5★); tính tay +1★/6 wave | Không | Vừa (xem mục 3) |
+| ~~**Star Lift** (Bệ Nâng Sao)~~ | Tím | **Đã bỏ 09/11** (trước: từ 5★ mỗi 2 wave 1 nấc) | — | — | — | Bỏ (xem mục 3) |
 | Merge King / Gold King | Vàng | Kéo | +1★ / +2★ tại chỗ (xem (a)) | | | |
 | Pandora "STAR GIFT" | Vàng | Ghép | +1★ 1 ụ ngẫu nhiên (xem (a)) | | | |
 | Hex Saboteur co-op | Vàng | Ghép | (đã bỏ +★) | | | |

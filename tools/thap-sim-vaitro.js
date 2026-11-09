@@ -149,7 +149,7 @@ if (require.main === module) {
         for (const c2 of CTX2) { goc += dpsBan(c2, nhom.concat([[7, 'mana', 1]]), T0, op); co += dpsBan(c2, nhom.concat([[7, id, s]]), T0, op); }
         return Math.round((co / goc - 1) * 100);
       });
-      const nt = ['khien', 'taylo', 'guongcong'].includes(id) ? 'defensive (boss / rival control)' : id === 'nangsao' ? 'buffs 2 lowest only' : '';
+      const nt = ['khien', 'taylo', 'guongcong'].includes(id) ? 'defensive (boss / rival control)' : id === 'nangsao' ? 'all 4, lowest-star ×1.5' : '';
       console.log('| ' + ten(id) + ' | ' + TEN_BAC[b] + ' | ' + ra.map(x => (x >= 0 ? '+' : '') + x + '%').join(' | ') + ' | ' + nt + ' |');
     }
   } else if (che === 'deck') {

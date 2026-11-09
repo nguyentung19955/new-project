@@ -577,26 +577,16 @@ SKILLS.hopbi = { // Hộp Bí Ẩn (Daron): sau 47 s biến thành ụ ngẫu nh
     return true;
   },
 };
-SKILLS.nangsao = { // Bệ Nâng Sao (Brownie) — HỖ TRỢ: CẢ 4 ô kề +tốc bắn (ụ kề SAO THẤP NHẤT ×1.5), trần riêng 50% × thẻ; 5★: mỗi 2 wave +1 nấc sao cho ụ kề thấp nhất (BAO-CAO gioi-han §4 mục 8, 07/11)
+SKILLS.nangsao = { // Bệ Nâng Sao (Brownie) — HỖ TRỢ: CẢ 4 ô kề +tốc bắn (ụ kề SAO THẤP NHẤT ×1.5), không trần riêng. 09/11 người dùng chốt: BỎ nấc sao miễn phí (5★ STAR PIP / 7★ STAR SURGE) — bù tốc bắn 10% → 12%/★ (BAO-CAO sao-mien-phi mục 3)
   vai: 'ht', dmg: 0, toc: 0, napMau: '#ffe46b',
-  them: (T) => 0.05 * T.sao * HOTRO.BAC[T.bac] * HOTRO.kThe(G.ban[T.ban], T) * (1 + 0.06 * (lvU(T) - 1)), // Tím 10%/★ (trước 24%/★ nhưng chỉ 2 ụ, trần 39% chạm từ 2★) — 0.07 đo sim-tier 07/11: 4★ ×2 → hạ 0.05
+  them: (T) => 0.06 * T.sao * HOTRO.BAC[T.bac] * HOTRO.kThe(G.ban[T.ban], T) * (1 + 0.06 * (lvU(T) - 1)), // Tím 12%/★ (09/11: 10% → 12% bù phần nấc sao đã bỏ; đo sim-vaitro hotro + so Radar/Fusion Mixer — 14.5% vượt cả hỗ trợ Vàng)
   tran: (T) => Infinity,   // 07/11: bỏ trần riêng 50%
-  can: (T) => (ms(T, 7) ? 2 : 3),        // nấc cần cho +1★ (7★ STAR SURGE: 2)
   thap(B, T) { return HOTRO.oDich(T).map(o => B.t[o]).filter(N => HOTRO.nhan(T, N)).sort((a, b) => a.sao - b.sao || a.o - b.o).slice(0, 1); },
   gt(T, thap) { return Math.min(this.tran(T), this.them(T) * (thap ? 1.5 : 1)); },
-  mo: (T) => 'All 4 neighbours: +' + Math.round(SKILLS.nangsao.gt(T) * 100) + '% fire rate, the lowest-star one +' + Math.round(SKILLS.nangsao.gt(T, 1) * 100) + '%' + (ms(T, 5) ? ' · every 2 waves the lowest gets a star pip (' + SKILLS.nangsao.can(T) + ' pips = +1★)' : ''),
+  mo: (T) => 'All 4 neighbours: +' + Math.round(SKILLS.nangsao.gt(T) * 100) + '% fire rate, the lowest-star one +' + Math.round(SKILLS.nangsao.gt(T, 1) * 100) + '%',
   hoTro(G, T, N, ra) { ra.toc = this.gt(T, this.thap(G.ban[T.ban], T).includes(N)); },
   capNhat(G, B, T, dt) {
     HOTRO.nhip(G, B, T, dt, '255,228,107', 2.4, 0.5);
-    if (ms(T, 5) && G.wave !== T.pipW) { // 5★ STAR PIP: 1 nấc mỗi 2 wave (bỏ trần 2★/trận — BAO-CAO §4 mục 8)
-      const lan = T.pipW != null; T.pipW = G.wave; if (lan) T.pipDem = (T.pipDem || 0) + 1;
-      const N = HOTRO.oDich(T).map(o => B.t[o]).filter(X => HOTRO.nhan(T, X) && X.sao < LUAT.saoMax).sort((a, b) => a.sao - b.sao || a.o - b.o)[0];
-      if (lan && N && T.pipDem % 2 === 0) {
-        N.pip = (N.pip || 0) + 1; const c = B.o[N.o];
-        if (N.pip >= this.can(T)) { N.pip = 0; T.pipDa = (T.pipDa || 0) + 1; nangSao(B, N, 1, 'STAR LIFT'); }
-        else FX.chu1(c.x, c.y - 22, '★ PIP ' + N.pip + '/' + this.can(T), '#ffe46b', 11);
-      }
-    }
     return true;
   },
 };

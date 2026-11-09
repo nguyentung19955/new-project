@@ -63,7 +63,6 @@ const NGUON = [
   ['Merge King +1★', 1, `var M = dat(14, 'vughep', X.sao, T => { T.vang = false; }); ghep(B, M, X);`],
   ['Merge King VÀNG +2★', 2, `var M = dat(14, 'vughep', X.sao, T => { T.vang = true; }); ghep(B, M, X);`],
   ['Genesis Core +1★', 1, `var K = dat(2, 'khoisinh', 3); K.luot = 3; K.sinhT = 999; SKILLS.khoisinh.capNhat(G, B, K, 0.01);`],
-  ['Star Lift +1★', 1, `var S = dat(2, 'nangsao', 5); S.pipW = G.wave - 1; S.pipDem = 1; X.pip = 2; SKILLS.nangsao.capNhat(G, B, S, 0.01);`],
   ['Chỉ huy REINFORCE +1★', 1, `CH.env().nangSao(B, X);`],
   ['Pandora VAULT STAR +1★', 1, `B.t[10].st.da = true; B.t[6].st.da = true; SKILLS.pandora.lam(G, B, 'sao', 3, B.o[X.o]); B.t[10].st.da = false; B.t[6].st.da = false;`],
   ['Online: ảnh chụp bàn lệch sao', 1, `var c = ONS.oCua(B); c[7] = X.id + ':' + (X.sao + 1); ONS.apAnh(B, { c, h: ONS.bam(c), f: B.t.map(T => (T && ONS.oTT(T)[2]) || '') });`],

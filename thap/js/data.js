@@ -330,7 +330,7 @@ const KY_NANG_CAP = {
   lanhgia: { ten: 'Slow', base: 12, buoc: 0.375, max: 16.5, dv: '%', ht: 1 },
   khuech: { ten: 'Per hit', base: 6.75, buoc: 0.225, max: 9.45, dv: '%', tien: '+', ht: 1 },
   taylo: { ten: 'Dmg buff', base: 18, buoc: 0.9, max: 26.1, dv: '%', tien: '+', ht: 1 },
-  nangsao: { ten: 'Rate buff', base: 10, buoc: 0.5, max: 14.5, dv: '%', tien: '+', ht: 1 },
+  nangsao: { ten: 'Rate buff', base: 12, buoc: 0.6, max: 17.4, dv: '%', tien: '+', ht: 1 }, // 09/11 bỏ nấc sao → 10% → 12%/★
   tuthan: { ten: 'Execute', base: 12, buoc: 0.6, max: 17.4, dv: '%', ht: 1 },
   thaukinh: { ten: 'Crit dmg', base: 36, buoc: 1.548, max: 49.932, dv: '%', tien: '+', ht: 1 },
   // Hỗ trợ VÀNG (08/11, cấp thẻ theo vai trò): +4% giá trị mỗi cấp (LV17 ×1.32)
