@@ -11,7 +11,7 @@
 const HA = {
   DOM: ['ha_top', 'ha_canh', 'ha_trieu', 'ha_o_rong', 'ha_o_vuong', 'ha_mana', 'ha_ic_dung', 'ha_ic_toc', 'ha_mau_trum', 'ha_mau_xanh', 'ha_mau_ranh',
     'ha_khung_trang', 'ha_khung_xanh', 'ha_khung_tim', 'ha_khung_vang', 'ha_khung_do'],
-  NEN: { san_tran: 'ha_nen', khay: 'ha_khay', duong_thang: 'ha_duong', duong_goc: 'ha_goc', duong_nga3: 'ha_nga3' }, // ảnh nền canvas cũ → mới (ngã ba co-op: tools/thap-cat-ui3.py)
+  NEN: { san_tran: 'ha_nen', khay: 'ha_khay', duong_thang: 'ha_duong', duong_goc: 'ha_goc', duong_nga3: 'ha_nga3' }, // ảnh nền canvas cũ → mới (ngã ba co-op: tools/thap-cat-ui4.py)
   // ảnh canvas thay ảnh thép cũ (REN.co): vành cổng sinh quái, lõi pha lê (lõi hư loi_hu1/2 thép cũ → bỏ, mức hư = chớp đỏ + 3 khúc tim)
   CO: { cong: 'ha_cong', loi: 'ha_loi', loi_hu1: null, loi_hu2: null, h2_loi_0: 'ha_loi', h2_loi_1: 'ha_loi', h2_loi_2: 'ha_loi', h2_loi_chop: null }, // null = bỏ ảnh thép (chớp đỏ dựng từ ha_loi — CORE.loiDo)
   MAU_MANA: '#4FEBD6', // số bay +mana (teal sáng trên nền tối; icon/viền mana #25D6C0)
