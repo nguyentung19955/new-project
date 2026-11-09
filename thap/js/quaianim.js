@@ -699,6 +699,7 @@ Object.assign(REN, {
       ctx.restore();
       if (X.t - dt <= 0) FX.vong1(X.x, X.y, X.co * 0.2, X.co * 0.9, '#ffffff', 0.25, 3);
     }
+    this.rigXacVe(ctx, dt); // trùm rig chết: 900 ms theo thời gian thực
     for (let i = this._nut.length - 1; i >= 0; i--) { // dải đánh tại chỗ chết: khung theo tiến độ, mờ 25% cuối
       const N = this._nut[i]; N.t += dt; const u = N.t / this.NUT_S;
       if (u >= 1) { this._nut.splice(i, 1); continue; }
@@ -714,6 +715,7 @@ Object.assign(REN, {
       const dai = this.coDai(ten, co * kc);
       // ---- chết: chuyển thành "xác nổ" chạy theo thời gian thực (lọt cổng thì biến mất luôn) ----
       if (E.chet) {
+        if (E._rigOn && !E._pop && E.tChet < 0.25) { this.rigChetDat(E); continue; } // trùm rig: chết theo rig (bảng 10.5)
         if (!E._pop && E.tChet < 0.25 && dai) {
           E._pop = 1;
           // nổ đúng hướng nhìn + đúng dải đang vẽ: chết giữa lúc tung chiêu → dải chiêu ở cỡ ×ATK_K (trước đây vẽ dải chiêu ở cỡ dải đi → trùm co lại 1/1.5 khi chết)
@@ -759,7 +761,8 @@ Object.assign(REN, {
       let x = E.x - (E.trum ? 0 : hx * kb), y = E.y + hover - (E.trum ? kb * 0.4 : hy * kb);
       let sc = 0.6 + 0.4 * (E.vao * E.vao * (3 - 2 * E.vao)); // xuất hiện êm
       sc *= 1 - 0.035 * he; // nén nhẹ khi trúng đòn
-      const cf = this.cdCf(E), kcd = E.trum ? kc : K8[E.d.anh || E.id] || 1; // quái code: ảnh gốc cùng cỡ ô dải 8 khung → luôn K8
+      const rg = E.trum ? this.rigCua(E) : null; // trùm rig nhiều lớp (TRUM_RIG) — có thì bỏ qua TRUM_ANIM_CODE
+      const cf = rg ? null : this.cdCf(E), kcd = E.trum ? kc : K8[E.d.anh || E.id] || 1; // quái code: ảnh gốc cùng cỡ ô dải 8 khung → luôn K8
       const cd = cf ? this.cdTinh(E, cf, co, kcd, sc, he, t, dt, x, y) : null;
       // trùm ở làn sát mép (làn trái x≈27 / làn phải x≈404): mép canvas cắt mất thân → vẽ LÙI VÀO trong (chỉ hình; vị trí gameplay giữ nguyên)
       let lech = 0;
@@ -768,11 +771,11 @@ Object.assign(REN, {
         lech = c0 == null || !(dt > 0) ? mt : c0 + (mt - c0) * (1 - Math.exp(-dt * (Math.abs(mt) > Math.abs(c0) ? 20 : 8)));
       }
       x += lech; E._lechX = lech;
-      E._cdOn = !!cd; if (cd) { E._cdOx = cd.ox + lech; E._cdOy = cd.oy; }
+      E._rigOn = !!rg; E._cdOn = !!cd; if (cd) { E._cdOx = cd.ox + lech; E._cdOy = cd.oy; }
       // ---- bóng ----
       const bco = co * (bay ? 0.62 : 0.78) * sc * (bay ? 1 - (hover + 6) * 0.02 : 1) * (cd ? cd.bs : 1); // trùm code: bóng nhỏ lại khi nảy/bay lên
       ctx.globalAlpha = (bay ? 0.32 : 0.5) * (cd ? 0.6 + 0.4 * cd.bs : 1);
-      if (bong) ctx.drawImage(REN.mip(bong, bco * REN.s * REN.dpr), E.x + lech + 2 - bco / 2, E.y + 4 + (bay ? 8 : 0) - bco * 0.42, bco, bco * 0.84);
+      if (bong && !rg) ctx.drawImage(REN.mip(bong, bco * REN.s * REN.dpr), E.x + lech + 2 - bco / 2, E.y + 4 + (bay ? 8 : 0) - bco * 0.42, bco, bco * 0.84);
       ctx.globalAlpha = 1;
       // ---- quầng báo chiêu của trùm ----
       if (E.bao) {
@@ -810,7 +813,8 @@ Object.assign(REN, {
       fr = fr <= nguong ? 0 : (fr - nguong) / (1 - nguong); fr = fr * fr * (3 - 2 * fr);
       if (E.trum) fr = 0; // 08/11: trùm KHÔNG hoà khung — dải trùm đổi hình lớn giữa 2 khung (nảy dẹt mad_crown, xoay janus/twin_core) → hoà ra 2 vương miện/2 thân chồng nhau
       E._f = fr > 0.5 && f1 >= 0 ? f1 : f0; E._gv = gv; E._oy = hover; E._sc = sc;
-      if (cd) { this.cdVe(ctx, E, cf, cd, M, x, y); E._tHv = null; E._kHv = 1; E._gv = cd.rot; }
+      if (rg) { const Cr = co * (K8[E.d.anh || E.trum] || 1) * sc; E._rgC = Cr; this.rigVe(ctx, rg, this.rigTinh(E, rg, Cr, t, dt, x, y), M, x, y, Cr, 1); E._tHv = null; E._kHv = 1; E._gv = 0; }
+      else if (cd) { this.cdVe(ctx, E, cf, cd, M, x, y); E._tHv = null; E._kHv = 1; E._gv = cd.rot; }
       else if (!dai) { /* ảnh quái chưa nạp: không vẽ chấm thay thế */ }
       else {
         // nhún/nén theo bước (≤3%): dọc hướng đi giãn thì ngang co, gần như giữ diện tích
@@ -860,6 +864,188 @@ Object.assign(REN, {
           ctx.restore(); ctx.globalAlpha = 1;
         }
       }
+    }
+  },
+});
+
+// ---- TRÙM RIG NHIỀU LỚP (09/11, tuvan/anim-rig/CHATGPT-TRA-LOI.md Q5/Q6/Q10) ----
+// Trùm có trong TRUM_RIG: đọc assets/rig/<id>.rig.json (lớp cha–con, pivot/anchor/z theo UV khung gốc) và vẽ từng lớp PNG đã tách
+// (tools/thap-rig-joker.py). Mọi tư thế tính từ THỜI GIAN THỰC + quãng đường (không theo FPS), chỉ hình — mô phỏng/luật không đổi.
+// Chưa nạp xong JSON/ảnh lớp hoặc ?trumrig=0 → trùm đó vẽ như cũ (TRUM_ANIM_CODE). Không dựng canvas mỗi khung (ảnh lớp qua REN.co có bộ đệm).
+const TRUM_RIG = new Set(['joker_king']);
+const TRUM_RIG_BAT = (() => { try { return new URLSearchParams(location.search).get('trumrig') !== '0'; } catch (e) { return true; } })();
+const rgSm = (u) => { u = clamp(u, 0, 1); return u * u * (3 - 2 * u); };
+const rgOut = (u) => { u = clamp(u, 0, 1); return 1 - (1 - u) * (1 - u) * (1 - u); };
+const rgIn = (u) => { u = clamp(u, 0, 1); return u * u * u; };
+const rgLerp = (a, b, u) => a + (b - a) * u;
+// lò xo dưới tới hạn: r giây sau cú hích, tần số hz, giảm chấn z → −1..1
+const rgOsc = (r, hz, z) => { if (r < 0 || r > 2) return 0; const w = 2 * Math.PI * hz; return Math.exp(-z * w * r) * Math.sin(w * Math.sqrt(1 - z * z) * r); };
+const RAD = Math.PI / 180;
+// 1 nhịp nhảy (m = ms trong vòng 800 ms) → [độ cao 0..1, nén q (sy = 1 − q, sx = 1/sy)] theo bảng 10.3
+const rgNhay = (m, W8) => {
+  const qS = 1 - W8.squashY, qT = 1 - W8.launchStretchY, qL = 1 - W8.landSquashY;
+  if (m < 120) return [0, qS * rgSm(m / 120)];
+  if (m < 290) { const u = (m - 120) / 170; return [0.85 * rgOut(u), rgLerp(qS, qT, rgSm(u * 1.6))]; }
+  if (m < 400) { const u = (m - 290) / 110; return [0.85 + 0.15 * Math.sin(u * Math.PI / 2), rgLerp(qT, 0, rgSm(u))]; }
+  if (m < 560) { const u = (m - 400) / 160; return [1 - u * u, -0.035 * rgSm(u)]; }
+  if (m < 640) { const u = (m - 560) / 80; return [0, u < 0.35 ? rgLerp(-0.035, qL, rgSm(u / 0.35)) : rgLerp(qL, 0.02, rgSm((u - 0.35) / 0.65))]; }
+  const r = (m - 640) / 1000; return [0, 0.02 * Math.exp(-r * 18) * Math.cos(r * 2 * Math.PI * 7)];
+};
+
+Object.assign(REN, {
+  _rig: {},
+  _rigXac: [],
+  // rig của trùm E (đã nạp JSON + mọi ảnh lớp) hoặc null
+  rigCua(E) {
+    if (!TRUM_RIG_BAT || !TRUM_RIG.has(E.trum)) return null;
+    const id = E.trum, R = this._rig;
+    if (R[id] === undefined) {
+      R[id] = null;
+      fetch('assets/rig/' + id + '.rig.json').then(r => r.json()).then(j => { R[id] = this.rigChuan(j); }).catch(() => { R[id] = false; });
+    }
+    const rg = R[id]; if (!rg) return null;
+    for (const L of rg.layers) if (!this.img(L.src)) return null;
+    return rg;
+  },
+  rigChuan(j) {
+    const by = {}; for (const L of j.layers) by[L.id] = L;
+    j.layers.sort((a, b) => a.z - b.z); j.by = by;
+    const sp = by.spring, so = j.sockets || {};
+    j.h0 = sp ? (so.springBase ? so.springBase.uv[1] : sp.pivotUV[1]) - (so.springTop ? so.springTop.uv[1] : sp.sourceRectUV[1]) : 0.2; // chiều cao lò xo lộ ra (UV)
+    return j;
+  },
+  // tư thế từng lớp: { idLớp: [dx, dy, rot, sx, sy, alpha] } (dx, dy theo UV khung gốc) + bóng + chớp
+  rigTinh(E, rg, C, t, dt, x, y) {
+    const S = rg.states, I = S.idle, W8 = S.walk, K = S.cast, Hh = S.hit, bh = rg.bodyHeightUV || 0.78, u0 = E.uid || 0;
+    if (E._rgX == null) { E._rgX = x; E._rgY = y; E._rgP = 0; E._rgD = 1; E._rgFl = -9; }
+    let dx = x - E._rgX, dy = y - E._rgY, d = Math.hypot(dx, dy); E._rgX = x; E._rgY = y;
+    if (d > C) d = dx = dy = 0;                          // nhảy vị trí (kéo lùi / đổi bàn)
+    if (Math.abs(dx) > 0.05) E._rgD = dx > 0 ? 1 : -1;   // hướng ngang đang đi (nắp ngả trễ ngược hướng)
+    // trúng đòn: chớp 80 ms, hồi 180 ms mới chớp lại (bị 20–40 ụ bắn không nhấp nháy trắng)
+    if (E._hitT != null && E._hitT > E._rgFl + Hh.cooldownMs / 1000) E._rgFl = E._hitT;
+    const rH = t - E._rgFl, dung = rH < Hh.visualHitStopMs / 1000; // hit-stop thị giác: giữ tư thế nhảy 40 ms (không đụng đồng hồ chiêu)
+    // nhịp nhảy: theo giờ (800 ms/lần) hoặc theo quãng (2×/3× nhảy dồn hơn); đứng yên / báo chiêu / bị khống chế: nhảy nốt rồi đứng
+    const P0 = E._rgP, dangDi = d > 1e-3 && !E.bao && !(E.chan > 0);
+    let dp = dangDi ? Math.max(dt * 1000 / W8.loopMs, d / (W8.stepCells * C)) : (P0 % 1 > 1e-6 ? dt * 1000 / W8.loopMs : 0);
+    if (dung) dp = 0;
+    if (!dangDi && Math.floor(P0 + dp) > Math.floor(P0)) dp = Math.ceil(P0) - P0; // dừng đúng lúc chạm đất xong vòng
+    E._rgP = P0 + dp;
+    const m = (E._rgP % 1) * W8.loopMs;
+    let [h, q] = E._rgP % 1 > 1e-6 ? rgNhay(m, W8) : [0, 0];
+    // nắp: nén 2° · trễ 4° lúc bật · giật 5° lúc chạm đất (lò xo 5,5 Hz, ζ 0,55), giới hạn ±6°
+    const ls = W8.lidSpring, sg = -E._rgD;
+    let lidRot = 0;
+    if (E._rgP % 1 > 1e-6) {
+      if (m < 120) lidRot += sg * W8.lidCompressDeg * RAD * rgSm(m / 120);
+      lidRot += sg * W8.lidLagDeg * RAD * rgOsc((m - 120) / 1000, ls.hz, ls.zeta);
+      lidRot -= sg * W8.lidLandDeg * RAD * rgOsc((m - 560) / 1000, ls.hz, ls.zeta);
+    }
+    // thở (luôn có, rất nhỏ): chu kỳ 2850 ms, sy 1 ± 1,2 %, nắp ±1,2°, glow lệch pha 75°
+    const ph = 2 * Math.PI * t * 1000 / I.periodMs + u0;
+    q -= I.scaleYAmp * Math.sin(ph);
+    lidRot += I.lidTremDeg * RAD * Math.sin(ph + 1.3);
+    let glow = I.glowBase + I.glowAmp * Math.sin(ph + I.glowPhaseDeg * RAD), glowL = glow;
+    let lift = 0, tilt = 0, knock = 0;
+    // ---- chiêu: báo 1,4 s (E.bao) → tung (E.bao hết) → hồi tới 1950 ms (bảng 10.4) ----
+    const B = G.ban[E.ban], c7 = B && B.o && B.o[7], gb = c7 ? Math.atan2(c7.y - y, c7.x - x) : Math.PI / 2;
+    const ngoai = -(Math.sign(Math.cos(gb)) || 1); // ngả nắp ra xa bàn ụ
+    let mc = -1;
+    if (E.bao) { mc = clamp(E.bao.t / (E.bao.song || 1.4), 0, 1) * K.telegraphMs; E._rgBao = 1; }
+    else if (E._rgBao) { E._rgBao = 0; E._rgRel = t; }
+    if (mc < 0 && E._rgRel != null) { mc = K.telegraphMs + (t - E._rgRel) * 1000; if (mc >= K.visualTotalMs) { E._rgRel = null; mc = -1; } }
+    if (mc >= 0) {
+      const full = K.springExtendFractionOfBody * bh, un = K.unlatchLiftBody * bh;
+      if (mc < 900) q += K.squash * rgIn(mc / 300);
+      else if (mc < 1400) q += rgLerp(K.squash, -0.03, rgSm((mc - 900) / 230));
+      glow += 0.5 * rgSm(mc / 300);
+      if (mc >= 300 && mc < 900) { // nắp rung nhanh dần 6 → 14 Hz, 2° → 5°
+        const s = (mc - 300) / 1000, k = (mc - 300) / 600, ff = K.rattleHz;
+        lidRot += rgLerp(K.rattleDeg[0], K.rattleDeg[1], k) * RAD * Math.sin(2 * Math.PI * (ff[0] * s + (ff[1] - ff[0]) * s * s / 1.2));
+        glow += 0.25 * k * (0.5 + 0.5 * Math.sin(t * 31));
+      }
+      if (mc >= 900 && mc < 1570) { // mở chốt (nhấc + ngả) → lò xo bật vương miện lên 24 % thân → lắc, lò xo thu bớt
+        lift = un * rgOut((mc - 900) / 230);
+        tilt = ngoai * K.unlatchTiltDeg * RAD * rgOut((mc - 900) / 230) * (1 - rgOut((mc - 1100) / 200));
+        if (mc >= 1100) lift = rgLerp(un, full, rgOut((mc - 1100) / 200));
+        if (mc >= 1300) lift += full * 0.015 * Math.sin(t * 70);
+        if (mc >= 1400) { const r = (mc - 1400) / 1000; lift = full * (0.78 + 0.22 * Math.cos(r * 2 * Math.PI * 5) * Math.exp(-r * 14)); lidRot += 6 * RAD * rgOsc(r, 5, 0.3); }
+      } else if (mc >= 1570 && mc < 1880) { lift = full * 0.78 * (1 - rgIn((mc - 1570) / 310)); }
+      else if (mc >= 1880) { const r = (mc - 1880) / 1000; q += 0.05 * Math.exp(-r * 30) * Math.cos(r * 2 * Math.PI * 8); lidRot += 2 * RAD * rgOsc(r, 8, 0.5); }
+      const gk = mc < 1300 ? 0 : mc < 1400 ? rgSm((mc - 1300) / 100) : mc < 1570 ? 1 : 1 - rgSm((mc - 1570) / 310);
+      glow = Math.max(glow, rgLerp(glow, K.glowPeak, gk)); glowL = Math.max(glowL, glow);
+    }
+    // trúng đòn: giật 3 % thân về sau (lên), nắp rung ±5,5°, hồi 260 ms
+    let fl = 0;
+    if (rH < Hh.recoverMs / 1000) {
+      const r = rH;
+      if (r < Hh.flashMs / 1000) fl = Hh.flashAlpha * (1 - r / (Hh.flashMs / 1000));
+      knock = Hh.knockFractionOfBody * bh * Math.exp(-r * 16) * Math.sin(Math.min(1, r / 0.03) * Math.PI / 2);
+      lidRot += Hh.lidDeg * RAD * rgOsc(r, 7, 0.45);
+    }
+    lidRot = clamp(lidRot, -10 * RAD, 10 * RAD);
+    const sy = 1 - q, sx = 1 / sy, hop = h * W8.maxLiftBodyHeightFraction * bh;
+    const spS = 1 + lift / rg.h0;
+    return {
+      fl, hop, sb: 1 - (1 - W8.shadowMinScale) * h, ab: 1 - 0.45 * h,
+      L: {
+        body: [0, -hop - knock, clamp(E._cdW || 0, -1, 1) * 0.02, sx, sy, 1],
+        spring: [0, 0, 0, 1, spS, 1],
+        lid: [0, -lift, lidRot + tilt, 1, 1, 1],
+        glow_body: [0, 0, 0, 1, 1, clamp(glow, 0, 1.6)],
+        glow_lid: [0, 0, 0, 1, 1, clamp(glowL, 0, 1.6)],
+      },
+    };
+  },
+  // đặt ctx theo chuỗi cha–con của lớp L: M · T(x−C/2, y−C/2) · S(C) · Π[T(anchor + d) R S T(−pivot)]
+  rigDat(ctx, rg, L, S, M, x, y, C) {
+    const ds = []; for (let n = L; n; n = n.parent ? rg.by[n.parent] : null) ds.push(n);
+    ctx.setTransform(M); ctx.translate(x - C / 2, y - C / 2); ctx.scale(C, C);
+    for (let i = ds.length - 1; i >= 0; i--) {
+      const n = ds[i], p = S.L[n.id]; if (!p) continue;
+      const a = n.anchorUV, v = n.pivotUV;
+      ctx.translate(a[0] + p[0], a[1] + p[1]); if (p[2]) ctx.rotate(p[2]); if (p[3] !== 1 || p[4] !== 1) ctx.scale(p[3], p[4]); ctx.translate(-v[0], -v[1]);
+    }
+  },
+  // vẽ rig tại (x, y) = tâm khung gốc; al = độ mờ chung
+  rigVe(ctx, rg, S, M, x, y, C, al) {
+    for (const L of rg.layers) {
+      const r = L.sourceRectUV, px = Math.max(r[2], r[3]) * C, im = this.co(L.src, px); if (!im) continue;
+      const p = S.L[L.id], a = (p ? p[5] : 1) * al; if (a <= 0.01) continue;
+      if (L.motion === 'ground') { // bóng: neo mặt đường (không nhảy theo thân), nhỏ + nhạt khi lên cao
+        ctx.setTransform(M); ctx.translate(x, y + (L.pivotUV[1] - 0.5) * C); ctx.scale(C * S.sb, C * S.sb);
+        ctx.globalAlpha = a * S.ab; ctx.drawImage(im, r[0] - L.pivotUV[0], r[1] - L.pivotUV[1], r[2], r[3]); continue;
+      }
+      this.rigDat(ctx, rg, L, S, M, x, y, C);
+      const add = L.blend === 'lighter';
+      if (add) ctx.globalCompositeOperation = 'lighter';
+      ctx.globalAlpha = Math.min(1, a); ctx.drawImage(im, r[0], r[1], r[2], r[3]);
+      if (add && a > 1) { ctx.globalAlpha = a - 1; ctx.drawImage(im, r[0], r[1], r[2], r[3]); }
+      if (!add && S.fl > 0.02) { const w = this.co(L.src, px, 'trang'); if (w) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = S.fl * al; ctx.drawImage(w, r[0], r[1], r[2], r[3]); } }
+      ctx.globalCompositeOperation = 'source-over';
+    }
+    ctx.setTransform(M); ctx.globalAlpha = 1;
+  },
+  // chết (bảng 10.5, 900 ms): bản trình bày riêng, không va chạm/nhắm — gameplay xoá trùm ngay cũng không sao
+  rigChetDat(E) {
+    E._pop = 1;
+    this._rigXac.push({ rg: this._rig[E.trum], x: E.x + (E._lechX || 0), y: E.y, C: E._rgC || 60, d: E._rgD || 1, uid: E.uid || 0, t: 0, no: 0 });
+  },
+  rigXacVe(ctx, dt) {
+    if (!this._rigXac.length) return;
+    const M = ctx.getTransform();
+    for (let i = this._rigXac.length - 1; i >= 0; i--) {
+      const X = this._rigXac[i]; X.t += dt; const m = X.t * 1000, D = X.rg.states.death, bh = X.rg.bodyHeightUV || 0.78;
+      if (m >= D.totalMs) { this._rigXac.splice(i, 1); continue; }
+      const k1 = rgSm(m / 150), pop = rgOut((m - 150) / 280), lift = D.springExtendFractionOfBody * bh * pop;
+      const tilt = X.d * D.tiltDeg * RAD * k1, q = 0.06 * k1 * (1 - pop);
+      const lidR = -X.d * 14 * RAD * pop + 9 * RAD * rgOsc((m - 150) / 1000, 6, 0.3);
+      const al = m < 430 ? 1 : m < 700 ? 1 - 0.6 * rgSm((m - 430) / 270) : 0.4 * (1 - rgSm((m - 700) / 200));
+      const sc = 1 + 0.12 * rgSm((m - 430) / 470);
+      const S = { fl: m > 380 && m < 520 ? 0.5 * (1 - Math.abs(m - 430) / 90) : 0, hop: 0, sb: 1, ab: m < 700 ? 1 : 1 - rgSm((m - 700) / 200),
+        L: { body: [0, -0.02 * bh * pop, tilt, (1 / (1 - q)) * sc, (1 - q) * sc, 1], spring: [0, 0, 0, 1, 1 + lift / X.rg.h0, 1], lid: [0, -lift, lidR, 1, 1, 1],
+          glow_body: [0, 0, 0, 1, 1, 0.5 * (1 - k1)], glow_lid: [0, 0, 0, 1, 1, m < 430 ? 0.5 + pop : 0] } };
+      if (!X.no && m >= D.burstMs) { X.no = 1; if (typeof FX !== 'undefined' && FX.vong1) FX.vong1(X.x, X.y, X.C * 0.25, X.C * 1.1, '#ffffff', 0.3, 3); }
+      this.rigVe(ctx, X.rg, S, M, X.x, X.y, X.C, al);
     }
   },
 });

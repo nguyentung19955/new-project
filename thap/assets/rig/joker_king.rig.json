@@ -1,0 +1,339 @@
+{
+ "schemaVersion": 2,
+ "id": "joker_king",
+ "kind": "boss",
+ "rigVersion": 1,
+ "ghiChu": "Tách từ ảnh gốc trum_joker_king_m.png + _m_nap.png (tools/thap-rig-joker.py). UV theo khung gốc 394×394; tâm khung (0.5,0.5) = vị trí gameplay của trùm; cạnh khung = cỡ ô trùm (co × K8). Chưa có pose nắp mở riêng → nắp = vương miện bật lên trên lò xo.",
+ "masterSrc": "trum_joker_king_m",
+ "referenceCanvasPx": [
+  394,
+  394
+ ],
+ "originUV": [
+  0.5,
+  0.5
+ ],
+ "rootPivotUV": [
+  0.5,
+  0.97
+ ],
+ "bodyHeightUV": 0.78,
+ "display": {
+  "widthCells": 1.0,
+  "bodySafeRadiusCells": 0.5,
+  "reserveFxRadiusCells": 0.9
+ },
+ "layers": [
+  {
+   "id": "shadow",
+   "src": "trum_joker_king_r_shadow",
+   "parent": null,
+   "z": 0,
+   "sourceRectUV": [
+    0.1599,
+    0.8426,
+    0.6726,
+    0.1574
+   ],
+   "pivotUV": [
+    0.5,
+    0.97
+   ],
+   "anchorUV": [
+    0.5,
+    0.97
+   ],
+   "motion": "ground",
+   "blend": "source-over"
+  },
+  {
+   "id": "inside",
+   "src": "trum_joker_king_r_inside",
+   "parent": "body",
+   "z": 20,
+   "sourceRectUV": [
+    0.1904,
+    0.4975,
+    0.6117,
+    0.2462
+   ],
+   "pivotUV": [
+    0.5,
+    0.97
+   ],
+   "anchorUV": [
+    0.5,
+    0.97
+   ],
+   "motion": "static",
+   "blend": "source-over"
+  },
+  {
+   "id": "spring",
+   "src": "trum_joker_king_r_spring",
+   "parent": "body",
+   "z": 30,
+   "sourceRectUV": [
+    0.3401,
+    0.4975,
+    0.3376,
+    0.2411
+   ],
+   "pivotUV": [
+    0.5,
+    0.7
+   ],
+   "anchorUV": [
+    0.5,
+    0.7
+   ],
+   "motion": "stretch-y",
+   "blend": "source-over"
+  },
+  {
+   "id": "body",
+   "src": "trum_joker_king_r_body",
+   "parent": null,
+   "z": 40,
+   "sourceRectUV": [
+    0.203,
+    0.6117,
+    0.5863,
+    0.3655
+   ],
+   "pivotUV": [
+    0.5,
+    0.97
+   ],
+   "anchorUV": [
+    0.5,
+    0.97
+   ],
+   "motion": "jump-squash",
+   "blend": "source-over"
+  },
+  {
+   "id": "lid",
+   "src": "trum_joker_king_r_lid",
+   "parent": "body",
+   "z": 50,
+   "sourceRectUV": [
+    0.1345,
+    0.1878,
+    0.7005,
+    0.5127
+   ],
+   "pivotUV": [
+    0.5,
+    0.69
+   ],
+   "anchorUV": [
+    0.5,
+    0.69
+   ],
+   "motion": "lift-rotate",
+   "blend": "source-over"
+  },
+  {
+   "id": "glow_body",
+   "src": "trum_joker_king_r_glow_body",
+   "parent": "body",
+   "z": 60,
+   "sourceRectUV": [
+    0.2563,
+    0.731,
+    0.4975,
+    0.2487
+   ],
+   "pivotUV": [
+    0.5,
+    0.97
+   ],
+   "anchorUV": [
+    0.5,
+    0.97
+   ],
+   "motion": "glow",
+   "blend": "lighter"
+  },
+  {
+   "id": "glow_lid",
+   "src": "trum_joker_king_r_glow_lid",
+   "parent": "lid",
+   "z": 61,
+   "sourceRectUV": [
+    0.2893,
+    0.198,
+    0.434,
+    0.4416
+   ],
+   "pivotUV": [
+    0.5,
+    0.69
+   ],
+   "anchorUV": [
+    0.5,
+    0.69
+   ],
+   "motion": "glow",
+   "blend": "lighter"
+  }
+ ],
+ "sockets": {
+  "springBase": {
+   "parent": "body",
+   "uv": [
+    0.5,
+    0.7
+   ]
+  },
+  "springTop": {
+   "parent": "lid",
+   "uv": [
+    0.5,
+    0.5025
+   ]
+  },
+  "lidSeat": {
+   "parent": "body",
+   "uv": [
+    0.5,
+    0.69
+   ]
+  },
+  "castOrigin": {
+   "parent": "lid",
+   "uv": [
+    0.5,
+    0.45
+   ]
+  }
+ },
+ "states": {
+  "idle": {
+   "periodMs": 2850,
+   "scaleYAmp": 0.012,
+   "lidTremDeg": 1.2,
+   "glowPhaseDeg": 75,
+   "glowBase": 0.3,
+   "glowAmp": 0.12
+  },
+  "walk": {
+   "loopMs": 800,
+   "stepCells": 0.6,
+   "maxLiftBodyHeightFraction": 0.13,
+   "keysMs": {
+    "squash": [
+     0,
+     120
+    ],
+    "launch": [
+     120,
+     290
+    ],
+    "apex": [
+     290,
+     400
+    ],
+    "fall": [
+     400,
+     560
+    ],
+    "land": [
+     560,
+     640
+    ],
+    "recover": [
+     640,
+     800
+    ]
+   },
+   "squashY": 0.91,
+   "launchStretchY": 1.06,
+   "landSquashY": 0.885,
+   "lidCompressDeg": 2,
+   "lidLagDeg": 4,
+   "lidLandDeg": 5,
+   "lidSpring": {
+    "hz": 5.5,
+    "zeta": 0.55,
+    "maxDeg": 6
+   },
+   "shadowMinScale": 0.75
+  },
+  "cast": {
+   "telegraphMs": 1400,
+   "gameplayImpactOffsetMs": 1400,
+   "visualTotalMs": 1950,
+   "squash": 0.04,
+   "rattleDeg": [
+    2,
+    5
+   ],
+   "rattleHz": [
+    6,
+    14
+   ],
+   "unlatchMs": [
+    900,
+    1130
+   ],
+   "unlatchLiftBody": 0.045,
+   "unlatchTiltDeg": 9,
+   "popMs": [
+    1100,
+    1300
+   ],
+   "springExtendFractionOfBody": 0.24,
+   "peakGlowMs": [
+    1300,
+    1400
+   ],
+   "glowPeak": 1.4,
+   "wobbleMs": [
+    1400,
+    1570
+   ],
+   "closeMs": [
+    1570,
+    1880
+   ],
+   "settleMs": [
+    1880,
+    1950
+   ]
+  },
+  "hit": {
+   "flashMs": 80,
+   "flashAlpha": 0.3,
+   "cooldownMs": 180,
+   "visualHitStopMs": 40,
+   "knockFractionOfBody": 0.03,
+   "lidDeg": 5.5,
+   "recoverMs": 260
+  },
+  "death": {
+   "totalMs": 900,
+   "tiltMs": [
+    0,
+    150
+   ],
+   "tiltDeg": 8,
+   "popMs": [
+    150,
+    430
+   ],
+   "burstMs": 430,
+   "dissolveMs": [
+    430,
+    700
+   ],
+   "fadeMs": [
+    700,
+    900
+   ],
+   "springExtendFractionOfBody": 0.32
+  }
+ },
+ "openPoseCrossfadeMs": 80
+}
