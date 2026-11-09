@@ -671,3 +671,16 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - Siêu Trộm Lăng Kính: ST 15 → 24 · tốc 1 → 2 · tỉ lệ màu đơn 4/6/8/10% → 8/10/12/15% (luật hợp thể theo ô đích giữ nguyên).
 - Bot chơi tốt (24 hạt) trước → sau: nhatthuc/lualien/hopca/dongbo/vughep 31.2 → 43.4 · luutru/mauhut/bienmau/dongbo/vughep 24.6 → 44.8 (trung vị 38; Máu không trần nên có ván chạy tới 70). Ụ tấn công duy nhất (+ lien, phun, dongbo, vughep; mốc Aten 29.8, Sói 33.2): Nhật Thực 24.4 → 34.2, Mạch Máu 22.9 → ~35, Lửa Thập Tự 17.8 → 27.2, Hợp Xướng 20.8 → 27.5, Kho Lưu 17.9 → 27.0, Lăng Kính 18.7 → 25.2 (bot không vuốt hợp thể / xếp Hoà âm).
 - Test `tools/thap-kt-vang-g2.js`: cập nhật kỳ vọng số (Hoà âm, điểm Kho Lưu); còn 1 lỗi CÓ SẴN trước đợt này (Ember kéo vào Wild Link).
+
+## claude/demo-hop-tuong — Rà TỐC BẮN mọi ụ Tấn công: đổi ST mỗi phát sang tốc bắn cho ụ quá chậm (09/11)
+- Người dùng: "bắn không thấy dame đâu vì tốc bắn quá chậm". Bảng đo đủ 45 ụ Tấn công (khoảng bắn 1★/4★/7★, số mục tiêu, DPS w30/w40): `docs/demo-hop-tuong/tuvan/tocban/BANG-TOC-BAN.md`.
+- Ụ chậm > 1.2 s ở 7★ đã đổi (DPS gần như giữ nguyên, không đổi cơ chế):
+  - Sniper (tia): tốc 0.35 → 0.47, ST 69.6 → 51.8 (7★: 2.0 s → 1.43 s; giữ bản sắc bắn tỉa chậm).
+  - Ice Blade (kiembang): tốc 0.75 → 1.1, ST 16.8 → 11.45 (1.36 s → 0.91 s).
+  - Mortar: tốc 0.4 → 0.56, ST 27.5 → 19.6 (7★: 1.67 s → 1.2 s).
+  - Purifier (aten): tốc 0.65 → 1.0, ST 36 → 23.4 (1.58 s → 1.0 s).
+  - Salvo Battery (railgun): tốc 0.33 → 0.5, ST 70 → 46.2 (7★: 2.5 s → 1.67 s).
+  - Sói Máy: nghỉ 1.8 s → 1.2 s, loạt thức tỉnh 1.2 s → 0.8 s, ST 58 → 38.7.
+  - Overlord: giữ nạp sấm nhưng rút ngắn (7 − 0.5/★) → (5.6 − 0.4/★) s, ST 28 → 22.4 (7★: 3.75 s → 2.73 s).
+- Giữ nguyên (chu kỳ là cơ chế): Mìn (min), Máy Tạo Tường (wallgen), Chúa Tổ (bầy drone), Hố Đen. Revolver (sungluc 1.11 s) dưới ngưỡng.
+- Bot chơi tốt 12 hạt, trước → sau (bỏ các ván bot chỉ gọi ra ụ Hỗ trợ và thua ở wave 2): Đỏ blackhole 55.0 → 58.2 · Đỏ ronglua/leviathan/overlord 69.9 → 68.8 · Vàng canon/aten/railgun 43.3 → 43.2 · soi/nemesis/ngoisao 38.0 → 37.2 · Xanh kiembang… 16.1 → 17.8 · Trắng lien/tia/set/mortar 23.6 → 22.3.

@@ -307,7 +307,7 @@ const SD_GD = {
   hopbi: ['Weak card shard poke', 'Three spinning bolts at once', 'Stops shooting: about to open'],
   tienhoa: ['Small egg', 'Growing egg', 'About to hatch'],
   lophanung: ['Cold aura, no shots', 'Aura deepens, freeze charging', 'Ice storm ready: tap to freeze'],
-  soi: ['(no Pup stage)', 'Normal: one barrel, 1 shot every 1.8s, splash 70%', 'Awakened: 3-shot volley every 1.2s, always crits, splash 85%'],
+  soi: ['(no Pup stage)', 'Normal: one barrel, 1 shot every 1.2s, splash 70%', 'Awakened: 3-shot volley every 0.8s, always crits, splash 85%'],
   orbital: ['Standby: no shots', 'Uplink: 2+ Orbitals', 'Awake: drops bombs on enemies'],
   cuongno: ['Normal yellow tracers', 'Rage: hotter, faster rounds', 'Frenzy: twin rounds, fire bursts'],
   ngoisao: ['Small star shards', 'Star shards fly in pairs', 'Comets, and meteors every 5th'],
