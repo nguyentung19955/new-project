@@ -424,11 +424,12 @@ const CDUI = {
   },
 
   // ---------- Ấn Đỏ (Lò rèn trong SHOP) ----------
-  anDoHang() {
+  anDoHang() { // cùng khuôn hàng LÒ RÈN của manh.js (Ấn Vàng): ô bậc Đỏ · tên + giá · nút
     const t = CD.anDoTt(), kh = KTUI.khoaNut ? KTUI.khoaNut('ren:vd', 'kt-slot') : '';
-    const nut = kh || '<button class="kt-slot' + (t.duoc ? ' vang' : '') + '" data-act="cd-ad"' + (t.duoc ? '' : ' disabled') + '><b>SEAL</b></button>';
-    return '<div class="kt-h cd-ad' + (kh ? ' tt-khoa-h' : '') + '">' + this.ttIc(CDC.anDo.tt) + '<div class="kt-h-g"><b>RED SEAL · ' + CDC.anDo.tt + ' Red Crystals → 1 Mythic card of your choice</b>' +
-      '<small class="mh-ph"><img src="' + this.a(CDC.ICON.tt) + '" alt="">' + t.tt + '/' + CDC.anDo.tt + ' · <img src="' + this.a(KTA.vang) + '" alt="">' + this.so(CDC.anDo.vang) + '</small></div>' + nut + '</div>';
+    const tt = '<i class="mh-chip cd-chip-tt"><img src="' + this.a(CDC.ICON.tt) + '" alt="Red Crystal">×' + CDC.anDo.tt + '</i>';
+    const nut = kh || '<button class="kt-slot' + (t.duoc ? ' vang' : '') + '" data-act="cd-ad"' + (t.duoc ? '' : ' disabled') + '><b>PICK</b></button>';
+    return '<div class="kt-h mh-an cd-ad' + (kh ? ' tt-khoa-h' : '') + '">' + MHUI.icBac('do', 1) + '<div class="kt-h-g"><b>Red Seal ' + tt + ' → 1 of your choice</b>' +
+      '<small class="mh-gia"><img src="' + this.a(KTA.vang) + '" alt="">' + this.so(CDC.anDo.vang) + ' · YOU HAVE ' + t.tt + '/' + CDC.anDo.tt + '</small></div>' + nut + '</div>';
   },
   anDoChon() {
     const t = CD.anDoTt();
@@ -628,8 +629,9 @@ const CDUI = {
     'FLOOR # · #/#': 'TẦNG # · #/#', 'TRIAL # · #/#': 'THỬ THÁCH # · #/#', 'TIER # · #/#': 'BẬC # · #/#', 'TIER # · PRACTICE · #/#': 'BẬC # · LUYỆN TẬP · #/#', 'BOSS TIME #s': 'GIỜ TRÙM #s',
     'BOSS HUNT · TIER #': 'SĂN TRÙM · BẬC #', 'FLOOR # · WAVE #/#': 'TẦNG # · WAVE #/#', 'TRIAL # · WAVE #/#': 'THỬ THÁCH # · WAVE #/#', 'TIER # · #s': 'BẬC # · #s', 'TIER # · PRACTICE · #s': 'BẬC # · LUYỆN TẬP · #s',
     'Unlocks after defeating # different bosses': 'Mở sau khi hạ # trùm khác nhau', '# BOSSES': '# TRÙM',
-    'RED SEAL · # Red Crystals → # Mythic card of your choice': 'ẤN ĐỎ · # Tinh thể Đỏ → # thẻ Cổ đại tự chọn', 'SEAL': 'ẤN', 'RED SEAL': 'ẤN ĐỎ',
+    'Red Seal': 'Ấn Đỏ', 'YOU HAVE #/#': 'ĐANG CÓ #/#', 'RED SEAL': 'ẤN ĐỎ',
     'Pick # Mythic card: +# copy. Costs # Red Crystals and #,# gold.': 'Chọn # thẻ Cổ đại: +# bản. Tốn # Tinh thể Đỏ và #.# vàng.',
+    'Pick # Mythic card: +# copy. Costs # Red Crystals and # gold.': 'Chọn # thẻ Cổ đại: +# bản. Tốn # Tinh thể Đỏ và # vàng.',
     'ALL BOSSES · TIER #': 'ĐỦ TRÙM · BẬC #', 'BOSS OF THE WEEK · TIER #': 'TRÙM CỦA TUẦN · BẬC #', 'Red Crystal': 'Tinh thể Đỏ',
   });
 })();
