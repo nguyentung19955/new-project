@@ -756,28 +756,66 @@ const REN = {
   // ---- dịu VFX (claude/diu-vfx): lớp hiệu ứng riêng cùng cỡ canvas chính ----
   lopFx() {
     const cv = this.cv; let L = this._lop;
-    if (!L) { L = this._lop = document.createElement('canvas'); this._lopX = L.getContext('2d'); }
-    const x = this._lopX;
+    if (!L) { L = this._lop = document.createElement('canvas'); this._lopX = L.getContext('2d'); this.theoVung(this._lopX); }
+    const x = this._lopX, V = x._vung;
     // chỉ dùng dải trên của canvas tới hết đường + lề (hiệu ứng nằm trên đường/bàn; dải thẻ bài phía dưới không cần) → bớt điểm ảnh xoá/đổ mỗi khung
     if (this._lopD !== G.duong) { this._lopD = G.duong; let my = 0; for (const p of G.duong) for (const q of p.pts) my = Math.max(my, q.y !== undefined ? q.y : q[1]); this._lopY = my > 0 ? my + 90 : H; }
     // sửa gấp 09/11 (bộ nhớ canvas iPhone): lớp chỉ CAO bằng dải được đổ lên (trước: cả màn, phần dưới không bao giờ dùng) → hình y hệt, bớt điểm ảnh
     const lh = Math.min(cv.height, Math.ceil((this._lopY + 10) * this.s * this.dpr));
-    if (L.width !== cv.width || L.height !== lh) { L.width = cv.width; L.height = lh; this.min(x); x.lineCap = 'round'; x.lineJoin = 'round'; }
+    if (L.width !== cv.width || L.height !== lh) { L.width = cv.width; L.height = lh; this.min(x); x.lineCap = 'round'; x.lineJoin = 'round'; V.rong(); }
     this._lopH = lh;
-    x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; x.globalCompositeOperation = 'source-over'; x.clearRect(0, 0, L.width, this._lopH);
+    x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; x.globalCompositeOperation = 'source-over';
+    // đợt 2 nóng máy (09/11): chỉ xoá VÙNG đã vẽ từ lần xoá trước (trước: xoá cả lớp 2 lần/khung dù hiệu ứng chỉ chiếm một góc)
+    if (V.co) { const r = V.khung(L.width, lh); if (r) x.clearRect(r[0], r[1], r[2], r[3]); }
+    V.rong();
     x.setTransform(this.ctx.getTransform());
     return x;
   },
+  // theo dõi khung bao (điểm ảnh thiết bị) mọi thứ vẽ lên ctx lớp hiệu ứng: drawImage tính đúng 4 góc theo phép biến đổi;
+  //   lệnh khác (fill/stroke/chữ/rect/putImageData) hoặc có bóng/filter → coi như cả lớp (an toàn, hình y hệt)
+  theoVung(x) {
+    const V = x._vung = { co: false, ca: false, x0: 0, y0: 0, x1: 0, y1: 0,
+      rong() { this.co = false; this.ca = false; this.x0 = this.y0 = Infinity; this.x1 = this.y1 = -Infinity; },
+      khung(w, h) { // [x, y, rộng, cao] đã kẹp trong lớp, lề 2 điểm ảnh khử răng cưa; null = không có gì
+        if (!this.co) return null; if (this.ca) return [0, 0, w, h];
+        const a = Math.max(0, Math.floor(this.x0) - 2), b = Math.max(0, Math.floor(this.y0) - 2), c = Math.min(w, Math.ceil(this.x1) + 2), d = Math.min(h, Math.ceil(this.y1) + 2);
+        return c > a && d > b ? [a, b, c - a, d - b] : null;
+      } };
+    V.rong();
+    const P = CanvasRenderingContext2D.prototype, dI = P.drawImage;
+    x.drawImage = function (im, a1, a2, a3, a4, a5, a6, a7, a8) {
+      V.co = true;
+      if (!V.ca) {
+        if (this.filter && this.filter !== 'none') V.ca = true;
+        else {
+          let dx, dy, dw, dh; const n = arguments.length;
+          if (n >= 9) { dx = a5; dy = a6; dw = a7; dh = a8; } else if (n >= 5) { dx = a1; dy = a2; dw = a3; dh = a4; } else { dx = a1; dy = a2; dw = im.width || 0; dh = im.height || 0; }
+          const m = this.getTransform(), p = this.shadowBlur > 0 ? this.shadowBlur * 2 + Math.abs(this.shadowOffsetX) + Math.abs(this.shadowOffsetY) : 0;
+          for (let i = 0; i < 4; i++) {
+            const u = dx + (i & 1 ? dw : 0), v = dy + (i & 2 ? dh : 0), X = m.a * u + m.c * v + m.e, Y = m.b * u + m.d * v + m.f;
+            if (X - p < V.x0) V.x0 = X - p; if (X + p > V.x1) V.x1 = X + p; if (Y - p < V.y0) V.y0 = Y - p; if (Y + p > V.y1) V.y1 = Y + p;
+          }
+          if (!(V.x0 > -1e7 && V.x1 < 1e7 && V.y0 > -1e7 && V.y1 < 1e7)) V.ca = true; // NaN / vô cực → cả lớp
+        }
+      }
+      return dI.apply(this, arguments);
+    };
+    for (const f of ['fill', 'stroke', 'fillRect', 'strokeRect', 'fillText', 'strokeText', 'putImageData']) {
+      const g = P[f]; x[f] = function () { V.co = true; V.ca = true; return g.apply(this, arguments); };
+    }
+  },
   // đổ lớp lên canvas chính; khoet: xoá mềm (destination-out, chấm mờ fx_cham_trang = mặt nạ) quanh từng quái sống → quái luôn lộ ra
   gopLop(ctx, al, khoet) {
-    const x = this._lopX, L = this._lop;
+    const x = this._lopX, L = this._lop, V = x._vung, h = this._lopH || L.height;
+    const r = V.khung(L.width, h); if (!r) return; // lớp rỗng: không khoét, không đổ (đợt 2 nóng máy 09/11)
     x.globalAlpha = 1; x.globalCompositeOperation = 'source-over';
     if (khoet && G.quai.length) {
-      const lo = this.cham1('#ffffff'); x.globalCompositeOperation = 'destination-out';
-      for (const E of G.quai) if (!E.chet) { const c = E.d.co * (E.trum ? 0.9 : 1.15); x.globalAlpha = E.trum ? DIU.loTrum : DIU.lo; x.drawImage(lo, E.x - c / 2, E.y - c * 0.6, c, c); }
+      const lo = this.cham1('#ffffff'), dI = CanvasRenderingContext2D.prototype.drawImage; x.globalCompositeOperation = 'destination-out'; // khoét chỉ XOÁ → không nới khung bao
+      for (const E of G.quai) if (!E.chet) { const c = E.d.co * (E.trum ? 0.9 : 1.15); x.globalAlpha = E.trum ? DIU.loTrum : DIU.lo; dI.call(x, lo, E.x - c / 2, E.y - c * 0.6, c, c); }
       x.globalAlpha = 1; x.globalCompositeOperation = 'source-over';
     }
-    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al; const h = this._lopH || L.height; ctx.drawImage(L, 0, 0, L.width, h, 0, 0, L.width, h); ctx.restore();
+    // chỉ đổ vùng có hình (cùng toạ độ nguồn = đích → điểm ảnh y hệt đổ cả lớp)
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al; ctx.drawImage(L, r[0], r[1], r[2], r[3], r[0], r[1], r[2], r[3]); ctx.restore();
     ctx.globalAlpha = 1;
   },
   // thanh máu quái: trong khung đang vẽ (ve0) gom lại vẽ sau lớp hiệu ứng; ngoài ve0 vẽ ngay

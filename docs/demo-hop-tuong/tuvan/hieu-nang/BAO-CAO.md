@@ -34,6 +34,26 @@ Phân tích:
 - Không đổi luật / thời gian / ngẫu nhiên gameplay (chỉ độ phân giải vẽ và ghi DOM).
 - Ảnh 390×844 đã xem: PVP/solo trước–sau không vỡ hình (chữ n/90, viền ô hơi mềm hơn ở 2× — chấp nhận được).
 
-## Còn có thể làm (đợt 2, chưa làm)
-- `REN.lopFx` + `gopLop`: xoá & đổ cả lớp mỗi khung kể cả khi lớp gần trống → theo dõi khung bao vùng đã vẽ, chỉ xoá/đổ vùng đó.
-- `#top`, `#the-mv`, `#mana-hop` có `filter: drop-shadow` trong khi nội dung bên trong đổi ~30 lần/s (thanh trùm, hồi chiêu, số mana) — Safari phải dựng lại bộ lọc; nên chuyển bóng vào ảnh / `box-shadow` tĩnh (chưa đo được trên WebKit thật vì máy không có WebKit).
+## Đợt 2 (09/11)
+Đo lại `tools/thap-kt-hieunang-dem.js`, `?ios=1` (canvas 780×1560), mỗi khung, trước = 7e275d15:
+
+| Chế độ | Điểm ảnh vẽ | Điểm ảnh xoá | Tổng | Đổi DOM |
+|---|---|---|---|---|
+| PVP trước | 4,22 M | 3,25 M | 7,47 M | 3,2 |
+| **PVP sau** | 2,59 M | 1,93 M | **4,52 M (−39%)** | 2,2 |
+| Solo trước | 3,13 M | 2,93 M | 6,06 M | 2,0 |
+| **Solo sau** | 1,51 M | 1,37 M | **2,88 M (−52%)** | 1,7 |
+
+So với gốc 3× (15,4 M) → PVP iPhone còn 4,5 M điểm ảnh/khung (−71%).
+
+1. (a) `REN.lopFx` / `gopLop` (render.js): ctx lớp hiệu ứng tự ghi KHUNG BAO điểm ảnh của mọi `drawImage` (4 góc theo phép biến đổi, cộng bóng);
+   fill/stroke/chữ/filter → cả lớp. Chỉ xoá + đổ đúng khung bao; lớp rỗng thì bỏ qua. Kiểm 48 khung PVP/solo: 0 điểm ảnh nằm ngoài khung bao (hình y hệt). ~1/3 khung lớp rỗng.
+2. (b) `filter: drop-shadow` trên HUD: ĐO trước khi sửa — gắn MutationObserver vào 21 phần tử có filter: chỉ #nut-trieu đổi 7–8 lần/s (do `classList.remove('h2-san')` mỗi lần cập nhật),
+   #the-mv / nút nhỏ 0,3 lần/s. Diện tích filter vẽ lại ≈ 0,6 M điểm ảnh/GIÂY, so với canvas ≈ 270 M/giây → < 0,3%. Không bỏ bóng (giữ hình),
+   chỉ sửa nguồn đổi: `hud2.js` dùng `toggle('h2-san', false)` → #nut-trieu hết vẽ lại.
+3. (c) Animation CSS chạy liên tục trong trận (`document.getAnimations()` sau 6 s, PVP + solo): KHÔNG có cái lặp vô hạn nào trên HUD trận
+   (cổng/lõi vẽ bằng canvas). Chỉ bảng giới thiệu đợt (#nd-gt, tạm thời). Không cần sửa.
+4. (d) Dải chân dung đối thủ PVP: cụm số "6 5 5" = dải điểm 3 quả Lucky Slot (`.cb-qua`, chữ 6px) đè nửa dưới chân dung 30px → ẩn trong `#dp-dai` (hud-anime.css).
+
+## Còn có thể làm
+- Khung bao lớp hiệu ứng hay bị "cả lớp" do vài hiệu ứng vẽ fill/stroke/chữ vào lớp → tính khung bao cho fillRect / chữ để giảm thêm.

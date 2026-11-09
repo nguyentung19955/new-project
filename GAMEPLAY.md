@@ -3,6 +3,12 @@
 > Game merge tower-defense trong `thap/`. Luật game và bàn giao: `docs/demo-hop-tuong/ban-giao/BAN-GIAO.md`, luật code/hình: `thap/QUY-TAC-HINH.md`.
 > Mỗi session thêm một mục `## claude/<tên-nhánh> — …` ở CUỐI file (file gộp kiểu union, không xung đột).
 
+## claude/demo-hop-tuong — nóng máy iPhone đợt 2 (09/11)
+- Lớp hiệu ứng "dịu VFX" chỉ xoá + đổ vùng có hình (khung bao), lớp rỗng bỏ qua → điểm ảnh/khung PVP 7,5 M → 4,5 M, solo 6,1 M → 2,9 M. Hình y hệt (kiểm 0 điểm ảnh ngoài khung bao).
+- Nút SUMMON không còn ghi lại class 30 lần/s khi thiếu mana / bàn đầy. Bóng drop-shadow HUD giữ nguyên (đo: < 0,3% việc vẽ). Không có animation CSS lặp vô hạn trên HUD trận.
+- PVP: ẩn dải điểm 3 quả Lucky Slot (chữ 6px) trong dải chân dung đối thủ — trước đè lên chân dung ("6 5 5").
+- Số đo: `docs/demo-hop-tuong/tuvan/hieu-nang/BAO-CAO.md` mục Đợt 2.
+
 ## claude/demo-hop-tuong — sửa gấp nóng máy iPhone (PVP bàn đầy Ember, 09/11)
 - Đo (không đoán): `docs/demo-hop-tuong/tuvan/hieu-nang/BAO-CAO.md`. Tool: `tools/thap-kt-hieunang-dem.js` (đếm điểm ảnh/lệnh vẽ/đổi DOM mỗi khung), `tools/thap-kt-hieunang.js` (khung hình, CDP).
 - iOS: canvas trận vẽ tối đa 2× (trước 3×, chỉ lùi khi tụt khung — iPhone vẫn đủ 60 Hz nên không bao giờ lùi). Điểm ảnh xoá/vẽ mỗi khung 15,4 M → 7,1 M (−54%). `?dpr=3` vẫn ép được để so.
