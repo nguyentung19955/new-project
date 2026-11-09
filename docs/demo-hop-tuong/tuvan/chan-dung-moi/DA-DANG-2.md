@@ -67,3 +67,8 @@ Còn giống nhẹ nhưng giữ: set ≈ aten (Voltari plasma, khác màu xanh d
 | 35 | hutmana | Mana Leech | L. Đàn ông đầu trọc cười to / thủy tộc nam há miệng | Khách: ma cà rồng | Bá tước ma cà rồng tóc đen vuốt ngược, áo choàng đỏ thẫm, nhấp ly mana xanh — đen/đỏ thẫm/xanh |
 
 Đa dạng sau thay: khoảng 11 nữ / 18 nam / 6 không giới tính (quái, slime, robot mascot, golem, gremlin); 1 trẻ con (nayda); 2 lão (rùa thủ thư, cụ dryad); 13 thú nhân/khách loài mới; 8 sinh vật huyền thoại (quỷ, oni, thiên thần, ma cà rồng, thần đèn, long nhân, tinh linh mây, dryad). Không còn hai ảnh trùng cùng tóc + màu nền + tư thế trong nhóm đổi.
+
+## Góp ý người dùng 09/11 14:05 — đa dạng, tự do hơn
+- Hướng ChatGPT đang hiểu đúng ý (mockup khay thẻ có cả sinh vật nhỏ 1 mắt dễ thương). Các đợt chân dung sau phải **đa dạng loài/kiểu**: ngoài người/á nhân anime, có thêm sinh vật nhỏ dễ thương (1 mắt, linh vật, thú nhỏ), quái vật, người máy, tinh linh, rồng con, thực thể kỳ dị…
+- **Không** chuyển toàn bộ sang "nhỏ nhỏ cute": đó chỉ là một nhóm trong nhiều nhóm. Mục tiêu: nhìn khay 5 thẻ là thấy mỗi chỉ huy một dáng, một cỡ, một loài khác nhau.
+- Gợi ý tỉ lệ cho mỗi đợt mới: ~50% người/á nhân anime · ~20% sinh vật nhỏ/linh vật cute · ~15% quái/thực thể ngầu · ~15% máy/tinh linh/khác. Giữ nét anime gacha, bóng đổ, khung bậc như bản pha.
