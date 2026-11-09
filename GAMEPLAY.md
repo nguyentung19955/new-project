@@ -950,6 +950,8 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - Bộ bài + bộ sưu tập: thẻ dọc dùng KHUNG BẬC anime (ha_khung_*: Trắng viền thẳng · Xanh viền đôi · Tím rune · Vàng vương miện · Đỏ lửa) — cùng khung khay trận; LV trong vòng tròn góc phải, nút (i) góc trái, số bản sao ở dải đáy. Bộ bài 5 cột, BỘ SƯU TẬP 4 cột có tên ụ. 5 ô bộ bài cùng thẻ dọc; ô trống = ô vát góc + nút tròn.
 - Thẻ ụ khoá: vẫn thấy hình (xám nhẹ) + tên + khung bậc, nhãn "PILOT / LV n" ở đáy cửa sổ; tiêu đề nhóm bậc hiện lại, nhóm còn khoá ghi "Unlocks at Pilot Level n" (Đỏ: "… and best wave 30"); nhãn đếm "PLAYABLE n · TOTAL m".
 - Đầu màn, băng chỉ huy, ô tìm, chip xếp: tấm/pill anime. Hợp đồng kéo-thả giữ nguyên (thap-kt-keo 23/23 ở 360/390/430).
+- Trang ụ / trang chỉ huy: nền trời lâu đài; nút dưới THÊM/DÙNG = nút chính cam đào, BỎ KHỎI BỘ / chưa dùng được = nút phụ chàm; ô cấp thẻ + LEVEL UP (cam khi đủ, chàm khi thiếu), thanh bản sao teal; ô chỉ số / kỹ năng / bảng chi tiết / chip / hàng mốc dùng tấm-pill anime; số "+3" nằm trong ô.
+- Xem nhanh (chạm thẻ ở bộ bài): chân dung thẻ dọc khung bậc. Test range (skilldemo): icon mana teal + số mana teal sáng (#4FEBD6) khi giao diện anime bật.
 
 ## claude/demo-hop-tuong — đổi tên Astral Arsenal
 - Người dùng chốt (09/11 18:10): tên game **Astral Arsenal** (cửa hàng: "Astral Arsenal: Merge Defense"). Tài liệu: `docs/demo-hop-tuong/tuvan/doi-ten/DOI-TEN.md`.

@@ -213,3 +213,41 @@ html.ua body #wrap #chon:not(.bst) #chon-luoi .luoi { padding-top: 2px; row-gap:
 html.ua body #wrap #chon #chon-bo { padding-top: 20px !important; }
 /* nhóm Tím/Vàng/Đỏ: khung có rune/vương miện/lửa nhô lên → chừa khe dưới tiêu đề */
 html.ua body #wrap #chon #chon-luoi > .nhom[data-uab="tim"], html.ua body #wrap #chon #chon-luoi > .nhom[data-uab="vang"], html.ua body #wrap #chon #chon-luoi > .nhom[data-uab="do"] { margin-bottom: 14px; }
+
+/* ================= TRANG Ụ / TRANG CHỈ HUY (#up) ================= */
+html.ua body #wrap #up .up-nen { background-image: url(../assets/ua_nen.jpg) !important; background-size: cover !important; background-position: center top !important; }
+/* nút dưới: thêm/dùng = nút chính cam đào; bỏ khỏi bộ / không dùng được = nút phụ chàm */
+html.ua body #wrap #up.up7 .up-nut { border-image: var(--ua-a) / 22px 42px stretch !important; color: #172040 !important; text-shadow: none !important; filter: none !important; }
+html.ua body #wrap #up.up7 .up-nut .up-nut-chu, html.ua body #wrap #up.up7 .up-nut .up-nut-so { color: #172040 !important; text-shadow: none !important; }
+html.ua body #wrap #up.up7 .up-nut.bo, html.ua body #wrap #up.up7 .up-nut:disabled { border-image: var(--ua-b) / 18px 30px stretch !important; color: #F7F8FF !important; opacity: 1 !important; }
+html.ua body #wrap #up.up7 .up-nut.bo .up-nut-chu, html.ua body #wrap #up.up7 .up-nut.bo .up-nut-so { color: #F7F8FF !important; }
+html.ua body #wrap #up.up7 .up-nut:disabled .up-nut-chu, html.ua body #wrap #up.up7 .up-nut:disabled .up-nut-so { color: #B8C3E6 !important; }
+/* cấp thẻ + LEVEL UP (hành động chính khi đủ bản sao + vàng) */
+html.ua body #wrap #up .tb-cap { border: 0 solid transparent !important; border-image: var(--ua-o) / 14px 16px stretch !important; }
+html.ua body #wrap #up .tb-nut { border: 0 solid transparent !important; border-image: var(--ua-a) / 14px 26px stretch !important; color: #172040 !important; text-shadow: none !important; }
+html.ua body #wrap #up .tb-nut * { color: #172040 !important; text-shadow: none !important; }
+html.ua body #wrap #up .tb-nut:disabled { border-image: var(--ua-b) / 13px 22px stretch !important; color: #B8C3E6 !important; filter: none !important; opacity: 1 !important; }
+html.ua body #wrap #up .tb-nut:disabled * { color: #B8C3E6 !important; }
+html.ua body #wrap #up .tb-sb { border: 0 !important; border-image: none !important; background: url(../assets/ha_mau_ranh.png) 0 50% / 100% 100% no-repeat !important; }
+html.ua body #wrap #up .tb-sb .tb-day img { content: url(../assets/ha_mau_xanh.png); object-fit: fill; }
+html.ua body #wrap #up .tb-sb b { text-shadow: 0 1px 2px #000, 0 0 3px #000 !important; color: #F7F8FF !important; }
+/* tấm thông tin: NEXT LEVEL, bảng phụ, hàng mốc, thẻ liên quan, chip */
+html.ua body #wrap #up .up-sau { border-image: var(--ua-t) / 12px 14px stretch !important; }
+html.ua body #wrap #up.up7 .up-spec div, html.ua body #wrap #up.up7 .up-kn, html.ua body #wrap #up.up7 .up-hang-ts { border-image: var(--ua-t) / 11px 13px stretch !important; }
+html.ua body #wrap #up .up-tam { border-image: var(--ua-t) / 20px 22px stretch !important; }
+html.ua body #wrap #up .up-bang, html.ua body #wrap #up .up-the { border-image: var(--ua-o) / 12px 12px stretch !important; }
+html.ua body #wrap #up .up-hang.moc { border-image: var(--ua-t) / 11px 13px stretch !important; }
+html.ua body #wrap #up .up-so1 > span { border-image: var(--ua-p) / 10px 14px stretch !important; }
+html.ua body #wrap #up .nac > button { border-image: var(--ua-p) / 10px 12px stretch !important; }
+html.ua body #wrap #up .nac > .cur { border-image: var(--ua-pb) / 10px 12px stretch !important; }
+html.ua body #wrap #up .up-spec div .up-tang { bottom: 12px !important; right: 14px !important; text-shadow: 0 1px 2px #000; }
+/* xem nhanh (bảng trượt khi chạm thẻ): chân dung thẻ dọc khung bậc như lưới */
+html.ua body #wrap .hm-xem-po.ot { width: 80px !important; height: auto !important; aspect-ratio: .6766; margin-top: 18px; overflow: visible !important; }
+html.ua body #wrap .hm-xem-po.ot > img:first-child:not(.ov) { position: absolute; left: 7.2% !important; top: 3.3% !important; width: 85.6% !important; height: 82% !important; }
+html.ua body #wrap .hm-xem-po.ot > img.ov { position: absolute !important; left: -8.82% !important; top: -28.12% !important; width: 117.65% !important; height: 131.4% !important; max-width: none !important; object-fit: fill !important; z-index: 2; pointer-events: none; content: url(../assets/ha_khung_trang.png); }
+html.ua body #wrap .hm-xem-po.ot[data-otb="xanh"] > img.ov { content: url(../assets/ha_khung_xanh.png); }
+html.ua body #wrap .hm-xem-po.ot[data-otb="tim"] > img.ov { content: url(../assets/ha_khung_tim.png); }
+html.ua body #wrap .hm-xem-po.ot[data-otb="vang"] > img.ov { content: url(../assets/ha_khung_vang.png); }
+html.ua body #wrap .hm-xem-po.ot[data-otb="do"] > img.ov { content: url(../assets/ha_khung_do.png); }
+/* nút trong bảng trượt: chữ dài (VI "THÊM VÀO BỘ BÀI") vừa nút */
+html.ua body #wrap .hm-tam .hm-cai2 .hm-nut2 { font-size: 13.5px !important; letter-spacing: .02em !important; padding: 0 16px !important; white-space: nowrap; }
