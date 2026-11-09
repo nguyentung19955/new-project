@@ -61,7 +61,7 @@
 | 37 | kepha Jammer | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
 | 38 | taylo Cleanser | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
 | 39 | khien Shield Gen | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
-| 40 | hopbi Mystery Box | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | evolver | 8 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
+| 40 | hopbi Mystery Box | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | GROW-UP 3 dạng | **ĐÃ CÓ** dạng 1/2/3 (raw_anime_u_dang_hopbi, STAGE_ANIME) | evolver | 8 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
 | 41 | nangsao Star Lift | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
 | 42 | tuthan Reaper Pillar | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
 | 43 | xaotron Scrambler | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | revolver | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
@@ -70,7 +70,7 @@
 | 46 | bao Storm Gun | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | gatling | 5 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
 | 47 | anhsang Lighthouse | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | beam | 5 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
 | 48 | aten Purifier | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | cannon | 4 | — |
-| 49 | dongbo Sync Cannon | Vàng | lệch vừa: phẳng/hoạt hình đơn sắc, thiếu khung vàng | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | support | 9 | P2 làm lại |
+| 49 | dongbo Sync Cannon | Vàng | lệch vừa: phẳng/hoạt hình đơn sắc, thiếu khung vàng | GROW-UP 3 dạng | **ĐÃ CÓ** dạng 1/2/3 (raw_anime_u_dang_dongbo, STAGE_ANIME) | support | 9 | **ĐÃ LÀM** (hình chính = hàng 1 tấm biến hình) |
 | 50 | railgun Salvo Battery | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | nang | 5 | — |
 | 51 | vughep Merge King | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | evolver | 4 | — |
 | 52 | sinhdoi Twin Maker | Vàng | lệch vừa: phẳng/hoạt hình đơn sắc, thiếu khung vàng | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | evolver | 4 | **ĐÃ LÀM** (raw_anime_u_vang2) |
@@ -81,10 +81,10 @@
 | 57 | tienhoa Evolver | Vàng | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | có (đầu riêng theo trạng thái trong skills) | evolver | 9 | — |
 | 58 | cauvong Rainbow | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 4 | — |
 | 59 | wallgen Wall Projector | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | nang | 5 | — |
-| 60 | orbital Orbital | Vàng | lệch vừa: phẳng/hoạt hình đơn sắc, thiếu khung vàng | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | drone | 11 | P2 làm lại |
+| 60 | orbital Orbital | Vàng | lệch vừa: phẳng/hoạt hình đơn sắc, thiếu khung vàng | GROW-UP 3 dạng | **ĐÃ CÓ** dạng 1/2/3 (raw_anime_u_dang_orbital, STAGE_ANIME) | drone | 11 | **ĐÃ LÀM** (hình chính = hàng 1 tấm biến hình) |
 | 61 | blackhole Black Hole | Đỏ | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | portal | 4 | — |
-| 62 | overlord Overlord | Đỏ | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | nang | 9 | — |
-| 63 | lophanung Cryo Reactor | Đỏ | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | ice | 8 | — |
+| 62 | overlord Overlord | Đỏ | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | **ĐÃ CÓ** dạng 1/2/3 (raw_anime_u_dang_overlord, STAGE_ANIME) | nang | 9 | — |
+| 63 | lophanung Cryo Reactor | Đỏ | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | **ĐÃ CÓ** dạng 1/2/3 (raw_anime_u_dang_lophanung, STAGE_ANIME) | ice | 8 | — |
 | 64 | haoquang Holy Halo | Đỏ | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | support | 5 | — |
 | 65 | nayda Ricochet | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | cannon | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
 | 66 | combo Combo Core | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | revolver | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
@@ -93,7 +93,7 @@
 | 69 | cuuvi Nine-Tail | Vàng | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | **ĐÃ CÓ** dạng 1/2/3 (raw_anime_u_dang_cuuvi, STAGE_ANIME) | cannon | 9 | — |
 | 70 | pandora Pandora Vault | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | portal | 4 | — |
 | 71 | luoicheo Resonance Grid | Vàng | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | **ĐÃ CÓ** dạng 1/2/3 (raw_anime_u_dang_luoicheo, STAGE_ANIME) | support | 8 | — |
-| 72 | ngaithoigian Chrono Throne | Đỏ | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | **THIẾU** (_s1–s3 cũ lệch đầu v2 → 1 đầu + quầng màu) | chrono | 8 | — |
+| 72 | ngaithoigian Chrono Throne | Đỏ | đạt (khung vàng, anime fantasy) | GROW-UP 3 dạng | **ĐÃ CÓ** dạng 1/2/3 (raw_anime_u_dang_ngaithoigian, STAGE_ANIME) | chrono | 8 | — |
 | 73 | nemesis Nemesis | Vàng | đạt (khung vàng, anime fantasy) | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | revolver | 5 | — |
 | 74 | docton Lone Ace | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | cannon | 5 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
 | 75 | thaukinh Focus Lens | Tím | lệch vừa: thân xám + tím, chưa Royal Twilight | 3★/5★/7★ (kỹ năng) | chung 1 hình + sao/quầng tier | beam | 4 | **ĐÃ LÀM** (raw_anime_u_tim1–7, santhuong: vang1 hàng 1) |
@@ -123,5 +123,5 @@
 ## Thứ tự làm (bước 2)
 1. Trắng 14 → **xong** · Xanh 17 → **xong** (`raw_anime_u_xanh1..6`) · Tím 22 → **xong** (`raw_anime_u_tim1..7` + `vang1` hàng 1) (tấm `thap-art/raw_anime_u_trang1..5.png`, cắt `tools/thap-cat-anime-u.py`).
 2. Xanh 17 (6 tấm) → Tím 22 (8 tấm) → Vàng 4 (2 tấm).
-3. Biến hình 11 ụ grow-up (xong: cuuvi ngoisao luoicheo): mỗi ụ 1 hàng (dạng 1/2/3 cùng bệ) → `<id>_nong_s1..s3` + trả id về `STAGE_K`.
+3. Biến hình 11 ụ grow-up (xong: cuuvi ngoisao luoicheo overlord lophanung ngaithoigian hopbi orbital dongbo): mỗi ụ 1 hàng (dạng 1/2/3 cùng bệ) → `<id>_nong_s1..s3` + trả id về `STAGE_K`.
 4. Hiệu ứng vẽ tay: Sói (vuốt), Hydra (thân), Prism (vệt) → PNG nướng sẵn.

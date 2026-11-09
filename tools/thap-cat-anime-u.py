@@ -50,7 +50,9 @@ def dang(nhom, i):
             K.append(U.js_obj(t0, 'HEAD_K')[i]); tip.append(round(float(U.js_obj(t0, 'UMOD_TIP')[i]), 3)); continue
         r = U.mot(ten)
         shutil.copyfile(os.path.join(tmp, ten + '_nong.png'), os.path.join(goc_out, '%s_nong_s%d.png' % (i, n)))
-        K.append(r['HEAD_K']); tip.append(round(float(r['tip']), 3))
+        k = r['HEAD_K']
+        if giu: k = round(max(k, K[0] * (1 + 0.04 * (n - 1))), 4)  # dạng sau không nhỏ hơn dạng 1 (đầu hiện tại có khi to hơn tấm mới)
+        K.append(k); tip.append(round(float(r['tip']), 3))
         print(i, 'dạng', n, 'K', r['HEAD_K'], 'khớp bệ', r['khop_be'])
     U.OUT = goc_out; shutil.rmtree(tmp, ignore_errors=True)
     p = os.path.join(U.JS, 'artscale.js'); t = open(p, encoding='utf-8').read()

@@ -40,3 +40,10 @@ Kèm ảnh `refd_<id>` (icon hiện tại + 3 đầu dạng CŨ `_s1.._s3_v1` l�
 - ngoisao: sao pha lê 1 nòng → NOVA sao đôi vệt lấp lánh → SUPERNOVA sao lớn đuôi sao chổi
 - luoicheo: lưới vàng lõi teal mờ → HUMMING vòng tia teal 4 góc chéo → RESONANCE lõi rực + gai pha lê chéo + cánh vàng
 - soi, hydra, tienhoa: đã gen (soi) / dừng (hydra) / gen (tienhoa) nhưng KHÔNG dùng — 3 ụ này vẽ đầu riêng theo trạng thái trong skills (đầu thường/thức tỉnh, số đầu, trứng theo sao).
+- overlord (làm lại 1 lần: lượt đầu cột 3 là trụ đứng không khớp cột 1 → thêm "column 3 must be EXACTLY the turret of column 1 with the base removed"): cụm 4 chóp pha lê đỏ + lõi sét → hồ quang giữa 4 chóp → chóp lớn + cánh vàng + lõi trắng-đỏ
+- lophanung: 3 lõi băng → kim băng + sương → vương miện băng + lưới lục giác
+- ngaithoigian: mặt đồng hồ + 1 kim → 12 vạch sáng + kim giây → vương miện thời gian nhiều vòng + kim xuyên
+- hopbi: hộp quà đóng → nắp hé, mảnh bài tím → bung sáng vàng + hoa giấy
+- orbital (làm lại cả hình chính, bệ vàng vuông): vệ tinh cánh gập → anten uplink + vòng quỹ đạo → cánh mở + khoang bom sáng
+- dongbo (làm lại cả hình chính, kèm `ref_dongbo_moi` = hàng 2 tấm vang1): 3 bánh răng mờ → vòng teal nối 3 trục → bánh răng thứ 4 + quầng vàng
+Quy tắc cắt GIU_CHINH: dạng 2/3 không nhỏ hơn dạng 1 (K ≥ K1 × 1,04^n).

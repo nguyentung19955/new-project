@@ -1070,3 +1070,7 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - sinhdoi, saochep vẽ lại (bệ vàng vuông góc vương miện) — `thap-art/raw_anime_u_vang2.png`.
 - Biến hình grow-up: đầu dạng 1/2/3 mới `<id>_nong_s1..s3.png` cho cuuvi, ngoisao, luoicheo (giữ hình chính đạt sẵn; dạng 1 = đầu hiện tại). `artscale.js` `window.STAGE_ANIME` → đưa id về `STAGE_K` nên growfx đổi đúng ảnh khi lên dạng (hoạt ảnh biến hình ~650 ms có sẵn). Cắt: `tools/thap-cat-anime-u.py --dang` (GIU_CHINH=1). Ảnh soát: `tuvan/ra-soat-anime-u/bien_hinh_*.jpg`.
 - Prism Thief (`skills7.js` pmVeVet): vệt vuốt hợp thể bỏ gradient/đường vẽ code → ảnh `fx_laser_tia` tô màu 2 đầu (bộ đệm theo màu, không tạo canvas mỗi khung); giữ đường vẽ cũ làm dự phòng khi ảnh chưa tải.
+
+## claude/demo-hop-tuong — Ụ anime: BIẾN HÌNH 3 dạng thêm 6 ụ + Orbital/Sync Cannon vẽ lại (10/11)
+- Đầu dạng 1/2/3 mới: overlord, lophanung, ngaithoigian, hopbi (giữ hình chính) · orbital, dongbo (vẽ lại cả hình chính bệ vàng vuông góc vương miện từ hàng 1 tấm biến hình). Ảnh `thap-art/raw_anime_u_dang_<id>.png`; số trong `artscale.js` STAGE_ANIME. Ảnh soát: `tuvan/ra-soat-anime-u/bien_hinh_do.jpg`, `bien_hinh_hopbi_dongbo.jpg`.
+- Chuẩn bị bỏ 2 hình vẽ canvas: Hydra thân (`skills3.js` veThan) và vuốt Sói (`skills2.js` HU.soiLan) — dùng ảnh `hydra_than` / `fx_soi_vuot` + `fx_vong_mong` tô màu khi có ảnh, chưa có ảnh thì vẽ như cũ.
