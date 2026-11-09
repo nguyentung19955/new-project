@@ -42,11 +42,23 @@ function upVai(id) {
 }
 function upNham(id) {
   const sk = SKILLS[id] || {};
-  if (!sk.dmg) return UP_TXT.target[{ bang: 'dau', doc: 'dau', bomhen: 'ngau' }[id] || 'khong'];
+  if (!sk.dmg) return UP_TXT.target[{ bang: 'dau', doc: 'dau', bomhen: 'ngau', orbital: 'tu' }[id] || 'khong']; // Vệ Tinh: không bắn thường nhưng thức tỉnh thả bom → kiểu riêng
   if (sk.chonMuc || NHIP[id]) return UP_TXT.target.tu;
   return UP_TXT.target[sk.nham] || UP_TXT.target.dau;
 }
-function upTam(id) { const sk = SKILLS[id] || {}; return typeof sk.tam === 'number' ? 'Melee · ' + sk.tam + ' px' : 'Whole path'; }
+// ụ KHÔNG BẮN (dmg 0, trừ Băng/Độc/Bom Hẹn Giờ/Vệ Tinh — các ụ này vẫn nhắm quái trên đường): tầm = VÙNG tác dụng thật, không bao giờ "Whole path"
+//   (09/11 người dùng: "Cổng Ấp Nở không có dame nên không bắn được" — trang ụ ghi Tầm bắn "Toàn đường đi" là vô lý). Không có vùng → "—".
+const UP_NHAM_QUAI = { bang: 1, doc: 1, bomhen: 1, orbital: 1 };
+function upKhongBan(id) { const sk = SKILLS[id]; return !!sk && !sk.dmg && !UP_NHAM_QUAI[id]; }
+function upVung(id) {
+  const sk = SKILLS[id] || {};
+  if (sk.toanBan) return 'Whole board';
+  if (upCheo(id)) return '4 diagonals';
+  if (id === 'cauvong') return '4 neighbours + path'; // Cầu Vồng: ụ Tấn công kề + vệt cầu vồng trên đường
+  if (sk.hoTro || id === 'khoisinh') return '4 neighbours'; // Lõi Khởi Sinh: tặng sao ụ kề (trên/dưới/trái/phải)
+  return '—'; // Máy Mana, Hộp Bí Ẩn, Trứng Tiến Hoá, Đe Rèn, Cổng Ấp Nở…: không bắn, không vùng
+}
+function upTam(id) { const sk = SKILLS[id] || {}; if (upKhongBan(id)) return upVung(id); return typeof sk.tam === 'number' ? 'Melee · ' + sk.tam + ' px' : 'Whole path'; }
 
 // chạy fn(B) trên một bàn tạm (màn chọn không có trận) — mọi công thức chỉ số dùng G.ban[T.ban]
 function upBanTam(id, fn) {
@@ -497,13 +509,13 @@ const UP = {
     // 4 thông số 2×2
     const bs = sk ? upBangSao(id) : [];
     const s1 = bs[0] || {};
-    const tam = sk ? (typeof sk.tam === 'number' ? 'Melee' : 'Whole path') : '—';
+    const tam = !sk ? '—' : upKhongBan(id) ? upVung(id) : typeof sk.tam === 'number' ? 'Melee' : 'Whole path';
     const ht = sk && !sk.dmg && SUP_LOAI[id] && BUFF[SUP_LOAI[id]]; // ụ hỗ trợ: thay sát thương/tốc bắn bằng loại buff + ô được buff
     // cấp thẻ kế tiếp: hàng "Next level" ngay dưới hàng CARD LV (thebai-ui.js chèn hàng đó trước .up-sau) + số tăng nhỏ trong ô thông số
     const cs = sk ? upCapSau(id) : null, dd = (k) => { const x = cs && cs.ds.find(y => y.k === k); return x ? x.d : ''; };
     P.push(this.sauHTML(cs));
     P.push('<div class="up-spec">' + (ht
-      ? this.o('Boosts', upSC(BUFF[SUP_LOAI[id]].ten), dd('the')) + this.o('Buffs', sk.toanBan ? 'Whole board' : upCheo(id) ? '4 diagonals' : '4 neighbours') + this.o('From 5★', (upDauChan(id) || {}).b ? '+ diagonals' : 'Same cells') + this.o('Target', upNham(id))
+      ? this.o('Boosts', upSC(BUFF[SUP_LOAI[id]].ten), dd('the')) + this.o('Buffs', upVung(id)) + this.o('From 5★', upVung(id) === '—' ? '—' : (upDauChan(id) || {}).b ? '+ diagonals' : 'Same cells') + this.o('Target', upNham(id))
       : this.o('Damage', s1.dmg != null ? s1.dmg : '—', dd('dmg')) + this.oToc(s1.toc, dd('toc')) +
         this.o('Range', tam) + this.o('Target', sk ? upNham(id) : '—')) + '</div>');
     // kỹ năng 1 dòng + Test range

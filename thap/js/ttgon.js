@@ -15,6 +15,7 @@
     if (!T) { // ngoài trận / thẻ: số gốc 1 dòng
       let so = TEXT.ui.baseDmg(Math.round((sk.dmg || 0) * tier.hs), tier.hs);
       const tc = tocTT(id, null); if (tc) so += ' · ' + tc;
+      if (typeof upKhongBan === 'function' && upKhongBan(id)) so = 'Does not shoot'; // ụ không bắn (Cổng Ấp Nở, Máy Mana, Hộp Bí Ẩn…): không ghi "Base damage 0" (09/11)
       if (!sk.dmg && SUP_LOAI[id] && SUP_GIA[id]) so = BUFF[SUP_LOAI[id]].ten + ' → ' + (sk.tamChu || '4 adjacent cells');
       L.push('<div class="d-so">' + esc(so) + '</div>');
     } else {

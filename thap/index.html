@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="tm-ver" content="9ba9f032dd">
+  <meta name="tm-ver" content="08ec445a55">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
@@ -248,14 +248,15 @@
   <link rel="stylesheet" href="css/tientrinh.css?v=f35bb6e2" data-b="6750"> <!-- tiến trình đợt 1: cấp phi công, ụ khoá, hành trình 7 ngày, nhiệm vụ tuần (js/tientrinh.js) -->
   <link rel="stylesheet" href="css/trumxem.css?v=d34373b9" data-b="3392"> <!-- xem 12 trùm ở HOME (js/trumxem.js) -->
   <link rel="stylesheet" href="css/rasoat.css?v=070c3bb7" data-b="6703"> <!-- rà soát thiết kế 09/11: lớp phủ xoay dọc, nút "i" trên thẻ, sàn cỡ chữ 12px, vùng chạm ≥48 (≈44 px màn 390) -->
-  <script src="js/ver-anh.js?v=905d2050"></script>
+  <link rel="stylesheet" href="css/hud-anime.css?v=6b3f40f2" data-b="32624"> <!-- HUD TRẬN ANIME Royal Twilight (B2 09/11, js/hud-anime.js): chỉ khi html.ha2 — nạp cuối -->
+  <script src="js/ver-anh.js?v=b0217c75"></script>
   <script src="js/donet.js?v=34c51606" data-b="2659"></script>
   <script src="js/font.js?v=26e0ac3d" data-b="1038"></script>
   <script src="js/taitai-anh.js?v=2adc1d8e" data-b="24519"></script>
   <script src="js/taitai.js?v=fea3fc08" data-b="40644"></script>
   <script src="js/meta.js?v=09c6bbb7" data-b="35011"></script>
   <script src="js/text.js?v=982f7f5c" data-b="29575"></script>
-  <script src="js/ngonngu-vi.js?v=260ecf85" data-b="619059"></script> <!-- từ điển Tiếng Việt (VI_DICH / VI_MAU) -->
+  <script src="js/ngonngu-vi.js?v=d6442125" data-b="619111"></script> <!-- từ điển Tiếng Việt (VI_DICH / VI_MAU) -->
   <script src="js/ngonngu.js?v=353ca939" data-b="15052"></script> <!-- Cài đặt → LANGUAGE: English / Tiếng Việt -->
   <script src="js/data.js?v=3caa85af" data-b="32148"></script>
   <script src="js/thebai.js?v=da6cf074" data-b="11985"></script> <!-- cấp thẻ ngoài trận kiểu DCDW (bản sao + vàng) -->
@@ -289,12 +290,12 @@
   <script src="js/glyph.js?v=913781ca" data-b="602"></script>
   <script src="js/nhandien.js?v=07a99dc2" data-b="10953"></script>
   <script src="js/statthuc.js?v=ea3267f2" data-b="10514"></script>
-  <script src="js/unitpage.js?v=a5a29423" data-b="67407"></script>
+  <script src="js/unitpage.js?v=36e9b18b" data-b="68601"></script>
   <script src="js/growfx.js?v=08759608" data-b="69431"></script>
   <script src="js/buffvfx.js?v=21fcbb16" data-b="13287"></script>
   <script src="js/fxu-meta.js?v=9b0f7d3c" data-b="16756"></script>
   <script src="js/fxu.js?v=2d4f0491" data-b="21932"></script>
-  <script src="js/ttgon.js?v=a00113e2" data-b="4734"></script>
+  <script src="js/ttgon.js?v=3c37e36c" data-b="4924"></script>
   <script src="js/doiphuong.js?v=269495ae" data-b="2857"></script>
   <script src="js/khung.js?v=6c634e1c" data-b="11533"></script>
   <script src="js/chandung.js?v=da2a1e77" data-b="16992"></script>
@@ -356,6 +357,7 @@
   <script src="js/anim-meta.js?v=446bf8a6" data-b="4648"></script>
   <script src="js/anim.js?v=ac865e8e" data-b="18067"></script> <!-- ANIMATION HYBRID: ụ sống — thở, tụ lực, giật/hồi lò xo, muzzle socket, nhóm chuyển động 93 ụ (tuvan/anim) -->
   <script src="js/rasoat.js?v=d033b3e9" data-b="6813"></script> <!-- rà soát thiết kế 09/11: khoá dọc (lớp phủ + tạm dừng trận), nút "i" mở chi tiết ụ -->
+  <script src="js/hud-anime.js?v=99e45b66" data-b="10647"></script> <!-- HUD TRẬN ANIME Royal Twilight (tuvan/huong-anime): thanh trên, nền/bàn/đường, băng chiêu trùm, đáy + khung bậc; thiếu ảnh → HUD cũ -->
   </template>
   <script id="tm-nap-js">
   // NẠP KHỞI ĐỘNG + THANH TIẾN ĐỘ THEO BYTE (TDO). css trước (song song) → js (song song, chạy đúng thứ tự). Không chặn vẽ màn tải.
