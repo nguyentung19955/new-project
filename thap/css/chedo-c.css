@@ -1,0 +1,101 @@
+/* GIAI ĐOẠN C (js/chedo-c.js): bảng chọn LEO THÁP / SĂN TRÙM / THỬ THÁCH NGẮN (trong #tt-phu, tấm ua_tam2) + nhãn trong trận + thưởng màn kết quả.
+   Chỉ ảnh có sẵn (ua_o, ua_tam, ua_pill, chân dung trùm, ua_ts_do…); chữ/vị trí bằng code. Bảng màu Royal Twilight (ui-anime.css). */
+#tt-phu.cd-p .kt-phu-tam { width: 400px; gap: 8px; max-height: calc(100% - 24px); }
+.cd-dau { display: flex; align-items: center; gap: 10px; align-self: stretch; }
+.cd-dau > img { width: 46px; height: 46px; object-fit: contain; flex: none; }
+.cd-dau span { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.cd-dau .kt-phu-t { text-align: left; margin: 0; }
+.cd-dau small { font: 700 11px/1.2 var(--f-chu, sans-serif); color: #B8C3E6; letter-spacing: .04em; }
+/* chương */
+.cd-chuong { display: flex; align-items: center; gap: 8px; align-self: stretch; }
+.cd-chuong > span { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 0; }
+.cd-chuong > span b { font: 800 15px/1 var(--f-hien, sans-serif); color: #F7F8FF; letter-spacing: .06em; }
+.cd-chuong > span small { font: 700 11px/1.2 var(--f-chu, sans-serif); color: #71E4EE; text-align: center; }
+#tt-phu .cd-chuong .hm-nut2.cd-mui { width: 44px; min-width: 44px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center; }
+#tt-phu .cd-chuong .hm-nut2.cd-mui b { font: 900 22px/1 sans-serif; }
+#tt-phu .cd-chuong .hm-nut2.cd-mui:disabled { opacity: .35; }
+/* lưới tầng 5×2 */
+.cd-luoi { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; align-self: stretch; }
+.cd-o { position: relative; height: 58px; border: 0 solid transparent; border-image: url(../assets/ua_o.webp?v=47ec89eb) 52 fill / 12px 14px stretch; background: none; color: #F7F8FF; padding: 0;
+  display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.cd-o b { position: relative; font: 900 18px/1 var(--f-hien, sans-serif); text-shadow: 0 1px 2px #000, 0 0 4px #000; }
+.cd-o.on { border-image-source: url(../assets/ua_pill_bat.webp?v=20bd9c86); border-image-slice: 40 62 fill; }
+.cd-o.on b { color: #172040; text-shadow: none; }
+.cd-o.khoa { opacity: .5; }
+.cd-o .cd-o-tr { position: absolute; inset: 6px; width: calc(100% - 12px); height: calc(100% - 12px); object-fit: cover; opacity: .55; border-radius: 4px; }
+.cd-o.on .cd-o-tr { opacity: .35; }
+.cd-tick, .cd-khoa { position: absolute; right: 3px; top: 3px; width: 18px; height: 18px; object-fit: contain; }
+.cd-khoa { opacity: .9; }
+/* chi tiết */
+.cd-ct { align-self: stretch; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 10px 8px;
+  border: 0 solid transparent; border-image: url(../assets/ua_tam.webp?v=45cf4b68) 50 fill / 14px 16px stretch; }
+.cd-ct-t { font: 800 14px/1.15 var(--f-hien, sans-serif); color: #F7F8FF; letter-spacing: .05em; text-align: center; }
+.cd-so { display: flex; gap: 6px; align-self: stretch; }
+.cd-so span { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.cd-so small { font: 700 10px/1 var(--f-chu, sans-serif); color: #B8C3E6; letter-spacing: .05em; }
+.cd-so b { font: 900 16px/1 var(--f-hien, sans-serif); color: #71E4EE; }
+#tt-phu .cd-luat { margin: 0; font-size: 12px; text-align: center; color: #F7F8FF; }
+.cd-nh { font: 800 10px/1.2 var(--f-chu, sans-serif); color: #E9CCA0 !important; letter-spacing: .06em; text-align: center; }
+.cd-thuong { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+.cd-thuong .kt-r { min-width: 0; }
+.cd-tt img { width: 30px; height: 30px; object-fit: contain; }
+/* nút đáy */
+.cd-nut { display: flex; gap: 8px; align-self: stretch; margin-top: 2px; }
+.cd-nut .hm-nut2 { flex: 1; min-height: 46px; padding: 6px 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.cd-nut .hm-nut2.vang { flex: 1.7; }
+.cd-nut .hm-nut2 b { font-size: 14px; white-space: nowrap; }
+.cd-nut .cd-ve small { display: flex; align-items: center; gap: 3px; font: 700 11px/1 var(--f-chu, sans-serif); }
+.cd-nut .cd-ve small img { width: 14px; height: 14px; }
+/* săn trùm */
+.cd-tuan { display: flex; align-items: center; gap: 8px; align-self: stretch; padding: 6px 8px; border: 0 solid transparent; border-image: url(../assets/ua_tam.webp?v=45cf4b68) 50 fill / 14px 16px stretch; }
+.cd-tuan > img { width: 48px; height: 48px; object-fit: cover; border-radius: 6px; flex: none; }
+.cd-tuan > span { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.cd-tuan small { font: 800 10px/1 var(--f-chu, sans-serif); color: #E9CCA0 !important; letter-spacing: .06em; }
+.cd-tuan b { font: 800 13px/1.1 var(--f-hien, sans-serif); color: #F7F8FF; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cd-tuan em { display: flex; gap: 4px; font-style: normal; }
+.cd-tuan em i { font: 800 10px/1 var(--f-chu, sans-serif); font-style: normal; color: #B8C3E6; padding: 2px 4px; border-radius: 3px; background: rgba(16, 22, 47, .7); }
+.cd-tuan em i.da { color: #172040; background: #71E4EE; }
+.cd-tuan .cd-thuong { flex: none; max-width: 150px; gap: 3px; }
+.cd-tuan .cd-thuong .kt-r { transform: scale(.82); margin: -4px; }
+.cd-trum { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; align-self: stretch; }
+.cd-tr { position: relative; aspect-ratio: 1; padding: 4px; border: 0 solid transparent; border-image: url(../assets/ua_o.webp?v=47ec89eb) 52 fill / 10px 12px stretch; background: none; overflow: hidden; }
+.cd-tr > img:first-child { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; display: block; }
+.cd-tr b { position: absolute; left: 0; right: 0; bottom: 2px; font: 900 10px/1 var(--f-hien, sans-serif); color: #F7F8FF; text-shadow: 0 1px 2px #000, 0 0 3px #000; text-align: center; }
+.cd-tr.on { border-image-source: url(../assets/ua_pill_bat.webp?v=20bd9c86); border-image-slice: 40 62 fill; }
+.cd-tr.khoa > img:first-child { filter: grayscale(1) brightness(.45); }
+.cd-tr.tuan::after { content: ''; position: absolute; inset: 2px; box-shadow: none; }
+.cd-bac { display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px; align-self: stretch; }
+#tt-phu .cd-bac .hm-chip { min-width: 0; height: 32px; padding: 0; font: 900 13px/1 var(--f-hien, sans-serif); border: 0 solid transparent; border-image: url(../assets/ua_pill_tat.webp?v=7011ead0) 40 62 fill / 10px 12px stretch; background: none; color: #F7F8FF; }
+#tt-phu .cd-bac .hm-chip.on { border-image-source: url(../assets/ua_pill_bat.webp?v=20bd9c86); color: #172040; }
+#tt-phu .cd-bac .hm-chip.xong:not(.on) { color: #71E4EE; }
+#tt-phu .cd-bac .hm-chip:disabled { opacity: .35; }
+/* thử thách */
+.cd-thu { display: flex; flex-direction: column; gap: 5px; align-self: stretch; }
+.cd-th { display: flex; align-items: center; gap: 8px; min-height: 52px; padding: 4px 10px; border: 0 solid transparent; border-image: url(../assets/ua_o.webp?v=47ec89eb) 52 fill / 12px 14px stretch; background: none; color: #F7F8FF; text-align: left; position: relative; }
+.cd-th.on { border-image-source: url(../assets/ua_tam.webp?v=45cf4b68); border-image-slice: 50 fill; }
+.cd-th > i { font: 900 18px/1 var(--f-hien, sans-serif); font-style: normal; color: #E9CCA0; width: 18px; text-align: center; flex: none; }
+.cd-th > span { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.cd-th > span b { font: 800 14px/1.1 var(--f-hien, sans-serif); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cd-th > span small { font: 700 10px/1 var(--f-chu, sans-serif); color: #B8C3E6; }
+.cd-th .cd-thuong { flex: none; flex-wrap: nowrap; gap: 2px; }
+.cd-th .cd-thuong .kt-r { transform: scale(.78); margin: -5px -3px; }
+.cd-th .cd-tick, .cd-th .cd-khoa { position: static; width: 26px; height: 26px; flex: none; }
+.cd-th.khoa { opacity: .5; }
+/* trong trận: nhãn tầng / đồng hồ trùm (dưới thanh trên) */
+.cd-chip { position: absolute; left: 50%; top: 54px; transform: translateX(-50%); z-index: 6; padding: 4px 16px; pointer-events: none;
+  border: 0 solid transparent; border-image: url(../assets/ua_pill_tat.webp?v=7011ead0) 40 62 fill / 10px 14px stretch;
+  font: 800 11px/1.2 var(--f-hien, sans-serif); color: #F7F8FF; letter-spacing: .06em; white-space: nowrap; text-shadow: 0 1px 2px #000; }
+.cd-chip.gap { color: #FF5E80; }
+/* màn kết quả */
+#ketqua .cd-kq-h { flex-wrap: wrap; justify-content: center; }
+#ketqua .cd-kq .cd-tt img { width: 26px; height: 26px; }
+/* trận C không có trùm (tầng thường): ẩn chân dung trùm "sắp tới" trên thanh trên */
+#top.cd-ko-trum .vt-chip { display: none !important; }
+/* bảng GAME MODE có 7 chế độ: hàng gọn hơn để vừa 1 màn (390×844) */
+#hm-tam.hm-tam-che .hm-ds { gap: 7px; }
+#hm-tam.hm-tam-che .hm-chec { min-height: 68px; padding-top: 6px; padding-bottom: 6px; gap: 12px; }
+#hm-tam.hm-tam-che .hm-chec > img { width: 42px; height: 42px; }
+#hm-tam.hm-tam-che .hm-chec b { font-size: 17px; }
+#hm-tam.hm-tam-che .hm-tam-dau { margin-bottom: 10px; }
+/* Ấn Đỏ trong LÒ RÈN: cùng cỡ chữ hàng rèn (manh.css .mh-ren) */
+.cd-ad .kt-h-g { gap: 3px; } .cd-ad .kt-h-g > b { font-size: 12px; }
