@@ -244,9 +244,9 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       const g = d._g || (d._g = d.querySelector('.gia b'));
       const tk = !!(SKILLS[id] && SKILLS[id].theKich) && typeof hydraGia === 'function'; // Hydra: thẻ khay = nút KÍCH HOẠT CHUNG (giá tăng gấp đôi mỗi lần)
       const kn = !tk && !!(SKILLS[id] && SKILLS[id].khongNang), gp = g && g.parentElement; if (gp && (gp.style.visibility === 'hidden') !== kn) gp.style.visibility = kn ? 'hidden' : ''; // Lucky Slot: không nâng bằng mana (ẩn ô giá)
-      if (tk) { chu(g, hydraGia(B)); const ok = hydraCo(B); d.classList.remove('max'); d.classList.toggle('du', ok); d.classList.toggle('thieu', !ok); d.classList.toggle('hy-tat', !ok); d.classList.add('hy-kich'); }
-      else if (kn) { chu(g, ''); d.classList.add('max'); d.classList.remove('du', 'thieu'); }
-      else if (lv >= 5) { chu(g, TEXT.ui.max); d.classList.add('max'); d.classList.remove('du', 'thieu'); }
+      if (tk) { chu(g, hydraGia(B)); const ok = hydraCo(B); d.classList.toggle('max', false); d.classList.toggle('du', ok); d.classList.toggle('thieu', !ok); d.classList.toggle('hy-tat', !ok); d.classList.toggle('hy-kich', true); }
+      else if (kn) { chu(g, ''); d.classList.toggle('max', true); d.classList.toggle('du', false); d.classList.toggle('thieu', false); } // toggle(x, bool): không ghi lại thuộc tính khi lớp không đổi (add/remove ghi lại mỗi khung → 5 lần đổi DOM/khung)
+      else if (lv >= 5) { chu(g, TEXT.ui.max); d.classList.toggle('max', true); d.classList.toggle('du', false); d.classList.toggle('thieu', false); }
       else { const gia = LUAT.giaNangCap[lv - 1]; chu(g, gia); d.classList.toggle('du', B.mana >= gia); d.classList.toggle('thieu', B.mana < gia); }
     });
     const mv = B.mv, md = MAVUONG[mv.id], te = $('#the-mv');

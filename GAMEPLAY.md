@@ -3,6 +3,12 @@
 > Game merge tower-defense trong `thap/`. Luật game và bàn giao: `docs/demo-hop-tuong/ban-giao/BAN-GIAO.md`, luật code/hình: `thap/QUY-TAC-HINH.md`.
 > Mỗi session thêm một mục `## claude/<tên-nhánh> — …` ở CUỐI file (file gộp kiểu union, không xung đột).
 
+## claude/demo-hop-tuong — sửa gấp nóng máy iPhone (PVP bàn đầy Ember, 09/11)
+- Đo (không đoán): `docs/demo-hop-tuong/tuvan/hieu-nang/BAO-CAO.md`. Tool: `tools/thap-kt-hieunang-dem.js` (đếm điểm ảnh/lệnh vẽ/đổi DOM mỗi khung), `tools/thap-kt-hieunang.js` (khung hình, CDP).
+- iOS: canvas trận vẽ tối đa 2× (trước 3×, chỉ lùi khi tụt khung — iPhone vẫn đủ 60 Hz nên không bao giờ lùi). Điểm ảnh xoá/vẽ mỗi khung 15,4 M → 7,1 M (−54%). `?dpr=3` vẫn ép được để so.
+- HUD: 5 thẻ khay không còn ghi lại lớp `max/du/thieu` mỗi khung khi không đổi → đổi DOM 8 → 2,7 lần/khung.
+- Không đổi luật / thời gian / ngẫu nhiên gameplay.
+
 ## claude/demo-hop-tuong — Ụ sáng tạo: 3 ụ mẫu làm thử (09/11)
 - Theo `docs/demo-hop-tuong/tuvan/u-sang-tao/DE-XUAT.md` §6 (người dùng "Ok"): thay cơ chế + hình + tên, GIỮ id/bậc/khoá lưu (bộ sưu tập, cấp thẻ, bộ bài không mất).
 - **Iaido Katana / Kiếm Rút Nhanh** (`sungluc`, Trắng): chém quái đầu trong dải HÀNG hoặc CỘT của ô (kéo ra tới đường) 40 ST / 1,8 s, trúng tức thì; ngoài dải chỉ chọc 45%. 3★ dải 1,5 ô +20% nhịp · 5★ +25% ST, trúng thêm quái thứ 2 trong dải · 7★ thêm ×1,3 ST, nhịp 1,4 s. Hình: kiếm trong vỏ xoay theo mục tiêu, rung khi quái vào dải, rút lưỡi → vung → tra vỏ, vệt chém.
