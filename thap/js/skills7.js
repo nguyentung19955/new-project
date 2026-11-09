@@ -571,3 +571,55 @@ window.addEventListener('DOMContentLoaded', () => {
     DC.ngauNhien = function () { const r0 = G.roster; G.roster = r0.filter(r => !SK7.CHUA_ANH.has(r.id)); try { return g.apply(this, arguments); } finally { G.roster = r0; } };
   }
 });
+
+// =====================================================================================================
+// CỔNG ẤP NỞ / HATCHERY GATE (congap) — VÀNG, Đặc biệt, KHÔNG bắn (người dùng thiết kế 09/11):
+//   · LƯỢT GỌI = số sao lúc ụ XUẤT HIỆN (1★ = 1 lượt, 2★ = 2…).
+//   · Mỗi 11 s CỐ ĐỊNH (không theo tốc bắn / cấp thẻ / power-up) dùng 1 lượt: gọi 1 ụ NGẪU NHIÊN trong BỘ BÀI (trừ chính Cổng Ấp Nở), 1★, vào 1 Ô TRỐNG.
+//     Loại: rngLuat(B, 83, ô của cổng); ô: trieu() (rngLuat 13) — tất định (NT9). Triệu hồi MIỄN PHÍ như Tháp Ánh Sáng: trieu(B, true, id) —
+//     không tốn mana, không tăng giá triệu hồi, không chạy móc "khi người chơi triệu hồi" khác (Tháp Ánh Sáng cũng vậy).
+//   · Bàn ĐẦY: đồng hồ giữ đầy, KHÔNG mất lượt; có ô trống là gọi ngay. Hết lượt: Ở LẠI, không làm gì (chiếm ô tới khi người chơi ghép/xử lý).
+//   · +★ TẠI CHỖ bởi BẤT KỲ đường nào (Merge King +1 / bản vàng +2, Bệ Nâng Sao, Lõi Khởi Sinh, Pandora, mọi +★ tự động…) → +lượt ĐÚNG bằng số sao tăng:
+//     so T.sao với sao đã thấy T.cgS mỗi khung (bắt được cả đường sửa T.sao trực tiếp).
+//     −★ (người dùng chốt 09/11): TRỪ lượt đúng bằng số sao bị trừ, không âm.
+//   · Ghép thường ra ụ này / Copycat chép / Twin Maker / Hộp… = ụ MỚI (sinh): lượt = sao của nó, không kế thừa (NT2, NT5).
+//   · Đá / băng: capNhatU không chạy kỹ năng → đồng hồ DỪNG; ±★ nhận lúc bị khoá được cộng khi tan (luot() đã tính sẵn để hiển thị).
+//   · Online: bàn con rối không tự gọi — lượt / đồng hồ / sao đã thấy đi theo cờ ô (dongbo.js: A lượt+1 · W đồng hồ ×10 · Y sao đã thấy).
+// =====================================================================================================
+SKILLS.congap = {
+  vai: 'db', dmg: 0, toc: 0, napMau: '#ffd23f', khongNang: true, // chu kỳ cố định → không có POWER-UP mana trong trận
+  KY: 11,
+  luot(T) { const l = T.cgL == null ? T.sao : T.cgL, s = T.cgS == null ? T.sao : T.cgS; return Math.max(0, l + T.sao - s); },
+  con(T) { return Math.max(0, this.KY - (T.cgT || 0)); },
+  mo: (T) => { const S = SKILLS.congap, n = S.luot(T); return 'Calls a random 1★ turret from your deck into an empty cell every ' + S.KY + 's (free) · calls left ' + n + (n > 0 ? ' (next in ' + Math.ceil(S.con(T)) + 's)' : ' — it stays, doing nothing') + ' · calls = its stars when it appeared; +★ in place adds the same number of calls, −★ removes them · full board: waits, keeps the call'; },
+  sinh(G, T) { T.cgL = T.sao; T.cgS = T.sao; T.cgT = 0; },
+  gocDau: (T, t) => t * 0.3,
+  capNhat(G, B, T, dt) {
+    T.cgL = this.luot(T); T.cgS = T.sao; // ±★ tại chỗ → ±lượt (không âm)
+    if (B.net && typeof ONS !== 'undefined' && ONS.on) return true; // bàn con rối: chờ ảnh chụp bàn
+    if (T.cgL <= 0) { T.cgT = 0; return true; }
+    T.cgT = Math.min(this.KY, (T.cgT || 0) + dt);
+    if (T.cgT >= this.KY && oTrong(B).length) {
+      const ds = deckTru(B, ['congap']), id = ds[Math.floor(rngLuat(B, 83, T.o)() * ds.length)];
+      const N = trieu(B, true, id);
+      if (N) {
+        T.cgT = 0; T.cgL--; T.sang = 1;
+        const c = tamU(T), q = B.o[N.o];
+        G.hu.push({ k: 'cungSang', t: 0, song: 0.5, x0: c.x, y0: c.y, x1: q.x, y1: q.y });
+        if (!B.ai || G.che === 'pvp') SND.gHop(0);
+      }
+    }
+    return true;
+  },
+  veThem(ctx, T, S, al, R) { // sắp gọi: quầng vàng nhấp nháy ở lõi (ảnh chấm PNG); số lượt + giây ở tấm đếm đáy ô (DEMKN)
+    const n = this.luot(T); if (n <= 0) return;
+    const p = (T.cgT || 0) / this.KY;
+    if (p > 0.85) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (p - 0.85) * 4 * (0.6 + 0.4 * Math.sin(R.t * 18)); R.anhGiua(ctx, R.cham1('#ffd23f'), 0, 0, S * 0.8); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al; }
+  },
+};
+themHo('summon', 3, 'congap', 'calls a free 1★ from your deck every 11s; calls = its stars, +★ adds / −★ removes calls');
+window.addEventListener('DOMContentLoaded', () => {
+  // tấm đếm đáy ô: icon chồng ụ + lượt còn · trứng + giây tới lần gọi (bàn đầy: đứng ở 0s) — hết lượt: không hiện
+  if (typeof DEMKN !== 'undefined') DEMKN.DS.congap = (T) => { const S = SKILLS.congap, n = S.luot(T); return n > 0 ? { m: [{ ic: 'h2_ic_chong', s: '' + n }, { ic: 'trung_1', s: Math.ceil(S.con(T)) + 's' }] } : null; };
+  if (typeof MV !== 'undefined' && MV.TAG) MV.TAG.congap = ['calls left · seconds to the next call', 'lượt gọi còn · giây tới lần gọi kế'];
+});

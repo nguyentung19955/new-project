@@ -220,6 +220,10 @@ const SD_K = {
   chuato: { q: Q.hang(5, 200, 36, 8), cham: [4.6], truoc: (T) => { T.nap = 0.95; T.napDay = -99; T.de = 99; }, c: [[0.2, 'Drones circle the hive'], [4.6, 'Tap: SWARM — all drones fly out', { cham: 0.7 }]], dai: 9 },
   leviathan: { q: Q.nho().concat([{ k: 'khong_lo', s: 30, h: 30 }]), cham: [4.6], truoc: (T) => { T.nap = 0.95; T.napDay = -99; T.nuot = 99; }, c: [[0.2, 'Eats a small enemy'], [1.4, 'Each eat: ABYSS +1 (+4% damage)'], [4.6, 'Tap: water orbs rain on the path', { cham: 0.7 }]], dai: 9 },
   khoisinh: { kieu: 'phu', cham: [4.6], truoc: (T) => { T.sinhT = SKILLS.khoisinh.g(T) - 1.4; T.nap = 0.95; T.napDay = -99; }, ke: [[6, 'lien', 1], [8, 'canon', 2], [2, 'set', 3]], c: [[0.2, 'Raises the lowest neighbour'], [1.4, 'Lowest neighbour gets +1★', { ev: 'sao', cham: 0.6 }], [4.6, 'Tap: summons a 1★ next to it', { cham: 0.6 }]], dai: 9 },
+  // Hatchery Gate (skills7.js): 1,4 s gọi 1 ụ 1★ trong bộ vào ô trống · 4,2 s Merge King +1★ tại chỗ → +1 lượt
+  congap: { kieu: 'phu', truoc: (T) => { T.cgT = SKILLS.congap.KY - 1.4; },
+    them: [[4.2, (B, D, T) => { if (T && T.sao < 7) nangSao(B, T, 1); }]],
+    c: [[0.2, 'Calls left = its stars'], [1.4, 'Calls a free 1★ from your deck', { ev: 'moi', cham: 0.6 }], [4.2, '+★ in place: +1 call', { cham: 0.6 }]], dai: 8 },
   // Rồng Máy LÒ PHẢN ỨNG: nhịp phun tích nhiệt → 2,4 s ghép thật cùng HÀNG (+5×★ nhiệt bay vào) → 5,2 s chạm: DRAGON DIVE đốt hết nhiệt
   // Arcane Cascade (thacmana.js): mana 120 → 2 quái; 2,4 s mana +1100 (1220 → 5 quái, ×2.75); 5,0 s chạm MANA FLOOD (xả 20%)
   thacmana: { q: Q.nhom(8, 205, 22, 14), mana: 1, manaDau: 120, cham: [5.0], truoc: (T) => { T.nap = 0.95; T.napDay = -99; T.thacT = 0; },
@@ -383,6 +387,7 @@ const SD_MO = {
   khoisinh: (T) => '+1★ to a neighbour every ' + SKILLS.khoisinh.g(T) + 's',
   thacmana: (T) => { const M = SKILLS.thacmana.mana(G.ban[T.ban]); return 'Mana ' + Math.floor(M) + ': ×' + SKILLS.thacmana.k(M).toFixed(2) + ' damage, ' + SKILLS.thacmana.lan(M) + ' targets'; },
   ronglua: (T) => SKILLS.ronglua.tenDang(T) + ' · heat ' + Math.floor(T.nhiet || 0) + ' (+' + Math.round((T.nhiet || 0) * SKILLS.ronglua.NHIET_ST * 100) + '% damage)',
+  congap: (T) => SKILLS.congap.luot(T) + ' calls left · 1★ every ' + SKILLS.congap.KY + 's',
   anhsang: (T) => 'Free 1★ turret every ' + SKILLS.anhsang.ky(T).toFixed(0) + 's',
   haoquang: (T) => 'Tap: team barrier ' + SKILLS.haoquang.tg(T) + 's',
   laser: (T) => 'Beam ramps to ×4 over 3s',
