@@ -935,6 +935,7 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
   - Đường đá 2 ray đối xứng (`ha_duong` gương nửa ray ngoài, `ha_goc`/`ha_nga3` dựng lại — `tools/thap-cat-ui4.py`): làn đi ngược quy ước (PVP chữ C bàn mình, co-op nhánh dưới) không còn lệch ray ở góc.
   - SUMMON lòng cam đào CTA #FFB866 (`ha_trieu_cam`, nhuộm chính ảnh) khi bấm được; vòng góc trên-phải thẻ = cấp power-up 1…4 (trước để trống trông như huy hiệu rỗng); thẻ chỉ huy có nhãn SKILL (vi: CHIÊU).
   - Màn trong trận còn lại dùng component chung Royal Twilight của B3 (`ua_tam` / `ua_nut_chinh` / `ua_nut_phu` / `ua_o`): bảng TẠM DỪNG (tấm chàm viền vàng, nút phụ chàm, RESUME cam), màn KẾT QUẢ (ô số liệu vát góc, RETRY cam; thua = lõi pha lê tắt sáng thay khiên thép), màn VÀO TRẬN (băng trùm `ha_canh`, tấm trùm `ua_tam`, nhãn WAVE indigo). Ký hiệu đáy: tạm dừng = 2 viên cyan (`ha_ic_dung2`, viên ChatGPT xoay đứng), tốc độ = mũi tên ››› cyan của đường (`duong_mui`) — không còn cắt từ phím thép.
+  - Băng KỸ NĂNG CHỈ HUY (cut-in) = tấm `ua_tam` + vòng `ua_nut_tron` (thay băng thép); thẻ HƯỚNG DẪN trong trận = tấm `ua_tam`, nút GOT IT cam / SKIP chàm. Ảnh trước/sau: `docs/demo-hop-tuong/tuvan/huong-anime/hud-truoc-sau-2.jpg`.
 
 ## claude/demo-hop-tuong — cân bằng Lucky Slot (09/11)
 
