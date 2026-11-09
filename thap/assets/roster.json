@@ -499,9 +499,9 @@
   "ten": "Werewolf",
   "bac": "vang",
   "dcdw": "Werewolf",
-  "kyNang": "Wolf gun: Normal = 1 barrel, a shot every 1.8s, each hit splashes 70% within 1 tile; AWAKENED by chance (30%+) = 3 barrels, 3-shot volley every 1.2s, always crits, splash 85% within 1.2 tile",
+  "kyNang": "Wolf gun: Normal = 1 barrel, a shot every 1.2s, each hit splashes 70% within 1 tile; AWAKENED by chance (30%+) = 3 barrels, 3-shot volley every 0.8s, always crits, splash 85% within 1.2 tile",
   "ten_vi": "Sói Máy",
-  "kyNang_vi": "Súng sói: bản Thường 1 nòng, 1 phát mỗi 1.8 s, mỗi đòn đánh lan 70% trong 1 ô; THỨC TỈNH theo xác suất (30%+) há 3 nòng, loạt 3 viên mỗi 1.2 s, luôn chí mạng, đánh lan 85% trong 1.2 ô"
+  "kyNang_vi": "Súng sói: bản Thường 1 nòng, 1 phát mỗi 1.2 s, mỗi đòn đánh lan 70% trong 1 ô; THỨC TỈNH theo xác suất (30%+) há 3 nòng, loạt 3 viên mỗi 0.8 s, luôn chí mạng, đánh lan 85% trong 1.2 ô"
  },
  {
   "id": "tienhoa",
@@ -832,33 +832,33 @@
   "ten": "Ember Relay",
   "bac": "vang",
   "dcdw": "Kalaratri",
-  "kyNang": "Merging 2 Relays: every Relay in the row and column gets both flames added (no limit). Each flame +8% damage, +0.4% crit, +4% crit damage",
+  "kyNang": "Merging 2 Relays: every Relay in the row and column gets both flames added (no limit). Each flame +8% damage, +0.4% crit, +4% crit damage, more fire rate",
   "vai": "tc",
   "ho": "blast",
   "ten_vi": "Lửa Thập Tự",
-  "kyNang_vi": "Ghép 2 Relay: mọi Relay cùng hàng và cột nhận tổng lửa 2 ụ (không giới hạn). Mỗi lửa +8% ST, +0,4% chí mạng, +4% ST chí mạng"
+  "kyNang_vi": "Ghép 2 Relay: mọi Relay cùng hàng và cột nhận tổng lửa 2 ụ (không giới hạn). Mỗi lửa +8% ST, +0,4% chí mạng, +4% ST chí mạng, thêm tốc bắn"
  },
  {
   "id": "hopca",
   "ten": "Quantum Choir",
   "bac": "vang",
   "dcdw": "Cosmem",
-  "kyNang": "Harmony: each touching same-star turret +25% damage, +8% crit damage; 2/3/4 Harmony unlock a 2nd target, +30% fire rate, echo hits",
+  "kyNang": "Harmony: each touching same-star turret +35% damage, +8% crit damage; 2/3/4 Harmony unlock a 2nd target, +30% fire rate, echo hits",
   "vai": "tc",
   "ho": "star",
   "ten_vi": "Hợp Xướng Lượng Tử",
-  "kyNang_vi": "Hoà âm: mỗi ụ kề cùng sao +25% ST, +8% ST chí mạng; 2/3/4 hoà âm mở mục tiêu thứ 2, +30% tốc, đòn vang"
+  "kyNang_vi": "Hoà âm: mỗi ụ kề cùng sao +35% ST, +8% ST chí mạng; 2/3/4 hoà âm mở mục tiêu thứ 2, +30% tốc, đòn vang"
  },
  {
   "id": "luutru",
   "ten": "Fusion Archive",
   "bac": "vang",
   "dcdw": "Aurora",
-  "kyNang": "Every real merge gives +1 charge to one random Archive: +1% damage each, rewards at 10/20/30/40",
+  "kyNang": "Every real merge gives +1 charge to one random Archive: +2% damage each, rewards at 10/20/30/40",
   "vai": "tc",
   "ho": "summon",
   "ten_vi": "Kho Lưu Hợp Nhất",
-  "kyNang_vi": "Mỗi lần ghép thật +1 điểm cho 1 Archive ngẫu nhiên: +1% ST mỗi điểm, thưởng mốc 10/20/30/40"
+  "kyNang_vi": "Mỗi lần ghép thật +1 điểm cho 1 Archive ngẫu nhiên: +2% ST mỗi điểm, thưởng mốc 10/20/30/40"
  },
  {
   "id": "xuonganh",

@@ -185,7 +185,7 @@ function danhDauDoc(E, T, B) {
   if (ms(T, 7) && !E.d.khangCham) { E.cham = Math.max(E.cham, 0.15); E.chamT = Math.max(E.chamT, 5); } // 7★ NEUROTOXIN
 }
 SKILLS.tia = { // Bắn Tỉa (Artemis): nhắm quái nhiều máu nhất; +100% vào quái to / trùm
-  vai: 'tc', dmg: 69.6, toc: 0.35, nham: 'mau',
+  vai: 'tc', dmg: 51.8, toc: 0.47, nham: 'mau', // 09/11 TỐC BẮN (người dùng: "bắn không thấy dame vì tốc bắn quá chậm"): tốc 0.35 → 0.47, ST 69.6 → 51.8 (DPS giữ)
   mo: () => '+100% vs big enemies & bosses',
   ban(G, B, T, E) {
     giat(T, 1.6); const [x, y] = chopNong(T, 34); phutKhoi(x, y, 1); SND.tia();
@@ -275,7 +275,7 @@ SKILLS.laser = { // Laser (Nebula): tia liên tục, giữ càng lâu càng mạ
   },
 };
 SKILLS.mortar = { // Súng Cối (Nade): bắn quái ngẫu nhiên, đạn vòng cao nổ lan
-  vai: 'tc', dmg: 27.5, toc: 0.4, nham: 'ngau',
+  vai: 'tc', dmg: 19.6, toc: 0.56, nham: 'ngau', // 09/11 TỐC BẮN (người dùng: "bắn không thấy dame vì tốc bắn quá chậm"): tốc 0.4 → 0.56, ST 27.5 → 19.6 (DPS giữ)
   mo: (T) => 'Splash 46 px · random targets · cluster shell in ' + (3 - (T.banLan % 3)),
   ban(G, B, T, E) {
     giat(T, 1.8); const [x, y] = chopNong(T, 30); phutKhoi(x, y, 3); SND.phao();
@@ -292,7 +292,7 @@ SKILLS.mortar = { // Súng Cối (Nade): bắn quái ngẫu nhiên, đạn vòng
 };
 // ============ VÀNG ============
 SKILLS.railgun = { // Railgun (Removal Tee): BINGO — hàng ngang ĐẦY Railgun +sát thương, cột dọc ĐẦY Railgun +tốc bắn; tia xuyên
-  vai: 'tc', dmg: 70, toc: 0.33, nham: 'dau', // đợt vai trò: −14% (đơn mục tiêu vượt trần ngách Huyền thoại)
+  vai: 'tc', dmg: 46.2, toc: 0.5, nham: 'dau', // 09/11 TỐC BẮN: tốc 0.33 → 0.5, ST 70 → 46.2 (DPS giữ) · đợt vai trò: −14% (đơn mục tiêu vượt trần ngách Huyền thoại)
   bingo(B, T) {
     const c = T.o % 5, h = (T.o / 5) | 0; let ngang = 0, doc = 0;
     for (let i = 0; i < 5; i++) { const X = B.t[h * 5 + i]; if (X && X.id === 'railgun' && !X.st.da) ngang++; /* ô ĐÁ không còn là ụ (DCDW: chỉ chiếm ô) → không tính bingo */ }
@@ -450,12 +450,13 @@ SKILLS.blackhole = {
   veThem(ctx, T, S, al, R) { if (T.bhA && !MOT_VONG) { ctx.globalCompositeOperation = 'lighter'; PX.vong(ctx, 0, 0, S * 0.46, 2, '#c070ff', al * (0.55 + 0.25 * Math.sin(R.t * 6))); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al; } }, // vòng tím: chiêu đã nạp cho hố kế
 };
 SKILLS.overlord = { // Overlord (Jacheongbi): nạp chậm, đầy thì bắn siêu sấm nổ diện rộng
-  vai: 'tc', dmg: 28, toc: 1,
-  mo: (T) => 'Charge ' + ((7 - 0.5 * (T.sao - 1)) / nhip3(T)).toFixed(1) + 's · thunder ×9 in 92 px · aftershock arcs ×2 to 4 more',
+  // 09/11 TỐC BẮN: giữ bản sắc nạp chậm nhưng rút ngắn: nạp (7 − 0.5/★) → (5.6 − 0.4/★) giây, ST 28 → 22.4 (DPS giữ)
+  vai: 'tc', dmg: 22.4, toc: 1, NAP: 5.6, NAP_SAO: 0.4, napS(T) { return this.NAP - this.NAP_SAO * (T.sao - 1); },
+  mo: (T) => 'Charge ' + (SKILLS.overlord.napS(T) / nhip3(T)).toFixed(1) + 's · thunder ×9 in 92 px · aftershock arcs ×2 to 4 more',
   capNhat(G, B, T, dt) {
     const E = quaiDau(B);
     xoayDau(T, E, dt);
-    T.nap = Math.min(1, T.nap + dt * (1 + T.buf.toc) / (7 - 0.5 * (T.sao - 1)));
+    T.nap = Math.min(1, T.nap + dt * (1 + T.buf.toc) / this.napS(T));
     if (T.nap >= 1 && E) {
       const c = tamU(T);
       if (Math.abs(gocLech(T.goc, Math.atan2(E.y - c.y, E.x - c.x))) > 0.2) return true;

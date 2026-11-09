@@ -207,7 +207,7 @@ function lanDoc(E, B) {
 // ụ tự quản lý nhịp (không có "phát/giây" cố định): mô tả nhịp riêng
 const nhip3 = (T) => (T && T.id && mocChung(T, 3) ? 1.2 : 1); // mốc chung 3★ QUICK HANDS (+20% nạp) — số giây hiển thị = số thật
 const NHIP = {
-  laser: () => 'continuous beam', overlord: (T) => 'charges ' + ((7 - 0.5 * (T.sao - 1)) / nhip3(T)).toFixed(1) + 's',
+  laser: () => 'continuous beam', overlord: (T) => 'charges ' + (SKILLS.overlord.napS(T) / nhip3(T)).toFixed(1) + 's',
   wallgen: (T) => 'wall every ' + (Math.max(5, 9 - 0.4 * T.sao) / nhip3(T)).toFixed(1) + 's', blackhole: (T) => 'hole every ' + (SKILLS.blackhole.ky(T) / nhip3(T)).toFixed(1) + 's',
   vungdoc: (T) => 'pool every ' + SKILLS.vungdoc.ky(T).toFixed(1) + 's', min: (T) => 'mine every ' + (SKILLS.min.ky(T) / nhip3(T)).toFixed(1) + 's',
   baotuyet: (T) => 'pulse every ' + SKILLS.baotuyet.ky(T).toFixed(1) + 's', lophanung: () => 'aura 2.5 ticks/s',

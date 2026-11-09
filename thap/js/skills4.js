@@ -197,11 +197,11 @@ HU.truyNaVe = { // ký hiệu "$" lục giác trên đầu mọi quái truy nã 
 // G1 · ECLIPSE (nhatthuc) — Vàng TC: đổi chế độ mỗi 8 s. NGÀY: tia nóng vào quái đầu ×d + CHÁY 4 s. ĐÊM: sóng trăng hình nón 100 px ×0.6, chậm 25% 2 s.
 //      7★ NHẬT THỰC: mỗi lần đổi, 1.5 s cả hai chế độ + nổ vòng ×4 quanh quái đầu. 2 Eclipse luôn lệch pha.
 // =====================================================================================================
-SKILLS.nhatthuc = {
-  vai: 'tc', dmg: 15, toc: 0.9, nham: 'dau',
-  d: (T) => sao7(T, [1.5, 1.6, 1.7, 1.8, 2, 2.2, 2.5]),
+SKILLS.nhatthuc = { // 09/11 gánh hậu kỳ (bot: bộ Nhật Thực/Ember/Hợp Xướng gãy ~31): tốc 0.9 → 1.5, tia ngày ×1.5–2.5 → ×2.2–3.8, cháy 40% → 60%, nón đêm ×0.6 → ×1
+  vai: 'tc', dmg: 15, toc: 1.5, nham: 'dau', DEM_K: 1.0, CHAY_K: 0.6,
+  d: (T) => sao7(T, [2.2, 2.4, 2.6, 2.8, 3.1, 3.4, 3.8]),
   sinh(G, T) { const B = G.ban[T.ban]; const khac = B && B.t.find(X => X && X.id === 'nhatthuc' && X !== T); T.dem = khac ? !khac.dem : false; T.doiT = 8; T.ca = 0; },
-  mo: (T) => (T.dem ? 'NIGHT: 100 px moon cone ×0.6, slows 25%' : 'DAY: beam ×' + SKILLS.nhatthuc.d(T) + ' + burn 4s') + ' · swaps in ' + Math.ceil(T.doiT || 0) + 's' + (T.sao >= 7 ? ' · ECLIPSE: both modes 1.5s + ×4 ring on each swap' : ''),
+  mo: (T) => (T.dem ? 'NIGHT: 100 px moon cone ×' + SKILLS.nhatthuc.DEM_K + ', slows 25%' : 'DAY: beam ×' + SKILLS.nhatthuc.d(T) + ' + burn 4s') + ' · swaps in ' + Math.ceil(T.doiT || 0) + 's' + (T.sao >= 7 ? ' · ECLIPSE: both modes 1.5s + ×4 ring on each swap' : ''),
   capNhat(G, B, T, dt) {
     T.doiT = (T.doiT == null ? 8 : T.doiT) - dt; T.ca = Math.max(0, (T.ca || 0) - dt);
     if (T.doiT <= 0) {
@@ -216,12 +216,12 @@ SKILLS.nhatthuc = {
     giat(T, 0.8);
     if (ngay) {
       trung(E, dmg * this.d(T), { B, mau: '#ffcc33' }); G.hu.push({ k: 'tiaTia', t: 0, song: 0.22, x0: x, y0: y, x1: E.x, y1: E.y, mau: '#ffcc33' });
-      if (!E.chet) { E.chayT = 4; E.chayD = dmg * 0.4; E.chayB = B; if (!G.hu.some(o => o.k === 'chay' && o.E === E)) G.hu.push({ k: 'chay', t: 0, song: 30, E, T }); }
+      if (!E.chet) { E.chayT = 4; E.chayD = dmg * this.CHAY_K; E.chayB = B; if (!G.hu.some(o => o.k === 'chay' && o.E === E)) G.hu.push({ k: 'chay', t: 0, song: 30, E, T }); }
       SND.tia();
     }
     if (dem) {
       const g = Math.atan2(E.y - y, E.x - x);
-      for (const Q of dsMucTieu(B)) { const d = Math.hypot(Q.x - x, Q.y - y), lech = Math.abs(gocLech(g, Math.atan2(Q.y - y, Q.x - x))); if (Q === E || (lech < 0.45 && d < Math.hypot(E.x - x, E.y - y) + 100)) { trung(Q, dmg * 0.6, { B, mau: '#9fb4ff' }); if (!Q.d.khangCham) { Q.cham = Math.max(Q.cham, Q.trum ? Math.min(0.25, HOTRO.CHAM_TRUM) : 0.25); Q.chamT = Math.max(Q.chamT, 2); } } }
+      for (const Q of dsMucTieu(B)) { const d = Math.hypot(Q.x - x, Q.y - y), lech = Math.abs(gocLech(g, Math.atan2(Q.y - y, Q.x - x))); if (Q === E || (lech < 0.45 && d < Math.hypot(E.x - x, E.y - y) + 100)) { trung(Q, dmg * this.DEM_K, { B, mau: '#9fb4ff' }); if (!Q.d.khangCham) { Q.cham = Math.max(Q.cham, Q.trum ? Math.min(0.25, HOTRO.CHAM_TRUM) : 0.25); Q.chamT = Math.max(Q.chamT, 2); } } }
       G.hu.push({ k: 'non', t: 0, song: 0.3, x, y, g, L: Math.hypot(E.x - x, E.y - y) + 100 });
       if (!ngay) SND.bang();
     }

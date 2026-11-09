@@ -78,18 +78,21 @@ function vm1Fx(id, x, y, w, song, mau) { G.hu.push({ k: 'vm1Fx', t: 0, song: son
 //      lửa đi theo cờ ô 'r' (dongbo.js) từ máy chủ bàn → 2 máy cùng số.
 // =====================================================================================================
 SKILLS.lualien = {
-  vai: 'tc', dmg: 17, toc: 1.0, nham: 'dau', napMau: null,
-  DMG: 0.08, CRIT: 0.004, CDMG: 0.04,
+  // 09/11 (người dùng: "Lửa Thập Tự 260 lửa, 18k dame mà bắn không nổi" — phát to nhưng chậm, đơn mục tiêu): ST 17 → 24, tốc 1.0 → 1.5,
+  //   lửa còn cho TỐC BẮN trần mềm: +TOC_MAX × n / (n + TOC_K) (10 lửa +29%, 60 lửa +100%, 260 lửa +162%, không vượt +200%)
+  vai: 'tc', dmg: 24, toc: 1.5, nham: 'dau', napMau: null,
+  DMG: 0.08, CRIT: 0.004, CDMG: 0.04, TOC_MAX: 2.0, TOC_K: 60,
+  tocLua(n) { return n > 0 ? this.TOC_MAX * n / (n + this.TOC_K) : 0; },
   tran(T) { return Infinity; }, // KHÔNG TRẦN (08/11) — giữ hàm cho chỗ gọi cũ
   bac: (n) => (n >= 70 ? 4 : n >= 50 ? 3 : n >= 30 ? 2 : n >= 10 ? 1 : 0),
   ICON: ['fx_cuuvi_dan', 'lua_t1', 'lua_t2', 'lua_t3', 'lua_t4'],
   icon(n) { return this.ICON[this.bac(n)]; },
   mo(T) {
     const n = Math.min(this.tran(T), T.lc || 0);
-    return 'Flames ' + n + ' → +' + Math.round(n * this.DMG * 100) + '% damage, +' + +(n * this.CRIT * 100).toFixed(1) + '% crit chance, +' + Math.round(n * this.CDMG * 100) + '% crit damage · each flame: +8% damage, +0.4% crit (crit max 100%), +4% crit damage · new Relays start with flames = ★ · when an Ember leaves the board for any reason, its flames pass to Embers in its row and column · merging two Embers: every other Ember in the merge tile\'s row and column gains both Embers\' flames · Embers that stay (stone, frozen, transformed, lost a star) keep their flames · no flame limit';
+    return 'Flames ' + n + ' → +' + Math.round(n * this.DMG * 100) + '% damage, +' + +(n * this.CRIT * 100).toFixed(1) + '% crit chance, +' + Math.round(n * this.CDMG * 100) + '% crit damage, +' + Math.round(this.tocLua(n) * 100) + '% fire rate · each flame: +8% damage, +0.4% crit (crit max 100%), +4% crit damage, and flames raise fire rate (soft cap, max +' + Math.round(this.TOC_MAX * 100) + '%) · new Relays start with flames = ★ · when an Ember leaves the board for any reason, its flames pass to Embers in its row and column · merging two Embers: every other Ember in the merge tile\'s row and column gains both Embers\' flames · Embers that stay (stone, frozen, transformed, lost a star) keep their flames · no flame limit';
   },
   sinh(G, T) { if (T.lc == null) T.lc = Math.min(this.tran(T), Math.max(1, T.sao | 0)); },
-  capNhat(G, B, T) { const n = Math.min(this.tran(T), T.lc || 0); if (n) { T.buf.dmg += n * this.DMG; T.buf.crit += n * this.CRIT; T.buf.cdmg = (T.buf.cdmg || 0) + n * this.CDMG; } return false; },
+  capNhat(G, B, T) { const n = Math.min(this.tran(T), T.lc || 0); if (n) { T.buf.dmg += n * this.DMG; T.buf.crit += n * this.CRIT; T.buf.cdmg = (T.buf.cdmg || 0) + n * this.CDMG; T.buf.toc += this.tocLua(n); } return false; },
   ban(G, B, T, E) {
     giat(T, 0.6); const [x, y] = chopNong(T, 22); SND.lien();
     const dmg = dmgU(T), nv = Math.min(8, ((T.lc || 0) / 10) | 0); // nv: chỉ cỡ hình
@@ -287,15 +290,15 @@ HU.vm1Tia = { // (cũ — thay bằng HU.vm1Vet) giữ cho ảnh chụp / bản 
 //      Mỗi Harmony +25% sát thương +8% ST chí mạng · 2 = bắn thêm 1 mục tiêu (50%) · 3 = +30% tốc bắn · 4 = +50% ST chí mạng và đòn VANG 1.5× mỗi loạt thứ 3.
 //      7★: +25% tốc bắn. Tính lại mỗi khung (chỉ đọc bàn) → tất định online.
 // =====================================================================================================
-SKILLS.hopca = {
-  vai: 'tc', dmg: 15, toc: 1.0, nham: 'dau',
+SKILLS.hopca = { // 09/11 gánh hậu kỳ (đơn mục tiêu, Hoà âm khó đủ): ST 15 → 24, tốc 1.0 → 2.0, mỗi Hoà âm +25% → +35% ST, mục tiêu thứ 2 50% → 80%
+  vai: 'tc', dmg: 24, toc: 2.0, nham: 'dau', HOA_DMG: 0.35, HAI_K: 0.8,
   hoa(B, T) { let n = 0; if (!B || !B.t) return 0; for (const X of keCan(B, T.o)) if (X && X.sao === T.sao && !X.st.da) n++; return Math.min(4, n); },
   // thưởng thuần theo số Harmony h (+ 7★)
-  thuong(h, sao) { return { dmg: 0.25 * h, cdmg: 0.08 * h + (h >= 4 ? 0.5 : 0), toc: (h >= 3 ? 0.30 : 0) + (sao >= 7 ? 0.25 : 0), hai: h >= 2, vang: h >= 4 }; },
+  thuong(h, sao) { return { dmg: this.HOA_DMG * h, cdmg: 0.08 * h + (h >= 4 ? 0.5 : 0), toc: (h >= 3 ? 0.30 : 0) + (sao >= 7 ? 0.25 : 0), hai: h >= 2, vang: h >= 4 }; },
   mo(T) {
     const B = G.ban[T.ban], h = B ? this.hoa(B, T) : 0, t = this.thuong(h, T.sao);
     return 'Harmony ' + h + '/4 → +' + Math.round(t.dmg * 100) + '% damage, +' + Math.round(t.cdmg * 100) + '% crit damage' + (t.toc ? ', +' + Math.round(t.toc * 100) + '% fire rate' : '') +
-      ' · each touching turret (up, down, left, right) with the SAME ★ = 1 Harmony: +25% damage, +8% crit damage · 2: also shoots a 2nd enemy (50%) · 3: +30% fire rate · 4: +50% crit damage and an echo hit (150%) every 3rd shot · 7★: +25% fire rate · stones do not count';
+      ' · each touching turret (up, down, left, right) with the SAME ★ = 1 Harmony: +' + Math.round(this.HOA_DMG * 100) + '% damage, +8% crit damage · 2: also shoots a 2nd enemy (' + Math.round(this.HAI_K * 100) + '%) · 3: +30% fire rate · 4: +50% crit damage and an echo hit (150%) every 3rd shot · 7★: +25% fire rate · stones do not count';
   },
   capNhat(G, B, T) {
     const h = this.hoa(B, T), t = this.thuong(h, T.sao);
@@ -312,7 +315,7 @@ SKILLS.hopca = {
     banDan({ img: 'dan_tia', x, y, muc: E, px: E.x, py: E.y, sp: 640, co: 14, B, T, trung: (G, d, M) => { if (M) { trung(M, dmg, { B, mau: '#e6c8ff' }); if (vang && !M.chet) trung(M, dmg * 1.5, { B, T, mau: '#ffffff' }); } FX.vong1(d.x, d.y, 3, 10 + h * 3, '#d9b8ff', 0.2, 2); } });
     if (t.hai) { // Harmony 2+: thêm 1 mục tiêu khác (quái kế quái đầu), 50%
       let E2 = null, best = 1e9; for (const Q of dsMucTieu(B)) { if (Q === E || Q.chet) continue; const r = G.duong[Q.p].len - Q.s; if (r < best) { best = r; E2 = Q; } }
-      if (E2) banDan({ img: 'dan_tia', x, y, muc: E2, px: E2.x, py: E2.y, sp: 640, co: 11, B, T, trung: (G, d, M) => { if (M) trung(M, dmg * 0.5, { B, mau: '#e6c8ff' }); } });
+      if (E2) banDan({ img: 'dan_tia', x, y, muc: E2, px: E2.x, py: E2.y, sp: 640, co: 11, B, T, trung: (G, d, M) => { if (M) trung(M, dmg * SKILLS.hopca.HAI_K, { B, mau: '#e6c8ff' }); } });
     }
   },
 };
@@ -324,15 +327,15 @@ SKILLS.hopca = {
 //      Mạch Máu đánh dấu, buff Anvil, trứng nở… KHÔNG phải ghép. Ụ mới 0 điểm. Mỗi điểm +1% ST. Mốc: 10 +15% tốc · 20 +8% chí mạng · 30 +25% ST ·
 //      40 +40% ST chí mạng · 50/60/70 thêm +20/+30/+40% ST. Trần 40 (LV9) → 50 (LV11) → 60 (LV13) → 70 (LV15). Ngẫu nhiên: rngHat(hạt trận + bàn + số lần ghép).
 // =====================================================================================================
-SKILLS.luutru = {
-  vai: 'tc', dmg: 15, toc: 1.0, nham: 'dau',
+SKILLS.luutru = { // 09/11 gánh hậu kỳ (đơn mục tiêu, điểm chia ngẫu nhiên cho 1 Archive): ST 15 → 24, tốc 1.0 → 2.0, mỗi điểm +1% → +2% ST
+  vai: 'tc', dmg: 24, toc: 2.0, nham: 'dau', DIEM: 0.02,
   tran(T) { const k = VM1.k(T); return k >= 6 ? 70 : k >= 4 ? 60 : k >= 2 ? 50 : 40; },
   MOC: [[10, 'toc', 0.15], [20, 'crit', 0.08], [30, 'dmg', 0.25], [40, 'cdmg', 0.40], [50, 'dmg', 0.20], [60, 'dmg', 0.30], [70, 'dmg', 0.40]],
-  thuong(n) { const r = { dmg: 0.01 * n, toc: 0, crit: 0, cdmg: 0, moc: 0 }; for (const [m, k, v] of this.MOC) if (n >= m) { r[k] += v; r.moc = m; } return r; },
+  thuong(n) { const r = { dmg: this.DIEM * n, toc: 0, crit: 0, cdmg: 0, moc: 0 }; for (const [m, k, v] of this.MOC) if (n >= m) { r[k] += v; r.moc = m; } return r; },
   mo(T) {
     const cap = this.tran(T), n = Math.min(cap, T.kho || 0), t = this.thuong(n);
     return 'Charges ' + n + '/' + cap + ' → +' + Math.round(t.dmg * 100) + '% damage' + (t.toc ? ', +' + Math.round(t.toc * 100) + '% fire rate' : '') + (t.crit ? ', +' + Math.round(t.crit * 100) + '% crit chance' : '') + (t.cdmg ? ', +' + Math.round(t.cdmg * 100) + '% crit damage' : '') +
-      ' · every real merge on your board gives +1 charge to ONE random Fusion Archive (it flies in) · each charge +1% damage · 10: +15% fire rate · 20: +8% crit chance · 30: +25% damage · 40: +40% crit damage · 50/60/70: +20/30/40% damage · max 40 (LV11 50, LV13 60, LV15 70) · Merge King, Copycat and Teleporter are not merges';
+      ' · every real merge on your board gives +1 charge to ONE random Fusion Archive (it flies in) · each charge +' + Math.round(this.DIEM * 100) + '% damage · 10: +15% fire rate · 20: +8% crit chance · 30: +25% damage · 40: +40% crit damage · 50/60/70: +20/30/40% damage · max 40 (LV11 50, LV13 60, LV15 70) · Merge King, Copycat and Teleporter are not merges';
   },
   sinh(G, T) { if (T.kho == null) T.kho = 0; },
   capNhat(G, B, T) {

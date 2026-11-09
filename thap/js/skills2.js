@@ -224,7 +224,7 @@ SKILLS.nhanmana = { // Máy Nhân Mana (Thisbe): khi GHÉP nhận nhiều mana
 // quái ĐANG CHẬM thật (có % chậm còn hạn, hoặc đang đóng băng) — quái kháng chậm có đồng hồ mà 0% chậm KHÔNG tính
 function biCham(E) { return !!E && ((E.chamT > 0 && E.cham > 0) || E.chan > 0); }
 SKILLS.kiembang = { // Kiếm Băng (Ymir): +400% sát thương vào quái đang bị chậm · bậc XANH họ Frost: hơi lạnh LAN sang quái quanh điểm chém
-  vai: 'tc', dmg: 16.8, toc: 0.75, nham: 'dau',
+  vai: 'tc', dmg: 11.45, toc: 1.1, nham: 'dau', // 09/11 TỐC BẮN (người dùng: "bắn không thấy dame vì tốc bắn quá chậm"): tốc 0.75 → 1.1, ST 16.8 → 11.45 (DPS giữ)
   mo: (T) => '×' + (ms(T, 7) ? 8 : ms(T, 3) ? 6 : 5) + ' damage to slowed enemies · chills enemies within 44 px (20% · 2s)' + (ms(T, 5) ? ' · splinters' : ''),
   chonMuc(G, B) { let m = null, best = 1e9; for (const E of dsMucTieu(B)) { const r = G.duong[E.p].len - E.s - (biCham(E) ? 400 : 0); if (r < best) { best = r; m = E; } } return m; },
   ban(G, B, T, E) {
@@ -706,7 +706,7 @@ SKILLS.anhsang = { // Tháp Ánh Sáng (Venus): quả cầu sáng = số sao; đ
 
 // ===================================================== VÀNG =====================================================
 SKILLS.aten = { // Pháo Thanh Tẩy (Aten): +300% vào quái trúng độc; giết thì nổ lan
-  vai: 'tc', dmg: 36, toc: 0.65, nham: 'dau', // 22.15 → 36 (đo bậc 06/11)
+  vai: 'tc', dmg: 23.4, toc: 1.0, nham: 'dau', // 22.15 → 36 (đo bậc 06/11) · 09/11 TỐC BẮN: tốc 0.65 → 1.0, ST 36 → 23.4 (DPS giữ)
   mo: (T) => '×' + (ms(T, 7) ? 6 : 4) + ' vs poisoned · kills explode ×2 in ' + (ms(T, 3) ? 70 : 50) + ' px' + (ms(T, 5) ? ' (poisons)' : ''),
   chonMuc(G, B) { let m = null, best = 1e9; for (const E of dsMucTieu(B)) { const r = G.duong[E.p].len - E.s - (biDoc(E) ? 400 : 0); if (r < best) { best = r; m = E; } } return m; },
   ban(G, B, T, E) {
@@ -890,12 +890,13 @@ SKILLS.soi = { // Sói Máy (Werewolf) — mỗi lần TRIỆU HỒI / GHÉP ra 
   //     Không Math.random: quyết định chí mạng của lan lấy từ viên chính (móc khiCrit). Vòng sóng vuốt ở điểm trúng: HU.soiLan (chỉ hình).
   //   D = 52 (trước 55, −5% đơn mục tiêu): 1 quái lân cận → +32% (thường) / +42% (thức tỉnh) so với bản cũ; 2 quái → +70% / +89%.
   //   09/11 gánh hậu kỳ (wave 30+ toàn bầy quái tách → Sói là ụ dọn bầy của bộ): D 52 → 58, lan 40%/0.6 ô → 70%/1.0 ô (thức tỉnh 50%/0.8 → 85%/1.2)
-  vai: 'tc', dmg: 58, toc: 1 / 1.8, nham: 'dau',
-  KY: 1.8, KY_TT: 1.2, CACH: 0.1, // giây: nghỉ bản thường · nghỉ loạt thức tỉnh · cách giữa 3 viên
+  //   09/11 TỐC BẮN: nghỉ 1.8 s → 1.2 s, loạt thức tỉnh 1.2 s → 0.8 s, D 58 → 38.7 (DPS giữ)
+  vai: 'tc', dmg: 38.7, toc: 1 / 1.2, nham: 'dau',
+  KY: 1.2, KY_TT: 0.8, CACH: 0.1, // giây: nghỉ bản thường · nghỉ loạt thức tỉnh · cách giữa 3 viên
   LAN_K: 0.7, LAN_K_TT: 0.85, LAN_R: 1.0, LAN_R_TT: 1.2, // đánh lan: hệ số sát thương · bán kính (ô = min(B.cw, B.ch))
   tiLe: (B) => Math.min(0.5, knThe(B, 'soi') / 100),
   sinh(G, T) { T.thuc = rngSinh(T, 6271)() < this.tiLe(G.ban[T.ban]); T.loat = 0; if (T.thuc) setTimeout(() => { SND.thucTinh(); }, 250); },
-  mo: (T) => (T && T.thuc ? 'AWAKENED: 3-barrel volley every 1.2s (3 shots × 50% damage, 0.1s apart) · always crits · splash 85% to enemies within 1.2 tile' : 'NORMAL: one barrel, 1 shot every 1.8s · splash 70% to enemies within 1 tile (crits only if the shot crits) · ' + Math.round(SKILLS.soi.tiLe(T && G.ban[T.ban]) * 100) + '% of summons/merges come out AWAKENED (3 barrels, always crit)') + (ms(T, 3) ? ' · +10% crit' : '') + (ms(T, 5) ? ' · +25% damage' : '') + (ms(T, 7) ? ' · howl: neighbours +25% fire rate' : ''),
+  mo: (T) => (T && T.thuc ? 'AWAKENED: 3-barrel volley every ' + SKILLS.soi.KY_TT + 's (3 shots × 50% damage, 0.1s apart) · always crits · splash 85% to enemies within 1.2 tile' : 'NORMAL: one barrel, 1 shot every ' + SKILLS.soi.KY + 's · splash 70% to enemies within 1 tile (crits only if the shot crits) · ' + Math.round(SKILLS.soi.tiLe(T && G.ban[T.ban]) * 100) + '% of summons/merges come out AWAKENED (3 barrels, always crit)') + (ms(T, 3) ? ' · +10% crit' : '') + (ms(T, 5) ? ' · +25% damage' : '') + (ms(T, 7) ? ' · howl: neighbours +25% fire rate' : ''),
   luonCrit: (T) => !!T.thuc,
   capNhat(G, B, T, dt) { // tự quản nhịp bắn (loạt 3 viên) → luật thuần theo dt, tất định
     if (ms(T, 3)) T.buf.crit += 0.10; // 3★ KEEN FANGS
