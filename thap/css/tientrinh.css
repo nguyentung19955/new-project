@@ -46,3 +46,27 @@ html body #chon #chon-luoi .c.tt-khoa > img.anh, html body #chon #chon-luoi .c.o
 .tt-hoac i { flex: none; font: 800 11px/1 var(--f-hien); font-style: normal; letter-spacing: .06em; text-transform: uppercase; color: #8fd0ff; }
 .tt-hoac span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tt-hoac em { flex: none; font-style: normal; font-weight: 800; color: var(--m-chu); }
+
+/* KHOÁ TÍNH NĂNG theo cấp (THIET-KE §2.2): nút tối + nhãn điều kiện "LV n" (chỉ chữ cho tới khi có ảnh ổ khoá TTA.khoa) */
+.tt-khoa-b { position: absolute; z-index: 4; display: flex; flex-direction: column; align-items: center; gap: 1px; pointer-events: none; text-align: center; }
+.tt-khoa-b b, .tt-khoa-nut b { font: 800 12px/1.05 var(--f-hien); letter-spacing: .04em; color: #ffd677; text-shadow: 0 1px 0 #000, 0 0 3px #000, 0 0 3px #000; }
+.tt-khoa-b small, .tt-khoa-nut small { font: 800 9px/1 var(--f-hien); letter-spacing: .03em; color: #ffb35a; text-shadow: 0 1px 0 #000, 0 0 3px #000; }
+.tt-khoa-b .tt-khoa-i, .tt-khoa-nut .tt-khoa-i { width: 20px; height: 20px; }
+/* HOME: 4 nút bên (SHOP/SPIN) */
+#chon .kt-nut.tt-khoa-tn .kt-nut-o img { filter: grayscale(.85) brightness(.45); }
+#chon .kt-nut.tt-khoa-tn > b { opacity: .55; }
+#chon .kt-nut > .tt-khoa-b { left: 0; right: 0; top: 18px; }
+/* màn cửa hàng: thanh thẻ dưới */
+#chon #kt .kt-tab button.tt-khoa-tn { position: relative; }
+#chon #kt .kt-tab button.tt-khoa-tn > b { opacity: .45; }
+#chon #kt .kt-tab .tt-khoa-b { left: 0; right: 0; top: -8px; flex-direction: row; justify-content: center; gap: 4px; } /* nhãn trên mép nút: không đè tên thẻ (chữ Việt dài) */
+#chon #kt .kt-tab .tt-khoa-b b { font-size: 11px; }
+/* bảng GAME MODE */
+#hm-tam .hm-chec.tt-khoa-tn > img, #hm-tam .hm-chec.tt-khoa-tn > span { opacity: .45; filter: grayscale(.6); }
+#hm-tam .hm-chec.tt-khoa-tn { position: relative; }
+#hm-tam .hm-chec > .tt-khoa-b { position: static; flex: none; margin-left: auto; padding-left: 6px; align-items: flex-end; }
+/* rương / lò rèn khoá: hàng tối, nút điều kiện thay nút mua */
+#chon #kt .tt-khoa-nut { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; }
+#chon #kt .kt-rc.tt-khoa-h .kt-rc-anh { filter: grayscale(.85) brightness(.5); }
+#chon #kt .kt-rc.tt-khoa-h > b, #chon #kt .kt-rc.tt-khoa-h > small { opacity: .55; }
+#chon #kt .kt-h.tt-khoa-h > .kt-r, #chon #kt .kt-h.tt-khoa-h > .kt-h-g { opacity: .5; }
