@@ -69,7 +69,7 @@ function vm1Fx(id, x, y, w, song, mau) { G.hu.push({ k: 'vm1Fx', t: 0, song: son
 //        Mimic, Wild Link, ghép đặc biệt) → lửa của nó truyền theo hàng/cột của Ô GHÉP (ô đích, nơi ụ ra xuất hiện), không theo ô cũ của nó.
 //        Ghép B vào C (đều Ember): mọi Ember khác cùng hàng/cột với ô C nhận lửa B + lửa C (A = 5 + 5 + 5 = 15); mỗi lần ghép chỉ tính 1 lần.
 //        Rời bàn đơn lẻ khác (bán, Blood Circuit nuốt, trùm phá, vỡ do trừ sao…): vẫn theo hàng/cột ô của chính nó.
-//      Ghép Ember chỉ khi CÙNG SAO (luật ghép thường). Ụ ra (nếu bốc trúng Ember) = Ember MỚI, lửa = ★ lúc sinh (09/11 người dùng, Q1 = A).
+//      Ghép Ember chỉ khi CÙNG SAO (luật ghép thường). Ụ ra (nếu bốc trúng Ember) = Ember MỚI, 0 LỬA (người dùng 08/11, game.js ghep; điều phối chốt lại 09/11) — triệu hồi / ụ mới khác vẫn lửa = ★.
 //      Ụ mới sinh: lửa = số sao. TĂNG 08/11 (người dùng: "hơi ít nhỉ, so với các tướng vàng có cộng dồn" — lửa chỉ đến khi Ember RỜI BÀN = tốn kém
 //        → thưởng cao): mỗi lửa +8% sát thương, +0.4 điểm % chí mạng (tổng ≤ 100%, critU), +4% ST chí mạng (cũ +2% / +0.12 / 0).
 //        BỎ TRẦN lửa (cũ LV9 70 → LV15 160; người dùng không thích trần ở kỹ năng cộng dồn đặc biệt) — giữ màu mốc 10/30/50/70.
@@ -89,7 +89,7 @@ SKILLS.lualien = {
   icon(n) { return this.ICON[this.bac(n)]; },
   mo(T) {
     const n = Math.min(this.tran(T), T.lc || 0);
-    return 'Flames ' + n + ' → +' + Math.round(n * this.DMG * 100) + '% damage, +' + +(n * this.CRIT * 100).toFixed(1) + '% crit chance, +' + Math.round(n * this.CDMG * 100) + '% crit damage, +' + Math.round(this.tocLua(n) * 100) + '% fire rate · each flame: +8% damage, +0.4% crit (crit max 100%), +4% crit damage, and flames raise fire rate (soft cap, max +' + Math.round(this.TOC_MAX * 100) + '%) · new Relays start with flames = ★ · when an Ember leaves the board for any reason, its flames pass to Embers in its row and column · merging two Embers: every other Ember in the merge tile\'s row and column gains both Embers\' flames · Embers that stay (stone, frozen, transformed, lost a star) keep their flames · no flame limit';
+    return 'Flames ' + n + ' → +' + Math.round(n * this.DMG * 100) + '% damage, +' + +(n * this.CRIT * 100).toFixed(1) + '% crit chance, +' + Math.round(n * this.CDMG * 100) + '% crit damage, +' + Math.round(this.tocLua(n) * 100) + '% fire rate · each flame: +8% damage, +0.4% crit (crit max 100%), +4% crit damage, and flames raise fire rate (soft cap, max +' + Math.round(this.TOC_MAX * 100) + '%) · new Relays start with flames = ★ · Ember + Ember merged into an Ember: a NEW Ember with 0 flames · when an Ember leaves the board for any reason, its flames pass to Embers in its row and column · merging two Embers: every other Ember in the merge tile\'s row and column gains both Embers\' flames · Embers that stay (stone, frozen, transformed, lost a star) keep their flames · no flame limit';
   },
   sinh(G, T) { if (T.lc == null) T.lc = Math.min(this.tran(T), Math.max(1, T.sao | 0)); },
   capNhat(G, B, T) { const n = Math.min(this.tran(T), T.lc || 0); if (n) { T.buf.dmg += n * this.DMG; T.buf.crit += n * this.CRIT; T.buf.cdmg = (T.buf.cdmg || 0) + n * this.CDMG; T.buf.toc += this.tocLua(n); } return false; },

@@ -107,10 +107,10 @@ const RIENG = { luutru: ['kho'], mimic: ['aurora'] }; // Mimic: ụ ra từ ghé
     R(`var a = dat(0, 'ronglua', 3, { banSao: ${ca}, nhiet: 50 }), b = dat(1, 'ronglua', 3, { banSao: ${cb}, nhiet: 90 }); ghep(B, a, b); var N = B.t[1];`);
     ok(R("N.id === 'ronglua' && N.banSao === false && !N.nhiet"), 'Rồng Máy ' + (ca ? 'bản sao' : 'thật') + ' → ' + (cb ? 'bản sao' : 'thật') + ' (ghép thường ra lại Rồng): ụ mới THẬT, nhiệt 0', R('[N.banSao, N.nhiet].join()'));
   }
-  // Ember: ụ ra cũng là ụ mới (lửa = ★) — lửa A + C chỉ truyền cho Ember KHÁC (09/11)
+  // Ember + Ember ra Ember: Ember MỚI 0 lửa (người dùng 08/11, game.js ghep) — lửa A + C chỉ truyền cho Ember KHÁC
   NAP(ctx, ['lualien']);
   R(`var a = dat(0, 'lualien', 2, { lc: 4 }), b = dat(1, 'lualien', 2, { lc: 3, epxung: 0.4 }); ghep(B, a, b); var N = B.t[1];`);
-  ok(R('N.lc === 3 && !N.epxung'), 'Ember + Ember (2★) ra Ember → Ember MỚI 3★: lửa = ★ (không lấy A + C), Ép Xung không mang', R('[N.lc, N.epxung].join()'));
+  ok(R('N.lc === 0 && !N.epxung'), 'Ember + Ember (2★) ra Ember → Ember MỚI 3★: 0 lửa (không lấy A + C), Ép Xung không mang', R('[N.lc, N.epxung].join()'));
 }
 
 // =====================================================================================================

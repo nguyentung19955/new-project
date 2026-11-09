@@ -4562,6 +4562,7 @@
 "Flames #/# → +#% damage, +#% crit chance": "Lửa #/# → +#% sát thương, +#% tỉ lệ chí mạng",
 "each flame: +#% damage, +#% crit": "mỗi lửa: +#% sát thương, +#% chí mạng",
 "new Relays start with flames = ★": "Relay mới có lửa = số ★",
+"Ember + Ember merged into an Ember: a NEW Ember with 0 flames": "Ember + Ember ghép ra Ember: Ember MỚI, 0 lửa",
 "new Relays start with flames =": "Relay mới có lửa = số",
 "merge # Ember Relays: every Relay in the same row and column gets the two flames added together (it keeps its own if higher)": "ghép # Lửa Thập Tự: mọi Relay cùng hàng và cột nhận tổng lửa 2 ụ (giữ của mình nếu cao hơn)",
 "max # flames (LV# #, LV# #, LV# #)": "tối đa # lửa (LV# #, LV# #, LV# #)",
