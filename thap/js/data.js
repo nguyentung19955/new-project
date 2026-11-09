@@ -282,7 +282,7 @@ function heDB(B, id) { const c = (B && B.capThe && B.capThe[id]) | 0, v = capVD(
 //  pu: bước POWER-UP TRONG TRẬN (B.lv +1…MAX = 4 bước) cho ụ KHÔNG gây sát thương (KIEM.md mục IX 'Đã quyết' #1, kiểu DCDW):
 //      giá trị = giá trị cấp thẻ + pu × số bước — cộng SAU kẹp max của cấp thẻ (power-up luôn có tác dụng), online tất định (B.lv đi theo lệnh nâng)
 const KY_NANG_CAP = {
-  canon: { ten: 'Per stack', base: 50, buoc: 2.5, max: 70, dv: '%', tien: '+', dmg: true }, // Pháo La Bàn (08/11 tổ hợp hướng): +% sát thương mỗi STACK (NSWE + NSWE) — 50% → 70% rải 8 cấp thẻ Vàng LV9→17 // (cũ: 'Per number' 15 → 21%) (LV8, phí 7 cấp)
+  canon: { ten: 'Per stack', base: 175, buoc: 2.5, max: 195, dv: '%', tien: '+', dmg: true }, // 09/11 lần 2: 50→70 thành 175→195 (+125%/stack, kèm tốc + STCM theo stack — skills.js; CONG-DON-EMBER-LABAN-PRISM.md) · Pháo La Bàn (08/11 tổ hợp hướng): +% sát thương mỗi STACK (NSWE + NSWE) — 50% → 70% rải 8 cấp thẻ Vàng LV9→17 // (cũ: 'Per number' 15 → 21%) (LV8, phí 7 cấp)
   saochep: { ten: 'Copy', base: 70, buoc: 4, max: 94, dv: '%', dmg: true },          // bản sao = chỉ số ụ gốc × % này
   mimic: { ten: 'Merge buff', base: 50, buoc: 2, max: 74, dv: '%', tien: '+', dmg: true },
   tudo: { ten: 'Bonus +1★', base: 10, buoc: 2.5, max: 30, dv: '%', dmg: true },          // Wild Link (VÀNG ĐB, 08/11 — trước Tím 10%→28%): xác suất kết quả ghép tự do được +1★ trên sao trung bình (thẻ Vàng LV9→17, 8 cấp: 10% → 30%)

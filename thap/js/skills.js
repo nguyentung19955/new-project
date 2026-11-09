@@ -33,6 +33,10 @@ SKILLS.canon = {
   vai: 'tc', dmg: 20, toc: 0.55, nham: 'dau', // bậc VÀNG (07/11 20:10): 20 × Vàng ×2.6
   BIT: [1, 2, 4, 8], CHU: ['N', 'E', 'S', 'W'], DOC: [0, 2, 3, 1], // bit theo chiều kim đồng hồ (0 N · 1 E · 2 S · 3 W); tên đọc theo thứ tự người dùng N S W E
   DU: 15, MOI: [0, 1.15, 1.25, 1.15, 1.05], TP5: 0.2, // MOI: ×ST mỗi tên lửa theo số hướng. 08/11 +15% (cũ 1.0/1.1/1.0/0.9) bù jackpot TRUE NORTH đã bỏ
+  // 09/11 lần 2 (người dùng: La Bàn KHÔNG dễ tích stack hơn, mà MẠNH HƠN THEO MỖI STACK — docs/demo-hop-tuong/tocban/CONG-DON-EMBER-LABAN-PRISM.md):
+  //   mỗi stack ngoài +% ST theo cấp thẻ (KY_NANG_CAP.canon) còn: +TỐC BẮN trần mềm TOC_MAX × s / (s + TOC_K) và +CDMG ST chí mạng mỗi stack (s = stack hiệu dụng, 5★ ×1.5)
+  TOC_MAX: 3, TOC_K: 2, CDMG: 0.25, // stack 1 +100% · 3 +180% · 7 +233% tốc (trần +300%)
+  tocChong(s) { return s > 0 ? this.TOC_MAX * s / (s + this.TOC_K) : 0; },
   banKinh: (T) => 26 + 5 * T.sao,
   hb: (T) => (((T && T.hb) | 0) & 15) || 1,
   chong: (T) => Math.max(0, (T && T.cmC) | 0),
@@ -49,7 +53,7 @@ SKILLS.canon = {
     if (x === this.DU || y === this.DU) return null; // 08/11 lần 2: chỉ cấm Pháo chưa đủ hướng + Pháo NSWE (2 chiều kéo)
     return { hb: u, sao, chong: 0, kieu: u === x && u === y ? 'cung' : 'them' }; // cùng hướng / tập con (N+N, NS+N) cũng ghép: hướng = hợp (giữ nguyên), sao = trung bình
   },
-  moiChong: (T) => (knThe(T && G.ban[T.ban], 'canon') || 50) / 100,
+  moiChong: (T) => (knThe(T && G.ban[T.ban], 'canon') || 175) / 100, // 09/11 lần 2: +175% (LV9) → +195% (LV17) mỗi stack
   chongHieu(T) { return this.chong(T) * (ms(T, 5) ? 1.5 : 1); },
   them(T) { return this.moiChong(T) * this.chongHieu(T) + (ms(T, 5) ? this.TP5 : 0); }, // +% ST riêng (stack + POLE STAR 5★) — nhóm ST cộng gộp
   rng(B, o) {
@@ -60,7 +64,7 @@ SKILLS.canon = {
   sinh(G, T) { if (!T.hb) { const B = G.ban[T.ban] || G.ban[0]; T.hb = 1 << (Math.floor(this.rng(B, T.o)() * 4) & 3); } if (T.cmC == null) T.cmC = 0; },
   mo(T) {
     const m = this.hb(T), k = this.dem(m), n = this.chong(T);
-    return 'Directions: ' + this.ten(m) + ' · ' + k + ' homing rocket' + (k > 1 ? 's' : '') + ' (×' + this.MOI[k] + ' damage each) · merge two Compasses to combine their directions · result star = average of the two, rounded up · same directions can merge too (directions stay) · only NSWE cannot merge with a Compass that is not NSWE · NSWE + NSWE adds a stack (no cap): each stack +' + Math.round(this.moiChong(T) * 100) + '% damage' + (m === this.DU ? ' · stacks: ' + n : '');
+    return 'Directions: ' + this.ten(m) + ' · ' + k + ' homing rocket' + (k > 1 ? 's' : '') + ' (×' + this.MOI[k] + ' damage each) · merge two Compasses to combine their directions · result star = average of the two, rounded up · same directions can merge too (directions stay) · only NSWE cannot merge with a Compass that is not NSWE · NSWE + NSWE adds a stack (no cap): each stack +' + Math.round(this.moiChong(T) * 100) + '% damage and +' + Math.round(this.CDMG * 100) + '% crit damage, and stacks raise fire rate (soft cap, max +' + Math.round(this.TOC_MAX * 100) + '%)' + (m === this.DU ? ' · stacks: ' + n + (n ? ' → +' + Math.round(this.moiChong(T) * this.chongHieu(T) * 100) + '% damage, +' + Math.round(this.tocChong(this.chongHieu(T)) * 100) + '% fire rate, +' + Math.round(this.CDMG * this.chongHieu(T) * 100) + '% crit damage' : '') : '');
   },
   // mục tiêu theo hướng h: quái xa nhất về phía đó (hoà: uid nhỏ hơn) — tất định
   mucTieu(B, T, h) {
@@ -70,6 +74,7 @@ SKILLS.canon = {
   },
   capNhat(G, B, T, dt) {
     const E = this.mucTieu(B, T, this.ds(this.hb(T))[0]); if (E) T.muc = E;
+    const s = this.chongHieu(T); if (s > 0) { T.buf.toc += this.tocChong(s); T.buf.cdmg = (T.buf.cdmg || 0) + this.CDMG * s; } // lần 2: tốc + ST chí mạng theo stack
     if (ms(T, 7) && !biKhoa(T)) { // FOUR WINDS: mỗi 8 s 1 loạt tên lửa theo cả 4 hướng
       T.gio = (T.gio || 0) + dt;
       if (T.gio >= 8) { T.gio = 0; let co = false; for (let h = 0; h < 4; h++) { const Q = this.mucTieu(B, T, h); if (Q) { this.banMot(G, B, T, Q, h, 4, 0.7); co = true; } } if (co) giat(T, 1.2); }

@@ -16,6 +16,8 @@ function upSC(s) {
   s = String(s).replace(/(^|[^\p{L}\p{N}])(\p{Lu}[\p{Lu}'’]+)(?![\p{L}\p{N}])/gu, (m, a, w) => a + (UP_GIU[w] || w.toLowerCase()));
   return s.replace(/^([^\p{L}\p{N}]*)(\p{Ll})/u, (m, a, b) => a + b.toUpperCase()); // \p{L}: chữ Việt có dấu (Đạn) không bị viết hoa giữa từ
 }
+// thêm dấu chấm cuối câu chỉ khi câu CHƯA kết thúc bằng . ! ? … (09/11: tránh "…10 điểm.." trên trang ụ)
+const upCham = (s) => { s = String(s == null ? '' : s); return /[.!?…]\s*$/.test(s) || !s.trim() ? s : s + '.'; };
 const upEsc = (v) => String(v == null ? '' : v).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const upTen = (id) => (TEXT.turret[id] && TEXT.turret[id].name) || (G.rosterMap[id] && G.rosterMap[id].ten) || id;
 const upCo = (id) => !!(SKILLS[id] && G.rosterMap[id]);
@@ -112,7 +114,7 @@ function upLuatGhep(id) {
   if (id === 'bienmau') { // Prism Thief: HỢP THỂ (08/11 lần 2) — skills7.js, docs/demo-hop-tuong/tuvan/prism/THIET-KE.md
     L.push(['Colour', 'Each Prism Thief gets 1 random colour when it appears: red kills, gold gives mana, blue freezes, green crits.']);
     L.push(['Fusion', 'Put 4 Prisms of 4 different colours side by side and swipe one line through all 4. They fuse into ONE 4-colour Spectrum Prism on the last tile. The other 3 tiles become empty. This counts as a merge.']);
-    L.push(['Spectrum Prism', 'Has all 4 effects on every hit. Each fusion: +' + Math.round(SKILLS.bienmau.HOP_DMG * 100) + '% damage, +' + Math.round(SKILLS.bienmau.HOP_TOC * 100) + '% fire rate and higher chances. Stacks of all 4 Prisms add up. Star = the highest star of the 4.']);
+    L.push(['Spectrum Prism', 'Has all 4 effects on every hit. Each fusion: +' + Math.round(SKILLS.bienmau.HOP_DMG * 100) + '% damage, +' + Math.round(SKILLS.bienmau.HOP_CDMG * 100) + '% crit damage, faster fire (fusion 1: +' + Math.round(SKILLS.bienmau.tocHop(1) * 100) + '%, fusion 3: +' + Math.round(SKILLS.bienmau.tocHop(3) * 100) + '%) and higher chances. Stacks of all 4 Prisms add up. Star = the highest star of the 4.']);
     L.push(['Fuse again', 'Swipe the mask with 3 Prisms of different colours (the mask counts as any colour), or drag a Spectrum Prism onto another one. The fusion number adds up. No limit.']);
     L.push(['Other merges', 'A Spectrum Prism does not merge normally (no Mimic, no random turret). Merge King raises its star and keeps the fusion. A Copycat copy is a new Prism with a new random colour.']);
     return L.concat([['Stone', 'If Janus Cube petrifies it, it cannot fuse until the stone is broken.']]);
@@ -128,8 +130,8 @@ function upLuatGhep(id) {
     return L.concat([['Stone', 'If Wild Link itself is stone or frozen, it cannot use its skill: a stone Wild Link only merges with stone of the same star.']]);
   }
   if (id === 'mimic') L.push(['Joker merge', 'Merges with any turret of the same star. The result gets +' + Math.round(knThe(null, 'mimic')) + '% damage for 8s.']);
-  else if (sk.ghepDB) L.push([sk.ghepDB.laGhep ? 'Special merge' : 'Drag skill', upSC(mo1 || (TEXT.turret[id] || {}).skill) + '.']);
-  if (sk.ghep) L.push(['Merge trigger', upSC((TEXT.turret[id] || {}).skill || mo1) + '.']);
+  else if (sk.ghepDB) L.push([sk.ghepDB.laGhep ? 'Special merge' : 'Drag skill', upCham(upSC(mo1 || (TEXT.turret[id] || {}).skill))]);
+  if (sk.ghep) L.push(['Merge trigger', upCham(upSC((TEXT.turret[id] || {}).skill || mo1))]);
   L.push(['Normal merge', sk.ghepDB && sk.ghepDB.cungLoai ? 'Two ' + ten + ' of the same star become one ' + ten + ' at +1★ (Golden is kept). Max 7★.' : 'Two ' + ten + ' of the same star merge into a random turret from your deck at +1★. Max 7★.']);
   L.push(['Stone', 'If Janus Cube petrifies it, it only merges with stone of the same star (result: a higher-star stone). Merge King can still raise a stone\'s star; Copycat can still copy it (the copy is a normal turret); Cleanser or Eve breaks the stone.']);
   return L;
@@ -463,9 +465,9 @@ const UP = {
       '<span class="up-bn-ic"><img class="ic" src="' + mvIcURL(id) + '" alt=""></span></div>' +
       // tư vấn C §B15: 3 thuộc tính kỹ năng (mana · hồi chiêu · thời gian) thay lưới 4 ô của trang ụ — giá ×2 mỗi lần dùng ghi ngay trong ô mana
       '<div class="up-spec ba">' + this.o('Mana cost', d.gia + ' · ×2 next') + this.o('Cooldown', d.cd + 's') + this.o('Duration', tt.lau || '—') + '</div>' +
-      this.theKN('Commander skill', upSC(d.mo) + '.', '') + this.hangTest(true);
+      this.theKN('Commander skill', upCham(upSC(d.mo)), '') + this.hangTest(true);
     el.querySelector('.up-b').innerHTML =
-      this.muc(1, 'Skill', '<p class="up-mo">' + upEsc(upSC(d.mo)) + '.</p><p class="up-phu"><b>How to cast.</b> ' + (d.chon ? 'Tap the commander button, then tap a cell on your board.' : 'Tap the commander button during a battle.') + ' The mana cost doubles after each use.</p>' + (d.mo2 ? '<p class="up-phu"><b>Unlock.</b> Reach wave ' + d.mo2.wave + ', or pay ' + d.mo2.ngoc + ' gems in the commander list.</p>' : '')) +
+      this.muc(1, 'Skill', '<p class="up-mo">' + upEsc(upCham(upSC(d.mo))) + '</p><p class="up-phu"><b>How to cast.</b> ' + (d.chon ? 'Tap the commander button, then tap a cell on your board.' : 'Tap the commander button during a battle.') + ' The mana cost doubles after each use.</p>' + (d.mo2 ? '<p class="up-phu"><b>Unlock.</b> Reach wave ' + d.mo2.wave + ', or pay ' + d.mo2.ngoc + ' gems in the commander list.</p>' : '')) +
       this.muc(2, 'How it works', '<dl class="up-dl">' + (tt.dl || []).map(([a, b]) => '<dt>' + upEsc(a) + '</dt><dd>' + upEsc(b) + '</dd>').join('') + '</dl>');
     el.querySelector('.up-tam-ten').textContent = ten;
     el.querySelector('.up-ts-ten').textContent = ten + ' · test range';
@@ -519,7 +521,7 @@ const UP = {
       : this.o('Damage', s1.dmg != null ? s1.dmg : '—', dd('dmg')) + this.oToc(s1.toc, dd('toc')) +
         this.o('Range', tam) + this.o('Target', sk ? upNham(id) : '—')) + '</div>');
     // kỹ năng 1 dòng + Test range
-    P.push(this.theKN(SUP_LOAI[id] ? 'Support skill' : 'Skill', upSC(r.kyNang || '') + '.', grow ? ' · ' + ((GROW[id] && GROW[id].hinh) ? GROW[id].hinh.length : 3) + ' forms' : ''));
+    P.push(this.theKN(SUP_LOAI[id] ? 'Support skill' : 'Skill', upCham(upSC(r.kyNang || '')), grow ? ' · ' + ((GROW[id] && GROW[id].hinh) ? GROW[id].hinh.length : 3) + ' forms' : ''));
     if (sk) P.push(this.hangTest());
     return P.join('');
   },
@@ -529,9 +531,9 @@ const UP = {
     const bs = sk ? upBangSao(id) : [], s1 = bs[0] || {}, moi = HO_MOI[id];
     let n = 1;
     P.push(this.muc(n++, UP_TXT.sec.skill,
-      '<p class="up-mo">' + upEsc(upSC(r.kyNang || '')) + '.</p>' +
+      '<p class="up-mo">' + upEsc(upCham(upSC(r.kyNang || ''))) + '</p>' +
       (vai ? '<p class="up-phu"><b>' + UP_TXT.role[vai] + '.</b> ' + UP_TXT.roleMo[vai] + '</p>' : '') +
-      (moi ? '<p class="up-phu"><b>Its twist:</b> ' + upEsc(upSC(moi)) + '.</p>' : '') +
+      (moi ? '<p class="up-phu"><b>Its twist:</b> ' + upEsc(upCham(upSC(moi))) + '</p>' : '') +
       (s1.kn ? '<div class="up-so1">' + s1.kn.split(/\s·\s/).map(x => '<span>' + upEsc(x) + '</span>').join('') + '</div>' : '') +
       (sk ? '<dl class="up-dl"><dt>Reach</dt><dd>' + upEsc(upTam(id)) + '</dd><dt>Target</dt><dd>' + upEsc(upNham(id)) + '</dd>' +
         (h ? '<dt>Family</dt><dd>' + upEsc(upSC(h.ten)) + ' · tier ' + h.bac + ' of 5</dd>' : '') + '</dl>' : '')));
@@ -612,7 +614,7 @@ const UP = {
     if (g.hinh) return '<div class="up-gd up-gd4">' + g.hinh.map((h, k) =>
       '<div class="up-gd1" style="--g:' + (h.mau || g.mau) + '"><div class="anh"><img class="dau nho" src="assets/' + h.anh + '.png" alt="" onerror="this.onerror=null;this.src=\'' + iconOf(id) + '\'"></div>' +
       '<b>' + upEsc(upSC(h.sao)) + ' · ' + upEsc(upSC(h.ten)) + '</b><span>' + upEsc(upSC(h.mo)) + '</span></div>').join('<img class="up-mt" src="assets/mui_tiep.png" alt="›">') + '</div>' +
-      '<p class="up-phu">' + upEsc(upSC(g.dk)) + '.</p>';
+      '<p class="up-phu">' + upEsc(upCham(upSC(g.dk))) + '</p>';
     // điều kiện chia theo dạng nếu chuỗi tách được thành 3 phần
     let ph = String(g.dk).split(/\s+\/\s+|\s+·\s+/);
     if (ph.length === 2) ph = ['Starting form'].concat(ph);
@@ -621,12 +623,12 @@ const UP = {
       return '<div class="up-gd">' + g.dang.map((k1) => { const k = k1 - 1, t = g.ten[k];
         return '<div class="up-gd1" style="--g:' + g.mau + '"><div class="anh">' + upGdAnh(id, k, anh) + '</div>' +
           '<b>' + upEsc(upSC(t)) + '</b>' + (g.dangMo && g.dangMo[k] ? '<span>' + upEsc(upSC(g.dangMo[k])) + '</span>' : '') + '</div>'; }).join('<b class="up-hoac">or</b>') + '</div>' +
-        '<p class="up-phu">' + upEsc(upSC(g.dk)) + '.</p>';
+        '<p class="up-phu">' + upEsc(upCham(upSC(g.dk))) + '</p>';
     }
     return '<div class="up-gd">' + g.ten.map((t, k) =>
       '<div class="up-gd1" style="--g:' + g.mau + '"><div class="anh">' + upGdAnh(id, k, anh) + '</div>' +
       '<b>' + (k + 1) + ' · ' + upEsc(upSC(t)) + '</b>' + (ph && ph[k] ? '<span>' + upEsc(upSC(ph[k])) + '</span>' : '') + '</div>').join('<img class="up-mt" src="assets/mui_tiep.png" alt="›">') + '</div>' +
-      '<p class="up-phu">' + upEsc(upSC(g.dk)) + '.</p>' + (g.lap ? '<p class="up-ghi">Cycles back to stage 1 after it fires.</p>' : '');
+      '<p class="up-phu">' + upEsc(upCham(upSC(g.dk))) + '</p>' + (g.lap ? '<p class="up-ghi">Cycles back to stage 1 after it fires.</p>' : '');
   },
   chanHTML(id, dc) {
     const anh = REN.kyHieuURL ? REN.kyHieuURL(dc.k) : '', mau = (BUFF[dc.k] || {}).mau || '#fff';

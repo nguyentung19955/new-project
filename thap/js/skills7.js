@@ -313,7 +313,11 @@ SKILLS.bienmau = { // 09/11 gánh hậu kỳ: ST 15 → 24, tốc 1 → 2, tỉ 
   TEN: ['RED', 'GOLD', 'BLUE', 'GREEN'], ANH: ['bienmau_m_do', 'bienmau_m_vang', 'bienmau_m_lam', 'bienmau_m_luc'],
   HOP: ['bienmau_hop_1', 'bienmau_hop_2', 'bienmau_hop_3', 'bienmau_hop_4'], // mặt nạ 4 màu: bậc sáng theo n (1–2 · 3–4 · 5–9 · 10+)
   TI: [0.08, 0.10, 0.12, 0.15], MANA_S: 6,
-  HOP_DMG: 3, HOP_TOC: 0.10, HOP_TI: 0.25,
+  HOP_DMG: 6, HOP_TOC: 0.10, HOP_TI: 0.25, // 09/11 lần 2: HOP_DMG 3 → 6
+  // 09/11 lần 2 (người dùng: Prism KHÔNG dễ hợp thể hơn, mà MẠNH HƠN THEO MỖI LẦN HỢP THỂ — docs/demo-hop-tuong/tocban/CONG-DON-EMBER-LABAN-PRISM.md):
+  //   mỗi n ngoài +HOP_DMG ST: tốc bắn trần mềm HOP_TOC × n + TOC_MAX × n / (n + TOC_K) và +HOP_CDMG ST chí mạng
+  HOP_CDMG: 0.5, TOC_MAX: 3, TOC_K: 2, // n 1: +110% tốc · 3: +210% · 10: +350%
+  tocHop(n) { return n > 0 ? this.HOP_TOC * n + this.TOC_MAX * n / (n + this.TOC_K) : 0; },
   mau: (T) => (T.pm | 0) & 3,
   n: (T) => (T && T.id === 'bienmau' ? T.pf | 0 : 0),
   bac: (n) => (n >= 10 ? 3 : n >= 5 ? 2 : n >= 3 ? 1 : 0),
@@ -328,7 +332,7 @@ SKILLS.bienmau = { // 09/11 gánh hậu kỳ: ST 15 → 24, tốc 1 → 2, tỉ 
   mo(T) {
     const n = this.n(T);
     if (n) {
-      return 'SPECTRUM PRISM · fusion ' + n + ': all 4 colours on every hit · +' + Math.round(this.HOP_DMG * 100 * n) + '% damage, +' + Math.round(this.HOP_TOC * 100 * n) + '% fire rate · chances ' +
+      return 'SPECTRUM PRISM · fusion ' + n + ': all 4 colours on every hit · +' + Math.round(this.HOP_DMG * 100 * n) + '% damage, +' + Math.round(this.tocHop(n) * 100) + '% fire rate, +' + Math.round(this.HOP_CDMG * 100 * n) + '% crit damage · chances ' +
         [0, 1, 2, 3].map(q => Math.round(this.ti(T, q) * 100) + '%').join(' / ') + ' (red / gold / blue / green) · stacks max ' + this.tran(T) + ' each: ' +
         [0, 1, 2, 3].map(q => this.TEN[q].toLowerCase() + ' ' + this.st(T, q)).join(', ') +
         ' · FUSE AGAIN: swipe it with 3 Prisms of different colours, or drag it onto another Spectrum Prism · every fusion makes it stronger, no limit';
@@ -360,7 +364,7 @@ SKILLS.bienmau = { // 09/11 gánh hậu kỳ: ST 15 → 24, tốc 1 → 2, tỉ 
   capNhat(G, B, T) {
     const n = this.n(T);
     for (const q of this.ds(T)) { const st = this.st(T, q); if (q === 1) T.buf.dmg += 0.01 * st; if (q === 3) T.buf.cdmg = (T.buf.cdmg || 0) + 0.05 * st; }
-    if (n) { T.buf.dmg += this.HOP_DMG * n; T.buf.toc += this.HOP_TOC * n; }
+    if (n) { T.buf.dmg += this.HOP_DMG * n; T.buf.toc += this.tocHop(n); T.buf.cdmg = (T.buf.cdmg || 0) + this.HOP_CDMG * n; }
     return false;
   },
   rng(B, T) { T.pmN = (T.pmN | 0) + 1; const hat = (typeof ONS !== 'undefined' && ONS.on ? ONS.seed : G.hat) || 1; return rngHat((hat * 2833 + B.i * 401 + T.o * 1009 + T.pmN * 7919) | 0)(); },

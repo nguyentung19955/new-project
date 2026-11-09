@@ -37,6 +37,7 @@ const VM1 = {
 };
 // mục kỹ năng theo cấp cho bảng chung — 08/11: Ember / Choir / Archive dùng trần + mốc riêng (không còn % theo cấp); Foundry: +3%/cấp (Đặc biệt)
 Object.assign(KY_NANG_CAP, {
+  lualien: { ten: 'Flame limit', base: 90, buoc: 12, max: 186, dv: '', dmg: true }, // Ember (09/11 lần 2): trần lửa CỨNG theo cấp thẻ LV9 90 → LV17 186 (dmg: vẫn +% ST mỗi cấp)
   xuonganh: { ten: 'Hero rate', base: 80, buoc: 2.4, max: 99.2, dv: '%', tien: '+', dmg: true },
 });
 // hiệu ứng 1 lần (dải 16 khung) tại (x,y) — chưa có ảnh: vòng mảnh PNG màu ụ
@@ -72,7 +73,7 @@ function vm1Fx(id, x, y, w, song, mau) { G.hu.push({ k: 'vm1Fx', t: 0, song: son
 //      Ghép Ember chỉ khi CÙNG SAO (luật ghép thường). Ụ ra (nếu bốc trúng Ember) = Ember MỚI, 0 LỬA (người dùng 08/11, game.js ghep; điều phối chốt lại 09/11) — triệu hồi / ụ mới khác vẫn lửa = ★.
 //      Ụ mới sinh: lửa = số sao. TĂNG 08/11 (người dùng: "hơi ít nhỉ, so với các tướng vàng có cộng dồn" — lửa chỉ đến khi Ember RỜI BÀN = tốn kém
 //        → thưởng cao): mỗi lửa +8% sát thương, +0.4 điểm % chí mạng (tổng ≤ 100%, critU), +4% ST chí mạng (cũ +2% / +0.12 / 0).
-//        BỎ TRẦN lửa (cũ LV9 70 → LV15 160; người dùng không thích trần ở kỹ năng cộng dồn đặc biệt) — giữ màu mốc 10/30/50/70.
+//        (08/11 bỏ trần lửa — 09/11 lần 2 người dùng chốt lại TRẦN CỨNG theo cấp thẻ: LV9 90 → +12/cấp → LV17 186, xem SKILLS.lualien.tran) — giữ màu mốc 10/30/50/70.
 //        Đột phá độ khó 5 (cũ 3): I +25% tốc · II +50% STCM · III +45% ST · IV +15% chí mạng & +85% STCM. Đột phá 10/30/50/70.
 //      Icon lửa theo mốc: <10 cam · ≥10 trắng · ≥30 xanh · ≥50 vàng · ≥70 đỏ (lua_t1–4). Online: bàn con rối (B.net) không tự truyền —
 //      lửa đi theo cờ ô 'r' (dongbo.js) từ máy chủ bàn → 2 máy cùng số.
@@ -80,16 +81,18 @@ function vm1Fx(id, x, y, w, song, mau) { G.hu.push({ k: 'vm1Fx', t: 0, song: son
 SKILLS.lualien = {
   // 09/11 (người dùng: "Lửa Thập Tự 260 lửa, 18k dame mà bắn không nổi" — phát to nhưng chậm, đơn mục tiêu): ST 17 → 24, tốc 1.0 → 1.5,
   //   lửa còn cho TỐC BẮN trần mềm: +TOC_MAX × n / (n + TOC_K) (10 lửa +29%, 60 lửa +100%, 260 lửa +162%, không vượt +200%; 10/11 thử +300% rồi trả lại — thay bằng đạn đổi mục tiêu 1 lần: doiMuc, game.js)
-  vai: 'tc', dmg: 24, toc: 1.5, nham: 'dau', napMau: null,
+  // 09/11 lần 2 (người dùng chốt phương án A, docs/demo-hop-tuong/tocban/CONG-DON-EMBER-LABAN-PRISM.md): TRẦN LỬA CỨNG theo CẤP THẺ (KY_NANG_CAP.lualien,
+  //   LV9 90 → +12 mỗi cấp → LV17 186) + bù ST 24 → 30, tốc 1.5 → 1.8. Chạm trần: lửa thừa MẤT (sinh / truyền / ghép đều kẹp min(trần, …)).
+  vai: 'tc', dmg: 30, toc: 1.8, nham: 'dau', napMau: null,
   DMG: 0.08, CRIT: 0.004, CDMG: 0.04, TOC_MAX: 2.0, TOC_K: 60,
   tocLua(n) { return n > 0 ? this.TOC_MAX * n / (n + this.TOC_K) : 0; },
-  tran(T) { return Infinity; }, // KHÔNG TRẦN (08/11) — giữ hàm cho chỗ gọi cũ
+  tran(T) { const e = KY_NANG_CAP.lualien; return knGt(e, T && G.ban ? VM1.k(T) : 0); }, // trần lửa theo cấp thẻ (tất định: B.capThe đi theo bộ bài online)
   bac: (n) => (n >= 70 ? 4 : n >= 50 ? 3 : n >= 30 ? 2 : n >= 10 ? 1 : 0),
   ICON: ['fx_cuuvi_dan', 'lua_t1', 'lua_t2', 'lua_t3', 'lua_t4'],
   icon(n) { return this.ICON[this.bac(n)]; },
   mo(T) {
     const n = Math.min(this.tran(T), T.lc || 0);
-    return 'Flames ' + n + ' → +' + Math.round(n * this.DMG * 100) + '% damage, +' + +(n * this.CRIT * 100).toFixed(1) + '% crit chance, +' + Math.round(n * this.CDMG * 100) + '% crit damage, +' + Math.round(this.tocLua(n) * 100) + '% fire rate · each flame: +8% damage, +0.4% crit (crit max 100%), +4% crit damage, and flames raise fire rate (soft cap, max +' + Math.round(this.TOC_MAX * 100) + '%) · new Relays start with flames = ★ · Ember + Ember merged into an Ember: a NEW Ember with 0 flames · when an Ember leaves the board for any reason, its flames pass to Embers in its row and column · merging two Embers: every other Ember in the merge tile\'s row and column gains both Embers\' flames · Embers that stay (stone, frozen, transformed, lost a star) keep their flames · no flame limit';
+    return 'Flames ' + n + '/' + this.tran(T) + ' → +' + Math.round(n * this.DMG * 100) + '% damage, +' + +(n * this.CRIT * 100).toFixed(1) + '% crit chance, +' + Math.round(n * this.CDMG * 100) + '% crit damage, +' + Math.round(this.tocLua(n) * 100) + '% fire rate · each flame: +8% damage, +0.4% crit (crit max 100%), +4% crit damage, and flames raise fire rate (soft cap, max +' + Math.round(this.TOC_MAX * 100) + '%) · new Relays start with flames = ★ · Ember + Ember merged into an Ember: a NEW Ember with 0 flames · when an Ember leaves the board for any reason, its flames pass to Embers in its row and column · merging two Embers: every other Ember in the merge tile\'s row and column gains both Embers\' flames · Embers that stay (stone, frozen, transformed, lost a star) keep their flames · flame limit ' + this.tran(T) + ' (card LV9 ' + KY_NANG_CAP.lualien.base + ', +' + KY_NANG_CAP.lualien.buoc + ' per card level, LV17 ' + KY_NANG_CAP.lualien.max + '): flames over the limit are lost';
   },
   sinh(G, T) { if (T.lc == null) T.lc = Math.min(this.tran(T), Math.max(1, T.sao | 0)); },
   capNhat(G, B, T) { const n = Math.min(this.tran(T), T.lc || 0); if (n) { T.buf.dmg += n * this.DMG; T.buf.crit += n * this.CRIT; T.buf.cdmg = (T.buf.cdmg || 0) + n * this.CDMG; T.buf.toc += this.tocLua(n); } return false; },
@@ -450,7 +453,7 @@ themHo('star', 3, 'hopca', 'HARMONY: stronger next to same-star turrets');
 themHo('summon', 3, 'luutru', 'every real merge feeds one Archive: milestones 10–70');
 themHo('amp', 3, 'xuonganh', 'merge stamps a 25s HERO tile: big fire-rate boost');
 Object.assign(GROW, {
-  lualien: { mau: '#ff8a2a', khongAnh: true, ten: ['EMBER', 'KINDLED', 'FULL BLAZE'], dk: 'Flames 1–9 / 10–49 / 50+ (no limit)',
+  lualien: { mau: '#ff8a2a', khongAnh: true, ten: ['EMBER', 'KINDLED', 'FULL BLAZE'], dk: 'Flames 1–9 / 10–49 / 50+ (max 90, +12 per card level, LV17 186)',
     gd: (T) => { const n = T.lc || 0; return { s: n >= 50 ? 3 : n >= 10 ? 2 : 1, p: Math.min(1, n / 70), v: [1 / 7, 5 / 7] }; } },
   luutru: { mau: '#bfe4ff', khongAnh: true, ten: ['EMPTY SHELVES', 'FILING', 'GRAND ARCHIVE'], dk: 'Charges 0–9 / 10–29 / 30+ (max 40, LV11 50, LV13 60, LV15 70)',
     gd: (T) => { const n = T.kho || 0; return { s: n >= 30 ? 3 : n >= 10 ? 2 : 1, p: Math.min(1, n / 40), v: [0.25, 0.75] }; } },
@@ -468,7 +471,7 @@ for (const id of VM1.IDS) PILOTS.add(id);
 }
 if (typeof addEventListener === 'function') addEventListener('DOMContentLoaded', () => {
   if (typeof DEMKN !== 'undefined') Object.assign(DEMKN.DS, {
-    lualien(T) { const n = T.lc || 0; return n > 0 ? { m: [{ ic: SKILLS.lualien.icon(n), s: n + '' }] } : null; }, // icon lửa theo mốc (lua_t1–4)
+    lualien(T) { const n = T.lc || 0, t = SKILLS.lualien.tran(T); return n > 0 ? { m: [{ ic: SKILLS.lualien.icon(n), s: n + '/' + t }], sang: n >= t } : null; }, // icon lửa theo mốc (lua_t1–4) · "n/trần" (09/11 lần 2), chạm trần sáng
     hopca(T, B) { const n = SKILLS.hopca.hoa(B, T); return n > 0 ? { m: [{ ic: 'ic_dmg', s: n + '/4' }], sang: n >= 4 } : null; },
     luutru(T) { const n = T.kho || 0; return n > 0 ? { m: [{ ic: 'kho_icon', s: n + '/' + SKILLS.luutru.tran(T) }], sang: n >= 40 } : null; },
     xuonganh(T, B) { const h = (B.hero || []).find(q => q.het > G.t); return h ? { m: [{ ic: 'ic_toc', s: Math.ceil(h.het - G.t) + 's' }], sang: true } : null; },
