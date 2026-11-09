@@ -12,13 +12,15 @@ const UA = {
   ANH: ['ua_nen', 'ua_nut_chinh', 'ua_nut_phu', 'ua_nut_tron', 'ua_pill_bat', 'ua_pill_tat', 'ua_tam', 'ua_o', 'ua_mien',
     'ua_ic_nv', 'ua_ic_shop', 'ua_ic_sk', 'ua_ic_vq', 'ua_ic_deck', 'ua_ic_bst', 'ua_ic_trum', 'ua_ic_cai',
     'ua_ic_lui', 'ua_ic_dong', 'ua_ic_loc', 'ua_ic_tim', 'ua_ic_tin', 'ua_ic_xong',
-    'ua_ts_mana', 'ua_ts_vang', 'ua_ts_ngoc', 'ua_ts_do', 'ua_ts_sk', 'ua_ts_xp'],
+    'ua_ts_mana', 'ua_ts_vang', 'ua_ts_ngoc', 'ua_ts_do', 'ua_ts_sk', 'ua_ts_xp',
+    'ua_vq_banh', 'ua_vq_khung', 'ua_vq_mui', 'ua_ic_khoa', 'ua_ic_cong', 'ua_ic_tick', 'ua_bn_shop', 'ua_bn_sk', 'ua_tam2',
+    'ua_ru_thuong', 'ua_ru_vang', 'ua_ru_than', 'ua_ru_thuong_mo', 'ua_ru_vang_mo', 'ua_ru_than_mo'],
   // ảnh cũ → ảnh mới (src <img> do JS/HTML đặt). Ngọc (tiền ngoài trận) = kim cương hồng; MANA (trong trận) = lục giác teal.
   DOI: {
     p7_ic_caidat: 'ua_ic_cai', p7_ic_lui: 'ua_ic_lui', p7_ic_dong: 'ua_ic_dong', p7_ic_loc: 'ua_ic_loc', p7_ic_tim: 'ua_ic_tim',
-    p7_ic_tin: 'ua_ic_tin', p7_ic_xong: 'ua_ic_xong', p7_ic_bomau: 'ua_ic_deck', ic_lui: 'ua_ic_lui',
+    p7_ic_tin: 'ua_ic_tin', p7_ic_xong: 'ua_ic_tick', nut_cong: 'ua_ic_cong', p7_ic_bomau: 'ua_ic_deck', ic_lui: 'ua_ic_lui',
     shop_vang: 'ua_ts_vang', shop_ngoc: 'ua_ts_ngoc', h2_ngoc: 'ua_ts_mana', ui_mana: 'ua_ts_mana',
-    shop_nut_nv: 'ua_ic_nv', shop_nut_shop: 'ua_ic_shop', shop_nut_sk: 'ua_ic_sk', shop_nut_vq: 'ua_ic_vq',
+    shop_nut_nv: 'ua_ic_nv', shop_nut_shop: 'ua_ic_shop', shop_nut_sk: 'ua_ic_sk', shop_nut_vq: 'ua_ic_vq', shop_ru_thuong: 'ua_ru_thuong', shop_ru_vang: 'ua_ru_vang', shop_ru_than: 'ua_ru_than', shop_banner: 'ua_bn_shop', shop_banner_su: 'ua_bn_sk',
   },
   bat: false, _cu: null,
   a(n) { return n === 'ua_nen' ? 'assets/ua_nen.jpg' : (typeof anhUrl === 'function' ? anhUrl(n) : 'assets/' + n + '.png'); },
@@ -46,16 +48,21 @@ const UA = {
       if (this._cu) return;
       const c = this._cu = {};
       if (typeof KTA !== 'undefined') {
-        c.kta = { vang: KTA.vang, ngoc: KTA.ngoc, xong: KTA.xong, tin: KTA.tin, lui: KTA.lui, nut: Object.assign({}, KTA.nut) };
-        KTA.vang = 'ua_ts_vang'; KTA.ngoc = 'ua_ts_ngoc'; KTA.xong = 'ua_ic_xong'; KTA.tin = 'ua_ic_tin'; KTA.lui = 'ua_ic_lui';
+        c.kta = { vang: KTA.vang, ngoc: KTA.ngoc, xong: KTA.xong, tin: KTA.tin, lui: KTA.lui, nut: Object.assign({}, KTA.nut), banh: KTA.banh, banhKhung: KTA.banhKhung, mui: KTA.mui, ru: Object.assign({}, KTA.ru), ruMo: Object.assign({}, KTA.ruMo), bannerSk: KTA.bannerSk };
+        KTA.vang = 'ua_ts_vang'; KTA.ngoc = 'ua_ts_ngoc'; KTA.xong = 'ua_ic_tick'; KTA.tin = 'ua_ic_tin'; KTA.lui = 'ua_ic_lui';
+        KTA.banh = 'ua_vq_banh'; KTA.banhKhung = 'ua_vq_khung'; KTA.mui = 'ua_vq_mui'; // vòng quay anime (raw_ui3_vongquay)
+        KTA.ru = { thuong: 'ua_ru_thuong', vang: 'ua_ru_vang', than: 'ua_ru_than' }; KTA.ruMo = { thuong: 'ua_ru_thuong_mo', vang: 'ua_ru_vang_mo', than: 'ua_ru_than_mo' }; // rương anime (raw_ui3_ruong)
+        KTA.bannerSk = 'ua_bn_sk';
         KTA.nut = { shop: 'ua_ic_shop', vq: 'ua_ic_vq', nv: 'ua_ic_nv', sk: 'ua_ic_sk' };
       }
+      if (typeof TTA !== 'undefined') { c.tta = TTA.khoa; TTA.khoa = 'ua_ic_khoa'; } // ổ khoá trên thẻ ụ khoá
       if (typeof TIEN !== 'undefined') { c.tien = TIEN.mana.glyph; TIEN.mana.glyph = 'ua_ts_mana'; }
       if (typeof CHI !== 'undefined') { c.chi = [CHI.trieu.icon, CHI.mv.icon]; CHI.trieu.icon = CHI.mv.icon = 'ua_ts_mana'; }
     } else if (this._cu) {
       const c = this._cu; this._cu = null;
       if (c.kta) Object.assign(KTA, c.kta);
       if (c.tien) TIEN.mana.glyph = c.tien;
+      if (c.tta !== undefined) TTA.khoa = c.tta;
       if (c.chi) { CHI.trieu.icon = c.chi[0]; CHI.mv.icon = c.chi[1]; }
     }
   },

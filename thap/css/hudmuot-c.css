@@ -17,7 +17,7 @@
 #up.up7.ra { animation: up7-ra .18s var(--e-exit) forwards; pointer-events: none; }
 @keyframes up7-vao { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 @keyframes up7-ra { to { opacity: 0; transform: translateY(12px); } }
-#up.up7 .up-nen { position: absolute; inset: 0; background: url(../assets/nen_menu.jpg?v=34f795d7) center / cover no-repeat; opacity: .32; pointer-events: none; }
+#up.up7 .up-nen { position: absolute; inset: 0; background: url(../assets/nen_menu.jpg?v=cbd6c820) center / cover no-repeat; opacity: .32; pointer-events: none; }
 #up.up7 > :not(.up-nen) { position: relative; z-index: 1; }
 
 /* thanh trên: ‹ (về) · TURRET FILE n/85 · ‹‹ ›› (lướt) */
@@ -143,7 +143,7 @@ html body #up.up7 .up-hero .up-pi { -webkit-mask-image: linear-gradient(to botto
 #onl-sanh.sanh7.vao .s7-moi { animation: s7-len .28s var(--e-out); }
 @keyframes s7-vao { from { opacity: 0; } to { opacity: 1; } }
 @keyframes s7-len { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
-#onl-sanh .s7-nen { position: absolute; inset: 0; background: url(../assets/nen_menu.jpg?v=34f795d7) center / cover no-repeat; opacity: .38; pointer-events: none; }
+#onl-sanh .s7-nen { position: absolute; inset: 0; background: url(../assets/nen_menu.jpg?v=cbd6c820) center / cover no-repeat; opacity: .38; pointer-events: none; }
 #onl-sanh .s7-dau { position: relative; height: 56px; display: flex; align-items: center; padding: 0 8px; }
 #onl-sanh .s7-dau b { flex: 1; text-align: center; font-size: 15px; font-weight: 900; letter-spacing: .16em; color: var(--c-chu); }
 #onl-sanh .s7-dau i { width: 48px; }

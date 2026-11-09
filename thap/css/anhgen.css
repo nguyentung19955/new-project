@@ -66,7 +66,7 @@
 
 /* ---------- nền (S7b, S7c) ---------- */
 /* màn chọn bộ bài (M2): sàn xưởng thép, giữa ít chi tiết để thẻ đọc rõ */
-#chon { background: #16171a url(../assets/nen_menu.jpg?v=34f795d7) center / cover no-repeat; }
+#chon { background: #16171a url(../assets/nen_menu.jpg?v=cbd6c820) center / cover no-repeat; }
 .chon-cuoi { background: #151618f2; }
 /* khung dưới trận (H8): console thép — 9 mảnh để góc/ống không méo khi co theo bề rộng màn */
 #duoi { background: none; border: 0; border-image: url(../assets/nen_hud_duoi.webp?v=5fa104b8) 51.6 127.5 97.2 127.5 fill / 17px 42px 32px 42px stretch; }

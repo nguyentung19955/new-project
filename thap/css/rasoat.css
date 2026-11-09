@@ -4,7 +4,7 @@
 
 /* ---------- 1 · LỚP PHỦ "XOAY DỌC MÁY" (js/rasoat.js) — nằm NGOÀI #wrap, phủ toàn màn ---------- */
 #xoay-doc { position: fixed; inset: 0; z-index: 2147483000; display: flex; align-items: center; justify-content: center;
-  background: #0b0d11 url(../assets/nen_menu.jpg?v=34f795d7) center / cover no-repeat; touch-action: none; user-select: none; -webkit-user-select: none; }
+  background: #0b0d11 url(../assets/nen_menu.jpg?v=cbd6c820) center / cover no-repeat; touch-action: none; user-select: none; -webkit-user-select: none; }
 #xoay-doc[hidden] { display: none; }
 #xoay-doc::before { content: ''; position: absolute; inset: 0; background: #05070bcc; } /* làm tối nền (mặt nạ, không phải vật thể) */
 #xoay-doc .xd-tam { position: relative; box-sizing: border-box; width: min(440px, 86vw); max-height: 88vh; padding: 22px 30px 24px; display: flex; align-items: center; gap: 22px;
