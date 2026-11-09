@@ -55,8 +55,8 @@
 .cd-tuan em { display: flex; gap: 4px; font-style: normal; }
 .cd-tuan em i { font: 800 10px/1 var(--f-chu, sans-serif); font-style: normal; color: #B8C3E6; padding: 2px 4px; border-radius: 3px; background: rgba(16, 22, 47, .7); }
 .cd-tuan em i.da { color: #172040; background: #71E4EE; }
-.cd-tuan .cd-thuong { flex: none; max-width: 150px; gap: 3px; }
-.cd-tuan .cd-thuong .kt-r { transform: scale(.82); margin: -4px; }
+.cd-tuan > .cd-tt { flex: none; }
+.cd-tuan > .cd-tt b { font-size: 11px; white-space: nowrap; }
 .cd-trum { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; align-self: stretch; }
 .cd-tr { position: relative; aspect-ratio: 1; padding: 4px; border: 0 solid transparent; border-image: url(../assets/ua_o.webp?v=47ec89eb) 52 fill / 10px 12px stretch; background: none; overflow: hidden; }
 .cd-tr > img:first-child { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; display: block; }
@@ -65,10 +65,10 @@
 .cd-tr.khoa > img:first-child { filter: grayscale(1) brightness(.45); }
 .cd-tr.tuan::after { content: ''; position: absolute; inset: 2px; box-shadow: none; }
 .cd-bac { display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px; align-self: stretch; }
-#tt-phu .cd-bac .hm-chip { min-width: 0; height: 32px; padding: 0; font: 900 13px/1 var(--f-hien, sans-serif); border: 0 solid transparent; border-image: url(../assets/ua_pill_tat.webp?v=7011ead0) 40 62 fill / 10px 12px stretch; background: none; color: #F7F8FF; }
-#tt-phu .cd-bac .hm-chip.on { border-image-source: url(../assets/ua_pill_bat.webp?v=20bd9c86); color: #172040; }
-#tt-phu .cd-bac .hm-chip.xong:not(.on) { color: #71E4EE; }
-#tt-phu .cd-bac .hm-chip:disabled { opacity: .35; }
+#tt-phu .cd-bac .cd-bp { min-width: 0; height: 34px; padding: 0; font: 900 14px/1 var(--f-hien, sans-serif); border: 0 solid transparent; border-image: url(../assets/ua_o.webp?v=47ec89eb) 52 fill / 8px 8px stretch; background: none; color: #F7F8FF; }
+#tt-phu .cd-bac .cd-bp.on { border-image: url(../assets/ua_pill_bat.webp?v=20bd9c86) 40 62 fill / 8px 10px stretch; color: #172040; }
+#tt-phu .cd-bac .cd-bp.xong:not(.on) { color: #71E4EE; }
+#tt-phu .cd-bac .cd-bp:disabled { opacity: .35; }
 /* thử thách */
 .cd-thu { display: flex; flex-direction: column; gap: 5px; align-self: stretch; }
 .cd-th { display: flex; align-items: center; gap: 8px; min-height: 52px; padding: 4px 10px; border: 0 solid transparent; border-image: url(../assets/ua_o.webp?v=47ec89eb) 52 fill / 12px 14px stretch; background: none; color: #F7F8FF; text-align: left; position: relative; }

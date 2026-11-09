@@ -324,18 +324,18 @@ const CDUI = {
     let id = this.chon.san; if (!ha.includes(id)) id = ha.includes(tuan) ? tuan : ha[0]; this.chon.san = id;
     const bm = id ? CD.bacMo(id) : 1; let b = this.chon.bac; if (!(b >= 1 && b <= bm)) b = bm; this.chon.bac = b;
     const ve = CD.ve();
-    let h = this.dau(CDC.ICON.san, 'BOSS HUNT', 'TICKETS ' + ve + ' / ' + CDC.san.veNgay + ' · RESETS IN <span data-dh="ngay"></span>');
+    let h = this.dau(CDC.ICON.san, 'BOSS HUNT', 'TICKETS ' + ve + ' / ' + CDC.san.veNgay + ' · RESETS IN ' + KT.dongHo(KT.conLai(false)));
     // trùm tuần
     const tt = Object.keys(CDC.san.tuan).map(Number);
     h += '<div class="cd-tuan"><img src="assets/trum_' + tuan + '_portrait.png" alt="" draggable="false"><span><small>BOSS OF THE WEEK</small><b>' + this.esc(CD.tenTrum(tuan)) + '</b>' +
-      '<em>' + tt.map(m => '<i class="' + (sa.tuanNhan[m] ? 'da' : '') + '">T' + m + '</i>').join('') + '</em></span>' + this.dsThuong(tt.map(m => CDC.san.tuan[m][0])) + '</div>';
+      '<em>' + tt.map(m => '<i class="' + (sa.tuanNhan[m] ? 'da' : '') + '">T' + m + '</i>').join('') + '</em></span>' + this.ttIc('T9') + '</div>';
     h += '<div class="cd-trum">' + ds.map(x => {
       const co = ha.includes(x), so = CD.bacMo(x) - (s.san.da[x + ':' + CD.bacMo(x)] ? 0 : 1);
       return '<button class="cd-tr' + (x === id ? ' on' : '') + (co ? '' : ' khoa') + (x === tuan ? ' tuan' : '') + '" data-act="cd-trum" data-id="' + x + '"' + (co ? '' : ' disabled') + ' aria-label="' + this.esc(CD.tenTrum(x)) + '"><img src="assets/trum_' + x + '_portrait.png" alt="" draggable="false">' +
         (co ? '<b>' + so + '/10</b>' : '<img class="cd-khoa" src="' + this.a('ua_ic_khoa') + '" alt="Locked">') + '</button>';
     }).join('') + '</div>';
     if (!id) { this.phu(h + '<p class="kt-chu">Defeat a boss once to hunt it.</p>' + this.nut(''), 'cd-san'); return; }
-    h += '<div class="cd-bac">' + Array.from({ length: CDC.san.bac }, (_, i) => i + 1).map(x => '<button class="hm-chip' + (x === b ? ' on' : '') + (s.san.da[id + ':' + x] ? ' xong' : '') + '" data-act="cd-bac" data-id="' + x + '"' + (x <= bm ? '' : ' disabled') + '>' + x + '</button>').join('') + '</div>';
+    h += '<div class="cd-bac">' + Array.from({ length: CDC.san.bac }, (_, i) => i + 1).map(x => '<button class="cd-bp' + (x === b ? ' on' : '') + (s.san.da[id + ':' + x] ? ' xong' : '') + '" data-act="cd-bac" data-id="' + x + '"' + (x <= bm ? '' : ' disabled') + '>' + x + '</button>').join('') + '</div>';
     const c = CD.cauHinh('san', id, b), da = !!s.san.da[id + ':' + b], du = CDC.san.du(b), nDu = ds.filter(x => s.san.da[x + ':' + b]).length;
     h += '<div class="cd-ct"><b class="cd-ct-t">' + this.esc(CD.tenTrum(id)) + ' · TIER ' + b + '</b>' + this.thongSo(c) +
       '<p class="kt-chu cd-luat">Defeat the boss within ' + CDC.san.gio + ' s' + (c.hsT > 1 ? ' · Boss HP ×' + c.hsT : '') + '</p>' +
@@ -613,7 +613,7 @@ const CDUI = {
     'Giants: Every 3rd enemy is a Giant': 'Khổng Lồ: cứ 3 quái có 1 Khổng Lồ', 'Thick Hide: Enemies +#% HP': 'Da Dày: quái +#% máu',
     'Sky Raid: Half of the enemies fly': 'Không Kích: một nửa số quái biết bay', 'Glass Core: Only # life': 'Lõi Thuỷ Tinh: chỉ # mạng',
     'Enemy HP ×#.#': 'Máu quái ×#.#', 'Enemy HP ×#.#–#': 'Máu quái ×#.#–#',
-    'TICKETS # / # · RESETS IN ': 'VÉ # / # · LÀM MỚI SAU ', 'BOSS OF THE WEEK': 'TRÙM CỦA TUẦN', 'TIER #': 'BẬC #', ' · TIER #': ' · BẬC #',
+    'TICKETS # / # · RESETS IN ': 'VÉ # / # · LÀM MỚI SAU ', 'TICKETS # / #': 'VÉ # / #', 'RESETS IN #:#:#': 'LÀM MỚI SAU #:#:#', 'TICKETS # / # · RESETS IN #:#:#': 'VÉ # / # · LÀM MỚI SAU #:#:#', 'BOSS OF THE WEEK': 'TRÙM CỦA TUẦN', 'TIER #': 'BẬC #', ' · TIER #': ' · BẬC #',
     'Defeat the boss within # s': 'Hạ trùm trong # giây', 'Boss HP ×#': 'Máu trùm ×#', 'ALL # BOSSES AT TIER #': 'ĐỦ # TRÙM Ở BẬC #', 'CLAIMED': 'ĐÃ NHẬN',
     '+1 TICKET': '+1 VÉ', 'HUNT · 1 TICKET': 'SĂN · 1 VÉ', 'PRACTICE': 'LUYỆN TẬP', 'Defeat a boss once to hunt it.': 'Hạ một trùm một lần để săn nó.',
     '# / # CLEARED': 'ĐÃ QUA # / #', 'WAVES #–#': 'WAVE #–#', 'BOSS': 'TRÙM', 'START · TRIAL #': 'BẮT ĐẦU · THỬ THÁCH #',
