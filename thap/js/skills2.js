@@ -276,7 +276,7 @@ SKILLS.dichchuyen = { // Bệ Dịch Chuyển (Merlin): kéo thả lên ụ khá
 };
 SKILLS.drone = { // DRONE KÉO XA (Hermes, co-che-moi/DE-XUAT.md §3-N): khi GHÉP phóng drone bom chạy ngược đường đâm quái —
   //   số drone = QUÃNG KÉO (số ô Manhattan từ ụ kéo tới ụ đích) + sao/3 (tối đa 8). Kéo góc → góc (6 ô) = 6+ drone. Dây kéo ảnh nối 2 ô lúc ghép.
-  vai: 'tc', dmg: 11.5, toc: 1.5, nham: 'dau', // 8.67 → 11.5 (đo bậc 06/11)
+  vai: 'tc', dmg: 17, toc: 1.5, nham: 'dau', // 8.67 → 11.5 (đo bậc 06/11) · 11/11 bậc Xanh ≥ Trắng (bot: bộ Xanh 19.6 → 23.8): 11.5 → 17
   MAX: 8, NHAN: 18, // ×sát thương mỗi drone (cũ ×24 cho 1–3 drone; giờ nhiều drone hơn)
   quang: (oa, ob) => Math.abs(oa % 5 - ob % 5) + Math.abs(((oa / 5) | 0) - ((ob / 5) | 0)),
   so(sao, d) { return Math.max(1, Math.min(this.MAX, d + Math.floor(sao / 3))); },
@@ -310,7 +310,7 @@ SKILLS.tron = { // Bộ Trộn (Zarramim) — HỖ TRỢ (đợt vai trò): ụ 
   capNhat(G, B, T, dt) { HOTRO.nhip(G, B, T, dt, '255,228,107', 2.2, 0.8); return true; },
 };
 SKILLS.nangluong = { // Pháo Năng Lượng (Jupiter): sát thương tăng theo mana đang có
-  vai: 'tc', dmg: 23, toc: 0.7, nham: 'dau', // 15.43 → 23 (đo bậc 06/11)
+  vai: 'tc', dmg: 34, toc: 0.7, nham: 'dau', // 15.43 → 23 (đo bậc 06/11) · 11/11 bậc Xanh ≥ Trắng (bot: bộ Xanh 19.6 → 23.8): 23 → 34
   k: (B) => Math.min(5, B.mana / 120),
   mo: (T) => 'Current mana → +' + Math.round(SKILLS.nangluong.k(G.ban[T.ban]) * 100) + '% (each 120 mana +100%, max +500%)',
   sangDau: (T) => SKILLS.nangluong.k(G.ban[T.ban]) * 0.12,
@@ -376,7 +376,7 @@ SKILLS.loa = { // Loa Hồi Chiêu (Melpomene): khi GHÉP giảm hồi chiêu k�
   },
 };
 SKILLS.hutmana = { // Máy Hút Mana (Elizabeth) — TẤN CÔNG (đợt vai trò): bắn tia hút quái đầu; mỗi phát trúng hồi chút mana (có trần mana/giây)
-  vai: 'tc', dmg: 13.5, toc: 1.4, nham: 'dau', // 11 → 13.5 (đo bậc 06/11)
+  vai: 'tc', dmg: 20, toc: 1.4, nham: 'dau', // 11 → 13.5 (đo bậc 06/11) · 11/11 bậc Xanh ≥ Trắng (bot: bộ Xanh 19.6 → 23.8): 13.5 → 20
   luong: (T) => (0.35 + 0.15 * (T.sao - 1)) * (1 + 0.2 * (lvU(T) - 1)),
   tran: (T) => (1.2 + 0.3 * (T.sao - 1)) * (1 + 0.2 * (lvU(T) - 1)),   // mana tối đa mỗi giây · power-up nâng cả trần/giây (BAO-CAO Mức 3)
   mo: (T) => '+' + SKILLS.hutmana.luong(T).toFixed(2) + ' mana per hit (max ' + SKILLS.hutmana.tran(T).toFixed(1) + '/s)',

@@ -253,7 +253,7 @@ SKILLS.mimic = { // Mimic (Aurora): ghép với BẤT KỲ ụ cùng sao; ghép 
   },
 };
 SKILLS.laser = { // Laser (Nebula): tia liên tục, giữ càng lâu càng mạnh (đổi mục tiêu thì về 0)
-  vai: 'tc', dmg: 12, toc: 1,
+  vai: 'tc', dmg: 14, toc: 1, // 11/11 bậc Xanh ≥ Trắng: 12 → 14
   mo: (T) => 'Beam ramps to ×4 over 3s on the lead enemy (resets on switch) · beam never crits',
   capNhat(G, B, T, dt) {
     const E = quaiDau(B);
