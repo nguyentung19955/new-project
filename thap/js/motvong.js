@@ -19,6 +19,7 @@ const MV = {
     if (sk.chuDong) return T.sao >= 3 || !!sk.chuDongMoiSao; // Mạch Máu / Trứng cháy: chạm được ở mọi sao
     return !!(sk.napMau || this.NAP_KHAC[T.id]);
   },
+  coNgoc(T) { if (!T || (typeof DOTPHA !== 'undefined' && DOTPHA.NGUONG[T.id])) return false; const d = this.dang(T); return !!d && (!this.GON || d.s >= 2); },
   tenChieu(id) { try { const m = mocCua(id).find(q => /active skill/i.test(q.mo || '')); return m ? m.ten : null; } catch (e) { return null; } },
   // dạng: { s: 1-based trong số n, n, ten }
   dang(T) {
@@ -94,7 +95,7 @@ const MV = {
       else if (sk.chuDong) P.push(vi ? 'Vòng xanh lá: nạp chiêu ' + (ten ? tr(ten) : '') + cd + ' — đầy thì chạm ụ để dùng' : 'Green ring: ' + (ten || 'skill') + ' charging' + cd + ' — full: tap the turret to use');
       else P.push(vi ? 'Vòng xanh lá: đang nạp — đầy thì tự kích' : 'Green ring: charging — fires by itself when full');
     }
-    const d = this.dang(T);
+    const d = this.coNgoc(T) && this.dang(T); // rà phần đã bỏ: hàng 3 viên ngọc đã bỏ (bàn gọn 07/11) — chỉ nhắc khi có hạt ngọc ở huy hiệu sao
     if (d) P.push(vi ? 'Ngọc: dạng ' + d.s + '/' + d.n + ' ' + tr(d.ten) : 'Gems: form ' + d.s + '/' + d.n + ' ' + d.ten);
     if (typeof DEMKN !== 'undefined' && DEMKN.lay(T, B)) { const g = this.TAG[T.id] || ['skill counter', 'bộ đếm kỹ năng']; P.push(vi ? 'Số dưới ô: ' + g[1] : 'Bottom tag: ' + g[0]); }
     if (T.id === 'nhatthuc') P.push(vi ? 'Chế độ: ' + (T.dem ? 'ĐÊM' : 'NGÀY') : 'Mode: ' + (T.dem ? 'NIGHT' : 'DAY'));
@@ -110,7 +111,7 @@ const MV = {
       else if (sk.chuDong) P.push(vi ? 'Vòng xanh lá = nạp ' + (ten ? tr(ten) : 'chiêu') + ' (đầy thì chạm ụ)' : 'Green ring = ' + (ten || 'skill') + ' charge (tap when full)');
       else P.push(vi ? 'Vòng xanh lá = nạp chiêu (đầy tự kích)' : 'Green ring = skill charge (fires itself)');
     }
-    const d = this.dang(T);
+    const d = this.coNgoc(T) && this.dang(T);
     if (d) P.push(vi ? 'Ngọc = dạng ' + d.s + '/' + d.n + ' ' + tr(d.ten) : 'Gems = form ' + d.s + '/' + d.n + ' ' + d.ten);
     if (typeof DEMKN !== 'undefined' && DEMKN.lay(T, B)) { const g = this.TAG[T.id] || ['skill counter', 'bộ đếm kỹ năng']; const ng = (x) => x.replace(/\s*\(.*\)$/, ''); P.push(vi ? 'Số dưới ô = ' + ng(g[1]) : 'Bottom number = ' + ng(g[0])); }
     return P.join(' · ');
@@ -124,9 +125,9 @@ const MV = {
     if (this.laNap(id)) P.push(hang(anhVong ? '<img src="' + anhVong + '" alt="">' : '', vi ? 'Vòng xanh lá' : 'Green ring',
       sk.chuDong ? (vi ? '= nạp chiêu ' + (ten ? NN.t(ten) : '') + (sk.chuDongMoiSao ? '' : ' (từ 3★)') + '. Đầy thì vòng sáng nhịp + hiện nút chạm: chạm ụ để dùng.' : '= ' + (ten || 'active skill') + ' charging' + (sk.chuDongMoiSao ? '' : ' (from 3★)') + '. When full it pulses and shows a tap icon: tap the turret to use it.')
         : (vi ? '= chiêu đang nạp. Đầy thì tự kích.' : '= skill charging. Fires by itself when full.')));
-    if (typeof laGrow === 'function' && laGrow(id) && GROW[id]) {
+    if (typeof laGrow === 'function' && laGrow(id) && GROW[id] && !(typeof DOTPHA !== 'undefined' && DOTPHA.NGUONG[id])) {
       const g = GROW[id], n = g.dang ? g.dang.length : 3, ds = (g.dang ? g.dang.map(k => g.ten[k - 1]) : g.ten).map(x => vi ? NN.t(x) : x).join(' → ');
-      P.push(hang('<img src="assets/ngoc_xanh.png" alt=""><img src="assets/ngoc_xanh.png" alt="" class="mv-xam">', vi ? n + ' viên ngọc' : n + ' gems', (vi ? 'dưới số sao = dạng hiện tại: ' : 'under the star badge = current form: ') + ds));
+      P.push(hang('<img src="assets/ngoc_xanh.png" alt=""><img src="assets/ngoc_vang.png" alt="">', vi ? 'Hạt ngọc' : 'Gem', (vi ? 'ở góc số sao: xanh = dạng giữa, vàng = dạng cuối (' + n + ' dạng: ' : 'on the star badge corner: blue = middle form, gold = final form (' + n + ' forms: ') + ds + ')')); // rà phần đã bỏ: hết hàng 3 viên ngọc dưới sao (bàn gọn 07/11)
     }
     if (typeof DEMKN !== 'undefined' && DEMKN.DS[id]) { const g = this.TAG[id] || ['skill counter', 'bộ đếm kỹ năng']; P.push(hang('<img src="assets/h2_tag.png" alt="" class="mv-tag">', vi ? 'Số dưới ô' : 'Bottom tag', '= ' + (vi ? g[1] : g[0]))); }
     if (!P.length) P.push('<p class="up-phu">' + (vi ? 'Ụ này không có vòng hay ngọc — chỉ số sao ở góc.' : 'No ring or gems on this turret — just the star badge.') + '</p>');

@@ -234,4 +234,4 @@ lanDoc = function (E, B) {
   const Q = dsMucTieu(B || G.ban[0]).filter(Q => Q !== E && !Q.chet && !(Q.vmT > 1)).sort((a, b) => Math.hypot(a.x - E.x, a.y - E.y) - Math.hypot(b.x - E.x, b.y - E.y))[0];
   if (Q && Math.hypot(Q.x - E.x, Q.y - E.y) < 90) { Q.vmT = 5; Q.vmK = E.vmK; Q.vmLay = 1; Q.yeu = Math.max(Q.yeu, 5); G.hu.push({ k: 'tiaPhep', t: 0, song: 0.35, x0: E.x, y0: E.y, x1: Q.x, y1: Q.y, mau: '#9dff5a' }); }
 };
-// SÀN TẤN CÔNG chỉ áp cho TRIỆU HỒI (game.js trieu: bàn < 2 ụ 'tc' → bốc trong ụ Tấn công của bộ); kết quả GHÉP / Twin Maker vẫn ĐỀU NGẪU NHIÊN trong bộ bài
+// (đã bỏ SÀN TẤN CÔNG khi triệu hồi — 09/11: triệu hồi, kết quả GHÉP, Twin Maker đều bốc ĐỀU NGẪU NHIÊN trong bộ bài, 20%/thẻ)

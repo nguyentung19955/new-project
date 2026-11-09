@@ -26,7 +26,7 @@ const UP_TXT = {
   role: { tc: 'Attack', ht: 'Support', ctl: 'Control', db: 'Special' },
   roleMo: {
     tc: 'Deals the damage. Build your deck around 2 or more of these.',
-    ht: 'Never attacks. Boosts the turrets next to it (up, down, left, right unless stated); stronger at 3/5/7★. Copies of the same Support don’t stack, and each buff type has a cap.',
+    ht: 'Never attacks. Boosts the turrets next to it (up, down, left, right unless stated); stronger at 3/5/7★. Copies of the same Support don’t stack.' /* rà phần đã bỏ: hết trần hỗ trợ (07/11) */,
     ctl: 'Its merge hits the rival in PvP, or helps your ally in co-op.',
     db: 'Bends the rules: freezes, marks, mana, odd merges, swaps or transformations. Little or no direct damage.',
   },

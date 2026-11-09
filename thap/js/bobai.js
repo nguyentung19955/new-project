@@ -1,5 +1,5 @@
 // TURRET MERGE — MÀN CHỌN BỘ BÀI (P1-01, P1-02): 6 bộ khởi đầu soạn tay (tên, 5 ụ + chỉ huy, 1 dòng lối chơi, nút TRY DECK)
-// + lọc theo vai trò + ô tìm kiếm (lưu bộ lọc cuối). Khoá bộ sưu tập 85 ụ cho tới khi xong/bỏ qua hướng dẫn (huongdan.js).
+// + lọc theo vai trò + ô tìm kiếm (lưu bộ lọc cuối). Khoá bộ sưu tập cho tới khi xong/bỏ qua hướng dẫn (huongdan.js); sau đó mở Trắng + Xanh, bậc cao theo cấp phi công (tientrinh.js).
 // Chỉ bọc UI.veChon — không sửa ui.js. Hình: ảnh ChatGPT có sẵn (khung_tt, khung_chon, h2_chip, h2_lcd, nut_nho).
 'use strict';
 

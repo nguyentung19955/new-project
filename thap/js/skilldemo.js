@@ -241,21 +241,21 @@ const SD_K = {
   // ---------- vàng mới (vangmoi1.js / skills7.js) ----------
   // Lửa Thập Tự (luật 08/11 — Ember RỜI BÀN truyền lửa theo hàng/cột của CHÍNH nó): kéo Ember ô 7 (3 lửa) vào ô 8 (1 lửa), cùng sao → cả 2 rời bàn:
   //   ô 6 (chung hàng với cả 7 và 8) 1 → 1 + 3 + 1 = 5 · ô 3, 13 (cột của ô 8) +1: 1 → 2, 7 → 8 · ô 11 không chung đường → không nhận.
-  //   Ụ ra ở ô 8 (bộ bài chỉ Relay) không nhận, = max(★, 3 + 1) = 4.
+  //   Ụ ra ở ô 8 (bộ bài chỉ Relay) là Ember MỚI: 0 lửa (08/11, bỏ max(★, A + C)).
   //   sdLuaLien: số lửa TO dưới mỗi Relay, lúc ghép mũi tên chạy dọc hàng + cột từ ô 8, "+N" trên ụ nhận, "✗" trên ô 11 (lệch hàng/cột)
   lualien: { kieu: 'ghep', ke: [[8, 'lualien', 's'], [6, 'lualien', 's'], [3, 'lualien', 's'], [13, 'lualien', 's'], [11, 'lualien', 's']], keo: [2.5, 7, 8], so: { o: 13, k: 'dmg' },
     truoc: (T, B) => { B.deck = ['lualien']; if (T) T.lc = 3; if (B.t[8]) B.t[8].lc = 1; if (B.t[13]) B.t[13].lc = 7; for (const o of [3, 6, 11]) if (B.t[o]) B.t[o].lc = 1; },
     them: [[2.4, (B) => { SD.lcCu = {}; for (const X of B.t) if (X && X.id === 'lualien') SD.lcCu[X.o] = X.lc || 0; }]],
     ve: (x, B) => sdLuaLien(x, B),
-    c: [[0.2, 'Number = flames on each Relay'], [1.3, 'Merge two same-star Embers'], [2.5, 'Both flames go along the merge tile\'s row + column', { cham: 0.6 }], [3.9, 'Not in that row or column: nothing'], [5.0, 'Each flame: +8% damage, +0.4% crit, +4% crit damage'], [6.2, 'Max 70 flames (more at LV11+)']], dai: 9 },
+    c: [[0.2, 'Number = flames on each Relay'], [1.3, 'Merge two same-star Embers'], [2.5, 'Both flames go along the merge tile\'s row + column', { cham: 0.6 }], [3.9, 'Not in that row or column: nothing'], [5.0, 'Each flame: +8% damage, +0.4% crit, +4% crit damage'], [6.2, 'No flame limit']], dai: 9 },
   // Quantum Choir: thêm ụ cùng sao (trùng) và khác sao (không tính) — chỉ số sát thương trước → sau
   hopca: { q: Q.hang(4, 180, 40, 8), ke: [[6, 'lien', 's'], [8, 'canon', (s) => s > 1 ? s - 1 : 2]],
     them: [[2.0, (B, D, T) => { if (T) sdThem(B, [[2, 'set', T.sao], [12, 'bang', T.sao]], T, 'dmg'); }], [4.0, (B, D, T) => { if (T) sdThem(B, [[3, 'sungluc', T.sao > 1 ? T.sao - 1 : 2]], T, 'dmg'); }]],
     c: [[0.2, (T) => 'Touching ' + T.sao + '★ turrets = Harmony'], [2.0, 'Each Harmony: +25% damage', { cham: 0.6 }], [3.0, '3 Harmony: +30% fire rate'], [4.0, 'Other ★ or far away: no', { cham: 0.4 }]] },
-  // Fusion Archive: 2 ghép thường bất kỳ → +1 điểm lưu mỗi lần; cuối: Archive + Archive → 3 xung nổ
+  // Fusion Archive: 2 ghép thường bất kỳ → +1 điểm lưu mỗi lần (đã bỏ 3 xung Archive + Archive, 08/11)
   luutru: { kieu: 'ghep', ke: [[2, 'lien', 1], [3, 'lien', 1], [11, 'canon', 1], [12, 'canon', 1], [8, 'luutru', 's']], keo: [[1.6, 3, 2, { o: 7, k: 'dmg' }], [3.2, 12, 11, { o: 7, k: 'dmg' }]],
     truoc: (T, B) => { if (B.t[8]) B.t[8].st.da = true; }, // Archive thứ 2 hoá đá → điểm luôn bay vào ụ đang xem
-    c: [[0.2, 'Every real merge: +1 charge'], [1.6, 'It flies to one Archive: +1% damage', { cham: 0.5 }], [3.2, 'Any turret merge counts'], [4.6, 'Rewards at 10 / 20 / 30 / 40 charges']], dai: 8 },
+    c: [[0.2, 'Every real merge: +1 charge'], [1.6, () => 'It flies to one Archive: +' + Math.round(SKILLS.luutru.DIEM * 100) + '% damage', { cham: 0.5 }], [3.2, 'Any turret merge counts'], [4.6, 'Rewards at 10 / 20 / 30 / 40 charges']], dai: 8 },
   // Hero Foundry: ghép → ô ngẫu nhiên thật (VM1.rng) thành ô Anh hùng; hiện tốc bắn trước → sau của ụ đứng trên ô
   xuonganh: { kieu: 'ghep', ke: [[2, 'lien', 's'], [3, 'set', 's'], [6, 'canon', 's'], [12, 'sungluc', 's']],
     them: [[3.2, (B) => { const o = B._hf, N = o != null && B.t[o]; if (N) SD.soDoi = { o, a: Math.round(tocU(N) / (1 + (B.hero && B.hero[0] ? B.hero[0].toc : 0)) * 100) / 100, b: sdSo(N, 'toc'), ic: 'ic_toc', t0: performance.now() }; }]],

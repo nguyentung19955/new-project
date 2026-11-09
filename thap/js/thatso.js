@@ -79,7 +79,7 @@
     M('chimang', 3, 'SHARP EYE', 'More crit chance (curve ×1.45)');
     M('chimang', 5, 'DEADLY EYE', 'More crit chance (curve ×1.9) + 10% crit damage');
     M('chimang', 7, 'CERTAIN STRIKE', 'More crit chance (curve ×2.35) + every 6s a sure crit');
-    M('radar', 7, 'OVERDRIVE', 'Aura ×2.35 + every 8s a 2s fire-rate burst (cap +15% during it)');
+    M('radar', 7, 'OVERDRIVE', 'Aura ×2.35 + every 8s: +25% fire rate 2s'); // rà phần đã bỏ: hết trần tốc (07/11) → bùng đúng +25%
     M('tuthan', 5, 'DEEP REAP', 'Threshold 40% HP + more kill chance (curve ×1.9)');
     M('phagiap', 5, 'DOUBLE EXPOSE', 'Exposes 3 enemies + more bonus (curve ×1.9)');
     M('cauvong', 5, 'DOUBLE ARC', '2 trails + more bonus (curve ×1.9)');
