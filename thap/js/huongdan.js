@@ -1,7 +1,6 @@
 // TURRET MERGE — HƯỚNG DẪN LẦN ĐẦU (P0-01): trận SOLO có hướng dẫn, bộ 5 ụ cố định + chỉ huy REINFORCE.
 // Từng bước: triệu hồi → ghép cùng ụ cùng sao → chạm xem thông tin → nút chỉ huy → cảnh báo trùm → hạ trùm wave 10 = xong.
-// Bỏ qua được; tiến độ lưu localStorage 'turret_hd'; xong (hoặc bỏ qua) → mở ụ Trắng + Xanh; Tím/Vàng/Đỏ mở theo cấp phi công (tientrinh.js).
-// Tiến trình đợt 1: bỏ câu phụ về Pháo La Bàn ở bước ghép (ụ Vàng, không có trong bộ hướng dẫn).
+// Bỏ qua được; tiến độ lưu localStorage 'turret_hd'; bộ sưu tập 85 ụ mở sau khi xong (hoặc bỏ qua).
 // Chỉ bọc (wrap) hàm có sẵn — không đổi luật chơi thường. Hình: chỉ ảnh ChatGPT có sẵn (khung_tt, h2_canh_bao, nut_nho).
 // Kiểm thử: ?tut=1 = chạy lại từ đầu · ?notut=1 = không tự vào hướng dẫn · ?mode=… (debug) không bao giờ vào hướng dẫn.
 'use strict';
@@ -17,7 +16,7 @@ const HD = {
   BUOC: [
     { id: 'muc', chu: 'Stop enemies reaching your CORE', phu: 'Each enemy that gets through costs a life. You have 3.', noi: 'tren', ok: true },
     { id: 'trieu', chu: 'Tap SUMMON twice', phu: 'A random turret from your deck appears. Each summon costs +10 mana.', noi: 'tren', dich: '#nut-trieu', can: 2 },
-    { id: 'ghep', chu: 'Drag a turret onto its twin', phu: 'Same turret + same ★ = merge: a RANDOM turret from your deck with +1★.', noi: 'tren', dich: 'cap' },
+    { id: 'ghep', chu: 'Drag a turret onto its twin', phu: 'Same turret + same ★ = merge: a RANDOM turret from your deck with +1★. (Compass Cannons stay Compass Cannons: same arrows add their numbers.)', noi: 'tren', dich: 'cap' },
     { id: 'tt', chu: 'Tap a turret (no drag)', phu: 'Its card shows what it does and its star skills.', noi: 'tren', dich: 'u' },
     { id: 'mv', chu: 'Tap your COMMANDER', phu: 'REINFORCE: two free turrets. Costs mana, doubles each use, then cools down.', noi: 'tren', dich: '#the-mv' },
     { id: 'tudo', chu: 'Keep summoning and merging', phu: 'Tap a card below to upgrade that turret with mana. Hold it to read it. Boss at wave 10.', noi: 'tren', ok: true, tu: 7 },

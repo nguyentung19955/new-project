@@ -34,15 +34,14 @@ const KTC = {
     { id: 'thang1', ten: 'Win 1 battle', can: 1, k: 'thang', r: { vang: 300 } },
     { id: 'tran3', ten: 'Play 3 battles', can: 3, k: 'tran', r: { vang: 400 } },
     { id: 'ghep30', ten: 'Merge 30 times', can: 30, k: 'ghep', r: { ngoc: 10 } },
-    { id: 'wave15', ten: 'Reach wave 15', can: 15, k: 'wave', max: 1, kl: 12, r: { ngoc: 10 } }, // kl = kỷ lục wave tối thiểu để vào bể (tien-trinh §3.4)
+    { id: 'wave15', ten: 'Reach wave 15', can: 15, k: 'wave', max: 1, r: { ngoc: 10 } },
     { id: 'trieu50', ten: 'Summon 50 turrets', can: 50, k: 'trieu', r: { vang: 300 } },
     { id: 'coop1', ten: 'Play CO-OP or ONLINE', can: 1, k: 'coop', r: { ngoc: 15 } },
     { id: 'pvp1', ten: 'Play 1 PVP battle', can: 1, k: 'pvp', r: { ngoc: 15 } },
-    { id: 'trum2', ten: 'Defeat 2 bosses', can: 2, k: 'trum', kl: 20, r: { ngoc: 15 } },
+    { id: 'trum2', ten: 'Defeat 2 bosses', can: 2, k: 'trum', r: { ngoc: 15 } },
     { id: 'sao5', ten: 'Make 3 turrets of 5★+', can: 3, k: 'sao5', r: { vang: 400 } },
   ],
   nvBonus: { ngoc: 20 },
-  nvDoiMax: 1, // đổi 1 nhiệm vụ/ngày (miễn phí) — người dùng chốt 09/11
   // ---- Điểm danh 7 ngày (không cần liên tiếp; ngày 7 = Rương Vàng, KHÔNG bảo đảm Cổ đại) ----
   dn: [{ vang: 300 }, { ngoc: 10 }, { ruong: 'thuong' }, { ngoc: 20 }, { vang: 1000 }, { ngoc: 30 }, { ruong: 'vang' }],
   // ---- Thành tựu 1 lần (ngọc) ----
@@ -63,9 +62,7 @@ const KTC = {
   skMax: 60,
   sk: [
     [40, { vang: 500 }], [100, { the: { su: 1, n: 1 } }], [180, { ruong: 'thuong' }], [280, { ngoc: 30 }], [400, { the: { su: 1, n: 1 } }],
-    [550, { ruong: 'vang' }], [750, { ngoc: 60 }], [1000, { the: { su: 1, n: 2 } }], [1300, { ruong: 'vang' }],
-    // tiến trình đợt 1 (tuvan/tien-trinh §5.5): mốc Đỏ 1 700 → 3 600; mốc 1 700 cũ = 3 000 vàng + 1 bản Vàng ngẫu nhiên; thêm mốc 2 300 = 50 ngọc
-    [1700, { vang: 3000, the: { bac: 'vang', n: 1 } }], [2300, { ngoc: 50 }], [3600, { the: { bac: 'do', n: 1 } }],
+    [550, { ruong: 'vang' }], [750, { ngoc: 60 }], [1000, { the: { su: 1, n: 2 } }], [1300, { ruong: 'vang' }], [1700, { the: { bac: 'do', n: 1 } }],
   ],
 };
 
@@ -234,33 +231,14 @@ const KT = {
   vqTiLe(tra) { const w = KTC.vq.map(o => tra && o.wTra ? o.wTra : o.w), t = w.reduce((a, b) => a + b, 0); return w.map(x => x / t * 100); },
 
   // ---------- NHIỆM VỤ NGÀY ----------
-  // bể nhiệm vụ ngày theo kỷ lục wave (mọi chế độ): không giao "Reach wave 30" cho người chưa đạt nổi (tien-trinh §3.4, lỗi L7)
-  nvBe() { const kl = this.doc().tk.wave | 0; return KTC.nv.filter(q => (q.kl | 0) <= kl); },
   nv() {
     const s = this.doc(), ng = this.ngay();
     if (s.nv.ngay !== ng) {
-      const r = this.rng(this.bam(s.pid + ':nv:' + ng)), bo = this.nvBe().map(q => q.id), ds = [];
+      const r = this.rng(this.bam(s.pid + ':nv:' + ng)), bo = KTC.nv.map(q => q.id), ds = [];
       while (ds.length < 3 && bo.length) ds.push(bo.splice(Math.floor(r() * bo.length), 1)[0]);
-      s.nv = { ngay: ng, ds, tien: {}, nhan: {}, bonus: 0, doi: 0 };
+      s.nv = { ngay: ng, ds, tien: {}, nhan: {}, bonus: 0 };
     }
-    // danh sách hôm nay (bản lưu cũ) có nhiệm vụ vượt kỷ lục, chưa làm → thay ngay (không tính lượt đổi) → không mất thưởng đủ 3
-    s.nv.ds = s.nv.ds.filter(id => KTC.nv.some(x => x.id === id));
-    const be = this.nvBe();
-    s.nv.ds.forEach((id, i) => { const q = KTC.nv.find(x => x.id === id); if ((q.kl | 0) > (s.tk.wave | 0) && !s.nv.nhan[id] && !((s.nv.tien[id] | 0) >= q.can)) { const m = this.nvMoi(be, 'thay' + i); if (m) s.nv.ds[i] = m; } });
     return s.nv.ds.map(id => { const q = KTC.nv.find(x => x.id === id), t = Math.min(q.can, s.nv.tien[id] | 0); return Object.assign({}, q, { t, xong: t >= q.can, da: !!s.nv.nhan[id] }); });
-  },
-  // nhiệm vụ thay thế: ngẫu nhiên tất định trong bể (đã lọc) trừ các nhiệm vụ đang có
-  nvMoi(be, khoa) {
-    const s = this.s, bo = (be || this.nvBe()).map(q => q.id).filter(id => !s.nv.ds.includes(id)); if (!bo.length) return null;
-    const id = bo[Math.floor(this.rng(this.bam(s.pid + ':nvd:' + s.nv.ngay + ':' + khoa))() * bo.length)];
-    delete s.nv.tien[id]; return id;
-  },
-  // ĐỔI 1 nhiệm vụ chưa xong (miễn phí, KTC.nvDoiMax lần/ngày)
-  nvDoiDuoc(id) { const q = this.nv().find(x => x.id === id); return !!q && !q.xong && !q.da && (this.s.nv.doi | 0) < KTC.nvDoiMax; },
-  nvDoi(id) {
-    if (!this.nvDoiDuoc(id)) return null;
-    const s = this.s, i = s.nv.ds.indexOf(id), m = this.nvMoi(null, 'doi' + (s.nv.doi | 0)); if (i < 0 || !m) return null;
-    s.nv.ds[i] = m; s.nv.doi = (s.nv.doi | 0) + 1; this.luu(); return m;
   },
   nvNhan(id) {
     const q = this.nv().find(x => x.id === id); if (!q || !q.xong || q.da) return null;
@@ -340,7 +318,7 @@ const KT = {
     const or = (x, y) => { if (!x || !y) return; for (const k in y) if (y[k]) x[k] = y[k]; };
     if (b.sp && a.sp && b.sp.ngay === a.sp.ngay) or(a.sp.mua, b.sp.mua);
     if (b.vq && a.vq && b.vq.ngay === a.vq.ngay) { a.vq.free = a.vq.free || b.vq.free; a.vq.tra = Math.max(a.vq.tra | 0, b.vq.tra | 0); }
-    if (b.nv && a.nv && b.nv.ngay === a.nv.ngay) { or(a.nv.nhan, b.nv.nhan); a.nv.bonus = a.nv.bonus || b.nv.bonus; a.nv.doi = Math.max(a.nv.doi | 0, b.nv.doi | 0); }
+    if (b.nv && a.nv && b.nv.ngay === a.nv.ngay) { or(a.nv.nhan, b.nv.nhan); a.nv.bonus = a.nv.bonus || b.nv.bonus; }
     if (b.dn && a.dn) { if ((b.dn.so | 0) > (a.dn.so | 0)) a.dn = b.dn; }
     if (b.sk && a.sk && b.sk.tuan === a.sk.tuan) { or(a.sk.nhan, b.sk.nhan); a.sk.diem = Math.max(a.sk.diem | 0, b.sk.diem | 0); }
     or(a.tt, b.tt);

@@ -94,7 +94,6 @@ const THEBAI = {
   },
 
   // ---------- TÚI THƯỞNG cuối trận ----------
-  soLuot(w) { w = Math.max(1, w | 0); return Math.min(14, 1 + Math.floor(Math.min(w, 36) / 4) + Math.floor(Math.max(0, w - 36) / 8)); },
   rut(rng) {
     let x = rng() * 100;
     for (const [b, w] of THE.tiLe) { if (x < w) return b; x -= w; }
@@ -105,14 +104,13 @@ const THEBAI = {
     if (typeof G !== 'undefined' && G.debug && (G.debug.mana || G.debug.auto || G.debug.wave)) return null; // trận thử (?mana=…): không thưởng
     const wave = Math.max(1, (k && k.wave) || G.wave || 1), rng = Math.random;
     const vang = 10 * wave + 40 * (m.trum || 0) + (k && k.thang ? 150 : 0);
-    // tiến trình đợt 1 (tuvan/tien-trinh §3.3): trần 14 lượt (đạt ở wave 68) thay vì 10 lượt ở wave 36 — wave ≤ 36 không đổi
-    const luot = THEBAI.soLuot(wave);
+    const luot = Math.min(10, 1 + Math.floor(wave / 4));
     const co = (G.roster || []).filter(r => SKILLS[r.id]);
     const gom = {};
     for (let i = 0; i < luot; i++) {
       const b = this.rut(rng);
       const trong = (m.deck || []).filter(id => this.bac(id) === b);
-      const ds = trong.length && rng() < (b === 'do' ? 0.3 : 0.5) ? trong : co.filter(r => r.bac === b).map(r => r.id); // Đỏ: 30% vào thẻ trong bộ (§6.4, trước 50%)
+      const ds = trong.length && rng() < 0.5 ? trong : co.filter(r => r.bac === b).map(r => r.id);
       if (!ds.length) continue;
       const id = ds[Math.floor(rng() * ds.length)], [a, c] = THE.soBan[b];
       gom[id] = (gom[id] || 0) + a + Math.floor(rng() * (c - a + 1));

@@ -87,12 +87,8 @@ const KTUI = {
   },
   rTen(r) {
     if (r.vang) return this.so(r.vang) + ' gold'; if (r.ngoc) return this.so(r.ngoc) + ' gems'; if (r.ruong) return KTC.ruong[r.ruong].ten.toLowerCase().replace(/^./, c => c.toUpperCase());
-    if (r.the) { const id = r.the.id || (r.the.su ? KT.suKien() : null); return (id ? this.ten(id) : 'Random ' + ({ trang: 'common', xanh: 'rare', tim: 'epic', vang: 'legendary', do: 'mythic' }[r.the.bac] || r.the.bac)) + ' ×' + r.the.n; } // tên bậc tiếng Anh cố định → ngonngu.js dịch được ('Random legendary ×#')
+    if (r.the) { const id = r.the.id || (r.the.su ? KT.suKien() : null); return (id ? this.ten(id) : 'Random ' + TIERS[r.the.bac].ten.toLowerCase()) + ' ×' + r.the.n; }
     return '';
-  },
-  rTen2(r) { // nhiều phần thưởng trong 1 mốc (vd. 3 000 vàng + 1 bản Vàng): 'A + B'
-    const ds = []; if (r.vang) ds.push({ vang: r.vang }); if (r.ngoc) ds.push({ ngoc: r.ngoc }); if (r.ruong) ds.push({ ruong: r.ruong }); if (r.the) ds.push({ the: r.the });
-    return ds.map(x => this.rTen(x)).join(' · ');
   },
   muc(t, phu) { return '<div class="kt-muc"><b>' + t + '</b>' + (phu ? '<small>' + phu + '</small>' : '') + '</div>'; },
 
@@ -108,8 +104,7 @@ const KTUI = {
     h += '</div>' + this.muc('CHESTS') + '<div class="kt-ru">';
     for (const k in KTC.ruong) {
       const C = KTC.ruong[k];
-      // bộ đếm bảo hiểm (tien-trinh §6.1): Vàng chắc chắn sau N rương · Đỏ chắc chắn sau M rương (đã có s.ru.pv/pd)
-      const phu = k === 'vang' ? 'Legendary in ≤ ' + (C.pityV - s.ru.pv) + '<br>Mythic in ≤ ' + (C.pityD - s.ru.pd) : k === 'than' ? '1 Mythic + 2 Legendary' : C.so + ' cards';
+      const phu = k === 'vang' ? 'Legendary in ≤ ' + (C.pityV - s.ru.pv) : k === 'than' ? '1 Mythic + 2 Legendary' : C.so + ' cards';
       h += '<div class="kt-rc kt-rc-' + k + '"><button class="hm-ic hm-ic1 kt-i" data-act="kt-tile" data-k="' + k + '" aria-label="Odds"><img src="' + this.a(KTA.tin) + '" alt=""></button>' +
         '<img class="kt-rc-anh" src="' + this.a(KTA.ru[k]) + '" alt=""><b>' + C.ten + '</b><small>' + phu + '</small>' +
         '<button class="hm-nut2 vang" data-act="kt-ru" data-k="' + k + '">' + this.gia(C.gia, !KT.du(C.gia)) + '</button></div>';
@@ -142,7 +137,7 @@ const KTUI = {
     });
     h += '</div><button class="hm-nut2 vang kt-dn-nut" data-act="kt-dn"' + (dn.duoc ? '' : ' disabled') + '><b>' + (dn.duoc ? 'CLAIM DAY ' + (dn.i + 1) : 'NEXT IN') + '</b>' + (dn.duoc ? '' : '<small data-dh="ngay"></small>') + '</button>';
     h += this.muc('DAILY QUESTS', 'NEW IN <span data-dh="ngay"></span>');
-    for (const q of nv) h += this.hangNv(q.ten + (KT.nvDoiDuoc(q.id) ? ' <button class="kt-nvd" data-act="kt-nvd" data-id="' + q.id + '">SWAP</button>' : ''), q, q.r, 'kt-nv', q.id); // đổi 1 nhiệm vụ/ngày
+    for (const q of nv) h += this.hangNv(q.ten, q, q.r, 'kt-nv', q.id);
     const tatCa = nv.every(q => q.da);
     h += this.hangNv('Complete all 3 quests', { t: nv.filter(q => q.da).length, can: 3, xong: tatCa, da: !!s.nv.bonus }, KTC.nvBonus, 'kt-nvb', 'b');
     h += this.muc('ACHIEVEMENTS');
@@ -158,7 +153,7 @@ const KTUI = {
     const id = KT.suKien(), e = KT.sk(), ds = KT.skDs(), cuoi = KTC.sk[KTC.sk.length - 1][0];
     let h = '<div class="kt-skd"><img class="kt-skd-bn" src="' + this.a(KTA.bannerSk) + '" alt="">' + (id ? OT.mini(id) : '') + '<div><small>FEATURED TURRET</small><b>' + (id ? this.ten(id) : '') + '</b><small>ENDS IN <span data-dh="tuan"></span></small></div></div>';
     h += '<div class="kt-skp"><b>' + this.so(e.diem) + '</b><small>EVENT POINTS</small>' + TBUI.thanh({ n: Math.min(e.diem, cuoi), can: cuoi, max: false }) + '<p class="kt-chu">Every battle in any mode: wave reached + 10 for a win + 5 per boss (max ' + KTC.skMax + ').</p></div>';
-    for (const m of ds) h += this.hangNv(this.rTen2(m.r), { t: Math.min(e.diem, m.d), can: m.d, xong: m.xong, da: m.da }, m.r, 'kt-sk', m.i);
+    for (const m of ds) h += this.hangNv(this.rTen(m.r), { t: Math.min(e.diem, m.d), can: m.d, xong: m.xong, da: m.da }, m.r, 'kt-sk', m.i);
     return h;
   },
 
@@ -279,7 +274,6 @@ const KTUI = {
       case 'kt-quay': this.quay(b.dataset.tra === '1'); break;
       case 'kt-dn': { const ra = KT.dnNhan(); this.ve(); this.nhan(ra); break; }
       case 'kt-nv': { const ra = KT.nvNhan(b.dataset.id); this.ve(); this.nhan(ra); break; }
-      case 'kt-nvd': { nut(); if (KT.nvDoi(b.dataset.id)) this.ve(); else this.lac(b); break; }
       case 'kt-nvb': { const ra = KT.nvBonus(); this.ve(); this.nhan(ra); break; }
       case 'kt-tt': { const ra = KT.ttNhan(b.dataset.id); this.ve(); this.nhan(ra); break; }
       case 'kt-sk': { const ra = KT.skNhan(+b.dataset.id); this.ve(); this.nhan(ra); break; }

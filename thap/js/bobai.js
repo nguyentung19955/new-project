@@ -98,7 +98,7 @@ const BOBAI = {
     document.getElementById('chon').classList.toggle('hd-khoa', !mo);
     if (mo || !luoi) return;
     const k = document.createElement('div'); k.id = 'bb-khoa';
-    k.innerHTML = '<b>TURRETS LOCKED</b><span>Finish the short tutorial (or skip it) to unlock Common and Rare turrets.</span>' + // tiến trình đợt 1: sau hướng dẫn chỉ mở Trắng + Xanh (Tím/Vàng/Đỏ theo cấp phi công — tientrinh.js)
+    k.innerHTML = '<b>85 TURRETS LOCKED</b><span>Finish the short tutorial (or skip it) to open the full collection. The starter decks above are ready now.</span>' +
       '<div><button type="button" class="nut-xep" data-act="hd-choi">PLAY TUTORIAL</button><button type="button" class="nut-xep" data-act="hd-boqua">SKIP TUTORIAL</button></div>';
     const dai = document.getElementById('bb-dai');
     luoi.insertBefore(k, dai ? dai.nextSibling : luoi.firstChild);
