@@ -106,6 +106,12 @@ const HB = {
     if (kn && EV) { const S = SKILLS.tienhoa, s = S.chay(EV) ? 'Burnt egg: recycles itself for +' + S.MANA + ' mana' : 'Hatches in ' + Math.ceil(S.con(EV)) + 's → +1★ turret · 7★ burns: auto +' + S.MANA + ' mana'; // 09/11: trứng cháy tự tái chế (game.js TU_KICH)
       if (kn._ev !== s) { kn._ev = s; kn.textContent = s; } }
     else if (kn) kn._ev = null;
+    // Genesis Core (10/11): dòng kỹ năng = trạng thái sống (lượt còn, giây tới lần tặng kế / đang chờ) — trước chỉ câu đầu mô tả
+    const KS = X && X.T && X.T.id === 'khoisinh' && G.ban[X.T.ban] && G.ban[X.T.ban].t[X.T.o] === X.T ? X.T : null;
+    if (kn && KS) { const S = SKILLS.khoisinh, B = G.ban[KS.ban], N = S.sapNhan(B, KS);
+      const s = 'Gifts left ' + S.luotCon(KS) + ' · ' + (N ? 'next +1★ in ' + Math.ceil(Math.max(0, S.g(KS) - (KS.sinhT || 0))) + 's' : 'WAITING: no neighbour to raise'); // ngắn: vừa 1 dòng ở 390 px
+      if (kn._ks !== s) { kn._ks = s; kn.textContent = s; } }
+    else if (kn) kn._ks = null;
     // Prism Thief HỢP THỂ: dòng kỹ năng = mặt nạ 4 màu sống (số hợp thể, +% ST, cộng dồn) thay chữ chung của ụ đơn (skills7.js)
     const PT = X && X.T && X.T.id === 'bienmau' && X.T.pf > 0 && G.ban[X.T.ban] && G.ban[X.T.ban].t[X.T.o] === X.T ? X.T : null;
     if (kn && PT) { const S = SKILLS.bienmau, s = 'SPECTRUM PRISM · fusion ' + PT.pf + ' · all 4 colours · +' + Math.round(S.HOP_DMG * 100 * PT.pf) + '% damage · stacks ' + [0, 1, 2, 3].map(q => S.st(PT, q)).join('/') + ' · swipe it with 3 other Prisms to fuse again'; if (kn._pm !== s) { kn._pm = s; kn.textContent = s; } }

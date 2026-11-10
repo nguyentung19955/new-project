@@ -227,7 +227,10 @@ function upCapSau(id) {
   }
   const ta = a.toc.match(UP_SO), tb = b.toc.match(UP_SO);
   if (ta && tb && ta[0] !== tb[0]) ds.push({ k: 'toc', ten: 'Fire rate', a: ta[0], b: tb[0], d: upHieu(upSoV(tb[0]) - upSoV(ta[0]), /s$/.test(tb[0]) ? 's' : '') });
-  if (e && a.the != null && b.the != null && Math.abs(b.the - a.the) > 1e-9) {
+  if (e && e.giay) { // Genesis Core: hiện số GIÂY thật giữa 2 lần tặng thay cho % thời gian (10/11)
+    const x = e.giay(t.k), y = e.giay(t.k + 1), r1 = (v) => Math.round(v * 10) / 10;
+    if (Math.abs(y - x) > 1e-9) ds.push({ k: 'the', ten: e.tenGiay, a: x.toFixed(1) + 's', b: y.toFixed(1) + 's', d: upHieu(r1(y) - r1(x), 's'), va: x, vb: y });
+  } else if (e && a.the != null && b.the != null && Math.abs(b.the - a.the) > 1e-9) {
     // 1 số lẻ như hàng CARD LV (TBUI.knV); bước nhỏ hơn 0.1 → 2 số lẻ để vẫn thấy tăng
     const le = Math.round(a.the * 10) === Math.round(b.the * 10) ? 100 : 10, r = (v) => String(Math.round(v * le) / le);
     const f = (v) => (e.tien || '') + r(v) + (e.dv || '');
@@ -518,6 +521,8 @@ const UP = {
     P.push(this.sauHTML(cs));
     P.push('<div class="up-spec">' + (ht
       ? this.o('Boosts', upSC(BUFF[SUP_LOAI[id]].ten), dd('the')) + this.o('Buffs', upVung(id)) + this.o('From 5★', upVung(id) === '—' ? '—' : (upDauChan(id) || {}).b ? '+ diagonals' : 'Same cells') + this.o('Target', upNham(id))
+      : id === 'khoisinh' && KY_NANG_CAP[id].giay // Genesis Core không bắn: 2 ô đầu = nhịp tặng sao (giây thật theo cấp thẻ) + số lượt tặng (10/11)
+      ? this.o('Raise interval', KY_NANG_CAP[id].giay(typeof THEBAI !== 'undefined' ? THEBAI.the(id).k : 0).toFixed(1) + 's', dd('the')) + this.o('Gifts', '= its stars') + this.o('Range', tam) + this.o('Target', upNham(id))
       : this.o('Damage', s1.dmg != null ? s1.dmg : '—', dd('dmg')) + this.oToc(s1.toc, dd('toc')) +
         this.o('Range', tam) + this.o('Target', sk ? upNham(id) : '—')) + '</div>');
     // kỹ năng 1 dòng + Test range
