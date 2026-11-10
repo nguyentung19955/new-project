@@ -31,7 +31,9 @@ function doTrang(NGUONG) { // chạy trong trang: trả danh sách nghi lỗi
   const W = innerWidth, H = innerHeight;
   const alpha = (c) => { if (!c || c === 'transparent') return 0; const m = c.match(/rgba?\(([^)]+)\)/); if (!m) return 1; const p = m[1].split(/[ ,/]+/).filter(Boolean); return p.length > 3 ? parseFloat(p[3]) : 1; };
   const csC = new Map(); const cs = (e) => { let v = csC.get(e); if (!v) { v = getComputedStyle(e); csC.set(e, v); } return v; };
-  const hien = (e) => { for (let x = e; x && x !== document.documentElement; x = x.parentElement) { const s = cs(x); if (s.display === 'none' || s.visibility === 'hidden' || +s.opacity < 0.05 || x.hidden) return false; } const r = e.getBoundingClientRect(); return r.width > 1 && r.height > 1 && r.right > 0 && r.bottom > 0 && r.left < W && r.top < H; };
+  const hien = (e) => { for (let x = e; x && x !== document.documentElement; x = x.parentElement) { const s = cs(x); if (s.display === 'none' || s.visibility === 'hidden' || +s.opacity < 0.05 || x.hidden) return false; } const r = e.getBoundingClientRect(); if (!(r.width > 1 && r.height > 1 && r.right > 0 && r.bottom > 0 && r.left < W && r.top < H)) return false;
+    for (let x = e.parentElement; x && x !== document.body; x = x.parentElement) { const s = cs(x); if (/auto|scroll/.test(s.overflowY + s.overflowX)) { const q = x.getBoundingClientRect(); if (r.top >= q.bottom - 2 || r.bottom <= q.top + 2) return false; } } // nằm hẳn ngoài vùng cuộn
+    return true; };
   const ten = (e) => { let s = e.tagName.toLowerCase() + (e.id ? '#' + e.id : '') + (e.classList.length ? '.' + [...e.classList].slice(0, 3).join('.') : ''); let p = e.parentElement, d = 0; while (p && d < 3 && p !== document.body) { s = p.tagName.toLowerCase() + (p.id ? '#' + p.id : '') + (p.classList.length ? '.' + [...p.classList].slice(0, 2).join('.') : '') + ' > ' + s; p = p.parentElement; d++; } return s; };
   const coHinh = (e) => { // khung có hình (để so ảnh con nằm gọn)
     if (e.tagName === 'BUTTON') return true;

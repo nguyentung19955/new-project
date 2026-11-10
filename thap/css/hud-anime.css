@@ -293,3 +293,5 @@ html.ha2 body #wrap #duoi #bo-the .the > .cb-qua { top: auto !important; bottom:
 html.ha2 body #wrap #duoi #bo-the .the > .cb-qua .cb-q { flex: 0 0 auto !important; flex-direction: row !important; align-items: center !important; justify-content: center !important; gap: 0 !important; }
 html.ha2 body #wrap #duoi #bo-the .the > .cb-qua .cb-q img { width: 8px !important; max-width: 8px !important; filter: none !important; }
 html.ha2 body #wrap #duoi #bo-the .the > .cb-qua .cb-q b { font-size: 10px !important; margin: 0 !important; letter-spacing: -.5px !important; text-shadow: 0 1px 0 #000, 0 0 2px #000 !important; transform: none !important; }
+/* 10/11 rà soát giao diện: ô số màn KẾT QUẢ — ô có thêm dòng "NEW RECORD/KỶ LỤC MỚI" (3 dòng) thì nhãn trên + dòng dưới chạm mép ảnh ua_o → đệm theo mép ảnh, dòng sát nhau hơn */
+html.ha2 body #wrap #ketqua.kq7 .kq-o { padding: 12px 8px 11px !important; gap: 0 !important; }

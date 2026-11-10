@@ -3,6 +3,10 @@
 > Game merge tower-defense trong `thap/`. Luật game và bàn giao: `docs/demo-hop-tuong/ban-giao/BAN-GIAO.md`, luật code/hình: `thap/QUY-TAC-HINH.md`.
 > Mỗi session thêm một mục `## claude/<tên-nhánh> — …` ở CUỐI file (file gộp kiểu union, không xung đột).
 
+## claude/demo-hop-tuong — rà soát giao diện đợt 3: trận + VI + 375×667 (10/11)
+- Màn kết quả: ô số có dòng "KỶ LỤC MỚI" không còn chạm mép khung. HUD solo/PVP/co-op, tạm dừng, màn tải, 375×667, tiếng Việt: đã soi ảnh, không lỗi lòi/cắt. Bảng tổng: `docs/demo-hop-tuong/tuvan/ra-soat-giao-dien/BANG.md`.
+- Công cụ rà soát: bỏ phần tử nằm ngoài vùng cuộn, nút thuộc lớp phủ khác (giảm báo nhầm).
+
 ## claude/demo-hop-tuong — rà soát giao diện đợt 2: cửa hàng / nhiệm vụ / sự kiện / chế độ / trùm / hồ sơ (10/11)
 - Bảng phủ & bảng trượt (UNLOCKED, tỉ lệ rương, Leo Tháp, Săn Trùm, Thử thách, Vô tận, danh sách/chi tiết trùm, chế độ, cài đặt, hồ sơ): nội dung cuộn không còn trượt qua viền khung ảnh; tiêu đề/nút không đè mép.
 - Hàng nhiệm vụ/sự kiện/lò rèn: ổ tròn thưởng nằm gọn trong hàng; ô Đăng nhập & ô mốc tuần: chữ/số không đè mép; nút i của rương nằm trong góc; hàng chế độ khoá không cụt chữ.

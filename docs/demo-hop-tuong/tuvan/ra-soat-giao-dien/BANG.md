@@ -24,3 +24,7 @@ Mỗi màn chụp `<man>_<cỡ>_<ngôn ngữ>.jpg` + `_d.jpg` (khoanh màu chỗ
 | 16 | Vô tận / Thử thách tuần › mốc tuần | 390×844 | EN/VI | "WAVE n" đè mép trên ô, "2,000" chạm mép phải, rương chạm đáy | đệm 10/6/9 px, icon 18 px | Đã sửa |
 | 17 | Chế độ chơi › hàng khoá | 390×844 | EN | Chữ phụ 2 dòng ("Beat a boss…", "After Tower floor 100…") chạm/bị mép dưới cắt | đệm 11 px, cao theo nội dung | Đã sửa |
 | 18 | Rương / vòng quay / thưởng thẻ | mọi cỡ | — | Khung chân dung nhỏ o_vien_<bậc> còn kiểu thép có ốc (lệch tông anime) | Cần ảnh khung vuông anime theo bậc (chưa có trong assets) | Còn lại — cần ảnh mới |
+| 19 | Kết quả trận (thắng, có KỶ LỤC MỚI) | 390×844 | VI | Ô giữa 3 dòng: "KỶ LỤC SOLO" chạm mép trên, "KỶ LỤC MỚI" chạm mép dưới khung ua_o | `hud-anime.css` đệm 12/11 px, gap 0 | Đã sửa |
+| 20 | HUD solo/PVP/co-op, tạm dừng, màn tải | 390×844 · 375×667 | EN/VI | Đã soi: không lỗi lòi/cắt (máy báo "260" mana cắt 2 px chân chữ = vùng trong suốt của font, ảnh không thấy cắt; tim PVP báo vượt khung = khung cha #top ẩn, không phải lỗi) | — | Không lỗi |
+| 21 | Mọi màn ngang 844×390 | 844×390 | EN | Game chỉ chơi dọc: điện thoại ngang hiện bảng "ROTATE TO PLAY" (gọn khung, đã xem) | — | Không lỗi |
+| 22 | Bắn thử 375×667, bộ bài/bộ sưu tập 375×667 VI | 375×667 | EN/VI | Đã xem: khung/nút/băng gọn, tên thẻ đủ, nhóm "n/m OWNED" gọn (máy báo chồng nút = nút trang phía sau tấm, không phải lỗi) | — | Không lỗi |
