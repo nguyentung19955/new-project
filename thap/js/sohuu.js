@@ -4,7 +4,7 @@
 //  · SỞ HỮU: chỉ ụ ĐÃ CÓ (≥ 1 bản sao từng nhận) mới vào bộ bài / bộ mẫu / bộ ngẫu nhiên. Người mới có sẵn 10 ụ (8 Trắng + 2 Xanh, SHC.khoiDau);
 //    hướng dẫn + Hành trình 7 ngày tặng thêm ụ cụ thể (SHC.qua). Sở hữu = turret_kt.sh.co[id] ∪ có mục trong turret_the.c ∪ cp.giu (tientrinh) ∪ ụ khởi đầu.
 //  · MỞ NHÓM: mỗi cấp phi công mở 1 NHÓM ụ cụ thể (SHC.nhom, 3–6 ụ có chủ đề chung) vào "bể rơi" của rương / cửa hàng / thưởng;
-//    ụ chưa mở KHÔNG rơi. Đỏ cần thêm kỷ lục ≥ wave 30 (TTC.doWave). Ụ đã có luôn nhận thêm bản sao (để lên cấp thẻ) dù nhóm chưa mở.
+//    ụ chưa mở KHÔNG rơi. Đỏ cần thêm đã qua tầng 40 Leo Tháp (TTC.doTang; người cũ: kỷ lục Solo ≥ wave 30). Ụ đã có luôn nhận thêm bản sao (để lên cấp thẻ) dù nhóm chưa mở.
 //  · 3 TRẠNG THÁI trên lưới bộ bài / bộ sưu tập: ĐÃ CÓ · CHƯA CÓ (mờ + nguồn kiếm) · CHƯA MỞ (mờ + "PILOT LV n"); chạm vẫn mở trang ụ.
 //  · NGƯỜI CHƠI CŨ: không mất gì — mọi ụ có bản sao/cấp thẻ, đang trong bộ bài / bộ mẫu lúc chuyển → sở hữu (ghi vào sh.co một lần).
 //  · Lưu turret_kt.sh = { v, co:{id:1}, moi:{id:1}, bao:{id:1}, qua:{k:1}, loc }; gộp hồ sơ Firebase: OR.
@@ -17,7 +17,7 @@ const SHC = {
   khoiDau: ['tia', 'lien', 'sungluc', 'bang', 'set', 'mana', 'doc', 'phagiap', 'khuech', 'laser'],
   // quà ụ CỤ THỂ: hướng dẫn + Hành trình 7 ngày (ngày 1 / 4 / 6) — tặng thẳng (không phải rơi ngẫu nhiên)
   qua: { hd: 'kiembang', hj1: 'cuongno', hj4: 'bao', hj6: 'epxung' },
-  // NHÓM MỞ THEO CẤP PHI CÔNG: cấp → { ten (chủ đề), ds }. Cấp 1 = khởi đầu. Đỏ từ cấp 12 (thêm kỷ lục wave 30).
+  // NHÓM MỞ THEO CẤP PHI CÔNG: cấp → { ten (chủ đề), ds }. Cấp 1 = khởi đầu. Đỏ từ cấp 12 (thêm qua tầng 40 Leo Tháp).
   nhom: {
     1: { ten: 'Starter Arsenal', ds: ['tia', 'lien', 'sungluc', 'bang', 'set', 'mana', 'doc', 'phagiap', 'khuech', 'laser'] },
     2: { ten: 'Spread & Traps', ds: ['phun', 'bomhen', 'kiembang', 'vungdoc'] },
@@ -101,7 +101,7 @@ const SH = {
   },
   // ghi sở hữu (gọi khi nhận bản sao); trả true nếu là ụ MỚI
   themCo(id) { if (!id || this.coThat(id)) return false; const h = this.st(); h.co[id] = 1; h.moi[id] = 1; return true; },
-  moVoi(id, L) { if (L < this.capMoBac(id)) return false; return THEBAI.bac(id) !== 'do' || TT.kyLuc() >= TTC.doWave; },
+  moVoi(id, L) { if (L < this.capMoBac(id)) return false; return THEBAI.bac(id) !== 'do' || TT.doDat(); }, // Đỏ: + qua tầng 40 Leo Tháp (hoặc kỷ lục Solo cũ ≥ wave 30)
   mo(id) { return ADMIN.la() || this.moVoi(id, TT.cap()); },
   trongPool(id) { return !!(id && SKILLS[id] && (this.mo(id) || this.co(id))); },
   pool(b) { return this.dsCo().filter(id => THEBAI.bac(id) === b && this.trongPool(id)).sort(); },
@@ -109,11 +109,11 @@ const SH = {
   tt(id) { return this.co(id) ? 'co' : this.mo(id) ? 'chua' : 'khoa'; },
   dem() { const ds = this.dsCo(); let co = 0, mo = 0; for (const id of ds) { const c = this.co(id); if (c) co++; if (c || this.mo(id)) mo++; } return { co, mo, tong: ds.length }; },
   nguon(id) { return SHC.nguon[THEBAI.bac(id)] || ''; },
-  dk(id) { const L = this.capMoBac(id); return THEBAI.bac(id) === 'do' ? 'Pilot Level ' + L + ' and best wave ' + TTC.doWave : 'Pilot Level ' + L; },
+  dk(id) { const L = this.capMoBac(id); return THEBAI.bac(id) === 'do' ? 'Pilot Level ' + L + ' and Tower floor ' + TTC.doTang : 'Pilot Level ' + L; },
   chuKhoa(id) { return this.tt(id) === 'khoa' ? 'Unlocks at ' + this.dk(id) : 'Not owned yet · ' + this.nguon(id); },
   // nhóm mở ở cấp L (ụ có kỹ năng)
   nhomCap(L) { const n = SHC.nhom[L]; return n ? n.ds.filter(id => SKILLS[id] && G.rosterMap[id]) : []; },
-  // ụ vừa vào bể rơi mà chưa báo (lên cấp / đạt wave 30 cho Đỏ) → đánh dấu đã báo
+  // ụ vừa vào bể rơi mà chưa báo (lên cấp / qua tầng 40 cho Đỏ) → đánh dấu đã báo
   baoMoi() {
     const h = this.st(), ra = [];
     if (!this.dsCo().length) return ra; // chưa nạp danh sách ụ
@@ -142,7 +142,7 @@ const SHUI = {
     if (t === 'co') return '';
     if (t === 'chua') return '<b class="sh-chua-t">NOT OWNED</b><small>' + SH.nguon(id) + '</small>';
     const L = SH.capMoBac(id);
-    return '<i class="sh-o" aria-hidden="true"></i><b>PILOT</b><b>LV ' + L + '</b>' + (THEBAI.bac(id) === 'do' ? '<small>WAVE ' + TTC.doWave + '</small>' : '');
+    return '<i class="sh-o" aria-hidden="true"></i><b>PILOT</b><b>LV ' + L + '</b>' + (THEBAI.bac(id) === 'do' ? '<small>FLOOR ' + TTC.doTang + '</small>' : '');
   },
   // danh sách ụ (ảnh + tên) cho bảng lên cấp
   dsU(ds) { return '<span class="sh-ds">' + ds.map(id => '<span class="sh-u b-' + THEBAI.bac(id) + '">' + OT.mini(id) + '<small>' + this.ten(id) + '</small></span>').join('') + '</span>'; },

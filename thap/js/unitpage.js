@@ -395,7 +395,7 @@ const UP = {
   capNutBo() {
     const nut = this.el.querySelector('.up-nut'), chu = nut.querySelector('.up-nut-chu'), so = nut.querySelector('.up-nut-so');
     if (this.mv) { // trang chỉ huy: dùng chỉ huy này
-      if (typeof mvCo === 'function' && !mvCo(this.mv)) { const m = MAVUONG[this.mv].mo2; chu.textContent = UP_TXT.locked; so.textContent = 'Wave ' + m.wave + ' or ' + m.ngoc + ' gems'; nut.disabled = true; nut.classList.remove('bo'); return; } // chưa mở (08/11)
+      if (typeof mvCo === 'function' && !mvCo(this.mv)) { const m = MAVUONG[this.mv].mo2; chu.textContent = UP_TXT.locked; so.textContent = 'Floor ' + m.tang + ' or ' + m.ngoc + ' gems'; nut.disabled = true; nut.classList.remove('bo'); return; } // chưa mở (08/11)
       const dang = UI.mv === this.mv;
       chu.textContent = dang ? 'Selected' : 'Use commander'; so.textContent = dang ? '' : 'Current: ' + upSC(String((MAVUONG[UI.mv] || MAVUONG.hero).ten).toLowerCase());
       nut.disabled = false; nut.classList.toggle('bo', dang); return;

@@ -23,6 +23,7 @@ Làm **lần lượt từng giai đoạn**, giai đoạn trước xong (đã ki�
 
 | Việc | Trạng thái |
 |---|---|
+| **Bỏ Solo** (anh chốt 10/11): Leo Tháp là chế độ một mình chính — PLAY vào thẳng tầng kế, GAME MODE bỏ SOLO, Leo Tháp mở sau hướng dẫn; điều kiện Đỏ = qua tầng 40 (người cũ wave 30 giữ quyền); nhiệm vụ / Hành trình / XP / sự kiện / Rương Trận nhỏ / kỷ lục hồ sơ tính theo trận Leo Tháp | **xong 10/11** (chưa xuất bản) — `tuvan/che-do-c/THIET-KE.md` §11 |
 | Đổi tên game → **Astral Arsenal** (cửa hàng: "Astral Arsenal: Merge Defense"; logo, tiêu đề, manifest) | **xong 09/11** (xuất bản) |
 | **Gacha thu thập**: chỉ dùng ụ đã sở hữu (người mới 10 ụ), mở nhóm ụ theo cấp phi công vào bể rơi, thưởng = rương (Trận / Sự kiện / Huyền thoại / Cổ đại) — `tuvan/gacha-thu-thap/BANG-MO-NHOM.md` | **xong 09/11** (xuất bản) |
 

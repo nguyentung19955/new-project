@@ -571,7 +571,7 @@ const ONS = {
             if (l) l.textContent = 'PLAY ONLINE AGAIN'; if (d) d.textContent = 'EDIT DECK';
           }, 1200);
         }
-        if (typeof TK !== 'undefined') TK.ghiTran(!!thang, G.wave);
+        if (typeof TK !== 'undefined') TK.ghiTran(!!thang, G.cd || G.tw ? 0 : G.wave); // trận Leo Tháp / chế độ C, D: không ghi kỷ lục wave (bắt đầu ở wave cao)
       }
       return r;
     });

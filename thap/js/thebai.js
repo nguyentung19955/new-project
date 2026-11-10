@@ -94,6 +94,7 @@ const THEBAI = {
   },
 
   // ---------- TÚI THƯỞNG cuối trận ----------
+  luotThap(t) { return 2 + Math.floor(Math.max(1, Math.min(100, t | 0)) / 34); }, // Rương Trận Leo Tháp: 2 / 3 / 4 lượt
   soLuot(w) { w = Math.max(1, w | 0); return Math.min(14, 1 + Math.floor(Math.min(w, 36) / 4) + Math.floor(Math.max(0, w - 36) / 8)); },
   rut(rng) {
     let x = rng() * 100;
@@ -104,9 +105,13 @@ const THEBAI = {
     if (!m || m.tut || m._thuong) return m && m._thuong;
     if (typeof G !== 'undefined' && G.debug && (G.debug.mana || G.debug.auto || G.debug.wave)) return null; // trận thử (?mana=…): không thưởng
     const wave = Math.max(1, (k && k.wave) || G.wave || 1), rng = Math.random;
-    const vang = 10 * wave + 40 * (m.trum || 0) + (k && k.thang ? 150 : 0);
+    // RƯƠNG TRẬN NHỎ của LEO THÁP (10/11, thay Solo): chỉ khi THẮNG tầng (kể cả thắng lại) — 2 lượt (tầng 1–33) / 3 (34–67) / 4 (68–100),
+    //  vàng 60 + t. Trận tầng ~2–3 phút → ≈ 0,7–1,3 lượt/phút, ngang nhịp Rương Trận Solo cũ (≈ 0,55–0,8 lượt/phút). Thua tầng: không rương.
+    const lt = m.thap;
+    if (lt && !lt.thang) return null;
+    const vang = lt ? 60 + (lt.t | 0) : 10 * wave + 40 * (m.trum || 0) + (k && k.thang ? 150 : 0);
     // tiến trình đợt 1 (tuvan/tien-trinh §3.3): trần 14 lượt (đạt ở wave 68) thay vì 10 lượt ở wave 36 — wave ≤ 36 không đổi
-    const luot = THEBAI.soLuot(wave);
+    const luot = lt ? THEBAI.luotThap(lt.t) : THEBAI.soLuot(wave);
     // gacha thu thập (sohuu.js): phần "thẻ bất kỳ" chỉ rơi ụ trong BỂ RƠI (đã mở theo cấp phi công hoặc đã có); bậc chưa có ụ → bỏ lượt như cũ
     const co = (G.roster || []).filter(r => SKILLS[r.id] && (typeof SH === 'undefined' || SH.trongPool(r.id)));
     const gom = {};

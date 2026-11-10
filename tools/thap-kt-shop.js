@@ -91,7 +91,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     KT._bay = null;
     o.nguon = !!(KT.s.nguon && KT.s.nguon['ngoc:quest'] > 0 && KT.s.nguon['vang:shop'] < 0 && KT.s.nguon['ngoc:login'] !== undefined || KT.s.nguon['vang:login']);
     // ---- 6. trận → nhiệm vụ / sự kiện / thành tựu ----
-    const ngay = KT.ngay(); KT.s.nv = { ngay, ds: ['ghep30', 'coop1', 'wave15'], tien: {}, nhan: {}, bonus: 0 };
+    const ngay = KT.ngay(); KT.s.nv = { ngay, ds: ['ghep30', 'coop1', 'trum2'], tien: {}, nhan: {}, bonus: 0 };
     const e0 = KT.sk().diem;
     KT.batTran('coop'); KT.tran.ghep = 31; KT.tran.sao7 = 1; KT.ketTran({ wave: 22, thang: true }, { trum: 2, che: 'coop' });
     const nv = KT.nv(); o.tran = nv.every(x => x.xong); o.diem = KT.sk().diem - e0; o.sao7 = KT.doc().tk.sao7 >= 1;
@@ -117,7 +117,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   ok(r.f1 && r.f2 && r.m1 && r.m2 && r.d1 && r.d2 && r.v1 && r.v2 && r.vTra === 5 && r.q1 && r.q2 && r.b0 && r.b1 && r.b2 && r.t1 && r.t2 && r.e1 && r.e2 && r.e3, 'không nhận 2 lần (quà shop, mua, điểm danh, quay miễn phí, 5 lượt ngọc, nhiệm vụ, thưởng đủ 3, thành tựu, mốc sự kiện)', JSON.stringify(r));
   ok(r.nguon, 'mối nối tiền tệ KT.cong ghi nhãn nguồn (quest/login/shop…, để dành iap/ad/pass)', JSON.stringify(r.nguon));
   ok(r.lui && r.moi, 'lùi đồng hồ không mở lại; sang ngày mới thì mở lại', JSON.stringify([r.lui, r.moi]));
-  ok(r.tran && r.diem === 42 && r.sao7 && r.tran2, 'trận co-op → nhiệm vụ ghép/co-op/wave xong, +42 điểm sự kiện, 7★, không cộng 2 lần', JSON.stringify([r.tran, r.diem, r.sao7, r.tran2]));
+  ok(r.tran && r.diem === 42 && r.sao7 && r.tran2, 'trận co-op → nhiệm vụ ghép/co-op/2 trùm xong, +42 điểm sự kiện, 7★, không cộng 2 lần', JSON.stringify([r.tran, r.diem, r.sao7, r.tran2]));
   ok(r.gop && r.gop2, 'gộp hồ sơ Firebase: bản mới hơn thắng, cờ đã nhận giữ, cấp thẻ lấy lớn nhất', JSON.stringify([r.gop, r.gop2]));
 
   // ---- 8. giao diện: mở mọi thẻ, mua, mở rương, quay — không lỗi ----

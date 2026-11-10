@@ -5,7 +5,7 @@
 > gacha `tuvan/gacha-thu-thap/BANG-MO-NHOM.md` (thưởng = rương, chỉ ụ trong bể rơi). Mã: `thap/js/chedo-d.js` + `thap/css/chedo-d.css`.
 > Trả lời người dùng: *"Có chế độ endless khi qua level nào đó chưa"* — trước giai đoạn D **chưa có**. Giai đoạn D thêm Vô tận.
 > **Đổi hướng 09/11 (người dùng)**: BỎ Solo — **Leo Tháp** là chế độ một mình chính; Vô tận mở **sau tầng 100** và **đánh tiếp từ đó**
-> (bản đầu của tài liệu này ghi "Solo qua wave 70" — đã thay). Việc bỏ Solo + đổi điều kiện "wave 30" sang tầng tháp do phiên khác làm sau.
+> (bản đầu của tài liệu này ghi "Solo qua wave 70" — đã thay). Bỏ Solo + đổi điều kiện "wave 30" sang tầng 40: **xong 10/11** — `che-do-c/THIET-KE.md` §11.
 > Mọi số = đề xuất ban đầu; đo lại khi có dữ liệu người chơi.
 
 ## 0. Nguyên tắc (giữ triết lý người dùng)

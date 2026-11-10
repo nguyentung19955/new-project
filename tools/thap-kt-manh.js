@@ -24,7 +24,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   const t0 = await tong();
   r = await p.evaluate(() => { KT.batTran('solo'); MH.tran = { hive: 1, freezer: 1, khong_co: 1 }; const x = KT.ketTran({ wave: 61, thang: false }, { che: 'solo', trum: 2 }); return { mh: (x.mh || []).map(g => g.nhan), sw: MH.st().sw, tr: Object.keys(MH.st().tr).sort().join() }; });
   let t1 = await tong();
-  ok(r.mh.join('|') === 'SOLO WAVE 20|SOLO WAVE 30|SOLO WAVE 40|SOLO WAVE 50|SOLO WAVE 60|FIRST KILL' && r.sw === 61 && r.tr === 'freezer,hive', 'hết trận Solo wave 61 + 2 trùm: tự nhận 5 mốc + trùm lần đầu (bỏ id lạ)', JSON.stringify(r));
+  ok(r.mh.join('|') === 'TOWER FLOOR 20|TOWER FLOOR 40|TOWER FLOOR 55|TOWER FLOOR 70|TOWER FLOOR 85|FIRST KILL' /* 10/11: mốc đổi tên theo tầng, kỷ lục Solo cũ vẫn tính */ && r.sw === 61 && r.tr === 'freezer,hive', 'hết trận Solo wave 61 + 2 trùm: tự nhận 5 mốc + trùm lần đầu (bỏ id lạ)', JSON.stringify(r));
   ok(t1.vang - t0.vang === 1 + 2 + 3 + 3 + 4 + 2 && t1.do - t0.do === 2, 'số bản: Vàng +15, Đỏ +2', JSON.stringify([t0, t1]));
   r = await p.evaluate(() => { KT.batTran('coop'); MH.tran = {}; const x = KT.ketTran({ wave: 75 }, { che: 'coop' }); return { n: (x.mh || []).length, sw: MH.st().sw }; });
   ok(r.n === 0 && r.sw === 61, 'co-op wave 75 không tính mốc Solo', JSON.stringify(r));

@@ -1,4 +1,4 @@
-// (giai đoạn C — chedo-c.js: thêm khoá QUICK TRIALS sau hướng dẫn · TOWER CLIMB cấp 5 · BOSS HUNT 3 trùm)
+// (giai đoạn C — chedo-c.js: thêm khoá QUICK TRIALS sau hướng dẫn · TOWER CLIMB sau hướng dẫn (10/11 bỏ Solo; trước: cấp 5) · BOSS HUNT 3 trùm)
 // (giai đoạn D — chedo-d.js: thêm khoá ENDLESS sau tầng 100 Leo Tháp; WEEKLY CHALLENGE cấp 8 khi bật CDDC.tw.bat)
 // TURRET MERGE — KIỂM TIẾN TRÌNH ĐỢT 1 (js/tientrinh.js + chỉnh kinhte.js / thebai.js / manh.js) — tuvan/tien-trinh/THIET-KE.md
 //  ✓ người mới: cấp 1, Trắng/Xanh mở, Tím/Vàng/Đỏ khoá; XP = wave + 3×trùm + 10 thắng; lên cấp phát thưởng 1 lần; cấp 3/6/12 mở Tím/Vàng/Đỏ (Đỏ cần kỷ lục 30)
@@ -117,7 +117,8 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     const o = {}, t = TT.st(), g0 = KT.soNgay(KT.ngay());
     o.ngay1 = TT.hjNgay(); o.d2khoa = !TT.hjDs()[1].mo;
     o.chuaXong = TT.hjNhan(1) === null;
-    for (let i = 0; i < 3; i++) { KT.batTran('solo'); KT.ketTran({ wave: 16, thang: false }, { trum: 1, che: 'solo' }); }
+    // 10/11 bỏ Solo: ngày 1 = qua tầng 5 + 3 trận + ụ 3★ — 3 trận Leo Tháp thắng tầng 3/4/5
+    for (let i = 0; i < 3; i++) { KT.batTran('solo'); KT.tran.che = 'thap'; TT.tr = { sao: 3, s5: 0 }; CD.st().thap.max = 3 + i; KT.ketTran({ wave: 9, thang: true }, { trum: 0, che: 'solo', thap: { t: 3 + i, qua: 5, thang: true } }); }
     o.xong1 = TT.hjDs()[0].xong; const v0 = KT.vang, n0 = KT.ngoc; const ra = TT.hjNhan(1); o.ra = !!ra && KT.vang - v0 === 500 && KT.ngoc - n0 === 30 && ra.ru && ra.ru.length === 2 && ra.ru[0].k === 'qua' && ra.ru[1].k === 'thuong' && ra.the.some(x => x.id === 'cuongno') && SH.co('cuongno'); // gacha thu thập: quà Berserker + Rương Thường
     o.lan2 = TT.hjNhan(1) === null;
     // ngày 3: chọn 1 trong 3 Sử thi
@@ -140,7 +141,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   r = await p.evaluate(() => {
     const o = {}, t = TT.st(), bay = KT._bay;
     KT._bay = () => new Date(Date.now() + 7 * 864e5 + 3600e3); // đã sang ngày 8: ngày 5/6 vẫn làm bù được
-    t.dem.wave = 25; t.dem.trumMax = 2; t.dem.sao5x = 1; t.dem.sao5t = 0;
+    t.dem.wave = 25; t.dem.trumMax = 2; t.dem.trum = 3; /* 10/11: ngày 5 = qua tầng 25 (wave 25 cũ quy đổi) + hạ 3 trùm */ t.dem.sao5x = 1; t.dem.sao5t = 0;
     o.d5chua = !TT.hjDs()[4].xong;
     for (let i = 0; i < 3; i++) { KT.batTran('solo'); KT.tran.sao5 = 2; KT.ketTran({ wave: 12, thang: false }, { trum: 0, che: 'solo' }); } // 6 ụ 5★ cộng dồn, chưa từng có 2 ụ 5★ cùng lúc
     const d5 = TT.hjDs()[4]; o.sao5t = t.dem.sao5t; o.d5 = d5.mo && d5.xong && d5.v[2].alt && d5.v[2].alt.xong && !(d5.v[2].t >= d5.v[2].can);
@@ -269,7 +270,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     o.toast = (document.getElementById('chon-goi-nhac') || {}).textContent; o.che2 = HM.che;
     return o;
   });
-  ok(r.mo === '' && r.cheCoop === 'solo' && r.cheOnl === 'solo' && !r.shopMo && !r.vqMo && r.quay && r.ru && r.ruFree && r.sp && r.onl && r.nut && r.che === 'coop,pvp,online,thu,thap,san,vt' && /Pilot Level 4/.test(r.toast) && r.che2 === 'solo',
+  ok(r.mo === '' && r.cheCoop === 'thap' && r.cheOnl === 'thap' && !r.shopMo && !r.vqMo && r.quay && r.ru && r.ruFree && r.sp && r.onl && r.nut && r.che === 'thap,coop,pvp,online,thu,san,vt' && /Pilot Level 4/.test(r.toast) && r.che2 === 'thap',
     'người mới (chưa xong hướng dẫn): khoá CO-OP/PVP/ONLINE/cửa hàng/vòng quay/rương (rương thưởng vẫn mở), nút tối + "LV 2", chạm → điều kiện', JSON.stringify(r));
   await chup('khoa-1-che-moi');
   await p.evaluate(() => HM.dong(true)); await chup('khoa-0-home-moi');
@@ -286,7 +287,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     KTUI.dong();
     return o;
   });
-  ok(r.hd === 'coop,thu' && r.c2 === 'coop,pvp,nvd,shop,vq,thu' && r.bao2 === 'pvp,nvd,shop,vq' && r.chePvp === 'pvp' && r.shopMo && r.ruV && r.ren === 3 && r.ruVLogic && r.c3 && r.ruV3,
+  ok(r.hd === 'coop,thu,thap' && r.c2 === 'coop,pvp,nvd,shop,vq,thu,thap' && r.bao2 === 'pvp,nvd,shop,vq' && r.chePvp === 'pvp' && r.shopMo && r.ruV && r.ren === 3 && r.ruVLogic && r.c3 && r.ruV3,
     'xong hướng dẫn → CO-OP · cấp 2 → PVP/nhiệm vụ ngày/cửa hàng/vòng quay (báo mở khoá) · Rương Vàng cấp 3 · lò rèn còn khoá', JSON.stringify(r));
   await p.evaluate(() => { const t = TT.st(); t.bao = []; t.xp = TT.xpTong(2); KT.luu(true); HM.ve(); KTUI.capNhat(); });
   await chup('khoa-2-home-cap2');
@@ -305,7 +306,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     KTUI.dong(); t.bao = []; KT.doc().tk.wave = 0; t.xp = TT.xpTong(4); KT.luu(true); HM.ve(); KTUI.capNhat();
     return o;
   });
-  ok(r.onl && r.bao4 === 'online' && r.che === 'online' && r.bao10 === 'nvt,ren,an,thap' && r.ren && r.renUi && r.bao12 === 'ruThan,renDo' && r.do,
+  ok(r.onl && r.bao4 === 'online' && r.che === 'online' && r.bao10 === 'nvt,ren,an' && r.ren && r.renUi && r.bao12 === 'ruThan,renDo' && r.do,
     'cấp 4 → ONLINE · cấp 10 → lò rèn + Ấn Vàng (Lò rèn Đỏ / Rương Thần thoại còn khoá) · cấp 12 + kỷ lục 30 → mở hết', JSON.stringify(r));
   await chup('khoa-5-home-cap4');
   await p.evaluate(async () => { const t = TT.st(); t.xp = TT.xpTong(10); KT.luu(true); KTUI.moTab('shop'); await new Promise(r => setTimeout(r, 200)); const e = [...document.querySelectorAll('#kt .kt-muc')].find(x => /FORGE/.test(x.textContent)); e && e.scrollIntoView(); });

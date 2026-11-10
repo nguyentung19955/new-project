@@ -2,7 +2,7 @@
 //  ✓ người mới chỉ có 10 ụ (8 Trắng + 2 Xanh); bộ bài / kéo / RANDOM / bộ mẫu chỉ nhận ụ đã có; trang ụ chưa có vẫn mở xem được
 //  ✓ rương (Thường / Vàng / Thần thoại / Sự kiện / Huyền thoại / Cổ đại), túi trận, Daily Specials, vòng quay, chọn 1 trong 3, Ấn Vàng: chỉ ụ trong bể (đã mở theo cấp hoặc đã có)
 //  ✓ bậc chưa mở → lùi bậc (không mất lượt); bảo hiểm Vàng 10 rương giữ nguyên khi đã có Vàng, không đếm khi chưa có; Thần thoại bảo đảm Đỏ khi đủ điều kiện
-//  ✓ lên cấp mở đúng nhóm (bảng lên cấp có hình + tên); Đỏ cần cấp 12 VÀ kỷ lục ≥ wave 30
+//  ✓ lên cấp mở đúng nhóm (bảng lên cấp có hình + tên); Đỏ cần cấp 12 VÀ qua tầng 40 Leo Tháp (người cũ: kỷ lục ≥ wave 30)
 //  ✓ người cũ: ụ có bản sao / đang trong bộ bài / bộ mẫu → sở hữu, cấp quy đổi mở đúng nhóm, không báo lại · gộp hồ sơ Firebase OR
 //  ✓ quà hướng dẫn (Ice Blade) + hành trình (Berserker / Storm Gun / Overclock) · NEW! ở rương · Rương Trận ở màn kết quả mở bằng lật thẻ
 //  ✓ lưới: 3 trạng thái + đếm "OWNED x · UNLOCKED y · TOTAL n" + lọc OWNED/NOT OWNED/LOCKED + xếp PILOT LV · PVP/online bộ bài vẫn hợp lệ · không lỗi trang
@@ -150,12 +150,12 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   r = await p.evaluate(() => {
     const o = {}, c = (id) => document.querySelector('#chon-luoi .c[data-id="' + id + '"]');
     o.co = !c('tia').classList.contains('khoa'); o.chua = c('railgun').classList.contains('sh-chua') && /NOT OWNED/.test(c('railgun').textContent) && /Gold Chest/.test(c('railgun').textContent);
-    o.khoa = c('khien').classList.contains('sh-khoa') && /LV 9/.test(c('khien').textContent); o.doKhoa = /WAVE 30/.test(c('lophanung').textContent);
+    o.khoa = c('khien').classList.contains('sh-khoa') && /LV 9/.test(c('khien').textContent); o.doKhoa = /FLOOR 40/.test(c('lophanung').textContent); // 10/11: Đỏ cần qua tầng 40 Leo Tháp
     o.dem = (document.getElementById('dkd-nhan') || {}).textContent || '';
     return o;
   });
   const d1 = await p.evaluate(() => { const d = SH.dem(); return d; });
-  ok(r.co && r.chua && r.khoa && r.doKhoa && r.dem.includes('OWNED') && r.dem.includes(String(d1.co)) && r.dem.includes(String(d1.mo)) && r.dem.includes('96'), 'lưới bộ bài: ĐÃ CÓ / CHƯA CÓ (nguồn) / CHƯA MỞ (PILOT LV 9, Đỏ + WAVE 30) + đếm OWNED · UNLOCKED · TOTAL', JSON.stringify(r));
+  ok(r.co && r.chua && r.khoa && r.doKhoa && r.dem.includes('OWNED') && r.dem.includes(String(d1.co)) && r.dem.includes(String(d1.mo)) && r.dem.includes('96'), 'lưới bộ bài: ĐÃ CÓ / CHƯA CÓ (nguồn) / CHƯA MỞ (PILOT LV 9, Đỏ + FLOOR 40) + đếm OWNED · UNLOCKED · TOTAL', JSON.stringify(r));
   await chup('390-bobai');
   await p.evaluate(() => { const c = document.querySelector('#chon-luoi .c.sh-chua'); c && c.scrollIntoView({ block: 'center' }); }); await chup('390-bobai-chua');
   // chạm ụ chưa có → trang ụ (xem được, nút Not owned)

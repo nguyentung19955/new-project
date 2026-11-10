@@ -87,11 +87,13 @@ Object.assign(MAVUONG.weaver, { pham: 'ban', hieuLuc: 11, khoa: 'nexus', chon: '
 MAVUONG.hero.bac = 'xanh'; MAVUONG.dahlia.bac = 'tim'; MAVUONG.eve.bac = 'vang';
 MAVUONG.tech.bac = 'trang'; MAVUONG.tide.bac = 'trang'; MAVUONG.twin.bac = 'xanh'; MAVUONG.hawk.bac = 'tim'; MAVUONG.weaver.bac = 'vang';
 // CÁCH CÓ (08/11): Trắng + 3 chỉ huy cũ miễn phí (không bao giờ lấy lại); Xanh/Tím/Vàng mới = kỷ lục wave HOẶC ngọc (mở ở bảng chọn chỉ huy, lưu turret_kt.mvMo)
-MAVUONG.twin.mo2 = { wave: 15, ngoc: 150 }; MAVUONG.hawk.mo2 = { wave: 30, ngoc: 400 }; MAVUONG.weaver.mo2 = { wave: 50, ngoc: 1000 };
+// 10/11 bỏ Solo: thêm mốc TẦNG Leo Tháp (tang) — kỷ lục wave cũ vẫn mở như trước (wave 15 ≈ tầng 15 · wave 30 ≈ tầng 40 · wave 50 ≈ tầng 70)
+MAVUONG.twin.mo2 = { wave: 15, tang: 15, ngoc: 150 }; MAVUONG.hawk.mo2 = { wave: 30, tang: 40, ngoc: 400 }; MAVUONG.weaver.mo2 = { wave: 50, tang: 70, ngoc: 1000 };
 function mvCo(id) { // đã có chỉ huy này chưa (không có mo2 = miễn phí)
   const d = MAVUONG[id]; if (!d) return false; if (!d.mo2) return true;
   if (typeof KT === 'undefined' || !KT.doc) return true; // trang không có kinh tế (test range…) → không khoá
-  const s = KT.doc(); return !!((s.mvMo && s.mvMo[id]) || (s.tk && s.tk.wave >= d.mo2.wave) || (typeof ADMIN !== 'undefined' && ADMIN.la()));
+  const s = KT.doc(), tang = Math.max((s.tk && s.tk.tang) | 0, (s.cd && s.cd.thap && s.cd.thap.max) | 0);
+  return !!((s.mvMo && s.mvMo[id]) || (s.tk && s.tk.wave >= d.mo2.wave) || (d.mo2.tang && tang >= d.mo2.tang) || (typeof ADMIN !== 'undefined' && ADMIN.la()));
 }
 function mvBac(id) { const d = MAVUONG[id]; return d && TIERS[d.bac] ? d.bac : 'trang'; } // bậc chỉ huy (id lạ/thiếu → trắng)
 function mvTuAnh(anh) { for (const k in MAVUONG) if (MAVUONG[k].anh === anh) return k; return null; } // 'af_eve' → 'eve'

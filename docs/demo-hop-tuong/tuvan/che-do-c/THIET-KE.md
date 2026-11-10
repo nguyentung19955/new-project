@@ -35,7 +35,7 @@
 | MONG | Glass Core | chỉ 1 tim |
 | DAY | Thick Hide | quái +30% máu |
 
-## 2. LEO THÁP (TOWER CLIMB) — mở Cấp phi công 5
+## 2. LEO THÁP (TOWER CLIMB) — mở ngay sau hướng dẫn (10/11; trước: Cấp phi công 5) — chế độ một mình CHÍNH (§11)
 
 - 100 tầng = 10 chương × 10 tầng. Tầng t: **W_t = 5 + ⌊0,62·(t−1)⌋** (tầng 1: wave 5–9 · tầng 50: 35–39 · tầng 100: 66–70). Tầng chia hết cho 10 = **tầng trùm** (wave cuối là trùm, trùm cố định theo tầng, xoay 12 trùm).
 - Phải thắng tầng t mới mở tầng t+1. Thắng lại tầng cũ: không thưởng.
@@ -112,9 +112,9 @@ XP phi công: 20 mỗi thử thách (lần đầu). Tổng 1 lần: **3 Rương 
 | Chế độ | Mở | Nơi vào |
 |---|---|---|
 | Thử thách ngắn | xong / bỏ qua hướng dẫn | HOME → GAME MODE → QUICK TRIALS → PLAY |
-| Leo Tháp | Cấp phi công 5 | GAME MODE → TOWER CLIMB |
+| Leo Tháp | xong / bỏ qua hướng dẫn (10/11) | HOME → PLAY (thẳng tầng kế) · GAME MODE → TOWER CLIMB (bảng tầng) |
 | Săn Trùm | đã hạ 3 trùm khác nhau | GAME MODE → BOSS HUNT |
-| Ấn Đỏ | Cấp 12 + kỷ lục wave 30 | SHOP → LÒ RÈN |
+| Ấn Đỏ | Cấp 12 + qua tầng 40 Leo Tháp (người cũ: kỷ lục wave 30) | SHOP → LÒ RÈN |
 
 Mục khoá trong GAME MODE: tối + nhãn điều kiện (giống khoá đợt 1). Mở được → báo trong bảng lên cấp ("NEW FEATURES UNLOCKED").
 
@@ -132,3 +132,30 @@ Prompt chờ gen (lưới 2×2, nền magenta #FF00FF, same style as attached ua
 
 1. Leo Tháp — `tools/thap-kt-thap-leo.js` · 2. Săn Trùm — `tools/thap-kt-san-trum.js` · 3. Tinh thể Đỏ + Ấn Đỏ — `tools/thap-kt-an-do.js` · 4. Thử thách ngắn — `tools/thap-kt-thu-thach.js`.
 Mỗi mục: chạy kèm `thap-kt-tien-trinh`, `thap-kt-so-huu`, `thap-kt-shop`, `thap-kt-manh`; chơi thật 390×844 + 844×390, EN + VI, xem ảnh tận mắt.
+
+## 11. BỎ SOLO — Leo Tháp là chế độ một mình chính (người dùng chốt 10/11)
+
+| Mục | Trước | Sau |
+|---|---|---|
+| HOME PLAY | theo chế độ chọn (mặc định SOLO) | **vào thẳng tầng chưa qua thấp nhất** (đã qua 100 → bảng tầng) |
+| GAME MODE | SOLO / CO-OP / PVP / ONLINE / Thử thách / Leo Tháp / Săn Trùm / Vô tận | **TOWER CLIMB đầu**, bỏ SOLO (mục ẩn cho `?mode=solo` + trận hướng dẫn); chọn TOWER CLIMB = mở bảng tầng |
+| Mở Leo Tháp | cấp 5 | **xong hướng dẫn** (xong hướng dẫn → nút CLIMB · FLOOR 1) |
+| Điều kiện Đỏ | cấp 12 + kỷ lục wave 30 (Solo) | cấp 12 + **qua tầng 40** — W₄₀ = 5+⌊0,62·39⌋ = 29 → tầng 40 đánh wave 29–33 (phủ wave 30), là tầng trùm cuối chương 4 (Khổng Lồ) như mốc trùm wave 30 Solo; mana đầu 0,6× nên khó ngang/hơn. Người có kỷ lục Solo ≥ 30 giữ quyền |
+| Nhiệm vụ / Hành trình / nhiệm vụ tuần / XP / sự kiện / thành tựu / mốc Huyền thoại / chỉ huy | đếm trận Solo theo wave | đếm **trận Leo Tháp** theo **tầng** (bảng dưới); kỷ lục wave cũ vẫn tính |
+| Rương Trận | Solo: mọi trận | Leo Tháp: **mỗi lần thắng tầng** (kể cả thắng lại), nhỏ |
+| Kỷ lục hồ sơ | best wave | **tầng cao nhất** (+ "OLD BEST WAVE n" nếu có) |
+
+Quy đổi (wave Solo → tầng): wave 15 ≈ tầng 15 · 20 → 20 (wave cuối tầng 20 = 20) · 30 → 40 · 40 → 55 · 50 → 70 · 60 → 85 · 70 → 100 (wave cuối). Hành trình chọn tầng theo THỜI GIAN chơi (~2–3 phút/tầng): ngày 1 tầng 5 · 2 trùm tầng 10 · 3 tầng 15 · 4 tầng 20 · 5 tầng 25 + 3 trùm · 7 tầng 35.
+
+**Kinh tế mỗi trận tầng (~2–3 phút)** — giữ gần nhịp/phút của Solo cũ:
+
+| Nguồn | Solo cũ | Leo Tháp |
+|---|---|---|
+| XP phi công | wave + 3/trùm + 10 thắng (~3 XP/phút) | wave đã qua (≤5) + 3/trùm + 5 thắng = 10–13 khi thắng (+ lần đầu 5+⌊t/5⌋) ≈ 4–6 XP/phút |
+| Điểm sự kiện | wave + 10 thắng + 5/trùm, trần 60 (~3,5/phút) | 2/wave đã qua + 5 thắng + 5/trùm = 15–20/thắng ≈ 6/phút (trận thua ít điểm) |
+| Rương Trận | 1+⌊w/4⌋ lượt (≤14), 10w + 40/trùm + 150 thắng vàng (~0,55–0,8 lượt/phút) | **thắng**: 2 / 3 / 4 lượt (tầng 1–33 / 34–67 / 68–100) + 60+t vàng ≈ 0,7–1,3 lượt/phút; thua: không |
+| Mốc Huyền thoại (manh.js) | wave 20…70 | tầng 20/40/55/70/85/100 (cùng rương) |
+
+Ước lượng cho người leo hết 100 tầng lần đầu (100 trận thắng + thua xen kẽ ≈ 120–150 trận ≈ 300–375 phút): Rương Trận 33·2 + 34·3 + 33·4 = **300 lượt thẻ + ≈ 11 000 vàng**; cùng thời gian chơi Solo cũ cho ≈ 200–300 lượt + 10 000–14 000 vàng → tổng **tương đương** (chỉ chuyển nguồn sang Leo Tháp; cộng thêm thưởng lần đầu §2 như trước). Thắng lại tầng cao để "cày" ≈ 1–1,3 lượt/phút — cao hơn Solo một chút nhưng chỉ ở tầng mình đã qua được.
+Lưu: không khoá mới ngoài `turret_kt.tk.tang` (tầng cao nhất cho thành tựu/nhiệm vụ); `turret_best`, `mh.sw`, `tk.wave` giữ nguyên.
+Mã: `chedo-c.js` (HOME/kết quả/hướng dẫn), `home.js`, `tientrinh.js`, `kinhte.js`, `manh.js`, `thebai.js`, `sohuu.js`, `data.js` (chỉ huy), `online/taikhoan.js`. Kiểm: `tools/thap-kt-bo-solo.js`.

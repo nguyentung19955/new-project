@@ -1,8 +1,9 @@
 // TURRET MERGE — NGUỒN MẢNH (bản sao) thẻ VÀNG (Huyền thoại) / ĐỎ (Cổ đại) — người dùng 09/11: "cơ chế kiếm thêm mảnh ụ Vàng, Đỏ — Đỏ khó kiếm hơn".
 //  Gắn thêm vào kinh tế sẵn có (kinhte.js / kinhte-ui.js / thebai-ui.js), không đổi luật cũ:
-//   1) MỐC WAVE SOLO lần đầu (kỷ lục Solo, cả bản cũ turret_best.solo) → bản sao Vàng; wave 50/60/70 thêm bản Đỏ.
+//   1) MỐC LEO THÁP lần đầu (10/11 bỏ Solo: trước là mốc wave Solo) → bản sao Vàng; mốc 4–6 thêm bản Đỏ. Kỷ lục Solo cũ (sw, turret_best.solo)
+//      vẫn tính: đã đạt wave w ở Solo = đạt mốc tương ứng (không ai mất).
 //   2) HẠ TRÙM LẦN ĐẦU: mỗi trùm (12) = 1 bản Vàng; hạ đủ 12 trùm = 1 bản Đỏ.
-//   3) NHIỆM VỤ NGÀY mới "Reach wave 30" = 1 bản Vàng (vào bể 3 nhiệm vụ/ngày).
+//   3) NHIỆM VỤ NGÀY mới "Clear floor 40 or higher" (trước: "Reach wave 30") = 1 bản Vàng (vào bể 3 nhiệm vụ/ngày).
 //   4) LÒ RÈN (SHOP): 30 bản 1 thẻ Sử thi + 2 000 vàng → 1 bản Vàng ngẫu nhiên (3/tuần) · 10 bản 1 thẻ Vàng + 10 000 vàng → 1 bản Đỏ ngẫu nhiên (1/tuần).
 //  Rương / Daily Specials / vòng quay / sự kiện tuần giữ nguyên (đã có Vàng/Đỏ — bảng ở docs/demo-hop-tuong/tuvan/shop/KINH-TE.md §7).
 //  Lưu: turret_kt.mh (thêm khoá mới, bản cũ không mất gì); gộp hồ sơ Firebase: cờ OR, kỷ lục lấy lớn nhất. Thẻ ngẫu nhiên chọn bằng KT.cho
@@ -10,14 +11,16 @@
 'use strict';
 
 const MHC = {
-  moc: [ // mốc wave Solo (lần đầu)
+  // mốc lần đầu: w = wave Solo cũ (kỷ lục cũ vẫn tính), t = TẦNG Leo Tháp tương đương (10/11): wave 20 → tầng 20 (wave cuối của tầng 20 = 20),
+  //  wave 30 → tầng 40 (như điều kiện Đỏ), wave 70 → tầng 100 (wave cuối 70), giữa nội suy đều 15 tầng/mốc
+  moc: [
     // gacha thu thập (09/11): bản Vàng / Đỏ ngẫu nhiên → RƯƠNG HUYỀN THOẠI (hh) / CỔ ĐẠI (cd) cùng số bản (KTC.ruong, tuvan/gacha-thu-thap §4)
-    { w: 20, r: [{ ruong: 'hh', n: 1 }] },
-    { w: 30, r: [{ ruong: 'hh', n: 2 }] },
-    { w: 40, r: [{ ruong: 'hh', n: 3 }] },
-    { w: 50, r: [{ ruong: 'hh', n: 3 }, { ruong: 'cd', n: 1 }] },
-    { w: 60, r: [{ ruong: 'hh', n: 4 }, { ruong: 'cd', n: 1 }] },
-    { w: 70, r: [{ ruong: 'hh', n: 5 }, { ruong: 'cd', n: 2 }] },
+    { w: 20, t: 20, r: [{ ruong: 'hh', n: 1 }] },
+    { w: 30, t: 40, r: [{ ruong: 'hh', n: 2 }] },
+    { w: 40, t: 55, r: [{ ruong: 'hh', n: 3 }] },
+    { w: 50, t: 70, r: [{ ruong: 'hh', n: 3 }, { ruong: 'cd', n: 1 }] },
+    { w: 60, t: 85, r: [{ ruong: 'hh', n: 4 }, { ruong: 'cd', n: 1 }] },
+    { w: 70, t: 100, r: [{ ruong: 'hh', n: 5 }, { ruong: 'cd', n: 2 }] },
   ],
   trum: { ruong: 'hh', n: 1 },   // mỗi trùm hạ lần đầu
   trumDu: { ruong: 'cd', n: 1 },   // hạ đủ mọi trùm
@@ -25,7 +28,7 @@ const MHC = {
     { k: 'tv', tu: 'tim', can: 30, gia: 2000, ra: 'vang', tuan: 3 },
     { k: 'vd', tu: 'vang', can: 10, gia: 10000, ra: 'do', tuan: 1 },
   ],
-  nv: { id: 'wave30', ten: 'Reach wave 30', can: 30, k: 'wave', max: 1, kl: 28, r: { ruong: 'hh', n: 1 } }, // kl: chỉ vào bể khi kỷ lục ≥ 28 (tien-trinh §3.4)
+  nv: { id: 'wave30', ten: 'Clear floor 40 or higher', can: 40, k: 'tang', max: 1, kl: 28, kt: 38, r: { ruong: 'hh', n: 1 } }, // kl: kỷ lục wave cũ ≥ 28 / kt: tầng ≥ 38 mới vào bể (tien-trinh §3.4)
   // ẤN VÀNG (tien-trinh §6.3, người dùng chốt 6:1): 6 bản Vàng thừa (nhiều thẻ, trừ thẻ đích) + 20 000 vàng → 1 bản Vàng TỰ CHỌN, 1 lần/tuần.
   //  Bản lấy tự động theo thứ tự: thẻ đã MAX → thẻ ngoài bộ bài → thẻ trong bộ; trong mỗi nhóm lấy chồng nhiều bản trước.
   an: { k: 'an', can: 6, gia: 20000, tuan: 1 },
@@ -50,7 +53,8 @@ const MH = {
   gop(ra, x) { ra.vang += x.vang || 0; ra.ngoc += x.ngoc || 0; ra.the.push(...(x.the || [])); if (x.ruong) { ra.the.push(...x.ruong.the); (ra.ru = ra.ru || []).push(x.ruong); } for (const y of x.ru || []) { ra.the.push(...y.the); (ra.ru = ra.ru || []).push(y); } return ra; },
   phat(ds, khoa) { const ra = { vang: 0, ngoc: 0, the: [] }; ds.forEach((r, i) => this.gop(ra, KT.cho(r, khoa + ':' + i, 'achieve'))); return ra; },
   // ---------- 1) mốc wave Solo ----------
-  mocDs() { const m = this.st(); return MHC.moc.map(o => ({ w: o.w, r: o.r, t: Math.min(o.w, m.sw), can: o.w, xong: m.sw >= o.w, da: !!m.moc[o.w] })); },
+  tang() { try { return typeof CD !== 'undefined' ? CD.st().thap.max | 0 : 0; } catch (e) { return 0; } },
+  mocDs() { const m = this.st(), f = this.tang(); return MHC.moc.map(o => { const xong = m.sw >= o.w || f >= o.t; return { w: o.w, f: o.t, r: o.r, t: xong ? o.t : Math.min(o.t, f), can: o.t, xong, da: !!m.moc[o.w] }; }); }, // khoá cờ giữ theo w (bản lưu cũ)
   mocNhan(w) {
     const o = this.mocDs().find(x => x.w === +w); if (!o || !o.xong || o.da) return null;
     this.st().moc[o.w] = 1; const ra = this.phat(o.r, 'mhm' + o.w); KT.luu(); return ra;
@@ -111,7 +115,7 @@ const MH = {
   // ---------- hết trận: ghi kỷ lục / trùm rồi tự nhận mọi thứ mới mở ----------
   tuDong() {
     const ds = [];
-    for (const o of this.mocDs()) if (o.xong && !o.da) { const ra = this.mocNhan(o.w); if (ra) ds.push({ nhan: 'SOLO WAVE ' + o.w, w: o.w, ra }); }
+    for (const o of this.mocDs()) if (o.xong && !o.da) { const ra = this.mocNhan(o.w); if (ra) ds.push({ nhan: 'TOWER FLOOR ' + o.f, w: o.w, f: o.f, ra }); }
     const t = this.trumNhan(); if (t) ds.push({ nhan: 'FIRST KILL', ra: t });
     const b = this.boNhan(); if (b) ds.push({ nhan: 'ALL BOSSES', ra: b });
     return ds;
@@ -134,8 +138,8 @@ const MHUI = {
   },
   ve_nv() {
     const m = MH.st(), tr = MH.trumDs(), ha = tr.filter(x => x.ha).length, chua = tr.some(x => x.ha && !x.da);
-    let h = KTUI.muc('LEGENDARY & MYTHIC', 'BEST SOLO WAVE ' + m.sw);
-    for (const o of MH.mocDs()) h += this.hang('Solo: wave ' + o.w, o, o.r, 'kt-mhm', o.w);
+    let h = KTUI.muc('LEGENDARY & MYTHIC', 'BEST FLOOR ' + MH.tang());
+    for (const o of MH.mocDs()) h += this.hang('Tower: floor ' + o.f, o, o.r, 'kt-mhm', o.w);
     h += this.hang('First kill of each boss', { t: ha, can: tr.length, xong: chua, da: !chua && tr.length > 0 && tr.every(x => x.da) }, [MHC.trum], 'kt-mht', 't');
     h += '<div class="mh-trum">' + tr.map(x => '<i class="' + (x.ha ? 'ha' : '') + '" title="' + x.ten + '"><img src="assets/trum_' + x.id + '_portrait.png" alt="' + x.ten + '" loading="lazy" draggable="false"></i>').join('') + '</div>';
     h += this.hang('Defeat all ' + tr.length + ' bosses', { t: ha, can: tr.length, xong: MH.boXong(), da: !!m.bo }, [MHC.trumDu], 'kt-mhb', 'b');
@@ -175,14 +179,14 @@ const MHUI = {
     for (const g of r.mh) for (const x of g.ra.the || []) gom[x.id] = (gom[x.id] || 0) + x.n;
     if (hang && !hang.querySelector('.mh-kq-t')) (hang.querySelector('.tb-kq-v') || hang).insertAdjacentHTML(hang.querySelector('.tb-kq-v') ? 'afterend' : 'afterbegin', Object.entries(gom).map(([id, n]) => '<span class="tb-kq-t mh-kq-t"><i class="ot-mini" data-id="' + id + '"><img class="po" src="' + portraitOf(id) + '" alt="" draggable="false"></i><b>×' + n + '</b></span>').join(''));
     let e = d.querySelector('.mh-kq'); if (!e) { e = document.createElement('small'); e.className = 'kt-kq mh-kq'; d.appendChild(e); }
-    const w = r.mh.filter(g => g.w).map(g => g.w), ten = (w.length ? ['SOLO WAVE ' + w.join('/')] : []).concat(r.mh.filter(g => !g.w).map(g => g.nhan));
+    const w = r.mh.filter(g => g.f).map(g => g.f), ten = (w.length ? ['TOWER FLOOR ' + w.join('/')] : []).concat(r.mh.filter(g => !g.f).map(g => g.nhan));
     e.textContent = ten.join(' · ');
     try { if (typeof OT !== 'undefined' && OT.quet) OT.quet(d); } catch (er) { }
   },
   // trang ụ: thẻ Vàng/Đỏ ghi "kiếm ở đâu"
   NGUON: {
-    vang: 'Battle rewards · Gold Chest · Daily Specials · Solo wave 20–70 · first boss kills · daily quest · Shard Forge · Legendary Seal',
-    do: 'Mythic / Gold Chest · Daily Specials (~1 day a week) · Solo wave 50, 60, 70 · defeat all bosses · event 3,600 pts · Shard Forge',
+    vang: 'Battle rewards · Gold Chest · Daily Specials · Tower floors 20–100 · first boss kills · daily quest · Shard Forge · Legendary Seal',
+    do: 'Mythic / Gold Chest · Daily Specials (~1 day a week) · Tower floors 70, 85, 100 · defeat all bosses · event 3,600 pts · Shard Forge',
   },
   nguon(id) { const b = THEBAI.bac(id); return this.NGUON[b] ? '<div class="mh-nguon"><small>WHERE TO GET</small><span>' + this.NGUON[b] + '</span></div>' : ''; },
 };

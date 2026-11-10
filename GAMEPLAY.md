@@ -3,6 +3,13 @@
 > Game merge tower-defense trong `thap/`. Luật game và bàn giao: `docs/demo-hop-tuong/ban-giao/BAN-GIAO.md`, luật code/hình: `thap/QUY-TAC-HINH.md`.
 > Mỗi session thêm một mục `## claude/<tên-nhánh> — …` ở CUỐI file (file gộp kiểu union, không xung đột).
 
+## claude/demo-hop-tuong — BỎ SOLO: Leo Tháp là chế độ một mình chính (10/11)
+- HOME: PLAY vào thẳng tầng Leo Tháp chưa qua thấp nhất; GAME MODE bỏ SOLO, TOWER CLIMB đứng đầu (chọn = mở bảng tầng để chơi lại tầng cũ); giữ PVP/CO-OP/ONLINE/Thử thách/Săn Trùm/Vô tận (Thử thách tuần vẫn ẩn). Leo Tháp mở ngay sau hướng dẫn (bỏ khoá cấp 5); xong hướng dẫn → nút CLIMB · FLOOR 1. Bản lưu cũ chọn SOLO → TOWER CLIMB. `?mode=solo` (kiểm thử) giữ.
+- Điều kiện Đỏ "kỷ lục ≥ wave 30" → **qua tầng 40 Leo Tháp** (tầng 40 = wave 29–33, tầng trùm cuối chương 4, mana đầu 0,6× → ngang/khó hơn wave 30 Solo); người đã đạt wave 30 ở Solo giữ quyền. Đổi chữ ở thẻ khoá, Ấn Đỏ/Lò Đỏ, gacha (EN+VI).
+- Trận Leo Tháp nhận mọi thứ trước đây của Solo, đo theo tầng: nhiệm vụ ngày ("Clear floor 15 or higher", "Clear floor 40 or higher"), Hành trình 7 ngày (tầng 5/10/15/20/25/35 thay wave), nhiệm vụ tuần (trận gần tầng cao nhất), XP phi công mỗi trận = wave đã qua (≤5) + 3/trùm + 5 khi thắng, điểm sự kiện = 2/wave + 5 thắng + 5/trùm, thành tựu + mốc Huyền thoại theo tầng (20/40/55/70/85/100), chỉ huy mở theo tầng (15/40/70), Hộp lên cấp. **Rương Trận nhỏ mỗi lần thắng tầng** (cả thắng lại): 2/3/4 lượt (tầng 1–33/34–67/68–100) + 60+t vàng; thua: không rương.
+- Kỷ lục hồ sơ = TẦNG cao nhất (kỷ lục wave cũ hiện nhỏ "OLD BEST WAVE"); không xoá khoá lưu `turret_*`, kỷ lục Solo cũ giữ nguyên. Bộ mẫu ghi "TOWER · …" thay "SOLO · …".
+- Kiểm: `tools/thap-kt-bo-solo.js` (mới) + tien-trinh, so-huu, thap-leo, san-trum, an-do, vo-tan, the-moi, admin, shop, manh, ketqua-vua, keoghep.
+
 ## claude/demo-hop-tuong — Prism Warden nhìn là hiểu + nổ không che trùm (10/11)
 - Khiên lăng kính vẽ lại: lục giác trong suốt ôm sát thân, viền sáng (thân luôn thấy) + kim cương đếm loại ụ đã trúng; niệm dựng lại = viền chớp 2,5 Hz co vào; vỡ = vỏ bung mờ; bị đánh lúc có khiên = loé khúc xạ nhỏ phía ụ bắn. Bỏ mảnh cung lệch + lớp khiên vàng.
 - Băng chiêu trùm 2 dòng ghi TÁC DỤNG (EN/VI) cho mọi trùm; Prism: "−90% ST · bắn bằng N loại ụ khác nhau để phá · x/N" / "khiên vỡ: nhận đủ ST · bật lại sau Xs"; bỏ đếm 2s/1s vô nghĩa (Prism, Twin Core, Leech chưa có ụ 2★).
