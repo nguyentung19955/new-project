@@ -338,7 +338,7 @@ SKILLS.luutru = { // 09/11 gánh hậu kỳ (đơn mục tiêu, điểm chia ng�
   mo(T) {
     const cap = this.tran(T), n = Math.min(cap, T.kho || 0), t = this.thuong(n);
     return 'Charges ' + n + '/' + cap + ' → +' + Math.round(t.dmg * 100) + '% damage' + (t.toc ? ', +' + Math.round(t.toc * 100) + '% fire rate' : '') + (t.crit ? ', +' + Math.round(t.crit * 100) + '% crit chance' : '') + (t.cdmg ? ', +' + Math.round(t.cdmg * 100) + '% crit damage' : '') +
-      ' · every real merge on your board gives +1 charge to ONE random Fusion Archive (it flies in) · each charge +' + Math.round(this.DIEM * 100) + '% damage · 10: +15% fire rate · 20: +8% crit chance · 30: +25% damage · 40: +40% crit damage · 50/60/70: +20/30/40% damage · max 40 (LV11 50, LV13 60, LV15 70) · Merge King, Copycat and Teleporter are not merges';
+      ' · every real merge on your board gives +1 charge to ONE random Fusion Archive (it flies in) · Merging an Archive passes all its charges to your Archive with the most charges · each charge +' + Math.round(this.DIEM * 100) + '% damage · 10: +15% fire rate · 20: +8% crit chance · 30: +25% damage · 40: +40% crit damage · 50/60/70: +20/30/40% damage · max 40 (LV11 50, LV13 60, LV15 70) · Merge King, Copycat and Teleporter are not merges';
   },
   sinh(G, T) { if (T.kho == null) T.kho = 0; },
   capNhat(G, B, T) {
@@ -361,6 +361,12 @@ SKILLS.luutru = { // 09/11 gánh hậu kỳ (đơn mục tiêu, điểm chia ng�
     const hat = (typeof ONS !== 'undefined' && ONS.on ? ONS.seed : G.hat) || 1;
     const r = rngHat((hat * 4099 + B.i * 7919 + (B.ghepN | 0) * 104729) | 0);
     return ds[Math.floor(r() * ds.length)];
+  },
+  // dồn điểm của Archive vừa bị ghép mất: nhiều điểm nhất trước (hoà → ô nhỏ hơn), mỗi Archive tới trần, dư sang Archive kế; không còn Archive → mất (tất định, không ngẫu nhiên)
+  don(B, n, a, b) {
+    const ds = []; for (let i = 0; i < 15; i++) { const X = B.t[i]; if (X && X.id === 'luutru' && !X.st.da && X !== a && X !== b) ds.push(X); }
+    ds.sort((p, q) => ((q.kho | 0) - (p.kho | 0)) || (p.o - q.o));
+    for (const X of ds) { if (n <= 0) break; const them = Math.min(n, this.tran(X) - (X.kho | 0)); if (them > 0) { X.kho = (X.kho | 0) + them; n -= them; X.sang = 1; } }
   },
   nhan(B, oNguon) { // 1 lần ghép thật xong → +1 cho 1 Archive (trần theo cấp thẻ); viên lưu bay vào (chỉ hình)
     const X = this.chon(B); if (!X) return null;
@@ -388,7 +394,15 @@ HU.khoNo = { cap(G, o, dt) { o.t += dt; return o.t >= o.song; }, ve(ctx, o) { co
     const B2 = b && G.ban[b.ban], oN = b && b.o;
     // ghép ĐẶC BIỆT chỉ tính khi kỹ năng tự khai là ghép thật (Twin Anvil + Twin Anvil); Vua Ghép / Sao Chép / Dịch Chuyển / Ép Xung / Mạch Máu / buff Anvil: không
     const that = laGhepThat(a, b, ep); // game.js — cùng định nghĩa ghép thật cho mọi bộ đếm
+    // 10/11 người dùng: Archive có điểm bị đem ghép → DỒN HẾT điểm sang Archive còn trên bàn nhiều điểm nhất (dư trần thì sang Archive kế tiếp)
+    //   chỉ tính Archive THỰC SỰ rời bàn (Merge King +★ tại chỗ / Teleporter đổi chỗ: Archive vẫn còn → giữ điểm, không nhân đôi)
+    const kA = a && a.id === 'luutru' ? (a.kho | 0) : 0, kB = b && b.id === 'luutru' ? (b.kho | 0) : 0;
     const r = _ghepVM1.apply(this, arguments);
+    if (r && B2 && (kA || kB)) {
+      const con = (X) => B2.t[X.o] === X && X.id === 'luutru' && !X.st.da; // còn trên bàn, vẫn là Archive
+      const n = (kA && !con(a) ? kA : 0) + (kB && !con(b) ? kB : 0);
+      if (n > 0) SKILLS.luutru.don(B2, n, a, b);
+    }
     if (r && B2 && that) { B2.ghepN = (B2.ghepN || 0) + 1; SKILLS.luutru.nhan(B2, oN); }
     return r;
   };

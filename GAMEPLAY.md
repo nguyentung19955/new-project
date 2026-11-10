@@ -3,6 +3,12 @@
 > Game merge tower-defense trong `thap/`. Luật game và bàn giao: `docs/demo-hop-tuong/ban-giao/BAN-GIAO.md`, luật code/hình: `thap/QUY-TAC-HINH.md`.
 > Mỗi session thêm một mục `## claude/<tên-nhánh> — …` ở CUỐI file (file gộp kiểu union, không xung đột).
 
+## claude/demo-hop-tuong — Fusion Archive: ghép Archive thì DỒN HẾT điểm (10/11)
+- Archive có điểm bị đem GHÉP (rời bàn) → toàn bộ điểm dồn sang Archive còn trên bàn nhiều điểm nhất (hoà → ô nhỏ hơn), quá trần thì dư sang Archive kế; không còn Archive → mất. Archive vừa ghép ra (0 điểm) cũng nhận được; Archive hoá đá không nhận; Merge King +★ tại chỗ giữ điểm (không nhân đôi). Tất định, bàn con rối online cùng kết quả.
+- Mô tả EN/VI thêm câu "Merging an Archive passes all its charges to your Archive with the most charges" (kỹ năng trong trận, TEXT, roster).
+- Cân bằng: bot 48 trận, wave TB 34.0 → 34.4 (trung vị Vàng ≈ 32–33, dải giữa 31–35) → giữ nguyên số. Bảng: `docs/demo-hop-tuong/tocban/LUUTRU-DON.md`.
+- Kiểm: `tools/thap-kt-luutru-don.js` (mới) + tu-kich, matran (3 lỗi có sẵn), vang-moi / vang-moi2 / vang-g2 / vi (chỉ lỗi có sẵn).
+
 ## claude/demo-hop-tuong — bớt giật cảnh 8 Lucky Slot đợt cao (10/11, đợt 3 hiệu năng)
 - Số sát thương ≥ 100 000 hiện gọn `199.9K` / `14.3M`; số chồng nhau gần nhau chỉ giữ số lớn nhất; ít chữ cùng lúc hơn (chỉ hiển thị, sát thương thật không đổi).
 - Mỗi khung vẽ ≤ 120 hạt sáng (giữ hạt to/mới); vệt hạt sau đạn Vàng/Đỏ giới hạn chung ≤ 70 hạt/giây theo thời gian trận; chấm sáng tia Lucky Slot nhỏ hơn (22 → 14 px), ≤ 6 chấm/khung, trùng chỗ chỉ 1.

@@ -12,6 +12,8 @@
 //   node tools/thap-do-cong-don.js ban [id] [pa=…]   → DPS 1 ụ (ô 2, 5★, cấp thẻ 0) theo số stack 0…800 ở wave 30 (bài đo như thap-do-vang-do.js)
 //   node tools/thap-do-cong-don.js heso [pa=…]        → hệ số nhân sát thương lý thuyết theo số stack (không mô phỏng) — Ember / La Bàn / Prism
 //
+//   10/11: X = luutru (Fusion Archive) cũng được ghép X với X khi kẹt — ghép 2 Archive ít điểm nhất trước (luật dồn điểm, LUUTRU-DON.md);
+//     SUA='SKILLS.luutru.don = () => {};' = luật cũ (điểm Archive bị ghép mất hẳn) để so.
 //   LẦN 2 (09/11, đã áp dụng vào game): cap=k = số cấp thẻ trên cấp đầu cho cả bộ (song / ban / heso; Vàng max 8, Đỏ max 6) · pa=cu = luật trước lần 2 ·
 //     SUA='…' vá thử hằng số (vd SUA='SKILLS.canon.TOC_MAX = 2;') · PMGIU=0 tắt "giữ Prism" (bot lần 1: Prism làm nguyên liệu ghép thường, hiếm hợp thể) ·
 //     DBG=1 in tim / số quái mỗi wave · ST thô bỏ đòn "phu" (Prism đỏ giết ngay = máu quái, không phải sức mạnh).
@@ -80,8 +82,10 @@ const BOT = `aiBan = (function (goc) { const SO_ = ${SO}; return function (B, dt
   if (oTrong(B).length <= 2) {
     const ys = ts.filter(T => T.id !== X && !biKhoa(T)).sort((p, q) => p.sao - q.sao);
     for (const a of ys) for (const b of ys) if (a !== b && a.sao < 7 && hopLeGhep(a, b) && (a.id === b.id || a.sao === b.sao)) { ghep(B, a, b); return; }
-    if (X === 'lualien' || X === 'canon' || (X === 'bienmau' && G._pmGiu)) { // kẹt: cho phép ghép X với X (ra ụ mới) để không chết vì đầy bàn
-      for (const a of xs) for (const b of xs) if (a !== b && a.sao < 7 && hopLeGhep(a, b)) { ghep(B, a, b); return; }
+    if (X === 'lualien' || X === 'canon' || X === 'luutru' || (X === 'bienmau' && G._pmGiu)) { // kẹt: cho phép ghép X với X (ra ụ mới) để không chết vì đầy bàn
+      // Archive (10/11): ghép 2 Archive ÍT điểm nhất trước (luật dồn: điểm của Archive bị ghép sang Archive nhiều điểm nhất)
+      const xk = X === 'luutru' ? xs.slice().sort((p, q) => (p.kho | 0) - (q.kho | 0) || p.sao - q.sao) : xs;
+      for (const a of xk) for (const b of xk) if (a !== b && a.sao < 7 && hopLeGhep(a, b)) { ghep(B, a, b); return; }
     }
   }
   // 5) phần còn lại (chỉ huy, kỹ năng Đỏ, Prism hợp thể…) — AI gốc, nhưng chặn ghép thường có X làm nguyên liệu
@@ -122,7 +126,7 @@ function dps1(ctx, id, sao, wave, T0, max, hs, stack) {
   R(ctx, `{ const [id, sao, wave, st] = _a; G.debug = { auto: false }; batDau('solo', ['lien', 'canon', 'set', 'tia', 'mana'], 'hero'); G.cho = 1e9; G.wave = wave;
     const B = G.ban[0]; B.tim = 1e9; B.mana = 600; B.capThe = {}; B.capThe[id] = (typeof _capK === 'number' ? _capK : 0); B.lv = B.lv || {}; B.lv[id] = 4;
     const T = sinhU(taoU(B, id, sao, 2)); B.t[2] = T;
-    if (id === 'lualien') T.lc = st; else if (id === 'canon') { T.hb = 15; T.cmC = st; } else if (id === 'bienmau') { T.pf = st; T.pmk = [999, 999, 999, 999]; }
+    if (id === 'lualien') T.lc = st; else if (id === 'canon') { T.hb = 15; T.cmC = st; } else if (id === 'bienmau') { T.pf = st; T.pmk = [999, 999, 999, 999]; } else if (id === 'luutru') T.kho = st;
     G._T = T; G._sum = 0; G._q = 0; }`);
   if (!ctx._lotVong) { ctx._lotVong = 1; R(ctx, 'const _lotSim = lot; lot = function (E) { if (G._vong) { E.s = 0; return; } return _lotSim(E); };'); }
   R(ctx, 'G._vong = true;');
@@ -178,7 +182,7 @@ if (require.main === module) {
         console.log(`  w${w} (${g.length} trận): stack max TV ${med(g.map(x => x.max))} (cao nhất ${Math.max(...g.map(x => x.max))}) · số ụ TV ${med(g.map(x => x.so))} · ST thô bàn/s TV ${med(g.map(x => x.tho))} · đòn lớn nhất TV ${med(g.map(x => x.dmax))}`); }
     }
   } else if (che === 'ban') {
-    const id = a[1] || 'lualien', ds = id === 'lualien' ? [0, 10, 30, 60, 90, 100, 150, 186, 300, 800] : id === 'canon' ? [0, 1, 2, 3, 5, 7, 15] : id === 'bienmau' ? [0, 1, 2, 3, 5, 10] : [0];
+    const id = a[1] || 'lualien', ds = id === 'lualien' ? [0, 10, 30, 60, 90, 100, 150, 186, 300, 800] : id === 'canon' ? [0, 1, 2, 3, 5, 7, 15] : id === 'bienmau' ? [0, 1, 2, 3, 5, 10] : id === 'luutru' ? [0, 7, 20, 34, 40] : [0];
     console.log(id, pa, 'cap+' + (+lay('cap', 0)), JSON.stringify(ban(id, pa, ds, +lay('cap', 0))));
   } else if (che === 'gop') { // gộp nhiều file ra=… : node tools/thap-do-cong-don.js gop nhan=a.json,b.json …
     const med = (v) => { const b = v.slice().sort((x, y) => x - y); return b.length ? b[(b.length - 1) >> 1] : 0; };
