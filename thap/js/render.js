@@ -281,6 +281,8 @@ const REN = {
     let c = this.cGet(key); if (c) return c;
     if (bien === 'xam' || bien === 'trang') { // biến thể dựng từ bản ĐÃ THU NHỎ (không giữ bản trắng/xám cỡ gốc)
       const b = this.co(ten, px, ''); if (!b) return null;
+      // nongskill.js (hết ngân sách khung) trả TẠM ảnh gốc cỡ lớn: không dựng + giữ biến thể từ ảnh gốc (đệm sai cỡ) — khung sau dựng lại đúng cỡ
+      if (Math.max(b.width, b.height) !== n) return bien === 'trang' ? null : b;
       return this.cSet(key, this.toBien(b, bien));
     }
     if (this.choRong(key)) return null;
@@ -1164,6 +1166,9 @@ const REN = {
     let c = this.cGet(key); if (c) return c;
     if (this.choRong(key)) return null;
     const a = this.co(ten, D, da ? 'xam' : ''); if (!a) return null;
+    // SỬA GỐC "ụ phóng to, tràn ô" (10/11): lúc khung hình hết ngân sách dựng ảnh, REN.co (nongskill.js) trả TẠM ảnh gốc chưa thu nhỏ;
+    // hàm này vẽ `a` theo cỡ tự nhiên rồi GIỮ ĐỆM → đầu ụ to ~2 lần, bị cắt, kẹt mãi. Ảnh chưa đúng cỡ n → chưa nướng (veDauLop vẽ bản không bóng đúng cỡ D)
+    if (Math.max(a.width, a.height) !== n) return null;
     const pad = Math.ceil(n * 0.12), N = n + pad * 2;
     c = document.createElement('canvas'); c.width = c.height = N;
     const x = this.c2d(c), ox = pad + Math.round((n - a.width) / 2), oy = pad + Math.round((n - a.height) / 2); // đặt nguyên điểm ảnh: không nhoè thêm

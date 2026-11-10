@@ -238,6 +238,12 @@ html.ua body #wrap #up.up7 .up-spec div, html.ua body #wrap #up.up7 .up-kn, html
 html.ua body #wrap #up .up-tam { border-image: var(--ua-t) / 20px 22px stretch !important; }
 html.ua body #wrap #up .up-bang, html.ua body #wrap #up .up-the { border-image: var(--ua-o) / 12px 12px stretch !important; }
 html.ua body #wrap #up .up-hang.moc { border-image: var(--ua-t) / 11px 13px stretch !important; }
+/* 10/11 người dùng: thẻ "Partners and counters" luôn khung vàng → khung theo BẬC của chính ụ (viền o_vien_<bậc> dùng chung với ô lưới bộ bài); không tô nền bằng code — thẻ nằm thẳng trên tấm bảng */
+html.ua body #wrap #up .up-the[data-bac] { border-image: url(../assets/o_vien_trang.webp?v=ea262113) 56 / 13px stretch !important; }
+html.ua body #wrap #up .up-the[data-bac="xanh"] { border-image-source: url(../assets/o_vien_xanh.webp?v=4c46843b) !important; }
+html.ua body #wrap #up .up-the[data-bac="tim"] { border-image-source: url(../assets/o_vien_tim.webp?v=723c25c8) !important; }
+html.ua body #wrap #up .up-the[data-bac="vang"] { border-image-source: url(../assets/o_vien_vang.webp?v=17d23ac7) !important; }
+html.ua body #wrap #up .up-the[data-bac="do"] { border-image-source: url(../assets/o_vien_do.webp?v=e0d0d904) !important; }
 html.ua body #wrap #up .up-so1 > span { border-image: var(--ua-p) / 10px 14px stretch !important; }
 html.ua body #wrap #up .nac > button { border-image: var(--ua-p) / 10px 12px stretch !important; }
 html.ua body #wrap #up .nac > .cur { border-image: var(--ua-pb) / 10px 12px stretch !important; }
