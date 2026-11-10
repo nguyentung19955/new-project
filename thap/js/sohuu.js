@@ -311,12 +311,12 @@ const SHUI = {
         let l = h.nextElementSibling; while (l && !l.classList.contains('luoi')) l = l.nextElementSibling;
         const ds = l ? [...l.querySelectorAll('.c[data-id]')].map(c => c.dataset.id) : []; if (!ds.length) return;
         const b = THEBAI.bac(ds[0]); if (h.dataset.uab !== b) h.dataset.uab = b;
-        const co = ds.filter(id => SH.co(id)).length, chu = co < ds.length ? co + '/' + ds.length + ' OWNED' : '';
+        const co = ds.filter(id => SH.co(id)).length, chu = co + '/' + ds.length + ' OWNED'; // 10/11: luôn hiện (mọi bậc cùng bố cục)
         let e = h.querySelector(':scope > em.ua-mo');
         if (!chu) { if (e) e.remove(); h.classList.remove('ua-khoa'); return; }
         if (!e) { e = document.createElement('em'); e.className = 'ua-mo'; h.appendChild(e); }
         if (e._c !== chu) { e._c = chu; e.textContent = chu; }
-        h.classList.toggle('ua-khoa', co === 0);
+        h.classList.toggle('ua-khoa', co === 0); h.classList.toggle('ua-du', co === ds.length);
       });
     };
     try { UA.nhom(); UA.dem(); } catch (e) { }

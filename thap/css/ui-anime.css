@@ -414,3 +414,14 @@ html.ua body #wrap .hm-tam, html.ua body #hm-mo .hm-tam { border-style: solid !i
 /* bảng CHẾ ĐỘ: hàng khoá (chữ phụ 2 dòng + nhãn "3 BOSSES"/"FLOOR 100" bên phải) → dòng 2 chạm/đè mép dưới khung ua_o → hàng cao theo nội dung, đệm theo mép ảnh */
 html.ua body #hm-mo #hm-tam.hm-tam-che .hm-chec { min-height: 64px !important; padding-top: 11px !important; padding-bottom: 11px !important; }
 html.ua body #hm-mo #hm-tam.hm-tam-che .hm-chec small { line-height: 1.2; }
+
+/* 10/11 người dùng: thanh tiêu đề nhóm bậc (COMMON…MYTHIC) lệch nhau + khó nhìn → mọi bậc CÙNG bố cục & khoảng cách:
+   dải tối đặc + vạch màu bậc bên trái + tên bậc màu bậc · "x/y playable" xám · "x/y OWNED" bên phải (đủ thì xanh ngọc) */
+html.ua body #wrap #chon:not(.hd-khoa) #chon-luoi > .nhom { height: 30px !important; margin: 14px 2px 14px !important; padding: 0 12px 0 10px !important;
+  border: 0 !important; border-image: none !important; border-radius: 8px; background: linear-gradient(90deg, rgba(10,14,34,.94), rgba(22,30,62,.9)) !important;
+  box-shadow: inset 4px 0 0 var(--m, #E9CCA0), inset 0 0 0 1px rgba(233,204,160,.45) !important; align-items: center; }
+html.ua body #wrap #chon #chon-luoi > .nhom b { color: var(--m, #F7F8FF) !important; text-shadow: 0 1px 0 #000 !important; }
+html.ua body #wrap #chon #chon-luoi > .nhom span { color: #AEB8DA !important; }
+html.ua body #wrap #chon #chon-luoi > .nhom em.ua-mo { color: #FFB866 !important; }
+html.ua body #wrap #chon #chon-luoi > .nhom.ua-du em.ua-mo { color: #71E4EE !important; }
+html.ua body #wrap #chon #chon-luoi > .nhom.ua-khoa span { display: inline !important; }
