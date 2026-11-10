@@ -230,11 +230,11 @@ Sinh tự động từ game (EN-mode cho số, VI-mode cho mô tả). Cột "1�
 | `luoicheo` | IDLE → HUMMING → RESONANCE | riêng `_nong_s1..3` |
 | `ngaithoigian` | DIAL → TWELVE HOURS → THRONE OF TIME | riêng `_nong_s1..3` |
 | `combo` | WARM-UP → ON A ROLL → OVERDRIVE | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |
-| `pandora` | LOCKED → AJAR → OPEN VAULT | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |
+| `pandora` | LOCKED → AJAR → OPEN VAULT | riêng `_nong_s1..3` (10/11, `STAGE_VE`; viền nhấn tím-hồng `#c77dff` cho nổi khỏi thân/bệ vàng) |
 | `nemesis` | SCALES → SCYTHE → VERDICT | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |
 | `nhatthuc` | DUSK → CORONA → TOTAL ECLIPSE | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |
-| `marionette` | STRINGS → GOLDEN HAND → TWIN PUPPETS | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |
-| `guongcong` | MIRROR → TWIN PANES → SHARD HALO | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |
+| `marionette` | STRINGS → GOLDEN HAND → TWIN PUPPETS | riêng `_nong_s1..3` (10/11, `STAGE_VE`; ĐẦU ĐỨNG như ảnh gốc: trận không quay tròn, chỉ lắc ±3.5°; viền `#ff3d7f`) |
+| `guongcong` | MIRROR → TWIN PANES → SHARD HALO | riêng `_nong_s1..3` (10/11, `STAGE_VE`; ĐẦU ĐỨNG: thanh ngang trên/dưới, trận không quay tròn, chỉ lắc ±3.5°) |
 | `chuato` | NEST → HIVE → ROYAL HIVE | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |
 | `leviathan` | HATCHLING → DEEP ONE → ABYSS LORD | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |
 | `khoisinh` | SEED → BLOSSOM → LOTUS OF LIFE | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |

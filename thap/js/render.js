@@ -1515,6 +1515,9 @@ const REN = {
 (function () {
   if (typeof SKILLS === 'undefined' || window.UCU) return;
   const TB = ['tudo', 'nhanmana', 'thanhdia', 'cauvong', 'sinhdoi', 'hasao', 'tron', 'nhanban', 'epxung', 'xaotron', 'nangsao', 'vughep', 'saochep', 'pandora', 'mana', 'phagiap', 'bua', 'bomhen', 'mimic', 'dichchuyen', 'kepha', 'taylo', 'khien', 'khoathoigian', 'thaukinh', 'nhieusong', 'santhuong', 'dongbo', 'guongcong', 'marionette', 'xuonganh', 'mauhut', 'nguyenrua', 'lophanung', 'ngaithoigian', 'bang', 'radar', 'doc'];
+  // ĐẦU ĐỨNG (10/11): ảnh 3 dạng vẽ đứng thẳng (Rối Máy: tay trên – rối treo dưới · Cổng Gương: khung thanh ngang trên/dưới) — quay tròn
+  // làm hình nằm ngang/lộn ngược → giữ thẳng, chỉ nghiêng lắc nhẹ ±3.5° (như rối treo đung đưa). Chỉ góc VẼ: T.goc/ngắm/đòn không đổi.
+  for (const id of ['marionette', 'guongcong']) if (SKILLS[id] && !SKILLS[id].gocDau && window.STAGE_VE && STAGE_VE[id]) SKILLS[id].gocDau = (T, t) => -Math.PI / 2 + Math.sin(t * 1.1 + (T.pha || 0) * 6) * 0.06;
   for (const id of TB) if (SKILLS[id] && !SKILLS[id].gocDau) SKILLS[id].gocDau = (T, t) => -Math.PI / 2 + (T.pha || 0) * 0.3 + t * 0.35;
 })();
 

@@ -3,6 +3,12 @@
 > Game merge tower-defense trong `thap/`. Luật game và bàn giao: `docs/demo-hop-tuong/ban-giao/BAN-GIAO.md`, luật code/hình: `thap/QUY-TAC-HINH.md`.
 > Mỗi session thêm một mục `## claude/<tên-nhánh> — …` ở CUỐI file (file gộp kiểu union, không xung đột).
 
+## claude/demo-hop-tuong — sửa 3 đầu ụ 3 dạng: Rối Máy, Cổng Gương đứng thẳng · Pandora viền tím (10/11)
+- `tools/thap-cat-dang-dau.py`: marionette + guongcong quay như ảnh chĩa lên (xoay −1) → trang ụ hiện ĐÚNG chiều ảnh gốc ChatGPT (Rối: tay trên, rối treo dưới; Gương: thanh ngang trên/dưới). Tuỳ chọn mới `khung` (vừa ô vuông thay vòng tròn → hình rộng như dạng 3 "2 con rối" to rõ, 2 rối tách nhau) và `vien` (dày viền theo dạng); Rối viền nhấn sáng hơn `#ff3d7f` (dạng 3 dày ×1.35).
+- Trong trận (`render.js`, khối thiết bị không nòng): 2 ụ này GIỮ ĐẦU ĐỨNG, chỉ lắc nhẹ ±3.5° (như rối treo đung đưa) thay vì quay tròn chậm — lý do: hình có trên/dưới rõ, quay tròn làm hình nằm ngang/lộn ngược, rối mắt. Chỉ góc VẼ; ngắm, điểm phát đòn (lõi), luật không đổi.
+- Pandora: viền nhấn vàng `#ffd23f` → tím-hồng ma thuật `#c77dff` cả 3 dạng (vàng trùng thân + bệ vàng nên không nổi). Icon thẻ `nho/pandora` là ảnh cũ, không đổi.
+- Kiểm: tu-kich 29/29, hinh-ui, vetay-ui đạt. Ảnh 393×852 FORMS 3 ụ + bàn trận 3 dạng đã xem; trước/sau `/home/claude/xem/ve14/sua3.jpg`.
+
 ## claude/demo-hop-tuong — đầu ụ 3 dạng mới cho 13 ụ grow-up (10/11, checklist mục E)
 - Ảnh ChatGPT `docs/demo-hop-tuong/thap-art/raw_anime_u_dang_sheet1..5.png` (chỉ đầu, nền magenta) → tool mới `tools/thap-cat-dang-dau.py`: tách nền (loang viền, mảng dính nhau cắt tại chỗ hẹp, mảnh vụn theo khối gần nhất), xoay cho mũi hướng PHẢI, dời tâm, viền màu nhấn nướng sẵn → `thap/assets/<id>_nong_s1..s3.png` khung 1 ô, bán kính 0,86 / 0,93 / 1,0 × 0,485 ô (to dần, dạng 3 không tràn ô).
 - 13 ụ: pandora, nemesis, nhatthuc, marionette, guongcong, lualien, luutru, combo, chuato, leviathan, khoisinh, cobac (trang ụ + trong trận đổi hình theo dạng) và hydra (CHỈ trang ụ — trận giữ vương miện n đầu = sao). Evolver không làm.

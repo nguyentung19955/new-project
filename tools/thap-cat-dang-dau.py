@@ -24,10 +24,14 @@ PX = 300                 # điểm ảnh / cạnh ô
 R_MAX = 0.485            # = thap-cat-umod.py / thap-nhan-dien-u.py
 TANG = (0.86, 0.93, 1.0) # bán kính dạng 1/2/3 so với R_MAX
 VIEN = 0.018             # viền màu nhấn / cạnh ô
-# id: (tấm, hàng, số hàng, màu nhấn, xoay np.rot90 từng dạng: 0 = đã chĩa PHẢI như đầu cũ, -1 = đang chĩa LÊN → quay phải)
+# id: (tấm, hàng, số hàng, màu nhấn, xoay np.rot90 từng dạng: 0 = đã chĩa PHẢI như đầu cũ, -1 = đang chĩa LÊN → quay phải[, tuỳ chọn])
+#   tuỳ chọn {'vien': (h1, h2, h3)} = hệ số dày viền từng dạng · {'khung': True} = đầu đứng (render.js gocDau giữ thẳng) → vừa ô vuông
 U_DS = {
-    'hydra': (1, 0, 3, '#2ee89a', (0, -1, -1)), 'pandora': (1, 1, 3, '#ffd23f', (-1, -1, -1)), 'nemesis': (1, 2, 3, '#d01e3a', (-1, -1, -1)),
-    'nhatthuc': (2, 0, 3, '#ffcc33', (-1, -1, -1)), 'marionette': (2, 1, 3, '#a01848', (0, 0, 0)), 'guongcong': (2, 2, 3, '#7fe8ff', (0, 0, 0)),
+    # pandora: viền tím-hồng ma thuật (vàng #ffd23f trùng thân vàng + bệ vàng → không nổi, người dùng 10/11)
+    'hydra': (1, 0, 3, '#2ee89a', (0, -1, -1)), 'pandora': (1, 1, 3, '#c77dff', (-1, -1, -1)), 'nemesis': (1, 2, 3, '#d01e3a', (-1, -1, -1)),
+    # marionette / guongcong: ảnh gốc vẽ ĐỨNG THẲNG (tay trên – rối treo dưới; khung gương thanh ngang trên/dưới) → quay phải như ảnh
+    # chĩa lên, để trang ụ (rotate −90°) và trận (gocDau −π/2, render.js DAU_DUNG) hiện đúng chiều ảnh gốc
+    'nhatthuc': (2, 0, 3, '#ffcc33', (-1, -1, -1)), 'marionette': (2, 1, 3, '#ff3d7f', (-1, -1, -1), {'vien': (1, 1, 1.35), 'khung': True}), 'guongcong': (2, 2, 3, '#7fe8ff', (-1, -1, -1), {'khung': True}),
     'lualien': (3, 0, 3, '#ff8a2a', (0, 0, 0)), 'luutru': (3, 1, 3, '#8fd0ff', (0, 0, -1)), 'combo': (3, 2, 3, '#ff6a3a', (-1, -1, -1)),
     'chuato': (4, 0, 3, '#ff6a2a', (0, 0, 0)), 'leviathan': (4, 1, 3, '#1fb6d9', (0, 0, 0)), 'khoisinh': (4, 2, 3, '#7ee05a', (0, 0, 0)),
     'cobac': (5, 0, 1, '#ffb43a', (0, 0, 0)),
@@ -68,13 +72,14 @@ def tach_tam(a, nh):
     return ra
 
 
-def mot_dau(c, xoay, mau, f):
+def mot_dau(c, xoay, mau, f, hv=1.0, khung=False):
     c = np.rot90(c, xoay).copy()
     ys, xs = np.nonzero(c[..., 3] > 0.02)
     cx, cy = (xs.min() + xs.max() + 1) / 2, (ys.min() + ys.max() + 1) / 2
     r = np.sqrt((xs + 0.5 - cx) ** 2 + (ys + 0.5 - cy) ** 2).max()
+    if khung: r = max(np.abs(xs + 0.5 - cx).max(), np.abs(ys + 0.5 - cy).max()) * 1.05  # đầu ĐỨNG (không quay tròn, lắc ±3.5°): vừa Ô VUÔNG thay vì vòng tròn → hình ngang/rộng không bị thu nhỏ
     R = R_MAX * f * PX                       # bán kính đích (px, gồm viền)
-    pv = VIEN * PX                           # viền (px đích)
+    pv = VIEN * PX * hv                      # viền (px đích)
     s = (R - 1.4 * pv) / r                   # tỉ lệ thu đầu (chưa viền; viền mờ lan thêm ~0,4 pv)
     im = U.anh(c)
     w, h = max(1, round(im.width * s)), max(1, round(im.height * s))
@@ -97,11 +102,11 @@ def main():
     m = re.search(r'window\.STAGE_VE = (.*);[ \t]*$', t, re.M); SV = json.loads(m.group(1)) if m else {}
     tam = {}
     for i in ids:
-        sh, hang, nh, mau, xoay = U_DS[i]
+        sh, hang, nh, mau, xoay = U_DS[i][:5]; tc = U_DS[i][5] if len(U_DS[i]) > 5 else {}
         if sh not in tam: tam[sh] = tach_tam(np.asarray(Image.open(os.path.join(RAW, 'raw_anime_u_dang_sheet%d.png' % sh)).convert('RGB')), nh)
         K = []
         for n in range(3):
-            im, rr = mot_dau(tam[sh][(hang, n)], xoay[n], mau, TANG[n])
+            im, rr = mot_dau(tam[sh][(hang, n)], xoay[n], mau, TANG[n], tc.get('vien', (1, 1, 1))[n], tc.get('khung', False))
             im.save(os.path.join(OUT, '%s_nong_s%d.png' % (i, n + 1)), optimize=True)
             K.append(1.0); print(i, 'dạng', n + 1, 'bán kính', rr)
         SV[i] = K
