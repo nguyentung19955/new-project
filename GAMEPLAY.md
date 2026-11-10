@@ -1078,3 +1078,11 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 ## claude/demo-hop-tuong — Ụ anime: biến hình cuongno/lienket + bỏ vẽ canvas vuốt Sói & thân Hydra (10/11)
 - Đầu dạng 1/2/3 mới cho cuongno, lienket → đủ 11/11 ụ grow-up có hình riêng từng dạng (`tuvan/ra-soat-anime-u/bien_hinh_*.jpg`).
 - Ảnh hiệu ứng ChatGPT `thap-art/raw_anime_u_fx1.png` → `tools/thap-cat-anime-fx.py` → `fx_soi_vuot` (vuốt trắng, tô màu theo trạng thái), `hydra_than` (thân Hydra ngọc lục bảo), dự trữ `fx_soi_song`, `hydra_than_tt`. `skills2.js` HU.soiLan: vòng = `fx_vong_mong` tô màu + vuốt = `fx_soi_vuot` (bộ đệm theo màu); `skills3.js` veThan: ảnh `hydra_than` (bản xám khi hoá đá). Vẫn giữ đường vẽ cũ khi ảnh chưa tải.
+
+## claude/demo-hop-tuong — ụ anime nhận ra ngay ở cỡ ô thật (10/11)
+- Người dùng (xem trong trận iPhone): 57 ụ anime mới cùng bậc đều là bệ khung vàng giống nhau, hình đặc trưng nhỏ → không phân biệt được. Sửa trước khi đẩy live.
+- `tools/thap-nhan-dien-u.py` NƯỚNG SẴN vào ảnh (PIL, không filter lúc chạy), nguồn = ảnh gốc trong git (48d490641) nên chạy lại được: đầu `<id>_nong` (+ `_s1.._s3` ụ grow-up) đổi kim loại vàng → MÀU NHẤN riêng theo cơ chế (băng xanh lạnh, độc xanh lá, điện vàng chanh, mana teal, bom đen…) + viền sáng màu nhấn ôm hình bóng; DỜI TÂM đầu về tâm khối hình rồi phóng tới bán kính 0,485 ô (vẫn nằm trong ô ở mọi góc xoay) → hình đặc trưng chiếm ~90% ô. Bệ `<id>_de` giảm bão hoà + tối bớt; bậc đọc bằng viền bậc màu (`_vien`).
+- Cỡ VẼ ghi `artscale.js` `window.DAU_VE`; `render.js` kDau/dauK dùng khi vẽ, `coDau` (mũi nòng/đạn) đặt cờ `_luat` → vẫn HEAD_K/STAGE_K cũ: luật & tất định không đổi. `?ucu=1` bỏ qua DAU_VE.
+- Tông BẬC (người dùng 10/11): bệ + icon thẻ `nho/` đổi kim loại vàng → Trắng bạc ngọc trai, Xanh sapphire, Tím thạch anh (Vàng giữ vàng kim).
+- Đợt 1: 14 ụ Trắng. Ảnh trước/sau + tờ nhận diện: `docs/demo-hop-tuong/tuvan/ra-soat-anime-u/nhan_dien_*.jpg`.
+- Test: tu-kich 29/0, matran (3 lỗi có sẵn), keoghep (giống nhánh gốc), vetay-ui, hinh-ui, hud2 không lỗi.

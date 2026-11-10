@@ -632,12 +632,14 @@ const REN = {
 
   coU(T) { const B = G.ban[T.ban]; return Math.min(B.cw, B.ch) * 0.98; },
   // đầu súng: đường kính vẽ = cạnh ô × K (artscale.js, đo từ ảnh: thân ~61% ô, mũi nòng ≤ 92% ô) — bệ chung = 70% cạnh ngắn ô
-  kDau(id) { const k = (window.HEAD_K || {})[id]; if (k) return k; const m = (window.ART_META || {})[id] || { s: 1 }; return 0.8 * m.s; },
-  coDau(T) { const B = G.ban[T.ban]; return Math.min(B.cw, B.ch) * this.dauK(T.id, T.gd); },
+  // DAU_VE (tools/thap-nhan-dien-u.py, 10/11): đầu ụ anime đã dời tâm + phóng → cỡ VẼ riêng; _luat = đang tính cỡ LUẬT (coDau: mũi nòng/đạn) → HEAD_K/STAGE_K cũ
+  DAU_VE: (!window.UCU && window.DAU_VE) || {},
+  kDau(id) { const v = !this._luat && this.DAU_VE[id]; if (v) return v.K; const k = (window.HEAD_K || {})[id]; if (k) return k; const m = (window.ART_META || {})[id] || { s: 1 }; return 0.8 * m.s; },
+  coDau(T) { const B = G.ban[T.ban]; this._luat = 1; try { return Math.min(B.cw, B.ch) * this.dauK(T.id, T.gd); } finally { this._luat = 0; } },
   // tên ảnh + hệ số cỡ của đầu súng ở dạng gd (0 = đầu thường, 1..3 = dạng grow-up)
   // REN._dauEp = [id, ảnh, K]: đầu RIÊNG theo trạng thái ụ đang vẽ (SKILLS[id].dauAnh(T) — Twin Anvil dạng tốc, mặt nạ Prism Thief, trứng Evolver); null = đầu thường
   dauTen(id, gd) { if (this._dauEp && this._dauEp[0] === id) return this._dauEp[1]; return gd && STAGE_K[id] ? id + '_nong_s' + gd : id + '_nong'; },
-  dauK(id, gd) { if (this._dauEp && this._dauEp[0] === id) return this._dauEp[2]; return gd && STAGE_K[id] ? STAGE_K[id][gd - 1] : this.kDau(id); },
+  dauK(id, gd) { if (this._dauEp && this._dauEp[0] === id) return this._dauEp[2]; const v = gd && !this._luat && this.DAU_VE[id]; if (v && v.S && STAGE_K[id]) return v.S[gd - 1]; return gd && STAGE_K[id] ? STAGE_K[id][gd - 1] : this.kDau(id); },
   datDauEp(T) {
     const sk = T && SKILLS[T.id], ten = sk && sk.dauAnh ? sk.dauAnh(T) : null;
     if (!ten || !this.img(ten)) { this._dauEp = null; return; } // ảnh riêng chưa tải: vẽ đầu thường (dự phòng)
