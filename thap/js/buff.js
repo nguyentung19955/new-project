@@ -131,7 +131,7 @@ function buffTongHop(T) {
   if (T.tocT > 0) them('toc', T.tocV, 'Speed boost ' + T.tocT.toFixed(0) + 's');
   if (T.epxung > 0) them('toc', T.epxung, 'Overclock');
   if (T.aurora > 0) them('dmg', knThe(G.ban[T.ban], 'mimic') / 100, 'Mimic merge ' + T.aurora.toFixed(0) + 's');
-  if (B && B.cuong > 0) them('dmg', 1, 'Archfiend RAGE ' + B.cuong.toFixed(0) + 's');
+  if (B && B.cuong > 0) them('dmg', 1, 'Commander RAGE ' + B.cuong.toFixed(0) + 's');
   if (typeof CHM !== 'undefined') CHM.nhanBuff(B, T, them); // chỉ huy mới (08/11): QUICK TUNE / TWIN / CROSSFIRE / NEXUS
   const ds = Object.values(ra);
   if (T.khien > 0) ds.push({ k: 'khien', tong: T.khien, nguon: ['blocks ' + T.khien + ' boss/rival skill'], cach: 'charges' });

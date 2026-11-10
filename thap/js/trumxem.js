@@ -68,7 +68,7 @@ const TX = {
       '<div class="tx-o"><div class="tx-kn"><em>' + this.e(T.kn) + '</em><i>' + kieu + '</i></div><p>' + this.e(T.mo) + '</p>' +
         (kieu === 'ACTIVE' ? '<small>Casts every ' + this.nhip(w) + ' s · red target marks 1.4 s before</small>' : '') + '</div>' +
       '<div class="hm-loc-nh">APPEARS</div>' +
-      '<div class="tx-o"><p>Solo &amp; PvP: random boss from wave ' + w + '</p>' + (co ? '<p>Co-op: wave ' + co + '</p>' : '') + '</div>' +
+      '<div class="tx-o"><p>Single-player &amp; PvP: can appear from wave ' + w + '</p>' + (co ? '<p>Co-op: wave ' + co + '</p>' : '') + '</div>' +
       '<div class="hm-loc-nh">HP BY WAVE</div>' +
       '<div class="tx-o tx-mau">' + moc.map(x => dong('WAVE ' + x, this.so(this.mau(id, x)))).join('') + '</div>' +
       '<div class="hm-loc-nh">EVERY BOSS</div>' +
