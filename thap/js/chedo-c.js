@@ -27,7 +27,7 @@ const CDC = {
     thuong(t) {
       const r = [{ vang: 50 + 10 * t }];
       if (t % 5 === 0) r.push({ ngoc: t > 70 ? 30 : 20 });
-      if (t % 10 === 0) r.push(t <= 30 ? { ruong: 'vang' } : t <= 70 ? { ruong: 'hh', n: 1 } : { ruong: 'hh', n: 2 });
+      if (t % 10 === 0) r.push(t <= 30 ? { ruong: 'thuong' } : t <= 60 ? { ruong: 'vang' } : t <= 90 ? { ruong: 'hh', n: 1 } : { ruong: 'hh', n: 2 }); // 10/11 người dùng: thưởng ải to quá (Rương Vàng từ tầng 10) → tầng 10–30 Rương Thường, 40–60 Vàng, 70–90 HH×1, 100 HH×2
       if (t === 50) r.push({ tt: 3 }); if (t === 100) r.push({ tt: 5 });
       return r;
     },
@@ -35,7 +35,7 @@ const CDC = {
   san: {
     veNgay: 3, muaMax: 2, giaVe: 3000, gio: 90, bac: 10, xp: (b) => 5 + 2 * b,
     hsT: { 8: 2, 9: 4, 10: 8 },
-    thuong: (b) => (b <= 3 ? [{ vang: 300 }] : b <= 6 ? [{ vang: 1000 }, { ngoc: 15 }] : b === 7 ? [{ ruong: 'hh', n: 1 }] : [{ vang: 2000 }, { ngoc: 30 }]),
+    thuong: (b) => (b <= 3 ? [{ vang: 300 }] : b <= 6 ? [{ vang: 1000 }, { ngoc: 15 }] : b === 7 ? [{ ruong: 'vang' }] : [{ vang: 2000 }, { ngoc: 30 }]), // 10/11: bậc 7 lần đầu HH → Vàng (giảm thưởng)
     du: (b) => (b <= 3 ? [{ ruong: 'thuong' }] : b <= 6 ? [{ ruong: 'vang' }] : b === 7 ? [{ ruong: 'hh', n: 3 }] : b === 10 ? [{ tt: 2 }] : null),
     tuan: { 3: [{ vang: 2000 }], 5: [{ ngoc: 50 }], 7: [{ ruong: 'hh', n: 1 }], 9: [{ tt: 1 }] },
   },
