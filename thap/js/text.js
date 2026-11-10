@@ -189,7 +189,9 @@ function hasPilot(id) { const t = TEXT.turret[id]; return !!((t && t.portrait) |
 function heroOf(id) { return 'assets/hero/hero_' + id + (id.indexOf('af_') === 0 ? '.webp' : '.jpg'); } // chỉ huy: nền trong suốt (webp)
 // ảnh NHỎ 256 px (assets/pn/pilot_<id>.png — tools/thap-pilot-nho.py) cho lưới 85 ô, 5 ô bộ bài, khay trận, dải đối thủ: ô hiện ≤ 195 px thật
 // (trước: tải + giải mã 85 ảnh 427 px ≈ 37 MB → cuộn màn bộ bài giật trên iPhone). Ảnh to (trang chi tiết, bóng kéo) vẫn portraitOf.
-function thumbOf(id) { const t = TEXT.turret[id]; return (t && t.portrait) || (PILOTS.has(id) ? (typeof anhUrl === 'function' ? anhUrl('pn/pilot_' + id) : 'assets/pn/pilot_' + id + '.png') : iconOf(id)); }
+function thumbOf(id) { const t = TEXT.turret[id]; return (t && t.portrait) || (PILOTS.has(id) ? (typeof anhUrl === 'function' ? anhUrl(poThuMuc(id) + 'pilot_' + id) : 'assets/' + poThuMuc(id) + 'pilot_' + id + '.png') : iconOf(id)); }
+// mặt NHỎ trong ảnh gốc (PO_TO — js/chandung.js): ô nhỏ phải phóng vào mặt → dùng ảnh 427 px (bản 256 px phóng lên sẽ nhoè)
+function poThuMuc(id) { return typeof PO_TO !== 'undefined' && PO_TO.has(id) ? '' : 'pn/'; }
 function portraitOf(id) { const t = TEXT.turret[id]; return (t && t.portrait) || (PILOTS.has(id) ? (typeof anhUrl === 'function' ? anhUrl('pilot_' + id) : 'assets/pilot_' + id + '.png') : iconOf(id)); }
 // ảnh trên thẻ: chỉ chân dung phi công (KHÔNG huy hiệu/icon tròn nhỏ cạnh mặt — người dùng yêu cầu bỏ; độ hiếm = màu khung); chưa có phi công → icon ụ to
 // lưới 85 thẻ được dựng sẵn lúc khởi động (màn bộ bài đang ẩn): trước khi HOME hiện, ảnh để ở data-tm-src (trình duyệt KHÔNG

@@ -30,7 +30,7 @@ def cat(i):
     L = min(max(0, round(fx * W - S / 2)), W - S)
     sq = im.crop((L, T, L + S, T + S))
     sq.resize((427, 427), Image.LANCZOS).save(os.path.join(A, f'pilot_{i}.png'), optimize=True)
-    sq.resize((256, 256), Image.LANCZOS).save(os.path.join(A, f'pn/pilot_{i}.png'), optimize=True)
+    sq.resize((300, 300), Image.LANCZOS).save(os.path.join(A, f'pn/pilot_{i}.png'), optimize=True)
     x0 = round(0.118 * W)
     im.crop((x0, 0, x0 + 1174, H)).resize((1170, 1020), Image.LANCZOS).save(os.path.join(A, f'hero/hero_{i}.jpg'), quality=88, optimize=True, progressive=True)
     p = lambda y: round(max(0, min(100, (y * H - T) / S * 100)), 1)

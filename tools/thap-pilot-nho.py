@@ -4,10 +4,11 @@ assets/pilot_<id>.png (427 px) → assets/pn/pilot_<id>.png 256 px (Lanczos nhâ
 Cỡ hiện lớn nhất: ô lưới 4 cột màn 360 (82 px logic, DPR 3) — chân dung còn phóng thêm theo khung mặt (khung.js MAT) → 200 px còn thiếu
 (hồi quy: 1,03 px nguồn/px máy) → 256 px dư ~20 % (QUY-TAC-HINH 5).
 Tên vẫn chứa 'pilot_<id>' → khung.js MAT (mốc mặt %) nhận như ảnh gốc. Chạy lại khi thêm/đổi pilot_*.png:
-  python3 tools/thap-pilot-nho.py [cỡ=256]"""
+  python3 tools/thap-pilot-nho.py [cỡ=300]
+10/11: 256 → 300 px — ảnh lấp kín ô trong khung thẻ dọc (css/ui-anime.css --po-mep .03) nên ô bộ sưu tập màn 430 cần ~292 px (thap-kt-vach: ≤ 1,05 px máy / px nguồn)."""
 import glob, os, sys
 from PIL import Image
-N = int(sys.argv[1]) if len(sys.argv) > 1 else 256
+N = int(sys.argv[1]) if len(sys.argv) > 1 else 300
 A = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'thap', 'assets')
 os.makedirs(os.path.join(A, 'pn'), exist_ok=True)
 for p in sorted(glob.glob(os.path.join(A, 'pilot_*.png'))):

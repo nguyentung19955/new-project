@@ -156,7 +156,7 @@ def chan_dung(i):
     T = min(max(0, round(ey * H - TILE_EYE * S)), H - S); L = min(max(0, round(fx * W - S / 2)), W - S)
     sq = full.crop((L, T, L + S, T + S))
     sq.resize((427, 427), Image.LANCZOS).save(os.path.join(A, 'pilot_%s.png' % i), optimize=True)
-    sq.resize((256, 256), Image.LANCZOS).save(os.path.join(A, 'pn', 'pilot_%s.png' % i), optimize=True)
+    sq.resize((300, 300), Image.LANCZOS).save(os.path.join(A, 'pn', 'pilot_%s.png' % i), optimize=True)
     hh = round(W * 1020 / 1170)
     full.crop((0, 0, W, hh)).resize((1170, 1020), Image.LANCZOS).save(os.path.join(A, 'hero', 'hero_%s.jpg' % i), quality=88, optimize=True, progressive=True)
     p = lambda y: round(max(0, min(100, (y * H - T) / S * 100)), 1)
