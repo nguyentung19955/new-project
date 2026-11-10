@@ -9,7 +9,8 @@ const FX = {
   rung: 0, rungX: 0, rungY: 0,
   chop: 0, chopMau: '#fff',
   MAX_HAT: 320, giam: 1, // giam: tỉ lệ giữ hạt (2×/3× sinh hạt nhanh hơn → bớt bằng xác suất để mật độ như 1×)
-  MAX_CHU: 32, MAX_ANIM: 90, MAX_NO: 28, MAX_SO: 14, // MAX_NO: trần dải nổ trên đường cùng lúc (không tính chớp nòng) · MAX_SO: trần số sát thương thường cùng lúc (claude/diu-vfx) // trần chữ nổi / dải nổ (trước 06/11 hai trần này nằm nhầm trong chú thích → không giới hạn: nhiều skill cùng lúc = hàng trăm dải nổ 1 khung)
+  MAX_CHU: 24, MAX_ANIM: 90, MAX_NO: 28, MAX_SO: 10, // đợt 3 giật (Lucky Slot đợt 66): chữ 32→24, số 14→10
+  // MAX_NO: trần dải nổ trên đường cùng lúc (không tính chớp nòng) · MAX_SO: trần số sát thương thường cùng lúc (claude/diu-vfx) // trần chữ nổi / dải nổ (trước 06/11 hai trần này nằm nhầm trong chú thích → không giới hạn: nhiều skill cùng lúc = hàng trăm dải nổ 1 khung)
   _kho: [], // kho tái dùng hạt
 
   reset() { this.hat.length = 0; this.chu.length = 0; this.anim.length = 0; this.vong.length = 0; this.rung = 0; this.chop = 0; },
@@ -59,7 +60,23 @@ const FX = {
         const c = this._chuSo(x, y, s, mau, co, kieu); c.trum = E; return c;
       }
     }
+    // đợt 3 giật (10/11, 8 Lucky Slot đợt 66: số khổng lồ chồng nhau): số thường gần nhau (≈ 1 số rộng) → chỉ giữ số LỚN nhất
+    //   (số mới ≤ số đang hiện gần đó → bỏ; lớn hơn → thay các số nhỏ quanh đó). Chỉ hiển thị, không đổi sát thương.
+    if ((!kieu || kieu === 'crit') && typeof s === 'string' && /^\d+$/.test(s)) {
+      const v = +s;
+      for (let i = this.chu.length - 1; i >= 0; i--) {
+        const c = this.chu[i]; if (!c.gop || c.trum || c.t > c.song * 0.7 || Math.abs(c.x - x) > 44 || Math.abs(c.y - y) > 22) continue;
+        if (+c.s >= v) return c;
+        this.chu.splice(i, 1);
+      }
+    }
     return this._chuSo(x, y, s, mau, co, kieu);
+  },
+  // số hiển thị gọn: ≥ 1 tỉ "1.2B", ≥ 1 triệu "14.3M", ≥ 100 000 (6 chữ số) "199.9K"; nhỏ hơn giữ nguyên (đợt 3 giật: chữ dài = ảnh chữ to + khó đọc)
+  soGon(s) {
+    if (typeof s !== 'string' || s.length < 6 || !/^\d+$/.test(s)) return s;
+    const n = +s, g = (v, d) => (Math.floor(v / d * 10) / 10).toFixed(1);
+    return n >= 1e9 ? g(n, 1e9) + 'B' : n >= 1e6 ? g(n, 1e6) + 'M' : g(n, 1e3) + 'K';
   },
   _chuSo(x, y, s, mau, co, kieu) {
     if ((!kieu || kieu === 'crit') && typeof s === 'string' && /^\d+$/.test(s)) { // bàn đông: giữ ≤ MAX_SO số sát thương, bỏ số cũ nhất (claude/diu-vfx)

@@ -57,3 +57,26 @@ So với gốc 3× (15,4 M) → PVP iPhone còn 4,5 M điểm ảnh/khung (−71
 
 ## Còn có thể làm
 - Khung bao lớp hiệu ứng hay bị "cả lớp" do vài hiệu ứng vẽ fill/stroke/chữ vào lớp → tính khung bao cho fillRect / chữ để giảm thêm.
+
+## Đợt 3 (10/11) — "Rất giật" cảnh 8 Lucky Slot đợt 66
+Báo lỗi iPhone: đợt 66, 8 Lucky Slot (cobac, 2–3 tia hồng tím) + vài ụ, quái dồn chùm, số sát thương khổng lồ chồng nhau, nhiều chấm trắng sáng to.
+
+Dựng lại: `BAN=cobac MODE=solo WAVE=66 node tools/thap-kt-hieunang-dem.js x=ios=1` (tham số mới `BAN` / `SAO` / `WAVE`: bàn 0 = 8 Lucky Slot 6★ + Ember / Hive Queen / Pháo / Liên xen kẽ, 15 ô đầy, auto=1, không kết thúc trận khi đo).
+Canvas 780×1560 (iOS 2×). Máy đo bận → đo xen kẽ trước/sau 5 lần mỗi bên; số mỗi khung:
+
+| | drawImage | Điểm ảnh vẽ | Điểm ảnh xoá | Hạt sống |
+|---|---|---|---|---|
+| Trước (5 lần) | 630–757 (TB ~680) | 1,98–2,18 màn (TB 2,07) | 1,41–1,47 | 212–296 (sát trần 320) |
+| **Sau** (5 lần) | 535–612 (TB ~557, **−18%**) | 1,67–1,93 (TB 1,81, **−13%**) | 1,28–1,49 (TB 1,34) | 86–152 |
+
+Điểm ảnh còn lại chủ yếu là cảnh nền (xoá canvas chính 1,0 màn, ụ/quái/thanh máu) — không thuộc hiệu ứng.
+
+Đã sửa (chỉ hình, không đổi luật / thời gian / ngẫu nhiên luật):
+1. `fx.js`: số ≥ 100 000 hiện gọn `199.9K` / `14.3M` / `1.2B` (`FX.soGon`, chỉ lúc vẽ — số thật không đổi); số thường cách nhau < 44×22 px chỉ giữ số LỚN nhất; trần số cùng lúc 14 → 10, chữ 32 → 24.
+2. `render.js` `veFx`: ≤ 120 hạt sáng vẽ mỗi khung (`REN.MAX_HAT_VE`), đông thì giữ hạt to / mới (điểm = cỡ × phần đời còn lại; không Math.random).
+3. `tiervfx.js` `TVX.dan`: vệt hạt sau đạn bậc Vàng/Đỏ dùng chung "xô" theo thời gian TRẬN (G.t, tất định): ≤ 70 hạt/giây toàn màn (dồn ≤ 10) → 1–3 đạn như cũ, nhiều đạn thì thưa dần.
+4. `jackpot.js` `HU.cbTia`: chấm sáng ở quái 22 → 14 px; mỗi khung ≤ 6 chấm, chấm trùng chỗ (< 14 px, nhiều Lucky Slot bắn cùng cụm) chỉ vẽ 1.
+5. `render.js` `gopLop`: chỉ khoét quái chạm khung bao hình thật của lớp; `theoVung` tính khung bao cho chữ (measureText actualBoundingBox) và fillRect/strokeRect thay vì "cả lớp"
+   — "+1" / "JACKPOT!" của Lucky Slot trước làm lớp hiệu ứng xoá + đổ cả màn (~0,7 màn) ở ~40% số khung. Kiểm: chữ thường / xoay / bóng / rect âm: 0 điểm ảnh ngoài khung bao.
+
+Ảnh 393×852 trước/sau: `/home/claude/xem/giat-lucky.jpg` (chỉ trên máy làm). Kiểm: hud2, hudtop, nut-trieu, tu-kich (29/0), vetay-ui, keoghep, trum-don, anim (RNG 30/60 FPS) xanh; matran 3 lỗi có sẵn.

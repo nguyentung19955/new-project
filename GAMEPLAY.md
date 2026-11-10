@@ -3,6 +3,11 @@
 > Game merge tower-defense trong `thap/`. Luật game và bàn giao: `docs/demo-hop-tuong/ban-giao/BAN-GIAO.md`, luật code/hình: `thap/QUY-TAC-HINH.md`.
 > Mỗi session thêm một mục `## claude/<tên-nhánh> — …` ở CUỐI file (file gộp kiểu union, không xung đột).
 
+## claude/demo-hop-tuong — bớt giật cảnh 8 Lucky Slot đợt cao (10/11, đợt 3 hiệu năng)
+- Số sát thương ≥ 100 000 hiện gọn `199.9K` / `14.3M`; số chồng nhau gần nhau chỉ giữ số lớn nhất; ít chữ cùng lúc hơn (chỉ hiển thị, sát thương thật không đổi).
+- Mỗi khung vẽ ≤ 120 hạt sáng (giữ hạt to/mới); vệt hạt sau đạn Vàng/Đỏ giới hạn chung ≤ 70 hạt/giây theo thời gian trận; chấm sáng tia Lucky Slot nhỏ hơn (22 → 14 px), ≤ 6 chấm/khung, trùng chỗ chỉ 1.
+- Lớp hiệu ứng: khoét chỉ quái trong vùng có hình; chữ "+1"/"JACKPOT!" không còn làm đổ cả lớp. Đo: drawImage −18%, điểm ảnh vẽ −13% mỗi khung (`docs/demo-hop-tuong/tuvan/hieu-nang/BAO-CAO.md` Đợt 3; `tools/thap-kt-hieunang-dem.js` thêm `BAN=cobac WAVE=66`).
+
 ## claude/demo-hop-tuong — Thử thách tuần BẬT + bảng xếp hạng 3 tab (10/11, giai đoạn D xong)
 - THỬ THÁCH TUẦN hiện trong GAME MODE + HOME → EVENT (thẻ WEEKLY CHALLENGE: PLAY / RANKS); mở ở Cấp phi công 8 (ADMIN luôn mở). Luật giữ như thiết kế: hạt = tuần (như nhau cho mọi người), 5 ụ cho mượn 1 Vàng + 2 Tím + 1 Xanh + 1 Trắng, chỉ huy cố định, cấp thẻ +5, 2 đột biến, wave 1–50; mốc 15 = 1 000 vàng · 25 = 30 ngọc · 35 = bản Vàng của bộ tuần (chưa vào bể → Rương HT) · 45 = 1 Tinh thể Đỏ.
 - BẢNG XẾP HẠNG: 3 tab Tuần / Vô tận tuần / Vô tận mọi thời đại (ở màn tuần, màn Vô tận, bảng riêng từ EVENT) + dòng HẠNG CỦA BẠN (#n / 50+). Ghi `turretmerge/lb/...` đúng rules đã publish: n ≤ 16 (trống → "Pilot"), av ≤ 24, w kẹp 1…51 / 999, t ≥ 6·w (< 100000), k = w·100000 + 99999 − t, at = ServerValue.TIMESTAMP, v = 1. Lỗi quyền / chưa đăng nhập / quá 8 s → NOT CONNECTED + kỷ lục cá nhân; điểm chờ giữ để gửi lại, tự bỏ khi máy chủ đã có điểm ≥.
