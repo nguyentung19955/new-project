@@ -108,7 +108,7 @@ const KQO = {
       h = b('kqo-sanh', 'BACK TO LOBBY', true) + b('kqo-nha', 'HOME');
       t = ban + ' is waiting in the lobby';
     } else {
-      h = b('kqo-moi', 'FIND NEW PARTNER', true) + b('kqo-solo', 'PLAY SOLO') + b('kqo-nha', 'HOME');
+      h = b('kqo-moi', 'FIND NEW PARTNER', true) + b('kqo-nha', 'HOME'); // 10/11 người dùng: bạn đã rời thì thôi — bỏ nút PLAY SOLO (Solo đã bỏ)
       t = (this.laPvp() ? 'Your opponent' : ban) + ' left the room';
     }
     if (row._h !== h) { row.innerHTML = h; row._h = h; } // .bang-nut xếp ngược (column-reverse) → nút chính ở trên cùng
