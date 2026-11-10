@@ -5496,4 +5496,12 @@ const VI_MAU = {
 "−#% damage until hit by # different turret types (# from wave #)": "−#% ST cho đến khi trúng # loại ụ khác nhau (# từ đợt #)",
 "−#s": "−# s",
 "≥# IN CHEST": "≥# TRONG RƯƠNG",
+// 10/11 băng chiêu trùm ghi TÁC DỤNG (hud-anime.js HA.cbChu) + Prism Warden dễ hiểu
+"PRISM SHIELD: −#% DMG": "KHIÊN LĂNG KÍNH: −#% ST",
+"Shield coming back!": "Khiên sắp bật lại!",
+"Hit with # different turret types to break · #/#": "Bắn bằng # loại ụ khác nhau để phá · #/#",
+"SHIELD BROKEN: FULL DMG": "KHIÊN VỠ: NHẬN ĐỦ ST",
+"Shield returns in": "Khiên bật lại sau",
+"−#% damage until hit by #–# turret types": "−#% sát thương tới khi trúng #–# loại ụ khác nhau",
+"−#% damage until hit by #–# turret types.": "−#% sát thương tới khi trúng #–# loại ụ khác nhau.",
 };

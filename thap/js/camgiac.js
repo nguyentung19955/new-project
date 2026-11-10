@@ -57,7 +57,7 @@ const CG = {
     const N = A.length;
     this._kTong = (N <= 24 ? 1 : Math.max(0.55, 1 - (N - 24) / 110)) * (this.doc().flash ? 0.85 : 1);
   },
-  kA(a) { let k = this._kTong; if (this._nT4 > 1 && !a.mot && a.co >= 140 && a !== this._t4) k *= 0.55; return k; },
+  kA(a) { let k = this._kTong; if (this._nT4 > 1 && !a.mot && a.co >= 140 && a !== this._t4) k *= 0.55; if (a._tr && a._tr !== 'an' && REN.NO_TRUM) k *= REN.NO_TRUM.al; return k; }, // _tr: nổ quanh thân trùm (render.js danhDauNoTrum) — mờ hơn, không che trùm
 
   // ---------- MỐC SAO 3/5/7 ----------
   ds: [], // { T, B, o, t0, n }

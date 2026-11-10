@@ -667,7 +667,7 @@ Object.assign(REN, {
     if (lanh && !s.dong && c('cham')) s.cham = 1;
     if (E.docT > 0 && c('doc')) s.doc = 1;
     if (E.chayT > 0 && c('chay')) s.chay = 1;
-    if ((E.cvT > 0 || E.cvPT > 0) && c('cauvong')) s.yeu = 'cauvong'; else if (E.giapT > 0 && c('khienvang')) s.yeu = 'khienvang'; else if (E.yeu > 0 && c('yeu')) s.yeu = 'yeu';
+    if ((E.cvT > 0 || E.cvPT > 0) && c('cauvong')) s.yeu = 'cauvong'; else if (E.giapT > 0 && !E.khien && c('khienvang')) s.yeu = 'khienvang'; // Prism Warden (E.khien): vỏ lăng kính riêng ở trumvfx.js — không phủ khiên vàng che thân else if (E.yeu > 0 && c('yeu')) s.yeu = 'yeu';
     // VFX P0 (REVIEW-VFX-93 II.I): tối đa 2 dấu trạng thái mỗi quái — ưu tiên khống chế cứng > sát thương theo thời gian > dấu suy yếu > chậm
     //  (mỗi trạng thái 1 hình riêng: đóng băng = khối tinh thể · choáng = sao vàng quay · cháy = lửa · độc = bọt xanh · lộ/dấu = vòng tím nứt / cầu vồng / khiên vàng · chậm = vòng gió lạnh)
     let n = 0;
@@ -793,9 +793,9 @@ Object.assign(REN, {
         if (!st.cham) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.2;
           this.anhGiua(ctx, this.cham1('#78D9F5'), x, y, co * 0.75); ctx.restore(); ctx.globalAlpha = 1; }
       } else E._lanhT = 0;
-      if ((E.yeu > 0 || E.cvT > 0 || E.cvPT > 0 || E.giapT > 0) && !st.yeu) {
+      if ((E.yeu > 0 || E.cvT > 0 || E.cvPT > 0 || (E.giapT > 0 && !E.khien)) && !st.yeu) {
         ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.28;
-        const mm = E.cvT > 0 || E.cvPT > 0 ? ['#ff4b8a', '#ffd23f', '#4bff9a', '#4fb8ff', '#c77dff'][Math.floor(t * 6 + E.uid) % 5] : E.giapT > 0 ? '#ffd23f' : '#c77dff';
+        const mm = E.cvT > 0 || E.cvPT > 0 ? ['#ff4b8a', '#ffd23f', '#4bff9a', '#4fb8ff', '#c77dff'][Math.floor(t * 6 + E.uid) % 5] : E.giapT > 0 && !E.khien ? '#ffd23f' : '#c77dff';
         this.anhGiua(ctx, this.cham1(mm), x, y, co * 1.15); ctx.restore(); ctx.globalAlpha = 1;
       }
       // ---- thân ----

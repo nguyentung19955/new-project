@@ -58,6 +58,13 @@ html.ha2 body #wrap #ha-cb b { flex: 0 1 auto; min-width: 0; white-space: nowrap
 html.ha2 body #wrap #ha-cb em { flex: 0 0 auto; font: 800 16px/1 'TM Display', sans-serif; font-style: normal; color: #FF5E80; text-shadow: 0 1px 2px #000; }
 html.ha2 body #wrap #ha-cb em:empty { display: none; }
 html.ha2 body #wrap #ha-cb.dang em { animation: ha-nhip .5s ease-in-out infinite alternate; }
+/* 10/11: dòng 2 = TÁC DỤNG chiêu (HA.cbChu) — người dùng: "băng chỉ có tên, không nói tác dụng" */
+html.ha2 body #wrap #ha-cb .cb-c { flex: 0 1 auto; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 0; }
+html.ha2 body #wrap #ha-cb .cb-c b { max-width: 100%; }
+html.ha2 body #wrap #ha-cb small { display: none; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font: 700 10px/1.25 'TM UI', sans-serif; color: #CFF6FF; text-shadow: 0 1px 2px #000; }
+html.ha2 body #wrap #ha-cb.td small { display: block; }
+html.ha2 body #wrap #ha-cb.td b { font-size: 12px; line-height: 1.25; } /* chữ hoa có dấu (KHIÊN) không bị cắt đầu */
+html.ha2 body #wrap #ha-cb.td.hep small { font-size: 9px; }
 @keyframes ha-nhip { from { opacity: 1; } to { opacity: .45; } }
 
 /* băng WAVE N (0,7 s đầu mỗi đợt): nền tấm rộng xanh, bỏ băng thép */

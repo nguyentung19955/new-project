@@ -3,6 +3,12 @@
 > Game merge tower-defense trong `thap/`. Luật game và bàn giao: `docs/demo-hop-tuong/ban-giao/BAN-GIAO.md`, luật code/hình: `thap/QUY-TAC-HINH.md`.
 > Mỗi session thêm một mục `## claude/<tên-nhánh> — …` ở CUỐI file (file gộp kiểu union, không xung đột).
 
+## claude/demo-hop-tuong — Prism Warden nhìn là hiểu + nổ không che trùm (10/11)
+- Khiên lăng kính vẽ lại: lục giác trong suốt ôm sát thân, viền sáng (thân luôn thấy) + kim cương đếm loại ụ đã trúng; niệm dựng lại = viền chớp 2,5 Hz co vào; vỡ = vỏ bung mờ; bị đánh lúc có khiên = loé khúc xạ nhỏ phía ụ bắn. Bỏ mảnh cung lệch + lớp khiên vàng.
+- Băng chiêu trùm 2 dòng ghi TÁC DỤNG (EN/VI) cho mọi trùm; Prism: "−90% ST · bắn bằng N loại ụ khác nhau để phá · x/N" / "khiên vỡ: nhận đủ ST · bật lại sau Xs"; bỏ đếm 2s/1s vô nghĩa (Prism, Twin Core, Leech chưa có ụ 2★).
+- Nổ quanh trùm: ≤ 2 vụ, cỡ ≤ 0,36 thân, mờ ×0,5 (chiêu trùm giữ nguyên); số sát thương trên trùm gộp 0,3 s + xếp so le 3 làn. Luật/thời gian không đổi.
+- Báo cáo: `docs/demo-hop-tuong/tuvan/trum-prism/BAO-CAO.md`.
+
 ## claude/demo-hop-tuong — quyền ADMIN (10/11)
 - Tài khoản Google admin (email đã xác minh, ghi trong `thap/js/admin.js`): bỏ mọi khoá (chế độ, màn, cửa hàng, vòng quay, lò rèn, Ấn Vàng/Đỏ, Leo Tháp, Săn Trùm, Thử thách, Vô tận, thử thách tuần, online, chỉ huy) và coi như sở hữu đủ 96 ụ.
 - Chỉ là "ảo": không ghi đè dữ liệu sở hữu / bản sao / cấp thẻ, không cộng tài nguyên; đăng xuất về đúng như cũ. Nhãn ADMIN ở chip phi công + hồ sơ.

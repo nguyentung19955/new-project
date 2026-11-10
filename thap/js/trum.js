@@ -10,7 +10,7 @@
 const TRUM_MOI = {
   hive:      { ten: 'HIVE MOTHER',   kn: 'SWARM',        mo: 'Launches 4 drones ahead of itself (6 from wave 40)',            nguy: 'Launches drone swarms',            mau: '#ffb648', tuWave: 10, hp: 0.85, v: 13, anhTam: 'mad_crown' },
   jammer:    { ten: 'STATIC JAMMER', kn: 'JAM',          mo: 'Jams 2 turrets (supports first): no fire, no merge, no aura 6 s', nguy: 'Jams 2 turrets — supports first', mau: '#b77dff', tuWave: 20, hp: 0.9, v: 15, anhTam: 'freezer' },
-  prism:     { ten: 'PRISM WARDEN',  kn: 'PRISM SHIELD', mo: '−90% damage until hit by 3 different turret types (4 from wave 40); re-shields ~8 s after breaking', nguy: 'Shield breaks to 3–4 turret types', mau: '#7ff0ff', tuWave: 20, hp: 1.15, v: 13, anhTam: 'janus' },
+  prism:     { ten: 'PRISM WARDEN',  kn: 'PRISM SHIELD', mo: '−90% damage until hit by 3 different turret types (4 from wave 40); re-shields ~8 s after breaking', nguy: '−90% damage until hit by 3–4 turret types', mau: '#7ff0ff', tuWave: 20, hp: 1.15, v: 13, anhTam: 'janus' },
   twin_core: { ten: 'TWIN CORE',     kn: 'SPLIT',        mo: 'Splits into 2 fast cores when destroyed',      nguy: 'Splits in two when destroyed',     mau: '#ff4b5a', tuWave: 30, hp: 0.7, v: 15, anhTam: 'joker_king' },
   patcher:   { ten: 'PATCH TITAN',   kn: 'REPAIR',       mo: 'Heals itself 12% and every enemy in its lane 35%', nguy: 'Repairs itself and every enemy',  mau: '#5dff8a', tuWave: 30, hp: 0.85, v: 12, anhTam: 'octopus' },
   leech:     { ten: 'STAR LEECH',    kn: 'STAR THEFT',   mo: 'Steals 1★ from your top turret (2★+), then dashes. Kill it: the stolen stars return to random turrets', nguy: 'Steals stars — kill it to get them back', mau: '#ffd84a', tuWave: 40, hp: 0.8, v: 16, anhTam: 'nightmare' },
@@ -35,7 +35,7 @@ const TRM = {
   hsPhu: 1, // hệ số máu quái do trùm gọi ra (chỉ sim chỉnh)
   prismCan: (w) => (w >= 40 ? 4 : 3),
   // hiệu ứng chiêu: ảnh ChatGPT riêng fx_trum_<id> nếu đã có, không thì ảnh FX có sẵn
-  fx(id, ten, x, y, co, song) { FX.no(TRUM_FX.has(id) ? 'trum_' + id : ten, x, y, co, Math.max(song || 0, TRUM_FX.has(id) ? 0.6 : 0)); },
+  fx(id, ten, x, y, co, song) { FX.cuaTrum = true; try { FX.no(TRUM_FX.has(id) ? 'trum_' + id : ten, x, y, co, Math.max(song || 0, TRUM_FX.has(id) ? 0.6 : 0)); } finally { FX.cuaTrum = false; } }, // cuaTrum: hiệu ứng CHIÊU trùm — không bị thu nhỏ như nổ của ụ quanh thân trùm (fx.js trumGan)
   chu(x, y, s, mau, co) { FX.chu1(x, y, s, mau, co || 13, 'to'); },
 };
 
@@ -70,7 +70,7 @@ const TRUM_KN = {
     chon: (E) => (E.khien && !E.khien.on && E.khien.be <= 0 ? [] : null), // chỉ niệm khi khiên đã vỡ xong → dựng lại
     lam(E) {
       E.khien.on = true; E.khien.ds.clear(); E.khien.can = TRM.prismCan(G.wave); E.giapT = 0.5;
-      FX.no('bang_vo', E.x, E.y, 120, 0.5); TRM.chu(E.x, E.y - 46, 'SHIELD UP', TRUM_MOI.prism.mau, 14);
+      TRM.fx('prism', 'bang_vo', E.x, E.y, 120, 0.5); TRM.chu(E.x, E.y - 46, 'SHIELD UP', TRUM_MOI.prism.mau, 14);
     },
     tick(E, dt) {
       const K = E.khien; if (!K) return;
