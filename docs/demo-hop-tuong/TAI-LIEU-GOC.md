@@ -225,23 +225,23 @@ Sinh tự động từ game (EN-mode cho số, VI-mode cho mô tả). Cột "1�
 | `ngoisao` | SPARK → NOVA → SUPERNOVA | riêng `_nong_s1..3` |
 | `lienket` | SINGLE → LINKED → CHAIN MASTER | riêng `_nong_s1..3` |
 | `dongbo` | OFFLINE → SYNCED → FULL SYNC | riêng `_nong_s1..3` |
-| `hydra` | HATCHLING → MANY HEADS → SEVEN HEADS | **dùng chung 1 ảnh** (`hydra_nong`) |
+| `hydra` | HATCHLING → MANY HEADS → SEVEN HEADS | riêng `_nong_s1..3` trên trang ụ (10/11, `STAGE_VE_TRANG`); trong trận Hydra vẫn tự vẽ vương miện n đầu = số sao |
 | `cuuvi` | KIT → BLAZING TAILS → NINE-TAIL | riêng `_nong_s1..3` |
 | `luoicheo` | IDLE → HUMMING → RESONANCE | riêng `_nong_s1..3` |
 | `ngaithoigian` | DIAL → TWELVE HOURS → THRONE OF TIME | riêng `_nong_s1..3` |
-| `combo` | WARM-UP → ON A ROLL → OVERDRIVE | **dùng chung 1 ảnh** (`combo_nong`) |
-| `pandora` | LOCKED → AJAR → OPEN VAULT | **dùng chung 1 ảnh** (`pandora_nong`) |
-| `nemesis` | SCALES → SCYTHE → VERDICT | **dùng chung 1 ảnh** (`nemesis_nong`) |
-| `nhatthuc` | DUSK → CORONA → TOTAL ECLIPSE | **dùng chung 1 ảnh** (`nhatthuc_nong`) |
-| `marionette` | STRINGS → GOLDEN HAND → TWIN PUPPETS | **dùng chung 1 ảnh** (`marionette_nong`) |
-| `guongcong` | MIRROR → TWIN PANES → SHARD HALO | **dùng chung 1 ảnh** (`guongcong_nong`) |
-| `chuato` | NEST → HIVE → ROYAL HIVE | **dùng chung 1 ảnh** (`chuato_nong`) |
-| `leviathan` | HATCHLING → DEEP ONE → ABYSS LORD | **dùng chung 1 ảnh** (`leviathan_nong`) |
-| `khoisinh` | SEED → BLOSSOM → LOTUS OF LIFE | **dùng chung 1 ảnh** (`khoisinh_nong`) |
+| `combo` | WARM-UP → ON A ROLL → OVERDRIVE | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |
+| `pandora` | LOCKED → AJAR → OPEN VAULT | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |
+| `nemesis` | SCALES → SCYTHE → VERDICT | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |
+| `nhatthuc` | DUSK → CORONA → TOTAL ECLIPSE | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |
+| `marionette` | STRINGS → GOLDEN HAND → TWIN PUPPETS | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |
+| `guongcong` | MIRROR → TWIN PANES → SHARD HALO | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |
+| `chuato` | NEST → HIVE → ROYAL HIVE | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |
+| `leviathan` | HATCHLING → DEEP ONE → ABYSS LORD | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |
+| `khoisinh` | SEED → BLOSSOM → LOTUS OF LIFE | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |
 | `ronglua` | Hatchling Engine (1–2★) → Winged Wyrm (3–4★) → Armored Dragon (5–6★) → Inferno Dragon (7★) | riêng: nho/ronglua_f1, nho/ronglua_f2, nho/ronglua_f3, nho/ronglua_f4 |
-| `lualien` | EMBER → KINDLED → FULL BLAZE | **dùng chung 1 ảnh** (`lualien_nong`) |
-| `luutru` | EMPTY SHELVES → FILING → GRAND ARCHIVE | **dùng chung 1 ảnh** (`luutru_nong`) |
-| `cobac` | SLOT → HIGH ROLLER → GRAND CASINO | **dùng chung 1 ảnh** (`cobac_nong`) |
+| `lualien` | EMBER → KINDLED → FULL BLAZE | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |
+| `luutru` | EMPTY SHELVES → FILING → GRAND ARCHIVE | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |
+| `cobac` | SLOT → HIGH ROLLER → GRAND CASINO | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |
 
 ## 7. Cấp thẻ
 Nguồn: `thebai.js: THE, THEBAI.the` · `data.js: hsThe, tocThe, heDB, KY_NANG_CAP, knGt`.
