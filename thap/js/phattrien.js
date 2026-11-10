@@ -34,7 +34,7 @@ const HO = {
 const HO_MOI = {
   bang: 'freezes the lead enemy (no damage)', kiembang: 'spreads slow + shatters slowed ×5', lanhgia: 'spreads slow through neighbours’ shots',
   baotuyet: 'slows ALL + brief freeze', lophanung: 'slow aura that makes neighbours hit slowed enemies harder',
-  doc: 'marks enemies: +12% damage taken', vungdoc: 'poison POOLS hit every enemy on them', aten: 'cashes in poison ×4; kills explode',
+  doc: 'marks enemies: +12% damage taken', vungdoc: 'poison POOLS hit every enemy on them', aten: 'cashes in poison ×8; kills explode',
   canon: 'merge to combine directions: 1 homing rocket per direction', xucxac: 'gambles damage 3–300%', mortar: 'CLUSTER shells split into bomblets', no5: 'every 5th shot: 3 exploding bolts',
   orbital: 'merging awakens EVERY Orbital on the board: area salvos (no normal shots)',
   set: 'chain lightning', laser: 'beam that ramps up ×4', bao: 'instant hits that ARC to a 2nd enemy', railgun: 'rocket salvo down a line + BINGO lines',
@@ -99,7 +99,7 @@ const MOC_RIENG = {
   orbital:   { 3: ['QUICK HANDS', 'Salvos 20% faster'], 5: ['HEAVY SALVO', '+25% bomb damage'], 7: ['JUSTICE RAIN', '+30% bomb damage, +1 bomb'] },
   cauvong:   { 5: ['DOUBLE ARC', 'Aura ×1.9, 2 trails'], 7: ['PRISM', 'Aura ×2.35, trail slows 10%'] },
   vungdoc:   { 3: ['TWIN POOLS', 'Throws a second pool'], 5: ['CORROSION', 'Pools weaken: +15% damage taken'], 7: ['TOXIC LAKE', 'Pools 50% wider'] },
-  aten:      { 3: ['BIG BANG', 'Kill explosion 70 px'], 5: ['TOXIC BLAST', 'Kill explosion poisons'], 7: ['PURGE', '×6 vs poisoned'] },
+  aten:      { 3: ['BIG BANG', 'Kill explosion 70 px'], 5: ['TOXIC BLAST', 'Kill explosion poisons'], 7: ['PURGE', '×12 vs poisoned'] },
   cuongno:   { 3: ['HOT BLOOD', 'Rage lasts 8s'], 5: ['BLOODLUST', 'Frenzy lasts 7s'], 7: ['RAMPAGE', 'Frenzy: +25% crit'] },
   soi:       { 3: ['KEEN FANGS', '+10% crit chance'], 5: ['FERAL', '+25% damage'], 7: ['ALPHA HOWL', 'Neighbours +25% fire rate'] },
   mana:      { 3: ['FAST FLOW', 'Mana every 6s'], 5: ['OVERFLOW', '+25% mana'], 7: ['WELLSPRING', 'Mana every 5s'] },
@@ -170,7 +170,7 @@ const GROW = {
   lophanung: { mau: '#9fe6ff', lap: true, ten: ['IDLE CORE', 'HEATING', 'CRYO STORM READY'], dk: 'Active charge <50% / 50–99% / full (tap to FREEZE)',
     gd: (T) => ({ s: T.nap >= 1 || T.bungT > 0 ? 3 : T.nap >= 0.5 ? 2 : 1, p: T.nap, v: [0.5, 1] }) },
   soi: { mau: '#ff4b3e', ten: ['PUP', 'NORMAL', 'AWAKENED'], dk: 'Form is rolled on summon / merge: Normal, or Awakened by chance (30% at LV9, +1.5% per card level) — no growing',
-    dang: [2, 3], dangMo: [null, 'One barrel · splash 70%', 'Three-barrel volley · always crits · splash 85%'], anhDang: [null, 'soi_dau_thuong', 'soi_dau_thuctinh'], // 10/11: đúng hình đầu trong trận + đúng mô tả bắn (không còn cận chiến)
+    dang: [2, 3], dangMo: [null, 'One barrel · splash 100%', 'Three-barrel volley · always crits · splash 120%'], anhDang: [null, 'soi_dau_thuong', 'soi_dau_thuctinh'], // 10/11: đúng hình đầu trong trận + đúng mô tả bắn (không còn cận chiến)
     gd: (T) => ({ s: T.thuc ? 3 : 2, p: 1, v: [0, 1] }) }, // DCDW Werewolf: 2 bản cố định (dạng 2 = thường, dạng 3 = thức tỉnh), không lớn dần
   orbital: { mau: '#9fe6ff', khongAnh: true, ten: ['STANDBY', 'UPLINK', 'AWAKENED'], dk: 'Uplink: 2+ Orbitals on board · Awakened: merging Orbitals awakens EVERY Orbital on the board (23s at LV9) — each fires area salvos',
     gd: (T) => { const B = G.ban[T.ban], n = B ? demCungLoai(B, 'orbital') : 1, s = T.thucT > 0 || (B && B.phao > 0) ? 3 : n >= 2 ? 2 : 1; return { s, p: s === 3 ? (T.thucT > 0 ? T.thucT / (T.thucMax || 23) : B.phao / 20) : s === 2 ? 0.5 : 0.2, v: [0.5] }; } },

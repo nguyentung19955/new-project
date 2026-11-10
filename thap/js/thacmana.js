@@ -18,7 +18,7 @@
 
 SKILLS.thacmana = {
   vai: 'tc', dmg: 20, toc: 1.0, nham: 'dau', napMau: '#9a7bff', // 09/11 đo bot: 15 → 13 sau đợt tăng trưởng sao mới · 09/11 lần 2 (Đỏ hơn Vàng rõ rệt): 13 → 20 — ụ Đỏ yếu nhất (≈0.6× Vàng tốt nhất ở 3–5★, docs/demo-hop-tuong/tocban/DO-VANG-DO.md)
-  cd: 30, NAY: 125, GIAM: 0.9, SAN: 0.5, K: 0.5,
+  cd: 30, NAY: 125, GIAM: 0.9, SAN: 0.5, K: 1.0, /* 10/11 đợt 2 (mạnh nhờ kỹ năng): K 0.5 → 1.0 */
   XA: 0.2, XA_MIN: 50, THAC_T: 4, THAC_NHIP: 0.5, THAC_K: 0.8, THAC_TOC: 0.5,
   LAN: [[0, 1], [100, 2], [300, 3], [600, 4], [1000, 5], [2000, 6], [4000, 8]], // [ngưỡng mana, số quái trúng]
   // ---- thuần (test) ----
@@ -35,7 +35,7 @@ SKILLS.thacmana = {
   mo(T) {
     const B = G.ban[T.ban], M = this.mana(B), n = this.lan(M);
     return 'Mana ' + Math.floor(M) + ' → ×' + this.k(M).toFixed(2) + ' damage, hits ' + n + (n > 1 ? ' enemies' : ' enemy') + ' (next at ' + this.nguongKe(M) + ' mana)' +
-      ' · mana orb bounces to the nearest enemy (' + this.NAY + ' px, −10% per bounce) · damage × (1 + 0.5 × √(mana/100)), no cap · bounces at 100/300/600/1000/2000/4000 mana: 2/3/4/5/6/8, +1 per doubling after' +
+      ' · mana orb bounces to the nearest enemy (' + this.NAY + ' px, −10% per bounce) · damage × (1 + ' + this.K + ' × √(mana/100)), no cap · bounces at 100/300/600/1000/2000/4000 mana: 2/3/4/5/6/8, +1 per doubling after' +
       (T.thacT > 0 ? ' · MANA FLOOD ' + Math.ceil(T.thacT) + 's' : '') +
       (T.sao >= 3 ? ' · TAP when full (cooldown 30s): MANA FLOOD — spends 20% of your mana (min 50): 4s of cascades hitting EVERY enemy on the path every 0.5s (80% × the multiplier, counting the spent mana) + 50% fire rate' : ' · MANA FLOOD unlocks at 3★');
   },

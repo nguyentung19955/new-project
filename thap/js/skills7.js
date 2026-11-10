@@ -56,12 +56,12 @@ function fx7(id, x, y, w, song) {
 //      Số Máu: góc TRÊN-PHẢI ô, màu theo mốc. Online: 'B' Máu · 'P' dạng · 'Q' đếm phát · 'M'/'C' dấu (dongbo.js); bàn con rối không tự nuốt.
 // =====================================================================================================
 SKILLS.mauhut = { // 09/11 gánh hậu kỳ: ST 17 → 22, tốc 0.9 → 1.3
-  vai: 'tc', dmg: 22, toc: 1.3, nham: 'dau', napMau: null,
+  vai: 'tc', dmg: 50, /* 10/11 đợt 2 (mạnh nhờ kỹ năng): thưởng dạng + ST gốc 22 → 50 (ụ 0 Máu chỉ có ST gốc) */ toc: 1.3, nham: 'dau', napMau: null,
   MOC: [20, 50, 100, 200],
   TEN: ['BLOOD CIRCUIT', 'BLOOD HUNTER', 'CRIMSON ENGINE', 'SANGUINE SOVEREIGN', 'BLOOD MOON'],
   MAU: ['#f6e3e6', '#ff7080', '#ff2a4a', '#ffd23f', '#ff8af0'], // màu số Máu theo mốc
-  DMG: 0.05, TOC: 0.006, CRIT: 0.002, CDMG: 0.03,               // mỗi 1 Máu
-  DANG_DMG: [0, 0.15, 0.4, 0.6, 0.9],                            // thưởng thêm khi đạt mốc (không cộng dồn, lấy bậc hiện tại)
+  DMG: 0.05, TOC: 0.006, CRIT: 0.002, CDMG: 0.01,               // mỗi 1 Máu (10/11 đợt 2: ST chí mạng 3% → 1% — kìm cuối trận)
+  DANG_DMG: [0, 2.5, 5, 5.5, 6],                                 // (10/11 đợt 2: [0, 0.15, 0.4, 0.6, 0.9] → dời sức mạnh về sớm) thưởng thêm khi đạt mốc (không cộng dồn, lấy bậc hiện tại)
   NOVA: [0, 10, 6, 5, 4], NOVA_K: 1.2, NOVA_R: 55,               // nova máu: mỗi phát thứ N, ×1.2 ST quanh điểm trúng (09/11 hậu kỳ: từ 20 Máu — trước [0,0,0,6,4] chỉ từ 100 Máu)
   CAM: ['tienhoa', 'loren', 'khoisinh', 'mauhut'],
   camAn: (b) => !b || b.sao >= 7 || SKILLS.mauhut.CAM.includes(b.id) || !!(SKILLS[b.id] && SKILLS[b.id].vai === 'ht'),
@@ -76,7 +76,7 @@ SKILLS.mauhut = { // 09/11 gánh hậu kỳ: ST 17 → 22, tốc 0.9 → 1.3
       +(n * this.CRIT * 100).toFixed(1) + '% crit chance, +' + Math.round(n * this.CDMG * 100) + '% crit damage' + (nx ? ' · next form at ' + nx + ' Blood' : '') +
       (m && X ? ' · eating ' + (TEXT.turret[X.id] ? TEXT.turret[X.id].name : X.id) + ' ' + X.sao + '★ in ' + Math.ceil(m.con) + 's' : '') +
       ' · drag onto one of your turrets to MARK it: after ' + this.tg(1, B) + 's + ' + Math.round(3 * this.kTg(B) * 10) / 10 + 's per ★ it is eaten and gives 5 Blood per ★' +
-      ' · each Blood: +5% damage, +0.6% fire rate, +0.2% crit (max 100%), +3% crit damage, no limit · new forms at 20 / 50 / 100 Blood: bigger bolts, more damage · 20 Blood: every 10th shot is a blood nova (50 / 100 / 200 Blood: every 6th / 5th / 4th)' +
+      ' · each Blood: +5% damage, +0.6% fire rate, +0.2% crit (max 100%), +1% crit damage, no limit · new forms at 20 / 50 / 100 Blood: bigger bolts, more damage · 20 Blood: every 10th shot is a blood nova (50 / 100 / 200 Blood: every 6th / 5th / 4th)' +
       ' · cannot eat 7★, eggs, Twin Anvil, Genesis Core or Support turrets · a frozen or stone target pauses the timer · new Blood Circuits start with 0 Blood';
   },
   capNhat(G, B, T, dt) {
@@ -309,13 +309,14 @@ SKILLS.thanhdia = {
 // =====================================================================================================
 const PRISM_MAU = ['#ff4a2a', '#ffd23f', '#4fb8ff', '#5cff7a'];
 SKILLS.bienmau = { // 09/11 gánh hậu kỳ: ST 15 → 24, tốc 1 → 2, tỉ lệ màu đơn 4/6/8/10% → 8/10/12/15%
-  vai: 'tc', dmg: 24, toc: 2, nham: 'dau',
+  vai: 'tc', dmg: 60, /* 10/11 đợt 2 (mạnh nhờ kỹ năng): cộng dồn màu đỏ 2% → 15%, vàng 1% → 10%, lục 5% → 30%; tỉ lệ đỏ 8% → 16%, lục 15% → 30%; hợp thể +600% → +1200%; phần thiếu bù ST gốc 24 → 60 (trần ×2.5) */ toc: 2, nham: 'dau',
   TEN: ['RED', 'GOLD', 'BLUE', 'GREEN'], ANH: ['bienmau_m_do', 'bienmau_m_vang', 'bienmau_m_lam', 'bienmau_m_luc'],
   HOP: ['bienmau_hop_1', 'bienmau_hop_2', 'bienmau_hop_3', 'bienmau_hop_4'], // mặt nạ 4 màu: bậc sáng theo n (1–2 · 3–4 · 5–9 · 10+)
-  TI: [0.08, 0.10, 0.12, 0.15], MANA_S: 6,
-  HOP_DMG: 6, HOP_TOC: 0.10, HOP_TI: 0.25, // 09/11 lần 2: HOP_DMG 3 → 6
+  TI: [0.16, 0.10, 0.12, 0.30], MANA_S: 6,
+  HOP_DMG: 12, HOP_TOC: 0.10, HOP_TI: 0.25, // 09/11 lần 2: HOP_DMG 3 → 6
   // 09/11 lần 2 (người dùng: Prism KHÔNG dễ hợp thể hơn, mà MẠNH HƠN THEO MỖI LẦN HỢP THỂ — docs/demo-hop-tuong/tocban/CONG-DON-EMBER-LABAN-PRISM.md):
   //   mỗi n ngoài +HOP_DMG ST: tốc bắn trần mềm HOP_TOC × n + TOC_MAX × n / (n + TOC_K) và +HOP_CDMG ST chí mạng
+  ST_DO: 0.15, ST_VANG: 0.10, ST_LUC: 0.30, // mỗi cộng dồn màu: đỏ +ST lên quái thường · vàng +ST · lục +ST chí mạng
   HOP_CDMG: 0.5, TOC_MAX: 3, TOC_K: 2, // n 1: +110% tốc · 3: +210% · 10: +350%
   tocHop(n) { return n > 0 ? this.HOP_TOC * n + this.TOC_MAX * n / (n + this.TOC_K) : 0; },
   mau: (T) => (T.pm | 0) & 3,
@@ -328,7 +329,7 @@ SKILLS.bienmau = { // 09/11 gánh hậu kỳ: ST 15 → 24, tốc 1 → 2, tỉ 
   ds: (T) => ((T.pf | 0) > 0 ? [0, 1, 2, 3] : [(T.pm | 0) & 3]),
   ti(T, q) { return Math.min(1, this.TI[q] * (1 + this.HOP_TI * this.n(T))); },
   thuong: (q) => (q === 0 ? 'kill a normal enemy at once' : q === 1 ? '+2 mana' : q === 2 ? 'freeze a normal enemy' : '+40% crit damage on that hit'),
-  so(T, q) { const st = this.st(T, q); return q === 0 ? '+' + st * 2 + '% damage vs normal enemies' : q === 1 ? '+' + st + '% damage' : q === 2 ? 'freeze ' + (1 + 0.06 * st).toFixed(2) + 's' : '+' + st * 5 + '% crit damage'; },
+  so(T, q) { const st = this.st(T, q); return q === 0 ? '+' + Math.round(st * this.ST_DO * 100) + '% damage vs normal enemies' : q === 1 ? '+' + Math.round(st * this.ST_VANG * 100) + '% damage' : q === 2 ? 'freeze ' + (1 + 0.06 * st).toFixed(2) + 's' : '+' + st * 5 + '% crit damage'; },
   mo(T) {
     const n = this.n(T);
     if (n) {
@@ -363,7 +364,7 @@ SKILLS.bienmau = { // 09/11 gánh hậu kỳ: ST 15 → 24, tốc 1 → 2, tỉ 
   },
   capNhat(G, B, T) {
     const n = this.n(T);
-    for (const q of this.ds(T)) { const st = this.st(T, q); if (q === 1) T.buf.dmg += 0.01 * st; if (q === 3) T.buf.cdmg = (T.buf.cdmg || 0) + 0.05 * st; }
+    for (const q of this.ds(T)) { const st = this.st(T, q); if (q === 1) T.buf.dmg += this.ST_VANG * st; if (q === 3) T.buf.cdmg = (T.buf.cdmg || 0) + this.ST_LUC * st; }
     if (n) { T.buf.dmg += this.HOP_DMG * n; T.buf.toc += this.tocHop(n); T.buf.cdmg = (T.buf.cdmg || 0) + this.HOP_CDMG * n; }
     return false;
   },
@@ -376,7 +377,7 @@ SKILLS.bienmau = { // 09/11 gánh hậu kỳ: ST 15 → 24, tốc 1 → 2, tỉ 
     const S = this, ds = this.ds(T), n = this.n(T);
     danThang(B, T, E, SK7.anh('bienmau', 'dan', 'dan_tia'), 640, 16, (G, d, M) => {
       if (!M || M.chet) return;
-      const thuong = S.laThuong(M), them = ds.includes(0) && thuong ? 0.02 * S.st(T, 0) : 0;
+      const thuong = S.laThuong(M), them = ds.includes(0) && thuong ? S.ST_DO * S.st(T, 0) : 0;
       // mỗi màu 1 lần quay / đòn (thứ tự cố định đỏ → vàng → lam → lục), hồi 1 s mỗi quái mỗi màu cho Prism này
       const cd = M.pmCd || (M.pmCd = {}), kh = [false, false, false, false];
       for (const q of ds) { const k = T.uid * 4 + q; if (!(cd[k] > G.t) && S.rng(B, T) < S.ti(T, q) && (q === 1 || q === 3 || thuong)) { kh[q] = true; cd[k] = G.t + 1; } }

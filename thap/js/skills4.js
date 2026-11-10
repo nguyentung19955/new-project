@@ -13,11 +13,11 @@ const ttSao = (mau, ten, dk) => ({ mau, khongAnh: true, ten, dk, gd: (T) => ({ s
 //      Riêng từng ụ (ghép/biến hình → mất). ĐÃ BỎ kết liễu máu thấp + phán quyết %máu trùm cũ.
 // =====================================================================================================
 SKILLS.nemesis = {
-  vai: 'tc', dmg: 26, toc: 0.8, nham: 'mau',
-  TRAN_TOC: 0.60, TRAN_DMG: 1.00, TRAN_TRUM: 0.012, // 09/11 gánh hậu kỳ: trần 40%/60% → 60%/100%, % máu 0.3–1.2% → 0.5–2%, trùm 0.8% → 1.2%
-  p: (T) => sao7(T, [0.005, 0.006, 0.008, 0.01, 0.012, 0.015, 0.02]),
+  vai: 'tc', dmg: 50, toc: 0.8, nham: 'mau', // 10/11 đợt 2 (mạnh nhờ kỹ năng): phán quyết ST +6% → +15% (trần 100% → 250%), % máu 0.5–2% → 1.5–6% (trùm giữ 1.2%), phần thiếu bù ST gốc 26 → 50
+  TRAN_TOC: 0.60, TRAN_DMG: 2.50, TRAN_TRUM: 0.012, BUOC_DMG: 0.15, // 09/11 gánh hậu kỳ: trần 40%/60% → 60%/100%, % máu 0.3–1.2% → 0.5–2%, trùm 0.8% → 1.2%
+  p: (T) => sao7(T, [0.015, 0.018, 0.024, 0.03, 0.036, 0.045, 0.06]),
   buocToc: (T) => 0.04 + 0.002 * capThe9(G.ban[T.ban], 'nemesis'),
-  buocDmg: (T) => 0.06 + 0.003 * capThe9(G.ban[T.ban], 'nemesis'),
+  buocDmg: (T) => SKILLS.nemesis.BUOC_DMG + 0.003 * capThe9(G.ban[T.ban], 'nemesis'),
   mo: (T) => '+' + (SKILLS.nemesis.p(T) * 100).toFixed(1) + '% max HP per hit' + (SKILLS.nemesis.p(T) > SKILLS.nemesis.TRAN_TRUM ? ' (bosses ' + SKILLS.nemesis.TRAN_TRUM * 100 + '%)' : '') + ' · VERDICT every 10 hits (' + ((T && T.nmDem) || 0) + '/10): more normal enemies → +' + +(SKILLS.nemesis.buocToc(T) * 100).toFixed(1) + '% fire rate (now +' + Math.round(((T && T.nmToc) || 0) * 100) + '%, cap ' + Math.round(SKILLS.nemesis.TRAN_TOC * 100) + '%); more elites/bosses or a tie → +' + +(SKILLS.nemesis.buocDmg(T) * 100).toFixed(1) + '% damage (now +' + Math.round(((T && T.nmDmg) || 0) * 100) + '%, cap ' + Math.round(SKILLS.nemesis.TRAN_DMG * 100) + '%)',
   sinh(G, T) { T.nmDem = 0; T.nmN = 0; T.nmE = 0; T.nmToc = 0; T.nmDmg = 0; },
   capNhat(G, B, T) { T.buf.toc += T.nmToc || 0; T.buf.dmg += T.nmDmg || 0; return false; },
@@ -198,8 +198,8 @@ HU.truyNaVe = { // ký hiệu "$" lục giác trên đầu mọi quái truy nã 
 //      7★ NHẬT THỰC: mỗi lần đổi, 1.5 s cả hai chế độ + nổ vòng ×4 quanh quái đầu. 2 Eclipse luôn lệch pha.
 // =====================================================================================================
 SKILLS.nhatthuc = { // 09/11 gánh hậu kỳ (bot: bộ Nhật Thực/Ember/Hợp Xướng gãy ~31): tốc 0.9 → 1.5, tia ngày ×1.5–2.5 → ×2.2–3.8, cháy 40% → 60%, nón đêm ×0.6 → ×1
-  vai: 'tc', dmg: 15, toc: 1.5, nham: 'dau', DEM_K: 1.0, CHAY_K: 0.6,
-  d: (T) => sao7(T, [2.2, 2.4, 2.6, 2.8, 3.1, 3.4, 3.8]),
+  vai: 'tc', dmg: 15, toc: 1.5, nham: 'dau', DEM_K: 2.1, CHAY_K: 1.25, // 10/11 đợt 2 (mạnh nhờ kỹ năng): nón đêm ×1 → ×2.1, cháy 60% → 125%, tia ngày ×2.2–3.8 → ×4.6–8
+  d: (T) => sao7(T, [4.6, 5.0, 5.5, 5.9, 6.5, 7.1, 8.0]),
   sinh(G, T) { const B = G.ban[T.ban]; const khac = B && B.t.find(X => X && X.id === 'nhatthuc' && X !== T); T.dem = khac ? !khac.dem : false; T.doiT = 8; T.ca = 0; },
   mo: (T) => (T.dem ? 'NIGHT: 100 px moon cone ×' + SKILLS.nhatthuc.DEM_K + ', slows 25%' : 'DAY: beam ×' + SKILLS.nhatthuc.d(T) + ' + burn 4s') + ' · swaps in ' + Math.ceil(T.doiT || 0) + 's' + (T.sao >= 7 ? ' · ECLIPSE: both modes 1.5s + ×4 ring on each swap' : ''),
   capNhat(G, B, T, dt) {

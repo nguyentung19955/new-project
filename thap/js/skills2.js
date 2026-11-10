@@ -702,7 +702,8 @@ SKILLS.anhsang = { // Tháp Ánh Sáng (Venus): quả cầu sáng = số sao; đ
 // ===================================================== VÀNG =====================================================
 SKILLS.aten = { // Pháo Thanh Tẩy (Aten): +300% vào quái trúng độc; giết thì nổ lan
   vai: 'tc', dmg: 40, toc: 1.0, nham: 'dau', // 10/11 cân bằng số hoá: 23.4 → 40 · 22.15 → 36 (đo bậc 06/11) · 09/11 TỐC BẮN: tốc 0.65 → 1.0, ST 36 → 23.4 (DPS giữ)
-  mo: (T) => '×' + (ms(T, 7) ? 6 : 4) + ' vs poisoned · kills explode ×2 in ' + (ms(T, 3) ? 70 : 50) + ' px' + (ms(T, 5) ? ' (poisons)' : ''),
+  DOC_K: 8, DOC_K7: 12, NO_K: 4, // 10/11 đợt 2 (mạnh nhờ kỹ năng): ×4 → ×8 (7★ ×6 → ×12), nổ ×2 → ×4; ST gốc giữ 40 · × ST lên quái trúng độc (7★ PURGE) · nổ khi giết × ST
+  mo: (T) => '×' + (ms(T, 7) ? SKILLS.aten.DOC_K7 : SKILLS.aten.DOC_K) + ' vs poisoned · kills explode ×' + SKILLS.aten.NO_K + ' in ' + (ms(T, 3) ? 70 : 50) + ' px' + (ms(T, 5) ? ' (poisons)' : ''),
   chonMuc(G, B) { let m = null, best = 1e9; for (const E of dsMucTieu(B)) { const r = G.duong[E.p].len - E.s - (biDoc(E) ? 400 : 0); if (r < best) { best = r; m = E; } } return m; },
   ban(G, B, T, E) {
     giat(T, 0.9); chopNong(T, 28); SND.tia();
@@ -710,13 +711,13 @@ SKILLS.aten = { // Pháo Thanh Tẩy (Aten): +300% vào quái trúng độc; gi�
     danThang(B, T, E, 'dan_tia', 620, 24, (G, d, M) => {
       if (!M) return;
       const doc = biDoc(M); // độc thật (vũng / lây) hoặc dấu Venom
-      trung(M, dmg * (doc ? (ms(T, 7) ? 6 : 4) : 1), { B, mau: doc ? '#9dff5a' : '#ffe46b' }); // 7★ PURGE
+      trung(M, dmg * (doc ? (ms(T, 7) ? this.DOC_K7 : this.DOC_K) : 1), { B, mau: doc ? '#9dff5a' : '#ffe46b' }); // 7★ PURGE
       FX.no(doc ? 'laser_trung' : 'dien', d.x, d.y, doc ? 50 : 30, 0.25);
     });
   },
   khiGiet(G, T, E) {
     const B = G.ban[T.ban] || G.ban[0], r = ms(T, 3) ? 70 : 50; // 3★ BIG BANG
-    noLan(E.x, E.y, r, dmgU(T) * 2, B, { phu: true, mau: '#ffe46b' });
+    noLan(E.x, E.y, r, dmgU(T) * this.NO_K, B, { phu: true, mau: '#ffe46b' });
     if (ms(T, 5)) for (const Q of dsMucTieu(B)) if (!Q.chet && Math.hypot(Q.x - E.x, Q.y - E.y) < r) { Q.doc = Math.max(Q.doc, dmgU(T) * 1.2); Q.docT = Math.max(Q.docT, 3); Q.docB = B; } // 5★ TOXIC BLAST
     FX.no('no_phao', E.x, E.y, r * 2.2, 0.45); FX.vong1(E.x, E.y, 6, r, '#ffe46b', 0.35, 4); FX.lac(2);
     nhanU(T, 'PURIFY', '#ffe46b');
@@ -854,7 +855,7 @@ SKILLS.ngoisao = { // Pháo Ngôi Sao (Darby): tổng ★ trên bàn — mỗi m
     n = Math.max(0, n | 0);
     const m10 = Math.floor(n / 10), m50 = Math.floor(n / 50), dung = n > 0 && n % 10 === 0;
     const moc = dung ? n : (m10 + 1) * 10, loai = moc % 50 === 0 ? 'dmg' : 'toc';
-    return { toc: 0.15 * (m10 - m50) + (dung && loai === 'toc' ? 1 : 0), dmg: 0.1 * m10 + 1.0 * m50 + (dung && loai === 'dmg' ? 3.5 : 0), moc, loai, dung };
+    return { toc: 0.3 * (m10 - m50) + (dung && loai === 'toc' ? 2.5 : 0), dmg: 0.4 * m10 + 4.0 * m50 + (dung && loai === 'dmg' ? 10 : 0), moc, loai, dung }; // 10/11 đợt 2 (mạnh nhờ kỹ năng): tốc 0.15 → 0.3/mốc (đúng mốc +100% → +250%), ST 0.1 → 0.4/mốc 10, 1.0 → 4.0/mốc 50 (đúng mốc +350% → +1000%)
   },
   // bộ đếm kỹ năng = tổng ★ của MỌI ụ trên bàn của mình (không phải số Star Cannon) — hiện ở bảng chạm + tấm đếm trên bàn (demkn)
   demTT(T) { const n = this.tong(G.ban[T.ban]), L = this.luat(n), h = knHe(G.ban[T.ban], 'ngoisao'), pc = (x) => Math.round(x * h * 100);
@@ -886,12 +887,12 @@ SKILLS.soi = { // Sói Máy (Werewolf) — mỗi lần TRIỆU HỒI / GHÉP ra 
   //   D = 52 (trước 55, −5% đơn mục tiêu): 1 quái lân cận → +32% (thường) / +42% (thức tỉnh) so với bản cũ; 2 quái → +70% / +89%.
   //   09/11 gánh hậu kỳ (wave 30+ toàn bầy quái tách → Sói là ụ dọn bầy của bộ): D 52 → 58, lan 40%/0.6 ô → 70%/1.0 ô (thức tỉnh 50%/0.8 → 85%/1.2)
   //   09/11 TỐC BẮN: nghỉ 1.8 s → 1.2 s, loạt thức tỉnh 1.2 s → 0.8 s, D 58 → 38.7 (DPS giữ)
-  vai: 'tc', dmg: 29, toc: 1 / 1.2, nham: 'dau', // 10/11 cân bằng số hoá: 38.7 → 29 (dễ mà mạnh)
+  vai: 'tc', dmg: 45, toc: 1 / 1.2, nham: 'dau', // 10/11 đợt 2: lan 70% → 100% (thức tỉnh 85% → 120%) + ST gốc 29 → 45 · 10/11 cân bằng số hoá: 38.7 → 29 (dễ mà mạnh)
   KY: 1.2, KY_TT: 0.8, CACH: 0.1, // giây: nghỉ bản thường · nghỉ loạt thức tỉnh · cách giữa 3 viên
-  LAN_K: 0.7, LAN_K_TT: 0.85, LAN_R: 1.0, LAN_R_TT: 1.2, // đánh lan: hệ số sát thương · bán kính (ô = min(B.cw, B.ch))
+  LAN_K: 1.0, LAN_K_TT: 1.2, LAN_R: 1.0, LAN_R_TT: 1.2, // đánh lan: hệ số sát thương · bán kính (ô = min(B.cw, B.ch))
   tiLe: (B) => Math.min(0.5, knThe(B, 'soi') / 100),
   sinh(G, T) { T.thuc = rngSinh(T, 6271)() < this.tiLe(G.ban[T.ban]); T.loat = 0; if (T.thuc) setTimeout(() => { SND.thucTinh(); }, 250); },
-  mo: (T) => (T && T.thuc ? 'AWAKENED: 3-barrel volley every ' + SKILLS.soi.KY_TT + 's (3 shots × 50% damage, 0.1s apart) · always crits · splash 85% to enemies within 1.2 tile' : 'NORMAL: one barrel, 1 shot every ' + SKILLS.soi.KY + 's · splash 70% to enemies within 1 tile (crits only if the shot crits) · ' + Math.round(SKILLS.soi.tiLe(T && G.ban[T.ban]) * 100) + '% of summons/merges come out AWAKENED (3 barrels, always crit)') + (ms(T, 3) ? ' · +10% crit' : '') + (ms(T, 5) ? ' · +25% damage' : '') + (ms(T, 7) ? ' · howl: neighbours +25% fire rate' : ''),
+  mo: (T) => (T && T.thuc ? 'AWAKENED: 3-barrel volley every ' + SKILLS.soi.KY_TT + 's (3 shots × 50% damage, 0.1s apart) · always crits · splash 120% to enemies within 1.2 tile' : 'NORMAL: one barrel, 1 shot every ' + SKILLS.soi.KY + 's · splash 100% to enemies within 1 tile (crits only if the shot crits) · ' + Math.round(SKILLS.soi.tiLe(T && G.ban[T.ban]) * 100) + '% of summons/merges come out AWAKENED (3 barrels, always crit)') + (ms(T, 3) ? ' · +10% crit' : '') + (ms(T, 5) ? ' · +25% damage' : '') + (ms(T, 7) ? ' · howl: neighbours +25% fire rate' : ''),
   luonCrit: (T) => !!T.thuc,
   capNhat(G, B, T, dt) { // tự quản nhịp bắn (loạt 3 viên) → luật thuần theo dt, tất định
     if (ms(T, 3)) T.buf.crit += 0.10; // 3★ KEEN FANGS

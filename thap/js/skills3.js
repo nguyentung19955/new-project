@@ -193,11 +193,11 @@ HU.khoa = { // ô thời gian lục giác trong suốt quanh quái + đồng h�
 //      Bỏ tia hợp đầu 7★. Mỗi đầu tự chọn mục tiêu (quái gần lối ra, xoay vòng). D = 40 (giữ ~DPS 6★ cũ).
 // =====================================================================================================
 SKILLS.hydra = {
-  vai: 'tc', dmg: 48, toc: 1, nham: 'dau', khongNang: true, theKich: true, _onl: true, // _onl: dongbo.js không bọc chuDong (gói 'hy' riêng)
-  GIA0: 40, HE_SO: 2,
+  vai: 'tc', dmg: 40, /* 10/11 đợt 2 (mạnh nhờ kỹ năng): ST gốc 48 → 40 (trả về), mỗi viên (0.35 + 0.08×sao) → (0.77 + 0.176×sao), 7★ 0.91 → 2.0, súng máy 0.45 → 1.0 */ toc: 1, nham: 'dau', khongNang: true, theKich: true, _onl: true, // _onl: dongbo.js không bọc chuDong (gói 'hy' riêng)
+  GIA0: 40, HE_SO: 2, MAY_K: 1.0, // MAY_K: mỗi viên SÚNG MÁY 7★ × ST
   gia: (T) => hydraGia(T ? G.ban[T.ban] : null),
   dai: (T) => 4 + 0.5 * T.sao + 0.25 * capThe9(G.ban[T.ban], 'hydra'),
-  vien: (T) => (T.sao >= 7 ? 0.91 : 0.35 + 0.08 * T.sao),
+  vien: (T) => (T.sao >= 7 ? 2.0 : 0.77 + 0.176 * T.sao),
   cach: (T) => (T.sao >= 7 ? 0.15 : 0.18),
   nghi: (T) => (T.sao >= 7 ? 1.6 : Math.max(1.6, 2.2 - 0.1 * T.sao)),
   mo: (T) => (T.sao > 1 ? T.sao + ' heads: a chain of ' + T.sao + ' shots (' + Math.round(SKILLS.hydra.vien(T) * 100) + '% each, ' + SKILLS.hydra.cach(T) + 's apart), rest ' : '1 head: 1 shot (' + Math.round(SKILLS.hydra.vien(T) * 100) + '% damage), rest ') + SKILLS.hydra.nghi(T).toFixed(1) + 's · no mana power-up · ' + (T.sao >= 3 ? 'TAP THE HYDRA CARD (' + SKILLS.hydra.gia(T) + ' mana, x2 each use): ALL Hydras 3★+ ' + (T.sao >= 7 ? '— this one: MACHINE GUN 10 shots/s × 45%' : '— this one: shots twice as fast') + ' for ' + SKILLS.hydra.dai(T).toFixed(2) + 's' : 'card skill works from 3★'),
@@ -212,7 +212,7 @@ SKILLS.hydra = {
       T.hyA = Math.max(0, T.hyA - dt);
       const may = T.sao >= 7, cach = may ? 0.1 : this.cach(T) / 2;
       T.hqT -= dt * k;
-      while (T.hqT <= 0 && ds.length) { T.hqT += cach; const i = (T.hq++) % n; this.mot(G, B, T, ds[i % ds.length], i, may ? 0.45 : this.vien(T)); }
+      while (T.hqT <= 0 && ds.length) { T.hqT += cach; const i = (T.hq++) % n; this.mot(G, B, T, ds[i % ds.length], i, may ? this.MAY_K : this.vien(T)); }
       if (T.hqT < 0) T.hqT = 0;
       if (T.hyA <= 0) { T.hq = 0; T.hqT = this.nghi(T); }
       return true;
@@ -333,9 +333,10 @@ HU.hydraTia = { // tia hợp đầu: lõi trắng + quầng xanh ngọc + vạch
 // =====================================================================================================
 SKILLS.cuuvi = {
   vai: 'tc', dmg: 24, /* 16 → 20 (đo bậc 06/11) → 24 (10/11 tăng nhẹ) */ toc: 1.2, nham: 'dau',
+  TRUM_HP: 0.02, DUOI_TOC: 0.10, /* 10/11 đợt 2 (mạnh nhờ kỹ năng): hồ hoả ×(2 + 0.5×sao) → ×(10 + 2.5×sao), trùm 8% → 2% máu mỗi đuôi, mỗi đuôi +5% → +10% tốc; ST gốc giữ 24 */ // trùm: +1 đuôi mỗi TRUM_HP máu tối đa ụ này gây ra · mỗi đuôi +tốc bắn
   sinh(G, T) { T.duoi = 0; T.trumAcc = 0; },
-  heSo: (T) => 2 + 0.5 * T.sao,
-  mo: (T) => 'Tails ' + (T.duoi || 0) + '/9 (+' + 5 * (T.duoi || 0) + '% fire rate) · at 9: 9 homing foxfires ×' + SKILLS.cuuvi.heSo(T).toFixed(1) + (T.sao >= 5 ? ' · 20% double tail' : '') + (T.sao >= 7 ? ' · NINE-TAIL: blasts 40 px, restarts at 3 tails' : '') + ' · bosses: +1 tail per 8% HP dealt',
+  heSo: (T) => 10 + 2.5 * T.sao,
+  mo: (T) => 'Tails ' + (T.duoi || 0) + '/9 (+' + Math.round(100 * SKILLS.cuuvi.DUOI_TOC * (T.duoi || 0)) + '% fire rate) · at 9: 9 homing foxfires ×' + SKILLS.cuuvi.heSo(T).toFixed(1) + (T.sao >= 5 ? ' · 20% double tail' : '') + (T.sao >= 7 ? ' · NINE-TAIL: blasts 40 px, restarts at 3 tails' : '') + ' · bosses: +1 tail per ' + Math.round(SKILLS.cuuvi.TRUM_HP * 100) + '% HP dealt',
   them(T, n) {
     T.duoi = Math.min(9, (T.duoi || 0) + n);
     if (T.duoi >= 9) this.xa(T);
@@ -351,12 +352,12 @@ SKILLS.cuuvi = {
     T.duoi = thuc ? 3 : 0; T.sang = 1;
     nhanU(T, 'NINE-TAIL FOXFIRE!', thuc ? '#9fe8ff' : '#ffa020', true); FX.vong1(c.x, c.y, 10, 60, thuc ? '#9fe8ff' : '#ffa020', 0.4, 4); SND.hoLy();
   },
-  capNhat(G, B, T) { T.buf.toc += 0.05 * (T.duoi || 0); return false; },
+  capNhat(G, B, T) { T.buf.toc += this.DUOI_TOC * (T.duoi || 0); return false; },
   khiGiet(G, T, E) { if (!E.trum) this.them(T, 1 + (T.sao >= 5 && rngLuat(G.ban[T.ban], 47, T.o)() < 0.2 ? 1 : 0)); }, // RNG luật có hạt (10/11)
   khiTrung(G, T, E, dmg) {
     if (!E.trum) return;
     T.trumAcc = (T.trumAcc || 0) + dmg; let n = 0;
-    while (T.trumAcc >= E.max * 0.08) { T.trumAcc -= E.max * 0.08; n++; }
+    while (T.trumAcc >= E.max * this.TRUM_HP) { T.trumAcc -= E.max * this.TRUM_HP; n++; }
     if (n) this.them(T, n);
   },
   // (09/11 Q1 = A: bỏ "ghép giữ số đuôi lớn hơn" — ghép thường ra Nine-Tail là ụ MỚI, đuôi / số lần xả về 0)

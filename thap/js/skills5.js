@@ -24,8 +24,8 @@ function napChuDong(G, B, T, dt, cd, sk) {
 SKILLS.chuato = {
   vai: 'tc', dmg: 80, toc: 1, nham: 'dau', napMau: '#ff4a1a',
   cd: 25,
-  moiCon: (T) => 0.70 + 0.15 * T.sao,
-  chuKy: (T, tha) => 2 * T.sao / (1 + 0.15 * (Math.max(1, tha || T.sao) - 1)) / (1 + 0.02 * capThe9(G.ban[T.ban], 'chuato')),
+  moiCon: (T) => 1.0 + 0.22 * T.sao, // 10/11 đợt 2 (mạnh nhờ kỹ năng): 0.70 + 0.15×sao → 1.0 + 0.22×sao
+  chuKy: (T, tha) => 1.4 /* đợt 2: 2 → 1.4 */ * T.sao / (1 + 0.15 * (Math.max(1, tha || T.sao) - 1)) / (1 + 0.02 * capThe9(G.ban[T.ban], 'chuato')),
   mo: (T) => (T.bay ? T.bay.length : 0) + '/' + T.sao + ' drones circling · full brood every ' + SKILLS.chuato.chuKy(T, T.thaN).toFixed(2) + 's, then all fly out: ' + Math.round(SKILLS.chuato.moiCon(T) * 100) + '% damage each, +8% per extra drone · ' + (T.sao >= 3 ? 'TAP (cooldown 25s): SWARM — release all drones now +35%, next brood 1.5s per drone' : 'SWARM unlocks at 3★'),
   sinh(G, T) { T.bay = []; T.de = 0; T.thaN = 0; T.nhanh = 0; },
   capNhat(G, B, T, dt) {
@@ -165,11 +165,12 @@ HU.hiveNo = { ve(ctx, o, R) { const u = o.t / o.song, im = REN.img('fx_hive_no')
 //      PVP: như solo (không còn luật gửi quái).
 // =====================================================================================================
 SKILLS.leviathan = {
-  vai: 'tc', dmg: 34, toc: 0.9, nham: 'dau', napMau: '#1fb6d9',
+  vai: 'tc', dmg: 24, /* 10/11 đợt 2 (mạnh nhờ kỹ năng): ST gốc 34 → 24 (trả về), bọt nổ 50%/30 px → 140%/42 px, TIDAL ×(4 + …) → ×(40 + …), hồi 35 → 25 s */ toc: 0.9, nham: 'dau', napMau: '#1fb6d9',
   e: (T) => sao7r(T, [9, 8.5, 8, 7, 6, 5.5, 5]),
-  cd: 35,
+  cd: 25,
   // dòng bảng ụ: 'ABYSS 56 · +224% damage' (VI: '+224% sát thương') = đúng số trên tấm đếm xoáy vực ở đáy ô (demkn.js)
-  mo: (T) => 'ABYSS ' + (T.vuc || 0) + ' · +' + 6 * (T.vuc || 0) + '% damage · this turret only (a new one starts at 0) · its kills: elite +3, boss +10 · devours a small enemy every ' + SKILLS.leviathan.e(T) + 's (' + SKILLS.leviathan.TAM + ' px' + (T.sao >= 4 ? ', big ones ×3' : '') + (T.sao >= 7 ? ', flyers too' : '') + ') · bubble splash 30 px · ' + (T.sao >= 3 ? 'TAP when full: TIDAL BREATH ×' + (4 + 0.1 * (T.vuc || 0)).toFixed(1) + ' — water orbs shoot up from the turret and rain down along the whole path' : 'TIDAL BREATH unlocks at 3★'),
+  mo: (T) => 'ABYSS ' + (T.vuc || 0) + ' · +' + Math.round(100 * SKILLS.leviathan.VUC_ST * (T.vuc || 0)) + '% damage · this turret only (a new one starts at 0) · its kills: elite +3, boss +10 · devours a small enemy every ' + SKILLS.leviathan.e(T) + 's (' + SKILLS.leviathan.TAM + ' px' + (T.sao >= 4 ? ', big ones ×3' : '') + (T.sao >= 7 ? ', flyers too' : '') + ') · bubble splash ' + SKILLS.leviathan.NO_R + ' px · ' + (T.sao >= 3 ? 'TAP when full: TIDAL BREATH ×' + (SKILLS.leviathan.THO_K + 0.1 * (T.vuc || 0)).toFixed(1) + ' — water orbs shoot up from the turret and rain down along the whole path' : 'TIDAL BREATH unlocks at 3★'),
+  VUC_ST: 0.06, THO_K: 40, NO_K: 1.4, NO_R: 42, // NO_K / NO_R: bọt nổ lan × ST / bán kính px · +ST mỗi điểm VỰC SÂU · hệ số gốc đòn TIDAL BREATH (× (THO_K + 0.1 × điểm))
   TAM: 160, // tầm nuốt 120 → 160 px: mọi ô hàng giữa với tới đường (BAO-CAO gioi-han §4 mục 7)
   // VỰC SÂU RIÊNG TỪNG Ụ (người dùng 07/11 18:57): chỉ Leviathan NUỐT mới được điểm; ụ mới = 0; ụ bị biến/đổi/thay (ghép ra ụ khác, Mad Crown, Hộp…) mất điểm;
   //   ghép 2 Leviathan ra Leviathan = ụ MỚI → 0 (09/11 người dùng Q1 = A, bỏ GIU_CONG_DON)
@@ -181,7 +182,7 @@ SKILLS.leviathan = {
     T.vuc = (T.vuc || 0) + n; nhanU(T, '+' + n + ' ABYSS', '#7fdcff');
   },
   capNhat(G, B, T, dt) {
-    T.buf.dmg += 0.06 * (T.vuc || 0);
+    T.buf.dmg += SKILLS.leviathan.VUC_ST * (T.vuc || 0);
     T.nuot = (T.nuot || 0) + dt * nhipU(T); // 09/11: nhịp nuốt theo nhipU (gồm cấp thẻ tốc)
     if (T.nuot >= this.e(T) && !G.hu.some(o => o.k === 'xoay' && o.T === T)) {
       const c = tamU(T);
@@ -201,7 +202,7 @@ SKILLS.leviathan = {
     const dmg = dmgU(T), gd = T.gd || 1;
     danThang(B, T, E, gd === 3 ? 'g_bot_lon' : 'g_bot', 460, gd === 3 ? 22 : 17, (G, d, M) => {
       if (M) trung(M, dmg, { B, mau: '#9fe8ff' });
-      noLan(d.x, d.y, 30, dmg * 0.5, B, { phu: true, mau: '#9fe8ff' });
+      noLan(d.x, d.y, this.NO_R, dmg * this.NO_K, B, { phu: true, mau: '#9fe8ff' });
       FX.vong1(d.x, d.y, 4, gd >= 2 ? 30 : 22, '#7fdcff', 0.25, 2); FX.tiaLua(d.x, d.y, 4, '#dff8ff', 120, 6);
     });
   },
@@ -210,7 +211,7 @@ SKILLS.leviathan = {
     if (T.nap < 1 || T.sao < 3) return false;
     T.nap = 0; T.napDay = 0; T.sang = 1; giat(T, 2.4);
     const p = G.duong.find(q => q.ban === B.i) || G.duong[0];
-    G.hu.push({ k: 'thoThuy', t: 0, song: 1.4, T, B, p, tick: 0, dmg: dmgU(T) * (4 + 0.1 * (T.vuc || 0)), da: new Map() });
+    G.hu.push({ k: 'thoThuy', t: 0, song: 1.4, T, B, p, tick: 0, dmg: dmgU(T) * (this.THO_K + 0.1 * (T.vuc || 0)), da: new Map() });
     nhanU(T, 'TIDAL BREATH!', '#7fdcff', true); SND.gSongTho(); FX.sang(0.12, '#7fdcff');
     return true;
   },
