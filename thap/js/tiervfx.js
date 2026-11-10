@@ -67,11 +67,19 @@ const TVX = {
     for (let i = 0; i < 3; i++) { const a = T.goc + rnd(-0.5, 0.5), v = rnd(60, 130); FX.hat1('lua', x, y, Math.cos(a) * v, Math.sin(a) * v, 0.2, 5, i ? m : '#fff3c0'); }
     if (b >= 4) FX.vong1(x, y, 3, 16, m, 0.2, 2);
   },
+  // đợt 3 giật (10/11): vệt hạt sau đạn bậc Vàng/Đỏ dùng chung "xô" theo THỜI GIAN TRẬN (G.t, tất định — không theo khung vẽ):
+  //   ≤ VET_TOC hạt/giây toàn màn (dồn tối đa VET_DON) → 1–3 đạn như cũ, nhiều đạn Đỏ cùng lúc thì vệt thưa dần. Chỉ hình.
+  VET_TOC: 70, VET_DON: 10, _vt: 0, _vtT: 0,
+  veTok(n) {
+    const t = G.t || 0; if (t < this._vtT) this._vtT = t;
+    this._vt = Math.min(this.VET_DON, this._vt + (t - this._vtT) * this.VET_TOC); this._vtT = t;
+    if (this._vt < n) return false; this._vt -= n; return true;
+  },
   dan(d, dt) {
     const T = d.T; if (!T || !T.bac) return;
     const b = this.bac(T); if (b < 3) return;
     const yy = d.y - (d.z || 0);
-    if (Math.random() < dt * (b >= 4 ? 34 : 24)) FX.hat1('lua', d.x + rnd(-2, 2), yy + rnd(-2, 2), rnd(-12, 12), rnd(-12, 12), 0.22, b >= 4 ? 7 : 6, this.mau(T));
-    if (b >= 4 && Math.random() < dt * 6) FX.hat1('than', d.x, yy, rnd(-8, 8), -16, 0.45, 4, this.mau(T)); // vệt than sau đạn ụ đỏ = màu nguyên tố (trước: cam cho mọi ụ)
+    if (Math.random() < dt * (b >= 4 ? 34 : 24) && this.veTok(1)) FX.hat1('lua', d.x + rnd(-2, 2), yy + rnd(-2, 2), rnd(-12, 12), rnd(-12, 12), 0.22, b >= 4 ? 7 : 6, this.mau(T));
+    if (b >= 4 && Math.random() < dt * 6 && this.veTok(1)) FX.hat1('than', d.x, yy, rnd(-8, 8), -16, 0.45, 4, this.mau(T)); // vệt than sau đạn ụ đỏ = màu nguyên tố (trước: cam cho mọi ụ)
   },
 };

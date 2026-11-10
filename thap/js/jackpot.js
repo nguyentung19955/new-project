@@ -264,7 +264,13 @@ HU.cbTia = {
     if (!R || !R.tia) return;
     const u = Math.min(1, o.t / o.song), mau = CB.TIA_MAU[o.n - 1] || CB.TIA_MAU[1], im = R.toMauA ? R.toMauA('tia_laser', mau, 0.85) : 'tia_laser';
     ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.85 * (1 - u);
-    for (const q of o.ds) { R.tia(ctx, im, o.x0, o.y0, q.x, q.y, o.n >= 3 ? 8 : 6.5, 0, true); R.anhGiua(ctx, R.cham1(mau), q.x, q.y, 22 * (1 - u * 0.5)); }
+    // đợt 3 giật (10/11): chấm sáng ở quái 22 → 14 px; nhiều Lucky Slot cùng bắn 1 cụm → mỗi khung ≤ 6 chấm, chấm cách < 14 px chấm đã vẽ thì bỏ
+    const k = R._kidHat, ds = R._cbK === k ? R._cbD : (R._cbK = k, R._cbD = []);
+    for (const q of o.ds) {
+      R.tia(ctx, im, o.x0, o.y0, q.x, q.y, o.n >= 3 ? 8 : 6.5, 0, true);
+      if (ds.length >= 6 || ds.some(p => Math.abs(p.x - q.x) < 14 && Math.abs(p.y - q.y) < 14)) continue;
+      ds.push(q); R.anhGiua(ctx, R.cham1(mau), q.x, q.y, 14 * (1 - u * 0.4));
+    }
     ctx.restore(); ctx.globalAlpha = 1;
   },
 };

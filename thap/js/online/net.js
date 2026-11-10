@@ -79,7 +79,10 @@ const NET = {
         this._db.ref('.info/connected').on('value', s => this._baoNoi(s.val()));
         this._db.ref('.info/serverTimeOffset').on('value', s => { this.lechGio = s.val() || 0; });
         // kết quả đăng nhập kiểu chuyển trang (iPhone ở chế độ ứng dụng / trình duyệt chặn cửa sổ bật lên)
-        this._auth.getRedirectResult().catch(e => this._xuLyLoiGoogle(e));
+        // 10/11: NỐI tài khoản kiểu chuyển trang (linkWithRedirect) KHÔNG phát onAuthStateChanged (cùng uid) → phải tự báo đổi TK khi có kết quả,
+        // không thì quay về game vẫn hiện KHÁCH. Lỗi thì ghi NET.loiGG để bảng hồ sơ hiện ra (trước đây nuốt mất).
+        this._auth.getRedirectResult().then((r) => { if (r && r.user) { this.loiGG = ''; this._capNhatTK(); } })
+          .catch(e => { this.loiGG = (e && (e.code || e.message)) || 'google'; return Promise.resolve(this._xuLyLoiGoogle(e)).catch(() => { }); });
         return new Promise((ok, hong) => {
           let dau = true;
           this._auth.onAuthStateChanged((u) => {
@@ -123,7 +126,7 @@ const NET = {
     this.loi = e.code || e.message;
     throw e;
   },
-  _capNhatTK() { const u = this._auth && this._auth.currentUser; if (u) this._baoTK(this._chuanUser(u)); return this.user; },
+  _capNhatTK() { const u = this._auth && this._auth.currentUser; if (u) { this.loiGG = ''; this._baoTK(this._chuanUser(u)); } return this.user; },
   dangXuat() {
     if (this.kieu === 'mock') return this._mockGui('signout', {}).then(u => this._baoTK(u));
     return this._auth.signOut(); // onAuthStateChanged tự vào lại bằng khách ẩn danh mới

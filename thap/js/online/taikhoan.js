@@ -104,7 +104,7 @@ const TK = {
     el.querySelector('#tk-loai').textContent = !NET.ok ? 'Offline — profile saved on this device' : u.anon ? 'Guest account (this device)' : 'Google: ' + (u.email || u.name);
     el.querySelector('#tk-google').hidden = !NET.ok || !u || !u.anon;
     el.querySelector('#tk-xuat').hidden = !NET.ok || !u || u.anon;
-    el.querySelector('#tk-loi').textContent = NET.ok ? '' : (NET.loi ? 'Online unavailable: ' + NET.loi : 'Connecting…');
+    el.querySelector('#tk-loi').textContent = NET.ok ? (NET.loiGG ? 'Google sign-in error: ' + NET.loiGG : '') : (NET.loi ? 'Online unavailable: ' + NET.loi : 'Connecting…');
   },
   dongBang() {
     const el = document.getElementById('tk-bang'); if (!el) return;
