@@ -1186,3 +1186,6 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - Tăng ụ khó mà yếu: Leviathan ST gốc 24 → 34, ABYSS +4% → +6% mỗi điểm (chữ mô tả, demo, nhắc nhanh sửa theo) · Star Cannon 21 → 40 · Purifier 23,4 → 40.
 - Tăng nhẹ (đo tĩnh chấm thấp oan so với trận bot): Nine-Tail 20 → 24 · Hydra 40 → 48 · Fusion Archive 24 → 28.
 - Cập nhật `docs/demo-hop-tuong/TAI-LIEU-GOC.md` mục 15 + dòng Leviathan bảng 96 ụ.
+
+## claude/demo-hop-tuong — sửa admin không nhận sau khi đăng nhập Google (10/11)
+- `net.js _chuanUser`: khách ẩn danh NỐI tài khoản Google thì `emailVerified` cấp trên vẫn false nên `ADMIN.xet` từ chối → coi email do Google cấp (providerData google.com) là đã xác minh.
