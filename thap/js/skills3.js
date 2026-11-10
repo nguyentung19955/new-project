@@ -193,7 +193,7 @@ HU.khoa = { // ô thời gian lục giác trong suốt quanh quái + đồng h�
 //      Bỏ tia hợp đầu 7★. Mỗi đầu tự chọn mục tiêu (quái gần lối ra, xoay vòng). D = 40 (giữ ~DPS 6★ cũ).
 // =====================================================================================================
 SKILLS.hydra = {
-  vai: 'tc', dmg: 40, toc: 1, nham: 'dau', khongNang: true, theKich: true, _onl: true, // _onl: dongbo.js không bọc chuDong (gói 'hy' riêng)
+  vai: 'tc', dmg: 48, toc: 1, nham: 'dau', khongNang: true, theKich: true, _onl: true, // _onl: dongbo.js không bọc chuDong (gói 'hy' riêng)
   GIA0: 40, HE_SO: 2,
   gia: (T) => hydraGia(T ? G.ban[T.ban] : null),
   dai: (T) => 4 + 0.5 * T.sao + 0.25 * capThe9(G.ban[T.ban], 'hydra'),
@@ -332,7 +332,7 @@ HU.hydraTia = { // tia hợp đầu: lõi trắng + quầng xanh ngọc + vạch
 //      Trùm: mỗi 8% máu tối đa trùm ụ này gây ra = +1 đuôi. Ghép giữ số đuôi cao hơn.
 // =====================================================================================================
 SKILLS.cuuvi = {
-  vai: 'tc', dmg: 20, /* 16 → 20 (đo bậc 06/11) */ toc: 1.2, nham: 'dau',
+  vai: 'tc', dmg: 24, /* 16 → 20 (đo bậc 06/11) → 24 (10/11 tăng nhẹ) */ toc: 1.2, nham: 'dau',
   sinh(G, T) { T.duoi = 0; T.trumAcc = 0; },
   heSo: (T) => 2 + 0.5 * T.sao,
   mo: (T) => 'Tails ' + (T.duoi || 0) + '/9 (+' + 5 * (T.duoi || 0) + '% fire rate) · at 9: 9 homing foxfires ×' + SKILLS.cuuvi.heSo(T).toFixed(1) + (T.sao >= 5 ? ' · 20% double tail' : '') + (T.sao >= 7 ? ' · NINE-TAIL: blasts 40 px, restarts at 3 tails' : '') + ' · bosses: +1 tail per 8% HP dealt',

@@ -186,7 +186,7 @@ const MV = {
     railgun: ['Salvos in its row / column', 'số Salvo cùng hàng / cột'],
     cuuvi: ['tails (max 9)', 'số đuôi (tối đa 9)'],
     loren: ['forge stacks', 'cộng dồn lò rèn'],
-    leviathan: ['ABYSS points (+4% damage each)', 'điểm ABYSS (+4% sát thương mỗi điểm)'],
+    leviathan: ['ABYSS points (+6% damage each)', 'điểm ABYSS (+6% sát thương mỗi điểm)'],
     ngoisao: ['stars on board / next milestone', 'tổng sao trên bàn / mốc kế'],
     nangluong: ['energy bonus', 'thưởng năng lượng'],
     docton: ['fire-rate bonus (alone = +100%)', 'thưởng tốc bắn (đứng một mình = +100%)'],

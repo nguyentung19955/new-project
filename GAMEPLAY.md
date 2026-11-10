@@ -1180,3 +1180,9 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - Thêm `docs/demo-hop-tuong/CHECKLIST-HUONG-DAN.md`: rà hướng dẫn, nhắc nhanh, mô tả 96 ụ (quét tự động số vs hàm trận), trang ụ (MODES AND DECK, MERGE RULES, FORMS), bắn thử, chỉ huy, trùm, GAME MODE, cửa hàng, mở khoá — 47 mục: 33 khớp, 14 lệch, 13 đã sửa; 14 ụ cần ảnh dạng (prompt ChatGPT trong checklist); 3 việc cần người dùng quyết (nút PLAY SOLO ở kết quả online…).
 - Sửa CHỮ (không đổi luật/số): "Solo" → "Single-player"/"Chơi đơn" (7 mô tả ụ, dòng sao Jammer/Scrambler/Signal Jammer/Hex Saboteur, trang ụ MODES AND DECK, bảng xem trùm); "Archfiend"/"Ma vương" → "Commander"/"Chỉ huy" (Cooldown Horn, bảng buff, chú thích chỉ huy, bắn thử); Radar 7★ 45% → 46%; Genesis Core 12 s → 11 s; luật ghép Pháo La Bàn: bản sao Copycat = Pháo mới 1 hướng ngẫu nhiên, 0 stack (đúng code); VI: ~45 khoá mới (Copycat, Hydra, Blood Circuit, Arcane Cascade…, mẹo POWER-UP), `'WAVE #'` ở chedo-d → 'ĐỢT #'; dòng "Chơi đơn" trên trang ụ VI không còn mất.
 - Test: thap-kt-vi ✓ (trước TRƯỢT), tu-kich 29/0, vetay-ui 0 lỗi, hinh-ui chỉ 404 chập chờn của server tĩnh.
+
+## claude/demo-hop-tuong — chỉnh số cân bằng Vàng/Đỏ theo bài số hoá (10/11)
+- Giảm ụ dễ mà mạnh: Lucky Slot ST gốc 58 → 38 · Werewolf 38,7 → 29.
+- Tăng ụ khó mà yếu: Leviathan ST gốc 24 → 34, ABYSS +4% → +6% mỗi điểm (chữ mô tả, demo, nhắc nhanh sửa theo) · Star Cannon 21 → 40 · Purifier 23,4 → 40.
+- Tăng nhẹ (đo tĩnh chấm thấp oan so với trận bot): Nine-Tail 20 → 24 · Hydra 40 → 48 · Fusion Archive 24 → 28.
+- Cập nhật `docs/demo-hop-tuong/TAI-LIEU-GOC.md` mục 15 + dòng Leviathan bảng 96 ụ.

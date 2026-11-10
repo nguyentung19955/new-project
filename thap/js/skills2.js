@@ -701,7 +701,7 @@ SKILLS.anhsang = { // Tháp Ánh Sáng (Venus): quả cầu sáng = số sao; đ
 
 // ===================================================== VÀNG =====================================================
 SKILLS.aten = { // Pháo Thanh Tẩy (Aten): +300% vào quái trúng độc; giết thì nổ lan
-  vai: 'tc', dmg: 23.4, toc: 1.0, nham: 'dau', // 22.15 → 36 (đo bậc 06/11) · 09/11 TỐC BẮN: tốc 0.65 → 1.0, ST 36 → 23.4 (DPS giữ)
+  vai: 'tc', dmg: 40, toc: 1.0, nham: 'dau', // 10/11 cân bằng số hoá: 23.4 → 40 · 22.15 → 36 (đo bậc 06/11) · 09/11 TỐC BẮN: tốc 0.65 → 1.0, ST 36 → 23.4 (DPS giữ)
   mo: (T) => '×' + (ms(T, 7) ? 6 : 4) + ' vs poisoned · kills explode ×2 in ' + (ms(T, 3) ? 70 : 50) + ' px' + (ms(T, 5) ? ' (poisons)' : ''),
   chonMuc(G, B) { let m = null, best = 1e9; for (const E of dsMucTieu(B)) { const r = G.duong[E.p].len - E.s - (biDoc(E) ? 400 : 0); if (r < best) { best = r; m = E; } } return m; },
   ban(G, B, T, E) {
@@ -844,7 +844,7 @@ SKILLS.saochep = { // Máy Sao Chép (Shamash): kéo lên ụ CÙNG SAO → thà
   },
 };
 SKILLS.ngoisao = { // Pháo Ngôi Sao (Darby): tổng ★ trên bàn — mỗi mốc 10 = mốc TỐC (+100% tốc khi đúng mốc, +10%/mốc đã qua); bội 50 = mốc SÁT THƯƠNG (+350% khi đúng mốc, +50%/mốc đã qua)
-  vai: 'tc', dmg: 21, toc: 1.1, nham: 'dau', // 12.73 → 21 (đo bậc 06/11)
+  vai: 'tc', dmg: 40, toc: 1.1, nham: 'dau', // 12.73 → 21 (đo bậc 06/11) → 40 (cân bằng số hoá 10/11: khó mà yếu)
   tong: (B) => B.t.reduce((s, X) => s + (X ? X.sao : 0), 0),
   // LUẬT (thuần, tất định — online dùng chung): n = tổng ★ → { toc, dmg, moc: mốc kế tiếp (hoặc mốc đang đứng), loai: 'toc'|'dmg', dung: đúng mốc }
   //   mốc tốc = bội 10 không phải bội 50 · mốc sát thương = bội 50
@@ -886,7 +886,7 @@ SKILLS.soi = { // Sói Máy (Werewolf) — mỗi lần TRIỆU HỒI / GHÉP ra 
   //   D = 52 (trước 55, −5% đơn mục tiêu): 1 quái lân cận → +32% (thường) / +42% (thức tỉnh) so với bản cũ; 2 quái → +70% / +89%.
   //   09/11 gánh hậu kỳ (wave 30+ toàn bầy quái tách → Sói là ụ dọn bầy của bộ): D 52 → 58, lan 40%/0.6 ô → 70%/1.0 ô (thức tỉnh 50%/0.8 → 85%/1.2)
   //   09/11 TỐC BẮN: nghỉ 1.8 s → 1.2 s, loạt thức tỉnh 1.2 s → 0.8 s, D 58 → 38.7 (DPS giữ)
-  vai: 'tc', dmg: 38.7, toc: 1 / 1.2, nham: 'dau',
+  vai: 'tc', dmg: 29, toc: 1 / 1.2, nham: 'dau', // 10/11 cân bằng số hoá: 38.7 → 29 (dễ mà mạnh)
   KY: 1.2, KY_TT: 0.8, CACH: 0.1, // giây: nghỉ bản thường · nghỉ loạt thức tỉnh · cách giữa 3 viên
   LAN_K: 0.7, LAN_K_TT: 0.85, LAN_R: 1.0, LAN_R_TT: 1.2, // đánh lan: hệ số sát thương · bán kính (ô = min(B.cw, B.ch))
   tiLe: (B) => Math.min(0.5, knThe(B, 'soi') / 100),
