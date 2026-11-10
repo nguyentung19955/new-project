@@ -170,7 +170,7 @@ const GROW = {
   lophanung: { mau: '#9fe6ff', lap: true, ten: ['IDLE CORE', 'HEATING', 'CRYO STORM READY'], dk: 'Active charge <50% / 50–99% / full (tap to FREEZE)',
     gd: (T) => ({ s: T.nap >= 1 || T.bungT > 0 ? 3 : T.nap >= 0.5 ? 2 : 1, p: T.nap, v: [0.5, 1] }) },
   soi: { mau: '#ff4b3e', ten: ['PUP', 'NORMAL', 'AWAKENED'], dk: 'Form is rolled on summon / merge: Normal, or Awakened by chance (30% at LV9, +1.5% per card level) — no growing',
-    dang: [2, 3], dangMo: [null, 'Normal crits · melee double slash', 'Always crits · +40% speed · wide frenzy'],
+    dang: [2, 3], dangMo: [null, 'One barrel · splash 70%', 'Three-barrel volley · always crits · splash 85%'], anhDang: [null, 'soi_dau_thuong', 'soi_dau_thuctinh'], // 10/11: đúng hình đầu trong trận + đúng mô tả bắn (không còn cận chiến)
     gd: (T) => ({ s: T.thuc ? 3 : 2, p: 1, v: [0, 1] }) }, // DCDW Werewolf: 2 bản cố định (dạng 2 = thường, dạng 3 = thức tỉnh), không lớn dần
   orbital: { mau: '#9fe6ff', khongAnh: true, ten: ['STANDBY', 'UPLINK', 'AWAKENED'], dk: 'Uplink: 2+ Orbitals on board · Awakened: merging Orbitals awakens EVERY Orbital on the board (23s at LV9) — each fires area salvos',
     gd: (T) => { const B = G.ban[T.ban], n = B ? demCungLoai(B, 'orbital') : 1, s = T.thucT > 0 || (B && B.phao > 0) ? 3 : n >= 2 ? 2 : 1; return { s, p: s === 3 ? (T.thucT > 0 ? T.thucT / (T.thucMax || 23) : B.phao / 20) : s === 2 ? 0.5 : 0.2, v: [0.5] }; } },
