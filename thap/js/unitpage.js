@@ -621,7 +621,7 @@ const UP = {
     if (ph.length !== 3) ph = null;
     if (g.dang) { // dạng cố định (không lớn dần): chỉ hiện các dạng có thật, nối bằng "or"
       return '<div class="up-gd">' + g.dang.map((k1) => { const k = k1 - 1, t = g.ten[k];
-        return '<div class="up-gd1" style="--g:' + g.mau + '"><div class="anh">' + upGdAnh(id, k, anh) + '</div>' +
+        return '<div class="up-gd1" style="--g:' + g.mau + '"><div class="anh">' + (g.anhDang && g.anhDang[k] ? '<img class="dau nho" src="assets/' + anhTen(g.anhDang[k]) + '.png" alt="">' : upGdAnh(id, k, anh)) + '</div>' +
           '<b>' + upEsc(upSC(t)) + '</b>' + (g.dangMo && g.dangMo[k] ? '<span>' + upEsc(upSC(g.dangMo[k])) + '</span>' : '') + '</div>'; }).join('<b class="up-hoac">or</b>') + '</div>' +
         '<p class="up-phu">' + upEsc(upCham(upSC(g.dk))) + '</p>';
     }

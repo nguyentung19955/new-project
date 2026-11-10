@@ -3495,6 +3495,8 @@ const VI_MAU = {
 "Normal": "Thường",
 "Normal chest": "Rương thường",
 "Normal crits · melee double slash": "Thường chí mạng · cận chiến chém đôi",
+"One barrel · splash #%": "1 nòng · đánh lan #%",
+"Three-barrel volley · always crits · splash #%": "Loạt 3 nòng · luôn chí mạng · đánh lan #%",
 "Normal damage numbers": "Số sát thương thường",
 "Normal merge": "Ghép thường",
 "Normal: one barrel, # shot every #s": "Bản thường: 1 nòng, # phát mỗi # s",
