@@ -25,6 +25,8 @@ GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.environ.get('OUT', os.path.join(GOC, 'thap/assets'))
 JS = os.path.join(GOC, 'thap/js/artscale.js')
 REF = os.environ.get('GOC_REF', '48d490641')
+# ụ cắt lại SAU 48d490641 (ảnh anime mới): đọc ảnh gốc chưa nướng + HEAD_K từ commit cắt của nó
+REF_RIENG = {'xaotron': 'aef60ba1d'}   # 10/11: Máy Xáo Trộn — khối rune 4 ô + 2 mũi tên đổi chỗ (trước giống máy xèng cobac)
 R_MAX = 0.485            # bán kính xa nhất của đầu / cạnh ô (= tools/thap-cat-umod.py)
 VIEN = 0.022             # độ dày viền màu nhấn quanh đầu / cạnh ô
 TRON = 0.80              # mức đổi vàng → màu nhấn (0..1)
@@ -41,7 +43,7 @@ MAU = {
     'mortar': '#a4b24a', 'khuech': '#b06bff', 'vungdoc': '#6ee03a', 'loa': '#e0603a', 'hutmana': '#d4304a', 'min': '#ff8a00',
     # Tím
     'cuongno': '#ff3030', 'baotuyet': '#bfe8ff', 'nhanban': '#ff9a3a', 'lienket': '#b8b0d8', 'kepha': '#ff7a2a', 'taylo': '#3ee08a',
-    'khien': '#3fd0ff', 'hopbi': '#e04fd0', 'nangsao': '#ffe04a', 'tuthan': '#7a3cff', 'xaotron': '#ff5ab0', 'epxung': '#c04cff',
+    'khien': '#3fd0ff', 'hopbi': '#e04fd0', 'nangsao': '#ffe04a', 'tuthan': '#7a3cff', 'xaotron': '#7aa6ff', 'epxung': '#c04cff',
     'no5': '#ff4f7a', 'bao': '#8a5cff', 'anhsang': '#fff07a', 'nayda': '#9be22d', 'combo': '#ff6a3a', 'khoathoigian': '#3ac8c8',
     'docton': '#c8283c', 'thaukinh': '#2fd38a', 'nhieusong': '#ff4fd0', 'santhuong': '#ff9a1a',
     # Vàng (4 ụ vẽ lại)
@@ -50,8 +52,8 @@ MAU = {
 DANG = {'cuongno', 'lienket', 'hopbi', 'dongbo', 'orbital'}   # ụ grow-up vẽ lại: thêm đầu _s1.._s3 (STAGE_ANIME)
 
 
-def doc_git(path):
-    b = subprocess.run(['git', '-C', GOC, 'show', '%s:%s' % (REF, path)], capture_output=True, check=True).stdout
+def doc_git(path, ref=None):
+    b = subprocess.run(['git', '-C', GOC, 'show', '%s:%s' % (ref or REF, path)], capture_output=True, check=True).stdout
     return Image.open(io.BytesIO(b)).convert('RGBA')
 
 
@@ -93,9 +95,9 @@ def vien_mau(im, mau, px):
     nen = Image.fromarray(c, 'RGBA'); nen.alpha_composite(im); return nen
 
 
-def dau(path_git, mau, K):
+def dau(path_git, mau, K, ref=None):
     """→ (ảnh đầu đã nướng, dời tâm), K_vẽ"""
-    a = doc_git(path_git); W = a.width
+    a = doc_git(path_git, ref); W = a.width
     px_o = W / K                                  # điểm ảnh / cạnh ô
     pv = max(2, int(round(VIEN * px_o)))
     pad = pv * 2 + 2
@@ -124,7 +126,7 @@ for _b, _ds in (('trang', 'xucxac lien phun sungluc bang doc mana tia set mayche
 
 def be(i):
     """bệ: kim loại vàng → tông BẬC (Vàng giữ vàng kim), rồi tối bớt để đầu nổi lên."""
-    a = np.asarray(doc_git('thap/assets/%s_de.png' % i))
+    a = np.asarray(doc_git('thap/assets/%s_de.png' % i, REF_RIENG.get(i)))
     m = BAC_MAU.get(BAC[i])
     if m: a = doi_vang(a, m, 1.0)
     a = a.astype(np.float64); f = a[..., :3] / 255
@@ -135,7 +137,7 @@ def be(i):
 
 def nho(i):
     """icon thẻ nho/<id>.png: kim loại vàng → tông BẬC (biểu tượng/đá màu giữ nguyên)."""
-    a = doc_git('thap/assets/nho/%s.png' % i); m = BAC_MAU.get(BAC[i])
+    a = doc_git('thap/assets/nho/%s.png' % i, REF_RIENG.get(i)); m = BAC_MAU.get(BAC[i])
     return Image.fromarray(doi_vang(np.asarray(a), m, 0.9), 'RGBA') if m else a
 
 
@@ -149,8 +151,9 @@ def main():
     HK, SA = js_obj(t0, 'HEAD_K'), js_obj(t0, 'STAGE_ANIME') or {}
     p = JS; t = open(p, encoding='utf-8').read(); DV = js_obj(t, 'DAU_VE') or {}
     for i in ids:
-        mau = MAU[i]
-        im, K = dau('thap/assets/%s_nong.png' % i, mau, HK[i]); im.save(os.path.join(OUT, i + '_nong.png'), optimize=True)
+        mau = MAU[i]; ref = REF_RIENG.get(i)
+        hk = js_obj(subprocess.run(['git', '-C', GOC, 'show', ref + ':thap/js/artscale.js'], capture_output=True, check=True, text=True).stdout, 'HEAD_K') if ref else HK
+        im, K = dau('thap/assets/%s_nong.png' % i, mau, hk[i], ref); im.save(os.path.join(OUT, i + '_nong.png'), optimize=True)
         e = {'K': K}
         if i in DANG and i in SA:
             e['S'] = []
@@ -160,7 +163,7 @@ def main():
         be(i).save(os.path.join(OUT, i + '_de.png'), optimize=True)
         if BAC_MAU.get(BAC[i]): nho(i).save(os.path.join(OUT, 'nho', i + '.png'), optimize=True)
         DV[i] = e
-        print(i, mau, 'K', HK[i], '→', K, e.get('S', ''))
+        print(i, mau, 'K', hk[i], '→', K, e.get('S', ''))
     if not os.environ.get('KHONG_JS'):
         s = 'window.DAU_VE = ' + json.dumps(DV, ensure_ascii=False) + ';'
         m = re.search(r'window\.DAU_VE = (.*);[ \t]*$', t, re.M)

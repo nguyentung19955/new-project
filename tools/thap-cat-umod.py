@@ -46,7 +46,7 @@ REL_TB = 0.90
 PHU_GIUA = {'set': 'duoi', 'mauhut': 'duoi', 'combo': 'tren'}
 # bệ GIỮ cỡ bệ chung dù đầu (kèm mũi tên xoay) to phải thu (f < 1): chỉ đầu thu, bệ không nhỏ hơn các ụ cùng bậc.
 # xaotron (anime 10/11): 2 mũi tên đổi chỗ quanh khối rune làm f = 0,765 → bệ 0,78 thay vì ~1,02 như các ụ Tím khác.
-BE_GIU = {'xaotron'}
+BE_GIU = {'xaotron', 'min', 'taylo', 'baotuyet', 'kepha', 'hutmana'}   # + 5 ụ vẽ lại 10/11 (f 0,87–0,93)
 
 
 def nguon(i):
