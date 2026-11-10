@@ -386,3 +386,31 @@ html.ua body #wrap #up .tb-cap { height: auto !important; min-height: 74px; padd
 html.ua body #wrap #up .tb-nut { height: 50px !important; width: 104px !important; padding: 6px 12px !important; gap: 0 !important; }
 html.ua body #wrap #up .tb-nut b { font-size: 13px; line-height: 15px; }
 html.ua body #wrap #up .tb-nut small { line-height: 14px; }
+/* 10/11 rà soát — cửa hàng / nhiệm vụ / sự kiện: hàng kt-h cao 58 px nhưng ổ tròn thưởng (ua_nut_tron 54×57) đặt lệch → lòi mép dưới khung hàng 4 px,
+   số "×1" dưới chân dung bị cắt → hàng cao 68 px, ổ tròn nằm gọn giữa mép trên/dưới */
+html.ua body #wrap #kt .kt-h { height: 68px !important; }
+html.ua body #wrap #kt .kt-h > .kt-r { top: -10px !important; height: 64px !important; }
+/* ĐĂNG NHẬP HẰNG NGÀY: chữ DAY n đè mép trên ô, số thưởng đè mép dưới → đệm theo mép ảnh ua_o (9 px) */
+html.ua body #wrap #kt .kt-dn-o { padding: 11px 0 9px !important; gap: 1px !important; }
+/* nút i (tỉ lệ rương) lòi ra ngoài góc phải trên của thẻ rương → nằm trong góc */
+html.ua body #wrap #kt .hm-ic.kt-i { top: 7px !important; right: 7px !important; width: 30px !important; min-width: 30px !important; height: 30px !important; }
+html.ua body #wrap #kt .hm-ic.kt-i > img { width: 30px !important; height: 30px !important; }
+/* sự kiện tuần khi CHƯA mở Huyền thoại nào: ô chân dung trên băng ua_bn_sk trống trơn → ổ khoá anime giữa ô + "Unlocks at Pilot Level n" */
+html.ua body #wrap #kt .kt-skd .kt-skd-khoa { display: flex !important; align-items: center; justify-content: center; }
+html.ua body #wrap #kt .kt-skd .kt-skd-khoa img { width: 34px; height: 34px; object-fit: contain; }
+/* 10/11 rà soát: bảng phủ (tt-phu / kt-phu) dài hơn màn (vd. "UNLOCKED" nhiều ụ khi lên nhiều cấp) cuộn được nhưng border-width 0 → nội dung
+   cuộn trượt QUA mép khung ảnh (hàng cuối nằm đè/lòi dưới viền vàng). Viền trong suốt thật (ảnh khung giữ nguyên bề dày qua border-image-width)
+   → vùng cuộn bị cắt ở MÉP TRONG khung; đệm trừ đi tương ứng (bố cục không đổi). */
+html.ua body #wrap #tt-phu:not(.kt-mo) .kt-phu-tam, html.ua body #wrap #kt-phu:not(.kt-mo) .kt-phu-tam { border-style: solid !important; border-color: transparent !important; border-width: 24px 14px 16px !important;
+  padding: 10px 12px 6px !important; }
+/* 10/11 rà soát: HỒ SƠ PHI CÔNG / ONLINE — tiêu đề đè mép trên khung ua_tam2 (vương miện), nút SAVE tràn sát 2 cạnh/đè góc khung → viền trong suốt thật theo bề dày ảnh khung */
+html.ua body .onl-bang { border-style: solid !important; border-color: transparent !important; border-width: 30px 18px 18px !important; padding: 6px 8px 4px !important; }
+/* 10/11 rà soát: ô MỐC TUẦN (Vô tận / Thử thách tuần): chữ WAVE n đè mép trên ô ua_o, số "2,000" chạm mép phải, rương chạm đáy → đệm theo mép ảnh (10 px), icon nhỏ lại */
+html.ua body .cdd-m { padding: 10px 6px 9px !important; gap: 2px !important; }
+html.ua body .cdd-m .kt-r img { width: 18px !important; height: 18px !important; object-fit: contain; }
+html.ua body .cdd-m .kt-r { gap: 2px !important; max-width: 100%; }
+/* bảng trượt HOME (#hm-mo .hm-tam: danh sách trùm, chế độ, cài đặt…): cùng lỗi nội dung cuộn trượt qua mép khung → viền trong suốt thật, tổng đệm giữ như cũ (28/26/26) */
+html.ua body #wrap .hm-tam, html.ua body #hm-mo .hm-tam { border-style: solid !important; border-color: transparent !important; border-width: 24px 14px 18px !important; padding: 4px 12px 8px !important; }
+/* bảng CHẾ ĐỘ: hàng khoá (chữ phụ 2 dòng + nhãn "3 BOSSES"/"FLOOR 100" bên phải) → dòng 2 chạm/đè mép dưới khung ua_o → hàng cao theo nội dung, đệm theo mép ảnh */
+html.ua body #hm-mo #hm-tam.hm-tam-che .hm-chec { min-height: 64px !important; padding-top: 11px !important; padding-bottom: 11px !important; }
+html.ua body #hm-mo #hm-tam.hm-tam-che .hm-chec small { line-height: 1.2; }

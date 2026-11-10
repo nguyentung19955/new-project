@@ -3,6 +3,11 @@
 > Game merge tower-defense trong `thap/`. Luật game và bàn giao: `docs/demo-hop-tuong/ban-giao/BAN-GIAO.md`, luật code/hình: `thap/QUY-TAC-HINH.md`.
 > Mỗi session thêm một mục `## claude/<tên-nhánh> — …` ở CUỐI file (file gộp kiểu union, không xung đột).
 
+## claude/demo-hop-tuong — rà soát giao diện đợt 2: cửa hàng / nhiệm vụ / sự kiện / chế độ / trùm / hồ sơ (10/11)
+- Bảng phủ & bảng trượt (UNLOCKED, tỉ lệ rương, Leo Tháp, Săn Trùm, Thử thách, Vô tận, danh sách/chi tiết trùm, chế độ, cài đặt, hồ sơ): nội dung cuộn không còn trượt qua viền khung ảnh; tiêu đề/nút không đè mép.
+- Hàng nhiệm vụ/sự kiện/lò rèn: ổ tròn thưởng nằm gọn trong hàng; ô Đăng nhập & ô mốc tuần: chữ/số không đè mép; nút i của rương nằm trong góc; hàng chế độ khoá không cụt chữ.
+- Sự kiện tuần khi chưa mở Huyền thoại: ổ khoá + "Unlocks at Pilot Level 6" thay ô trống.
+
 ## claude/demo-hop-tuong — rà soát giao diện đợt 1: trang ụ + bắn thử + bộ bài (10/11)
 - Công cụ mới `tools/thap-kt-ra-soat-gd.js`: mở ~40 màn × 4 cỡ × EN/VI, đo icon/chữ vượt khung, bị cắt, nút chồng → ảnh khoanh + JSON. Bảng lỗi: `docs/demo-hop-tuong/tuvan/ra-soat-giao-dien/BANG.md`.
 - Bắn thử (trang ụ): khung ua_o + nút 1★/4★/7★ pill anime + nút dừng tròn anime (góc dưới phải, dưới pha lê lõi); khung cắt 120…592 → băng chú thích nằm DƯỚI làn dưới (không đè làn/đáy bàn), băng = tấm ua_tam.

@@ -99,6 +99,8 @@ function doTrang(NGUONG) { // chạy trong trang: trả danh sách nghi lỗi
   const nut = tatCa.filter(e => (e.tagName === 'BUTTON' || e.getAttribute('data-act')) && !e.closest('[aria-hidden="true"]') && !biChe(e) && (() => { const r = e.getBoundingClientRect(); return r.width * r.height < 0.35 * W * H; })());
   for (let i = 0; i < nut.length; i++) for (let j = i + 1; j < nut.length; j++) {
     const a = nut[i], b = nut[j]; if (a.contains(b) || b.contains(a)) continue;
+    const lop = (e) => e.closest('#hm-mo,#tt-phu,#kt-phu,#kt,#up,#ketqua,#dung,#tt,#cdd-hoi,#tai,.kt-phu,.cd-p');
+    if (lop(a) !== lop(b)) continue; // khác lớp (bảng phủ / màn khác đè lên)
     { let c = a, da = 0; while (c && !c.contains(b)) { c = c.parentElement; da++; } let db = 0; for (let x = b; x && x !== c; x = x.parentElement) db++; if (da > 4 || db > 4) continue; } // khác lớp (bảng phủ đè màn dưới) → không tính
     const ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
     const w = Math.min(ra.right, rb.right) - Math.max(ra.left, rb.left), h = Math.min(ra.bottom, rb.bottom) - Math.max(ra.top, rb.top);
@@ -151,8 +153,8 @@ const MAN = [
   ['nv', '?notut=1', () => { KTUI.moTab('nv'); }],
   ['nv-cuoi', '?notut=1', () => { KTUI.moTab('nv'); setTimeout(() => { const t = document.querySelector('#kt-than'); t.scrollTop = t.scrollHeight; }, 300); }],
   ['sk', '?notut=1', () => { KTUI.moTab('sk'); }],
-  ['ruong', '?notut=1', () => { KTUI.moTab('shop'); const r = KT.moRuong(Object.keys(KTC.ruong || { hh: 1 })[0]); if (r) KTUI.moRuongAnim(r); }, 5000],
-  ['tiLe', '?notut=1', () => { KTUI.moTab('shop'); KTUI.tiLe(Object.keys(KTC.ruong || { hh: 1 })[0]); }],
+  ['ruong', '?notut=1', () => { KTUI.moTab('shop'); KT.cong('vang', 99999, 'other'); KTUI.ve(); document.querySelector('[data-act=kt-ru][data-k=thuong]').click(); }, 5000],
+  ['tiLe', '?notut=1', () => { KTUI.moTab('shop'); KTUI.tiLe('thuong'); }],
   ['trum', '?notut=1', () => { TX.moDS(); }],
   ['trum-ct', '?notut=1', () => { TX.moCT(Object.keys(TRUM)[0]); }],
   ['thap', '?notut=1', () => { CDUI.mo('thap'); }],

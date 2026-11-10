@@ -14,3 +14,13 @@ Mỗi màn chụp `<man>_<cỡ>_<ngôn ngữ>.jpg` + `_d.jpg` (khoanh màu chỗ
 | 6 | Lưới thẻ | mọi cỡ | EN/VI | Badge NEW! vẽ gradient hồng + nhịp phóng liên tục, đè huy hiệu LV góc phải | pill cyan ua_pill_bat, đứng yên, giữa mép trên chân dung | Đã sửa |
 | 7 | Khay trận (Lucky Slot) | mọi cỡ | EN/VI | Dải số quả = gradient tối vẽ CSS (demkn.css) | tấm ua_tam 9 mảnh | Đã sửa |
 | 8 | Trang ụ › hàng CARD LV | 390×844 | EN | Thanh bản sao lòi lên mép khung, "Need 1 more copy" chạm mép dưới, chữ LEVEL UP bị mép nút cắt; icon vàng là ngọc vàng cũ (lệch HOME/cửa hàng) | hàng cao ≥74 px + đệm, nút 50 px; `thebai-ui.js` icon vàng theo KTA.vang (ua_ts_vang) | Đã sửa |
+| 9 | Cửa hàng / Nhiệm vụ / Sự kiện | 390×844 | EN/VI | Ổ tròn thưởng (ua_nut_tron) lòi mép dưới hàng 4 px, "×1" dưới chân dung bị cắt | hàng kt-h 68 px, ổ tròn đặt lại | Đã sửa |
+| 10 | Nhiệm vụ › Đăng nhập hằng ngày | 390×844 | EN/VI | "DAY n" đè mép trên ô, số thưởng đè mép dưới | đệm 11/9 px theo mép ua_o | Đã sửa |
+| 11 | Cửa hàng › Rương | mọi cỡ | EN/VI | Nút i (tỉ lệ) ảnh 44 px trong nút 29 px → lòi ra ngoài góc thẻ rương | nút + ảnh 30 px, nằm trong góc | Đã sửa |
+| 12 | Sự kiện tuần (chưa mở Huyền thoại) | mọi cỡ | EN/VI | Ô chân dung trống trơn, tên trống | ổ khoá anime + "Legendary / Unlocks at Pilot Level 6" | Đã sửa |
+| 13 | Bảng phủ: UNLOCKED (lên cấp), tỉ lệ rương, Leo Tháp, Săn Trùm, Thử thách, Vô tận, Tuần | mọi cỡ | EN/VI | Nội dung cuộn trượt QUA mép khung ảnh (hàng cuối đè/lòi dưới viền vàng) | viền trong suốt thật = bề dày khung → cắt ở mép trong | Đã sửa |
+| 14 | Bảng trượt HOME: danh sách trùm, chi tiết trùm, chế độ, cài đặt | mọi cỡ | EN/VI | như #13 (ALL BOSSES / hàng cuối bị viền cắt ngang) | như #13 | Đã sửa |
+| 15 | Hồ sơ phi công | 390×844 | EN/VI | Tiêu đề đè mép trên khung, nút SAVE tràn sát 2 cạnh/đè góc | viền trong suốt 30/18 px | Đã sửa |
+| 16 | Vô tận / Thử thách tuần › mốc tuần | 390×844 | EN/VI | "WAVE n" đè mép trên ô, "2,000" chạm mép phải, rương chạm đáy | đệm 10/6/9 px, icon 18 px | Đã sửa |
+| 17 | Chế độ chơi › hàng khoá | 390×844 | EN | Chữ phụ 2 dòng ("Beat a boss…", "After Tower floor 100…") chạm/bị mép dưới cắt | đệm 11 px, cao theo nội dung | Đã sửa |
+| 18 | Rương / vòng quay / thưởng thẻ | mọi cỡ | — | Khung chân dung nhỏ o_vien_<bậc> còn kiểu thép có ốc (lệch tông anime) | Cần ảnh khung vuông anime theo bậc (chưa có trong assets) | Còn lại — cần ảnh mới |
