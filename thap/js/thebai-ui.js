@@ -7,6 +7,8 @@
 'use strict';
 
 const TBUI = {
+  // icon VÀNG theo giao diện đang bật (anime: đồng xu ua_ts_vang như HOME/cửa hàng — 10/11 rà soát giao diện: trước luôn là viên ngọc vàng cũ)
+  icVang() { try { return KTUI.a(KTA.vang); } catch (e) { return 'assets/ngoc_vang.png'; } },
   so: (v) => Math.floor(v).toLocaleString('en-US'),
   thanh(t) {
     const p = t.max ? 100 : Math.min(100, Math.round(t.n / Math.max(1, t.can) * 100)), du = t.max || t.n >= t.can;
@@ -41,10 +43,10 @@ const TBUI = {
       phu = kn || thieu || dmgC(true);
       if (kn) phu2 = thieu || (coDmg ? dmgC(true) : ''); // ụ kỹ năng: dòng 2 = thiếu bản sao/vàng hoặc +% sát thương
       if (!phu2 && typeof THATSO !== 'undefined' && THATSO.capThe) phu2 = THATSO.capThe(id, t); // ụ hỗ trợ: trần nới theo cấp thẻ
-      nut = '<button class="tb-nut" data-up="tbnang"' + (THEBAI.nangDuoc(t) ? '' : ' disabled') + '><b>LEVEL UP</b><small><img src="assets/ngoc_vang.png" alt="">' + this.so(t.vang) + '</small></button>';
+      nut = '<button class="tb-nut" data-up="tbnang"' + (THEBAI.nangDuoc(t) ? '' : ' disabled') + '><b>LEVEL UP</b><small><img src="' + TBUI.icVang() + '" alt="">' + this.so(t.vang) + '</small></button>';
     }
     return '<div class="tb-cap" data-id="' + id + '"><div class="tb-cap-lv"><small>CARD LV</small><b>' + t.lv + '</b><em>/' + THE.maxLv(t.bac) + '</em></div>' +
-      '<div class="tb-cap-giua">' + this.thanh(t) + '<small class="tb-phu1">' + phu + '</small><small class="tb-phu2">' + phu2 + '</small><small class="tb-vi"><img src="assets/ngoc_vang.png" alt="">' + this.so(vang) + '</small></div>' + nut + '</div>';
+      '<div class="tb-cap-giua">' + this.thanh(t) + '<small class="tb-phu1">' + phu + '</small><small class="tb-phu2">' + phu2 + '</small><small class="tb-vi"><img src="' + TBUI.icVang() + '" alt="">' + this.so(vang) + '</small></div>' + nut + '</div>';
   },
 
   // túi thưởng ở màn kết quả
@@ -54,7 +56,7 @@ const TBUI = {
     let d = chi.querySelector('.tb-kq');
     if (!r) { if (d) d.remove(); return; }
     if (!d) { d = document.createElement('div'); d.className = 'tb-kq'; chi.insertBefore(d, chi.querySelector('.kq-xem') || null); }
-    d.innerHTML = '<small>REWARDS</small><div class="tb-kq-h"><span class="tb-kq-v"><img src="assets/ngoc_vang.png" alt="">+' + this.so(r.vang) + '</span>' +
+    d.innerHTML = '<small>REWARDS</small><div class="tb-kq-h"><span class="tb-kq-v"><img src="' + TBUI.icVang() + '" alt="">+' + this.so(r.vang) + '</span>' +
       r.the.slice(0, 6).map(x => '<span class="tb-kq-t"><i class="ot-mini" data-id="' + x.id + '"><img class="po" src="' + portraitOf(x.id) + '" alt="' + ((G.rosterMap[x.id] || {}).ten || '') + '" draggable="false"></i><b>×' + x.n + '</b></span>').join('') + '</div>';
     if (typeof OT !== 'undefined' && OT.quet) try { OT.quet(d); } catch (e) { }
   },

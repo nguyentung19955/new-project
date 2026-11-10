@@ -3,6 +3,12 @@
 > Game merge tower-defense trong `thap/`. Luật game và bàn giao: `docs/demo-hop-tuong/ban-giao/BAN-GIAO.md`, luật code/hình: `thap/QUY-TAC-HINH.md`.
 > Mỗi session thêm một mục `## claude/<tên-nhánh> — …` ở CUỐI file (file gộp kiểu union, không xung đột).
 
+## claude/demo-hop-tuong — rà soát giao diện đợt 1: trang ụ + bắn thử + bộ bài (10/11)
+- Công cụ mới `tools/thap-kt-ra-soat-gd.js`: mở ~40 màn × 4 cỡ × EN/VI, đo icon/chữ vượt khung, bị cắt, nút chồng → ảnh khoanh + JSON. Bảng lỗi: `docs/demo-hop-tuong/tuvan/ra-soat-giao-dien/BANG.md`.
+- Bắn thử (trang ụ): khung ua_o + nút 1★/4★/7★ pill anime + nút dừng tròn anime (góc dưới phải, dưới pha lê lõi); khung cắt 120…592 → băng chú thích nằm DƯỚI làn dưới (không đè làn/đáy bàn), băng = tấm ua_tam.
+- Bảng TURRETS LOCKED (chưa qua hướng dẫn) sang tấm/nút anime. Badge NEW! = pill cyan đứng yên (bỏ nhịp phóng liên tục), không đè LV. Dải số Lucky Slot = tấm ua_tam.
+- Tên thẻ NOT OWNED không còn cụt chân chữ. Hàng CARD LV: không lòi thanh/chữ khỏi khung, LEVEL UP không bị cắt, icon vàng = đồng xu anime (như HOME).
+
 ## claude/demo-hop-tuong — Solo/Leo Tháp: đường không che bàn nữa (09/11)
 - Người dùng (iPhone): "Đường che mất bàn". Chế độ 1 bàn (Solo, Leo Tháp, Săn Trùm, Thử thách) dùng chung `boCuc('solo')`: khay 408 cũ đè ray trong làn trên/dưới (kể cả độ dày 3D) và chìa ra dưới cột cổng/lõi.
 - `data.js` BC_SOLO: khay 330×195 (ô ~57×49, vẫn to hơn PVP), nằm gọn trong chữ C, hở ~10–12 px mỗi phía (tính cả độ dày 3D); cổng/lõi ở cột phải, ngoài khay; giữ tâm dọc cũ. Độ dài LUẬT làn giữ 1061 (`dai`) → thời gian quái đi hết làn y như cũ. PVP/Co-op không đổi.

@@ -642,9 +642,9 @@ SD.moc = function () {
 };
 
 // ===================================================== lớp vẽ chú thích =====================================================
-const SD_Y0 = 112, SD_CAO = 420; // khung cắt (toạ độ logic y 112…532) — khớp unitpage.js khungXem. Đường trên (y 173) + số sát thương bay lên nằm TRỌN trong khung;
+const SD_Y0 = 120, SD_CAO = 472; // khung cắt (toạ độ logic y 120…592; 10/11 rà soát giao diện: kéo dài xuống để băng chữ nằm DƯỚI đường dưới y 488 của bàn BC_SOLO, không đè làn/đáy bàn) — khớp unitpage.js khungXem. Đường trên (y 173) + số sát thương bay lên nằm TRỌN trong khung;
 // chú thích đặt ở ĐÁY khung (dưới đường dưới) để không che quái (trước: băng chữ ở y 175 đè đúng lên quái đường trên)
-const SD_CY = SD_Y0 + SD_CAO - 22;
+const SD_CY = SD_Y0 + SD_CAO - 30;
 // ---------- vẽ bằng ẢNH (QUY-TAC-HINH.md): code chỉ đặt vị trí / xoay / phóng / mờ ảnh PNG + chữ số ----------
 const SD_IC = { toc: 'ic_toc', dmg: 'ic_dmg', crit: 'ic_crit', cdmg: 'ic_crit', cham: 'ic_cham', chet: 'ic_chet', mana: 'ic_mana', khien: 'ic_khien', taylo: 'ic_taylo' }; // ký hiệu buff → ảnh icon có sẵn
 const sdIm = (ten) => { try { return REN.img(ten); } catch (e) { return null; } };
@@ -656,6 +656,13 @@ function sdVe(x, ten, cx, cy, w, h, rot) {
   h = h || w * im.height / im.width;
   if (rot) { x.save(); x.translate(cx, cy); x.rotate(rot); x.drawImage(im, -w / 2, -h / 2, w, h); x.restore(); }
   else x.drawImage(im, cx - w / 2, cy - h / 2, w, h);
+  return true;
+}
+// ảnh 9 mảnh (giữ nguyên 4 góc khi kéo giãn): tấm chàm vát góc viền vàng anime ua_tam (lát 50 px) cho băng chú thích
+function sdVe9(x, ten, cx, cy, w, h, cat, g) {
+  const im = sdIm(ten); if (!im) return false;
+  const W0 = im.width, H0 = im.height, X = cx - w / 2, Y = cy - h / 2, sx = [0, cat, W0 - cat, W0], sy = [0, cat, H0 - cat, H0], dx = [X, X + g, X + w - g, X + w], dy = [Y, Y + g, Y + h - g, Y + h];
+  for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) x.drawImage(im, sx[i], sy[j], sx[i + 1] - sx[i], sy[j + 1] - sy[j], dx[i], dy[j], dx[i + 1] - dx[i], dy[j + 1] - dy[j]);
   return true;
 }
 function sdKhung(x, ten, f, n, cx, cy, s) { // 1 khung của dải ảnh n khung ngang (fx_starup, fx_summon, fx_buff…)
@@ -849,7 +856,7 @@ SD.veChu = function (x, now) {
   const hai = dong.length > 1, cy = hai ? SD_CY - 10 : SD_CY, bh = hai ? 62 : 42, lh = fs * 1.12;
   const bw = w + 44;
   x.globalAlpha = u; x.save(); x.translate(cx, cy); x.scale(0.94 + 0.06 * u, 0.94 + 0.06 * u); x.translate(-cx, -cy);
-  sdVe(x, 'bang_wave_nen', cx, cy, bw, bh); // băng PNG; chưa nạp → chỉ chữ (bỏ hộp fillRect vẽ code)
+  if (!((typeof UA !== 'undefined' && UA.bat) && sdVe9(x, 'ua_tam', cx, cy, bw, bh, 50, 15))) sdVe(x, 'bang_wave_nen', cx, cy, bw, bh); // băng PNG: anime = tấm ua_tam (Royal Twilight), cũ = băng thép; chưa nạp → chỉ chữ (bỏ hộp fillRect vẽ code)
   x.textBaseline = 'middle'; x.font = '800 ' + fs.toFixed(1) + 'px "TM UI", sans-serif';
   dong.forEach((d, i) => {
     const y = cy + 1 + (hai ? (i ? lh / 2 : -lh / 2) : 0), p0 = i === 0 && pre, wl = x.measureText((p0 ? pre : '') + d).width, x0 = cx - wl / 2;
