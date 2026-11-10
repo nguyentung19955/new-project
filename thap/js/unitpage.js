@@ -609,7 +609,7 @@ const UP = {
     const upGdAnh = (id, k, anh) => !anh && window.DE_RIENG && DE_RIENG[id] && !window.UCU
       ? '<img class="dau nho s' + (k + 1) + ' loc" src="' + iconOf(id) + '" alt="">'
       : '<img class="de" src="assets/de_chung.webp?v=5b0cfbfb" alt=""><img class="dau s' + (k + 1) + (anh ? '' : ' loc') + '" src="assets/' + anhTen(id + '_nong' + (anh ? '_s' + (k + 1) : '')) + '.png" alt="" onerror="this.onerror=null;this.src=\'' + iconOf(id) + '\'">';
-    const g = GROW[id], anh = !!(window.STAGE_K && STAGE_K[id]);
+    const g = GROW[id], anh = !!((window.STAGE_K && STAGE_K[id]) || (!window.UCU && window.STAGE_VE && STAGE_VE[id])); // STAGE_VE: đầu 3 dạng mới (Hydra chỉ trang ụ)
     // dạng HÌNH riêng (Rồng Máy 4 dạng — skills5.js GROW.ronglua.hinh): icon dựng sẵn nho/<ảnh> mỗi dạng; ảnh lỗi → icon thẻ
     if (g.hinh) return '<div class="up-gd up-gd4">' + g.hinh.map((h, k) =>
       '<div class="up-gd1" style="--g:' + (h.mau || g.mau) + '"><div class="anh"><img class="dau nho" src="assets/' + h.anh + '.png" alt="" onerror="this.onerror=null;this.src=\'' + iconOf(id) + '\'"></div>' +
