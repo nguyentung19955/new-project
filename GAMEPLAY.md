@@ -3,6 +3,11 @@
 > Game merge tower-defense trong `thap/`. Luật game và bàn giao: `docs/demo-hop-tuong/ban-giao/BAN-GIAO.md`, luật code/hình: `thap/QUY-TAC-HINH.md`.
 > Mỗi session thêm một mục `## claude/<tên-nhánh> — …` ở CUỐI file (file gộp kiểu union, không xung đột).
 
+## claude/demo-hop-tuong — Thử thách tuần BẬT + bảng xếp hạng 3 tab (10/11, giai đoạn D xong)
+- THỬ THÁCH TUẦN hiện trong GAME MODE + HOME → EVENT (thẻ WEEKLY CHALLENGE: PLAY / RANKS); mở ở Cấp phi công 8 (ADMIN luôn mở). Luật giữ như thiết kế: hạt = tuần (như nhau cho mọi người), 5 ụ cho mượn 1 Vàng + 2 Tím + 1 Xanh + 1 Trắng, chỉ huy cố định, cấp thẻ +5, 2 đột biến, wave 1–50; mốc 15 = 1 000 vàng · 25 = 30 ngọc · 35 = bản Vàng của bộ tuần (chưa vào bể → Rương HT) · 45 = 1 Tinh thể Đỏ.
+- BẢNG XẾP HẠNG: 3 tab Tuần / Vô tận tuần / Vô tận mọi thời đại (ở màn tuần, màn Vô tận, bảng riêng từ EVENT) + dòng HẠNG CỦA BẠN (#n / 50+). Ghi `turretmerge/lb/...` đúng rules đã publish: n ≤ 16 (trống → "Pilot"), av ≤ 24, w kẹp 1…51 / 999, t ≥ 6·w (< 100000), k = w·100000 + 99999 − t, at = ServerValue.TIMESTAMP, v = 1. Lỗi quyền / chưa đăng nhập / quá 8 s → NOT CONNECTED + kỷ lục cá nhân; điểm chờ giữ để gửi lại, tự bỏ khi máy chủ đã có điểm ≥.
+- Kiểm (stub Firebase + giả lập rules, không chạm database thật): `tools/thap-kt-thu-thach-tuan.js`, `tools/thap-kt-bxh.js` (mới) + vo-tan, thap-leo, bo-solo, tien-trinh (cập nhật: GAME MODE có tw, cấp 8 báo mở), so-huu, shop, admin. Ảnh 393×852 EN+VI: `/home/claude/xem/tuan-bxh.jpg`.
+
 ## claude/demo-hop-tuong — BỎ SOLO: Leo Tháp là chế độ một mình chính (10/11)
 - HOME: PLAY vào thẳng tầng Leo Tháp chưa qua thấp nhất; GAME MODE bỏ SOLO, TOWER CLIMB đứng đầu (chọn = mở bảng tầng để chơi lại tầng cũ); giữ PVP/CO-OP/ONLINE/Thử thách/Săn Trùm/Vô tận (Thử thách tuần vẫn ẩn). Leo Tháp mở ngay sau hướng dẫn (bỏ khoá cấp 5); xong hướng dẫn → nút CLIMB · FLOOR 1. Bản lưu cũ chọn SOLO → TOWER CLIMB. `?mode=solo` (kiểm thử) giữ.
 - Điều kiện Đỏ "kỷ lục ≥ wave 30" → **qua tầng 40 Leo Tháp** (tầng 40 = wave 29–33, tầng trùm cuối chương 4, mana đầu 0,6× → ngang/khó hơn wave 30 Solo); người đã đạt wave 30 ở Solo giữ quyền. Đổi chữ ở thẻ khoá, Ấn Đỏ/Lò Đỏ, gacha (EN+VI).

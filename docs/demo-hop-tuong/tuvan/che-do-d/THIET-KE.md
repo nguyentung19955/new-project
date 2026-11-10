@@ -6,6 +6,7 @@
 > Trả lời người dùng: *"Có chế độ endless khi qua level nào đó chưa"* — trước giai đoạn D **chưa có**. Giai đoạn D thêm Vô tận.
 > **Đổi hướng 09/11 (người dùng)**: BỎ Solo — **Leo Tháp** là chế độ một mình chính; Vô tận mở **sau tầng 100** và **đánh tiếp từ đó**
 > (bản đầu của tài liệu này ghi "Solo qua wave 70" — đã thay). Bỏ Solo + đổi điều kiện "wave 30" sang tầng 40: **xong 10/11** — `che-do-c/THIET-KE.md` §11.
+> **10/11: XONG** — Thử thách tuần bật (`CDDC.tw.bat = true`, GAME MODE + HOME → EVENT), bảng xếp hạng 3 tab + hạng của mình; rules §3.2 người dùng đã publish. Kiểm `tools/thap-kt-thu-thach-tuan.js`, `tools/thap-kt-bxh.js`.
 > Mọi số = đề xuất ban đầu; đo lại khi có dữ liệu người chơi.
 
 ## 0. Nguyên tắc (giữ triết lý người dùng)
