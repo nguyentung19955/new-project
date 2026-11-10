@@ -95,7 +95,7 @@ const NET = {
   },
   _chuanUser(u) {
     const g = (u.providerData || []).find(p => p && p.providerId === 'google.com');
-    return { uid: u.uid, anon: !!u.isAnonymous, name: (g && g.displayName) || u.displayName || '', email: (g && g.email) || u.email || '', photo: (g && g.photoURL) || '', ev: !!u.emailVerified }; // ev: admin.js chỉ nhận email đã xác minh
+    return { uid: u.uid, anon: !!u.isAnonymous, name: (g && g.displayName) || u.displayName || '', email: (g && g.email) || u.email || '', photo: (g && g.photoURL) || '', ev: !!u.emailVerified || !!(g && g.email) }; // ev: admin.js chỉ nhận email đã xác minh. 10/11: khách NỐI Google (linkWith…) thì emailVerified cấp trên vẫn false → email do chính Google cấp (providerData google.com) coi là đã xác minh
   },
   laIOS() { return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); },
   laApp() { const m = (s) => !!(window.matchMedia && matchMedia(s).matches); return navigator.standalone === true || m('(display-mode: standalone)') || m('(display-mode: fullscreen)'); },
