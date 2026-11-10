@@ -99,7 +99,7 @@ const HB = {
     if (el._h !== h) { el._h = h; el.innerHTML = h; }
     // Leviathan: dòng kỹ năng = số ABYSS sống (đúng số trên tấm xoáy vực đáy ô) + gợi ý vòng nuốt xanh (hieuung.js veChon)
     const kn = tt.querySelector('.tt-kn'), LT = X && X.T && X.T.id === 'leviathan' && G.ban[X.T.ban] && G.ban[X.T.ban].t[X.T.o] === X.T ? X.T : null;
-    if (kn && LT) { const n = LT.vuc || 0, s = 'ABYSS ' + n + ' · +' + 6 * n + '% damage · devours enemies inside the cyan ring — place it next to the path to eat more'; if (kn._lev !== s) { kn._lev = s; kn.textContent = s; } }
+    if (kn && LT) { const n = LT.vuc || 0, s = 'ABYSS ' + n + ' · +' + Math.round(100 * SKILLS.leviathan.VUC_ST * n) + '% damage · devours enemies inside the cyan ring — place it next to the path to eat more'; if (kn._lev !== s) { kn._lev = s; kn.textContent = s; } }
     else if (kn) kn._lev = null;
     // Evolver: dòng kỹ năng = giải thích trứng sống (giây còn lại / trứng cháy chạm +20 mana) — trước chỉ "Does not shoot."
     const EV = X && X.T && X.T.id === 'tienhoa' && G.ban[X.T.ban] && G.ban[X.T.ban].t[X.T.o] === X.T ? X.T : null;

@@ -10,7 +10,7 @@ const S = 'SKILLS.thacmana';
 
 // 1) hàm thuần
 const K = (M) => R(ctx, `${S}.k(${M})`), L = (M) => R(ctx, `${S}.lan(${M})`);
-kt(Math.abs(K(0) - 1) < 1e-9 && Math.abs(K(100) - 1.5) < 1e-9 && Math.abs(K(400) - 2) < 1e-9 && Math.abs(K(10000) - 6) < 1e-9, 'k(M) = 1 + 0.5√(M/100)');
+kt(Math.abs(K(0) - 1) < 1e-9 && Math.abs(K(100) - 2) < 1e-9 && Math.abs(K(400) - 3) < 1e-9 && Math.abs(K(10000) - 11) < 1e-9, 'k(M) = 1 + 1.0√(M/100) (10/11 đợt 2: K 0.5 → 1.0)');
 kt(K(1e6) > K(1e5) && K(1e5) > K(1e4), 'k không trần');
 const bang = [[0, 1], [99, 1], [100, 2], [299, 2], [300, 3], [600, 4], [1000, 5], [1999, 5], [2000, 6], [4000, 8], [7999, 8], [8000, 9], [16000, 10], [32000, 11]];
 for (const [m, n] of bang) kt(L(m) === n, `lan(${m}) = ${n} (được ${L(m)})`);

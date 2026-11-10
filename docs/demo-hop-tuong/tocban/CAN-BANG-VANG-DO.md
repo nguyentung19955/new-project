@@ -220,3 +220,57 @@ Nhận xét kèm theo (không vá thử):
 - Hệ số sửa → điểm **không tuyến tính** (sát thương thừa lên quái nhỏ): Lucky Slot −34% ST gốc chỉ −21% điểm → luôn đo lại sau khi chỉnh.
 - Nhiễu: bộ Tấn công ±5%, ụ đặt 2 ô trên bàn R ±0.25 điểm. Roster hiện có **11 ụ Đỏ** (mục 5–6 của `TAI-LIEU-GOC.md` ghi 10).
 - Chưa đo ở cấp thẻ tối đa (LV17) và chưa đo PVP/Co-op.
+
+## 8. Đợt 2 — kéo về dải đích (10/11, ĐÃ ÁP vào code)
+Người dùng chốt 10/11: (1) ụ TẤN CÔNG Vàng không được thua ụ HỖ TRỢ Đỏ (Cryo Reactor 2.23); các ụ Đỏ tấn công nên mạnh như Leviathan; KHÔNG tăng máu quái, không đổi wave. (2) **Sức mạnh phải đến từ HIỆU ỨNG KỸ NĂNG, không từ chỉ số cơ bản** — bắt buộc với Đỏ (không tăng ST gốc / tốc bắn / chí mạng gốc), ưu tiên với Vàng (chỉ khi cơ chế không đủ mới bù ST gốc). Chỉ chỉnh ụ `vai: 'tc'` Vàng/Đỏ; ụ hỗ trợ / đặc biệt / khống chế / kinh tế để đợt riêng.
+
+**Dải đích (điểm tổng, đơn vị = số ụ Eclipse tham chiếu):**
+
+| Bậc | Dễ (khó 1) | Vừa (khó 2) | Khó (khó 3) |
+|---|---|---|---|
+| Đỏ tấn công | 4.5–4.8 | 4.8–5.1 | 5.1–5.5 |
+| Vàng tấn công | 2.5–2.8 | 2.8–3.1 | 3.1–3.5 |
+
+**Thước đo cố định:** đợt này đổi hệ số của chính Eclipse (ụ tham chiếu), nên `tools/thap-can-bang-so.js` nay đo bàn tham chiếu R với **bộ số của Eclipse trước đợt 2** (`REF_GOC`: ST gốc 15, tia ngày ×2.2–3.8, nón đêm ×1, cháy 60%; `REF_GOC=0` → cách cũ). v0 bài A không đổi: 760 / 4347 / 15669 ST/giây mỗi ô. Thêm tham số `v0=<file.json>` (dùng lại v0 lần đo trước, dò số ~10 s/ụ). Giả định phán quyết của Nemesis nay tính theo hằng thật (số lần phán quyết × bước, kẹp trần).
+
+**Ba ụ bài tĩnh chấm oan (Hydra, Nine-Tail, Fusion Archive):** trận bot trước đây cho 3 ụ này ngang trung vị Vàng (1.52) trong khi bài tĩnh chấm 0.79 / 0.32 / 0.75. Nhắm ĐẦU DƯỚI dải (2.8) theo sức mạnh thật ⇒ đích quy đổi trên bài tĩnh = 2.8 × (điểm tĩnh gốc ÷ 1.52) = **1.46 / 0.59 / 1.38**. Chưa chắc — cần đo trận thật.
+
+**Bảng trước / sau** ("trước" = code sau đợt 1, đo lại cùng thước; số nhỏ: bài A·bài B). Số thô: `/home/claude/xem/canbang2/` (`can-bang2-a.json`, `can-bang2-b.json`, `can-bang2-truoc-*.json`, `bang-dot2.json`, `bang-dot2.md`).
+
+| Bậc | Ụ | Khó | Chỉnh | Hệ số kỹ năng cũ → mới | ST gốc | Điểm trước | Điểm sau | w20 / w40 / w60 sau (A·B) | Dải đích | Kết quả | Ghi chú |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| Đỏ | Leviathan (`leviathan`) | 3 | kỹ năng | bọt nổ lan 50% / 30 px → **140% / 42 px** · TIDAL BREATH ×(4 + 0.1/điểm) → **×(40 + 0.1/điểm)**, hồi 35 → **25 s** · ABYSS giữ +6%/điểm | 34 → **24** (trả về số trước 10/11) | 4.18 | **5.29** | 3.35 <sub>3.7·3.0</sub> / 6.23 <sub>6.7·5.8</sub> / 7.08 <sub>7.9·6.3</sub> | 5.1–5.5 | ĐẠT | w20 3.35 sát mép −35% |
+| Đỏ | Wyrm Engine (`ronglua`) | 2 | không đổi | — | 8.5 (giữ) | 5.05 | **5.06** | 3.85 <sub>4.1·3.6</sub> / 5.77 <sub>6.3·5.3</sub> / 5.85 <sub>6.8·5.0</sub> | 4.8–5.1 | ĐẠT | đã trong dải |
+| Đỏ | Arcane Cascade (`thacmana`) | 2 | kỹ năng | hệ số mana K: ×(1 + 0.5√(mana/100)) → **×(1 + 1.0√(mana/100))** | 20 (giữ) | 3.70 | **4.87** | 3.50 <sub>3.9·3.2</sub> / 5.29 <sub>6.0·4.7</sub> / 6.23 <sub>7.4·5.2</sub> | 4.8–5.1 | ĐẠT | — |
+| Đỏ | Black Hole (`blackhole`) | 2 | kỹ năng | nghiền (2.0 + 0.6×★)D → **(3.2 + 0.95×★)D** | 90 (giữ) | 3.91 | **4.83** | 4.30 <sub>8.5·2.2</sub> / 4.86 <sub>7.2·3.3</sub> / 5.41 <sub>9.7·3.0</sub> | 4.8–5.1 | ĐẠT | bài A/B lệch ×3.9 — số đo không ổn định |
+| Đỏ | Lucky Slot (`cobac`) | 1 | kỹ năng | điểm quả: Cam +2.5% → **+5%** ST/điểm · Nho +6% → **+10%** ST chí mạng/điểm | 38 (giữ) | 3.62 | **4.62** | 4.31 <sub>4.5·4.1</sub> / 4.80 <sub>5.3·4.4</sub> / 4.77 <sub>5.6·4.0</sub> | 4.5–4.8 | ĐẠT | — |
+| Đỏ | Overlord (`overlord`) | 1 | kỹ năng | sấm ×9 → **×16** · dư chấn ×2 tới 4 quái → **×6 tới 8 quái** · nạp 5.6 → **5.1 s** | 22.4 (giữ) | 2.81 | **4.61** | 3.06 <sub>3.5·2.7</sub> / 5.10 <sub>5.7·4.6</sub> / 6.28 <sub>7.2·5.5</sub> | 4.5–4.8 | ĐẠT | w60 6.28 đúng mép +35% |
+| Đỏ | Hive Queen (`chuato`) | 1 | kỹ năng | mỗi drone (0.70 + 0.15×★)D → **(1.0 + 0.22×★)D** · chu kỳ bầy 2×★ → **1.4×★** giây | 80 (giữ) | 3.03 | **4.63** | 3.68 <sub>4.0·3.4</sub> / 5.13 <sub>5.5·4.8</sub> / 5.27 <sub>5.7·4.8</sub> | 4.5–4.8 | ĐẠT | — |
+| Vàng | Compass Cannon (`canon`) | 3 | không đổi | — | 20 (giữ) | 3.73 | **3.73** | 1.56 <sub>1.9·1.3</sub> / 4.29 <sub>5.2·3.6</sub> / 7.77 <sub>9.0·6.7</sub> | 3.1–3.5 | trên dải (giữ) | giữ theo yêu cầu (trên dải) |
+| Vàng | Ember Relay (`lualien`) | 3 | không đổi | — | 30 (giữ) | 3.48 | **3.45** | 1.91 <sub>2.0·1.8</sub> / 3.57 <sub>3.8·3.3</sub> / 6.05 <sub>6.4·5.7</sub> | 3.1–3.5 | ĐẠT | giữ theo yêu cầu |
+| Vàng | Salvo Battery (`railgun`) | 3 | kỹ năng | BINGO đủ hàng +200% → **+240%** ST | 46.2 (giữ) | 2.96 | **3.24** | 3.21 <sub>3.6·2.8</sub> / 3.53 <sub>4.2·3.0</sub> / 2.99 <sub>3.4·2.6</sub> | 3.1–3.5 | ĐẠT | nâng nhẹ |
+| Vàng | Quantum Choir (`hopca`) | 3 | kỹ năng + gốc | mỗi Hoà âm +35% → **+100%** ST | 24 → **32** | 1.98 | **3.38** | 3.46 <sub>3.5·3.4</sub> / 2.97 <sub>3.1·2.8</sub> / 3.78 <sub>4.2·3.4</sub> | 3.1–3.5 | ĐẠT | kỹ năng một mình tới ≈2.65 (Hoà âm +85%); phần thiếu bù ST gốc |
+| Vàng | Blood Circuit (`mauhut`) | 3 | kỹ năng + gốc | thưởng dạng 20/50/100/200 Máu +15/40/60/90% → **+250/500/550/600%** · ST chí mạng mỗi Máu 3% → **1%** (kìm cuối trận) · +5% ST/Máu giữ | 22 → **50** | 1.61 | **3.32** | 1.16 <sub>1.2·1.1</sub> / 3.34 <sub>3.3·3.4</sub> / 9.43 <sub>9.8·9.0</sub> | 3.1–3.5 | ĐẠT | giả định Máu: w20 có 10/12 ụ 0 Máu → chỉ ST gốc kéo được đầu trận; w20 1.16 / w60 9.43 lệch xa |
+| Vàng | Prism Thief (`bienmau`) | 3 | kỹ năng + gốc | cộng dồn màu: đỏ +2% → **+15%**, vàng +1% → **+10%**, lục +5% → **+30%** STCM · tỉ lệ đỏ 8% → **16%**, lục 15% → **30%** · hợp thể +600% → **+1200%** ST/lần | 24 → **60** (trần ×2.5) | 1.68 | **2.71** | 1.69 <sub>2.1·1.4</sub> / 2.71 <sub>3.2·2.3</sub> / 4.38 <sub>5.0·3.8</sub> | 3.1–3.5 | CHƯA (dưới dải) | CHƯA vào dải dù đã dùng cả kỹ năng lẫn trần ST gốc; phụ thuộc giả định số lần hợp thể (10/12 ụ là Prism đơn) |
+| Vàng | Star Cannon (`ngoisao`) | 3 | kỹ năng | mốc sao: tốc +15% → **+30%**/mốc 10 (đúng mốc +100% → **+250%**) · ST +10% → **+40%**/mốc 10, +100% → **+400%**/mốc 50 (đúng mốc 50 +350% → **+1000%**) | 40 (giữ mức chiều nay) | 1.54 | **3.11** | 2.85 <sub>3.1·2.6</sub> / 3.21 <sub>3.3·3.2</sub> / 3.29 <sub>3.7·2.9</sub> | 3.1–3.5 | ĐẠT | không trả được về 21: cần hệ số mốc gấp ~8 |
+| Vàng | Purifier (`aten`) | 2 | kỹ năng | ×4 → **×8** lên quái trúng độc (7★ PURGE ×6 → **×12**) · nổ khi giết ×2 → **×4** | 40 (giữ mức chiều nay) | 1.57 | **2.83** | 2.53 <sub>2.5·2.5</sub> / 2.97 <sub>2.9·3.1</sub> / 3.02 <sub>3.1·2.9</sub> | 2.8–3.1 | ĐẠT | không trả về 23.4: sẽ cần ×14 lên quái độc |
+| Vàng | Nemesis (`nemesis`) | 2 | kỹ năng + gốc | phán quyết ST +6% → **+15%** (trần +100% → **+250%**) · % máu mỗi đòn 0.5–2% → **1.5–6%** (trùm giữ 1.2%) | 26 → **50** | 1.55 | **2.85** | 1.37 <sub>1.3·1.5</sub> / 3.08 <sub>3.0·3.1</sub> / 5.51 <sub>5.7·5.3</sub> | 2.8–3.1 | ĐẠT | kỹ năng một mình tới ≈1.74; w20 1.37 thấp (phán quyết tích chậm), w60 5.51 cao; phụ thuộc giả định số phán quyết |
+| Vàng | Wall Projector (`wallgen`) | 2 | kỹ năng | tường nổ ×7 → **×18** ST (Tường Vàng vẫn ×6 của số đó) | 26 (giữ) | 1.19 | **1.74** | 1.61 <sub>2.1·1.2</sub> / 1.85 <sub>2.4·1.4</sub> / 1.79 <sub>2.7·1.2</sub> | 2.8–3.1 | CHƯA (dưới dải) | CHƯA vào dải: nổ tường bão hoà (×16 → 1.66, ×18 → 1.74); giá trị chính là CHẶN quái (không đo) → dừng, không bù ST gốc |
+| Vàng | Hydra (`hydra`) | 2 | kỹ năng | mỗi viên (0.35 + 0.08×★)D → **(0.77 + 0.176×★)D**, 7★ 0.91 → **2.0** · SÚNG MÁY 0.45D → **1.0D** mỗi viên | 48 → **40** (trả về số trước 10/11) | 0.95 | **1.48** | 1.13 <sub>1.2·1.1</sub> / 1.89 <sub>2.1·1.7</sub> / 1.52 <sub>1.7·1.4</sub> | 2.8–3.1 | đạt đích quy đổi 1.46 — CHƯA CHẮC, cần đo trận thật | bài tĩnh chấm oan → đích quy đổi 1.46; cần đo trận thật |
+| Vàng | Nine-Tail (`cuuvi`) | 2 | kỹ năng | hồ hoả ×(2 + 0.5×★) → **×(10 + 2.5×★)** · trùm: +1 đuôi mỗi 8% → **2%** máu · mỗi đuôi +5% → **+10%** tốc bắn | 24 (giữ mức chiều nay) | 0.39 | **0.60** | 0.71 <sub>0.5·1.0</sub> / 0.59 <sub>0.5·0.7</sub> / 0.52 <sub>0.4·0.7</sub> | 2.8–3.1 | đạt đích quy đổi 0.59 — CHƯA CHẮC, cần đo trận thật | giữ 24 vì ở 20 chỉ đo được 0.46; bài tĩnh ít quái bị giết nên hồ hoả hiếm khi xả → đích quy đổi 0.59; cần đo trận thật |
+| Vàng | Fusion Archive (`luutru`) | 2 | kỹ năng | mỗi điểm +2% → **+10%** ST · mốc 10 / 20 / 30 / 40: +15% tốc / +8% chí mạng / +25% ST / +40% STCM → **+100% / +25% / +150% / +200%** | 28 → **24** (trả về số trước 10/11) | 0.82 | **1.34** | 0.77 <sub>0.8·0.7</sub> / 1.39 <sub>1.5·1.3</sub> / 2.23 <sub>2.5·2.0</sub> | 2.8–3.1 | đạt đích quy đổi 1.38 — CHƯA CHẮC, cần đo trận thật | bài tĩnh chấm oan → đích quy đổi 1.38; cần đo trận thật |
+| Vàng | Werewolf (`soi`) | 1 | kỹ năng + gốc | đánh lan 70% → **100%** (thức tỉnh 85% → **120%**) | 29 → **45** | 1.68 | **2.64** | 2.02 <sub>2.6·1.6</sub> / 3.13 <sub>3.9·2.5</sub> / 2.92 <sub>3.6·2.3</sub> | 2.5–2.8 | ĐẠT | đòn chính bắn thẳng không có hệ số kỹ năng → phần thiếu bù ST gốc |
+| Vàng | Eclipse (`nhatthuc`) | 1 | kỹ năng | tia NGÀY ×2.2–3.8 → **×4.6–8.0** · nón ĐÊM ×1 → **×2.1** · cháy 60% → **125%** | 15 (giữ) | 1.47 | **2.66** | 2.01 <sub>2.4·1.7</sub> / 2.88 <sub>3.1·2.6</sub> / 3.26 <sub>3.9·2.8</sub> | 2.5–2.8 | ĐẠT | ụ tham chiếu: thước đo cố định ở bộ số cũ của Eclipse |
+
+Không chỉnh (đo lại để đối chiếu, cùng thước): Cryo Reactor 2.24 · Genesis Core 1.56.
+
+**Đọc bảng — các điểm cần biết:**
+- **ĐỎ: cả 7 ụ trong dải, không ụ nào tăng ST gốc** (Leviathan còn trả ST gốc 34 → 24). Leviathan đạt dải nhờ bọt nổ lan + TIDAL BREATH chứ không tăng % mỗi điểm ABYSS (giữ 6%): tăng % ABYSS chỉ đẩy cuối trận (w60) mà đầu trận gần như không đổi.
+- **VÀNG đạt dải:** Eclipse, Werewolf, Purifier, Nemesis, Salvo, Quantum Choir, Star Cannon, Blood Circuit (+ Ember giữ nguyên; Compass giữ nguyên, trên dải). **Chỉ bằng kỹ năng:** Eclipse, Purifier, Salvo, Star Cannon, Wall Projector, Hydra, Nine-Tail, Fusion Archive. **Kỹ năng + bù ST gốc** (kỹ năng không đủ): Werewolf, Quantum Choir, Nemesis, Blood Circuit, Prism Thief.
+- **CHƯA vào dải:** Wall Projector 1.74 (kỹ năng gây sát thương đã bão hoà; giá trị chính là chặn quái, không đo → dừng, không bù ST gốc) · Prism Thief 2.71 (đã dùng cả kỹ năng lẫn trần ×2.5 ST gốc).
+- **Điểm KHÔNG tuyến tính theo hệ số** (đòn dồn vào quái nhỏ thừa sát thương): hệ số ×2 thường chỉ cho điểm ×1.2–1.5. Trong trận thật gặp quái trâu (wave cao, trùm) sức mạnh thật có thể tăng NHIỀU hơn điểm đo — nhất là các hệ số tăng mạnh: Nine-Tail hồ hoả ×5, Fusion Archive %/điểm ×5, Star Cannon mốc ×3–4, Wall Projector ×2.6, Overlord dư chấn, Nemesis % máu ×3. **Nên đo trận bot trước khi xuất bản.**
+- **Lệch theo mốc (quá ±35% so với giữa dải):** Blood Circuit w20 1.16 / w60 9.43 · Nemesis w20 1.37 / w60 5.51 · Leviathan w20 3.35 (sát mép) · Overlord w60 6.28 (đúng mép).
+- **Phụ thuộc giả định cộng dồn:** Blood Circuit (số Máu), Prism Thief (số lần hợp thể), Leviathan (điểm ABYSS), Nemesis (số phán quyết), Fusion Archive (điểm), Lucky Slot (điểm quả).
+- Black Hole: bài A và B lệch ×3.9 (8.5 · 2.2 ở w20) — điểm tổng 4.83 chỉ là trung bình nhân, độ tin thấp.
+- Bài đo không tính quái bị Leviathan NUỐT (chết không qua sát thương) → Leviathan thật nhỉnh hơn số đo.
+

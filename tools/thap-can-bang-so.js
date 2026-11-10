@@ -1,6 +1,6 @@
 // TURRET MERGE — CÂN BẰNG SỐ HOÁ ụ VÀNG (33) / ĐỎ (11 trong roster): mỗi ụ đặt trong BỘ PHÙ HỢP NHẤT, so trong CÙNG BẬC.
 //   Tài liệu + bảng: docs/demo-hop-tuong/tocban/CAN-BANG-VANG-DO.md
-//   node tools/thap-can-bang-so.js [ra=/thư/mục] [chi=id,id] [T0=40] [hat=4242,777]     → đo, ghi <ra>/can-bang.json
+//   node tools/thap-can-bang-so.js [ra=/thư/mục] [chi=id,id] [T0=40] [hat=4242,777] [v0=<file.json lần đo trước>]     → đo, ghi <ra>/can-bang.json
 //   HS=1 node tools/thap-can-bang-so.js ra=… ten=can-bang-b                               → bài B: quái thường máu ×1 (mặc định bài A: ×4)
 //   node tools/thap-can-bang-so.js kt                                                    → tự kiểm chéo công thức (dmgU × tocU × crit) với số đo
 // CÁCH ĐO (tất định, không giao diện — nạp code game thật bằng vm như tools/thap-sim-vaitro.js, nhanh hơn Playwright ~50×):
@@ -15,6 +15,10 @@
 const fs = require('fs'), path = require('path'), vm = require('vm');
 const { taoMoiTruong: taoGoc, R } = require('./thap-sim-vaitro.js');
 const REF = process.env.REF || 'nhatthuc'; // ụ Vàng Tấn công tham chiếu (bắn thẳng, không điều kiện, gần trung vị Vàng TC)
+// ĐƠN VỊ ĐO CỐ ĐỊNH (đợt 2, 10/11): ụ tham chiếu R luôn đo với BỘ SỐ GỐC của Eclipse TRƯỚC đợt 2 (REF_GOC) — để chỉnh số của chính Eclipse không làm đổi thước đo.
+//   Bàn R (v0, bàn gốc, bộ hỗ trợ/đặc biệt đặt trên bàn R) dùng REF_GOC; bộ Tấn công (kể cả bộ 12 Eclipse) dùng số thật trong game. REF_GOC=0 → dùng số thật ở mọi nơi (cách đo cũ).
+const REF_GOC = process.env.REF_GOC === '0' || REF !== 'nhatthuc' ? null : '({ dmg: 15, DEM_K: 1.0, CHAY_K: 0.6, d: (T) => sao7(T, [2.2, 2.4, 2.6, 2.8, 3.1, 3.4, 3.8]) })';
+let NM = { k: 1, tran: 1 }; // Nemesis: giả định phán quyết ST theo hằng thật (bước +6% → BUOC_DMG, trần TRAN_DMG)
 const KB = [{ ten: 'w20', w: 20, S: 3, lv: 2, mana: 200 }, { ten: 'w40', w: 40, S: 5, lv: 4, mana: 400 }, { ten: 'w60', w: 60, S: 7, lv: 5, mana: 600 }];
 
 function taoMoiTruong(hat) {
@@ -94,7 +98,7 @@ const KIT = {
   wallgen: { kho: 2, lk: 'tường tự dựng (dễ) nhưng Tường Vàng cần ghép 2 Máy Dựng Tường', ly: 'chuẩn; giá trị chặn quái không tính', gd: 'không tính Tường Vàng khi ghép', pa: [boTC('wallgen'), boR('wallgen', [6, 8])], hc: 'chặn quái (khống chế) không vào DPS' },
   hydra: { kho: 2, lk: 'không nâng mana; cuồng nộ tốn mana gấp đôi mỗi lần, phải để dành', ly: 'chuẩn; tự kích khi đủ mana (mana giữ 200/400/600)', pa: [boTC('hydra')] },
   cuuvi: { kho: 2, lk: 'phải GIẾT để mọc đuôi (9 đuôi mới xả)', ly: 'chuẩn; đuôi tích tự nhiên theo số quái bị giết trong bài đo', pa: [boTC('cuuvi')] },
-  nemesis: { kho: 2, lk: 'tích PHÁN QUYẾT vĩnh viễn theo từng ụ, mất khi ghép', ly: 'chuẩn; đòn % máu tối đa hợp trùm', gd: 'phán quyết: tốc +20/40/60%, ST +12/40/100% (w20/40/60)', pa: [boTC('nemesis', (i, k) => ({ nmToc: [0.2, 0.4, 0.6][k], nmDmg: [0.12, 0.4, 1][k] }))], sua2: ['SKILLS.nemesis.TRAN_TRUM = 0', 'SKILLS.nemesis.TRAN_TRUM = 0.012'], hc: 'đòn % máu tối đa phồng khi Trùm luôn có mặt: điểm = trung bình nhân của (bài chuẩn) và (bài tắt % máu lên Trùm); cả 2 số ghi ở cột ghi chú' },
+  nemesis: { kho: 2, lk: 'tích PHÁN QUYẾT vĩnh viễn theo từng ụ, mất khi ghép', ly: 'chuẩn; đòn % máu tối đa hợp trùm', gd: 'phán quyết: tốc +20/40/60%, ST = 2 / 6,7 / 16,7 lần phán quyết ST × bước (bước 6% → +12/40/100%), kẹp trần (w20/40/60)', pa: [boTC('nemesis', (i, k) => ({ nmToc: [0.2, 0.4, 0.6][k], nmDmg: Math.min(NM.tran, [0.12, 0.4, 1][k] * NM.k) }))], sua2: ['SKILLS.nemesis.TRAN_TRUM = 0', 'SKILLS.nemesis.TRAN_TRUM = 0.012'], hc: 'đòn % máu tối đa phồng khi Trùm luôn có mặt: điểm = trung bình nhân của (bài chuẩn) và (bài tắt % máu lên Trùm); cả 2 số ghi ở cột ghi chú' },
   aten: { kho: 2, lk: 'cần ụ gây độc đi kèm (×4 chỉ khi quái trúng độc)', ly: '9 Purifier + 3 Toxic Pool (độc) + 3 hỗ trợ', pa: [boTC('aten', null, { kem: { 0: 'vungdoc', 4: 'vungdoc', 12: 'vungdoc' } }), boTC('aten', null, { kem: { 0: 'vungdoc', 4: 'vungdoc', 10: 'vungdoc', 14: 'vungdoc', 12: 'vungdoc' } })] },
   railgun: { kho: 3, lk: 'BINGO: phải xếp đủ hàng 5 / cột 3 toàn Salvo', ly: 'kín 15 ô Salvo (3 hàng + 5 cột bingo) hoặc 2 hàng bingo + hàng giữa hỗ trợ', pa: [(k, S) => ({ cells: tat(15).map(p => ({ o: p, id: 'railgun', s: S })) }), boTC('railgun', null, { ht: [[6, 'dongbo'], [7, 'hasao'], [8, 'thanhdia']] })] },
   ngoisao: { kho: 3, lk: 'phải giữ TỔNG SAO bàn đúng mốc 10/50 (ghép là lệch mốc)', ly: 'chuẩn, chỉnh sao vài ô để tổng sao ĐÚNG mốc: 50★ (w20) · 80★ (w40) · 100★ (w60)', gd: 'tổng sao đúng mốc 50 / 80 / 100', pa: [(k, S) => { const c = boTC('ngoisao')(k, S).cells; const d = [5, 5, -5][k]; const ds = c.filter(x => x.id === 'ngoisao'); for (let i = 0; i < Math.abs(d); i++) ds[i].s += Math.sign(d); return { cells: c }; }, boTC('ngoisao')] },
@@ -151,9 +155,13 @@ const gm = (a, b) => Math.sqrt(Math.max(1e-9, a) * Math.max(1e-9, b));
 function doTat(opt) {
   const HAT = opt.hat, CTX = HAT.map(h => taoMoiTruong(h)), T0 = opt.T0, ra = { ngay: new Date().toISOString(), REF, T0, hat: HAT, kb: KB, v0: [], u: {} };
   const ro = R(CTX[0], `G.roster.filter(r => ['vang', 'do'].includes(r.bac)).map(r => ({ id: r.id, bac: r.bac, ten: TEXT.turret[r.id] ? TEXT.turret[r.id].name : r.id, vai: SKILLS[r.id].vai }))`);
-  const V = (c, n) => { const rs = CTX.slice(0, n || CTX.length).map((x, i) => do1(x, Object.assign({}, c, { hat: HAT[i] }), T0)); return { V: tb(rs.map(r => r.V)), theo: rs[0].theo, giet: tb(rs.map(r => r.giet)), loi: rs.find(r => r.loi) ? rs.find(r => r.loi).loi : null }; };
-  const nho = {}, VR = (k, cells) => { const key = k + ':' + cells.map(c => c.o + '.' + c.s).join(','); if (nho[key] == null) nho[key] = V(cauHinh({}, {}, k, cells)).V; return nho[key]; }; // bàn gốc R (nhớ lại theo bố cục sao)
-  for (let k = 0; k < 3; k++) ra.v0.push(VR(k, gocR(KB[k].S)) / 15);
+  for (const x of CTX) R(x, `var _REF_THAT = { dmg: SKILLS['${REF}'].dmg, DEM_K: SKILLS['${REF}'].DEM_K, CHAY_K: SKILLS['${REF}'].CHAY_K, d: SKILLS['${REF}'].d }, _REF_GOC = ${REF_GOC || '_REF_THAT'};`);
+  const datRef = (ref) => { for (const x of CTX) R(x, `Object.assign(SKILLS['${REF}'], ${ref ? '_REF_GOC' : '_REF_THAT'})`); };
+  ra.refGoc = REF_GOC || 'số thật'; NM = { k: R(CTX[0], 'SKILLS.nemesis.BUOC_DMG / 0.06'), tran: R(CTX[0], 'SKILLS.nemesis.TRAN_DMG') };
+  const V = (c, n, ref) => { datRef(ref); const rs = CTX.slice(0, n || CTX.length).map((x, i) => do1(x, Object.assign({}, c, { hat: HAT[i] }), T0)); return { V: tb(rs.map(r => r.V)), theo: rs[0].theo, giet: tb(rs.map(r => r.giet)), loi: rs.find(r => r.loi) ? rs.find(r => r.loi).loi : null }; };
+  const nho = {}, VR = (k, cells) => { const key = k + ':' + cells.map(c => c.o + '.' + c.s).join(','); if (nho[key] == null) nho[key] = V(cauHinh({}, {}, k, cells), undefined, true).V; return nho[key]; }; // bàn gốc R (nhớ lại theo bố cục sao)
+  if (opt.v0) { ra.v0 = opt.v0.slice(); for (let k = 0; k < 3; k++) nho[k + ':' + gocR(KB[k].S).map(c => c.o + '.' + c.s).join(',')] = opt.v0[k] * 15; } // v0=<file.json>: dùng lại v0 của lần đo trước (cùng bài A/B, cùng REF_DMG) — dò số nhanh
+  else for (let k = 0; k < 3; k++) ra.v0.push(VR(k, gocR(KB[k].S)) / 15);
   for (const r of ro) {
     if (opt.chi && !opt.chi.includes(r.id)) continue;
     const kit = KIT[r.id]; if (!kit) { process.stderr.write('!thiếu bộ ' + r.id + '\n'); continue; }
@@ -162,14 +170,14 @@ function doTat(opt) {
       const ds = [];
       for (let p = 0; p < kit.pa.length; p++) {
         try {
-          const x = kit.pa[p](k, KB[k].S), c = cauHinh(kit, x, k, x.cells), m = V(c, x.goc ? undefined : Math.min(3, CTX.length));
+          const x = kit.pa[p](k, KB[k].S), c = cauHinh(kit, x, k, x.cells), m = V(c, x.goc ? undefined : Math.min(3, CTX.length), !!x.goc);
           let E, vg = null;
           if (x.goc) { // bàn R: giá trị CẬN BIÊN của ô X so với giá trị cận biên của ụ R ở đúng các ô đó (bàn gốc − bàn bỏ trống các ô đó)
             const bo = x.oX || [6, 8], vt = VR(k, x.goc.filter(q => !bo.includes(q.o))); vg = VR(k, x.goc);
             E = x.ao ? (m.V - vg) / (x.ao * (vg - vt) / bo.length) : (m.V - vt) / (vg - vt); }
           else E = m.V / (15 * ra.v0[k]);
           const o = { pa: p, V: Math.round(m.V), Vg: vg && Math.round(vg), E, chinh: Math.round(m.theo[r.id] || 0), giet: +m.giet.toFixed(2), loi: m.loi, deck: c.deck };
-          if (kit.sua2) { R(CTX[0], kit.sua2[0]); for (const cx of CTX) R(cx, kit.sua2[0]); const m2 = V(c, Math.min(3, CTX.length)); for (const cx of CTX) R(cx, kit.sua2[1]); o.E1 = E; o.E2 = m2.V / (15 * ra.v0[k]); o.E = gm(o.E1, o.E2); }
+          if (kit.sua2) { R(CTX[0], kit.sua2[0]); for (const cx of CTX) R(cx, kit.sua2[0]); const m2 = V(c, Math.min(3, CTX.length), !!x.goc); for (const cx of CTX) R(cx, kit.sua2[1]); o.E1 = E; o.E2 = m2.V / (15 * ra.v0[k]); o.E = gm(o.E1, o.E2); }
           ds.push(o);
         } catch (e) { process.stderr.write(r.id + ' k' + k + ' pa' + p + ' LỖI ' + String(e && e.stack || e).slice(0, 300) + '\n'); }
       }
@@ -204,7 +212,7 @@ if (require.main === module) {
   if (a.includes('kt')) { const L = kiemCheo(); console.log(JSON.stringify(L, null, 1)); const dir = lay('ra', null); if (dir) fs.writeFileSync(path.join(dir, 'kiem-cheo.json'), JSON.stringify(L, null, 1)); }
   else {
     const dir = lay('ra', '/tmp'), chi = lay('chi', null);
-    const d = doTat({ T0: +lay('T0', 60), hat: lay('hat', '4242,777,31337,99,2024,5150,8086,1311').split(',').map(Number), chi: chi && chi.split(',') });
+    const d = doTat({ T0: +lay('T0', 60), hat: lay('hat', '4242,777,31337,99,2024,5150,8086,1311').split(',').map(Number), chi: chi && chi.split(','), v0: lay('v0', null) ? JSON.parse(fs.readFileSync(lay('v0'), 'utf8')).v0 : null });
     fs.mkdirSync(dir, { recursive: true }); fs.writeFileSync(path.join(dir, lay('ten', 'can-bang') + '.json'), JSON.stringify(d));
     for (const u of Object.values(d.u)) console.log(u.bac, u.id.padEnd(13), u.vai, 'kho' + u.kho, u.kb.map(x => 'E=' + x.E.toFixed(2) + ' [' + x.cac.join(',') + '] V=' + x.V + ' chinh=' + x.chinh + ' giet=' + x.giet + (x.loi ? ' LOI ' + x.loi : '')).join(' | '));
     console.log('v0', d.v0.map(x => Math.round(x)).join(' / '));

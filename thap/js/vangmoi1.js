@@ -294,7 +294,7 @@ HU.vm1Tia = { // (cũ — thay bằng HU.vm1Vet) giữ cho ảnh chụp / bản 
 //      7★: +25% tốc bắn. Tính lại mỗi khung (chỉ đọc bàn) → tất định online.
 // =====================================================================================================
 SKILLS.hopca = { // 09/11 gánh hậu kỳ (đơn mục tiêu, Hoà âm khó đủ): ST 15 → 24, tốc 1.0 → 2.0, mỗi Hoà âm +25% → +35% ST, mục tiêu thứ 2 50% → 80%
-  vai: 'tc', dmg: 24, toc: 2.0, nham: 'dau', HOA_DMG: 0.35, HAI_K: 0.8,
+  vai: 'tc', dmg: 32, toc: 2.0, nham: 'dau', HOA_DMG: 1.0, HAI_K: 0.8, // 10/11 đợt 2 (mạnh nhờ kỹ năng): mỗi Hoà âm +35% → +100% ST, phần thiếu bù ST gốc 24 → 32
   hoa(B, T) { let n = 0; if (!B || !B.t) return 0; for (const X of keCan(B, T.o)) if (X && X.sao === T.sao && !X.st.da) n++; return Math.min(4, n); },
   // thưởng thuần theo số Harmony h (+ 7★)
   thuong(h, sao) { return { dmg: this.HOA_DMG * h, cdmg: 0.08 * h + (h >= 4 ? 0.5 : 0), toc: (h >= 3 ? 0.30 : 0) + (sao >= 7 ? 0.25 : 0), hai: h >= 2, vang: h >= 4 }; },
@@ -331,14 +331,14 @@ SKILLS.hopca = { // 09/11 gánh hậu kỳ (đơn mục tiêu, Hoà âm khó đ�
 //      40 +40% ST chí mạng · 50/60/70 thêm +20/+30/+40% ST. Trần 40 (LV9) → 50 (LV11) → 60 (LV13) → 70 (LV15). Ngẫu nhiên: rngHat(hạt trận + bàn + số lần ghép).
 // =====================================================================================================
 SKILLS.luutru = { // 09/11 gánh hậu kỳ (đơn mục tiêu, điểm chia ngẫu nhiên cho 1 Archive): ST 15 → 24, tốc 1.0 → 2.0, mỗi điểm +1% → +2% ST
-  vai: 'tc', dmg: 28, toc: 2.0, nham: 'dau', DIEM: 0.02, // 10/11 tăng nhẹ ST 24 → 28
+  vai: 'tc', dmg: 24, toc: 2.0, nham: 'dau', DIEM: 0.10, // 10/11 đợt 2 (mạnh nhờ kỹ năng): ST gốc 28 → 24 (trả về), mỗi điểm 2% → 10%, mốc 10/20/30/40: +15% tốc / +8% chí mạng / +25% ST / +40% STCM → +100% / +25% / +150% / +200%
   tran(T) { const k = VM1.k(T); return k >= 6 ? 70 : k >= 4 ? 60 : k >= 2 ? 50 : 40; },
-  MOC: [[10, 'toc', 0.15], [20, 'crit', 0.08], [30, 'dmg', 0.25], [40, 'cdmg', 0.40], [50, 'dmg', 0.20], [60, 'dmg', 0.30], [70, 'dmg', 0.40]],
+  MOC: [[10, 'toc', 1.0], [20, 'crit', 0.25], [30, 'dmg', 1.5], [40, 'cdmg', 2.0], [50, 'dmg', 0.20], [60, 'dmg', 0.30], [70, 'dmg', 0.40]],
   thuong(n) { const r = { dmg: this.DIEM * n, toc: 0, crit: 0, cdmg: 0, moc: 0 }; for (const [m, k, v] of this.MOC) if (n >= m) { r[k] += v; r.moc = m; } return r; },
   mo(T) {
     const cap = this.tran(T), n = Math.min(cap, T.kho || 0), t = this.thuong(n);
     return 'Charges ' + n + '/' + cap + ' → +' + Math.round(t.dmg * 100) + '% damage' + (t.toc ? ', +' + Math.round(t.toc * 100) + '% fire rate' : '') + (t.crit ? ', +' + Math.round(t.crit * 100) + '% crit chance' : '') + (t.cdmg ? ', +' + Math.round(t.cdmg * 100) + '% crit damage' : '') +
-      ' · every real merge on your board gives +1 charge to ONE random Fusion Archive (it flies in) · Merging an Archive passes all its charges to your Archive with the most charges · each charge +' + Math.round(this.DIEM * 100) + '% damage · 10: +15% fire rate · 20: +8% crit chance · 30: +25% damage · 40: +40% crit damage · 50/60/70: +20/30/40% damage · max 40 (LV11 50, LV13 60, LV15 70) · Merge King, Copycat and Teleporter are not merges';
+      ' · every real merge on your board gives +1 charge to ONE random Fusion Archive (it flies in) · Merging an Archive passes all its charges to your Archive with the most charges · each charge +' + Math.round(this.DIEM * 100) + '% damage · 10: +100% fire rate · 20: +25% crit chance · 30: +150% damage · 40: +200% crit damage · 50/60/70: +20/30/40% damage · max 40 (LV11 50, LV13 60, LV15 70) · Merge King, Copycat and Teleporter are not merges';
   },
   sinh(G, T) { if (T.kho == null) T.kho = 0; },
   capNhat(G, B, T) {

@@ -306,9 +306,9 @@ SKILLS.railgun = { // Railgun (Removal Tee): BINGO — hàng ngang ĐẦY Railgu
   },
   // SALVO BATTERY (tên cũ Railgun — đổi tên + hình 08/11, người dùng duyệt TOM-TAT mục 10): giữ BINGO hàng/cột (ụ băng vẫn tính, ô đá phá chuỗi)
   //   + thưởng DỞ DANG: HÀNG 3/5 +25% · 4/5 +65% · 5/5 +200% sát thương · CỘT 2/3 +35% · 3/3 +150% tốc bắn (mỗi Salvo trong hàng/cột đó; 1 hàng + 1 cột cùng lúc được)
-  BINGO_DMG: 2.0, BINGO_TOC: 1.5,
-  HANG: [0, 0, 0, 0.25, 0.65, 2.0], COT: [0, 0, 0.35, 1.5],
-  mo(T) { const b = this.bingo(G.ban[T.ban], T); return 'Salvos in this row ' + b.ngang + '/5 → +' + Math.round(this.HANG[b.ngang] * 100) + '% damage · in this column ' + b.doc + '/3 → +' + Math.round(this.COT[b.doc] * 100) + '% fire rate · row 3/5 +25%, 4/5 +65%, 5/5 +200% damage · column 2/3 +35%, 3/3 +150% fire rate · only Salvo Batteries count, a stone breaks the line'; },
+  BINGO_DMG: 2.4, BINGO_TOC: 1.5,
+  HANG: [0, 0, 0, 0.25, 0.65, 2.4], /* 10/11 đợt 2: đủ hàng +200% → +240% */ COT: [0, 0, 0.35, 1.5],
+  mo(T) { const b = this.bingo(G.ban[T.ban], T); return 'Salvos in this row ' + b.ngang + '/5 → +' + Math.round(this.HANG[b.ngang] * 100) + '% damage · in this column ' + b.doc + '/3 → +' + Math.round(this.COT[b.doc] * 100) + '% fire rate · row 3/5 +25%, 4/5 +65%, 5/5 +240% damage · column 2/3 +35%, 3/3 +150% fire rate · only Salvo Batteries count, a stone breaks the line'; },
   capNhat(G, B, T) {
     const b = this.bingo(B, T);
     T.buf.dmg += this.HANG[b.ngang] || 0;
@@ -373,7 +373,7 @@ SKILLS.orbital = { // Vệ Tinh (Mafdet) — ĐẶC BIỆT: KHÔNG bắn thườ
 SKILLS.wallgen = { // Máy Dựng Tường (Cleopatra): định kỳ dựng tường ánh sáng chặn đường rồi nổ;
   //   DCDW Cleopatra: khi GHÉP Máy Dựng Tường → TƯỜNG VÀNG mạnh hơn hẳn (đứng 6 s, nổ ×6 sát thương tường thường, vùng nổ to) trước quái đầu
   vai: 'tc', dmg: 26, toc: 1,
-  VANG_SONG: 6, VANG_K: 6,
+  VANG_SONG: 6, VANG_K: 6, NO_K: 18, /* 10/11 đợt 2 (mạnh nhờ kỹ năng): ×7 → ×18 */ // NO_K: tường nổ × ST
   mo: (T) => 'Wall holds ' + (2.4 + 0.3 * T.sao).toFixed(1) + 's, then explodes · on merge: GOLDEN WALL holds 6s, explodes ×6',
   ghep(G, B, a, b) { // TƯỜNG VÀNG (mọi chế độ; online: kỹ năng khi ghép chạy y hệt ở 2 máy)
     const T0 = a.id === 'wallgen' ? a : b, E = quaiDau(B);
@@ -381,7 +381,7 @@ SKILLS.wallgen = { // Máy Dựng Tường (Cleopatra): định kỳ dựng tư�
     if (E) { pi = E.p; s = Math.min(G.duong[pi].len - 10, E.s + 34); }
     else { pi = G.duong.findIndex(p => p.ban === B.i); if (pi < 0) pi = 0; s = G.duong[pi].len * 0.55; }
     const [x, y, goc] = viTri(G.duong[pi], s);
-    G.hu.push({ k: 'tuong', t: 0, song: this.VANG_SONG, p: pi, s, x, y, goc, T: null, B, vang: true, dmg: dmgU(T0) * 7 * this.VANG_K * (1 + 0.85 * T0.sao) / (1 + 0.85 * (T0.sao - 1)) });
+    G.hu.push({ k: 'tuong', t: 0, song: this.VANG_SONG, p: pi, s, x, y, goc, T: null, B, vang: true, dmg: dmgU(T0) * this.NO_K * this.VANG_K * (1 + 0.85 * T0.sao) / (1 + 0.85 * (T0.sao - 1)) });
     FX.sang(0.25, '#ffd23f'); FX.vong1(x, y, 10, 70, '#ffd23f', 0.5, 4); if (!B.ai) SND.thucTinh();
   },
   capNhat(G, B, T, dt) {
@@ -394,7 +394,7 @@ SKILLS.wallgen = { // Máy Dựng Tường (Cleopatra): định kỳ dựng tư�
       const p = G.duong[E.p], s = Math.min(p.len - 10, E.s + 30);
       const [x, y, goc] = viTri(p, s);
       T.nap = 0; giat(T, 0.8); chopNong(T, 26); SND.nap();
-      G.hu.push({ k: 'tuong', t: 0, song: 2.4 + 0.3 * T.sao, p: E.p, s, x, y, goc, T, B, dmg: dmgU(T) * 7 });
+      G.hu.push({ k: 'tuong', t: 0, song: 2.4 + 0.3 * T.sao, p: E.p, s, x, y, goc, T, B, dmg: dmgU(T) * this.NO_K });
     }
     return true;
   },
@@ -410,7 +410,7 @@ SKILLS.blackhole = {
   cd: 40, GIA: 30,
   ky: (T) => 10 - 0.5 * (T.sao - 1),
   r: (T) => 64 + 4 * T.sao,
-  nghien: (T) => 2.0 + 0.6 * T.sao,
+  nghien: (T) => 3.2 + 0.95 * T.sao, // 10/11 đợt 2 (mạnh nhờ kỹ năng): 2.0 + 0.6×sao → 3.2 + 0.95×sao
   mo: (T) => 'Every ' + SKILLS.blackhole.ky(T).toFixed(1) + 's a black hole (radius ' + SKILLS.blackhole.r(T) + ' px) holds enemies in place 1.2s (elites 0.6s, bosses not held), then crushes for ' + Math.round(SKILLS.blackhole.nghien(T) * 100) + '% damage (bosses 50%)' + (T.sao >= 3 ? ' · TAP (30 mana, cooldown 40s): SINGULARITY COLLAPSE — next hole +24 px, holds 1s longer, +300% crush, bosses lose 0.5% max HP' + (T.bhA ? ' (READY)' : '') : ' · tap skill unlocks at 3★'),
   capNhat(G, B, T, dt) {
     if (T.sao >= 3) T.nap = Math.min(1, (T.nap || 0) + dt / this.cd); else T.nap = 0;
@@ -457,8 +457,8 @@ SKILLS.blackhole = {
 };
 SKILLS.overlord = { // Overlord (Jacheongbi): nạp chậm, đầy thì bắn siêu sấm nổ diện rộng
   // 09/11 TỐC BẮN: giữ bản sắc nạp chậm nhưng rút ngắn: nạp (7 − 0.5/★) → (5.6 − 0.4/★) giây, ST 28 → 22.4 (DPS giữ)
-  vai: 'tc', dmg: 22.4, toc: 1, NAP: 5.6, NAP_SAO: 0.4, napS(T) { return this.NAP - this.NAP_SAO * (T.sao - 1); },
-  mo: (T) => 'Charge ' + (SKILLS.overlord.napS(T) / nhip3(T)).toFixed(1) + 's · thunder ×9 in 92 px · aftershock arcs ×2 to 4 more',
+  vai: 'tc', dmg: 22.4, toc: 1, NAP: 5.1, NAP_SAO: 0.4, SAM_K: 16, DU_K: 6, DU_N: 8, /* 10/11 đợt 2 (mạnh nhờ kỹ năng): sấm ×9 → ×16, dư chấn ×2 tới 4 → ×6 tới 8 quái, nạp 5.6 → 5.1 s */ napS(T) { return this.NAP - this.NAP_SAO * (T.sao - 1); },
+  mo: (T) => 'Charge ' + (SKILLS.overlord.napS(T) / nhip3(T)).toFixed(1) + 's · thunder ×' + SKILLS.overlord.SAM_K + ' in 92 px · aftershock arcs ×' + SKILLS.overlord.DU_K + ' to ' + SKILLS.overlord.DU_N + ' more',
   capNhat(G, B, T, dt) {
     const E = quaiDau(B);
     xoayDau(T, E, dt);
@@ -467,7 +467,7 @@ SKILLS.overlord = { // Overlord (Jacheongbi): nạp chậm, đầy thì bắn si
       const c = tamU(T);
       if (Math.abs(gocLech(T.goc, Math.atan2(E.y - c.y, E.x - c.x))) > 0.2) return true;
       T.nap = 0; giat(T, 2.2); const [x, y] = chopNong(T, 44); phutKhoi(x, y, 3);
-      G.hu.push({ k: 'sam', t: 0, song: 0.7, x: E.x, y: E.y, x0: x, y0: y, r: 92, dmg: dmgU(T) * 9, B, T, da: false, seed: Math.random() * 99 });
+      G.hu.push({ k: 'sam', t: 0, song: 0.7, x: E.x, y: E.y, x0: x, y0: y, r: 92, dmg: dmgU(T) * this.SAM_K, B, T, da: false, seed: Math.random() * 99 });
       SND.sam();
     }
     return true;
@@ -718,8 +718,8 @@ HU.sam = { // overlord: tia sấm khổng lồ + chớp màn hình
       FX.vong1(o.x, o.y, 10, o.r, '#fff27a', 0.4, 6); FX.tiaLua(o.x, o.y, 30, '#fff27a', 320, 14);
       // AFTERSHOCK: sét dư chấn nhảy tới 4 quái gần nhất ngoài tâm nổ (×2 mỗi con) — phần "wow" bậc ĐỎ họ Energy
       // (QA vàng-đỏ: trước đây o.dmg/6 = ×1.5 và trúng lại cả quái đã dính nổ — chữ kỹ năng hứa ×2 cho 4 quái KHÁC)
-      const ds = dsMucTieu(o.B).filter(E => { const d = Math.hypot(E.x - o.x, E.y - o.y); return !E.chet && d < 240 && d > o.r + E.d.co * 0.25; }).sort((a, b) => Math.hypot(a.x - o.x, a.y - o.y) - Math.hypot(b.x - o.x, b.y - o.y)).slice(0, 4);
-      if (ds.length) { for (const E of ds) trung(E, o.dmg * 2 / 9, { B: o.B, mau: '#fff27a', phu: true }); G.hu.push({ k: 'set', t: 0, song: 0.3, x: o.x, y: o.y, ds: ds.map(Q => ({ Q, x: Q.x, y: Q.y })), seed: Math.random() * 999 }); }
+      const ds = dsMucTieu(o.B).filter(E => { const d = Math.hypot(E.x - o.x, E.y - o.y); return !E.chet && d < 240 && d > o.r + E.d.co * 0.25; }).sort((a, b) => Math.hypot(a.x - o.x, a.y - o.y) - Math.hypot(b.x - o.x, b.y - o.y)).slice(0, SKILLS.overlord.DU_N);
+      if (ds.length) { for (const E of ds) trung(E, o.dmg * SKILLS.overlord.DU_K / SKILLS.overlord.SAM_K, { B: o.B, mau: '#fff27a', phu: true }); G.hu.push({ k: 'set', t: 0, song: 0.3, x: o.x, y: o.y, ds: ds.map(Q => ({ Q, x: Q.x, y: Q.y })), seed: Math.random() * 999 }); }
     }
   },
   ve(ctx, o, R) {

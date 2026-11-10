@@ -80,7 +80,7 @@ ok(R('okC && N && N.id === "bienmau" && !(N.pf > 0) && N.pm >= 0 && N.pm < 4 && 
 console.log('Chỉ số theo số hợp thể');
 tran(DECK);
 R(`var D = PR(7, 1, 4, 2), K = PR(8, 0, 0, 2); K.pf = 3; K.pmk = [5, 6, 7, 8]; cn();`);
-ok(gan(R('K.buf.dmg'), 6 * 3 + 0.06, 1e-9) && R('K.buf.toc') >= 0.3 + 3 * 3 / 5 - 1e-9 && R('K.buf.toc') <= 2.25 /* +5% tốc ngoài (có từ trước, không thuộc hợp thể) */ && gan(R('K.buf.cdmg || 0'), 0.5 * 3 + 0.4, 1e-9), 'n = 3 (09/11 lần 2): +1800% ST (+6% vàng), tốc +30% + trần mềm 300%·3/5 = +210%, +150% STCM hợp thể + 40% (8 cộng dồn lục)', R('[K.buf.dmg, K.buf.toc, K.buf.cdmg]'));
+ok(gan(R('K.buf.dmg'), 12 * 3 + 0.6, 1e-9) && R('K.buf.toc') >= 0.3 + 3 * 3 / 5 - 1e-9 && R('K.buf.toc') <= 2.25 /* +5% tốc ngoài (có từ trước, không thuộc hợp thể) */ && gan(R('K.buf.cdmg || 0'), 0.5 * 3 + 2.4, 1e-9), 'n = 3 (10/11 đợt 2): +3600% ST (+60% vàng: 6 cộng dồn × 10%), tốc +30% + trần mềm 300%·3/5 = +210%, +150% STCM hợp thể + 240% (8 cộng dồn lục × 30%)', R('[K.buf.dmg, K.buf.toc, K.buf.cdmg]'));
 ok(gan(R('SKILLS.bienmau.ti(K, 0)'), R('SKILLS.bienmau.TI[0]') * 1.75) && gan(R('SKILLS.bienmau.ti(K, 3)'), R('SKILLS.bienmau.TI[3]') * 1.75), 'tỉ lệ mỗi màu × (1 + 0.25 n)');
 ok(R('SKILLS.bienmau.tran(K)') === 40 && R('SKILLS.bienmau.tran(D)') === 10 && (R('B.capThe.bienmau = 8'), R('SKILLS.bienmau.tran(K)')) === 72, 'trần cộng dồn: đơn 10, mặt nạ n=3: 40; LV17: 18 × 4 = 72'); R('B.capThe.bienmau = 0');
 ok(R('SKILLS.bienmau.manaTran(B)') === 12, 'trần mana vàng / giây cả bàn: 6 + 2 × 3 = 12');
@@ -91,7 +91,7 @@ ok(!/LỖI|undefined|NaN/.test(s) && /SPECTRUM PRISM · fusion 3/.test(s) && /FU
 console.log('Tất định (2 lần chạy cùng hạt)');
 const chay = () => {
   ctx = moiTruong(); R = (q) => vm.runInContext(q, ctx);
-  tran(DECK); R(`G.cho = 0; B.mana = 0; var K = PR(7, 0, 0, 4); K.pf = 4; K.pmk = [0, 0, 0, 0]; PR(6, 0, 0, 3); PR(8, 2, 0, 3);`);
+  tran(DECK); R(`G.cho = 0; G.wave = 24; /* 10/11 đợt 2: ST gốc Prism 24 → 60 — quái wave đầu chết vì 2 Prism đơn trước khi đạn mặt nạ tới, mặt nạ không tích được cộng dồn → đánh ở wave trâu hơn */ B.mana = 0; var K = PR(7, 0, 0, 4); K.pf = 4; K.pmk = [0, 0, 0, 0]; PR(6, 0, 0, 3); PR(8, 2, 0, 3);`);
   for (let t = 0; t < 40; t += 1 / 30) { R('capNhat(1/30)'); if (ctx._cho.length) ctx._cho.splice(0).forEach(f => f()); }
   return R('JSON.stringify({ k: B.t[7] && B.t[7].pmk, a: B.t[6] && B.t[6].pms, b: B.t[8] && B.t[8].pms, m: Math.round(B.mana), w: G.wave, q: G.quai.length })');
 };

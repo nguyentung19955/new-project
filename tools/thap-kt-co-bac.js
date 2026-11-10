@@ -75,7 +75,7 @@ tran(DECK);
 R('B.cb = [10, 10, 10]; var A = dat(6, "cobac", 3), C = dat(8, "cobac", 3); A.cbS = 3; C.cbS = 3; A.cbQuay = 0; C.cbQuay = 0; mocBuf(B);');
 { const d = R('CB.gt(B, "dmg")'), t = R('CB.gt(B, "toc")'), c = R('CB.gt(B, "cdmg")'), DM = R('CB.DMG'), CD = R('CB.CDMG'), TO = R('CB.TOC');
   const KH = R('CB.KHOI'); // 09/11: mỗi ngăn tính sẵn KHOI = 10 điểm
-  ok(KH === 10 && Math.abs(d - (10 + KH) * DM) < 1e-9 && Math.abs(c - (10 + KH) * CD) < 1e-9 && Math.abs(DM - 0.025) < 1e-9 && Math.abs(CD - 0.06) < 1e-9 && Math.abs(TO - 0.05) < 1e-9 && R('SKILLS.cobac.dmg') === 58, 'cam 10 (+10 sẵn) → +' + (d * 100).toFixed(0) + '% ST · nho 10 (+10 sẵn) → +' + (c * 100).toFixed(0) + '% ST chí mạng (09/11: mỗi điểm 2,5% / 5% / 6%, sẵn 10 điểm)', d + ' / ' + c);
+  ok(KH === 10 && Math.abs(d - (10 + KH) * DM) < 1e-9 && Math.abs(c - (10 + KH) * CD) < 1e-9 && Math.abs(DM - 0.05) < 1e-9 && Math.abs(CD - 0.10) < 1e-9 && Math.abs(TO - 0.05) < 1e-9 && R('SKILLS.cobac.dmg') === 38, 'cam 10 (+10 sẵn) → +' + (d * 100).toFixed(0) + '% ST · nho 10 (+10 sẵn) → +' + (c * 100).toFixed(0) + '% ST chí mạng (10/11 đợt 2: mỗi điểm 5% / 5% / 10%, sẵn 10 điểm; ST gốc 38)', d + ' / ' + c);
   ok(Math.abs(t - 1.5 * (1 - Math.exp(-(10 + KH) * TO / 1.5))) < 1e-9 && t < (10 + KH) * TO, 'dưa 10 (+10 sẵn) → +' + (t * 100).toFixed(1) + '% tốc (giảm dần)', t); }
 ok(R('B.cb[1] = 1000; CB.gt(B, "toc") <= 1.5 + 1e-9 && CB.gt(B, "toc") > 1.49'), 'dưa 1000 → tiến tới trần +150%', R('CB.gt(B, "toc")'));
 ok(R('B.cb[0] = 999; B.cb[2] = 999; Math.abs(CB.gt(B, "dmg") - (999 + CB.KHOI) * CB.DMG) < 1e-9 && Math.abs(CB.gt(B, "cdmg") - (999 + CB.KHOI) * CB.CDMG) < 1e-9'), 'cam / nho KHÔNG trần (999 điểm vẫn tuyến tính — người dùng 08/11)');
@@ -84,9 +84,9 @@ ok(Math.abs(R('CB.gt(B, "dmg")') - R('(10 + CB.KHOI) * CB.DMG * 1.3')) < 1e-9, '
 R('B.capThe = {}; mocBuf(B);');
 // 09/11 "Lucky Slot chơi khó": 0 điểm vẫn có sẵn KHOI điểm mỗi ngăn — Lucky Slot vừa quay xong (ngăn 0) đã có buff; ụ chưa quay / ụ khác không nhận
 { const s0 = R('JSON.stringify(B.cb)'); R('B.cb = [0, 0, 0]; for (const T of B.t) if (T) for (const k in T.buf) if (typeof T.buf[k] === "number") T.buf[k] = 0; mocBuf(B);');
-  ok(R('Math.abs(CB.gt(B, "dmg") - 10 * CB.DMG) < 1e-9 && Math.abs(CB.gt(B, "cdmg") - 10 * CB.CDMG) < 1e-9 && Math.abs(CB.gt(B, "toc") - 1.5 * (1 - Math.exp(-10 * CB.TOC / 1.5))) < 1e-9 && CB.gt(B, "toc") > 0.4'), 'ngăn 0 điểm → vẫn +25% ST · +42% tốc · +60% ST chí mạng (10 điểm sẵn)', R('[CB.gt(B, "dmg"), CB.gt(B, "toc"), CB.gt(B, "cdmg")].join(" / ")'));
+  ok(R('Math.abs(CB.gt(B, "dmg") - 10 * CB.DMG) < 1e-9 && Math.abs(CB.gt(B, "cdmg") - 10 * CB.CDMG) < 1e-9 && Math.abs(CB.gt(B, "toc") - 1.5 * (1 - Math.exp(-10 * CB.TOC / 1.5))) < 1e-9 && CB.gt(B, "toc") > 0.4'), 'ngăn 0 điểm → vẫn +50% ST · +42% tốc · +100% ST chí mạng (10 điểm sẵn)', R('[CB.gt(B, "dmg"), CB.gt(B, "toc"), CB.gt(B, "cdmg")].join(" / ")'));
   ok(R('A.buf.dmg >= 10 * CB.DMG - 1e-9 && A.buf.toc > 0.4'), 'Lucky Slot vừa quay xong ở bàn 0 điểm đã có buff sẵn', R('JSON.stringify(A.buf)'));
-  ok(R('/Every fruit starts with 10 bonus points/.test(SKILLS.cobac.mo(A)) && /\\+25% damage|Orange 0 \\(\\+25%\\)/.test(SKILLS.cobac.mo(A))'), 'mô tả ghi điểm sẵn + % hiện tại tính cả điểm sẵn', R('SKILLS.cobac.mo(A)').slice(-160));
+  ok(R('/Every fruit starts with 10 bonus points/.test(SKILLS.cobac.mo(A)) && /\\+50% damage|Orange 0 \\(\\+50%\\)/.test(SKILLS.cobac.mo(A))'), 'mô tả ghi điểm sẵn + % hiện tại tính cả điểm sẵn', R('SKILLS.cobac.mo(A)').slice(-160));
   R('B.cb = ' + s0 + '; mocBuf(B);'); }
 ok(R('Math.abs(A.buf.dmg - C.buf.dmg) < 1e-9 && A.buf.dmg >= 20 * CB.DMG - 1e-9 && (A.buf.cdmg || 0) >= 20 * CB.CDMG - 1e-9'), 'mọi Lucky Slot trên bàn nhận cùng buff', R('JSON.stringify([A.buf, C.buf])'));
 R('C.cbQuay = 0.5; mocBuf(B);'); ok(R('C.buf.dmg < A.buf.dmg'), 'Lucky Slot đang quay chưa nhận (chưa thành súng)');
