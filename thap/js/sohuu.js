@@ -87,6 +87,17 @@ const SH = {
     try { const t = KT.doc().cp; if (t && t.giu && t.giu[id]) return true; } catch (e) { }
     return false;
   },
+  // NHÃN NEW (10/11 người dùng: "nhận tướng mới thì lần đầu vào deck hiện new ở thẻ đó"): sh.moi = ụ vừa SỞ HỮU lần đầu, chưa xem.
+  //  Mất khi chạm/xem thẻ (xem nhanh / trang ụ) hoặc đưa vào bộ bài. Người cũ chuyển đổi: moi = {} (không NEW hàng loạt).
+  dsMoi() { const h = this.st(); return Object.keys(h.moi).filter(id => SKILLS[id] && this.co(id)); },
+  xemMoi(id) {
+    let h; try { h = this.st(); } catch (e) { return false; }
+    if (!id || !h.moi[id]) return false;
+    delete h.moi[id]; try { KT.luu(true); } catch (e) { }
+    try { document.querySelectorAll('#chon-luoi .c[data-id="' + id + '"]').forEach(c => c.classList.remove('sh-moi-c')); } catch (e) { }
+    try { SHUI.cham(); } catch (e) { }
+    return true;
+  },
   // ghi sở hữu (gọi khi nhận bản sao); trả true nếu là ụ MỚI
   themCo(id) { if (!id || this.co(id)) return false; const h = this.st(); h.co[id] = 1; h.moi[id] = 1; return true; },
   moVoi(id, L) { if (L < this.capMoBac(id)) return false; return THEBAI.bac(id) !== 'do' || TT.kyLuc() >= TTC.doWave; },
@@ -134,6 +145,15 @@ const SHUI = {
   },
   // danh sách ụ (ảnh + tên) cho bảng lên cấp
   dsU(ds) { return '<span class="sh-ds">' + ds.map(id => '<span class="sh-u b-' + THEBAI.bac(id) + '">' + OT.mini(id) + '<small>' + this.ten(id) + '</small></span>').join('') + '</span>'; },
+  // chấm đỏ (kt-cham, như nút SHOP/QUESTS) trên DECK + COLLECTION ở HOME khi còn ụ mới chưa xem
+  cham() {
+    let co = false; try { co = SH.dsMoi().length > 0; } catch (e) { }
+    for (const n of document.querySelectorAll('#hm .hm-tab [data-act="hm-deck"], #hm .hm-tab [data-act="hm-bst"]')) {
+      let i = n.querySelector(':scope > .sh-cham');
+      if (!i) { if (!co || typeof KTA === 'undefined' || !KTA.cham) continue; i = document.createElement('img'); i.className = 'kt-cham sh-cham'; i.alt = ''; i.src = KTUI.a(KTA.cham); n.appendChild(i); }
+      i.hidden = !co;
+    }
+  },
   // nhãn "NEW!" cho thẻ mới trong rương / túi trận
   moi: '<i class="sh-moi">NEW!</i>',
 
@@ -180,11 +200,15 @@ const SHUI = {
     return x;
   };
   // trang ụ: xem rồi → bỏ nhãn NEW
-  if (typeof UP !== 'undefined' && UP.mo) { const g = UP.mo; UP.mo = function (id) { try { const h = SH.st(); if (h.moi[id]) { delete h.moi[id]; KT.luu(true); } } catch (e) { } return g.apply(this, arguments); }; }
+  if (typeof UP !== 'undefined' && UP.mo) { const g = UP.mo; UP.mo = function (id) { SH.xemMoi(id); return g.apply(this, arguments); }; }
+  // xem nhanh (HOME) → bỏ NEW; đưa vào bộ bài (chạm / kéo / bộ mẫu / RANDOM — mọi đường đều vẽ lại ô bộ bài) → bỏ NEW
+  if (typeof HM !== 'undefined' && HM.moXem) { const g = HM.moXem; HM.moXem = function (id) { SH.xemMoi(id); return g.apply(this, arguments); }; }
+  if (typeof DC !== 'undefined' && DC.chamThe) { const g = DC.chamThe; DC.chamThe = function (c) { try { SH.xemMoi(c && c.dataset && c.dataset.id); } catch (e) { } return g.apply(this, arguments); }; } // chạm thẻ ở màn bộ bài (thêm / đổi)
+  if (typeof UI !== 'undefined' && UI.veBoChon) { const g = UI.veBoChon; UI.veBoChon = function () { const x = g.apply(this, arguments); try { if (G.roster && G.roster.length) for (const id of UI.chon) SH.xemMoi(id); } catch (e) { } return x; }; }
   // HOME: số ụ ĐÃ CÓ trên nút bộ sưu tập
   if (typeof HM !== 'undefined' && HM.veHome) {
     const g = HM.veHome;
-    HM.veHome = function () { const x = g.apply(this, arguments); try { const e = document.getElementById('hm-bst-so'), d = SH.dem(); if (e && d.tong) e.textContent = d.co + '/' + d.tong + ' TURRETS'; } catch (er) { } return x; };
+    HM.veHome = function () { const x = g.apply(this, arguments); try { const e = document.getElementById('hm-bst-so'), d = SH.dem(); if (e && d.tong) e.textContent = d.co + '/' + d.tong + ' TURRETS'; SHUI.cham(); } catch (er) { } return x; };
   }
   // ---- màn bộ bài / bộ sưu tập: lọc ĐÃ CÓ / CHƯA CÓ / CHƯA MỞ + xếp theo CẤP PHI CÔNG + đếm ----
   if (typeof BOBAI !== 'undefined') {

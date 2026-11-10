@@ -169,7 +169,7 @@ const KT = {
     if (r.ruong) ra.ruong = this.moRuong(r.ruong, true, r.n);
     return ra;
   },
-  themBan(id, n) { const d = THEBAI.doc(), t = THEBAI.the(id); d.c[id] = { lv: t.lv, n: t.n + n }; if (n > 0 && typeof SH !== 'undefined') SH.themCo(id); },
+  themBan(id, n) { if (n > 0 && typeof SH !== 'undefined') SH.themCo(id); const d = THEBAI.doc(), t = THEBAI.the(id); d.c[id] = { lv: t.lv, n: t.n + n }; }, // themCo TRƯỚC khi ghi bản sao (sau thì SH.co đã true → không đánh dấu NEW)
 
   // ---------- DAILY SPECIALS ----------
   spTao(ngay) {

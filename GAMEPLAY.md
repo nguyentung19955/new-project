@@ -3,6 +3,11 @@
 > Game merge tower-defense trong `thap/`. Luật game và bàn giao: `docs/demo-hop-tuong/ban-giao/BAN-GIAO.md`, luật code/hình: `thap/QUY-TAC-HINH.md`.
 > Mỗi session thêm một mục `## claude/<tên-nhánh> — …` ở CUỐI file (file gộp kiểu union, không xung đột).
 
+## claude/demo-hop-tuong — nhãn NEW cho ụ mới nhận (10/11)
+- Nhận được ụ lần đầu (mọi nguồn: rương, Rương Trận, quà hướng dẫn/Hành trình, Ấn Vàng/Ấn Đỏ, vòng quay, thưởng chế độ…) → thẻ hiện nhãn NEW! ở Xếp bộ bài và Bộ sưu tập; nút DECK + COLLECTION ở HOME có chấm đỏ khi còn ụ mới chưa xem.
+- Nhãn mất khi chạm thẻ (bộ bài), mở xem nhanh / trang ụ, hoặc đưa ụ vào bộ bài. Lưu ở `turret_kt.sh.moi` (khoá con sẵn có, trước đây gần như không được ghi do thứ tự trong `KT.themBan`); người chơi cũ không bị NEW hàng loạt.
+- Kiểm: `tools/thap-kt-the-moi.js`.
+
 ## claude/demo-hop-tuong — rà soát giao diện đợt 3: trận + VI + 375×667 (10/11)
 - Màn kết quả: ô số có dòng "KỶ LỤC MỚI" không còn chạm mép khung. HUD solo/PVP/co-op, tạm dừng, màn tải, 375×667, tiếng Việt: đã soi ảnh, không lỗi lòi/cắt. Bảng tổng: `docs/demo-hop-tuong/tuvan/ra-soat-giao-dien/BANG.md`.
 - Công cụ rà soát: bỏ phần tử nằm ngoài vùng cuộn, nút thuộc lớp phủ khác (giảm báo nhầm).
