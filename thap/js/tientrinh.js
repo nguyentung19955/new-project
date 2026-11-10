@@ -1,8 +1,10 @@
 // TURRET MERGE — TIẾN TRÌNH NGƯỜI CHƠI ĐỢT 1 (docs/demo-hop-tuong/tuvan/tien-trinh/THIET-KE.md §2–§3, người dùng chốt 09/11):
 //  · CẤP PHI CÔNG (cấp tài khoản): XP mỗi trận = wave đạt + 3 × trùm hạ + 10 nếu thắng (mọi chế độ, trừ hướng dẫn / trận thử ?mana=).
+//    Leo Tháp (10/11 thay Solo): XP = wave đã qua trong tầng (≤5) + 3 × trùm + 5 nếu qua tầng (TT.ketTran, m.thap).
 //    XP lên cấp L → L+1 = 20 + 15·L, tối đa cấp 30; sau 30 mỗi 1 000 XP = 1 "cấp danh vọng" (Rương Thường + 300 vàng).
 //    Thưởng mỗi cấp: 150·L vàng + 20 ngọc; cấp 5/10/…/30 thêm Rương Vàng; cấp 6 tặng CHỌN 1 TRONG 3 thẻ Vàng (1 bản).
-//  · KHOÁ BẬC Ụ theo cấp: Trắng + Xanh ngay sau hướng dẫn · Tím cấp 3 · Vàng cấp 6 · Đỏ cấp 12 VÀ kỷ lục ≥ wave 30.
+//  · KHOÁ BẬC Ụ theo cấp: Trắng + Xanh ngay sau hướng dẫn · Tím cấp 3 · Vàng cấp 6 · Đỏ cấp 12 VÀ đã qua TẦNG 40 Leo Tháp
+//    (10/11 bỏ Solo: trước là kỷ lục ≥ wave 30 — người đã đạt wave 30 ở Solo cũ vẫn giữ quyền, xem doDat).
 //    Ụ khoá vẫn xem được (thẻ tối + điều kiện mở — chỉ nêu điều kiện, không chỉ cách chơi); bộ bài không nhận ụ khoá.
 //  · NGƯỜI CHƠI CŨ (có bản lưu trước bản này): cấp khởi điểm theo kỷ lục (≥30 → 12 · ≥20 → 8 · ≥10 → 5 · còn lại 3);
 //    mọi ụ đang nằm trong bộ bài / 6 bộ mẫu lúc chuyển được GIỮ (dùng tiếp dù bậc chưa mở) → không ai mất ụ đang dùng.
@@ -10,7 +12,7 @@
 //  · HÀNH TRÌNH 7 NGÀY (mục tiêu = KẾT QUẢ, không nói cách; không có Đỏ) · NHIỆM VỤ TUẦN (mở cấp 8, 5 việc × 20 ngọc + đủ 5 = 40 ngọc + 1 bản Vàng).
 //  · Lưu: turret_kt.cp (khoá mới, giá trị mặc định, không xoá gì); gộp hồ sơ Firebase: XP/cấp/đếm lấy lớn nhất, cờ đã nhận OR.
 //  · KHOÁ TÍNH NĂNG theo cấp (THIET-KE §2.2): CO-OP sau hướng dẫn · PVP / nhiệm vụ ngày / cửa hàng / vòng quay cấp 2 · Rương Vàng cấp 3 ·
-//    ONLINE cấp 4 · nhiệm vụ tuần cấp 8 · Lò rèn (Sử thi→Vàng) + Ấn Vàng cấp 10 · Rương Thần thoại + Lò rèn Đỏ theo điều kiện Đỏ (cấp 12 + kỷ lục 30).
+//    ONLINE cấp 4 · nhiệm vụ tuần cấp 8 · Lò rèn (Sử thi→Vàng) + Ấn Vàng cấp 10 · Rương Thần thoại + Lò rèn Đỏ theo điều kiện Đỏ (cấp 12 + tầng 40).
 //    Nút khoá: tối + nhãn "LV n" (điều kiện), chạm = 1 dòng điều kiện mở (không hướng dẫn cách chơi); mở được → báo trong bảng lên cấp.
 //    Người chơi cũ (cp.cu > 0): giữ ONLINE (kể cả đang trong phòng / nhận lời mời) + Lò rèn nếu đã từng rèn + Rương Thần thoại nếu đã từng mở rương.
 //    Lối vào khác cũng theo khoá: link mời phòng (?room=) khi chưa đủ cấp → báo điều kiện, không vào phòng; phòng đang chơi dở / sảnh tải lại → không chặn.
@@ -23,6 +25,10 @@ const TTC = {
   capMax: 30,
   xpCan: (L) => 20 + 15 * L,                       // XP để lên L → L+1
   moBac: { trang: 0, xanh: 0, tim: 3, vang: 6, do: 12 }, doWave: 30,
+  // 10/11 (bỏ Solo — Leo Tháp là chế độ một mình chính): điều kiện Đỏ = qua tầng 40. Tầng t bắt đầu ở wave 5+⌊0,62(t−1)⌋ → tầng 40 = wave 29–33
+  //  (phủ wave 30) và là TẦNG TRÙM cuối chương 4 (Khổng Lồ) — giống mốc trùm wave 30 của Solo; mana đầu chỉ 0,6× nên khó ngang/hơn wave 30 Solo.
+  //  doWave giữ cho người chơi cũ: kỷ lục Solo ≥ wave 30 vẫn tính là đạt.
+  doTang: 40,
   quyDoi: [[30, 12], [20, 8], [10, 5]], cuCap: 3,  // người chơi cũ: kỷ lục → cấp khởi điểm
   thuongCap: (L) => (L % 5 === 0 ? [{ vang: 150 * L, ngoc: 20 }, { ruong: 'vang' }] : [{ vang: 150 * L, ngoc: 20 }]),
   danhVong: { xp: 1000, r: [{ vang: 300 }, { ruong: 'thuong' }] },
@@ -31,16 +37,18 @@ const TTC = {
   //  Ngày đã qua vẫn làm bù được (đếm cộng dồn, không hết hạn). Ngày 5/6 dễ nghẽn (tư vấn tien-trinh/CHATGPT-THU-PHI.md) → đạt 1 trong 2 mục tiêu.
   hj: [
     // gacha thu thập (09/11): ngày 1 = Rương Thường (thay 10 bản Xanh lẻ) + quà ụ Berserker; ngày 4 / 6 thêm quà ụ cụ thể (SHC.qua, sohuu.js)
-    { r: { vang: 500, ngoc: 30, ruong: 'thuong', tang: 'hj1' }, v: [['trum', 1, 'Defeat the wave 10 boss'], ['tran', 3, 'Play 3 battles'], ['wave', 15, 'Reach wave 15']] },
-    { r: { vang: 800, ngoc: 30, ruong: 'thuong' }, v: [['wave', 18, 'Reach wave 18'], ['sao', 4, 'Have a 4★ turret'], ['nang', 2, 'Level up 2 cards']] },
-    { r: { ngoc: 40, chon: { bac: 'tim', n: 4 } }, v: [['coop', 1, 'Finish a CO-OP battle'], ['trumKhac', 2, 'Defeat 2 different bosses'], ['wave', 20, 'Reach wave 20']] },
-    { r: { vang: 1500, ngoc: 40, tang: 'hj4' }, v: [['wave', 22, 'Reach wave 22'], ['sao', 5, 'Have a 5★ turret'], ['sp', 1, 'Buy a Daily Specials item']] },
-    { r: { ruong: 'vang' }, v: [['wave', 25, 'Reach wave 25'], ['trumMax', 2, 'Defeat the wave 20 boss'], ['sao5x', 2, 'Have two 5★ turrets at once', ['sao5t', 6, 'Make 6 turrets of 5★+ in total']]] },
+    // 10/11 bỏ Solo: mục tiêu "Reach wave N" → "Clear floor N" (Leo Tháp, khoá đếm 'tang' = tầng cao nhất đã qua; kỷ lục wave cũ quy đổi — TT.giaTri).
+    //  Tầng chọn theo THỜI GIAN chơi (~2–3 phút/tầng) chứ không đổi thẳng wave→tầng (wave 15 Solo ≈ 6 phút ≠ 11 tầng ≈ 30 phút).
+    { r: { vang: 500, ngoc: 30, ruong: 'thuong', tang: 'hj1' }, v: [['tang', 5, 'Clear floor 5'], ['tran', 3, 'Play 3 battles'], ['sao', 3, 'Have a 3★ turret']] },
+    { r: { vang: 800, ngoc: 30, ruong: 'thuong' }, v: [['tang', 10, 'Defeat the floor 10 boss'], ['sao', 4, 'Have a 4★ turret'], ['nang', 2, 'Level up 2 cards']] },
+    { r: { ngoc: 40, chon: { bac: 'tim', n: 4 } }, v: [['coop', 1, 'Finish a CO-OP battle'], ['trumKhac', 2, 'Defeat 2 different bosses'], ['tang', 15, 'Clear floor 15']] },
+    { r: { vang: 1500, ngoc: 40, tang: 'hj4' }, v: [['tang', 20, 'Clear floor 20'], ['sao', 5, 'Have a 5★ turret'], ['sp', 1, 'Buy a Daily Specials item']] },
+    { r: { ruong: 'vang' }, v: [['tang', 25, 'Clear floor 25'], ['trum', 3, 'Defeat 3 bosses'], ['sao5x', 2, 'Have two 5★ turrets at once', ['sao5t', 6, 'Make 6 turrets of 5★+ in total']]] },
     { r: { vang: 2000, ngoc: 50, tang: 'hj6' }, v: [['pvp', 1, 'Play a PVP battle'], ['nvd', 3, 'Complete 3 daily quests'], ['cap', 9, 'Reach Pilot Level 9', ['tran', 25, 'Play 25 battles']]] },
-    { r: { chon: { bac: 'vang', n: 2 } }, v: [['wave', 30, 'Reach wave 30'], ['trumKhac', 4, 'Defeat 4 different bosses'], ['nangV', 1, 'Level up a Legendary card']] },
+    { r: { chon: { bac: 'vang', n: 2 } }, v: [['tang', 35, 'Clear floor 35'], ['trumKhac', 4, 'Defeat 4 different bosses'], ['nangV', 1, 'Level up a Legendary card']] },
   ],
   // NHIỆM VỤ TUẦN (reset thứ Hai, mở cấp 8): mỗi việc 20 ngọc, đủ 5 = 40 ngọc + 1 bản Vàng ngẫu nhiên → +140 ngọc/tuần
-  // KHOÁ TÍNH NĂNG: cap = cấp phi công · hd = xong hướng dẫn · do = điều kiện Đỏ (cấp 12 + kỷ lục 30). ten: tên trong bảng mở khoá.
+  // KHOÁ TÍNH NĂNG: cap = cấp phi công · hd = xong hướng dẫn · do = điều kiện Đỏ (cấp 12 + tầng 40 Leo Tháp). ten: tên trong bảng mở khoá.
   tn: {
     coop: { hd: 1, ten: 'CO-OP' }, pvp: { cap: 2, ten: 'PVP' }, nvd: { cap: 2, ten: 'DAILY QUESTS' }, shop: { cap: 2, ten: 'SHOP' }, vq: { cap: 2, ten: 'LUCKY SPIN' },
     ruVang: { cap: 3, ten: 'GOLD CHEST' }, online: { cap: 4, ten: 'ONLINE' }, nvt: { cap: 8, ten: 'WEEKLY QUESTS' },
@@ -50,7 +58,7 @@ const TTC = {
   nvt: [
     { id: 'tran', can: 15, ten: 'Play 15 battles' },
     { id: 'trum', can: 8, ten: 'Defeat 8 bosses' },
-    { id: 'gan', can: 3, ten: 'Finish 3 battles within 5 waves of your best' },
+    { id: 'gan', can: 3, ten: 'Play 3 battles within 5 floors of your best' }, // Leo Tháp: tầng ≥ tầng cao nhất − 5 · CO-OP/PVP: vẫn theo wave
     { id: 'sao5', can: 10, ten: 'Make 10 turrets of 5★+' },
     { id: 'nvd', can: 12, ten: 'Complete 12 daily quests' },
   ],
@@ -68,6 +76,12 @@ const TT = {
     return { L, n: xp - this.xpTong(L), can: TTC.xpCan(L), max: false };
   },
   kyLuc() { const s = KT.doc(); let w = s.tk.wave | 0; try { if (typeof MH !== 'undefined') w = Math.max(w, MH.st().sw | 0); } catch (e) { } return w; },
+  // tầng Leo Tháp cao nhất đã qua (turret_kt.cd.thap.max — chedo-c.js; đọc thẳng bản lưu để không phụ thuộc thứ tự nạp)
+  tangMax() { try { const c = KT.doc().cd; return Math.max(0, (c && c.thap && c.thap.max) | 0); } catch (e) { return 0; } },
+  // kỷ lục wave cũ (Solo/CO-OP/PVP) quy ra tầng tương đương: tầng f qua được khi sống hết wave cuối W_f + 4 = 9 + ⌊0,62(f−1)⌋
+  tangTuWave(w) { let f = 0; while (f < 100 && 9 + Math.floor(0.62 * f) <= (w | 0)) f++; return f; },
+  // điều kiện Đỏ (ngoài cấp): qua tầng TTC.doTang — hoặc kỷ lục Solo cũ ≥ wave TTC.doWave (người chơi cũ không mất quyền)
+  doDat() { return this.tangMax() >= TTC.doTang || this.kyLuc() >= TTC.doWave; },
 
   // ---------- lưu / di chuyển ----------
   laCu(s) {
@@ -109,7 +123,7 @@ const TT = {
   },
 
   // ---------- khoá bậc ----------
-  bacMoVoi(b, L) { const c = TTC.moBac[b] | 0; return L >= c && (b !== 'do' || this.kyLuc() >= TTC.doWave); },
+  bacMoVoi(b, L) { const c = TTC.moBac[b] | 0; return L >= c && (b !== 'do' || this.doDat()); },
   bacMo(b) { return ADMIN.la() || this.bacMoVoi(b, this.cap()); },
   khoa(id) {
     if (!id || typeof SKILLS === 'undefined' || !SKILLS[id]) return false;
@@ -117,7 +131,7 @@ const TT = {
     const t = this.st(); if (t.giu[id]) return false;
     return !this.bacMo(THEBAI.bac(id));
   },
-  dk(b) { return b === 'do' ? 'Pilot Level ' + TTC.moBac.do + ' and best wave ' + TTC.doWave : 'Pilot Level ' + TTC.moBac[b]; },
+  dk(b) { return b === 'do' ? 'Pilot Level ' + TTC.moBac.do + ' and Tower floor ' + TTC.doTang : 'Pilot Level ' + TTC.moBac[b]; },
   chuKhoa(id) { return typeof SH !== 'undefined' ? SH.chuKhoa(id) : 'Unlocks at ' + this.dk(THEBAI.bac(id)); },
   locMo(ds) { return (ds || []).filter(id => !this.khoa(id)); },
   // chạy fn với G.roster chỉ còn ụ đã mở (bộ ngẫu nhiên của NGƯỜI CHƠI; bộ máy co-op/PVP không đổi)
@@ -177,7 +191,7 @@ const TT = {
 
   // ---------- hành trình 7 ngày ----------
   hjNgay() { return Math.max(1, Math.min(7, KT.soNgay(KT.ngay()) - this.st().hj.ngay0 + 1)); }, // ngày đã mở tới
-  giaTri(k) { const t = this.st(); if (k === 'cap') return this.cap(); if (k === 'trumKhac') return Object.keys(t.trk).length; return t.dem[k] | 0; },
+  giaTri(k) { const t = this.st(); if (k === 'cap') return this.cap(); if (k === 'trumKhac') return Object.keys(t.trk).length; if (k === 'tang') return Math.max(this.tangMax(), this.tangTuWave(t.dem.wave)); return t.dem[k] | 0; },
   hjDs() {
     const t = this.st(), mo = this.hjNgay();
     return TTC.hj.map((d, i) => {
@@ -218,14 +232,17 @@ const TT = {
   ketTran(k, m, klTruoc, tran, trums) {
     const t = this.st(), wave = Math.max(1, (k && k.wave) | 0), trum = (m && m.trum) | 0, thang = !!(k && k.thang);
     const che = tran && tran.onl ? 'online' : ((tran && tran.che) || (m && m.che) || 'solo'), tr = this.tr || {};
-    const xp = wave + 3 * trum + (thang ? 10 : 0), capTruoc = this.cap();
+    // Leo Tháp (10/11 thay Solo): XP = số wave đã qua trong tầng (≤ 5) + 3/trùm + 5 nếu qua tầng (+ XP lần đầu ở chedo-c.js).
+    //  Trận tầng chỉ ~2–3 phút nên không dùng số wave tuyệt đối (tầng 50 = wave 35–39 → 50+ XP/trận, gấp ~5 lần nhịp Solo).
+    const lt = che === 'thap' && m && m.thap;
+    const xp = lt ? (lt.qua | 0) + 3 * trum + (thang ? 5 : 0) : wave + 3 * trum + (thang ? 10 : 0), capTruoc = this.cap();
     t.xp += xp;
     const d = t.dem, mx = (key, v) => { d[key] = Math.max(d[key] | 0, v | 0); }, cg = (key, v) => { d[key] = (d[key] | 0) + (v | 0); };
-    cg('tran', 1); cg('trum', trum); cg('sao5t', (tran && tran.sao5) | 0); mx('wave', wave); mx('trumMax', trum); mx('sao', tr.sao); mx('sao5x', tr.s5);
+    cg('tran', 1); cg('trum', trum); cg('sao5t', (tran && tran.sao5) | 0); if (!lt) mx('wave', wave); mx('trumMax', trum); mx('sao', tr.sao); mx('sao5x', tr.s5);
     if (che === 'coop' || che === 'online') cg('coop', 1); if (che === 'pvp') cg('pvp', 1);
     for (const id of trums || []) t.trk[id] = 1;
     this.nvtCong('tran', 1); this.nvtCong('trum', trum); this.nvtCong('sao5', (tran && tran.sao5) | 0);
-    if (wave >= Math.max(1, (klTruoc | 0) - 5)) this.nvtCong('gan', 1);
+    if (lt ? (lt.t | 0) >= this.tangMax() - 5 : wave >= Math.max(1, (klTruoc | 0) - 5)) this.nvtCong('gan', 1);
     this.tr = null;
     const bao = this.xetCap();
     return { xp, cap: this.cap(), len: this.cap() > capTruoc, bao };
@@ -327,7 +344,7 @@ const TTUI = {
   ve_dau() {
     const x = TT.thanhXp(), t = TT.st(), L = x.L;
     const ke = ['tim', 'vang', 'do'].find(b => !TT.bacMo(b));
-    let h = KTUI.muc('PILOT LEVEL', 'XP: WAVE + 3 PER BOSS + 10 FOR A WIN');
+    let h = KTUI.muc('PILOT LEVEL', 'XP: WAVES + 3 PER BOSS + WIN BONUS');
     h += '<div class="tt-box"><b class="tt-L">LV ' + L + '</b><div class="tt-box-g">' + TBUI.thanh({ n: x.n, can: x.can, max: false }) +
       '<small>' + (ke ? 'NEXT: ' + this.TIER(ke) + ' turrets · ' + TT.dk(ke) : L >= TTC.capMax ? 'Every ' + TTC.danhVong.xp + ' XP: prestige reward' : 'NEXT: Level ' + (L + 1) + ' reward') + '</small></div></div>';
     if (!t.qv && L >= TTC.quaVang.cap) h += KTUI.hangNv('Level ' + TTC.quaVang.cap + ' gift: pick 1 of 3 Legendary cards', { t: 1, can: 1, xong: true, da: false }, { the: { bac: TTC.quaVang.bac, n: TTC.quaVang.n } }, 'tt-qvmo', 'qv');
@@ -365,7 +382,7 @@ const TTUI = {
     c.classList.toggle('sh-moi-c', !k && typeof SH !== 'undefined' && !!SH.st().moi[id]);
     let n = c.querySelector(':scope > .tt-khoa-n');
     if (!k) { if (n) n.remove(); return c; }
-    const b = THEBAI.bac(id), h = sh ? SHUI.nhan(id) : (TTA.khoa ? '<img class="tt-khoa-i" src="' + KTUI.a(TTA.khoa) + '" alt="" draggable="false">' : '') + '<b>PILOT</b><b>LV ' + TTC.moBac[b] + '</b>' + (b === 'do' ? '<small>WAVE ' + TTC.doWave + '</small>' : '');
+    const b = THEBAI.bac(id), h = sh ? SHUI.nhan(id) : (TTA.khoa ? '<img class="tt-khoa-i" src="' + KTUI.a(TTA.khoa) + '" alt="" draggable="false">' : '') + '<b>PILOT</b><b>LV ' + TTC.moBac[b] + '</b>' + (b === 'do' ? '<small>FLOOR ' + TTC.doTang + '</small>' : '');
     if (!n) { n = document.createElement('span'); n.className = 'tt-khoa-n'; c.appendChild(n); }
     if (n._h !== h) { n._h = h; n.innerHTML = h; }
     return c;
@@ -373,7 +390,7 @@ const TTUI = {
   capLuoi() { document.querySelectorAll('#chon-luoi .c[data-id]').forEach(c => this.ganKhoa(c, c.dataset.id)); },
 
   // ---------- khoá tính năng: nhãn điều kiện + thông báo 1 dòng ----------
-  tnNhan(k) { const c = TTC.tn[k] || {}; return (TTA.khoa ? '<img class="tt-khoa-i" src="' + KTUI.a(TTA.khoa) + '" alt="" draggable="false">' : '') + (c.hd ? '<b>TUTORIAL</b>' : '<b>LV ' + (c.do ? TTC.moBac.do : c.cap) + '</b>' + (c.do ? '<small>WAVE ' + TTC.doWave + '</small>' : '')); },
+  tnNhan(k) { const c = TTC.tn[k] || {}; return (TTA.khoa ? '<img class="tt-khoa-i" src="' + KTUI.a(TTA.khoa) + '" alt="" draggable="false">' : '') + (c.hd ? '<b>TUTORIAL</b>' : '<b>LV ' + (c.do ? TTC.moBac.do : c.cap) + '</b>' + (c.do ? '<small>FLOOR ' + TTC.doTang + '</small>' : '')); },
   toast(s) { try { SND.nut(); } catch (e) { } try { UI.nhac(s); const c = document.getElementById('chon-goi-nhac'); if (c) c.style.zIndex = 70; } catch (e) { } },
   // nút thay cho nút mua/rèn khi khoá (kinhte-ui.js / manh.js gọi KTUI.khoaNut): '' = đã mở
   khoaNut(id, cls) {
@@ -522,11 +539,11 @@ const TTUI = {
     const cc = HM.chonChe; HM.chonChe = function (k) { if (TTC.tn[k] && tnK(k)) { TTUI.toast(TT.tnChu(k)); return; } return cc.apply(this, arguments); };
     const ch = HM.choi; HM.choi = function () { if (TTC.tn[this.che] && tnK(this.che)) { TTUI.toast(TT.tnChu(this.che)); return; } return ch.apply(this, arguments); };
   }
-  if (typeof UI !== 'undefined') { // chế độ đã lưu mà đang khoá (vd. bộ cũ lưu CO-OP trước hướng dẫn) → SOLO
+  if (typeof UI !== 'undefined') { // chế độ đã lưu mà đang khoá (vd. bộ cũ lưu CO-OP trước hướng dẫn) → LEO THÁP (10/11: bỏ Solo; bàn trận vẫn 'solo')
     const ui = UI.init;
     UI.init = async function () {
       const r = await ui.apply(this, arguments);
-      try { if (typeof HM !== 'undefined' && TTC.tn[HM.che] && tnK(HM.che) && !G.debug.mode) { HM.che = 'solo'; if (UI.che !== 'solo' && TTC.tn[UI.che] && tnK(UI.che)) UI.che = 'solo'; HM.ve(); } } catch (e) { }
+      try { if (typeof HM !== 'undefined' && TTC.tn[HM.che] && tnK(HM.che) && !G.debug.mode) { HM.che = 'thap'; if (UI.che !== 'solo' && TTC.tn[UI.che] && tnK(UI.che)) UI.che = 'solo'; HM.ve(); } } catch (e) { }
       return r;
     };
   }

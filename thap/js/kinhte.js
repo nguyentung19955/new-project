@@ -39,11 +39,13 @@ const KTC = {
     { id: 'thang1', ten: 'Win 1 battle', can: 1, k: 'thang', r: { vang: 300 } },
     { id: 'tran3', ten: 'Play 3 battles', can: 3, k: 'tran', r: { vang: 400 } },
     { id: 'ghep30', ten: 'Merge 30 times', can: 30, k: 'ghep', r: { ngoc: 10 } },
-    { id: 'wave15', ten: 'Reach wave 15', can: 15, k: 'wave', max: 1, kl: 12, r: { ngoc: 10 } }, // kl = kỷ lục wave tối thiểu để vào bể (tien-trinh §3.4)
+    // 10/11 bỏ Solo: 'Reach wave 15' → qua tầng ≥ 15 Leo Tháp (k 'tang' = số tầng vừa qua, lấy lớn nhất trong ngày). kt = tầng cao nhất tối thiểu để vào bể
+    //  (kl cũ = kỷ lục wave: người chơi cũ vẫn được giao như trước — KT.nvVaoBe)
+    { id: 'wave15', ten: 'Clear floor 15 or higher', can: 15, k: 'tang', max: 1, kl: 12, kt: 12, r: { ngoc: 10 } }, // kl = kỷ lục wave tối thiểu để vào bể (tien-trinh §3.4)
     { id: 'trieu50', ten: 'Summon 50 turrets', can: 50, k: 'trieu', r: { vang: 300 } },
     { id: 'coop1', ten: 'Play CO-OP or ONLINE', can: 1, k: 'coop', r: { ngoc: 15 } },
     { id: 'pvp1', ten: 'Play 1 PVP battle', can: 1, k: 'pvp', r: { ngoc: 15 } },
-    { id: 'trum2', ten: 'Defeat 2 bosses', can: 2, k: 'trum', kl: 20, r: { ngoc: 15 } },
+    { id: 'trum2', ten: 'Defeat 2 bosses', can: 2, k: 'trum', kl: 20, kt: 20, r: { ngoc: 15 } },
     { id: 'sao5', ten: 'Make 3 turrets of 5★+', can: 3, k: 'sao5', r: { vang: 400 } },
   ],
   nvBonus: { ngoc: 20 },
@@ -55,9 +57,10 @@ const KTC = {
     { id: 'thang', ten: 'First victory', k: 'thang', can: 1, r: { ngoc: 20 } },
     { id: 'trum', ten: 'First boss kill', k: 'trum', can: 1, r: { ngoc: 30 } },
     { id: 'sao7', ten: 'First 7★ turret', k: 'sao7', can: 1, r: { ngoc: 50 } },
-    { id: 'w30', ten: 'Reach wave 30', k: 'wave', can: 30, r: { ngoc: 50 } },
-    { id: 'w50', ten: 'Reach wave 50', k: 'wave', can: 50, r: { ngoc: 100 } },
-    { id: 'w70', ten: 'Reach wave 70', k: 'wave', can: 70, r: { ngoc: 200 } },
+    // 10/11 bỏ Solo: mốc wave → tầng Leo Tháp (k2/can2 = tầng; kỷ lục wave cũ ≥ can vẫn tính là đạt — không ai mất thành tựu)
+    { id: 'w30', ten: 'Clear Tower floor 40', k: 'wave', can: 30, k2: 'tang', can2: 40, r: { ngoc: 50 } },
+    { id: 'w50', ten: 'Clear Tower floor 70', k: 'wave', can: 50, k2: 'tang', can2: 70, r: { ngoc: 100 } },
+    { id: 'w70', ten: 'Clear Tower floor 100', k: 'wave', can: 70, k2: 'tang', can2: 100, r: { ngoc: 200 } },
     { id: 'nang', ten: 'Level up a card', k: 'nang', can: 1, r: { ngoc: 20 } },
     { id: 'ruong', ten: 'Open a chest', k: 'ruong', can: 1, r: { ngoc: 20 } },
   ],
@@ -65,7 +68,8 @@ const KTC = {
   goiNgoc: [],          // vd. { id: 'gem_500', ngoc: 500, sku: 'com.turretmerge.gem500' } — thẻ "GEM PACKS" chỉ hiện khi mảng có phần tử
   skPremium: null,      // vd. [[100, { ruong: 'vang' }], …] — hàng premium của Event Pass, ẩn khi null
   // ---- Sự kiện tuần: điểm mỗi trận = wave + 10 nếu thắng + 5/trùm (tối đa 60) ----
-  skMax: 60,
+  //  Leo Tháp (10/11): 2/wave đã qua trong tầng (≤ 10) + 5 nếu qua tầng + 5/trùm — trận tầng ~2–3 phút ≈ nhịp điểm/phút của Solo cũ
+  skMax: 60, skThap: (qua, thang, trum) => 2 * Math.min(5, qua | 0) + (thang ? 5 : 0) + 5 * (trum | 0),
   sk: [
     [40, { vang: 500 }], [100, { ruong: 'su', n: 1 }], [180, { ruong: 'thuong' }], [280, { ngoc: 30 }], [400, { ruong: 'su', n: 1 }],
     [550, { ruong: 'vang' }], [750, { ngoc: 60 }], [1000, { ruong: 'su', n: 2 }], [1300, { ruong: 'vang' }],
@@ -94,7 +98,7 @@ const KT = {
   dongHo(ms) { const s = Math.floor(ms / 1000), h = Math.floor(s / 3600), m = Math.floor(s / 60) % 60, x = s % 60, p = (v) => (v < 10 ? '0' : '') + v; return h >= 48 ? (typeof NN !== 'undefined' && NN.vi && NN.vi() ? Math.floor(h / 24) + 'n ' + (h % 24) + 'g' : Math.floor(h / 24) + 'd ' + (h % 24) + 'h') : p(h) + ':' + p(m) + ':' + p(x); },
 
   // ---------- lưu / di chuyển ----------
-  moi() { return { v: this.V, pid: Math.random().toString(36).slice(2, 10), n: 0, ngayMax: 0, sp: {}, ru: { pv: 0, pd: 0, mo: 0 }, vq: {}, nv: {}, dn: { ngay: 0, so: 0 }, sk: {}, tt: {}, tk: { thang: 0, trum: 0, sao7: 0, wave: 0, nang: 0, ruong: 0 }, mvMo: {} }; }, // mvMo: chỉ huy đã mở bằng ngọc (08/11)
+  moi() { return { v: this.V, pid: Math.random().toString(36).slice(2, 10), n: 0, ngayMax: 0, sp: {}, ru: { pv: 0, pd: 0, mo: 0 }, vq: {}, nv: {}, dn: { ngay: 0, so: 0 }, sk: {}, tt: {}, tk: { thang: 0, trum: 0, sao7: 0, wave: 0, nang: 0, ruong: 0, tang: 0 }, mvMo: {} }; }, // tk.tang: tầng Leo Tháp cao nhất (10/11) · mvMo: chỉ huy đã mở bằng ngọc (08/11)
   doc() {
     if (this.s) return this.s;
     let s = null;
@@ -251,7 +255,8 @@ const KT = {
 
   // ---------- NHIỆM VỤ NGÀY ----------
   // bể nhiệm vụ ngày theo kỷ lục wave (mọi chế độ): không giao "Reach wave 30" cho người chưa đạt nổi (tien-trinh §3.4, lỗi L7)
-  nvBe() { const kl = this.doc().tk.wave | 0; return KTC.nv.filter(q => (q.kl | 0) <= kl); },
+  nvVaoBe(q) { const s = this.doc(), tk = s.tk, tang = Math.max(tk.tang | 0, (s.cd && s.cd.thap && s.cd.thap.max) | 0); return (q.kl | 0) <= (tk.wave | 0) || (q.kt != null && q.kt <= tang); }, // kỷ lục wave cũ HOẶC tầng Leo Tháp
+  nvBe() { return KTC.nv.filter(q => this.nvVaoBe(q)); },
   nv() {
     const s = this.doc(), ng = this.ngay();
     if (s.nv.ngay !== ng) {
@@ -262,7 +267,7 @@ const KT = {
     // danh sách hôm nay (bản lưu cũ) có nhiệm vụ vượt kỷ lục, chưa làm → thay ngay (không tính lượt đổi) → không mất thưởng đủ 3
     s.nv.ds = s.nv.ds.filter(id => KTC.nv.some(x => x.id === id));
     const be = this.nvBe();
-    s.nv.ds.forEach((id, i) => { const q = KTC.nv.find(x => x.id === id); if ((q.kl | 0) > (s.tk.wave | 0) && !s.nv.nhan[id] && !((s.nv.tien[id] | 0) >= q.can)) { const m = this.nvMoi(be, 'thay' + i); if (m) s.nv.ds[i] = m; } });
+    s.nv.ds.forEach((id, i) => { const q = KTC.nv.find(x => x.id === id); if (!this.nvVaoBe(q) && !s.nv.nhan[id] && !((s.nv.tien[id] | 0) >= q.can)) { const m = this.nvMoi(be, 'thay' + i); if (m) s.nv.ds[i] = m; } });
     return s.nv.ds.map(id => { const q = KTC.nv.find(x => x.id === id), t = Math.min(q.can, s.nv.tien[id] | 0); return Object.assign({}, q, { t, xong: t >= q.can, da: !!s.nv.nhan[id] }); });
   },
   // nhiệm vụ thay thế: ngẫu nhiên tất định trong bể (đã lọc) trừ các nhiệm vụ đang có
@@ -293,7 +298,7 @@ const KT = {
   },
 
   // ---------- THÀNH TỰU ----------
-  tt() { const s = this.doc(); return KTC.tt.map(a => ({ ...a, t: Math.min(a.can, s.tk[a.k] | 0), xong: (s.tk[a.k] | 0) >= a.can, da: !!s.tt[a.id] })); },
+  tt() { const s = this.doc(); return KTC.tt.map(a => { const cu = (s.tk[a.k] | 0) >= a.can; if (!a.k2) return { ...a, t: Math.min(a.can, s.tk[a.k] | 0), xong: cu, da: !!s.tt[a.id] }; const xong = cu || (s.tk[a.k2] | 0) >= a.can2; return { ...a, can: a.can2, t: xong ? a.can2 : Math.min(a.can2, s.tk[a.k2] | 0), xong, da: !!s.tt[a.id] }; }); },
   ttNhan(id) { const a = this.tt().find(x => x.id === id); if (!a || !a.xong || a.da) return null; this.s.tt[id] = 1; const ra = this.cho(a.r, 'tt' + id, 'achieve'); this.luu(); return ra; },
 
   // ---------- SỰ KIỆN TUẦN ----------
@@ -308,11 +313,15 @@ const KT = {
     if (tr.xong) return null; tr.xong = 1;
     const s = this.doc(), wave = Math.max(1, (k && k.wave) | 0), trum = (m && m.trum) | 0, thang = !!(k && k.thang), che = tr.onl ? 'online' : (tr.che || (m && m.che) || 'solo');
     this.nv(); const nv = s.nv, cong = (key, v) => { for (const id of nv.ds) { const q = KTC.nv.find(x => x.id === id); if (q.k !== key) continue; nv.tien[id] = q.max ? Math.max(nv.tien[id] | 0, v) : (nv.tien[id] | 0) + v; } };
-    cong('tran', 1); if (thang) cong('thang', 1); cong('ghep', tr.ghep); cong('trieu', tr.trieu); cong('wave', wave); cong('trum', trum); cong('sao5', tr.sao5);
+    // Leo Tháp (10/11 thay Solo, che 'thap', m.thap = { t: tầng, qua: wave đã qua 0–5 }): không ghi wave tuyệt đối (tầng cao bắt đầu ở wave cao)
+    const lt = che === 'thap' && m && m.thap;
+    cong('tran', 1); if (thang) cong('thang', 1); cong('ghep', tr.ghep); cong('trieu', tr.trieu); if (!lt) cong('wave', wave); cong('trum', trum); cong('sao5', tr.sao5);
+    if (lt && thang) cong('tang', lt.t | 0);
     if (che === 'coop' || che === 'online') cong('coop', 1); if (che === 'pvp') cong('pvp', 1);
-    const diem = Math.min(KTC.skMax, wave + (thang ? 10 : 0) + 5 * trum); this.sk().diem += diem;
-    s.tk.thang += thang ? 1 : 0; s.tk.trum += trum; s.tk.sao7 += tr.sao7; s.tk.wave = Math.max(s.tk.wave, wave);
-    this.luu(); return { diem };
+    const diem = Math.min(KTC.skMax, lt ? KTC.skThap(lt.qua, thang, trum) : wave + (thang ? 10 : 0) + 5 * trum); this.sk().diem += diem;
+    s.tk.thang += thang ? 1 : 0; s.tk.trum += trum; s.tk.sao7 += tr.sao7; if (!lt) s.tk.wave = Math.max(s.tk.wave, wave);
+    if (lt) s.tk.tang = Math.max(s.tk.tang | 0, typeof CD !== 'undefined' ? CD.st().thap.max | 0 : 0, thang ? lt.t | 0 : 0);
+    this.luu(); return (tr.kq = { diem }); // tr.kq: các lớp bọc (manh / tientrinh) gắn thêm .mh / .tt → màn kết quả Leo Tháp đọc lại (chedo-c.js)
   },
   // có gì nhận được (chấm đỏ HOME)
   coNhan() {

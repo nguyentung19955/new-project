@@ -3,7 +3,11 @@
 //  · Trận chế độ C = trận SOLO (bàn, bộ bài, cấp thẻ thật) + tham số G.cd: wave đầu/cuối, mana đầu, trùm cố định, luật sinh quái, đồng hồ trùm.
 //  · TẤT ĐỊNH: thành phần wave sinh bằng rngHat(hạt tầng) — không Math.random trong file này; hạt trận cố định (G.hat) → lịch chiêu trùm như nhau.
 //  · Không ghi kỷ lục Solo / mốc wave / điểm sự kiện / nhiệm vụ theo wave, không Rương Trận (bắt đầu ở wave cao sẽ phá các mốc đó) — chỉ thưởng LẦN ĐẦU
-//    (ghi cờ trước khi phát) + XP phi công lần đầu.
+//    (ghi cờ trước khi phát) + XP phi công lần đầu.  [Săn Trùm / Thử thách ngắn giữ nguyên như vậy.]
+//  · 10/11 NGƯỜI DÙNG CHỐT "BỎ SOLO": LEO THÁP là chế độ một mình CHÍNH — mở ngay sau hướng dẫn (bỏ khoá cấp 5), HOME PLAY vào thẳng tầng kế,
+//    và trận Leo Tháp nhận mọi thứ trước đây của trận Solo, đo theo TẦNG (che 'thap', KQ.m.thap = { t, qua, thang }):
+//    nhiệm vụ ngày / Hành trình / nhiệm vụ tuần (kinhte.js, tientrinh.js), XP phi công mỗi trận, điểm sự kiện, thành tựu + mốc Huyền thoại theo tầng
+//    (manh.js), RƯƠNG TRẬN NHỎ mỗi lần thắng tầng (thebai.js), Hộp lên cấp. Không ghi kỷ lục Solo (turret_best) — kỷ lục cũ giữ nguyên.
 //  · Lưu: turret_kt.cd (khoá con mới) + turret_kt.mh.tt (Tinh thể Đỏ). Gộp hồ sơ Firebase: cờ OR, số lớn nhất.
 'use strict';
 
@@ -360,11 +364,12 @@ const CDUI = {
   },
 
   // ---------- màn kết quả ----------
-  ketQua(k, c) {
+  ketQua(k, c, rp) {
     const kq = document.getElementById('ketqua'); if (!kq) return;
     try { if (typeof VT !== 'undefined' && VT.mo) VT.dong(); } catch (e) { }
     let r = null;
-    if (k.thang && !c.luyen) { try { r = CD.thang(c); } catch (e) { console.error('CD', e); } }
+    if (rp !== undefined) r = rp; // Leo Tháp: đã phát thưởng lần đầu trước chuỗi hết trận
+    else if (k.thang && !c.luyen) { try { r = CD.thang(c); } catch (e) { console.error('CD', e); } }
     this._ru = r && r.ra.ru ? r.ra.ru.slice() : [];
     const dich = (x) => (typeof NN !== 'undefined' && NN.t ? NN.t(x) : x); // câu ghép với lý do thua (đã là chữ Việt) → dịch phần của mình trước
     const phu = document.getElementById('kq-phu'); if (phu) phu.textContent = dich(CD.tenCheDo(c) + ' · ' + (c.loai === 'san' ? 'TIER ' + c.bac : CD.tenTran(c).toUpperCase())) + (c.loai === 'san' ? ' · ' + CD.tenTrum(c.id) : '') + (!k.thang && k.ly ? ' · ' + dich(k.ly) : '');
@@ -373,7 +378,9 @@ const CDUI = {
     const soW = c.w1 - c.w0 + 1, qua = Math.max(0, Math.min(soW, G.wave - c.w0 + (k.thang ? 1 : 0))), tim = G.ban[0] ? Math.max(0, G.ban[0].tim | 0) : 0;
     let h = '<div class="kq-hang">' + (c.loai === 'san' ? o('TIER', c.bac) + o('TICKETS', CD.ve()) : o(c.loai === 'thap' ? 'FLOOR' : 'TRIAL', c.id) + o('WAVES', qua + '/' + soW)) + o('LIVES', tim + '/' + c.tim) + '</div>';
     let th;
-    if (c.luyen) th = '<small>PRACTICE · NO REWARD</small>';
+    const lt = rp !== undefined && c.loai === 'thap' && typeof KQ !== 'undefined' && KQ.m && KQ.m.thap;
+    if (lt) th = this.thuongThap(k, r);
+    else if (c.luyen) th = '<small>PRACTICE · NO REWARD</small>';
     else if (r && (r.ra.vang || r.ra.ngoc || r.ra.tt || r.ra.the.length || (r.ra.ru || []).length)) {
       const ic = []; if (r.ra.vang) ic.push(KTUI.rIc({ vang: r.ra.vang })); if (r.ra.ngoc) ic.push(KTUI.rIc({ ngoc: r.ra.ngoc })); if (r.ra.tt) ic.push(this.ttIc(r.ra.tt));
       th = '<small>' + (r.moi ? 'FIRST CLEAR REWARDS' : 'REWARDS') + '</small><div class="tb-kq-h cd-kq-h">' + (this._ru.length ? '<button class="sh-kq-ru" data-act="cd-kq-mo" aria-label="Open chest"><img src="' + this.a(KTA.ru[this._ru[0].k] || KTA.ru.thuong) + '" alt=""><b>OPEN' + (this._ru.length > 1 ? ' ×' + this._ru.length : '') + '</b></button>' : '') + ic.join('') + '</div>' +
@@ -389,6 +396,30 @@ const CDUI = {
     CD.lap = lap;
     const lai = kq.querySelector('[data-act="choilai"]'); if (lai) lai.textContent = chu;
     const sua = kq.querySelector('[data-act="doibo"]'); if (sua) sua.textContent = 'EDIT DECK';
+  },
+  // ô thưởng trận Leo Tháp: thưởng lần đầu + Rương Trận nhỏ (thebai.js, chỉ khi thắng) + mốc Huyền thoại theo tầng (manh.js) — 1 nút OPEN mở
+  //  tất cả rương; dòng XP phi công (lần đầu + mỗi trận) + điểm sự kiện
+  thuongThap(k, r) {
+    const bt = KQ.m._thuong || null, x = (typeof KT !== 'undefined' && KT.tran && KT.tran.kq) || {}, mh = x.mh || [], ru = this._ru.slice();
+    let vang = (r ? r.ra.vang : 0) + (bt ? bt.vang | 0 : 0), ngoc = r ? r.ra.ngoc : 0; const tt = r ? r.ra.tt : 0;
+    for (const g of mh) { if (g.ra) { vang += g.ra.vang || 0; ngoc += g.ra.ngoc || 0; ru.push(...(g.ra.ru || [])); } }
+    if (bt && bt.the && bt.the.length) ru.push({ k: 'tran', ten: 'BATTLE CHEST', the: bt.the.map(y => ({ id: y.id, n: y.n, bac: y.bac || THEBAI.bac(y.id), moi: y.moi })).sort((a, b) => TIERS[a.bac].thuTu - TIERS[b.bac].thuTu) });
+    this._ru = ru;
+    const ic = []; if (vang) ic.push(KTUI.rIc({ vang })); if (ngoc) ic.push(KTUI.rIc({ ngoc })); if (tt) ic.push(this.ttIc(tt));
+    const xp = (r ? r.xp : 0) + (x.tt ? x.tt.xp | 0 : 0), len = (x.tt && x.tt.len && x.tt.cap) || (r && r.len) || 0;
+    const co = ru.length || ic.length;
+    let h = '<small>' + (r && r.moi ? 'FIRST CLEAR REWARDS' : co ? 'REWARDS' : 'NO REWARD') + '</small>';
+    if (co) h += '<div class="tb-kq-h cd-kq-h">' + (ru.length ? '<button class="sh-kq-ru" data-act="cd-kq-mo" aria-label="Open chest"><img src="' + this.a(KTA.ru[ru[0].k] || KTA.ru.thuong) + '" alt=""><b>OPEN' + (ru.length > 1 ? ' ×' + ru.length : '') + '</b></button>' : '') + ic.join('') + '</div>';
+    if (mh.length) h += '<small class="kt-kq">' + mh.map(g => g.nhan).join(' · ') + '</small>';
+    if (xp) h += '<small class="kt-kq tt-kq">PILOT XP +' + xp + (len ? ' · LEVEL ' + len + '!' : '') + '</small>';
+    if (x.diem) h += '<small class="kt-kq">EVENT +' + x.diem + ' PTS</small>';
+    return h;
+  },
+  // xong trận hướng dẫn (thắng): nút chơi tiếp = vào tầng Leo Tháp kế (không còn trận Solo)
+  sauHd(k) {
+    if (!k || !k.thang || typeof KQ === 'undefined' || !KQ.m || !KQ.m.tut || !TT.tnMo('thap')) return;
+    const lai = document.querySelector('#ketqua [data-act="choilai"]'); if (!lai) return;
+    lai.textContent = 'CLIMB · FLOOR ' + CD.thapKe(); lai.dataset.cdThap = '1';
   },
   moKq() {
     const ru = this._ru || []; if (!ru.length) return;
@@ -446,7 +477,7 @@ const CDUI = {
   try { CD.st(); } catch (e) { console.error('CD', e); }
 
   // ---- khoá tính năng (tientrinh.js TTC.tn) ----
-  Object.assign(TTC.tn, { thu: { hd: 1, ten: 'QUICK TRIALS' }, thap: { cap: 5, ten: 'TOWER CLIMB' }, san: { cap: 0, trum: 3, ten: 'BOSS HUNT' } });
+  Object.assign(TTC.tn, { thu: { hd: 1, ten: 'QUICK TRIALS' }, thap: { hd: 1, ten: 'TOWER CLIMB' }, san: { cap: 0, trum: 3, ten: 'BOSS HUNT' } }); // 10/11: Leo Tháp mở ngay sau hướng dẫn (trước: cấp 5)
   { const g = TT.tnMo; TT.tnMo = function (k) { if (k === 'san') { try { return ADMIN.la() || !!this.st().giuTn.san || CD.trumHa().length >= TTC.tn.san.trum; } catch (e) { return false; } } return g.apply(this, arguments); }; }
   { const g = TT.tnChu; TT.tnChu = function (k) { return k === 'san' ? 'Unlocks after defeating ' + TTC.tn.san.trum + ' different bosses' : g.apply(this, arguments); }; }
   { const g = TTUI.tnNhan; TTUI.tnNhan = function (k) { return k === 'san' ? '<b>' + TTC.tn.san.trum + ' BOSSES</b>' : g.apply(this, arguments); }; }
@@ -481,7 +512,19 @@ const CDUI = {
   if (typeof UI !== 'undefined' && UI.ketQua) {
     const kq = UI.ketQua;
     UI.ketQua = function (k) {
-      const c = G.cd; if (!c) return kq.apply(this, arguments);
+      const c = G.cd;
+      if (!c) { const x = kq.apply(this, arguments); try { CDUI.sauHd(k); } catch (e) { console.error('CD', e); } return x; }
+      // LEO THÁP (10/11 thay Solo): chạy đủ chuỗi hết trận (nhiệm vụ / XP / sự kiện / Rương Trận nhỏ) với KQ.m.thap; chỉ bỏ kỷ lục Solo
+      if (c.loai === 'thap' && !c.luyen && typeof KQ !== 'undefined' && KQ.m && !KQ.m.tut) {
+        const soW = c.w1 - c.w0 + 1, qua = Math.max(0, Math.min(soW, G.wave - c.w0 + (k && k.thang ? 1 : 0)));
+        let r = null; if (k && k.thang) { try { r = CD.thang(c); } catch (e) { console.error('CD', e); } } // thưởng lần đầu TRƯỚC → nhiệm vụ / mốc thấy tầng mới
+        KQ.m.thap = { t: c.id, qua, thang: !!(k && k.thang) };
+        try { if (KT.tran) KT.tran.che = 'thap'; } catch (e) { }
+        const lb = KQ.luuBest; KQ.luuBest = function () { };
+        let x; try { x = kq.apply(this, arguments); } finally { KQ.luuBest = lb; }
+        try { CDUI.ketQua(k, c, r); } catch (e) { console.error('CD', e); }
+        return x;
+      }
       const dw = G.debug.wave, lb = typeof KQ !== 'undefined' ? KQ.luuBest : null;
       G.debug.wave = -1; if (lb) KQ.luuBest = function () { };
       let x;
@@ -518,6 +561,12 @@ const CDUI = {
     };
   }
   // RETRY / NEXT sau trận C (pha capture, trước ketqua.js / ui.js): nạp cấu hình chờ rồi để ui.js gọi batDau như thường
+  document.addEventListener('click', (e) => { // xong hướng dẫn → CLIMB · FLOOR n (bộ hướng dẫn đang chọn)
+    const el = e.target.closest && e.target.closest('#ketqua [data-act="choilai"][data-cd-thap]'); if (!el) return;
+    delete el.dataset.cdThap; if (G.cd || !TT.tnMo('thap')) return;
+    CD.cho = CD.cauHinh('thap', CD.thapKe()); UI.che = 'solo'; if (typeof KQ !== 'undefined' && KQ.m) KQ.m.che = 'solo';
+    if (typeof HM !== 'undefined') { HM.che = 'thap'; HM.luu(); }
+  }, true);
   document.addEventListener('click', (e) => {
     const el = e.target.closest && e.target.closest('#ketqua [data-act="choilai"]'); if (!el || !CD.lap || !G.cd) return;
     const c = CD.lap; CD.lap = null;
@@ -545,13 +594,16 @@ const CDUI = {
       if (!laC(k)) return cc.apply(this, arguments);
       if (khoa(k)) { TTUI.toast(TT.tnChu(k)); return; }
       this.che = k; this.luu(); try { SND.nut(); } catch (e) { } this.dong(); this.ve();
+      if (k === 'thap') { this.luuBo(); CDUI.mo('thap'); } // PLAY vào thẳng tầng kế → chọn TOWER CLIMB trong GAME MODE = mở bảng tầng (chơi lại tầng cũ)
     };
     const ch = HM.choi;
     HM.choi = function () {
       if (!laC(this.che)) return ch.apply(this, arguments);
       if (UI.chon.length !== 5) { if (!this.el('chon').classList.contains('xem-dk') || this.bst) this.di('dk'); UI.nhac('Pick 5 turrets'); return; }
       if (khoa(this.che)) { TTUI.toast(TT.tnChu(this.che)); return; }
-      this.luuBo(); CDUI.mo(this.che);
+      this.luuBo();
+      if (this.che === 'thap' && CD.st().thap.max < CDC.thap.so) { CD.vao('thap', CD.thapKe()); return; } // 10/11: PLAY = vào thẳng tầng chưa qua thấp nhất
+      CDUI.mo(this.che);
     };
     const mc = HM.moChe; // mở bảng: cuộn tới chế độ đang chọn
     HM.moChe = function () { const x = mc.apply(this, arguments); try { const o = document.querySelector('#hm-tam .hm-chec.on'); if (o) o.scrollIntoView({ block: 'nearest' }); } catch (e) { } return x; };
@@ -633,5 +685,18 @@ const CDUI = {
     'Pick # Mythic card: +# copy. Costs # Red Crystals and #,# gold.': 'Chọn # thẻ Cổ đại: +# bản. Tốn # Tinh thể Đỏ và #.# vàng.',
     'Pick # Mythic card: +# copy. Costs # Red Crystals and # gold.': 'Chọn # thẻ Cổ đại: +# bản. Tốn # Tinh thể Đỏ và # vàng.',
     'ALL BOSSES · TIER #': 'ĐỦ TRÙM · BẬC #', 'BOSS OF THE WEEK · TIER #': 'TRÙM CỦA TUẦN · BẬC #', 'Red Crystal': 'Tinh thể Đỏ',
+    // 10/11 bỏ Solo — Leo Tháp là chế độ một mình chính (nhiệm vụ / điều kiện Đỏ / mốc / hồ sơ theo TẦNG)
+    'Clear floor #': 'Qua tầng #', 'Defeat the floor # boss': 'Hạ trùm tầng #', 'Clear floor # or higher': 'Qua tầng # trở lên', 'Clear Tower floor #': 'Qua tầng # Leo Tháp',
+    'Play # battles within # floors of your best': 'Chơi # trận cách tầng cao nhất không quá # tầng', 'Have a #★ turret': 'Có một ụ #★', 'Defeat # bosses': 'Hạ # trùm',
+    'Pilot Level # and Tower floor #': 'Cấp phi công # và tầng # Leo Tháp', 'Unlocks at Pilot Level # and Tower floor #': 'Mở ở cấp phi công # và tầng # Leo Tháp',
+    'Tower: floor #': 'Leo Tháp: tầng #', 'BEST FLOOR #': 'TẦNG CAO NHẤT #', 'BEST FLOOR': 'TẦNG CAO NHẤT', 'OLD BEST WAVE #': 'KỶ LỤC ĐỢT CŨ #',
+    'TOWER FLOOR #': 'LEO THÁP TẦNG #', 'TOWER FLOOR #/#': 'LEO THÁP TẦNG #/#', 'TOWER FLOOR #/#/#': 'LEO THÁP TẦNG #/#/#',
+    'Locked · clear Tower floor # or unlock with gems': 'Đang khoá · qua tầng # Leo Tháp hoặc mở bằng ngọc', 'Floor # or # gems': 'Tầng # hoặc # ngọc',
+    'XP: WAVES + # PER BOSS + WIN BONUS': 'XP: ĐỢT + # MỖI TRÙM + THƯỞNG THẮNG',
+    'OPEN ×#': 'MỞ ×#', 'TOWER · PVP': 'LEO THÁP · PVP', 'TOWER · CO-OP': 'LEO THÁP · CO-OP', 'TOWER': 'LEO THÁP', 'PILOT XP +# · LEVEL #!': 'XP PHI CÔNG +# · CẤP #!',
+    'Tower floors #–#': 'Leo Tháp tầng #–#', 'Tower floors #, #, #': 'Leo Tháp tầng #, #, #',
+    'Battle rewards · Gold Chest · Daily Specials · Tower floors #–# · first boss kills · daily quest · Shard Forge · Legendary Seal': 'Thưởng trận · Rương Vàng · Ưu đãi hôm nay · Leo Tháp tầng #–# · hạ trùm lần đầu · nhiệm vụ ngày · Lò rèn · Ấn Vàng',
+    'Mythic / Gold Chest · Daily Specials (~# day a week) · Tower floors #, #, # · defeat all bosses · event #,# pts · Shard Forge': 'Rương Thần thoại / Vàng · Ưu đãi hôm nay (~# ngày/tuần) · Leo Tháp tầng #, #, # · hạ đủ trùm · sự kiện #.# điểm · Lò rèn',
+    'Mythic / Gold Chest · Daily Specials (~# day a week) · Tower floors #, #, # · defeat all bosses · event # pts · Shard Forge': 'Rương Thần thoại / Vàng · Ưu đãi hôm nay (~# ngày/tuần) · Leo Tháp tầng #, #, # · hạ đủ trùm · sự kiện # điểm · Lò rèn',
   });
 })();

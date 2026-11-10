@@ -76,7 +76,7 @@ const TK = {
       el.innerHTML = '<div class="bang onl-bang">' +
         '<div class="bang-ten">PILOT PROFILE</div>' +
         '<div class="tk-dau"><img class="tk-av" alt=""><div class="tk-ten-hop"><input id="tk-ten" maxlength="16" autocomplete="off" spellcheck="false"><small id="tk-loai"></small></div></div>' +
-        '<div class="tk-so"><div><b id="tk-w">0</b><span>BEST WAVE</span></div><div><b id="tk-th">0</b><span>WINS</span></div><div><b id="tk-tr">0</b><span>MATCHES</span></div></div>' +
+        '<div class="tk-so"><div><b id="tk-w">0</b><span>BEST FLOOR</span></div><div><b id="tk-th">0</b><span>WINS</span></div><div><b id="tk-tr">0</b><span>MATCHES</span></div></div>' +
         '<div class="onl-nho">CHOOSE AVATAR</div><div class="tk-avs"></div>' +
         '<div class="bang-nut"><button class="nut" data-act="tk-google" id="tk-google">SIGN IN WITH GOOGLE</button>' +
         '<button class="nut" data-act="tk-xuat" id="tk-xuat" hidden>SIGN OUT</button>' +
@@ -96,7 +96,10 @@ const TK = {
     const h = this.ho, u = NET.user;
     el.querySelector('.tk-av').src = this.avURL(h.av);
     const ip = el.querySelector('#tk-ten'); if (document.activeElement !== ip) ip.value = this._tenGo != null ? this._tenGo : h.name;
-    el.querySelector('#tk-w').textContent = h.bestWave; el.querySelector('#tk-th').textContent = h.wins; el.querySelector('#tk-tr').textContent = h.games;
+    // 10/11 bỏ Solo: kỷ lục hồ sơ = TẦNG Leo Tháp cao nhất; kỷ lục wave cũ (Solo…) chỉ hiện nhỏ "OLD BEST WAVE n" — không xoá
+    let tang = 0; try { tang = CD.st().thap.max | 0; } catch (e) { }
+    el.querySelector('#tk-w').textContent = tang;
+    { const o = el.querySelector('#tk-w').parentNode; let c = o.querySelector('.tk-cu'); if (h.bestWave > 0) { if (!c) { c = document.createElement('small'); c.className = 'tk-cu'; o.appendChild(c); } c.textContent = 'OLD BEST WAVE ' + h.bestWave; } else if (c) c.remove(); } el.querySelector('#tk-th').textContent = h.wins; el.querySelector('#tk-tr').textContent = h.games;
     el.querySelectorAll('.tk-a').forEach(b => b.classList.toggle('chon', b.dataset.av === h.av));
     el.querySelector('#tk-loai').textContent = !NET.ok ? 'Offline — profile saved on this device' : u.anon ? 'Guest account (this device)' : 'Google: ' + (u.email || u.name);
     el.querySelector('#tk-google').hidden = !NET.ok || !u || !u.anon;

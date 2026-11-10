@@ -42,6 +42,7 @@
 .tk-so { display: flex; gap: 6px; margin: 10px 0 4px; }
 .tk-so > div { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 2px 0; border: 0 solid transparent; border-width: 6px 10px; border-image: url(../assets/h2_lcd.webp?v=e23fa299) 56.4 94.1 fill / 6px 10px stretch; }
 .tk-so b { font-family: var(--f-so, monospace); font-size: 20px; color: #ffe08a; line-height: 1.1; }
+.tk-so .tk-cu { font-size: 9px; opacity: .7; letter-spacing: .04em; } /* kỷ lục wave cũ (bỏ Solo 10/11) */
 .tk-so span { font-family: var(--f-ui); font-size: 8px; font-weight: 800; color: #8b95a3; letter-spacing: .5px; }
 .tk-avs { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-top: 6px; }
 .tk-a { aspect-ratio: 1; padding: 0; border: 0; background: none; opacity: .55; }

@@ -1,6 +1,8 @@
 // TURRET MERGE — HUD mượt A (TU-VAN-HUD-MUOT.txt §3A HOME + §3B DECK BUILDER + §4 chuyển động).
 //  #chon = MENU (mọi file khác vẫn coi "#chon hiện" = đang ở menu). Bên trong 2 màn:
-//   · .hm HOME: hồ sơ + kỷ lục, logo, ảnh lớn (chỉ huy đang dùng), chọn CHẾ ĐỘ (1 bảng: SOLO / CO-OP / PVP / ONLINE), nút PLAY, DECK / COLLECTION.
+//   · .hm HOME: hồ sơ + kỷ lục, logo, ảnh lớn (chỉ huy đang dùng), chọn CHẾ ĐỘ (1 bảng: LEO THÁP / … / CO-OP / PVP / ONLINE), nút PLAY, DECK / COLLECTION.
+//     10/11 (người dùng chốt "bỏ solo"): LEO THÁP là chế độ một mình chính — PLAY vào thẳng tầng kế (chedo-c.js); SOLO không còn trong bảng
+//     (giữ mục ẩn cho ?mode=solo kiểm thử + trận hướng dẫn; bàn trận Leo Tháp vẫn là bàn 'solo').
 //   · .dk XÂY BỘ BÀI: BACK + tiêu đề + PRESETS; 5 ô + ô chỉ huy thứ 6 (chạm = chọn chỉ huy); tìm + FILTER; lưới 3 cột; PLAY dính đáy.
 //  Bảng trượt dưới (#hm-mo): chế độ · cài đặt (nhạc/SFX/âm lượng, hồ sơ, hướng dẫn) · bộ mẫu (presets) · bộ lọc (vai trò/độ hiếm/sắp xếp)
 //   · chỉ huy · XEM NHANH thẻ (ADD/REMOVE + DETAILS → trang ụ). Chỉ dời chỗ — không bỏ tính năng nào.
@@ -10,16 +12,18 @@ const HM = {
   KEY: 'turret_hm',
   CHE: {
     // mo: 1 câu cho bảng GAME MODE (tư vấn C §B6) — nói rõ 4 chế độ khác nhau thế nào (CO-OP/PVP trên máy = bạn máy; ONLINE = phòng bạn bè qua mã)
-    solo: { ten: 'SOLO', ic: 'ic_solo', phu: () => TEXT.ui.soloSub, mo: 'Just you · 1 board · 3 lives' },
+    solo: { ten: 'SOLO', ic: 'ic_solo', phu: () => TEXT.ui.soloSub, mo: 'Just you · 1 board · 3 lives', an: 1 }, // an: ẩn khỏi GAME MODE (chỉ ?mode=solo)
     coop: { ten: 'CO-OP', ic: 'ic_coop', phu: () => TEXT.ui.coopSub, mo: 'Team up with an AI ally · 3 shared lives' },
     pvp: { ten: 'PVP', ic: 'ic_pvp', phu: () => TEXT.ui.pvpSub, mo: 'Outlast an AI rival on the same waves' },
     online: { ten: 'ONLINE', ic: 'ic_coop', phu: () => 'Co-op with a friend', mo: 'Friend room · join with a 4-letter code' },
   },
   ICHE: {}, // ảnh biểu tượng chế độ riêng (E32, khi có) — trống = dùng ic_solo/ic_coop/ic_pvp
-  che: 'solo', bac: 'all', armed: -1, noi: null, bst: false, sheet: null,
+  che: 'thap', bac: 'all', armed: -1, noi: null, bst: false, sheet: null,
   giam: () => matchMedia('(prefers-reduced-motion: reduce)').matches,
   esc: (v) => String(v == null ? '' : v).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])),
-  doc() { try { const l = JSON.parse(localStorage.getItem(this.KEY) || 'null'); if (l) { if (this.CHE[l.che]) this.che = l.che; if (l.bac === 'all' || (typeof TIERS !== 'undefined' && typeof l.bac === 'string' && TIERS[l.bac])) this.bac = l.bac; } } catch (e) { } },
+  // chế độ hợp lệ trên HOME: 'solo' (bản lưu cũ) → Leo Tháp, trừ khi kiểm thử ?mode=solo
+  chuan(k) { return k === 'solo' && !(typeof G !== 'undefined' && G.debug && G.debug.mode === 'solo') ? 'thap' : k; },
+  doc() { try { const l = JSON.parse(localStorage.getItem(this.KEY) || 'null'); if (l) { if (this.CHE[l.che] && !this.CHE[l.che].an) this.che = l.che; if (l.bac === 'all' || (typeof TIERS !== 'undefined' && typeof l.bac === 'string' && TIERS[l.bac])) this.bac = l.bac; } } catch (e) { } },
   luu() { try { localStorage.setItem(this.KEY, JSON.stringify({ che: this.che, bac: this.bac })); } catch (e) { } },
   luuBo() { try { localStorage.setItem('turret_bo', JSON.stringify({ chon: UI.chon, mv: UI.mv, che: UI.che })); } catch (e) { } },
   el: (id) => document.getElementById(id),
@@ -48,7 +52,7 @@ const HM = {
   ve() { this.veHome(); this.veDeck(); },
 
   veHome() {
-    const m = this.CHE[this.che];
+    const m = this.CHE[this.che] || this.CHE.solo;
     this.el('hm-che-ic').src = (typeof anhUrl === 'function' ? anhUrl(m.ic) : 'assets/' + m.ic + '.png');
     this.el('hm-che-ten').textContent = m.ten;
     const n = UI.chon.length;
@@ -64,7 +68,7 @@ const HM = {
   },
 
   veDeck() {
-    const m = this.CHE[this.che], n = UI.chon.length;
+    const m = this.CHE[this.che] || this.CHE.solo, n = UI.chon.length;
     const nv = this.el('nut-vao'); if (nv) nv.disabled = n !== 5;
     this.el('dk-choi-phu').textContent = n === 5 ? m.ten + ' · ' + m.phu() : (5 - n) + ' more to go';
     // ô đang chờ đổi
@@ -111,11 +115,13 @@ const HM = {
   dau(t, phu) { return '<div class="hm-tam-dau"><b>' + t + '</b>' + (phu ? '<small>' + phu + '</small>' : '') + '<button class="hm-ic hm-ic1 hm-dong" data-act="hm-dong" aria-label="Close"><img src="assets/p7_ic_dong.webp?v=14f619f0" alt=""></button></div>'; },
 
   moChe() {
-    this.mo('che', this.dau('GAME MODE') + '<div class="hm-ds">' + Object.entries(this.CHE).map(([k, m]) =>
+    // LEO THÁP đứng đầu; mục ẩn (SOLO) không hiện
+    const ds = Object.entries(this.CHE).filter(([k, m]) => !m.an).sort((a, b) => (b[0] === 'thap') - (a[0] === 'thap'));
+    this.mo('che', this.dau('GAME MODE') + '<div class="hm-ds">' + ds.map(([k, m]) =>
       '<button class="hm-hang hm-chec' + (k === this.che ? ' on' : '') + '" data-act="hm-che-chon" data-che="' + k + '" aria-pressed="' + (k === this.che) + '"><img src="' + (typeof anhUrl === 'function' ? anhUrl((this.ICHE[k] || m.ic)) : 'assets/' + (this.ICHE[k] || m.ic) + '.png') + '" alt=""><span><b>' + m.ten + '</b><small>' + this.esc(m.mo || m.phu()) + '</small></span>' + (k === this.che ? '<em>SELECTED</em>' : '') + '</button>').join('') + '</div>');
   },
   chonChe(k) {
-    if (!this.CHE[k]) return;
+    if (!this.CHE[k] || (this.CHE[k].an && this.chuan(k) !== k)) return;
     this.che = k; if (k !== 'online') UI.che = k;
     document.querySelectorAll('#chon .che').forEach(b => b.classList.toggle('chon', b.dataset.che === UI.che));
     this.luu(); this.luuBo(); SND.nut(); this.dong(); this.ve();
@@ -186,9 +192,9 @@ const HM = {
       '<div class="hm-hang hm-mvh' + (id === UI.mv ? ' on' : '') + (this.mvKhoa(id) ? ' khoa' : '') + '" style="--mm:' + d.mau + '" data-bac="' + (typeof mvBac === 'function' ? mvBac(id) : '') + '"><button class="hm-mvh-chon" data-act="hm-mv-chon" data-id="' + id + '"><span class="hm-mvh-po">' + (typeof OT !== 'undefined' ? OT.miniMV(id) : '<img src="' + mvIcURL(id) + '" alt="">') + '</span><span>' + this.mvBacNhan(id) + '<b>' + this.esc(d.ten) + '</b><small>' + this.esc(d.mo) + '</small>' + this.mvMoChu(id) + '</span>' + (id === UI.mv ? '<em>SELECTED</em>' : '') + '</button>' +
       (this.mvKhoa(id) ? this.mvNutMua(id) : '') + '<button class="hm-ct" data-act="hm-mv-ct" data-id="' + id + '">DETAILS</button></div>').join('') + '</div>');
   },
-  // CÁCH CÓ chỉ huy (08/11): mo2 = { wave, ngoc } — kỷ lục wave HOẶC trả ngọc (mvCo — data.js); chỉ huy miễn phí không có mo2
+  // CÁCH CÓ chỉ huy (08/11): mo2 = { wave, tang, ngoc } — tầng Leo Tháp (10/11; kỷ lục wave cũ vẫn tính) HOẶC trả ngọc (mvCo — data.js); chỉ huy miễn phí không có mo2
   mvKhoa(id) { return typeof mvCo === 'function' && !mvCo(id); },
-  mvMoChu(id) { const m = MAVUONG[id].mo2; return this.mvKhoa(id) ? '<i class="hm-mv-mo">Locked · reach wave ' + m.wave + ' or unlock with gems</i>' : ''; },
+  mvMoChu(id) { const m = MAVUONG[id].mo2; return this.mvKhoa(id) ? '<i class="hm-mv-mo">Locked · clear Tower floor ' + m.tang + ' or unlock with gems</i>' : ''; },
   mvNutMua(id) { const m = MAVUONG[id].mo2; return '<button class="hm-mv-mua" data-act="hm-mv-mua" data-id="' + id + '"><img src="' + (typeof KTUI !== 'undefined' ? KTUI.a(KTA.ngoc) : 'assets/shop_ngoc.webp?v=569d23d8') + '" alt="Gems"><b>' + m.ngoc + '</b></button>'; },
   mvMua(id) { // mở bằng ngọc: trừ ngọc 1 lần, lưu turret_kt.mvMo (không bao giờ lấy lại)
     const d = MAVUONG[id]; if (!d || !d.mo2 || !this.mvKhoa(id) || typeof KT === 'undefined') return false;
@@ -257,6 +263,7 @@ const HM = {
       UI.nhac('Pick 5 turrets'); return;
     }
     if (this.che === 'online') { if (typeof ONL !== 'undefined') ONL.moBang(); return; }
+    if (this.chuan(this.che) !== this.che) { this.che = 'thap'; this.luu(); return this.choi(); } // Solo cũ → Leo Tháp (HM.choi đã bọc ở chedo-c.js)
     UI.che = this.che; this.luuBo(); UI.vao();
   },
 
@@ -366,7 +373,7 @@ const HM = {
   const initGoc = UI.init;
   UI.init = async function () {
     const r = await initGoc.apply(this, arguments);
-    if (HM.che !== 'online' && HM.CHE[UI.che]) HM.che = UI.che;
+    if (HM.che !== 'online' && HM.CHE[UI.che]) HM.che = HM.chuan(UI.che);
     try { HM.ve(); } catch (e) { console.error('HM', e); }
     return r;
   };
