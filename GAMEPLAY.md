@@ -1147,3 +1147,8 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - Cắt bằng `tools/thap-cat-anime-u.py` (→ `_de/_vien/_nong/_phu` + `nho/`); `tools/thap-cat-umod.py` thêm `BE_GIU`: đầu kèm mũi tên/tia to phải thu (f 0,77–0,93) nhưng bệ giữ cỡ bệ chung (~1,02 như các ụ cùng bậc).
 - Nhận diện `tools/thap-nhan-dien-u.py`: `REF_RIENG` đọc ảnh gốc chưa nướng của 6 ụ từ commit cắt mới (ụ khác vẫn 48d490641); màu nhấn mới xaotron tím-cyan, min đỏ-đen, taylo bạc hà, baotuyet xanh băng, kepha cam, hutmana teal; bệ/icon theo tông bậc. `artscale.js`: HEAD_K/DE_RIENG/PHU_K/UMOD_TIP (cắt) + DAU_VE (vẽ) của 6 ụ.
 - Không đổi luật. Ảnh kiểm 393×852: `/home/claude/xem/xaotron_moi.jpg`, `/home/claude/xem/ve_lai_6u.jpg`.
+
+## claude/demo-hop-tuong — TÀI LIỆU GỐC + quy tắc cập nhật (10/11)
+- Thêm `docs/demo-hop-tuong/TAI-LIEU-GOC.md`: thống kê game đang chạy viết TỪ CODE (commit gốc `0b1a6b539`): vòng chơi trận, quái/wave/trùm/tim, 9 chế độ + mở khoá + thưởng (Solo đã bỏ), 5 bậc + hệ số, bảng 96 ụ (sinh tự động từ game: tên EN/VI, bậc, vai, mô tả, ST/tốc, 1★→7★, mốc sao, dạng, chủ động), dạng + ảnh trang ụ, cấp thẻ + KY_NANG_CAP, 8 chỉ huy, 12 trùm, gacha/rương/tỉ lệ/bảo hiểm/mở nhóm, kinh tế, tiến trình, online, admin, nguyên tắc thiết kế, phong cách hình.
+- `CLAUDE.md`: mục "Tài liệu gốc" — mọi thay đổi luật/số/cơ chế/chế độ/kinh tế phải cập nhật TAI-LIEU-GOC.md trong cùng commit.
+- Chỉ tài liệu, không đổi code.

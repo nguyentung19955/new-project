@@ -7,6 +7,11 @@ Nhánh `claude/demo-hop-tuong` chỉ chứa game **TURRET MERGE** (merge tower-d
 - Luật code/hình bắt buộc: `thap/QUY-TAC-HINH.md`.
 - Đụng tới tương tác giữa các ụ (ghép, biến hình, nâng/hạ sao, đá/băng, online): đọc `docs/demo-hop-tuong/tuvan/conghuong/NGUYEN-TAC.md`.
 
+## Tài liệu gốc (người dùng chốt 10/11)
+- `docs/demo-hop-tuong/TAI-LIEU-GOC.md` = mô tả game ĐANG chạy, viết từ code (luật, số, chế độ, 96 ụ, kinh tế, tiến trình…).
+- **Mọi thay đổi luật/số liệu/cơ chế/chế độ/kinh tế phải cập nhật `docs/demo-hop-tuong/TAI-LIEU-GOC.md` trong CÙNG commit**; tài liệu gốc là chuẩn đối chiếu cho hướng dẫn và mô tả trong game.
+- Đổi chữ hướng dẫn / mô tả ụ / video bắn thử → đối chiếu tài liệu gốc và cập nhật `docs/demo-hop-tuong/CHECKLIST-HUONG-DAN.md`.
+
 ## Chung
 - Trả lời người dùng bằng **tiếng Việt**, ngắn, dễ hiểu; prompt gửi phiên khác / ChatGPT viết tiếng Anh.
 - **Không in/commit khoá API** (PixelLab, Firebase apiKey, service account).
