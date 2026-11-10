@@ -8,6 +8,7 @@ Ra (ghi đè ảnh cũ kiểu người):
   thap/assets/hero/hero_<id>.jpg  1170×1020 — phần trên ảnh (rộng đủ), trang ụ
 và mốc mặt PO_NEO + HERO_NEO (thap/js/chandung.js), FACE_BOX (thap/js/khung.js) theo MAT[id] = (đỉnh đầu y, mắt y, tâm mặt x, cằm y) px ảnh nguồn.
 Lô 2 (10/11): thêm 15 id (bang, set, nangluong, laser, khuech, lienket, thaukinh, docton, lophanung, cobac, chimang, baotuyet, xaotron, cuongno, nhanban) — cùng cách cắt.
+Lô 3 (11/11): thêm 4 id (vungdoc, drone, khien, overlord) — cùng cách cắt; ảnh nguồn không nhất thiết 1254² (overlord 1058²), tool tính theo cỡ ảnh thật.
 LƯU Ý: các id trong CAT KHÔNG còn cắt bằng thap-cat-chandung.py / thap-cat-chandung2.py / thap-cat-thacmana-congap.py / thap-hero.py (ảnh nguồn cũ) — chạy lại các tool đó cho các id này sẽ ghi đè ảnh mới.
 Chạy (gốc repo): python3 tools/thap-cat-phicong-moi.py [id ...]     (KHONG_JS=1: chỉ ghi ảnh)
 """
@@ -23,7 +24,9 @@ CAT = {'chuato': (150, 0, 1100), 'pandora': (225, 0, 830), 'hydra': (190, 0, 100
        # lô 2 (10/11): 15 phi công sinh vật — xem chú thích MAT
        'bang': (130, 20, 1000), 'set': (230, 0, 1000), 'nangluong': (150, 40, 1050), 'laser': (90, 0, 1100), 'khuech': (150, 0, 1000),
        'lienket': (180, 0, 1080), 'thaukinh': (200, 60, 880), 'docton': (140, 0, 1000), 'lophanung': (0, 0, 1254), 'cobac': (100, 0, 1050),
-       'chimang': (70, 40, 1110), 'baotuyet': (150, 0, 1050), 'xaotron': (180, 0, 950), 'cuongno': (200, 0, 1050), 'nhanban': (60, 0, 1100)}
+       'chimang': (70, 40, 1110), 'baotuyet': (150, 0, 1050), 'xaotron': (180, 0, 950), 'cuongno': (200, 0, 1050), 'nhanban': (60, 0, 1100),
+       # lô 3 (11/11): 4 ảnh người dùng vẽ lại — xem chú thích MAT (overlord nguồn 1058², 3 ảnh kia 1254²); vungdoc + drone cắt CẢ ảnh: mõm/mỏ dài, ô thẻ dọc mới đủ rộng thấy mắt + cả mõm/mỏ
+       'vungdoc': (0, 0, 1254), 'drone': (0, 0, 1254), 'khien': (120, 0, 900), 'overlord': (60, 0, 940)}
 # bocap ↑: bocap (10/11): Crimson Sting — sát thủ bọ cạp giáp tím-đen, ô thấy cả đầu + ngòi đuôi hồng ngọc
 # (đỉnh đầu y, đường mắt y, tâm mặt x, cằm y) — px ảnh nguồn; hydra = ĐẦU GIỮA; pandora = cụm mắt sao + miệng cười (không lấy rương)
 MAT = {'chuato': (5, 445, 700, 690), 'pandora': (20, 340, 640, 470), 'hydra': (0, 212, 690, 385), 'congap': (20, 410, 690, 690), 'thanhdia': (10, 325, 660, 545),
@@ -34,7 +37,11 @@ MAT = {'chuato': (5, 445, 700, 690), 'pandora': (20, 340, 640, 470), 'hydra': (0
        # · cuongno lợn rừng mào đỏ · nhanban đầu LỌ 2 sinh vật (đầu = cả cái lọ)
        'bang': (130, 465, 660, 610), 'set': (130, 300, 760, 580), 'nangluong': (200, 455, 770, 680), 'laser': (100, 500, 640, 900), 'khuech': (80, 365, 650, 620),
        'lienket': (40, 385, 720, 650), 'thaukinh': (140, 400, 610, 600), 'docton': (60, 380, 640, 590), 'lophanung': (40, 400, 680, 760), 'cobac': (120, 365, 620, 640),
-       'chimang': (110, 530, 660, 740), 'baotuyet': (110, 410, 750, 720), 'xaotron': (30, 385, 650, 580), 'cuongno': (60, 410, 740, 820), 'nhanban': (60, 440, 610, 720)}
+       'chimang': (110, 530, 660, 740), 'baotuyet': (110, 410, 750, 720), 'xaotron': (30, 385, 650, 580), 'cuongno': (60, 410, 740, 820), 'nhanban': (60, 440, 610, 720),
+       # lô 3 (11/11): vungdoc cá sấu nhà hoá học nhìn nghiêng (đầu = gai gáy → cằm, tính cả mõm; tâm ngang giữa mắt và mõm để ô thẻ thấy cả mõm + kính một mắt)
+       # · drone bồ nông mũ phi công (đầu = mũ → đáy túi mỏ chứa 3 drone; tâm ngang lệch từ mắt về phía mỏ) · khien tatu hiệp sĩ (đầu tính cả 2 tai + mũ giáp)
+       # · overlord mặt nạ đá đen mắt trắng rực + sừng pha lê đỏ (đầu = sừng → miệng răng cưa)
+       'vungdoc': (65, 270, 780, 720), 'drone': (65, 325, 770, 830), 'khien': (45, 400, 660, 600), 'overlord': (50, 550, 529, 830)}
 # bocap ↑: bocap: đầu giáp 4 mắt đỏ + hồng ngọc trán
 
 
