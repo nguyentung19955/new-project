@@ -3,6 +3,11 @@
 > Game merge tower-defense trong `thap/`. Luật game và bàn giao: `docs/demo-hop-tuong/ban-giao/BAN-GIAO.md`, luật code/hình: `thap/QUY-TAC-HINH.md`.
 > Mỗi session thêm một mục `## claude/<tên-nhánh> — …` ở CUỐI file (file gộp kiểu union, không xung đột).
 
+## claude/demo-hop-tuong — đo dung lượng bản xuất bản thap/ (10/11, tư vấn)
+- Bản live 376 MB: PNG 260,7 MB (249,8 MB là PNG đã có .webp, chỉ còn là dự phòng), webp 69,7, jpg 31,5, js 3,8 MB. Không có raw/docs lạc.
+- Rác thật chỉ vài trăm KB → xoá `thap/assets/kho_chong.png` (không code/tool nào dùng). Nén PNG không mất mát chỉ −2,6 % → không làm.
+- Đề xuất (chờ duyệt): giới hạn số bản lưu trên Firebase console; donet.js đổi .png dựng động → .webp + thap-ver.py bỏ .png trùng lúc xuất bản (~376 → ~154 MB/bản, thử 0 lỗi 404). Chi tiết + diff: `docs/demo-hop-tuong/tuvan/dung-luong/BAO-CAO.md`.
+
 ## claude/demo-hop-tuong — sửa 3 đầu ụ 3 dạng: Rối Máy, Cổng Gương đứng thẳng · Pandora viền tím (10/11)
 - `tools/thap-cat-dang-dau.py`: marionette + guongcong quay như ảnh chĩa lên (xoay −1) → trang ụ hiện ĐÚNG chiều ảnh gốc ChatGPT (Rối: tay trên, rối treo dưới; Gương: thanh ngang trên/dưới). Tuỳ chọn mới `khung` (vừa ô vuông thay vòng tròn → hình rộng như dạng 3 "2 con rối" to rõ, 2 rối tách nhau) và `vien` (dày viền theo dạng); Rối viền nhấn sáng hơn `#ff3d7f` (dạng 3 dày ×1.35).
 - Trong trận (`render.js`, khối thiết bị không nòng): 2 ụ này GIỮ ĐẦU ĐỨNG, chỉ lắc nhẹ ±3.5° (như rối treo đung đưa) thay vì quay tròn chậm — lý do: hình có trên/dưới rõ, quay tròn làm hình nằm ngang/lộn ngược, rối mắt. Chỉ góc VẼ; ngắm, điểm phát đòn (lõi), luật không đổi.
