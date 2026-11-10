@@ -220,7 +220,7 @@ const SD_K = {
     c: [[0.2, 'Neighbours resist control'], [1.6, 'The Boss uses a skill…'], [3.0, 'The mirror blocks it', { cham: 0.6 }], [4.4, 'Rival uses a Jammer…'], [5.0, 'Mirror reflects it back', { cham: 0.7 }]] },
   marionette: { q: Q.hang(4, 190, 36, 14), truoc: (T) => { T.nap = 0.86; }, c: [[0.2, 'Grabs an enemy'], [1.6, 'Walks it back, then boom', { cham: 0.5 }]], dai: 9 },
   chuato: { q: Q.hang(5, 200, 36, 8), cham: [4.6], truoc: (T) => { T.nap = 0.95; T.napDay = -99; T.de = 99; }, c: [[0.2, 'Drones circle the hive'], [4.6, 'Tap: SWARM — all drones fly out', { cham: 0.7 }]], dai: 9 },
-  leviathan: { q: Q.nho().concat([{ k: 'khong_lo', s: 30, h: 30 }]), cham: [4.6], truoc: (T) => { T.nap = 0.95; T.napDay = -99; T.nuot = 99; }, c: [[0.2, 'Eats a small enemy'], [1.4, 'Each eat: ABYSS +1 (+4% damage)'], [4.6, 'Tap: water orbs rain on the path', { cham: 0.7 }]], dai: 9 },
+  leviathan: { q: Q.nho().concat([{ k: 'khong_lo', s: 30, h: 30 }]), cham: [4.6], truoc: (T) => { T.nap = 0.95; T.napDay = -99; T.nuot = 99; }, c: [[0.2, 'Eats a small enemy'], [1.4, 'Each eat: ABYSS +1 (+6% damage)'], [4.6, 'Tap: water orbs rain on the path', { cham: 0.7 }]], dai: 9 },
   khoisinh: { kieu: 'phu', cham: [4.6], truoc: (T) => { T.sinhT = SKILLS.khoisinh.g(T) - 1.4; T.nap = 0.95; T.napDay = -99; }, ke: [[6, 'lien', 1], [8, 'canon', 2], [2, 'set', 3]], c: [[0.2, 'Raises the lowest neighbour'], [1.4, 'Lowest neighbour gets +1★', { ev: 'sao', cham: 0.6 }], [4.6, 'Tap: summons a 1★ next to it', { cham: 0.6 }]], dai: 9 },
   // Hatchery Gate (skills7.js): 1,4 s gọi 1 ụ 1★ trong bộ vào ô trống · 4,2 s Merge King +1★ tại chỗ → +1 lượt
   congap: { kieu: 'phu', truoc: (T) => { T.cgT = SKILLS.congap.KY - 1.4; },
@@ -385,7 +385,7 @@ const SD_MO = {
   hydra: (T) => T.sao + (T.sao > 1 ? ' heads' : ' head') + ', ' + Math.round(SKILLS.hydra.vien(T) * 100) + '% damage each',
   cobac: () => 'Pair +1 · 3 of a kind: JACKPOT +2 all · all fruits ' + CB.TIA[0] + '/' + CB.TIA[1] + ': 2/3 beams',
   chuato: (T) => 'Up to ' + T.sao + ' drones',
-  leviathan: () => 'ABYSS: +4% damage each, no cap',
+  leviathan: () => 'ABYSS: +6% damage each, no cap',
   khoisinh: (T) => '+1★ to a neighbour every ' + SKILLS.khoisinh.g(T) + 's',
   thacmana: (T) => { const M = SKILLS.thacmana.mana(G.ban[T.ban]); return 'Mana ' + Math.floor(M) + ': ×' + SKILLS.thacmana.k(M).toFixed(2) + ' damage, ' + SKILLS.thacmana.lan(M) + ' targets'; },
   ronglua: (T) => SKILLS.ronglua.tenDang(T) + ' · heat ' + Math.floor(T.nhiet || 0) + ' (+' + Math.round((T.nhiet || 0) * SKILLS.ronglua.NHIET_ST * 100) + '% damage)',

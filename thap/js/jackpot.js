@@ -108,7 +108,7 @@ const CB = {
 // SKILLS.cobac — Lucky Slot (Đỏ TC): bắn xu vàng 1 phát/s vào quái đầu (cả 3 quả ≥ CB.TIA: 2 / 3 tia, quái kế tiếp theo đường) · không kỹ năng chủ động (kỹ năng = máy xèng 3 ô + ngăn quả)
 // =====================================================================================================
 SKILLS.cobac = {
-  vai: 'tc', dmg: 58, toc: 1.0, crit: 0.15, nham: 'dau', khongNang: true, // 08/11 người dùng: KHÔNG nâng cấp bằng mana trong trận (ngăn quả đã mạnh vô hạn theo thời gian) — ẩn giá, AI bỏ qua, nangCap từ chối // 58 × Đỏ 2.7 (08/11 người dùng "yếu": 50 → 58) — cân bằng 08/11 (3 ô): xem GAMEPLAY.md + tools/thap-sim-co-bac.js
+  vai: 'tc', dmg: 38, toc: 1.0, crit: 0.15, nham: 'dau', khongNang: true, // 08/11 người dùng: KHÔNG nâng cấp bằng mana trong trận (ngăn quả đã mạnh vô hạn theo thời gian) — ẩn giá, AI bỏ qua, nangCap từ chối // 58 × Đỏ 2.7 (08/11 người dùng "yếu": 50 → 58) — cân bằng 08/11 (3 ô): xem GAMEPLAY.md + tools/thap-sim-co-bac.js
   mo: (T) => {
     const B = T && G.ban && G.ban[T.ban], a = (B && B.cb) || [0, 0, 0], p = (k) => Math.round(CB.gt(B || { cb: a }, k) * 100), h = CB.he(B);
     return 'Spins 3 fruit reels when it appears (summon or merge). A pair = +1 point to that fruit; 3 of a kind = JACKPOT: +2 to all fruits. No match = spin again. Points are shared by all Lucky Slots. Orange = damage, Watermelon = speed, Grape = crit damage. Raising its star in place (like Merge King) doesn\'t spin again.'

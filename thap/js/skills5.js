@@ -160,16 +160,16 @@ HU.hiveNo = { ve(ctx, o, R) { const u = o.t / o.song, im = REN.img('fx_hive_no')
 
 // =====================================================================================================
 // R3 · LEVIATHAN (leviathan) — Đỏ TC: bắn bọt nước nổ 30 px. Mỗi e s NUỐT 1 quái thường (không to, không trùm, GĐ1–2 không nuốt quái bay)
-//      trong 120 px → +1 VỰC SÂU (mỗi cộng dồn +4% sát thương, KHÔNG trần — như Kalaratri DCDW). 4★+: nuốt được quái to (×3 cộng dồn).
+//      trong 120 px → +1 VỰC SÂU (mỗi cộng dồn +6% sát thương (10/11: 4% → 6%), KHÔNG trần — như Kalaratri DCDW). 4★+: nuốt được quái to (×3 cộng dồn).
 //      CHỦ ĐỘNG "TIDAL BREATH" (3★+, hồi 35 s): tia nước quét DỌC cả đường 1.4 s, mỗi quái trúng 1 lần dmg×(4+0.1×cộng dồn), đẩy lùi 20 px.
 //      PVP: như solo (không còn luật gửi quái).
 // =====================================================================================================
 SKILLS.leviathan = {
-  vai: 'tc', dmg: 24, toc: 0.9, nham: 'dau', napMau: '#1fb6d9',
+  vai: 'tc', dmg: 34, toc: 0.9, nham: 'dau', napMau: '#1fb6d9',
   e: (T) => sao7r(T, [9, 8.5, 8, 7, 6, 5.5, 5]),
   cd: 35,
   // dòng bảng ụ: 'ABYSS 56 · +224% damage' (VI: '+224% sát thương') = đúng số trên tấm đếm xoáy vực ở đáy ô (demkn.js)
-  mo: (T) => 'ABYSS ' + (T.vuc || 0) + ' · +' + 4 * (T.vuc || 0) + '% damage · this turret only (a new one starts at 0) · its kills: elite +3, boss +10 · devours a small enemy every ' + SKILLS.leviathan.e(T) + 's (' + SKILLS.leviathan.TAM + ' px' + (T.sao >= 4 ? ', big ones ×3' : '') + (T.sao >= 7 ? ', flyers too' : '') + ') · bubble splash 30 px · ' + (T.sao >= 3 ? 'TAP when full: TIDAL BREATH ×' + (4 + 0.1 * (T.vuc || 0)).toFixed(1) + ' — water orbs shoot up from the turret and rain down along the whole path' : 'TIDAL BREATH unlocks at 3★'),
+  mo: (T) => 'ABYSS ' + (T.vuc || 0) + ' · +' + 6 * (T.vuc || 0) + '% damage · this turret only (a new one starts at 0) · its kills: elite +3, boss +10 · devours a small enemy every ' + SKILLS.leviathan.e(T) + 's (' + SKILLS.leviathan.TAM + ' px' + (T.sao >= 4 ? ', big ones ×3' : '') + (T.sao >= 7 ? ', flyers too' : '') + ') · bubble splash 30 px · ' + (T.sao >= 3 ? 'TAP when full: TIDAL BREATH ×' + (4 + 0.1 * (T.vuc || 0)).toFixed(1) + ' — water orbs shoot up from the turret and rain down along the whole path' : 'TIDAL BREATH unlocks at 3★'),
   TAM: 160, // tầm nuốt 120 → 160 px: mọi ô hàng giữa với tới đường (BAO-CAO gioi-han §4 mục 7)
   // VỰC SÂU RIÊNG TỪNG Ụ (người dùng 07/11 18:57): chỉ Leviathan NUỐT mới được điểm; ụ mới = 0; ụ bị biến/đổi/thay (ghép ra ụ khác, Mad Crown, Hộp…) mất điểm;
   //   ghép 2 Leviathan ra Leviathan = ụ MỚI → 0 (09/11 người dùng Q1 = A, bỏ GIU_CONG_DON)
@@ -181,7 +181,7 @@ SKILLS.leviathan = {
     T.vuc = (T.vuc || 0) + n; nhanU(T, '+' + n + ' ABYSS', '#7fdcff');
   },
   capNhat(G, B, T, dt) {
-    T.buf.dmg += 0.04 * (T.vuc || 0);
+    T.buf.dmg += 0.06 * (T.vuc || 0);
     T.nuot = (T.nuot || 0) + dt * nhipU(T); // 09/11: nhịp nuốt theo nhipU (gồm cấp thẻ tốc)
     if (T.nuot >= this.e(T) && !G.hu.some(o => o.k === 'xoay' && o.T === T)) {
       const c = tamU(T);

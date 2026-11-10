@@ -331,7 +331,7 @@ SKILLS.hopca = { // 09/11 gánh hậu kỳ (đơn mục tiêu, Hoà âm khó đ�
 //      40 +40% ST chí mạng · 50/60/70 thêm +20/+30/+40% ST. Trần 40 (LV9) → 50 (LV11) → 60 (LV13) → 70 (LV15). Ngẫu nhiên: rngHat(hạt trận + bàn + số lần ghép).
 // =====================================================================================================
 SKILLS.luutru = { // 09/11 gánh hậu kỳ (đơn mục tiêu, điểm chia ngẫu nhiên cho 1 Archive): ST 15 → 24, tốc 1.0 → 2.0, mỗi điểm +1% → +2% ST
-  vai: 'tc', dmg: 24, toc: 2.0, nham: 'dau', DIEM: 0.02,
+  vai: 'tc', dmg: 28, toc: 2.0, nham: 'dau', DIEM: 0.02, // 10/11 tăng nhẹ ST 24 → 28
   tran(T) { const k = VM1.k(T); return k >= 6 ? 70 : k >= 4 ? 60 : k >= 2 ? 50 : 40; },
   MOC: [[10, 'toc', 0.15], [20, 'crit', 0.08], [30, 'dmg', 0.25], [40, 'cdmg', 0.40], [50, 'dmg', 0.20], [60, 'dmg', 0.30], [70, 'dmg', 0.40]],
   thuong(n) { const r = { dmg: this.DIEM * n, toc: 0, crit: 0, cdmg: 0, moc: 0 }; for (const [m, k, v] of this.MOC) if (n >= m) { r[k] += v; r.moc = m; } return r; },
