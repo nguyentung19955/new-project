@@ -106,7 +106,10 @@ const NET = {
     if (this.kieu === 'mock') return this._mockGui('google', {}).then(u => { this._baoTK(u); return u; });
     if (!this._auth) return Promise.reject(new Error('offline'));
     const fb = this._fb, pv = new fb.auth.GoogleAuthProvider(); pv.setCustomParameters({ prompt: 'select_account' });
-    const u = this._auth.currentUser, chuyenTrang = this.laIOS() || this.laApp();
+    // 10/11: ứng dụng trên màn hình chính iPhone (PWA) — trang Google mở ra NGOÀI ứng dụng (trình duyệt riêng, kho lưu trữ riêng) nên kiểu
+    // chuyển trang không bao giờ quay về được → dùng CỬA SỔ BẬT LÊN trước (iOS 16.4+ giữ liên kết opener), lỗi mới chuyển trang.
+    // Safari thường trên iPhone: vẫn chuyển trang (authDomain cùng tên miền, xem _moFirebase).
+    const u = this._auth.currentUser, chuyenTrang = this.laIOS() && !this.laApp();
     const lam = (kieu) => u && u.isAnonymous
       ? (kieu === 'popup' ? u.linkWithPopup(pv) : u.linkWithRedirect(pv))
       : (kieu === 'popup' ? this._auth.signInWithPopup(pv) : this._auth.signInWithRedirect(pv));
@@ -123,7 +126,7 @@ const NET = {
       return this._auth.signInWithCredential(e.credential).then(() => this._capNhatTK());
     }
     if (e.code === 'auth/popup-closed-by-user' || e.code === 'auth/cancelled-popup-request') return;
-    this.loi = e.code || e.message;
+    this.loiGG = e.code || e.message; // hiện ở bảng hồ sơ (taikhoan.js #tk-loi)
     throw e;
   },
   _capNhatTK() { const u = this._auth && this._auth.currentUser; if (u) { this.loiGG = ''; this._baoTK(this._chuanUser(u)); } return this.user; },
