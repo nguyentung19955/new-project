@@ -636,3 +636,78 @@ window.addEventListener('DOMContentLoaded', () => {
   if (typeof DEMKN !== 'undefined') DEMKN.DS.congap = (T) => { const S = SKILLS.congap, n = S.luot(T); return n > 0 ? { m: [{ ic: 'h2_ic_chong', s: '' + n }, { ic: 'trung_1', s: Math.ceil(S.con(T)) + 's' }] } : null; };
   if (typeof MV !== 'undefined' && MV.TAG) MV.TAG.congap = ['calls left · seconds to the next call', 'lượt gọi còn · giây tới lần gọi kế'];
 });
+
+// =====================================================================================================
+// Ụ VÀNG 97 · CRIMSON STING / BỌ CẠP HỒNG NGỌC (bocap) — Vàng TC, người dùng duyệt 10/11. Con bọ cạp máy (không phải nòng pháo trên bệ).
+//   Đơn mục tiêu (quái đầu), KHÔNG lan. Tỉ lệ chí mạng thường (10%), ST chí mạng thường (200%).
+//   Mỗi lần CHÍNH ụ này bắn chí mạng: +1 STING của riêng ụ đó — KHÔNG TRẦN. Mỗi STING: +16% ST (LV9; +0,5%/cấp thẻ, KY_NANG_CAP.bocap) · +1% ST chí mạng · tốc bắn +100% × n/(n+250) (tiệm cận, không tự bùng nổ).
+//   Ụ mới (triệu hồi, ghép ra, biến hình ra) = 0. Bị HẠ SAO = mất hết (so sao mỗi nhịp: mọi đường hạ sao — cháy, trùm, Hex, Star Breaker đối thủ).
+//   Hoá đá / đóng băng: không bắn nên không tích, không mất. +★ tại chỗ (Merge King, Star Lift…): giữ.
+//   Hỗ trợ chí mạng kề (Crit Antenna, Hammer, Focus Lens) → chí mạng nhiều hơn → tích nhanh hơn (chủ ý).
+//   Mốc: 3★ +5% chí mạng · 5★ mỗi chí mạng THỨ 3 cho +2 (đếm, tất định) · 7★ chí mạng đánh dấu quái 3 s: nhận +10% ST từ chính ụ này (không lan).
+//   3 dạng theo STING (NGUONG): STINGLET → VENOM SURGE → KING SCORPION (ảnh bocap_nong_s1..s3).
+//   Tất định: chí mạng do trung() quyết bằng rngLuat (game.js); móc khiCrit chỉ đếm. Online: cờ ô 'G<sting>;J<đếm chí mạng>;' (dongbo.js oTT/datO).
+// =====================================================================================================
+Object.assign(KY_NANG_CAP, {
+  bocap: { ten: 'Per STING', base: 16, buoc: 0.5, max: 20, dv: '%', tien: '+', dmg: true }, // +% ST mỗi STING: LV9 16% → LV17 20% (+0,5%/cấp thẻ)
+});
+SKILLS.bocap = {
+  vai: 'tc', dmg: 22, toc: 2.0, nham: 'dau', MAU: '#FF3B4E',
+  TOC_MAX: 1.0, TOC_K: 250, CD: 0.01, // tốc bắn: +TOC_MAX × n / (n + TOC_K) (≈ +0,4%/STING lúc đầu, 250 STING = +50%, không bao giờ quá +100% → không tự bùng nổ) · mỗi STING +1% ST chí mạng
+  tocN(n) { return this.TOC_MAX * n / (n + this.TOC_K); },
+  NGUONG: [50, 200],               // dạng 2 từ 50 STING · dạng 3 từ 200 STING (kỳ vọng ụ giữ lâu: ≈59 ở wave 20, ≈201 ở wave 40)
+  M3_CRIT: 0.05, M5_KY: 3, M7_K: 0.10, M7_S: 3,
+  n: (T) => Math.max(0, (T && T.sting) | 0),
+  st(T) { const B = T && typeof G !== 'undefined' && G.ban ? G.ban[T.ban] : null; return (knThe(B, 'bocap') || KY_NANG_CAP.bocap.base) / 100; },
+  thuong(T) { const n = this.n(T); return { n, dmg: this.st(T) * n, toc: this.tocN(n), cdmg: this.CD * n }; },
+  dang(T) { const n = this.n(T); return n >= this.NGUONG[1] ? 3 : n >= this.NGUONG[0] ? 2 : 1; },
+  // dòng sống bảng chạm ụ / trang ụ: 'STING 37 · +74% damage · +7% fire rate · +37% crit damage'
+  dong(T) { const t = this.thuong(T); return 'STING ' + t.n + ' · +' + Math.round(t.dmg * 100) + '% damage · +' + Math.round(t.toc * 100) + '% fire rate · +' + Math.round(t.cdmg * 100) + '% crit damage'; },
+  mo(T) { // bảng sao / trang ụ: ngắn — chưa có STING thì nêu luật, có rồi thì số đang cộng; kèm phần mốc sao đã mở
+    const S = SKILLS.bocap, n = S.n(T);
+    return (n > 0 ? S.dong(T) : 'Each own crit: +1 STING · +' + Math.round(S.st(T) * 1000) / 10 + '% damage, +' + S.CD * 100 + '% crit damage each') +
+      (T && T.sao >= 3 ? ' · +' + S.M3_CRIT * 100 + '% crit chance' : '') + (T && T.sao >= 5 ? ' · every ' + S.M5_KY + 'rd crit: +2' : '') + (T && T.sao >= 7 ? ' · crits mark the enemy ' + S.M7_S + 's: +' + S.M7_K * 100 + '% from this turret' : '');
+  },
+  sinh(G, T) { T.sting = T.sting || 0; T.stC = T.stC || 0; T.stS = T.sao; },
+  capNhat(G, B, T) {
+    if (T.stS == null) T.stS = T.sao;
+    if (T.sao < T.stS) { T.sting = 0; T.stC = 0; } // bị hạ sao: mất hết STING
+    T.stS = T.sao;
+    const t = this.thuong(T);
+    T.buf.dmg += t.dmg; T.buf.toc += t.toc; T.buf.cdmg = (T.buf.cdmg || 0) + t.cdmg;
+    if (ms(T, 3)) T.buf.crit += this.M3_CRIT;
+    return false;
+  },
+  ban(G, B, T, E) { // kim chích hồng ngọc: 1 mục tiêu, không lan
+    giat(T, 0.6); const [x, y] = chopNong(T, 18); SND.tia();
+    const dmg = dmgU(T), S = this;
+    banDan({ img: 'dan_tia', mau: S.MAU, x, y, muc: E, px: E.x, py: E.y, sp: 700, co: 14, B, T, doiMuc: 1, trung: (G, d, M) => { // doiMuc: quái đích chết lúc kim còn bay → kim đổi sang 1 quái gần đó (không phải lan: vẫn 1 kim 1 quái)
+      if (!M) return;
+      const dau = M.bcBy === T && M.bcT > G.t; // 7★ VENOM MARK: quái đang mang dấu của CHÍNH ụ này
+      trung(M, dmg * (dau ? 1 + S.M7_K : 1), { B, T, mau: '#ff8a96' });
+    } });
+  },
+  khiCrit(G, T, E) {
+    if (!T || T.id !== 'bocap' || !conTren(T)) return; // kim còn bay mà ụ đã rời bàn / bị ghép: không tính
+    T.stC = (T.stC | 0) + 1;
+    T.sting = (T.sting | 0) + (ms(T, 5) && T.stC % this.M5_KY === 0 ? 2 : 1);
+    if (ms(T, 7) && E && !E.chet) { E.bcBy = T; E.bcT = G.t + this.M7_S; }
+    T.stChop = G.t; // chỉ hình: tấm đếm + ngòi loé
+    try { if (E) FX.tiaLua(E.x, E.y, 8, this.MAU, 170, 5); const c = tamU(T); FX.vong1(c.x, c.y, 8, 26, this.MAU, 0.3, 3); } catch (e) { }
+  },
+  sangDau: (T) => (typeof G !== 'undefined' && T.stChop != null && G.t - T.stChop < 0.25 ? 0.35 : 0),
+};
+themHo('crit', 3, 'bocap', 'its own crits stack STING forever: +damage, +fire rate, +crit damage — merging starts over');
+Object.assign(MOC_RIENG, {
+  bocap: { 3: ['KEEN STINGER', '+5% crit chance'], 5: ['DOUBLE DOSE', 'Every 3rd crit gives +2 STING'], 7: ['VENOM MARK', 'A crit marks the enemy 3s: it takes +10% damage from this turret'] },
+});
+Object.assign(GROW, {
+  bocap: { mau: '#FF3B4E', ten: ['STINGLET', 'VENOM SURGE', 'KING SCORPION'], dk: 'STING 0–49 / 50–199 / 200+',
+    gd: (T) => { const S = SKILLS.bocap, n = S.n(T); return { s: S.dang(T), p: Math.min(1, n / S.NGUONG[1]), v: [S.NGUONG[0] / S.NGUONG[1], 1], n }; } },
+});
+if (typeof PILOTS !== 'undefined') PILOTS.add('bocap');
+window.addEventListener('DOMContentLoaded', () => {
+  // tấm đếm đáy ô: icon ngòi hồng ngọc (huy hiệu cột 4 của tấm 3 dạng) + số STING; vừa chí mạng: chữ sáng
+  if (typeof DEMKN !== 'undefined') { DEMKN.DS.bocap = (T) => { const n = SKILLS.bocap.n(T); return n > 0 ? { m: [{ ic: 'bocap_phu', s: '' + n }], mau: n >= SKILLS.bocap.NGUONG[1] ? '#ffd0d6' : '#ff8a96', sang: T.stChop != null && G.t - T.stChop < 0.3 } : null; }; if (DEMKN.ANH && !DEMKN.ANH.includes('bocap_phu')) DEMKN.ANH.push('bocap_phu'); }
+  if (typeof MV !== 'undefined' && MV.TAG) MV.TAG.bocap = ['STING stacks (+damage, +fire rate, +crit damage each)', 'cộng dồn STING (mỗi điểm +sát thương, +tốc bắn, +ST chí mạng)'];
+});

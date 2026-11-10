@@ -155,9 +155,11 @@ const UP_HOP = {
   star: ['dongbo', 'ngoisao', 'mimic'], joker: ['vughep', 'nangsao', 'dongbo'], guard: ['soi', 'tia', 'overlord'], transform: ['nangsao', 'vughep', 'mimic'],
 };
 const UP_HT_HOP = { toc: ['lien', 'phun', 'cuongno'], crit: ['soi', 'bua', 'cuongno'], cham: ['kiembang', 'lophanung', 'bang'], dmg: ['tia', 'sungluc', 'railgun'], chet: ['phun', 'lien', 'maychem'], mana: ['nangluong', 'hutmana', 'loa'], khien: ['soi', 'overlord', 'tia'], taylo: ['soi', 'tia', 'overlord'] };
+const UP_CAP_RIENG = { bocap: ['chimang', 'bua', 'thaukinh'] }; // cặp đôi riêng (đứng trước gợi ý theo họ): Crimson Sting cần hỗ trợ chí mạng kề để tích STING nhanh
+const UP_SO_RIENG = { bocap: ['Merging it resets its STING to 0 — losing a star does too.'] }; // dòng Watch out riêng (đứng đầu)
 function upCapDoi(id) {
   const h = HO_CUA[id], k = SUP_LOAI[id];
-  let ds = (k ? UP_HT_HOP[k] : null) || (h ? UP_HOP[h.ho] : null) || ['khuech', 'radar', 'mimic'];
+  let ds = (UP_CAP_RIENG[id] || []).concat((k ? UP_HT_HOP[k] : null) || (h ? UP_HOP[h.ho] : null) || ['khuech', 'radar', 'mimic']);
   if (h) for (const b of HO[h.ho].bac) ds = ds.concat(b);
   const ra = [];
   for (const x of ds) if (x !== id && upCo(x) && !ra.includes(x)) ra.push(x);
@@ -170,7 +172,7 @@ function upCapDoi(id) {
   });
 }
 function upKhac(id) {
-  const h = HO_CUA[id], sk = SKILLS[id] || {}, tot = [], so = [];
+  const h = HO_CUA[id], sk = SKILLS[id] || {}, tot = [], so = (UP_SO_RIENG[id] || []).slice();
   const T = { blast: 'Swarms and splitters', energy: 'Groups (hits chain)', heavy: 'Giants and bosses', frost: 'Fast runners', poison: 'Tanky waves', rapid: 'Steady streams',
     crit: 'Single tough targets', trap: 'Crowded paths', execute: 'Small enemies', amp: 'Bosses (they take more damage)', mana: 'Long games', summon: 'Filling the board fast',
     star: 'Late waves', joker: 'Fixing bad merges', guard: 'Boss skills', transform: 'Lucky streaks' };

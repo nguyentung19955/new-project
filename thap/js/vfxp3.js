@@ -18,7 +18,7 @@ const P3 = {
   NT: { fire: '#ff8a2a', ice: '#a8ecff', poison: '#86ff4a', energy: '#6fc8ff', laser: '#ff3a6a', eclipse: '#ff6a2a', blood: '#ff2a3a', arcane: '#c77dff', gold: '#ffd23f', void: '#a35cff', water: '#4fb8ff' },
   U_NT: { canon: 'fire', mortar: 'fire', no5: 'fire', cuuvi: 'fire', bomhen: 'fire', min: 'fire', loren: 'fire', bang: 'ice', kiembang: 'ice', lanhgia: 'ice', baotuyet: 'ice',
     nhatthuc: 'eclipse', doc: 'poison', vungdoc: 'poison', aten: 'poison', set: 'energy', bao: 'energy', railgun: 'energy', nayda: 'energy', nangluong: 'energy', laser: 'laser',
-    cuongno: 'blood', mauhut: 'blood', mana: 'arcane', nhanmana: 'arcane', hutmana: 'arcane', santhuong: 'gold', nangsao: 'gold', vughep: 'gold', hasao: 'gold', ngoisao: 'gold',
+    cuongno: 'blood', mauhut: 'blood', bocap: 'blood', mana: 'arcane', nhanmana: 'arcane', hutmana: 'arcane', santhuong: 'gold', nangsao: 'gold', vughep: 'gold', hasao: 'gold', ngoisao: 'gold',
     overlord: 'laser', orbital: 'fire', lualien: 'fire', ronglua: 'fire', lophanung: 'ice', blackhole: 'void', leviathan: 'water' },
   mauTen(ten) { if (!ten || !ten.startsWith('fx_')) return null; const nt = this.U_NT[ten.slice(3, ten.indexOf('_', 3))]; return nt ? this.NT[nt] : null; },
   ten(id) { return 'p3_' + id; },

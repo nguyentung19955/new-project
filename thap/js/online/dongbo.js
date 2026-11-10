@@ -233,6 +233,7 @@ const ONS = {
     if (T.id === 'thacmana' && T.thacT > 0) f += 'U' + Math.round(T.thacT * 100) + ';V' + Math.round(T.thacS || 0) + ';'; // Arcane Cascade: MANA FLOOD còn (×100) + mana đã xả
     // AUDIT F14 (09/11): MỌI cộng dồn riêng ụ + trạng thái trên thân đi theo cờ ô → bàn con rối khớp máy chủ bàn
     if (T.id === 'leviathan' && T.vuc) f += 'v' + T.vuc + ';'; // Leviathan: ABYSS
+    if (T.id === 'bocap') { if (T.sting) f += 'G' + (T.sting | 0) + ';'; if (T.stC) f += 'J' + (T.stC | 0) + ';'; } // Crimson Sting: STING + số lần chí mạng (nhịp +2 của mốc 5★)
     if (T.id === 'cuuvi') { if (T.duoi) f += 'd' + T.duoi + ';'; if (T.xaN) f += 'f' + T.xaN + ';'; } // Nine-Tail: đuôi + số lần xả (đột phá)
     if (T.id === 'nemesis') { if (T.nmDem) f += 'N' + T.nmDem + ';'; if (T.nmN) f += 'm' + T.nmN + ';'; if (T.nmE) f += 'E' + T.nmE + ';'; if (T.nmToc) f += 'O' + Math.round(T.nmToc * 1000) + ';'; if (T.nmDmg) f += 'D' + Math.round(T.nmDmg * 1000) + ';'; } // Nemesis: đếm phán quyết + buff đã cộng
     if (T.id === 'congap') { const S = SKILLS.congap; f += 'A' + (S.luot(T) + 1) + ';Y' + T.sao + ';'; if (T.cgT) f += 'W' + Math.round(T.cgT * 10) + ';'; } // Hatchery Gate: lượt còn (+1) + sao đã thấy + đồng hồ ×10
@@ -269,6 +270,7 @@ const ONS = {
     if (T.id === 'thacmana') { T.thacT = so('U') / 100; T.thacS = so('V'); if (!(T.thacT > 0)) T.thacP = 0; }
     // AUDIT F14: cộng dồn riêng ụ + trạng thái trên thân (xem oTT)
     if (T.id === 'leviathan') T.vuc = so('v');
+    if (T.id === 'bocap') { T.sting = so('G'); T.stC = so('J'); T.stS = T.sao; }
     if (T.id === 'cuuvi') { T.duoi = so('d'); T.xaN = so('f'); }
     if (T.id === 'nemesis') { T.nmDem = so('N'); T.nmN = so('m'); T.nmE = so('E'); T.nmToc = so('O') / 1000; T.nmDmg = so('D') / 1000; }
     if (T.id === 'congap') { const l = so('A'); if (l) { T.cgL = l - 1; T.cgS = so('Y') || T.sao; } T.cgT = so('W') / 10; }
