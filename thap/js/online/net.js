@@ -71,7 +71,10 @@ const NET = {
       .then(() => Promise.all([this._taiJS(v + 'firebase-auth-compat.js'), this._taiJS(v + 'firebase-database-compat.js')]))
       .then(() => {
         const fb = window.firebase;
-        const app = fb.apps.find(a => a.name === 'turretmerge') || fb.initializeApp(cfg, 'turretmerge');
+        // 10/11: iPhone (Safari chặn lưu trữ bên thứ ba) — đăng nhập Google kiểu chuyển trang chỉ chạy khi authDomain CÙNG tên miền đang mở game.
+        // Đang chạy trên tên miền Firebase Hosting của dự án → dùng chính tên miền đó (cần thêm https://<tên miền>/__/auth/handler vào OAuth client).
+        const cfg2 = (this.laIOS() || this.laApp()) && /^turret-merge\.(web\.app|firebaseapp\.com)$/.test(location.hostname) ? Object.assign({}, cfg, { authDomain: location.hostname }) : cfg;
+        const app = fb.apps.find(a => a.name === 'turretmerge') || fb.initializeApp(cfg2, 'turretmerge');
         this.kieu = 'firebase'; this._fb = fb; this._auth = app.auth(); this._db = app.database(); this.theoDoiNgu();
         this._db.ref('.info/connected').on('value', s => this._baoNoi(s.val()));
         this._db.ref('.info/serverTimeOffset').on('value', s => { this.lechGio = s.val() || 0; });
