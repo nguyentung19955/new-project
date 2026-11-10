@@ -17,7 +17,9 @@
 (() => {
   if (typeof ANH_V === 'undefined') return;
   const RE = /(assets\/([\w\/-]+)\.(png|jpg))(?![?\w])/g;
-  const V = (s) => typeof s === 'string' && s.indexOf('assets/') >= 0 ? s.replace(RE, (m, u, n, e) => ANH_V[n] ? u + '?v=' + ANH_V[n] : m) : s;
+  // bản xuất bản bỏ .png khi đã có .webp (tools/thap-ver.py, ANH_W) → đường dẫn .png dựng động cũng đổi sang .webp?v= (máy không đọc webp: TAI_WEBP=false → giữ .png)
+  const W = (n, e) => e === 'png' && typeof ANH_W !== 'undefined' && ANH_W[n] && (typeof TAI_WEBP === 'undefined' || TAI_WEBP);
+  const V = (s) => typeof s === 'string' && s.indexOf('assets/') >= 0 ? s.replace(RE, (m, u, n, e) => W(n, e) ? 'assets/' + n + '.webp?v=' + ANH_W[n] : ANH_V[n] ? u + '?v=' + ANH_V[n] : m) : s;
   window.anhV = V;
   const EP = Element.prototype, d = Object.getOwnPropertyDescriptor(EP, 'innerHTML');
   if (d && d.set) Object.defineProperty(EP, 'innerHTML', { configurable: true, enumerable: d.enumerable, get: d.get, set(v) { d.set.call(this, V(v)); } });
@@ -25,4 +27,10 @@
   const sa = EP.setAttribute; EP.setAttribute = function (k, v) { return sa.call(this, k, (k === 'src' || k === 'style') ? V(v) : v); };
   const IP = HTMLImageElement.prototype, ds = Object.getOwnPropertyDescriptor(IP, 'src');
   if (ds && ds.set) Object.defineProperty(IP, 'src', { configurable: true, enumerable: ds.enumerable, get: ds.get, set(v) { ds.set.call(this, V(v)); } });
+  // el.style.backgroundImage = 'url(assets/x.png)' / style.setProperty('--hang', 'url(../assets/x.png)') (VT.sprite, tvb.js)
+  const SP = CSSStyleDeclaration.prototype, sp = SP.setProperty; SP.setProperty = function (k, v, u) { return sp.call(this, k, V(v), u); };
+  for (let P = Object.getPrototypeOf(document.documentElement.style); P && P !== Object.prototype; P = Object.getPrototypeOf(P))
+    for (const k of ['backgroundImage', 'background', 'borderImage', 'borderImageSource', 'maskImage', 'webkitMaskImage', 'listStyleImage', 'content', 'cssText']) {
+      const d2 = Object.getOwnPropertyDescriptor(P, k); if (d2 && d2.set && d2.configurable) Object.defineProperty(P, k, { configurable: true, enumerable: d2.enumerable, get: d2.get, set(v) { d2.set.call(this, V(v)); } });
+    }
 })();

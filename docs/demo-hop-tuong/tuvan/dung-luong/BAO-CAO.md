@@ -161,3 +161,12 @@ Thêm mẫu `"ignore"` vào `firebase-thap.json` (vd bỏ `**/*.png` có .webp) 
 - Kiểm: `tools/thap-kt-tu-kich.js` 29 đạt/0 lỗi · `tools/thap-kt-hinh-ui.js 390 844` errs [] (fps 60) · `tools/thap-kt-vetay-ui.js` errors 0 ·
   bò 17 màn (HOME, ?ucu=1, cửa hàng, trang ụ, trận, trùm) trên nhánh nguồn: 0 lỗi 404. Đã xem ảnh: menu, trận trùm w10, cửa hàng (hồ sơ mới → trận hướng dẫn).
 - Ước lượng sau: nhánh nguồn −0,02 MB (không đáng kể); **chỉ đề xuất B mới giảm thật: ~376 → ~154 MB/bản**.
+
+## 5. Đã làm sau khi người dùng duyệt (10/11)
+- B.1 `thap/js/donet.js` + B.2 `tools/thap-ver.py` đúng diff ở mục 3 (chép đè `/home/claude/pubtools/thap-ver.py`).
+- Chuyển ra `docs/demo-hop-tuong/thap-art/`: `icon-1024.png` (index.html / manifest.webmanifest / apple-touch-icon không trỏ tới);
+  `v2_overlord_nong_s2/s3.png` đã có bản giống hệt ở đó → chỉ bỏ khỏi `thap/assets/`.
+- Thử trên bản copy của wt-live (+ donet.js mới, bỏ 3 tệp) → thap-ver mới: bỏ 1687 PNG (218,3 MB), giữ 81; `thap/` **376 → 153 MB**
+  (webp 69,7 · png 41,1 · jpg 31,5 · js 3,8 MB). Hồ sơ ĐÃ QUA hướng dẫn, 29 màn (HOME, bộ bài, bộ sưu tập, cửa hàng 4 tab, vòng quay + kết quả,
+  rương, nhiệm vụ, sự kiện, cài đặt, hồ sơ phi công, Leo Tháp bảng + trận + kết quả, Săn Trùm bảng + trận, trang ụ + bắn thử, ?ucu=1, PVP, co-op,
+  trùm w10/w20): **0 lỗi 404/HTTP, 0 lỗi JS**.

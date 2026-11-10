@@ -3,6 +3,12 @@
 > Game merge tower-defense trong `thap/`. Luật game và bàn giao: `docs/demo-hop-tuong/ban-giao/BAN-GIAO.md`, luật code/hình: `thap/QUY-TAC-HINH.md`.
 > Mỗi session thêm một mục `## claude/<tên-nhánh> — …` ở CUỐI file (file gộp kiểu union, không xung đột).
 
+## claude/demo-hop-tuong — bỏ PNG trùng webp lúc xuất bản (10/11, người dùng duyệt)
+- `thap/js/donet.js`: bản xuất bản (có ANH_W) đổi đường dẫn `assets/X.png` dựng động (innerHTML/src/setAttribute/style.setProperty/backgroundImage…) → `X.webp?v=`; nhánh làm việc không đổi gì.
+- `tools/thap-ver.py`: sau khi sinh webp, xoá `X.png` có bản webp, trừ PNG còn bị trỏ thẳng (tự quét, giữ ~81); chạy lại vẫn đúng; tắt `THAP_BO_PNG=0`. Bản xuất bản ~376 → ~153 MB.
+- Chuyển `icon/icon-1024.png` (icon cửa hàng) + `v2_overlord_nong_s2/s3.png` ra `docs/demo-hop-tuong/thap-art/`.
+- Thử trên bản copy live: 29 màn (hồ sơ đã qua hướng dẫn) 0 lỗi 404/JS. Chi tiết: `docs/demo-hop-tuong/tuvan/dung-luong/BAO-CAO.md` mục 5.
+
 ## claude/demo-hop-tuong — đo dung lượng bản xuất bản thap/ (10/11, tư vấn)
 - Bản live 376 MB: PNG 260,7 MB (249,8 MB là PNG đã có .webp, chỉ còn là dự phòng), webp 69,7, jpg 31,5, js 3,8 MB. Không có raw/docs lạc.
 - Rác thật chỉ vài trăm KB → xoá `thap/assets/kho_chong.png` (không code/tool nào dùng). Nén PNG không mất mát chỉ −2,6 % → không làm.

@@ -57,4 +57,4 @@ nên không phải sửa bố cục HOME; chi tiết sao/chòm sao hợp chữ "
 1. **Tra nhãn hiệu** "Astral Arsenal" (USPTO TESS, EUIPO eSearch, WIPO Global Brand Database, Cục SHTT Việt Nam) nhóm 9 & 41; tra trùng tên trên App Store / Google Play / Steam.
 2. Đặt bundle id / package name mới (vd `com.<studio>.astralarsenal`) — đổi sau khi phát hành là không được.
 3. Tên miền / trang chủ (nếu cần), mạng xã hội cùng tên.
-4. Icon cửa hàng 1024×1024: `thap/assets/icon/icon-1024.png`; ảnh logo trong suốt: `thap/assets/logo_aa.png` (cần bản lớn hơn → cắt lại từ `raw_logo_aa_1.png`).
+4. Icon cửa hàng 1024×1024: `docs/demo-hop-tuong/thap-art/icon-1024.png` (chuyển khỏi thap/ 10/11 — game không dùng, bớt dung lượng xuất bản); ảnh logo trong suốt: `thap/assets/logo_aa.png` (cần bản lớn hơn → cắt lại từ `raw_logo_aa_1.png`).

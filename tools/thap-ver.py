@@ -32,6 +32,14 @@ def _webp(a):
 
 A = os.path.join(D, 'assets')
 anh = {}
+# chạy lại sau khi đã BỎ .png trùng (bên dưới): ảnh chỉ còn .webp → lấy lại băm cũ từ js/ver-anh.js lần trước
+CU_V, CU_W = {}, {}
+try:
+    _t = open(os.path.join(D, 'js/ver-anh.js'), encoding='utf-8').read()
+    CU_V = json.loads(re.search(r'var ANH_V = (\{.*?\});', _t).group(1)); CU_W = json.loads(re.search(r'var ANH_W = (\{.*?\});', _t).group(1))
+except Exception: pass
+for t, h in CU_W.items():
+    if not os.path.isfile(os.path.join(A, t + '.png')) and os.path.isfile(os.path.join(A, t + '.webp')) and t in CU_V: anh[t] = CU_V[t]
 for goc, _, ds in os.walk(A):
     for f in ds:
         if f.endswith(('.png', '.jpg')):
@@ -53,6 +61,8 @@ if os.environ.get('THAP_WEBP', '1') != '0':
             if kq:
                 open(os.path.join(A, t + '.webp'), 'wb').write(kq)
                 W[t] = hashlib.sha1(kq).hexdigest()[:8]
+    for t in anh:  # .png đã bỏ ở lần chạy trước → giữ bản .webp đang có
+        if t not in W and t in CU_W and not os.path.isfile(os.path.join(A, t + '.png')) and os.path.isfile(os.path.join(A, t + '.webp')): W[t] = CU_W[t]
 # số byte từng ảnh (thanh % theo byte của màn tải)
 B = {}
 for goc, _, ds in os.walk(A):
@@ -136,4 +146,33 @@ sp = os.path.join(D, 'sw.js')
 if os.path.isfile(sp):
     t = open(sp, encoding='utf-8').read(); t2 = re.sub(r"const V = '[^']*';", "const V = '%s';" % V, t, count=1)
     if t2 != t: open(sp, 'w', encoding='utf-8').write(t2)
+# ---- BỎ .png TRÙNG (bản xuất bản ~350 → ~150 MB; gói Spark 10 GB): ảnh có .webp → xoá .png. Tắt: THAP_BO_PNG=0.
+# Cần js/donet.js đổi đường dẫn .png dựng động sang .webp (ANH_W). Máy không đọc được webp (iOS < 14) sẽ thiếu các ảnh này.
+def bo_png_trung(D, A, W):
+    """Bản xuất bản: ảnh đã có .webp (W) → xoá .png (nhánh nguồn giữ PNG). GIỮ .png còn bị trỏ thẳng ở chỗ không qua
+    anhUrl / donet.js (chuỗi .png tĩnh còn sót sau doiW, mẫu ghép 'assets/trum_' + id + '_portrait.png' → trum_*_portrait).
+    Mẫu ghép toàn phần ('assets/' + n + '.png') không giữ: đi qua donet.js (innerHTML/src/setAttribute/style) → .webp."""
+    mau = set()
+    for goc, _, ds in os.walk(D):
+        if os.sep + 'assets' in goc[len(D):]: continue
+        for f in ds:
+            if not f.endswith(('.js', '.css', '.html', '.json', '.webmanifest')) or f == 'ver-anh.js': continue
+            s = open(os.path.join(goc, f), encoding='utf-8', errors='ignore').read()
+            s = re.sub(r'/\*.*?\*/|<!--.*?-->', '', s, flags=re.S); s = re.sub(r'(^|[\s;{}(),])//[^\n]*', r'\1', s)  # bỏ chú thích
+            for m in re.finditer(r"assets/([^\n]{0,200}?)\.png", s):
+                dong = s[s.rfind('\n', 0, m.start()) + 1:m.start()]
+                if re.search(r"typeof anhUrl === 'function' \?[^:]*:\s*['\"]?$|typeof anhUrl === 'function' \? anhUrl\([^)]*\) : '?$", dong[-160:]): continue  # nhánh dự phòng khi thiếu anhUrl: không bao giờ chạy
+                g = re.sub(r"""['"`]\s*\+.*?\+\s*['"`]""", '*', m.group(1))  # ' + biểu thức + ' → *
+                if re.fullmatch(r'[\w\-/*]+', g) and g.strip('*/'): mau.add(g)
+    rx = [re.compile('^' + re.escape(g).replace(r'\*', r'[\w\-/]*') + '$') for g in mau]
+    bo = giu = 0; nb = 0
+    for t in W:
+        p = os.path.join(A, t + '.png')
+        if not os.path.isfile(p): continue
+        if any(r.match(t) for r in rx): giu += 1; continue
+        nb += os.path.getsize(p); os.remove(p); bo += 1
+    return bo, giu, nb, sorted(mau)
+BO = (0, 0, 0, [])
+if W and os.environ.get('THAP_BO_PNG', '1') != '0': BO = bo_png_trung(D, A, W)
+print('thap-ver: bỏ %d .png trùng (%.1f MB), giữ %d' % (BO[0], BO[2] / 1048576, BO[1]))
 print('thap-ver:', V, '·', len(anh), 'ảnh ·', len(W), 'webp ·', len(re.findall(r'\?v=', h)), 'tệp js/css')
