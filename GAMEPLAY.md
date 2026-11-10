@@ -1087,3 +1087,9 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - Đủ 57 ụ: Trắng 14, Xanh 17, Tím 22 (gồm biến hình cuongno/lienket/hopbi), Vàng 4 (dongbo/orbital biến hình, sinhdoi, saochep). 40 ụ Vàng/Đỏ cũ không đổi; đặt cạnh nhau cỡ đầu mới nhỉnh hơn chút, không lệch nhiều (`nhan_dien_vang_do_canh_nhau.jpg`). Không gen lại ảnh ChatGPT (đổi màu/tỉ lệ đã đủ đọc).
 - Ảnh trước/sau + tờ nhận diện từng ụ ở cỡ ô thật (393×852 DPR2) + icon nho/: `docs/demo-hop-tuong/tuvan/ra-soat-anime-u/nhan_dien_*.jpg`.
 - Test: tu-kich 29/0, matran (3 lỗi có sẵn), keoghep (giống nhánh gốc), vetay-ui, hinh-ui, hud2 không lỗi.
+
+## claude/demo-hop-tuong — vẽ lại 6 ụ anime: Máy Xáo Trộn + 5 ụ dễ nhầm (10/11)
+- Ụ Tím Máy Xáo Trộn (`xaotron`) trước giống Máy Xèng (`cobac`) → ảnh ChatGPT mới `docs/demo-hop-tuong/thap-art/raw_anime_u_xaotron.png` (dùng hàng 1: khối rune 4 ô + 2 mũi tên đổi chỗ tím/cyan). Cùng đợt vẽ lại `min`, `hutmana` (Xanh), `taylo`, `baotuyet`, `kepha` (Tím) từ `raw_anime_u_velai_a.png` / `raw_anime_u_velai_b.png`.
+- Cắt bằng `tools/thap-cat-anime-u.py` (→ `_de/_vien/_nong/_phu` + `nho/`); `tools/thap-cat-umod.py` thêm `BE_GIU`: đầu kèm mũi tên/tia to phải thu (f 0,77–0,93) nhưng bệ giữ cỡ bệ chung (~1,02 như các ụ cùng bậc).
+- Nhận diện `tools/thap-nhan-dien-u.py`: `REF_RIENG` đọc ảnh gốc chưa nướng của 6 ụ từ commit cắt mới (ụ khác vẫn 48d490641); màu nhấn mới xaotron tím-cyan, min đỏ-đen, taylo bạc hà, baotuyet xanh băng, kepha cam, hutmana teal; bệ/icon theo tông bậc. `artscale.js`: HEAD_K/DE_RIENG/PHU_K/UMOD_TIP (cắt) + DAU_VE (vẽ) của 6 ụ.
+- Không đổi luật. Ảnh kiểm 393×852: `/home/claude/xem/xaotron_moi.jpg`, `/home/claude/xem/ve_lai_6u.jpg`.

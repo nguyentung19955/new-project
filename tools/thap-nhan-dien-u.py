@@ -26,7 +26,7 @@ OUT = os.environ.get('OUT', os.path.join(GOC, 'thap/assets'))
 JS = os.path.join(GOC, 'thap/js/artscale.js')
 REF = os.environ.get('GOC_REF', '48d490641')
 # ụ cắt lại SAU 48d490641 (ảnh anime mới): đọc ảnh gốc chưa nướng + HEAD_K từ commit cắt của nó
-REF_RIENG = {'xaotron': 'aef60ba1d'}   # 10/11: Máy Xáo Trộn — khối rune 4 ô + 2 mũi tên đổi chỗ (trước giống máy xèng cobac)
+REF_RIENG = {'xaotron': 'aef60ba1d', **{i: '708d42e8f' for i in ('min', 'taylo', 'baotuyet', 'kepha', 'hutmana')}}   # 10/11: Máy Xáo Trộn — khối rune 4 ô + 2 mũi tên đổi chỗ (trước giống máy xèng cobac); + 5 ụ vẽ lại cùng đợt (raw_anime_u_velai_a/b)
 R_MAX = 0.485            # bán kính xa nhất của đầu / cạnh ô (= tools/thap-cat-umod.py)
 VIEN = 0.022             # độ dày viền màu nhấn quanh đầu / cạnh ô
 TRON = 0.80              # mức đổi vàng → màu nhấn (0..1)
@@ -40,9 +40,9 @@ MAU = {
     # Xanh
     'nhanmana': '#23e0a0', 'kiembang': '#4a8bff', 'mimic': '#b8763a', 'chimang': '#ff3d5a', 'dichchuyen': '#6a7bff',
     'radar': '#3ddc6a', 'drone': '#4fc3ff', 'tron': '#ff9a2a', 'nangluong': '#2fe0ff', 'laser': '#c25cff', 'lanhgia': '#a8f0ff',
-    'mortar': '#a4b24a', 'khuech': '#b06bff', 'vungdoc': '#6ee03a', 'loa': '#e0603a', 'hutmana': '#d4304a', 'min': '#ff8a00',
+    'mortar': '#a4b24a', 'khuech': '#b06bff', 'vungdoc': '#6ee03a', 'loa': '#e0603a', 'hutmana': '#22c8b8', 'min': '#d0202e',
     # Tím
-    'cuongno': '#ff3030', 'baotuyet': '#bfe8ff', 'nhanban': '#ff9a3a', 'lienket': '#b8b0d8', 'kepha': '#ff7a2a', 'taylo': '#3ee08a',
+    'cuongno': '#ff3030', 'baotuyet': '#8fdcff', 'nhanban': '#ff9a3a', 'lienket': '#b8b0d8', 'kepha': '#ff7a4a', 'taylo': '#7affd2',
     'khien': '#3fd0ff', 'hopbi': '#e04fd0', 'nangsao': '#ffe04a', 'tuthan': '#7a3cff', 'xaotron': '#7aa6ff', 'epxung': '#c04cff',
     'no5': '#ff4f7a', 'bao': '#8a5cff', 'anhsang': '#fff07a', 'nayda': '#9be22d', 'combo': '#ff6a3a', 'khoathoigian': '#3ac8c8',
     'docton': '#c8283c', 'thaukinh': '#2fd38a', 'nhieusong': '#ff4fd0', 'santhuong': '#ff9a1a',
