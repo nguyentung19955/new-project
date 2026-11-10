@@ -1350,6 +1350,12 @@ HU.cauSang = { // quả cầu ánh sáng bay tới ô được gọi ụ
 HU.soiLan = { // Sói Máy — ĐÁNH LAN: sóng xung tròn + 3 vết vuốt chéo, VẼ GIỮA điểm trúng (bán kính = vùng lan thật, FX không cắt khung)
   ve(ctx, o, R) {
     const u = Math.min(1, o.t / o.song), e = 1 - (1 - u) * (1 - u), mau = o.tt ? '#ff4b3e' : '#c8ff6b', r = o.r;
+    if (R.img('fx_vong_mong') && R.img('fx_soi_vuot')) { // anime-u: vòng = fx_vong_mong tô màu, 3 vết vuốt = ảnh fx_soi_vuot (bộ đệm theo màu, không vẽ path)
+      ctx.save(); ctx.globalCompositeOperation = 'lighter';
+      ctx.globalAlpha = 0.9 * (1 - u); R.anhGiua(ctx, R.toMauA('fx_vong_mong', mau, 0.85), o.x, o.y, 2 * r * (0.3 + 0.7 * e));
+      ctx.globalAlpha = 1 - u; R.anhGiua(ctx, R.toMauA('fx_soi_vuot', mau, 0.8), o.x, o.y, r * (o.tt ? 1.5 : 1.3) * Math.min(1, 0.4 + u * 4), (o.goc || 0) + 0.7);
+      ctx.restore(); return;
+    }
     ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round';
     ctx.globalAlpha = 0.9 * (1 - u); ctx.strokeStyle = mau; ctx.lineWidth = Math.max(1.2, (o.tt ? 4 : 3) * (1 - u));
     ctx.beginPath(); ctx.arc(o.x, o.y, r * (0.3 + 0.7 * e), 0, Math.PI * 2); ctx.stroke();

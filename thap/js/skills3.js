@@ -254,6 +254,9 @@ SKILLS.hydra = {
   },
   _than: {},
   veThan(ctx, r, da) { // thân tròn giữa ô: vảy ngọc lục bảo + viền vàng + ngọc giữa (dựng sẵn theo cỡ)
+    // anime-u: ảnh PNG hydra_than (ChatGPT, tools/thap-cat-anime-fx.py) — thiếu ảnh thì vẽ bản cũ bên dưới
+    const im = typeof REN !== 'undefined' && REN.img('hydra_than') && REN.co('hydra_than', r * 2.1, da ? 'xam' : '');
+    if (im) { ctx.drawImage(im, -r * 1.05, -r * 1.05, r * 2.1, r * 2.1); return; }
     const key = Math.round(r * 4) + (da ? 'x' : ''); let c = this._than[key];
     if (!c) {
       const d = Math.ceil(r * 2 * 2) + 4; c = document.createElement('canvas'); c.width = c.height = d; const q = c.getContext('2d'), m = d / 2, R = r * 2;

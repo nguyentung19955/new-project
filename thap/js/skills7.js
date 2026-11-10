@@ -557,8 +557,16 @@ function pmVeVet(ctx) {
   const mau = (o) => { const X = B.t[o]; return !X || X.id !== 'bienmau' ? '#ff6a6a' : S.n(X) ? PRISM_MAU[Math.floor(t * 6) & 3] : PRISM_MAU[S.mau(X)]; };
   ctx.save(); ctx.lineCap = 'round'; ctx.globalCompositeOperation = 'lighter';
   for (let i = 1; i < p.length; i++) {
-    const a = B.o[p[i - 1]], b = B.o[p[i]], g = ctx.createLinearGradient(a.x, a.y, b.x, b.y);
-    g.addColorStop(0, mau(p[i - 1])); g.addColorStop(1, mau(p[i]));
+    const a = B.o[p[i - 1]], b = B.o[p[i]], m0 = mau(p[i - 1]), m1 = mau(p[i]), rg = C * (du ? 0.42 : 0.3), lech = t * C * 2;
+    // vệt = ảnh tia PNG (fx_laser_tia) tô màu 2 đầu, mỗi màu phủ nửa đoạn (anime-u: bỏ gradient/đường vẽ code)
+    if (REN.img('fx_laser_tia')) {
+      const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+      ctx.globalAlpha = du ? 0.95 : 0.7; REN.tia(ctx, REN.toMauA('fx_laser_tia', m0, 0.85), a.x, a.y, mx, my, rg, lech); REN.tia(ctx, REN.toMauA('fx_laser_tia', m1, 0.85), mx, my, b.x, b.y, rg, lech);
+      ctx.globalAlpha = du ? 0.9 : 0.45; REN.tia(ctx, 'fx_laser_tia', a.x, a.y, b.x, b.y, rg * 0.4, lech);
+      continue;
+    }
+    const g = ctx.createLinearGradient(a.x, a.y, b.x, b.y); // dự phòng khi ảnh chưa tải
+    g.addColorStop(0, m0); g.addColorStop(1, m1);
     ctx.strokeStyle = g; ctx.globalAlpha = du ? 0.95 : 0.7; ctx.lineWidth = C * (du ? 0.16 : 0.11); ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
     ctx.strokeStyle = '#ffffff'; ctx.globalAlpha = du ? 0.9 : 0.45; ctx.lineWidth = C * 0.04; ctx.stroke();
   }
