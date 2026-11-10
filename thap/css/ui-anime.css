@@ -431,3 +431,8 @@ html.ua body #wrap #chon #chon-luoi > .nhom span { color: #AEB8DA !important; }
 html.ua body #wrap #chon #chon-luoi > .nhom em.ua-mo { color: #FFB866 !important; }
 html.ua body #wrap #chon #chon-luoi > .nhom.ua-du em.ua-mo { color: #71E4EE !important; }
 html.ua body #wrap #chon #chon-luoi > .nhom.ua-khoa span { display: inline !important; }
+
+/* 10/11 ảnh chân dung LẤP KÍN ô trong của khung bậc (ha_khung_*): css/otoigian.css đặt --po-mep .081 + bo góc 16 % cho viền vuông o_vien_* cũ →
+   trong thẻ dọc ảnh bị thu nhỏ, lộ viền tối quanh ảnh (rõ ở khung Trắng / Vàng). Cửa sổ khung dọc chỉ lẹm ~3 % mỗi cạnh hộp ảnh, góc gần vuông (khung PNG phủ trên). */
+html.ua body #wrap #chon #chon-luoi .c.ot > img.anh, html.ua.co-khung body #wrap #chon #chon-luoi .c.ot.co-kh > img.anh,
+html.ua body #wrap #chon #chon-bo .o-bo.ot > img:not(.ov):not(.kh):not(.gl):not(.dk-vien) { --po-mep: .03 !important; border-radius: 4% !important; }
