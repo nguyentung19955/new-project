@@ -91,7 +91,7 @@ MAVUONG.twin.mo2 = { wave: 15, ngoc: 150 }; MAVUONG.hawk.mo2 = { wave: 30, ngoc:
 function mvCo(id) { // đã có chỉ huy này chưa (không có mo2 = miễn phí)
   const d = MAVUONG[id]; if (!d) return false; if (!d.mo2) return true;
   if (typeof KT === 'undefined' || !KT.doc) return true; // trang không có kinh tế (test range…) → không khoá
-  const s = KT.doc(); return !!((s.mvMo && s.mvMo[id]) || (s.tk && s.tk.wave >= d.mo2.wave));
+  const s = KT.doc(); return !!((s.mvMo && s.mvMo[id]) || (s.tk && s.tk.wave >= d.mo2.wave) || (typeof ADMIN !== 'undefined' && ADMIN.la()));
 }
 function mvBac(id) { const d = MAVUONG[id]; return d && TIERS[d.bac] ? d.bac : 'trang'; } // bậc chỉ huy (id lạ/thiếu → trắng)
 function mvTuAnh(anh) { for (const k in MAVUONG) if (MAVUONG[k].anh === anh) return k; return null; } // 'af_eve' → 'eve'

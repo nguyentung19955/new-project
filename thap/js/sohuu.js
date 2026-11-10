@@ -79,7 +79,8 @@ const SH = {
   },
 
   // ---------- sở hữu / mở ----------
-  co(id) {
+  co(id) { return !!(id && ADMIN.la() && SKILLS[id]) || this.coThat(id); }, // ADMIN: sở hữu ẢO đủ ụ (không ghi sh.co / bản sao)
+  coThat(id) { // sở hữu theo dữ liệu thật
     if (!id) return false;
     if (SHC.khoiDau.includes(id)) return true;
     const h = this.st(); if (h.co[id]) return true;
@@ -99,9 +100,9 @@ const SH = {
     return true;
   },
   // ghi sở hữu (gọi khi nhận bản sao); trả true nếu là ụ MỚI
-  themCo(id) { if (!id || this.co(id)) return false; const h = this.st(); h.co[id] = 1; h.moi[id] = 1; return true; },
+  themCo(id) { if (!id || this.coThat(id)) return false; const h = this.st(); h.co[id] = 1; h.moi[id] = 1; return true; },
   moVoi(id, L) { if (L < this.capMoBac(id)) return false; return THEBAI.bac(id) !== 'do' || TT.kyLuc() >= TTC.doWave; },
-  mo(id) { return this.moVoi(id, TT.cap()); },
+  mo(id) { return ADMIN.la() || this.moVoi(id, TT.cap()); },
   trongPool(id) { return !!(id && SKILLS[id] && (this.mo(id) || this.co(id))); },
   pool(b) { return this.dsCo().filter(id => THEBAI.bac(id) === b && this.trongPool(id)).sort(); },
   // trạng thái thẻ: 'co' ĐÃ CÓ · 'chua' CHƯA CÓ (đã mở) · 'khoa' CHƯA MỞ

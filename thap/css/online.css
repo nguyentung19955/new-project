@@ -80,3 +80,6 @@
 .onl-bang.moi-loi .onl-loi { font-size: 15px; }
 /* đổi bộ bài từ sảnh CO-OP: không có PLAY / PLAY TUTORIAL (‹ = về sảnh) */
 #chon.onl-doibo #hm-choi, #chon.onl-doibo [data-act="hd-choi"], #chon.onl-doibo [data-act="hd-boqua"] { display: none !important; }
+/* nhãn ADMIN (js/admin.js): chip phi công HOME + bảng hồ sơ — chữ nhỏ vàng, không hiệu ứng */
+.adm-nhan { display: inline-block; align-self: flex-start; margin-top: 1px; padding: 0 4px; border-radius: 3px; font: 900 8px/1.35 var(--f-ui, sans-serif); font-style: normal; letter-spacing: .08em; color: #1a1430; background: #ffd677; }
+#tk-bang .adm-nhan { margin: 3px 0 0; font-size: 10px; }
