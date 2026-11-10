@@ -329,7 +329,7 @@ const KY_NANG_CAP = {
   haoquang: { ten: 'Barrier', base: 3, buoc: 0.125, max: 3.5, dv: 's', pu: 0.15 },             // thời gian rào bất tử (trước mốc sao)
   loren: { ten: 'Forge buff', base: 3, buoc: 0.09, max: 3.72, dv: '%', tien: '+', pu: 0.3 },      // Twin Anvil (08/11): buff rèn ST +3%/cộng dồn × (1 + 3%/cấp thẻ) (rèn tốc ×2/3) · power-up +0.3 điểm %/cộng dồn mỗi bước
   cobac: { ten: 'Fruit power', base: 100, buoc: 5, max: 130, dv: '%', dmg: true },       // Lucky Slot (08/11, jackpot.js CB): mọi số/điểm ngăn quả × giá trị/100 — thẻ Đỏ LV11 100% → LV17 130%
-  khoisinh: { ten: 'Raise time', base: 94.3, buoc: -2.2834, max: 80.6, dv: '%', pu: -3 },          // Lõi Khởi Sinh (08/11, skills5.js g): 12 s ÷ (1 + 3% × (LV − 9)) — thẻ Đỏ bắt đầu LV11 = 94.3% → LV17 80.6% · power-up −3%/bước
+  khoisinh: { ten: 'Raise time', base: 94.3, buoc: -2.2834, max: 80.6, dv: '%', pu: -3, tenGiay: 'Raise every', giay: (k) => SKILLS.khoisinh.gK(Math.max(0, ((typeof THE !== 'undefined' && THE.lvDau.do) || 11) + (k | 0) - 9), 0) }, // giay/tenGiay (10/11): CHỈ HIỂN THỊ — trang ụ + hàng CARD LV ghi số GIÂY thật giữa 2 lần tặng ('Raise every 11.3s → 11.0s') thay cho % khó hiểu; công thức vẫn là SKILLS.khoisinh.gK ·          // Lõi Khởi Sinh (08/11, skills5.js g): 12 s ÷ (1 + 3% × (LV − 9)) — thẻ Đỏ bắt đầu LV11 = 94.3% → LV17 80.6% · power-up −3%/bước
   // hỗ trợ: giá trị buff chính ở 1★ (đường cong sao HOTRO.K nhân lên như cũ) — ≈ +40% ở cấp 15 · 07/11: hạ 1★ của ụ chạm trần sớm (BAO-CAO gioi-han §4 mục 2)
   radar: { ten: 'Rate buff', base: 19.5, buoc: 0.65, max: 27.3, dv: '%', tien: '+', ht: 1 }, // 08/11 +8% (18/0.6/25.2) bù jackpot PERFECT FREQUENCY đã bỏ
   phagiap: { ten: 'Exposed', base: 13, buoc: 0.355, max: 17.964, dv: '%', tien: '+', ht: 1 },

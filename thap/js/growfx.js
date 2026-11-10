@@ -748,7 +748,7 @@ P.luoicheo = () => {
 // ---- 3 ụ Đỏ đợt 3 (chuato / leviathan / khoisinh) đổi dạng theo sao: đã vẽ riêng trong skills5.js (drone hoàng gia, bọt lớn, hoa sen) ----
 ATK.chuato = ['1–3 drones circle the hive, then fly out together', '4–6 drones: each extra drone adds +8% to the volley', '7 drones: the full brood volley'];
 ATK.leviathan = ['Bubble shot, 30 px splash', 'Bubble shot, bigger splash ring (same 30 px); devours big enemies', 'ABYSS LORD: big double-ring bubbles; devours flyers'];
-ATK.khoisinh = ['3 rotating gold rings, raises your lowest turret', 'BLOSSOM: steel lotus petals, neighbours +15% damage', 'LOTUS OF LIFE: white star core, each raise also seeds a free 1★'];
+ATK.khoisinh = ['3 rotating gold rings, raises the lowest-star neighbour', 'BLOSSOM: steel lotus petals, neighbours +15% damage', 'LOTUS OF LIFE: white star core, neighbours +15% damage']; // 10/11: bỏ câu "each raise also seeds a free 1★" (luật 08/11 không còn gieo ụ)
 
 // =====================================================================================================
 // 5) BẢNG THÔNG TIN: dòng "Attack per stage" (dạng hiện tại tô sáng)

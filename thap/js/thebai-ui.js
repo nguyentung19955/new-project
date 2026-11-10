@@ -17,7 +17,8 @@ const TBUI = {
   },
   // giá trị kỹ năng: 'Copy 50% → 57%' (max: 'Copy 92%')
   knV(e, v) { const r = Math.round(v * 10) / 10; return (e.tien || '') + (e.dv === 's' ? r.toFixed(1) : String(r)) + (e.dv || ''); },
-  knChu(e, t) { const a = knGt(e, t.k); return e.ten + ' ' + this.knV(e, a) + (t.max ? '' : ' → ' + this.knV(e, knGt(e, t.k + 1))); },
+  knChu(e, t) { if (e.giay) { const f = (v) => v.toFixed(1) + 's'; return e.tenGiay + ' ' + f(e.giay(t.k)) + (t.max ? '' : ' → ' + f(e.giay(t.k + 1))); } const a = knGt(e, t.k); // e.giay: mục hiện bằng GIÂY thật (Genesis Core)
+    return e.ten + ' ' + this.knV(e, a) + (t.max ? '' : ' → ' + this.knV(e, knGt(e, t.k + 1))); },
   // gắn LV + thanh vào 1 thẻ lưới (idempotent)
   ganThe(c) {
     const id = c && c.dataset.id; if (!id || !SKILLS[id] || !G.rosterMap[id]) return;

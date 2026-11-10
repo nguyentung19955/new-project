@@ -24,6 +24,8 @@ const DEMKN = {
     leviathan(T) { const n = T.vuc || 0; return n > 0 ? { m: [{ ic: DEMKN.icVuc(), s: '' + n }], mau: n >= 100 ? '#b8f6ff' : '#5fe3ff' } : null; },
     // Rồng Máy: NHIỆT lò (không trần) — ngọn lửa cam <100 · vàng ≥100 QUÁ NHIỆT · trắng ≥250 NÓNG CHẢY (chữ vàng = đang có thưởng mốc)
     ronglua(T) { const n = Math.floor(T.nhiet || 0); return n > 0 ? { m: [{ ic: n >= 250 ? 'lua_t1' : n >= 100 ? 'lua_t3' : 'fx_cuuvi_dan', s: '' + n }], sang: n >= 100 } : null; },
+    // Genesis Core (10/11): số LƯỢT TẶNG còn lại (ngôi sao + số), luôn hiện; còn 1 lượt (tặng xong là vỡ) → chữ đỏ cam
+    khoisinh(T) { const n = SKILLS.khoisinh.luotCon(T); return n > 0 ? { m: [{ ic: 'ic_sao', s: '×' + n }], mau: n <= 1 ? '#ff7a5c' : '#ffd0e0' } : null; },
     nangluong(T, B) { const k = Math.round(SKILLS.nangluong.k(B) * 100); return k > 0 ? { m: [{ ic: 'ic_mana', s: '+' + k + '%' }], sang: k >= 500 } : null; },
     // (Sói: bỏ bộ đếm mạng — Sói không còn lớn dần theo mạng; dạng thường / thức tỉnh quay lúc sinh)
     docton(T, B) { const n = SKILLS.docton.ke(B, T); return n === 0 ? { m: [{ ic: 'ic_toc', s: '+100%' }], sang: true } : n >= 3 ? { m: [{ ic: 'ic_toc', s: '−30%' }] } : null; },
@@ -95,6 +97,56 @@ const DEMKN = {
     ctx.restore(); return true;
   },
 
+  // ---------- GENESIS CORE (10/11 "chưa rõ ràng, chưa nhiều thông tin") — chỉ hiển thị, đọc đúng hàm luật (SKILLS.khoisinh) ----------
+  //  · thanh đồng hồ nhỏ ngay trên tấm đếm: hồng = đang đếm tới lần tặng kế · hổ phách nhấp nháy = ĐANG CHỜ (không ụ kề nào nhận được)
+  //  · ụ kề SẼ được +1★ (K.sapNhan = đúng K.dich của luật): khung hồng quanh ô + mũi tên từ lõi sang + chữ "+1★"; sáng dần khi sắp tặng
+  //  Ảnh có sẵn tô màu (tai_day / khung_chon / duong_mui — QUY-TAC-HINH 3), chữ dựng sẵn 1 lần vào bộ đệm REN (không tạo canvas mỗi khung).
+  KS_HONG: '#ff8ab0', KS_CHO: '#ffb43a',
+  ANH_KS: ['tai_day', 'khung_chon', 'duong_mui'],
+  chuKS(ctx, s, mau, f) { // ảnh chữ nhỏ có viền đen, dựng 1 lần theo cỡ điểm ảnh
+    const m = ctx.getTransform(), k = m.a > 0 ? m.a : 1, key = 'ks|' + s + '|' + mau + '|' + Math.round(f * k * 2);
+    let a = REN.cGet(key);
+    if (!a) {
+      const x0 = REN.ctxNong ? REN.ctxNong() : null; if (!x0) return null;
+      x0.font = '900 ' + f.toFixed(2) + 'px ' + FONT.display; const w = x0.measureText(s).width + 4;
+      a = document.createElement('canvas'); a.width = Math.ceil(w * k) + 2; a.height = Math.ceil((f + 4) * k) + 2;
+      const q = REN.c2d(a); q.setTransform(k, 0, 0, k, 1, 1);
+      q.font = '900 ' + f.toFixed(2) + 'px ' + FONT.display; q.textBaseline = 'middle'; q.textAlign = 'left'; q.lineJoin = 'round';
+      q.lineWidth = Math.max(1.5, f * 0.24); q.strokeStyle = '#000'; q.strokeText(s, 2, (f + 4) / 2 + 0.5); q.fillStyle = mau; q.fillText(s, 2, (f + 4) / 2 + 0.5);
+      a._w = a.width / k; a._h = a.height / k; REN.cSet(key, a);
+    }
+    return a;
+  },
+  veKhoiSinh(ctx, h) {
+    const T = h.T, B = h.B, K = SKILLS.khoisinh; if (!K || !K.tienDo || T.st.da || typeof PX === 'undefined') return;
+    const n = K.luotCon(T); if (n <= 0) return;
+    const c = h.C, al = h.al, p = K.tienDo(T), cho = K.dangCho(B, T), t = typeof G !== 'undefined' ? G.t || 0 : 0;
+    ctx.save();
+    // 1) thanh đồng hồ (ngay trên tấm đếm ở đáy ô)
+    const w = c * 0.5, hh = Math.max(2.5, c * 0.06), y = h.yDay - Math.max(9, c * 0.2) - hh - 3;
+    PX.thanh(ctx, h.cx - w / 2, y, w, hh, cho ? 0.55 + 0.45 * Math.abs(Math.sin(t * 3)) : p, cho ? this.KS_CHO : this.KS_HONG);
+    // 2) ụ kề sắp được +1★
+    const N = !cho && K.sapNhan(B, T);
+    if (N && B.o[N.o] && B.o[T.o]) {
+      const a = B.o[T.o], b = B.o[N.o], g = Math.atan2(b.y - a.y, b.x - a.x), q = al * (0.45 + 0.55 * p) * (p > 0.85 ? 0.75 + 0.25 * Math.sin(t * 10) : 1);
+      const fr = PX.mau('khung_chon', this.KS_HONG);
+      if (fr && typeof KG !== 'undefined' && KG.khung9) { ctx.globalAlpha = q; KG.khung9(ctx, fr, b.x - B.cw / 2 + 2, b.y - B.ch / 2 + 2, B.cw - 4, B.ch - 4, 10); }
+      const tr = (0.5 + 0.06 * Math.sin(t * 5)), mx = a.x + (b.x - a.x) * tr, my = a.y + (b.y - a.y) * tr, mw = Math.min(B.cw, B.ch) * 0.42;
+      PX.ve(ctx, PX.mau('duong_mui', this.KS_HONG), mx, my, mw, mw * 32 / 48, g, Math.min(1, q + 0.4));
+      const f = Math.max(7.5, Math.min(B.cw, B.ch) * 0.22), ch = this.chuKS(ctx, '+1', '#ffe0ea', f), sao = REN.img('ic_sao'); // "+1" + ngôi sao PNG (ký tự ★ không có trong phông hiển thị)
+      if (ch) {
+        const x0 = b.x - B.cw / 2 + 2.5, y0 = b.y - B.ch / 2 + B.ch * 0.15; /* dưới hàng huy hiệu sao (không đè sao) */ ctx.globalAlpha = Math.min(1, q + 0.4); ctx.drawImage(ch, x0, y0, ch._w, ch._h);
+        if (sao) { const s = f * 1.05, im = REN.mip ? REN.mip(sao, s * REN.s * REN.dpr) : sao; ctx.drawImage(im, x0 + ch._w - 2.5, y0 + (ch._h - s) / 2, s, s); }
+      }
+    }
+    // 3) 4★+: các ô kề đang được +15% sát thương → kiếm nhỏ (ic_dmg) góc trên-phải ô đó (đúng danh sách ô của luật: oHoTro; chỉ ụ có sát thương)
+    if (T.sao >= 4 && !(T.st.bang > 0) && !(T.st.cam > 0) && typeof oHoTro === 'function') {
+      const ic = REN.img('ic_dmg'), s = Math.max(8, Math.min(B.cw, B.ch) * 0.24);
+      if (ic) { const im = REN.mip ? REN.mip(ic, s * REN.s * REN.dpr) : ic; ctx.globalAlpha = al * 0.95; for (const N of oHoTro(B, T)) { if (!N || N === T || N.st.da || N.st.bang > 0 || !(SKILLS[N.id] && SKILLS[N.id].dmg)) continue; const b = B.o[N.o]; if (b) ctx.drawImage(im, b.x + B.cw / 2 - s - 1.5, b.y - B.ch / 2 + 1.5, s, s); } }
+    }
+    ctx.restore();
+  },
+
   // ---------- DOM: số ụ trên bàn ở thẻ bộ bài (mình) + dải thẻ bên kia ----------
   dem(B, id) { let n = 0; if (B) for (const X of B.t) if (X && X.id === id) n++; return n; },
   gan(d, lop) {
@@ -113,12 +165,12 @@ const DEMKN = {
 
 (() => {
   if (typeof document === 'undefined') return;
-  if (typeof REN !== 'undefined') for (const t of DEMKN.ANH) { if (REN.CO_DINH) REN.CO_DINH.add(t); try { REN.img(t); } catch (e) { } }
+  if (typeof REN !== 'undefined') for (const t of DEMKN.ANH.concat(DEMKN.ANH_KS)) { if (REN.CO_DINH) REN.CO_DINH.add(t); try { REN.img(t); } catch (e) { } }
   // lớp huy hiệu trên ụ: thêm tấm đếm ở đáy ô (vẽ sau đạn/hiệu ứng, như huy hiệu sao)
   if (typeof ND !== 'undefined') {
     const xep = ND.xep, veHH = ND.veHuyHieu;
     ND.xep = function (T, x, y, C, hs, al, B) { const h = xep.apply(this, arguments); const k = C / Math.min(B.cw, B.ch); h.B = B; h.cx = x; h.yDay = y + (B.ch * k) / 2 - 1.5; h.C = C; return h; };
-    ND.veHuyHieu = function (ctx, h) { veHH.apply(this, arguments); if (h.B && h.hs > 0.5) { try { DEMKN.ve(ctx, h.T, h.B, h.cx, h.yDay, h.C, h.al); } catch (e) { } } if (h.T && h.T.id === 'lualien' && typeof LUA_VET !== 'undefined' && LUA_VET._pop.size) LUA_VET.veHH(ctx, h); }; // Ember: loé lửa + "+N" trên tấm đếm (vangmoi1.js)
+    ND.veHuyHieu = function (ctx, h) { veHH.apply(this, arguments); if (h.B && h.hs > 0.5) { if (h.T.id === 'khoisinh') { try { DEMKN.veKhoiSinh(ctx, h); } catch (e) { } } try { DEMKN.ve(ctx, h.T, h.B, h.cx, h.yDay, h.C, h.al); } catch (e) { } } if (h.T && h.T.id === 'lualien' && typeof LUA_VET !== 'undefined' && LUA_VET._pop.size) LUA_VET.veHH(ctx, h); }; // Ember: loé lửa + "+N" trên tấm đếm (vangmoi1.js)
   }
   if (typeof UI !== 'undefined') {
     const capGoc = UI.capNhat;

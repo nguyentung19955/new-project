@@ -291,9 +291,18 @@ const KE_CONG = (o) => { const c = o % 5, h = (o / 5) | 0, ds = []; if (h > 0) d
 SKILLS.khoisinh = {
   vai: 'db', dmg: 0, toc: 0, napMau: '#ff3a6a',
   GIA: 30,
-  g: (T) => { const B = G.ban[T.ban]; return Math.round(12 / (1 + 0.03 * capThe9(B, 'khoisinh')) * (1 - 0.03 * knPU(B, 'khoisinh')) * 100) / 100; },
+  gK: (c9, pu) => Math.round(12 / (1 + 0.03 * c9) * (1 - 0.03 * pu) * 100) / 100, // giây giữa 2 lần tặng: c9 = cấp thẻ trên LV9, pu = bước power-up (công thức gốc, tách ra để trang ụ hiện đúng số giây)
+  g: (T) => { const B = G.ban[T.ban]; return SKILLS.khoisinh.gK(capThe9(B, 'khoisinh'), knPU(B, 'khoisinh')); },
   cd: 45,
-  mo: (T) => '+1★ to the lowest-star N/E/S/W neighbour every ' + SKILLS.khoisinh.g(T) + 's (next in ' + Math.max(0, SKILLS.khoisinh.g(T) - (T.sinhT || 0)).toFixed(0) + 's) · gifts left ' + Math.min(T.luot == null ? T.sao : T.luot, T.sao) + ' (= its stars when it appeared; at 0 it breaks) · waits if no neighbour can take a star' + (T.sao >= 4 ? ' · neighbours +15% damage' : '') + ' · ' + (T.sao >= 3 ? 'TAP (30 mana, cooldown 45s): GENESIS summons a 1★ into an empty neighbour cell' : 'GENESIS unlocks at 3★'),
+  // ---- chỉ để HIỂN THỊ (10/11 "làm rõ Genesis Core") — đọc đúng trạng thái/luật, không đổi gì ----
+  luotCon: (T) => Math.min(T.luot == null ? T.sao : T.luot, T.sao), // lượt tặng còn lại
+  tienDo: (T) => Math.max(0, Math.min(1, (T.sinhT || 0) / SKILLS.khoisinh.g(T))), // 0..1 tới lần tặng kế
+  sapNhan(B, T) { return !B || T.st.da || T.st.bang > 0 || this.luotCon(T) <= 0 ? null : this.dich(B, T); }, // ụ kề SẼ được +1★ lần tới (đúng hàm chọn của luật)
+  dangCho(B, T) { return !!B && !T.st.da && !(T.st.bang > 0) && this.tienDo(T) >= 1 && !this.dich(B, T); }, // đồng hồ đầy mà không ụ kề nào nhận được
+  mo: (T) => {
+    const K = SKILLS.khoisinh, B = G.ban[T.ban], g = K.g(T), N = K.sapNhan(B, T);
+    return '+1★ to the lowest-star turret above/below/left/right every ' + g + 's · ' + (N || !K.dangCho(B, T) ? 'next gift in ' + Math.max(0, g - (T.sinhT || 0)).toFixed(0) + 's' : 'WAITING: no neighbour can take a star (no gift is lost)') + ' · gifts left ' + K.luotCon(T) + ' (= its stars when it appeared; at 0 it breaks)' + (T.sao >= 4 ? ' · neighbours +15% damage' : '') + ' · ' + (T.sao >= 3 ? 'TAP (30 mana, cooldown 45s): GENESIS summons a 1★ into an empty neighbour cell' : 'GENESIS unlocks at 3★');
+  },
   sinh(G, T) { if (T.luot == null) T.luot = T.sao; T.sinhT = 0; },
   gocDau: (T, t) => t * (0.25 + 0.5 * (T.sinhT || 0) / SKILLS.khoisinh.g(T)),
   hoTro(G, T, N, ra) { if (T.sao >= 4) { if (ra) ra.dmg = 0.15; else N.buf.dmg += 0.15; } }, // ra: vào trần sát thương chung (HOTRO.apDung — BAO-CAO §3)
@@ -306,6 +315,10 @@ SKILLS.khoisinh = {
     if (T.luot == null) T.luot = T.sao;
     if (T.luot > T.sao) T.luot = T.sao; // bị hạ sao → lượt = min(lượt, sao)
     T.nap = T.sao < 3 ? 0 : Math.min(1, T.nap + dt / this.cd); // chiêu TỐN MANA: không tự phát cho người chơi (AI bàn máy vẫn dùng — game.js)
+    if (T.sao >= 4) { // chỉ hiển thị: xung nhẹ tới các ô kề đang +15% (cùng kiểu ụ hỗ trợ — HU.ping); không đụng luật
+      T.nhip = (T.nhip || 0) + dt / 2.6;
+      if (T.nhip >= 1) { T.nhip = 0; const ke = oHoTro(B, T).filter(N => N && N !== T && !N.st.da && !(N.st.bang > 0)); if (ke.length) G.hu.push({ k: 'ping', t: 0, song: 0.18, T, ke, rgb: '255,138,176' }); }
+    }
     if (B.net && typeof ONS !== 'undefined' && ONS.on) return true; // bàn con rối: chờ ảnh chụp bàn
     const g = this.g(T);
     T.sinhT = Math.min(g, (T.sinhT || 0) + dt * (1 + T.buf.toc));
@@ -314,7 +327,7 @@ SKILLS.khoisinh = {
       if (N) {
         T.sinhT = 0; T.sang = 1; T.luot--;
         const c = tamU(T), n = B.o[N.o];
-        G.hu.push({ k: 'cungSang', t: 0, song: 0.55, x0: c.x, y0: c.y, x1: n.x, y1: n.y });
+        G.hu.push({ k: 'cungSang', t: 0, song: 0.55, x0: c.x, y0: c.y, x1: n.x, y1: n.y, sao: 1 }); // sao: ngôi sao PNG bay theo cung (quà +1★)
         nangSao(B, N, 1, 'GENESIS +1★'); // tại chỗ, ngay lúc chọn (tất định)
         if (!B.ai || G.che === 'pvp') SND.gHop(0);
         if (T.luot <= 0) { // hết lượt: tự huỷ, để trống ô
@@ -341,15 +354,13 @@ SKILLS.khoisinh = {
     return true;
   },
   sangDau: (T) => (T.gd === 3 ? 0.2 + 0.08 * Math.sin(G.t * 4) : T.gd === 2 ? 0.1 : 0) + T.sang * 0.3,
-  veThem(ctx, T, S, al, R) { // GĐ1: 3 vành vàng quay · GĐ2: + 8 cánh sen thép · GĐ3: + ngôi sao trắng ở lõi · chấm hồng = số lượt còn lại
+  veThem(ctx, T, S, al, R) { // GĐ1: 3 vành vàng quay · GĐ2: + 8 cánh sen thép · GĐ3: + ngôi sao trắng ở lõi · (lượt còn lại: tấm đếm dưới ô — demkn.js)
     const gd = T.gd || 1, p = (T.sinhT || 0) / SKILLS.khoisinh.g(T);
     ctx.globalCompositeOperation = 'lighter';
     if (!MOT_VONG) for (let i = 0; i < 3; i++) { const rr = S * (0.3 + i * 0.045), vp = PX.mau('fx_vong_trieu', i === 2 ? '#ff8ab0' : '#ffd23f'); if (vp) PX.ve(ctx, vp, 0, 0, rr * 2.3, rr * 2.3, (i % 2 ? -1 : 1) * R.t * (0.4 + 0.2 * i), al * (0.35 + 0.15 * i)); } // vành = vòng phù văn PNG
     if (gd >= 2) for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4 + R.t * 0.3; PX.sao(ctx, Math.cos(a) * S * 0.34, Math.sin(a) * S * 0.34, S * 0.12, '#ffd23f', al * 0.5, a); } // cánh sen = lấp lánh PNG
     if (gd === 3) { ctx.globalAlpha = al * (0.5 + 0.2 * Math.sin(R.t * 4)); R.anhGiua(ctx, R.cham1('#ff8ab0'), 0, 0, S * 0.7); ctx.globalAlpha = al; vePandora(ctx, 'sao', S * 0.09, '#ffffff'); }
     if (p > 0.9) { ctx.globalAlpha = al * (p - 0.9) * 6 * (0.6 + 0.4 * Math.sin(R.t * 20)); R.anhGiua(ctx, R.cham1('#ffd23f'), 0, 0, S * 0.8); }
-    const n = Math.min(T.luot == null ? T.sao : T.luot, T.sao); // lượt còn lại: n chấm dưới lõi
-    for (let i = 0; i < n; i++) R.anhGiua(ctx, R.cham1('#ff8ab0'), (i - (n - 1) / 2) * S * 0.09, S * 0.3, 7, 0, al * 0.95);
     ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al;
   },
 };
@@ -362,6 +373,7 @@ HU.cungSang = { // tia sáng CONG từ lõi sang ụ đích (đầu sáng chạy
     const s0 = Math.max(0, e - 0.45), pts = []; for (let i = 0; i <= 12; i++) pts.push(P(s0 + (e - s0) * i / 12));
     PX.duong(ctx, pts, 3, '#ffd23f', 0.7); // cung sáng = các đoạn tia PNG
     const [hx, hy] = P(e); ctx.globalAlpha = 1 - u * 0.5; R.anhGiua(ctx, R.cham1('#ff8ab0'), hx, hy, 26); R.anhGiua(ctx, R.cham1('#ffffff'), hx, hy, 10);
+    if (o.sao) { const im = R.img('ic_sao'); if (im) { ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1; R.anhGiua(ctx, im, hx, hy, 18); } } // quà +1★: ngôi sao bay từ lõi sang ụ nhận
     ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
   },
 };
