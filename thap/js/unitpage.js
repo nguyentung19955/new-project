@@ -108,7 +108,7 @@ function upLuatGhep(id) {
     L.push(['Same directions', 'Same or fewer directions can merge too (N + N = N, NS + N = NS): the directions stay, star = average.']);
     L.push(['NSWE', 'An NSWE Compass cannot merge with a Compass that is not NSWE.']);
     L.push(['Stack', 'NSWE + NSWE = NSWE + 1 stack (both stacks are kept). Each stack +' + Math.round(knThe(null, 'canon')) + '% damage. No limit.']);
-    L.push(['Other merges', 'Mimic merges give a random turret as usual. Merge King raises the star and keeps the directions + stacks. A Copycat copy keeps them too.']);
+    L.push(['Other merges', 'Mimic merges give a random turret as usual. Merge King raises the star and keeps the directions + stacks. A Copycat copy is a new Compass: 1 new random direction, 0 stacks.']);
     return L.concat([['Stone', 'If Janus Cube petrifies it, it only merges with stone of the same star (result: a higher-star stone).']]);
   }
   if (id === 'bienmau') { // Prism Thief: HỢP THỂ (08/11 lần 2) — skills7.js, docs/demo-hop-tuong/tuvan/prism/THIET-KE.md
@@ -138,11 +138,11 @@ function upLuatGhep(id) {
 }
 function upCheDo(id) {
   const t = (TEXT.turret[id] || {}).skill || '', L = [], sk = SKILLS[id] || {}, r = G.rosterMap[id];
-  const pv = t.match(/PVP:?\s*([^;.]*)/i), co = t.match(/Co-op:?\s*([^;.]*)/i), so = t.match(/Solo:?\s*([^;.]*)/i);
+  const pv = t.match(/PVP:?\s*([^;.]*)/i), co = t.match(/Co-op:?\s*([^;.]*)/i), so = t.match(/(?:Single-player|Chơi đơn):?\s*([^;.]*)/i);
   if (pv) L.push(['PvP', upSC(pv[1].trim()) || 'Affects the rival board.']);
   if (co) L.push(['Co-op', upSC(co[1].trim()) || 'Helps your ally.']);
-  if (so) L.push(['Solo', upSC(so[1].trim())]);
-  if (!L.length) L.push(['All modes', 'Works the same in solo, co-op and PvP.']);
+  if (so) L.push(['Single-player', upSC(so[1].trim())]);
+  if (!L.length) L.push(['All modes', 'Works the same in every mode.']);
   if (r && r.bac === 'do') L.push(['Mythic', 'Max 1 Mythic per deck.' + (sk.chuDong ? (typeof laTuKich === 'function' && laTuKich(id) ? ' Its active skill fires by itself when charged (some unlock it at 3★).' : ' Tap it on the board when charged to fire its active skill (only Black Hole and Arcane Cascade; others fire by themselves).') : '')]);
   if (sk.vai === 'tc') L.push(['Deck tip', 'Take at least 2 attack turrets.']);
   return L;

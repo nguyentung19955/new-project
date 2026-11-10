@@ -368,7 +368,7 @@ SKILLS.vungdoc = { // Bom Vũng Độc (Flora): ném vũng độc lên đường
 SKILLS.loa = { // Loa Hồi Chiêu (Melpomene): khi GHÉP giảm hồi chiêu kỹ năng Ma vương
   vai: 'db', dmg: 12.5, toc: 0.8, nham: 'dau',
   giam: (sao, B) => Math.round((4 + 2 * sao) * knHe(B, 'loa') * 10) / 10, // 3+1.5★ → 4+2★ (đo bậc 06/11)
-  mo: (T) => 'On merge: Archfiend cooldown −' + SKILLS.loa.giam(T.sao, G.ban[T.ban]) + 's (if ready: cost −15%, not below its base cost)',
+  mo: (T) => 'On merge: Commander cooldown −' + SKILLS.loa.giam(T.sao, G.ban[T.ban]) + 's (if ready: cost −15%, not below its base cost)',
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'tia_lua', co: 14, mau: '#ffe46b', sp: 440 }); const c = tamU(T); FX.vong1(c.x, c.y, 8, 22, '#ffe46b', 0.3, 2); },
   ghep(G, B, a, b, ra) {
     const mv = B.mv, g = this.giam(a.sao, B), c = B.o[b.o];
@@ -502,7 +502,7 @@ SKILLS.lienket = { // Chuỗi Liên Kết (Won): mạnh hơn theo số ụ cùng
 };
 SKILLS.kepha = { // Kẹp Phá (Myrina): khi GHÉP — PVP làm chậm ụ đối thủ; CO-OP tăng tốc ụ đồng đội (SOLO: ụ mình)
   vai: 'db', dmg: 9.3, toc: 1.3, nham: 'dau', // 6.92 → 9.3 (đo bậc 06/11)
-  mo: (T) => 'On merge: PVP clamps ' + (1 + Math.floor(T.sao / 2)) + ' rival turrets −40% speed · CO-OP/SOLO +' + Math.round((0.7 + 0.05 * T.sao) * 100) + '% speed',
+  mo: (T) => 'On merge: PVP clamps ' + (1 + Math.floor(T.sao / 2)) + ' rival turrets −40% speed · CO-OP/SINGLE-PLAYER +' + Math.round((0.7 + 0.05 * T.sao) * 100) + '% speed',
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'dan_tia', co: 15, sp: 560 }); },
   ghep(G, B, a, b, ra) {
     const n = 1 + Math.floor(a.sao / 2), c0 = B.o[b.o];
@@ -600,7 +600,7 @@ SKILLS.tuthan = { // Cột Tử Thần (Thanatos): HỖ TRỢ — ụ kề có x
 };
 SKILLS.xaotron = { // Máy Xáo Trộn (Neban): khi GHÉP — PVP đổi ngẫu nhiên ụ đối thủ; CO-OP/SOLO tạo cặp ghép cho bàn đồng đội/mình
   vai: 'db', dmg: 14, toc: 1.35, nham: 'dau', // 6.67 → 14 (đo bậc 06/11)
-  mo: (T) => 'On merge: PVP shuffles ' + (1 + Math.floor(T.sao / 2)) + ' rival turrets · CO-OP/SOLO makes loners mergeable',
+  mo: (T) => 'On merge: PVP shuffles ' + (1 + Math.floor(T.sao / 2)) + ' rival turrets · CO-OP/SINGLE-PLAYER makes loners mergeable',
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'tia_lua', co: 15, mau: '#ff6ad5', sp: 480 }); },
   ghep(G, B, a, b, ra) {
     const n = 1 + Math.floor(a.sao / 2), c0 = B.o[b.o];

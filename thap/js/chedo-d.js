@@ -602,7 +602,7 @@ const CDDUI = {
     'SOLO PAST WAVE #': 'SOLO SAU WAVE #',
     'Bosses every # waves after #, every # after #, every wave after # · +# mutation every # waves from #': 'Trùm mỗi # wave sau wave #, mỗi # wave sau #, wave nào cũng có sau # · +# đột biến mỗi # wave từ wave #',
     'WEEKLY MILESTONES · RESETS IN #d #h': 'MỐC TUẦN · LÀM MỚI SAU #n #g', 'WEEKLY MILESTONES · RESETS IN #:#:#': 'MỐC TUẦN · LÀM MỚI SAU #:#:#', 'WEEKLY MILESTONES': 'MỐC TUẦN',
-    'WAVE #': 'WAVE #', 'THIS WEEK': 'TUẦN NÀY', 'ALL TIME': 'MỌI THỜI ĐẠI', 'LOADING…': 'ĐANG TẢI…',
+    'WAVE #': 'ĐỢT #', 'THIS WEEK': 'TUẦN NÀY', 'ALL TIME': 'MỌI THỜI ĐẠI', 'LOADING…': 'ĐANG TẢI…',
     'NOT CONNECTED · personal best only': 'CHƯA KẾT NỐI · chỉ kỷ lục cá nhân', 'No scores yet this week': 'Tuần này chưa có điểm',
     'START': 'BẮT ĐẦU', 'NEW': 'MỚI', 'W#': 'W#', 'START · WEEK #': 'BẮT ĐẦU · TUẦN #',
     'WEEK # · RESETS IN #d #h': 'TUẦN # · LÀM MỚI SAU #n #g', 'WEEK # · RESETS IN #:#:#': 'TUẦN # · LÀM MỚI SAU #:#:#',

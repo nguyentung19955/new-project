@@ -47,7 +47,7 @@ const HO_MOI = {
   bomhen: 'timed bomb that weakens a group', min: 'mines across the path', wallgen: 'walls block the path and explode; merge raises a GOLDEN wall', blackhole: 'holds a crowd in place and crushes it + SINGULARITY (tap, mana)',
   maychem: 'chance to execute small enemies', tuthan: 'neighbours execute low-HP enemies',
   mana: 'makes mana over time', hutmana: 'leech bolts: damage + capped mana', nhanmana: 'mana burst on merge',
-  drone: 'merge launches bomb drones', loa: 'merge cuts Archfiend cooldown', nhanban: 'merge summons a free 1★ (2★ from 3★ merges)', anhsang: 'summons 1★ turrets over time',
+  drone: 'merge launches bomb drones', loa: 'merge cuts Commander cooldown', nhanban: 'merge summons a free 1★ (2★ from 3★ merges)', anhsang: 'summons 1★ turrets over time',
   sinhdoi: 'merge summons a SAME-STAR turret (10%+: +1★)',
   nangsao: 'speeds up all neighbours, the lowest-star most', vughep: 'drag: +1★ and keeps the type', hasao: 'merge surge for neighbours; punishes rival 5★', ngoisao: 'grows with total board stars',
   mimic: 'merges with any same-star turret', tron: 'fire rate for mixed Attack neighbours', dichchuyen: 'swaps two turrets', xaotron: 'merge scrambles turrets', saochep: 'becomes a copy of any same-star turret',

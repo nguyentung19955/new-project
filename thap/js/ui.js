@@ -329,7 +329,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     an.src = typeof anhUrl === 'function' ? anhUrl(d.anh) : 'assets/' + d.anh + '.png';
     tt.querySelector('.tt-ten').textContent = d.ten; tt.querySelector('.tt-ten').style.color = d.mau;
     { const tb = TIERS[typeof mvBac === 'function' ? mvBac(id) : 'trang']; tt.style.setProperty('--m', tb.mau); tt.querySelector('.tt-bac').textContent = tb.ten; } // bậc chỉ huy (08/11) — như ụ: nhãn + --m màu bậc
-    tt.querySelector('.tt-phu').textContent = 'Archfiend skill · tap the button to cast';
+    tt.querySelector('.tt-phu').textContent = 'Commander skill · tap the button to cast';
     tt.querySelector('.tt-kn').textContent = d.mo;
     const gia = B ? B.mv.gia : d.gia, cd = B ? B.mv.cd : 0;
     tt.querySelector('.tt-so').innerHTML = '<div class="d-so">Cost ' + gia + ' mana (doubles each use) · cooldown ' + d.cd + 's' + (cd > 0 ? ' · ready in ' + Math.ceil(cd) + 's' : '') + '</div>';

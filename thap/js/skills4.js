@@ -97,7 +97,7 @@ function xuyenCrit(E, dmg, T, o) { // chí mạng xuyên: quái phía sau gần 
 SKILLS.nhieusong = {
   vai: 'db', dmg: 18, toc: 1, nham: 'dau', // 11 → 18 (đo bậc 06/11)
   n: (T) => sao7(T, [1, 1, 2, 2, 3, 3, 4]), t: (T) => sao7(T, [3, 3.5, 4, 4.5, 5, 5.5, 6]), m: (T) => sao7(T, [5, 5, 10, 10, 15, 15, 20]),
-  mo: (T) => { const s = SKILLS.nhieusong, S = { sao: Math.min(7, T.sao + 1) }; return 'On merge (as ' + S.sao + '★): PVP jams ' + s.n(S) + ' rival turrets −40% for ' + s.t(S) + 's + their next summon +' + s.m(S) + ' mana · CO-OP ally next summon FREE + 10% speed ' + s.t(S) + 's · SOLO slows all 20% for ' + s.t(S) + 's'; }, // QA Tím: số hiện = số thật khi ghép (sao kết quả)
+  mo: (T) => { const s = SKILLS.nhieusong, S = { sao: Math.min(7, T.sao + 1) }; return 'On merge (as ' + S.sao + '★): PVP jams ' + s.n(S) + ' rival turrets −40% for ' + s.t(S) + 's + their next summon +' + s.m(S) + ' mana · CO-OP ally next summon FREE + 10% speed ' + s.t(S) + 's · SINGLE-PLAYER slows all 20% for ' + s.t(S) + 's'; }, // QA Tím: số hiện = số thật khi ghép (sao kết quả)
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'dan_tia', co: 14, mau: '#8a7bff', sp: 540 }); },
   ghep(G, B, a, b, ra) {
     const S = { sao: Math.min(7, a.sao + 1) }, n = this.n(S), t = this.t(S), m = this.m(S), c0 = B.o[b.o];

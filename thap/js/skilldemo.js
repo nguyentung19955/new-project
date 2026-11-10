@@ -148,7 +148,7 @@ const SD_K = {
   laser: { q: Q.hang(3, 180, 50, 14), c: [[0.2, 'Keeps a beam on one enemy'], [2.2, 'Beam grows up to ×4', { cham: 0.5 }]] },
   mortar: { q: Q.nhom(6, 185, 22, 7), c: [[0.2, 'Fires shells at random enemies'], [1.2, 'Every 3rd shell splits into bombs', { ev: 'hit', cham: 0.7 }]] },
   vungdoc: { q: Q.dong(6, 0.6, 9), truoc: (T) => { T.nap = 0.85; }, c: [[0.2, 'Throws a poison pool'], [2.0, 'Enemies walking in lose HP', { cham: 0.5 }]] },
-  loa: { kieu: 'ghep', cd: 1, c: [[0.2, 'Your Archfiend skill is cooling down'], [2.5, 'Merge = shorter cooldown', { cham: 0.6 }]] },
+  loa: { kieu: 'ghep', cd: 1, c: [[0.2, 'Your Commander skill is cooling down'], [2.5, 'Merge = shorter cooldown', { cham: 0.6 }]] },
   hutmana: { q: Q.hang(4, 175, 40, 6), mana: 1, manaDau: 0, c: [[0.2, 'Each hit makes a little mana'], [2.0, 'Mana goes to your counter', { ev: 'mana', cham: 0.5 }]] },
   min: { q: Q.dong(6, 0.7, 6), truoc: (T) => { T.nap = 0.8; }, c: [[0.2, 'Lays mines on the path'], [2.6, 'Step on a mine: boom', { ev: 'hit', cham: 0.6 }]] },
   cuongno: { q: Q.dong(8, 0.5, 4), may: [1.8, 3.4], c: [[0.2, 'Each crit = 1 rage'], [1.8, '2 rage: shoots much faster', { cham: 0.6 }]] },
