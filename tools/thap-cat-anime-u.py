@@ -7,6 +7,7 @@ Cách làm: mỗi hàng dựng lại thành tấm 2×2 y như raw_mod_<id>.png (
   rồi gọi đúng tools/thap-cat-umod.py (mot + ghi artscale.js) → <id>_de / _vien / _nong / _phu + nho/<id>.png.
 Chạy: python3 tools/thap-cat-anime-u.py <nhóm> id1 id2 id3      (id '-' = bỏ hàng đó)
       python3 tools/thap-cat-anime-u.py --dang <nhóm> <id>       tấm BIẾN HÌNH: hàng 1/2/3 = dạng 1/2/3 của 1 ụ grow-up (cùng bệ)
+        (BIEN_HANG=310,616 … : ranh hàng tự đặt — bocap)
         → hàng 1 làm hình chính (như trên) + đầu <id>_nong_s1..s3.png; K/tip từng dạng ghi artscale.js window.STAGE_ANIME
 """
 import os, sys, tempfile, importlib.util
@@ -21,17 +22,20 @@ U = importlib.util.module_from_spec(spec); spec.loader.exec_module(U)
 
 def tach_hang(nhom, ids):
     a = Image.open(os.path.join(os.environ.get('RAW_ANIME', os.path.join(GOC, 'docs/demo-hop-tuong/thap-art')), 'raw_anime_u_%s.png' % nhom)).convert('RGB')
-    W, H = a.size; NR = len(ids); cw, ch = W // 4, H // NR; n = max(cw, ch)
+    W, H = a.size; NR = len(ids); cw, ch = W // 4, H // NR
+    # BIEN_HANG=y1,y2: ranh hàng tự đặt (px) khi hình hàng dưới chìa lên quá H/3 (vd bocap: ngòi dạng 3 lấn sang ô dạng 2 → BIEN_HANG=310,616)
+    bh = [0] + [int(v) for v in os.environ['BIEN_HANG'].split(',')] + [H] if os.environ.get('BIEN_HANG') else [r * ch for r in range(NR)] + [NR * ch]
+    n = max(cw, max(bh[r + 1] - bh[r] for r in range(NR)))
     tmp = tempfile.mkdtemp(prefix='anime-u-')
     for r, i in enumerate(ids):
         if i == '-': continue
         t = Image.new('RGB', (2 * n, 2 * n), (255, 0, 255))
         for c, (ox, oy) in enumerate(((0, 0), (n, 0), (0, n), (n, n))):
-            o = a.crop((c * cw, r * ch, (c + 1) * cw, (r + 1) * ch))
+            o = a.crop((c * cw, bh[r], (c + 1) * cw, bh[r + 1]))
             if c == 2 and i in CAT_TREN:  # cắt phần chìa lên của ĐẦU (vd tia lửa ngòi nổ) để ụ không bị thu nhỏ khi xoay
                 q = np.asarray(o).copy(); m = ~((q[..., 0] > 200) & (q[..., 1] < 80) & (q[..., 2] > 200))
                 ys = np.nonzero(m.any(1))[0]; y0 = ys[0] + int((ys[-1] - ys[0]) * CAT_TREN[i]); q[:y0] = (255, 0, 255); o = Image.fromarray(q)
-            t.paste(o, (ox + (n - cw) // 2, oy + (n - ch) // 2))
+            t.paste(o, (ox + (n - cw) // 2, oy + (n - o.height) // 2))
         t.save(os.path.join(tmp, 'raw_mod_%s.png' % i))
     return tmp
 

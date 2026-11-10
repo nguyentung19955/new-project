@@ -35,6 +35,9 @@ U_DS = {
     'lualien': (3, 0, 3, '#ff8a2a', (0, 0, 0)), 'luutru': (3, 1, 3, '#8fd0ff', (0, 0, -1)), 'combo': (3, 2, 3, '#ff6a3a', (-1, -1, -1)),
     'chuato': (4, 0, 3, '#ff6a2a', (0, 0, 0)), 'leviathan': (4, 1, 3, '#1fb6d9', (0, 0, 0)), 'khoisinh': (4, 2, 3, '#7ee05a', (0, 0, 0)),
     'cobac': (5, 0, 1, '#ffb43a', (0, 0, 0)),
+    # bocap (10/11): tấm BIẾN HÌNH 4 cột riêng (raw_anime_u_dang_bocap.png — hàng = dạng, cột 3 = con bọ cạp chĩa LÊN); 'bien' = ranh hàng px
+    #   (ngòi dạng 3 chìa lên quá H/3). Bệ / icon thẻ / huy hiệu của tấm cắt bằng tools/thap-cat-anime-u.py --dang (BIEN_HANG=310,616).
+    'bocap': (0, 0, 1, '#ff3b4e', (-1, -1, -1), {'tam': 'raw_anime_u_dang_bocap', 'cot': 2, 'bien': (0, 310, 616, 1024), 'glyph': True}),
 }
 
 
@@ -96,6 +99,16 @@ def mot_dau(c, xoay, mau, f, hv=1.0, khung=False):
     return nen, round(float(rr), 4)
 
 
+def glyph(c, i):
+    """glyph/<id>.png 128²: bóng TRẮNG của dạng 1 (chĩa LÊN), nét viền đen → khe trong suốt (như tools/thap-cat-thacmana-congap.py glyph)"""
+    from scipy import ndimage as nd
+    lum = 0.3 * c[..., 0] + 0.59 * c[..., 1] + 0.11 * c[..., 2]
+    toi = nd.binary_dilation(lum < 0.09, iterations=1) & nd.binary_erosion(c[..., 3] > 0.5, iterations=8)
+    g = np.zeros(c.shape); g[..., :3] = 1; g[..., 3] = c[..., 3] * ~toi
+    x0, y0, x1, y1 = U.bbox(c[..., 3] > 0); h = max(x1 - x0, y1 - y0) / 2 / 0.9
+    U.anh(U.thu(U.dat_giua(g, (x0 + x1) / 2, (y0 + y1) / 2, h), 128)).save(os.path.join(OUT, 'glyph', i + '.png'), optimize=True)
+
+
 def main():
     ids = sys.argv[1:] or list(U_DS)
     t = open(JS, encoding='utf-8').read()
@@ -103,12 +116,18 @@ def main():
     tam = {}
     for i in ids:
         sh, hang, nh, mau, xoay = U_DS[i][:5]; tc = U_DS[i][5] if len(U_DS[i]) > 5 else {}
+        if tc.get('tam'):  # tấm 4 cột (hàng = dạng): lấy cột 'cot' của 3 hàng xếp lại thành 1 hàng 3 ô rồi tách như tấm chỉ-có-đầu
+            sh = tc['tam']; g = Image.open(os.path.join(RAW, sh + '.png')).convert('RGB'); cw = g.width // 4; bien = tc['bien']
+            ch = max(bien[r + 1] - bien[r] for r in range(3)); x = Image.new('RGB', (3 * cw, ch), (255, 0, 255))
+            for r in range(3): o = g.crop((tc['cot'] * cw, bien[r], (tc['cot'] + 1) * cw, bien[r + 1])); x.paste(o, (r * cw, (ch - o.height) // 2))
+            tam[sh] = tach_tam(np.asarray(x), 1)
         if sh not in tam: tam[sh] = tach_tam(np.asarray(Image.open(os.path.join(RAW, 'raw_anime_u_dang_sheet%d.png' % sh)).convert('RGB')), nh)
         K = []
         for n in range(3):
             im, rr = mot_dau(tam[sh][(hang, n)], xoay[n], mau, TANG[n], tc.get('vien', (1, 1, 1))[n], tc.get('khung', False))
             im.save(os.path.join(OUT, '%s_nong_s%d.png' % (i, n + 1)), optimize=True)
             K.append(1.0); print(i, 'dạng', n + 1, 'bán kính', rr)
+        if tc.get('glyph'): glyph(tam[sh][(hang, 0)], i)
         SV[i] = K
     if not os.environ.get('KHONG_JS'):
         s = 'window.STAGE_VE = ' + json.dumps(SV) + ';'

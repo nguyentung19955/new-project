@@ -101,6 +101,10 @@ const HB = {
     const kn = tt.querySelector('.tt-kn'), LT = X && X.T && X.T.id === 'leviathan' && G.ban[X.T.ban] && G.ban[X.T.ban].t[X.T.o] === X.T ? X.T : null;
     if (kn && LT) { const n = LT.vuc || 0, s = 'ABYSS ' + n + ' · +' + Math.round(100 * SKILLS.leviathan.VUC_ST * n) + '% damage · devours enemies inside the cyan ring — place it next to the path to eat more'; if (kn._lev !== s) { kn._lev = s; kn.textContent = s; } }
     else if (kn) kn._lev = null;
+    // Crimson Sting: dòng kỹ năng = STING sống (đúng số trên tấm đếm ngòi đáy ô) + % đang cộng
+    const BT = X && X.T && X.T.id === 'bocap' && G.ban[X.T.ban] && G.ban[X.T.ban].t[X.T.o] === X.T ? X.T : null;
+    if (kn && BT) { const s = SKILLS.bocap.dong(BT); if (kn._bc !== s) { kn._bc = s; kn.textContent = s; } }
+    else if (kn) kn._bc = null;
     // Evolver: dòng kỹ năng = giải thích trứng sống (giây còn lại / trứng cháy chạm +20 mana) — trước chỉ "Does not shoot."
     const EV = X && X.T && X.T.id === 'tienhoa' && G.ban[X.T.ban] && G.ban[X.T.ban].t[X.T.o] === X.T ? X.T : null;
     if (kn && EV) { const S = SKILLS.tienhoa, s = S.chay(EV) ? 'Burnt egg: recycles itself for +' + S.MANA + ' mana' : 'Hatches in ' + Math.ceil(S.con(EV)) + 's → +1★ turret · 7★ burns: auto +' + S.MANA + ' mana'; // 09/11: trứng cháy tự tái chế (game.js TU_KICH)

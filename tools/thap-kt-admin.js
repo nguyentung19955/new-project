@@ -1,6 +1,6 @@
 // ASTRAL ARSENAL — KIỂM QUYỀN ADMIN (thap/js/admin.js + các chỗ kiểm khoá `|| ADMIN.la()`) — docs/demo-hop-tuong/tuvan/admin/ADMIN.md
 //  ✓ giả lập (stub) tài khoản Google đúng email (đã xác minh) → mọi khoá mở: tính năng (TTC.tn), Leo Tháp 100 tầng, Thử thách, Săn Trùm mọi trùm/bậc,
-//    Vô tận, thử thách tuần, online, chỉ huy; sở hữu ảo đủ 96 ụ (cả Đỏ), lưới bộ bài không thẻ khoá, chọn được Đỏ; nhãn ADMIN ở HOME + hồ sơ
+//    Vô tận, thử thách tuần, online, chỉ huy; sở hữu ảo đủ 97 ụ (cả Đỏ), lưới bộ bài không thẻ khoá, chọn được Đỏ; nhãn ADMIN ở HOME + hồ sơ
 //  ✓ KHÔNG ghi đè dữ liệu thật: vàng / ngọc / bản sao / sh.co giữ nguyên; tải lại (ngoại tuyến) vẫn admin nhờ cache turret_admin
 //  ✓ đăng xuất (về khách) → như cũ + xoá cache · email khác / email chưa xác minh / khách → không admin
 //  Ảnh (SHOTS, mặc định /tmp/thap-admin): 393×852 — HOME + bộ bài admin (EN + VI).
@@ -65,11 +65,11 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   r.push(await dn({ uid: 'g4', anon: false, email: 'x' + EMAIL, ev: true }));
   ok(r.every(x => x === false) && (await p.evaluate(() => localStorage.getItem('turret_admin'))) === null, 'email khác / chưa xác minh / khách ẩn danh → KHÔNG admin, không cache', JSON.stringify(r));
 
-  // ---- 3. admin: mọi khoá mở, sở hữu ảo 96 ụ ----
+  // ---- 3. admin: mọi khoá mở, sở hữu ảo 97 ụ ----
   var r = await dn({ uid: 'adm1', anon: false, email: 'Ly230595@Gmail.com', ev: true });
   await sleep(500);
   let k1 = await khoa();
-  ok(r && k1.dem === '96/96/96' && k1.uKhoa === 0 && k1.doPool > 0, 'admin: sở hữu ảo đủ 96 ụ (cả Đỏ), không ụ nào khoá', JSON.stringify(k1));
+  ok(r && k1.dem === '97/97/97' && k1.uKhoa === 0 && k1.doPool > 0, 'admin: sở hữu ảo đủ 97 ụ (cả Đỏ), không ụ nào khoá', JSON.stringify(k1));
   ok(!k1.tnKhoa.length && !k1.bac.length && k1.nvt && k1.thap && k1.thu && k1.trum.split('/')[0] === k1.trum.split('/')[1] && k1.sanBac && !k1.mv.length,
     'admin: mọi tính năng (shop, vòng quay, rương, lò rèn, Ấn, online, Săn Trùm, Vô tận, thử thách tuần…) + Leo Tháp 100 + Thử thách + mọi trùm/bậc + chỉ huy mở', JSON.stringify(k1));
   r = await p.evaluate(() => {
@@ -96,7 +96,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   // ---- 4. tải lại (Firebase không báo tài khoản: như ngoại tuyến) → cache vẫn admin ----
   await p.reload({ waitUntil: 'load' }); await cho();
   r = await p.evaluate(() => ({ la: ADMIN.la(), dem: SH.dem().co, nhan: !!document.querySelector('#tk-chip .adm-nhan'), c: localStorage.getItem('turret_admin') }));
-  ok(r.la && r.dem === 96 && r.nhan && /adm1/.test(r.c) && !r.c.includes('@'), 'tải lại / ngoại tuyến: vẫn admin nhờ cache turret_admin (không lưu email)', JSON.stringify(r));
+  ok(r.la && r.dem === 97 && r.nhan && /adm1/.test(r.c) && !r.c.includes('@'), 'tải lại / ngoại tuyến: vẫn admin nhờ cache turret_admin (không lưu email)', JSON.stringify(r));
 
   // ---- 5. đăng xuất → về khách: như cũ ----
   r = await dn({ uid: 'khach2', anon: true, email: '' });

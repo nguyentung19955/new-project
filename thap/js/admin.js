@@ -1,7 +1,7 @@
 // ASTRAL ARSENAL — QUYỀN ADMIN (người dùng chốt 10/11). Ghi chú + giới hạn: docs/demo-hop-tuong/tuvan/admin/ADMIN.md · kiểm tools/thap-kt-admin.js
 //  · ADMIN.la(): true khi tài khoản Google đang đăng nhập có email đã xác minh (emailVerified) = EMAIL (so chữ thường).
 //  · Admin: BỎ MỌI KHOÁ (chế độ, màn, cửa hàng, vòng quay, lò rèn, Ấn Vàng/Ấn Đỏ, Leo Tháp, Săn Trùm, Thử thách, Vô tận, thử thách tuần,
-//    online, chỉ huy) + SỞ HỮU ẢO đủ 96 ụ: các chỗ kiểm khoá chỉ thêm `|| ADMIN.la()` — KHÔNG ghi đè dữ liệu thật (đăng xuất → như cũ),
+//    online, chỉ huy) + SỞ HỮU ẢO đủ 97 ụ: các chỗ kiểm khoá chỉ thêm `|| ADMIN.la()` — KHÔNG ghi đè dữ liệu thật (đăng xuất → như cũ),
 //    cấp thẻ / bản sao / vàng / ngọc / vé giữ theo dữ liệu thật, không cộng tài nguyên.
 //  · Cache khoá turret_admin = { uid } để mở ngoại tuyến vẫn nhận; xoá khi đăng xuất / đổi sang tài khoản khác / khách.
 //  · ĐÂY LÀ KIỂM PHÍA MÁY KHÁCH (ai sửa JS cũng bật được) — quyền thật kiểm ở server: giai đoạn F.

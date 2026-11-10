@@ -26,7 +26,7 @@ const SHC = {
     5: { ten: 'Frost & Mana', ds: ['lanhgia', 'nhanmana', 'hutmana', 'baotuyet', 'santhuong'] },
     6: { ten: 'First Legends', ds: ['min', 'lienket', 'epxung', 'railgun', 'soi', 'aten'] },
     7: { ten: 'Merge Bonus', ds: ['drone', 'loa', 'nhanban', 'anhsang'] },
-    8: { ten: 'One Big Shot', ds: ['nangluong', 'docton', 'thaukinh', 'nemesis'] },
+    8: { ten: 'One Big Shot', ds: ['nangluong', 'docton', 'thaukinh', 'nemesis', 'bocap'] },
     9: { ten: 'Guardians', ds: ['khien', 'taylo', 'nhieusong', 'thanhdia'] },
     10: { ten: 'Teamwork', ds: ['tuthan', 'nayda', 'dongbo', 'hydra'] },
     11: { ten: 'Tricksters', ds: ['mimic', 'tron', 'dichchuyen', 'xaotron'] },

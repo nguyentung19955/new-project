@@ -35,7 +35,7 @@ const MV = {
   // ụ BẤM TAY (chạm khi đầy): có chuDong mà không tự kích (game.js TU_KICH) — còn lại Black Hole + Arcane Cascade
   bamTay(id) { const sk = SKILLS[id]; return !!(sk && sk.chuDong && !(typeof laTuKich === 'function' && laTuKich(id))); },
   // màu đặc trưng: napMau > màu dạng (GROW) > bảng riêng > màu bậc
-  MAU: { blackhole: '#c070ff', thacmana: '#59a8ff', ngaithoigian: '#ff6a8a', haoquang: '#ffe27a', leviathan: '#3fd0ff', khoisinh: '#ff8ab0', ronglua: '#ff8a2a', lophanung: '#9fe6ff', overlord: '#ff5a5a', wallgen: '#9ad1ff', mana: '#7fdcff', hydra: '#2ee89a' },
+  MAU: { bocap: '#FF3B4E', blackhole: '#c070ff', thacmana: '#59a8ff', ngaithoigian: '#ff6a8a', haoquang: '#ffe27a', leviathan: '#3fd0ff', khoisinh: '#ff8ab0', ronglua: '#ff8a2a', lophanung: '#9fe6ff', overlord: '#ff5a5a', wallgen: '#9ad1ff', mana: '#7fdcff', hydra: '#2ee89a' },
   mauNap(id) {
     const sk = SKILLS[id] || {}; if (sk.napMau) return sk.napMau;
     if (this.MAU[id]) return this.MAU[id];

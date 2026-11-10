@@ -41,7 +41,7 @@ Test sau khi sửa: `thap-kt-vi` ✓ (Tiếng Việt đủ — trước đó TR�
 | Nhãn trùm | thanh trên | "BOSS IN n" / Leo Tháp "FLOOR t · k/5" | có | — | KHỚP | — | — | — |
 | Bảng xem trùm | trùm (`trumxem.js`) | "Solo & PvP: random boss from wave N" | "Solo & PvP…" | chân dung trùm | LỆCH | Solo đã bỏ; Leo Tháp chọn trùm theo tầng (không hẳn "random") | → "Single-player & PvP: can appear from wave N" / "Chơi đơn & PvP: có thể ra từ đợt N" | ✓ |
 
-## C. Mô tả 96 ụ (`text.js: TEXT.turret`, `SKILLS[id].mo`, `phattrien.js: HO_MOI/MOC`, VI `vi.json`)
+## C. Mô tả 97 ụ (`text.js: TEXT.turret`, `SKILLS[id].mo`, `phattrien.js: HO_MOI/MOC`, VI `vi.json`)
 Quét tự động: lấy mọi con số trong mô tả ngắn, so với số mà chính hàm trận in ra ở 1★…7★ (`upBangSao`), `SKILLS` và `KY_NANG_CAP`; quét chữ "Solo/solo", "Archfiend", "melee"; quét chuỗi VI chưa dịch trên trang ụ đủ 96 ụ (`NN.thieu`).
 | Mục | Nơi | EN | VI | Hình/video | Kết quả | Chỗ sai | Cách sửa | Đã sửa? |
 |---|---|---|---|---|---|---|---|---|
@@ -56,6 +56,8 @@ Quét tự động: lấy mọi con số trong mô tả ngắn, so với số m�
 | Ụ tự kích (Cryo Reactor, Chrono Throne, Hive Queen, Leviathan, Genesis Core, Wyrm Engine, Hydra, Evolver) | mô tả, mốc sao, bắn thử | trong code ghi "tap…" | "chạm…" | caption "Tap: …" | KHỚP khi hiển thị | `motvong.js: MV.doiChu` đổi "tap" → "auto" lúc hiện (mô tả, mốc, demo) | — (nguồn chữ còn "tap" nhưng người chơi thấy "auto") | — |
 | Black Hole, Arcane Cascade | mô tả | "tap (30 mana)" / "tap when full" | có | caption "Tap: …" | KHỚP (`TU_KICH` không có 2 ụ này) | — | — | — |
 | VI thiếu dịch | trang ụ VI | Copycat, Hydra, Blood Circuit, Hex Saboteur, Arcane Cascade, Werewolf (dạng), Star Lift (mốc 5/7★), Twin Maker, Fusion Archive… | **35 chuỗi tiếng Anh** | — | LỆCH | khoá VI chưa có / mô tả đổi sau bản dịch | thêm ~40 khoá `vi.json` → `tools/thap-vi-dung.py` | ✓ |
+
+- **Crimson Sting (`bocap`, ụ 97 — thêm 10/11):** mô tả `text.js` + `roster.json`/`meta.js` (EN/VI) khớp `SKILLS.bocap` (+16% ST và +1% ST chí mạng mỗi STING, tốc tiến tới +100%, ghép / hạ sao về 0, đá/băng giữ); dòng `mo` ngắn theo sao (3★ +5% chí mạng · 5★ chí mạng thứ 3 +2 · 7★ dấu nọc +10%/3 s); mốc `MOC_RIENG`, dạng `GROW` (0–49 / 50–199 / 200+), bắn thử `SD_K.bocap` (Crit Antenna kề; dạng 1/2/3 đặt 12 / 50 / 200 STING), nhắc nhanh `SD_MO`, bảng chạm `hudb.js` ("STING N · +X% damage · +Y% fire rate · +Z% crit damage"), Partners riêng (Crit Antenna, Hammer, Focus Lens) + Watch out "Merging it resets its STING". VI: `vi.json` đủ (`tools/thap-kt-vi.js` ✓). Đã xem ảnh EN + VI: `/home/claude/xem/bocap/`.
 
 ## D. Trang ụ (`unitpage.js`)
 | Mục | Nơi | EN | VI | Hình/video | Kết quả | Chỗ sai | Cách sửa | Đã sửa? |

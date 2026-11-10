@@ -76,7 +76,7 @@ console.log('NT1 · ghép đặc biệt cùng loại → theo ô ĐÍCH · Q3 Me
 console.log('NT2/NT8 · Q1 = A · Q2 = A — ghép thường ra ụ TRÙNG loại = ụ mới (mọi ụ ghép thường được)');
 // =====================================================================================================
 // trường cộng dồn riêng ụ / buff trên thân: gán 7 lên CẢ 2 nguyên liệu → ụ ra phải bằng ụ VỪA SINH cùng loại, cùng sao
-const CD = ['vuc', 'duoi', 'xaN', 'nhiet', 'egg', 'nmDem', 'nmN', 'nmE', 'nmToc', 'nmDmg', 'tuoi', 'epxung', 'khien', 'aurora', 'luot', 'sinhT', 'thaN', 'pip', 'giet', 'mau', 'kho'];
+const CD = ['vuc', 'duoi', 'xaN', 'nhiet', 'egg', 'nmDem', 'nmN', 'nmE', 'nmToc', 'nmDmg', 'tuoi', 'epxung', 'khien', 'aurora', 'luot', 'sinhT', 'thaN', 'pip', 'giet', 'mau', 'kho', 'sting', 'stC'];
 // luật riêng đã thiết kế (không phải "giữ số lớn hơn"): Ember ụ ra = A + C (kỹ năng khi ghép); Fusion Archive: mỗi lần ghép thật +1 điểm (Archive + Archive bắn xung)
 const RIENG = { luutru: ['kho'], mimic: ['aurora'] }; // Mimic: ụ ra từ ghép có Mimic được Aurora 8 s (buff KHI ghép, không phải mang sang)
 {
@@ -97,6 +97,19 @@ const RIENG = { luutru: ['kho'], mimic: ['aurora'] }; // Mimic: ụ ra từ ghé
     if (kq) sai.push(id + ': ' + kq);
   }
   ok(dem.thu > 40 && !sai.length, 'ghép thường X + X ra X (' + dem.thu + ' loại): mọi cộng dồn / buff thân = ụ vừa sinh (Q1 = A, Q2 = A)', sai.join(' · '));
+  // Crimson Sting (10/11, thiết kế người dùng duyệt): STING của riêng ụ — ghép = 0 (ma trận trên), BỊ HẠ SAO = mất hết (ngoại lệ có chủ ý của NT3 cho −★),
+  //   +★ tại chỗ giữ, hoá đá giữ; chỉ chí mạng của CHÍNH nó mới +1 (5★: chí mạng thứ 3 cho +2)
+  NAP(ctx, ['bocap', 'lien', 'tia', 'set', 'bang']);
+  R(`var s = dat(2, 'bocap', 4, { sting: 60, stC: 4 }); buoc(2); nangSao(B, s, 1); buoc(2);`);
+  ok(R('s.sao === 5 && s.sting === 60'), 'Crimson Sting +★ tại chỗ: giữ STING', R('[s.sao, s.sting].join()'));
+  R(`s.st.da = true; buoc(30); var giuDa = s.sting; s.st.da = false; buoc(2);`);
+  ok(R('giuDa === 60 && s.sting === 60'), 'Crimson Sting hoá đá: giữ STING');
+  R(`haSao(B, s, 'kt'); buoc(2);`);
+  ok(R('s.sao === 4 && s.sting === 0 && s.stC === 0'), 'Crimson Sting bị hạ sao: mất hết STING', R('[s.sao, s.sting, s.stC].join()'));
+  R(`var E = sinhQuai('bo', 0, 50, 1e6); E.vao = 1; var c5 = dat(3, 'bocap', 5, { sting: 0, stC: 0 }); buoc(1); for (let i = 0; i < 3; i++) trung(E, 10, { T: c5, crit: true, B }); var n5 = c5.sting; trung(E, 10, { T: c5, crit: false, B }); trung(E, 10, { T: c5, crit: true, B, phu: true });`);
+  ok(R('n5 === 4 && c5.sting === 4'), 'Crimson Sting 5★: 3 chí mạng = 1 + 1 + 2 STING; đòn thường / đòn phụ không cộng', R('[n5, c5.sting].join()'));
+  R(`B.t[3] = null; trung(E, 10, { T: c5, crit: true, B });`);
+  ok(R('c5.sting === 4'), 'Crimson Sting đã rời bàn: kim còn bay chí mạng không cộng');
   // đối chứng Mimic + ụ có cộng dồn (ra loại khác hoặc cùng loại: đều là ụ mới)
   NAP(ctx, ['leviathan']);
   R(`var a = dat(0, 'mimic', 2), b = dat(1, 'leviathan', 2, { vuc: 40, epxung: 0.5, anv: { k: 'toc', v: 0.2 } }); ghep(B, a, b); var N = B.t[1];`);
@@ -244,6 +257,7 @@ console.log('Online F14 · khứ hồi oTT → datO cho cộng dồn riêng ụ'
     ['nemesis', `{ nmDem: 7, nmN: 4, nmE: 3, nmToc: 0.12, nmDmg: 0.24 }`, ['nmDem', 'nmN', 'nmE', 'nmToc', 'nmDmg']],
     ['khoisinh', `{ luot: 2, sinhT: 3.4 }`, ['luot', 'sinhT']], ['chuato', `{ thaN: 3 }`, ['thaN']],
     ['lien', `{ khien: 1, aurora: 4.5, st: { lua: 2.5, kep: 1.5 } }`, ['khien', 'aurora', 'st.lua', 'st.kep']],
+    ['bocap', `{ sting: 137, stC: 5 }`, ['sting', 'stC']], // Crimson Sting (10/11)
   ];
   const sai = [];
   for (const [id, f, ks] of CA) {

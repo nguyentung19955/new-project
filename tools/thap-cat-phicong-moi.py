@@ -17,9 +17,11 @@ RAW = os.path.join(GOC, 'docs/demo-hop-tuong/tuvan/phi-cong-moi')
 A = os.environ.get('OUT', os.path.join(GOC, 'thap/assets'))
 JS = os.path.join(GOC, 'thap/js')
 # ô vuông cắt (trái, trên, cạnh) — px ảnh nguồn 1254
-CAT = {'chuato': (150, 0, 1100), 'pandora': (225, 0, 830), 'hydra': (190, 0, 1000), 'congap': (104, 0, 1150), 'thanhdia': (185, 0, 950)}
+CAT = {'chuato': (150, 0, 1100), 'pandora': (225, 0, 830), 'hydra': (190, 0, 1000), 'congap': (104, 0, 1150), 'thanhdia': (185, 0, 950),
+       'bocap': (250, 0, 900)}  # bocap (10/11): Crimson Sting — sát thủ bọ cạp giáp tím-đen, ô thấy cả đầu + ngòi đuôi hồng ngọc
 # (đỉnh đầu y, đường mắt y, tâm mặt x, cằm y) — px ảnh nguồn; hydra = ĐẦU GIỮA; pandora = cụm mắt sao + miệng cười (không lấy rương)
-MAT = {'chuato': (5, 445, 700, 690), 'pandora': (20, 340, 640, 470), 'hydra': (0, 212, 690, 385), 'congap': (20, 410, 690, 690), 'thanhdia': (10, 325, 660, 545)}
+MAT = {'chuato': (5, 445, 700, 690), 'pandora': (20, 340, 640, 470), 'hydra': (0, 212, 690, 385), 'congap': (20, 410, 690, 690), 'thanhdia': (10, 325, 660, 545),
+       'bocap': (150, 500, 650, 665)}  # bocap: đầu giáp 4 mắt đỏ + hồng ngọc trán
 
 
 def cat(i):

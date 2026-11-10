@@ -49,8 +49,8 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     UI.chon = ['tia', 'lien', 'bang', 'set', 'sungluc']; HM.luuBo();
     return o;
   });
-  ok(r.dem === '10,10,96' && r.khoiDau && r.bac === '8,2,0,0,0' && r.hd, 'người mới: sở hữu 10 ụ (8 Trắng + 2 Xanh), gồm cả bộ hướng dẫn · đã mở 10 · tổng 96', JSON.stringify(r));
-  ok(r.bang === 96 && r.duNhom && r.trung && r.coDo12 && r.size, 'bảng nhóm: đủ 96 ụ, mỗi ụ 1 lần, mỗi cấp 3–6 ụ, Đỏ từ cấp 12', JSON.stringify(r));
+  ok(r.dem === '10,10,97' && r.khoiDau && r.bac === '8,2,0,0,0' && r.hd, 'người mới: sở hữu 10 ụ (8 Trắng + 2 Xanh), gồm cả bộ hướng dẫn · đã mở 10 · tổng 96', JSON.stringify(r));
+  ok(r.bang === 97 && r.duNhom && r.trung && r.coDo12 && r.size, 'bảng nhóm: đủ 97 ụ, mỗi ụ 1 lần, mỗi cấp 3–6 ụ, Đỏ từ cấp 12', JSON.stringify(r));
   ok(!r.chonVang && !r.chonPhun && r.chonTia && /Unlocks at Pilot Level 2/.test(r.loi) && r.loiOk === '' && r.nn === 0 && r.pre, 'bộ bài: ụ chưa có không vào (chọn / kéo), RANDOM chỉ ra 5 ụ đã có, bộ mẫu hiện chỉ gồm ụ đã có', JSON.stringify(r));
 
   // ---- 2. bể rơi + rương ----
@@ -155,7 +155,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     return o;
   });
   const d1 = await p.evaluate(() => { const d = SH.dem(); return d; });
-  ok(r.co && r.chua && r.khoa && r.doKhoa && r.dem.includes('OWNED') && r.dem.includes(String(d1.co)) && r.dem.includes(String(d1.mo)) && r.dem.includes('96'), 'lưới bộ bài: ĐÃ CÓ / CHƯA CÓ (nguồn) / CHƯA MỞ (PILOT LV 9, Đỏ + FLOOR 40) + đếm OWNED · UNLOCKED · TOTAL', JSON.stringify(r));
+  ok(r.co && r.chua && r.khoa && r.doKhoa && r.dem.includes('OWNED') && r.dem.includes(String(d1.co)) && r.dem.includes(String(d1.mo)) && r.dem.includes('97'), 'lưới bộ bài: ĐÃ CÓ / CHƯA CÓ (nguồn) / CHƯA MỞ (PILOT LV 9, Đỏ + FLOOR 40) + đếm OWNED · UNLOCKED · TOTAL', JSON.stringify(r));
   await chup('390-bobai');
   await p.evaluate(() => { const c = document.querySelector('#chon-luoi .c.sh-chua'); c && c.scrollIntoView({ block: 'center' }); }); await chup('390-bobai-chua');
   // chạm ụ chưa có → trang ụ (xem được, nút Not owned)
@@ -173,7 +173,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     const nh = [...document.querySelectorAll('#chon-luoi > .nhom')].map(e => e.textContent); o.nh = nh.length; o.dau = nh[0]; o.cuoi = nh[nh.length - 1]; o.tong = hien().length;
     return o;
   });
-  ok(r.chips === 4 && r.lv && r.co && r.khoa && r.nh === 24 && /PILOT LV 1/.test(r.dau) && /PILOT LV 24/.test(r.cuoi) && r.tong === 96, 'lọc OWNED / LOCKED đúng, xếp PILOT LV: 24 nhóm có tiêu đề, đủ 96 thẻ', JSON.stringify(r));
+  ok(r.chips === 4 && r.lv && r.co && r.khoa && r.nh === 24 && /PILOT LV 1/.test(r.dau) && /PILOT LV 24/.test(r.cuoi) && r.tong === 97, 'lọc OWNED / LOCKED đúng, xếp PILOT LV: 24 nhóm có tiêu đề, đủ 97 thẻ', JSON.stringify(r));
   await p.evaluate(() => HM.dong(true)); await chup('390-bobai-xep-cap');
   await p.evaluate(() => { HM.di('hm'); HM.di('dk', true); }); await sleep(500); await chup('390-bosuutap');
   await p.evaluate(() => { UI.xep = 'bac'; UI.veChon(); HM.di('hm'); }); await sleep(400); await chup('390-home');

@@ -5,7 +5,7 @@
 > Mỗi mục ghi `file: hàm/hằng` để đối chiếu. **Quy tắc:** mọi thay đổi luật / số liệu / cơ chế / chế độ / kinh tế phải sửa tài liệu này trong **cùng commit** (xem `CLAUDE.md` mục "Tài liệu gốc").
 >
 > - Cập nhật lần cuối: **10/11/2026** · commit gốc đọc code: `0b1a6b539` (Fusion Archive dồn điểm) + sửa chữ đợt checklist 1 (Solo → Single-player/Chơi đơn, Archfiend → Commander, Radar 46%, Genesis 11 s).
-> - Bảng 96 ụ, bảng cấp thẻ, bảng chỉ huy, bảng trùm **sinh tự động** bằng cách nạp game thật (Playwright) và đọc `G.roster`, `SKILLS`, `TEXT`, `upBangSao`, `mocCua`, `GROW`, `KY_NANG_CAP`, `MAVUONG`, `TRUM` — khi sửa số, chạy lại để cập nhật (cách làm ở mục 17).
+> - Bảng 97 ụ, bảng cấp thẻ, bảng chỉ huy, bảng trùm **sinh tự động** bằng cách nạp game thật (Playwright) và đọc `G.roster`, `SKILLS`, `TEXT`, `upBangSao`, `mocCua`, `GROW`, `KY_NANG_CAP`, `MAVUONG`, `TRUM` — khi sửa số, chạy lại để cập nhật (cách làm ở mục 17).
 > - Checklist rà hướng dẫn theo tài liệu này: `docs/demo-hop-tuong/CHECKLIST-HUONG-DAN.md`.
 
 ## Mục lục
@@ -14,7 +14,7 @@
 3. [Quái, wave, trùm, tim](#3-quái-wave-trùm-tim)
 4. [Các chế độ chơi + mở khoá + thưởng](#4-các-chế-độ-chơi)
 5. [5 bậc và hệ số sức mạnh](#5-5-bậc-và-hệ-số-sức-mạnh)
-6. [Bảng 96 ụ](#6-bảng-96-ụ)
+6. [Bảng 97 ụ](#6-bảng-97-ụ)
 7. [Cấp thẻ + kỹ năng theo cấp (KY_NANG_CAP)](#7-cấp-thẻ)
 8. [Chỉ huy](#8-chỉ-huy)
 9. [12 trùm + chiêu](#9-12-trùm)
@@ -34,7 +34,7 @@
 - **Một câu:** triệu hồi ụ súng ngẫu nhiên từ bộ 5 thẻ lên bàn 5×3, ghép 2 ụ giống nhau để lên sao, giữ lõi khỏi quái đi theo đường chữ C; trùm mỗi 10 wave.
 - **Màn khung logic** 430×860, co giãn theo màn (`data.js: W, H`). Ngôn ngữ EN (gốc trong code) + VI (`ngonngu.js` + từ điển `ngonngu-vi.js` sinh từ `docs/demo-hop-tuong/tuvan/ngonngu/vi.json` bằng `tools/thap-vi-dung.py`).
 - **Một loại tiền trong trận: MANA** (`data.js: TIEN, CHI`). Ngoài trận: **Vàng, Ngọc, Tinh thể Đỏ**, bản sao thẻ (mảnh).
-- **Số ụ đang chơi:** 96 (`G.roster` lọc theo `SKILLS`; `assets/roster.json` có 97 mục — `haoquang` (Holy Halo) đã bỏ khỏi game).
+- **Số ụ đang chơi:** 97 (`G.roster` lọc theo `SKILLS`; `assets/roster.json` có 98 mục — `haoquang` (Holy Halo) đã bỏ khỏi game). Ụ thứ 97 = Crimson Sting (`bocap`, 10/11).
 
 ## 2. Vòng chơi một trận
 Nguồn: `game.js: batDau, trieu, ghep, hopLeGhep, nangCap, dungMV, dmgU, tocU, critU` · `data.js: LUAT, boCuc, hsLv`.
@@ -102,11 +102,11 @@ Nguồn: `data.js: TIERS, CAP_VD, CAP_DO, TOC_DO` · `thebai.js: THE`.
 | Vàng (`vang`) | LEGENDARY | #ffd23f | 2,6 | LV9 → **17** | theo vai: Tấn công +5% ST +2% tốc · Hỗ trợ +4% · Đặc biệt/Khống chế +3% mỗi cấp |
 | Đỏ (`do`) | MYTHIC | #ff4b3e | 3,3 | LV11 → **17** | Tấn công +7% ST +3% tốc · Hỗ trợ +5,5% · ĐB +4%; ụ Tấn công Đỏ tốc ×1,15 |
 
-ST đòn = `dmg gốc × hs bậc × hệ số sao × (1 + 25%·bước power-up) × hệ số cấp thẻ × (1 + buff) × …` (`dmgU`). Phân bố 96 ụ: Trắng 14 · Xanh 17 · Tím 22 · Vàng 33 · Đỏ 10. Vai: Tấn công 47 · Hỗ trợ 19 · Đặc biệt 26 · Khống chế 4 (Khống chế = ụ Đặc biệt có hiệu ứng lên đối thủ PVP, `unitpage.js: upVai`).
+ST đòn = `dmg gốc × hs bậc × hệ số sao × (1 + 25%·bước power-up) × hệ số cấp thẻ × (1 + buff) × …` (`dmgU`). Phân bố 97 ụ: Trắng 14 · Xanh 17 · Tím 22 · Vàng 34 · Đỏ 10. Vai: Tấn công 48 · Hỗ trợ 19 · Đặc biệt 26 · Khống chế 4 (Khống chế = ụ Đặc biệt có hiệu ứng lên đối thủ PVP, `unitpage.js: upVai`).
 
 **Họ kỹ năng theo bậc** (`phattrien.js: HO`): Trắng = hiệu ứng cơ bản 1 mục tiêu · Xanh = lan rộng · Tím = thêm cơ chế mới · Vàng = combo/điều kiện mạnh · Đỏ = kết "WOW" + kỹ năng chủ động.
 
-## 6. Bảng 96 ụ
+## 6. Bảng 97 ụ
 Sinh tự động từ game (EN-mode cho số, VI-mode cho mô tả). Cột "1★ → 7★" là dòng hiệu ứng **chính hàm trận** in ra (`SKILLS[id].mo` / `SUP[id].chu`, qua `upBangSao`) ở cấp thẻ đầu, trước power-up/buff. "Dạng" = các dạng grow-up/biến hình trên trang ụ (`GROW`). "Chủ động": Tự kích / Chạm tay. Mô tả đầy đủ + luật ghép riêng: trang ụ (`unitpage.js: upLuatGhep, upCheDo`).
 
 | # | id | Tên EN / VI | Bậc | Vai | Cơ chế (mô tả trong game, VI) | ST gốc · tốc | 1★ → 7★ (dòng hiệu ứng code) | Mốc sao 3/5/7★ | Dạng | Chủ động |
@@ -207,6 +207,9 @@ Sinh tự động từ game (EN-mode cho số, VI-mode cho mô tả). Cột "1�
 | 94 | `overlord` | Overlord / Overlord | Đỏ | Tấn công | Nạp chậm, rồi bắn một đòn sấm lớn vào cả nhóm quái. Sau đó tia lửa nhảy sang thêm quái | 22.4 · 1/s | Charge 5.6s · thunder ×9 in 92 px · aftershock arcs ×2 to 4 more → Charge 2.7s · thunder ×9 in 92 px · aftershock arcs ×2 to 4 more | QUICK HANDS / OVERCHARGE / APEX | DORMANT → CHARGING → OVERCHARGED | — |
 | 95 | `ronglua` | Wyrm Engine / Rồng Máy | Đỏ | Tấn công | LÒ PHẢN ỨNG: phun 1 TIA LỬA mảnh vào quái đầu, xuyên mọi quái trên đường tia và thiêu chúng; mỗi nhịp tia trúng tích Nhiệt (không trần, nguội 2%/giây); ghép thật cùng hàng hoặc cột +5 × ★ nhiệt. Mỗi nhiệt +0.2% sát thương · 100 nhiệt: +25% tốc phun · 250 nhiệ… | 8.5 · 5/s | Hatchling engine · Heat 0 → +0% damage · fire beam to the front enemy, pierces every enemy on the line (130 p… → Inferno dragon · Heat 0 → +0% damage · fire beam to the front enemy, pierces every enemy on the line (304 px)… | WINGED WYRM / ARMORED DRAGON / INFERNO DRAGON | Hatchling Engine → Winged Wyrm → Armored Dragon → Inferno Dragon | Tự kích |
 | 96 | `thacmana` | Arcane Cascade / Thác Mana | Đỏ | Tấn công | Súng cầu mana mạnh theo MANA bạn đang giữ. Bắn quái đầu rồi nảy sang các quái gần nhất (−10% mỗi lần nảy). Sát thương × (1 + 1 × √(mana/100)), không trần. Ở 100 / 300 / 600 / 1000 / 2000 / 4000 mana trúng 2 / 3 / 4 / 5 / 6 / 8 quái, sau đó mỗi lần gấp đôi +… | 20 · 1/s | Mana 100 → ×1.50 damage, hits 2 enemies (next at 300 mana) · mana orb bounces to the nearest enemy (125 px, −… → Mana 100 → ×1.50 damage, hits 2 enemies (next at 300 mana) · mana orb bounces to the nearest enemy (125 px, −… | MANA FLOOD / DOUBLE TAP / APEX | — | Chạm tay |
+| 97 | `bocap` | Crimson Sting / Bọ Cạp Hồng Ngọc | Vàng | Tấn công | Mỗi lần CHÍNH ụ này bắn chí mạng: +1 STING, không trần. Mỗi STING: +16% sát thương và +1% ST chí mạng; tốc bắn cũng tăng dần (tiến tới +100%). Chỉ đánh 1 quái. Ụ mới (kể cả ghép ra) bắt đầu từ 0; bị hạ sao thì mất hết STING. Hoá đá / đóng băng: giữ nguyên. Đặt cạnh ụ hỗ trợ chí mạng để tích nhanh hơn | 22 · 2/s | Each own crit: +1 STING · +16% damage, +1% crit damage each → … · +5% crit chance · every 3rd crit: +2 · crits mark the enemy 3s: +10% from this turret | KEEN STINGER / DOUBLE DOSE / VENOM MARK | STINGLET → VENOM SURGE → KING SCORPION | — |
+
+> **Crimson Sting (`bocap`, ụ 97 — 10/11, `skills7.js: SKILLS.bocap`).** Vàng Tấn công, đơn mục tiêu (quái đầu), **không lan** (kim đổi sang 1 quái gần đó nếu quái đích chết lúc kim còn bay — vẫn 1 kim 1 quái). Chí mạng thường (10%, ×200%). **Mỗi chí mạng của CHÍNH ụ đó +1 STING, KHÔNG TRẦN**; mỗi STING: **+16% ST** (LV9; +0,5%/cấp thẻ → LV17 +20%, `KY_NANG_CAP.bocap`), **+1% ST chí mạng**, tốc bắn **+100% × n/(n + 250)** (≈ +0,4%/STING lúc đầu, 250 STING = +50%, tiệm cận +100% — không tự bùng nổ). Ụ mới (triệu hồi / ghép ra / biến hình ra) = 0; **bị hạ sao = mất hết** (ngoại lệ có chủ ý của nguyên tắc "−★ không đặt lại"); +★ tại chỗ giữ; hoá đá / đóng băng không bắn nên không tích, không mất. Hỗ trợ chí mạng kề (Crit Antenna, Hammer, Focus Lens) làm tích nhanh hơn — chủ ý. **Mốc sao riêng:** 3★ KEEN STINGER +5% chí mạng · 5★ DOUBLE DOSE mỗi chí mạng thứ 3 cho +2 STING (đếm, tất định) · 7★ VENOM MARK chí mạng đánh dấu quái 3 s: nhận +10% ST từ chính ụ này (không có mốc chung QUICK HANDS / DOUBLE TAP / APEX). **3 dạng theo STING:** 0–49 STINGLET · 50–199 VENOM SURGE · 200+ KING SCORPION (kỳ vọng ụ giữ lâu ≈59 ở wave 20, ≈201 ở wave 40). Tấm đếm đáy ô: icon ngòi hồng ngọc + số STING. Online: chí mạng do `trung()` quyết bằng `rngLuat`; cờ ô `G<sting>;J<đếm chí mạng>;` (`dongbo.js oTT/datO`). Mở ở cấp phi công 8 (nhóm One Big Shot); rơi như các thẻ Vàng khác. **Cân bằng** (`tools/thap-can-bang-so.js`, độ khó 3, dải 3.1–3.5): w20 **1.91** · w40 **3.27** · w60 **5.67** · tổng **3.28** — giả định STING theo công thức kỳ vọng (phát bắn × 15% chí mạng × thời gian sống 2,5 / 5 / 8 phút): 3 ụ giữ lâu 59 / 201 / 386, 9 ụ còn lại 17 / 36 / 131. 1 ụ 7★ sống 10 phút liên tục ở wave 60: 486 STING, ≈549k ST/giây (Compass Cannon 7★ stack 6 ≈ 252k, stack 10 ≈ 478k; Ember 90 lửa ≈ 497k) — tăng theo bậc hai của thời gian, không theo hàm mũ; có Crit Antenna + Hammer + Focus Lens kề: ≈1600 STING, ≈5,0 triệu ST/giây sau 10 phút (**cần theo dõi**).
 
 > **Cân bằng đợt 2 (10/11):** cột "ST gốc" và cột mô tả của các ụ tấn công Vàng/Đỏ đã cập nhật theo đợt 2; cột "1★ → 7★" (dòng hiệu ứng code) của các ụ đổi hệ số kỹ năng CHƯA sinh lại — số đúng xem bảng ở mục 15 hoặc trang ụ trong game.
 
@@ -243,6 +246,7 @@ Sinh tự động từ game (EN-mode cho số, VI-mode cho mô tả). Cột "1�
 | `ronglua` | Hatchling Engine (1–2★) → Winged Wyrm (3–4★) → Armored Dragon (5–6★) → Inferno Dragon (7★) | riêng: nho/ronglua_f1, nho/ronglua_f2, nho/ronglua_f3, nho/ronglua_f4 |
 | `lualien` | EMBER → KINDLED → FULL BLAZE | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |
 | `luutru` | EMPTY SHELVES → FILING → GRAND ARCHIVE | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |
+| `bocap` | STINGLET → VENOM SURGE → KING SCORPION (STING 0–49 / 50–199 / 200+) | riêng `_nong_s1..3` (10/11, `STAGE_VE`; tấm `raw_anime_u_dang_bocap.png`, cắt `tools/thap-cat-dang-dau.py bocap` + `BIEN_HANG=310,616 tools/thap-cat-anime-u.py --dang dang_bocap bocap` cho bệ / icon / huy hiệu) |
 | `cobac` | SLOT → HIGH ROLLER → GRAND CASINO | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |
 
 ## 7. Cấp thẻ
@@ -277,6 +281,7 @@ Nguồn: `thebai.js: THE, THEBAI.the` · `data.js: hsThe, tocThe, heDB, KY_NANG_
 | `taylo` | Dmg buff | +18 | 0.9 | 26.1 | % | — |
 | `thaukinh` | Crit dmg | +36 | 1.548 | 49.932 | % | — |
 | `tuthan` | Execute | 12 | 0.6 | 17.4 | % | — |
+| `bocap` | Per STING | +16 | 0.5 | 20 | % | — |
 | `canon` | Per stack | +175 | 2.5 | 195 | % | — |
 | `cauvong` | Trail dmg | +29.9 | 1.196 | 39.468 | % | — |
 | `dongbo` | Dmg buff | +17.25 | 0.69 | 22.77 | % | — |
@@ -340,7 +345,7 @@ Nguồn: `sohuu.js: SHC, SH` · `kinhte.js: KTC.ruong, KT.moRuong` · `manh.js: 
 
 - **Sở hữu:** chỉ ụ **đã có ≥1 bản sao** mới vào bộ bài/bộ mẫu. Người mới có **10 ụ**: Sniper, Gatling, Revolver, Frost, Tesla, Mana Core, Venom, Armor Breaker, Amplifier, Laser. Quà cụ thể: hướng dẫn → Ice Blade; Hành trình ngày 1 → Berserker, ngày 4 → Storm Gun, ngày 6 → Overclock.
 - **3 trạng thái thẻ** ở lưới bộ bài/bộ sưu tập: ĐÃ CÓ · CHƯA CÓ (mờ + nguồn: Trắng/Xanh "Any chest", Tím "Gold Chest", Vàng "Gold Chest · Event", Đỏ "Mythic Chest") · CHƯA MỞ (mờ + "PILOT LV n"). Chạm vẫn mở trang ụ.
-- **Mở nhóm theo cấp phi công** (ụ chưa mở **không rơi**; ụ đã có vẫn nhận bản sao): LV1 Starter Arsenal (10 ụ khởi đầu) · 2 Spread & Traps (phun, bomhen, kiembang, vungdoc) · 3 Critical Strike (xucxac, bua, nam, chimang, cuongno) · 4 Heavy Fire (maychem, mortar, radar, no5, bao) · 5 Frost & Mana (lanhgia, nhanmana, hutmana, baotuyet, santhuong) · 6 First Legends (min, lienket, epxung, railgun, soi, aten) · 7 Merge Bonus (drone, loa, nhanban, anhsang) · 8 One Big Shot (nangluong, docton, thaukinh, nemesis) · 9 Guardians (khien, taylo, nhieusong, thanhdia) · 10 Teamwork (tuthan, nayda, dongbo, hydra) · 11 Tricksters (mimic, tron, dichchuyen, xaotron) · 12 Eternal Frost (kepha, nhatthuc, lophanung) · 13 Starlight (nangsao, ngoisao, hasao) · 14 Firestorm (cuuvi, bienmau, overlord) · 15 Path Control (khoathoigian, wallgen, marionette, blackhole) · 16 Swarm (combo, sinhdoi, chuato) · 17 Merge Workshop (luutru, congap, vughep) · 18 Star Forge (loren, hopca, khoisinh) · 19 Resonance (cauvong, xuonganh, luoicheo, thacmana) · 20 Big Guns (canon, orbital, leviathan) · 21 Shapeshifters (hopbi, tienhoa, saochep) · 22 Dark Wards (guongcong, nguyenrua, ngaithoigian) · 23 Dragonfire (lualien, mauhut, ronglua) · 24 Wild Cards (tudo, pandora, cobac).
+- **Mở nhóm theo cấp phi công** (ụ chưa mở **không rơi**; ụ đã có vẫn nhận bản sao): LV1 Starter Arsenal (10 ụ khởi đầu) · 2 Spread & Traps (phun, bomhen, kiembang, vungdoc) · 3 Critical Strike (xucxac, bua, nam, chimang, cuongno) · 4 Heavy Fire (maychem, mortar, radar, no5, bao) · 5 Frost & Mana (lanhgia, nhanmana, hutmana, baotuyet, santhuong) · 6 First Legends (min, lienket, epxung, railgun, soi, aten) · 7 Merge Bonus (drone, loa, nhanban, anhsang) · 8 One Big Shot (nangluong, docton, thaukinh, nemesis, bocap) · 9 Guardians (khien, taylo, nhieusong, thanhdia) · 10 Teamwork (tuthan, nayda, dongbo, hydra) · 11 Tricksters (mimic, tron, dichchuyen, xaotron) · 12 Eternal Frost (kepha, nhatthuc, lophanung) · 13 Starlight (nangsao, ngoisao, hasao) · 14 Firestorm (cuuvi, bienmau, overlord) · 15 Path Control (khoathoigian, wallgen, marionette, blackhole) · 16 Swarm (combo, sinhdoi, chuato) · 17 Merge Workshop (luutru, congap, vughep) · 18 Star Forge (loren, hopca, khoisinh) · 19 Resonance (cauvong, xuonganh, luoicheo, thacmana) · 20 Big Guns (canon, orbital, leviathan) · 21 Shapeshifters (hopbi, tienhoa, saochep) · 22 Dark Wards (guongcong, nguyenrua, ngaithoigian) · 23 Dragonfire (lualien, mauhut, ronglua) · 24 Wild Cards (tudo, pandora, cobac).
 - **Khoá bậc theo cấp phi công** (`tientrinh.js: TTC.moBac`): Trắng + Xanh sau hướng dẫn · Tím LV3 · Vàng LV6 · **Đỏ LV12 VÀ đã qua tầng 40 Leo Tháp** (`TTC.doTang`; người cũ: kỷ lục Solo ≥ wave 30). Ụ Đỏ trong nhóm chỉ rơi khi đạt điều kiện Đỏ.
 - **Rương** (tỉ lệ % độ hiếm MỖI thẻ, công khai bằng nút (i)):
 
@@ -392,7 +397,7 @@ Nguồn: `online/net.js, taikhoan.js, phong.js, dongbo.js, chat.js, ketqua-onl.j
 - **Tất định:** gameplay không phụ thuộc hiệu ứng/FPS (bước 1/60 s cố định); quyết định ngẫu nhiên dùng `rngLuat` / `rngHat` / `rngSinh` có hạt — **không `Math.random` trong luật** (Math.random chỉ cho hiệu ứng).
 
 ## 14. Admin
-Nguồn: `admin.js: ADMIN`. `ADMIN.la()` = tài khoản Google đã đăng nhập có email đã xác minh trùng `ADMIN.EMAIL` (không ghi email ở đây). Admin **bỏ mọi khoá** (chế độ, tầng, cửa hàng, lò rèn, Ấn, chỉ huy, online…) + sở hữu ảo đủ 96 ụ; **không** đổi dữ liệu thật, không cộng tài nguyên. Chỉ kiểm phía máy khách (quyền thật ở server: giai đoạn sau).
+Nguồn: `admin.js: ADMIN`. `ADMIN.la()` = tài khoản Google đã đăng nhập có email đã xác minh trùng `ADMIN.EMAIL` (không ghi email ở đây). Admin **bỏ mọi khoá** (chế độ, tầng, cửa hàng, lò rèn, Ấn, chỉ huy, online…) + sở hữu ảo đủ 97 ụ; **không** đổi dữ liệu thật, không cộng tài nguyên. Chỉ kiểm phía máy khách (quyền thật ở server: giai đoạn sau).
 
 ## 15. Nguyên tắc thiết kế
 - **Vừa đủ khó** để muốn chinh phục: mỗi chế độ có mốc khó dần, thua không mất gì ngoài thời gian, không bán "thắng" (`docs/demo-hop-tuong/tuvan/tien-trinh/THIET-KE.md` N1). Thẻ Vàng/Đỏ phải "cày" như DCDW.
@@ -413,6 +418,7 @@ Nguồn: `admin.js: ADMIN`. `ADMIN.la()` = tài khoản Google đã đăng nhậ
 | Overlord (Đỏ, dễ) | sấm ×9 → ×16 · dư chấn ×2 tới 4 quái → ×6 tới 8 quái · nạp 5.6 → 5.1 s | 22.4 giữ | 2.81 → 4.61 | 4.5–4.8 | đạt |
 | Hive Queen (Đỏ, dễ) | mỗi drone (0.70 + 0.15×★)D → (1.0 + 0.22×★)D · chu kỳ bầy 2×★ → 1.4×★ giây | 80 giữ | 3.03 → 4.63 | 4.5–4.8 | đạt |
 | Compass Cannon · Ember Relay (Vàng, khó) | không đổi | giữ | 3.73 · 3.45 | 3.1–3.5 | giữ |
+| Crimson Sting (Vàng, khó — ụ MỚI 10/11) | mỗi STING +16% ST, +1% STCM, tốc +100% × n/(n+250); mốc 3/5/7★ riêng | 22 (tốc 2/s) | — → 3.28 (1.91 / 3.27 / 5.67) | 3.1–3.5 | đạt |
 | Salvo Battery (Vàng, khó) | BINGO đủ hàng +200% → +240% | 46.2 giữ | 2.96 → 3.24 | 3.1–3.5 | đạt |
 | Quantum Choir (Vàng, khó) | mỗi Hoà âm +35% → +100% ST | 24 → 32 | 1.98 → 3.38 | 3.1–3.5 | đạt |
 | Blood Circuit (Vàng, khó) | thưởng dạng 20/50/100/200 Máu +15/40/60/90% → +250/500/550/600% · STCM mỗi Máu 3% → 1% | 22 → 50 | 1.61 → 3.32 | 3.1–3.5 | đạt (w20 1.2 · w60 9.4) |
@@ -426,6 +432,7 @@ Nguồn: `admin.js: ADMIN`. `ADMIN.la()` = tài khoản Google đã đăng nhậ
 | Fusion Archive (Vàng, vừa) | mỗi điểm +2% → +10% ST · mốc 10/20/30/40: +15% tốc / +8% chí mạng / +25% ST / +40% STCM → +100% / +25% / +150% / +200% | 28 → 24 | 0.82 → 1.34 | đích quy đổi 1.38 | chưa chắc — cần đo trận thật |
 | Werewolf (Vàng, dễ) | đánh lan 70% → 100% (thức tỉnh 85% → 120%) | 29 → 45 | 1.68 → 2.64 | 2.5–2.8 | đạt |
 | Eclipse (Vàng, dễ) | tia NGÀY ×2.2–3.8 → ×4.6–8.0 · nón ĐÊM ×1 → ×2.1 · cháy 60% → 125% | 15 giữ | 1.47 → 2.66 | 2.5–2.8 | đạt |
+- **Tự do sáng tạo (người dùng chốt 10/11):** mỗi Ụ là **một vật thể riêng** (vd con bọ cạp máy của Crimson Sting), mỗi PHI CÔNG là **một sinh vật riêng** — không dùng lại khuôn "nòng pháo trên bệ" cho ụ, không dùng "người anime đổi màu" cho phi công. Hình vẫn chỉ từ ChatGPT (mục 16); ụ phải nhận ra được ở cỡ ô thật và không lẫn với ụ cùng bậc.
 - **Đỏ hiếm:** tối đa 1 Đỏ/bộ; Đỏ mở ở LV12 + tầng 40; tỉ lệ rơi 0,2% (túi trận/Rương Vàng), bảo hiểm 120 rương.
 - **Tất định:** không `Math.random` trong luật; online + Retry same seed ra cùng kết quả.
 - **VFX không đổi gameplay:** hiệu ứng/hoạt ảnh chạy song song, luật không chờ hoạt ảnh (`trieu`: "luật chơi không chờ hoạt ảnh"); 30/60 FPS cùng kết quả.
