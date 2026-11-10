@@ -37,7 +37,7 @@ const HA = {
     const w = $('#wrap');
     if (w && !$('#ha-cb')) {
       const d = document.createElement('div'); d.id = 'ha-cb'; d.hidden = true; d.setAttribute('role', 'status');
-      d.innerHTML = '<b></b><em></em>'; w.appendChild(d);
+      d.innerHTML = '<span class="cb-c"><b></b><small></small></span><em></em>'; w.appendChild(d); // dòng 1 tên chiêu · dòng 2 TÁC DỤNG (cbChu)
     }
   },
   // sau UI.vaoTran: khung bậc cho 5 thẻ + khung chỉ huy (ảnh <img>, đè lên khung cũ đã ẩn bằng CSS)
@@ -109,10 +109,12 @@ const HA = {
       this.dat(cb, 'hidden', !hien);
       this.dat($('#wrap'), '.ha-cb-on', hien && G.ban.length > 1);
       if (hien) {
-        this.dat(cb.querySelector('b'), 'text', T.kn);
-        const dang = !!E.bao, con = dang ? Math.max(0, E.bao.song - E.bao.t) : E.knT;
-        this.dat(cb.querySelector('em'), 'text', con < 100 ? Math.max(0, Math.ceil(con)) + 's' : '');
-        this.dat(cb, '.dang', dang);
+        const c = this.cbChu(E, T, B);
+        this.dat(cb.querySelector('b'), 'text', c[0]);
+        this.dat(cb.querySelector('small'), 'text', c[1]);
+        this.dat(cb.querySelector('em'), 'text', c[2] != null && c[2] < 100 ? Math.max(0, Math.ceil(c[2])) + 's' : '');
+        this.dat(cb, '.dang', c[3]);
+        this.dat(cb, '.td', !!c[1]);
         if (cb._b !== B.y + '|' + G.che) { cb._b = B.y + '|' + G.che; this.datCb(cb, B); }
       }
     }
@@ -122,6 +124,21 @@ const HA = {
     const nd = $('#nut-tocdo + .nut-nho') || document.querySelector('#duoi [data-act="dung"]');
     this.dat(nd, '.bat', !!G.dung);
     this.dat($('#nut-tocdo'), '.bat', (G.tocDo || 1) > 1);
+  },
+  // nội dung băng chiêu trùm: [tên chiêu, TÁC DỤNG ngắn, giây đếm ngược (null = ẩn), đang báo?] — chữ gốc EN, NN dịch VI (ngonngu-vi.js)
+  //  (người dùng 10/11: "KHIÊN LĂNG KÍNH 1s/2s" chỉ có tên, số nhảy 2→1→2 vô nghĩa vì Prism/Twin Core không có chiêu định kỳ — game.js thử lại mỗi 2 s)
+  cbChu(E, T, B) {
+    const dang = !!E.bao, con = dang ? Math.max(0, E.bao.song - E.bao.t) : E.knT, K = E.khien;
+    const td = (typeof VT !== 'undefined' && VT.NGUY && VT.NGUY[E.trum]) || '';
+    if (K && K.can) { // PRISM WARDEN: khiên −90% sát thương tới khi trúng đủ N LOẠI ụ khác nhau; vỡ → ~8 s sau dựng lại
+      const pt = Math.round((1 - TRM.PRISM_GIAM) * 100);
+      if (dang) return ['PRISM SHIELD: −' + pt + '% DMG', 'Shield coming back!', con, true];
+      if (K.on) return ['PRISM SHIELD: −' + pt + '% DMG', 'Hit with ' + K.can + ' different turret types to break · ' + K.ds.size + '/' + K.can, null, false];
+      return ['SHIELD BROKEN: FULL DMG', 'Shield returns in', Math.max(0, E.knT + 1.4 - 0.05), false];
+    }
+    if (E.trum === 'twin_core') return [T.kn, td, null, false]; // bị động (tách khi chết) — không có nhịp chiêu
+    if (E.trum === 'leech' && !dang && B && !B.t.some(U => U && U.sao >= 2)) return [T.kn, td, null, false]; // chưa có ụ 2★ để cướp: không đếm
+    return [T.kn, td, con, dang];
   },
   // vị trí băng: khoảng trống giữa đáy đường của bàn mình và hàng nút đáy; không đủ chỗ (PVP/CO-OP) → ngay dưới thanh trên
   datCb(cb, B) {

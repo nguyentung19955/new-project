@@ -936,9 +936,9 @@ const REN = {
         ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.2 * al;
         this.anhGiua(ctx, this.cham1('#78D9F5'), x, y, co * 0.75); ctx.restore(); ctx.globalAlpha = al;
       } else E._lanhT = 0;
-      if ((E.yeu > 0 || E.cvT > 0 || E.cvPT > 0 || E.giapT > 0) && !E.chet) { // dấu suy yếu (Phá Giáp: tím), cầu vồng (sắc màu), giáp đối thủ (vàng)
+      if ((E.yeu > 0 || E.cvT > 0 || E.cvPT > 0 || (E.giapT > 0 && !E.khien)) && !E.chet) { // dấu suy yếu (Phá Giáp: tím), cầu vồng (sắc màu), giáp đối thủ (vàng)
         ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.28 * al;
-        const mm = E.cvT > 0 || E.cvPT > 0 ? ['#ff4b8a', '#ffd23f', '#4bff9a', '#4fb8ff', '#c77dff'][Math.floor(this.t * 6 + E.uid) % 5] : E.giapT > 0 ? '#ffd23f' : '#c77dff';
+        const mm = E.cvT > 0 || E.cvPT > 0 ? ['#ff4b8a', '#ffd23f', '#4bff9a', '#4fb8ff', '#c77dff'][Math.floor(this.t * 6 + E.uid) % 5] : E.giapT > 0 && !E.khien ? '#ffd23f' : '#c77dff';
         this.anhGiua(ctx, this.cham1(mm), x, y, co * 1.15); ctx.restore(); ctx.globalAlpha = al;
       }
       const dai = this.coDai(ten, co);
@@ -1329,11 +1329,39 @@ const REN = {
       ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
     }
   },
+  // nổ quanh TRÙM (người dùng 10/11: "thân trùm bị đám mây nổ tên lửa La Bàn che hết"): mỗi khung, với từng trùm còn sống —
+  //  chỉ 2 vụ nổ ụ MỚI NHẤT trong bán kính thân được vẽ, cỡ ≤ 0,36 thân, độ đậm × 0,5; vòng nổ ≤ 0,4 thân. Hiệu ứng CHIÊU trùm (trum_*, cuaTrum) giữ nguyên.
+  //  Chỉ vẽ — không đổi FX.anim (luật/tất định không đụng), không cấp phát mỗi khung.
+  NO_TRUM: { n: 2, co: 0.36, al: 0.5, r: 0.62, vong: 0.4 },
+  _tq: [],
+  danhDauNoTrum() {
+    const L = this._tq; L.length = 0;
+    if (typeof G === 'undefined' || !G.quai) return;
+    for (const E of G.quai) if (E.trum && !E.chet && E.d) L.push(E);
+    const C = this.NO_TRUM;
+    for (const a of FX.anim) a._tr = null;
+    if (!L.length) return;
+    for (const E of L) {
+      const x = E.x + (E._lechX || 0), r = E.d.co * C.r, r2 = r * r; let n = 0;
+      for (let i = FX.anim.length - 1; i >= 0; i--) {
+        const a = FX.anim[i];
+        if (a._tr || a.cuaTrum || a.ten === 'chop_nong' || a.mot === 'no' || String(a.ten).startsWith('trum_')) continue;
+        const dx = a.x - x, dy = a.y - E.y; if (dx * dx + dy * dy > r2) continue;
+        a._tr = n++ < C.n ? E : 'an';
+      }
+    }
+  },
+  coNoTrum(a, co) { const E = a._tr; return E && E !== 'an' ? Math.min(co, E.d.co * this.NO_TRUM.co) : co; },
   veFx(ctx) {
     ctx.globalCompositeOperation = 'lighter';
+    this.danhDauNoTrum();
     for (const a of FX.anim) {
       const u = Math.min(1, a.t / a.song);
-      if (a.mot) { this.veMot(ctx, a, u); continue; }
+      if (a._tr === 'an') continue; // quá 2 vụ nổ quanh trùm: bỏ vẽ vụ cũ
+      if (a.mot) { // cỡ nổ quanh trùm: tạm thu a.co trong lúc vẽ (camgiac/vfxp3 thay REN.veMot cũng đọc a.co) rồi trả lại
+        if (a._tr) { const c0 = a.co; a.co = this.coNoTrum(a, c0); try { this.veMot(ctx, a, u); } finally { a.co = c0; } } else this.veMot(ctx, a, u);
+        continue;
+      }
       let x = a.x, y = a.y, goc = a.goc, al, sc;
       if (a.bam && !a.bam.chet) { x = a.bam.x; y = a.bam.y; }
       if (a.ten === 'chop_nong') { // chớp đầu nòng: bung nhanh (ease-out) rồi tắt mềm, bám theo nòng đang xoay/giật
@@ -1347,14 +1375,15 @@ const REN = {
       }
       ctx.globalAlpha = 1;
       const aI = this.img('fx_' + a.ten), nK = aI ? Math.round(aI.width / aI.height) : 6; // dải 6 khung (fx_*) hoặc 16 khung (fx_trum_<id>)
-      this.khungMuot(ctx, 'fx_' + a.ten, u * (nK - 0.001), x, y, a.co * sc, goc, Math.min(DIU.bat ? 0.7 : 0.82, al) * (window.CG ? CG.kA(a) : 1)); // trần độ sáng cộng · CG.kA: trần sáng chung + chỉ 1 dải T4 sáng đủ (camgiac.js)
+      this.khungMuot(ctx, 'fx_' + a.ten, u * (nK - 0.001), x, y, this.coNoTrum(a, a.co) * sc, goc, Math.min(DIU.bat ? 0.7 : 0.82, al) * (window.CG ? CG.kA(a) : a._tr ? this.NO_TRUM.al : 1)); // trần độ sáng cộng · CG.kA: trần sáng chung + chỉ 1 dải T4 sáng đủ (camgiac.js)
     }
     const vm = typeof FXU !== 'undefined' && FXU.co('fx_vong_mong') && this.img('fx_vong_mong');
     for (const v of FX.vong) {
       const u = v.t / v.song, e = 1 - (1 - u) * (1 - u);
       if (vm) { // vòng mảnh PNG (T22) tô màu — thay arc vẽ code
-        const r = Math.max(1, v.r0 + (v.r1 - v.r0) * e), im = FXU.mau('fx_vong_mong', v.mau);
-        if (im) { ctx.globalAlpha = (1 - u) * (DIU.bat ? 0.6 : 0.85); ctx.drawImage(this.mip(im, r * 2.3 * this.s * this.dpr), v.x - r * 1.15, v.y - r * 1.15, r * 2.3, r * 2.3); }
+        let r = Math.max(1, v.r0 + (v.r1 - v.r0) * e), k = 1; const im = FXU.mau('fx_vong_mong', v.mau);
+        for (const E of this._tq) { const dx = v.x - E.x, dy = v.y - E.y, rr = E.d.co * this.NO_TRUM.r; if (dx * dx + dy * dy < rr * rr) { r = Math.min(r, E.d.co * this.NO_TRUM.vong); k = this.NO_TRUM.al; break; } } // vòng nổ quanh trùm: không to hơn thân
+        if (im) { ctx.globalAlpha = (1 - u) * (DIU.bat ? 0.6 : 0.85) * k; ctx.drawImage(this.mip(im, r * 2.3 * this.s * this.dpr), v.x - r * 1.15, v.y - r * 1.15, r * 2.3, r * 2.3); }
         continue;
       }
       // fx_vong_mong chưa tải: không vẽ vòng code
@@ -1398,7 +1427,7 @@ const REN = {
       const e = 1 - (1 - u) * (1 - u); let al = Math.min(1, u / 0.08);
       if (u > 0.65) { const v = (u - 0.65) / 0.35; al *= 1 - v * v * (3 - 2 * v); }
       let x = a.x, y = a.y; if (a.bam && !a.bam.chet) { x = a.bam.x; y = a.bam.y; }
-      this.anhGiua(ctx, a.ten, x, y, a.co * (0.6 + 0.5 * e), a.goc, al * (window.CG ? CG.kA(a) : 1));
+      this.anhGiua(ctx, a.ten, x, y, this.coNoTrum(a, a.co) * (0.6 + 0.5 * e), a.goc, al * (window.CG ? CG.kA(a) : a._tr ? this.NO_TRUM.al : 1));
     }
     ctx.globalAlpha = 1; ctx.globalCompositeOperation = op;
   },

@@ -44,6 +44,24 @@ const FX = {
         if (c.t < 0.25 && c.kieu === (kieu || '') && c.mau === (mau || '#fff') && c.gop && Math.abs(c.x - x) < 34 && Math.abs(c.y - y) < 24) { c.s = String(+c.s + +s); return c; }
       }
     }
+    // số sát thương TRÊN TRÙM (người dùng 10/11: "chữ sát thương chồng nhau"): mọi số trong thân trùm, < 0,3 s → cộng vào 1 số (chí mạng
+    //  nâng số đó lên vàng); số mới thì xếp so le 3 làn (giữa / trái-trên / phải-trên) theo số đang hiện — không đè nhau. Chỉ hiển thị.
+    if ((!kieu || kieu === 'crit') && typeof s === 'string' && /^\d+$/.test(s) && typeof G !== 'undefined' && G.quai) {
+      let E = null; for (const Q of G.quai) if (Q.trum && !Q.chet && Q.d && Math.abs(Q.x - x) < Q.d.co * 0.5 && Math.abs(Q.y - 16 - y) < Q.d.co * 0.5) { E = Q; break; }
+      if (E) {
+        let n = 0;
+        for (let i = this.chu.length - 1; i >= 0; i--) {
+          const c = this.chu[i]; if (!c.gop || c.trum !== E) continue;
+          if (c.t < 0.3) { c.s = String(+c.s + +s); if (kieu === 'crit' && c.kieu !== 'crit') { c.kieu = 'crit'; c.mau = mau; c.co = co; c.song = 0.6; } return c; }
+          n++;
+        }
+        const L = [[0, 0], [-0.26, -12], [0.26, -12]][n % 3]; x = E.x + E.d.co * L[0]; y = E.y - 16 + L[1];
+        const c = this._chuSo(x, y, s, mau, co, kieu); c.trum = E; return c;
+      }
+    }
+    return this._chuSo(x, y, s, mau, co, kieu);
+  },
+  _chuSo(x, y, s, mau, co, kieu) {
     if ((!kieu || kieu === 'crit') && typeof s === 'string' && /^\d+$/.test(s)) { // bàn đông: giữ ≤ MAX_SO số sát thương, bỏ số cũ nhất (claude/diu-vfx)
       let n = 0, i0 = -1; for (let i = 0; i < this.chu.length; i++) if (this.chu[i].gop) { n++; if (i0 < 0) i0 = i; }
       if (n >= this.MAX_SO && i0 >= 0) this.chu.splice(i0, 1);
@@ -68,6 +86,7 @@ const FX = {
     }
     const kq = this._no(ten, x, y, co, song, goc, bam), A = this.anim[this.anim.length - 1]; // _no luôn đẩy 1 dải vào cuối
     if (A && A.k0 === undefined) { A.k0 = ten; A.co0 = A.co; A.song0 = A.song; }
+    if (A) A.cuaTrum = this.cuaTrum ? 1 : 0; // chiêu trùm (TRM.fx): render.js không thu nhỏ như nổ của ụ quanh thân trùm
     return kq;
   },
   _no(ten, x, y, co, song, goc, bam) {

@@ -158,23 +158,82 @@ const TVF = {
     for (const E of G.quai) {
       if (!E.trum || E.chet) continue;
       const co = E.d.co, x = E.x + (E._lechX || 0), y = E.y, yb = y - co * 0.55; // _lechX: trùm sát mép vẽ lùi vào (quaianim.js trumLech)
-      const K = E.khien;
-      if (K && K.can && K.on) { // mảnh khiên: còn = sáng, đã vỡ (đủ loại ụ khác nhau) = tối; khiên TẮT → không vẽ gì (trước: vòng 3 cánh mờ 25% dưới thân như bóng thừa)
-        const seg = this.CO.has('prism_seg'), r = co * 0.56;
-        for (let i = 0; i < K.can; i++) {
-          const a = -Math.PI / 2 + i * Math.PI * 2 / K.can, con = K.on && i >= K.ds.size, al = K.on ? (con ? 0.9 : 0.4) : 0.25;
-          const im = con ? this.anh('prism_seg') : (seg ? this.anhChan('prism_seg') : REN.img('seg_tat'));
-          if (!im) continue;
-          if (seg) { // 1/4 vòng (tâm cong ở góc dưới-phải ảnh) → đặt tâm cong vào tâm trùm, xoay cho giữa cung ở góc a; 3 mảnh có khe
-            const w = co * 0.6, k = K.can > 4 ? 4 / K.can : 1;
-            ctx.save(); ctx.translate(x, y); ctx.rotate(a + Math.PI * 3 / 4); ctx.scale(k, k); ctx.globalAlpha = al;
-            ctx.drawImage(REN.mip(im, w * REN.s * REN.dpr), -w, -w, w, w); ctx.restore();
-          } else PX.ve(ctx, im, x + Math.cos(a) * r, y + Math.sin(a) * r * 0.8, 9, 9, 0, al);
-        }
-      }
+      if (E.khien && E.khien.can) this.veLangKinh(ctx, E, E.khien, x, y, co, t);
       if (E.kho > 0) { const s = REN.img('h2_sao'); for (let i = 0; i < Math.min(5, E.kho); i++) PX.ve(ctx, s, x - (Math.min(5, E.kho) - 1) * 5 + i * 10, yb - 9, 9, 9, 0, 0.95); }
       if (E.trum === 'twin_core' && !E.con && E.hp < E.max * 0.3) PX.ve(ctx, REN.img('fx_st_giapvo'), x, y, co * 0.8, co * 0.8, 0, 0.55 + 0.2 * Math.sin(t * 4));
       // (bỏ 2 trái tim "sẽ mất nếu lọt" cạnh thanh máu trùm — người dùng 08/11: không cần; số tim còn lại đã có trên thanh trên + vòng lõi)
+    }
+    ctx.globalAlpha = 1;
+  },
+  // ---------- PRISM WARDEN: vỏ lăng kính (người dùng 10/11: "chả hiểu con boss này đang làm gì") ----------
+  //  Luật (trum.js, KHÔNG đổi): khiên bật = −90% sát thương; trúng đủ N LOẠI ụ khác nhau (3, từ đợt 40: 4) → vỡ; ~7 s sau niệm 1,4 s rồi bật lại.
+  //  Hình: khiên bật = vỏ lục giác trong suốt ôm thân, viền sáng (thân vẫn thấy) + N viên kim cương dưới thân (sáng = loại ụ đã trúng) ·
+  //  đang niệm = viền lục giác chớp 2,5 Hz co dần vào thân · vỡ = vỏ bung ra mờ dần · trúng lúc có khiên = loé khúc xạ nhỏ ở mép phía ụ bắn
+  //  (đòn bị bẻ cong, chỉ 10% lọt qua). Ảnh vỏ nướng sẵn 1 lần mỗi cỡ (không filter / shadowBlur), loé ≤ 3 mỗi trùm.
+  LK: { R: 0.56, MAU: '#7ff0ff', LOE: 0.2, LOE_N: 3 },
+  _lk: new WeakMap(), // E → { on, tVo, loe: [{ t, g }] }
+  lkTT(E) { let s = this._lk.get(E); if (!s) { s = { on: !!(E.khien && E.khien.on), tVo: -9, loe: [] }; this._lk.set(E, s); } return s; },
+  voLK(R, vien) { // ảnh vỏ lục giác (đỉnh nhọn trên/dưới), R = bán kính logic → px thật theo REN.s × dpr
+    const k = (typeof REN !== 'undefined' ? REN.s * REN.dpr : 1) || 1, Rp = Math.max(8, Math.round(R * k / 4) * 4), key = Rp + (vien ? 'v' : 'f');
+    const M = this._lkAnh || (this._lkAnh = {}); if (M[key]) return M[key];
+    const n = Math.ceil(Rp * 2 + 8), c = document.createElement('canvas'); c.width = c.height = n;
+    const g = c.getContext('2d'), o = n / 2, P = [];
+    for (let i = 0; i < 6; i++) { const a = -Math.PI / 2 + i * Math.PI / 3; P.push([o + Math.cos(a) * Rp, o + Math.sin(a) * Rp * 1.04]); }
+    const duong = () => { g.beginPath(); P.forEach((p, i) => (i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1]))); g.closePath(); };
+    if (!vien) {
+      const lg = g.createLinearGradient(o - Rp, o - Rp, o + Rp, o + Rp);
+      lg.addColorStop(0, 'rgba(200,255,255,0.20)'); lg.addColorStop(0.45, 'rgba(127,240,255,0.05)'); lg.addColorStop(1, 'rgba(190,140,255,0.16)');
+      duong(); g.fillStyle = lg; g.fill();
+      g.strokeStyle = 'rgba(220,255,255,0.28)'; g.lineWidth = Math.max(1, Rp * 0.025); g.beginPath(); // mặt cắt lăng kính: 3 cạnh từ tâm lệch tới đỉnh xen kẽ
+      const cx = o - Rp * 0.08, cy = o - Rp * 0.1; for (const j of [0, 2, 4]) { g.moveTo(cx, cy); g.lineTo(P[j][0], P[j][1]); } g.stroke();
+      g.fillStyle = 'rgba(255,255,255,0.22)'; g.beginPath(); g.moveTo(P[5][0], P[5][1]); g.lineTo(P[0][0], P[0][1]); g.lineTo(cx, cy); g.closePath(); g.fill(); // mặt sáng trên-trái
+    }
+    duong(); g.lineJoin = 'round';
+    g.strokeStyle = 'rgba(127,240,255,0.95)'; g.lineWidth = Math.max(2, Rp * 0.07); g.stroke();
+    g.strokeStyle = 'rgba(255,255,255,0.95)'; g.lineWidth = Math.max(1, Rp * 0.025); g.stroke();
+    return (M[key] = c);
+  },
+  loe(E, o) { // trúng lúc có khiên → ghi 1 loé khúc xạ (chỉ hiển thị)
+    const s = this.lkTT(E), t = this.t(), L = s.loe;
+    if (L.length && t - L[L.length - 1].t < 0.07) return;
+    const T = o && o.T !== undefined ? o.T : (typeof G !== 'undefined' ? G.dangBan : null), B = T && G.ban[T.ban], c = B && B.o && B.o[T.o];
+    const g = c ? Math.atan2(c.y - E.y, c.x - E.x) : Math.PI / 2;
+    if (L.length >= this.LK.LOE_N) L.shift();
+    L.push({ t, g });
+  },
+  veLangKinh(ctx, E, K, x, y, co, t) {
+    const s = this.lkTT(E), R = co * this.LK.R;
+    if (s.on && !K.on) s.tVo = t; s.on = K.on;
+    const ve = (im, sc, al) => { if (!im || al <= 0.01) return; const w = R * 2 * sc * (im.width / (im.width - 8)); ctx.globalAlpha = Math.min(1, al); ctx.drawImage(im, x - w / 2, y - w / 2, w, w); };
+    if (K.on) {
+      ve(this.voLK(R, false), 1, 0.82 + 0.1 * Math.sin(t * 2.2));
+      // loé khúc xạ: mặt lục giác sáng ở mép phía ụ bắn + 3 tia lệch hướng (lam / tím / vàng) — đòn bị bẻ cong
+      ctx.globalCompositeOperation = 'lighter';
+      for (const l of s.loe) {
+        const e = (t - l.t) / this.LK.LOE; if (e < 0 || e >= 1) continue;
+        const ex = x + Math.cos(l.g) * R * 0.92, ey = y + Math.sin(l.g) * R * 0.92, a = 1 - e;
+        ctx.globalAlpha = a; ctx.lineWidth = 1.6; ctx.lineCap = 'round';
+        const MAU = ['#7ff0ff', '#d58cff', '#ffe27a'];
+        for (let j = 0; j < 3; j++) {
+          const gj = l.g + (j - 1) * 0.55, L = R * (0.25 + 0.35 * e);
+          ctx.strokeStyle = MAU[j]; ctx.beginPath(); ctx.moveTo(ex, ey); ctx.lineTo(ex + Math.cos(gj) * L, ey + Math.sin(gj) * L); ctx.stroke();
+        }
+        ctx.fillStyle = '#ffffff'; ctx.globalAlpha = a * 0.9; const r = R * 0.16 * (1 - 0.4 * e);
+        ctx.beginPath(); for (let i = 0; i < 6; i++) { const q = i * Math.PI / 3; ctx[i ? 'lineTo' : 'moveTo'](ex + Math.cos(q) * r, ey + Math.sin(q) * r); } ctx.closePath(); ctx.fill();
+      }
+      ctx.globalCompositeOperation = 'source-over';
+      // N viên kim cương dưới thân: sáng = loại ụ đã trúng (đủ N → vỡ)
+      const n = K.can, d = 11, y0 = y + R * 0.8; // trong mép dưới vỏ (dưới nữa là hàng ụ)
+      for (let i = 0; i < n; i++) {
+        const px = x + (i - (n - 1) / 2) * d, da = i < K.ds.size;
+        ctx.globalAlpha = 0.95; ctx.beginPath(); ctx.moveTo(px, y0 - 5); ctx.lineTo(px + 4, y0); ctx.lineTo(px, y0 + 5); ctx.lineTo(px - 4, y0); ctx.closePath();
+        ctx.fillStyle = da ? '#ffffff' : 'rgba(10,30,50,0.85)'; ctx.fill(); ctx.lineWidth = 1.3; ctx.strokeStyle = this.LK.MAU; ctx.stroke();
+      }
+    } else if (E.bao) { // đang niệm dựng lại khiên: viền chớp 2,5 Hz, co từ 1,35 → 1 vào thân
+      const u = clamp(E.bao.t / (E.bao.song || 1.4), 0, 1), bat = Math.floor(E.bao.t / 0.2) % 2 === 0;
+      ve(this.voLK(R, true), 1.35 - 0.35 * u, bat ? 0.95 : 0.3);
+    } else { // vừa vỡ: vỏ bung ra, mờ dần 0,35 s
+      const e = (t - s.tVo) / 0.35; if (e >= 0 && e < 1) ve(this.voLK(R, true), 1 + 0.45 * e, 1 - e);
     }
     ctx.globalAlpha = 1;
   },
@@ -276,7 +335,11 @@ const TVF = {
       return _bung.apply(this, arguments);
     };
   }
-  if (typeof batDau === 'function') { const _bd = batDau; batDau = function () { TVF.xoaHet(); return _bd.apply(this, arguments); }; }
+  if (typeof batDau === 'function') { const _bd = batDau; batDau = function () { TVF.xoaHet(); TVF._lk = new WeakMap(); return _bd.apply(this, arguments); }; }
+  if (typeof trung === 'function') { // Prism Warden: trúng lúc khiên bật → loé khúc xạ (chỉ hiển thị, không đổi sát thương)
+    const _tr = trung;
+    trung = function (E, dmg, o) { const on = !!(E && E.khien && E.khien.on && !E.chet); const r = _tr.apply(this, arguments); if (on) { try { TVF.loe(E, o); } catch (e) { } } return r; };
+  }
   // vẽ: vòng chân trùm (dưới) + pha trùm (trên) quanh veQuai; RAGE/khiên ô (dưới ụ) + dấu báo chiêu (trên ụ) quanh veO; nổ/vỡ sau hiệu ứng
   const _vq = REN.veQuai;
   REN.veQuai = function (ctx) { try { TVF.veVongTrum(ctx); } catch (e) { } const r = _vq.apply(this, arguments); try { TVF.veTrenTrum(ctx); } catch (e) { } return r; };
