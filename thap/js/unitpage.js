@@ -605,9 +605,10 @@ const UP = {
     return this.o('Fire rate', t, d);
   },
   muc(n, ten, noi) { return '<section class="up-muc"><h3>' + ten + '</h3>' + noi + '</section>'; },
+  // thẻ "đi cùng / khắc chế": khung + màu tên theo BẬC của chính ụ đó (data-bac → viền o_vien_<bậc>, css/ui-anime.css) — trước mọi thẻ đều khung vàng ua_o
   theNho(id, ly) {
     const r = G.rosterMap[id], m = r ? TIERS[r.bac].mau : '#9aa6b4';
-    return '<button class="up-the" data-up="mo" data-id="' + id + '" style="--c:' + m + '"><img src="' + portraitOf(id) + '" alt=""><b>' + upEsc(upTen(id)) + '</b><span>' + upEsc(ly) + '</span></button>';
+    return '<button class="up-the" data-up="mo" data-id="' + id + '"' + (r && TIERS[r.bac] ? ' data-bac="' + r.bac + '"' : '') + ' style="--c:' + m + '"><img src="' + portraitOf(id) + '" alt=""><b>' + upEsc(upTen(id)) + '</b><span>' + upEsc(ly) + '</span></button>';
   },
   growHTML(id) {
     // ụ module (claude/u-module): bệ riêng + đầu mới = icon nho/<id> dựng sẵn (không ghép đầu mới lên bệ chung); ảnh dạng _s riêng thì giữ như cũ
