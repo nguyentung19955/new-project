@@ -159,7 +159,7 @@ const KTUI = {
   // ---------- SỰ KIỆN ----------
   ve_sk() {
     const id = KT.suKien(), e = KT.sk(), ds = KT.skDs(), cuoi = KTC.sk[KTC.sk.length - 1][0];
-    let h = '<div class="kt-skd"><img class="kt-skd-bn" src="' + this.a(KTA.bannerSk) + '" alt="">' + (id ? OT.mini(id) : '') + '<div><small>FEATURED TURRET</small><b>' + (id ? this.ten(id) : '') + '</b><small>ENDS IN <span data-dh="tuan"></span></small></div></div>';
+    let h = '<div class="kt-skd"><img class="kt-skd-bn" src="' + this.a(KTA.bannerSk) + '" alt="">' + (id ? OT.mini(id) : '<i class="ot-mini kt-skd-khoa"><img src="' + this.a('ua_ic_khoa') + '" alt=""></i>') + '<div><small>FEATURED TURRET</small><b>' + (id ? this.ten(id) : 'Legendary') + '</b>' + (id ? '' : '<small>' + (typeof TT !== 'undefined' && TT.dk ? 'Unlocks at ' + TT.dk('vang') : '') + '</small>') + '<small>ENDS IN <span data-dh="tuan"></span></small></div></div>';
     h += '<div class="kt-skp"><b>' + this.so(e.diem) + '</b><small>EVENT POINTS</small>' + TBUI.thanh({ n: Math.min(e.diem, cuoi), can: cuoi, max: false }) + '<p class="kt-chu">Every battle in any mode: wave reached + 10 for a win + 5 per boss (max ' + KTC.skMax + ').</p></div>';
     for (const m of ds) h += this.hangNv(this.rTen2(m.r), { t: Math.min(e.diem, m.d), can: m.d, xong: m.xong, da: m.da }, m.r, 'kt-sk', m.i);
     return h;
