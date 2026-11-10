@@ -77,7 +77,7 @@ const CD = {
     try { for (const id in (MH.st().tr || {})) ha[id] = 1; } catch (e) { }
     try { for (const id in (TT.st().trk || {})) ha[id] = 1; } catch (e) { }
     try { for (const k in this.st().san.da) ha[k.split(':')[0]] = 1; } catch (e) { }
-    return this.dsTrum().filter(id => ha[id]);
+    return this.dsTrum().filter(id => ha[id] || ADMIN.la());
   },
 
   // ---------- cấu hình trận ----------
@@ -110,7 +110,7 @@ const CD = {
   },
 
   // ---------- trạng thái từng chế độ ----------
-  thapMo(t) { return t >= 1 && t <= CDC.thap.so && t <= this.st().thap.max + 1; },
+  thapMo(t) { return t >= 1 && t <= CDC.thap.so && (t <= this.st().thap.max + 1 || ADMIN.la()); },
   thapKe() { return Math.min(CDC.thap.so, this.st().thap.max + 1); },
   sanSt() {
     const sa = this.st().san, ng = KT.ngay(), tu = KT.tuan();
@@ -126,8 +126,8 @@ const CD = {
     sa.mua++; KT.luu(); return true;
   },
   trumTuan() { const ds = this.dsTrum(); return ds.length ? ds[((KT.tuan() % ds.length) + ds.length) % ds.length] : null; },
-  bacMo(id) { const da = this.st().san.da; let b = 1; while (b < CDC.san.bac && da[id + ':' + b]) b++; return b; }, // bậc cao nhất được chọn
-  thuMo(i) { return i === 1 || !!this.st().thu.da[i - 1]; },
+  bacMo(id) { if (ADMIN.la()) return CDC.san.bac; const da = this.st().san.da; let b = 1; while (b < CDC.san.bac && da[id + ':' + b]) b++; return b; }, // bậc cao nhất được chọn
+  thuMo(i) { return i === 1 || !!this.st().thu.da[i - 1] || ADMIN.la(); },
   thuKe() { for (let i = 1; i <= CDC.thu.length; i++) if (!this.st().thu.da[i]) return i; return CDC.thu.length; },
 
   // ---------- vào trận ----------
@@ -447,7 +447,7 @@ const CDUI = {
 
   // ---- khoá tính năng (tientrinh.js TTC.tn) ----
   Object.assign(TTC.tn, { thu: { hd: 1, ten: 'QUICK TRIALS' }, thap: { cap: 5, ten: 'TOWER CLIMB' }, san: { cap: 0, trum: 3, ten: 'BOSS HUNT' } });
-  { const g = TT.tnMo; TT.tnMo = function (k) { if (k === 'san') { try { return !!this.st().giuTn.san || CD.trumHa().length >= TTC.tn.san.trum; } catch (e) { return false; } } return g.apply(this, arguments); }; }
+  { const g = TT.tnMo; TT.tnMo = function (k) { if (k === 'san') { try { return ADMIN.la() || !!this.st().giuTn.san || CD.trumHa().length >= TTC.tn.san.trum; } catch (e) { return false; } } return g.apply(this, arguments); }; }
   { const g = TT.tnChu; TT.tnChu = function (k) { return k === 'san' ? 'Unlocks after defeating ' + TTC.tn.san.trum + ' different bosses' : g.apply(this, arguments); }; }
   { const g = TTUI.tnNhan; TTUI.tnNhan = function (k) { return k === 'san' ? '<b>' + TTC.tn.san.trum + ' BOSSES</b>' : g.apply(this, arguments); }; }
 

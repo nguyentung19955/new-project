@@ -3,6 +3,11 @@
 > Game merge tower-defense trong `thap/`. Luật game và bàn giao: `docs/demo-hop-tuong/ban-giao/BAN-GIAO.md`, luật code/hình: `thap/QUY-TAC-HINH.md`.
 > Mỗi session thêm một mục `## claude/<tên-nhánh> — …` ở CUỐI file (file gộp kiểu union, không xung đột).
 
+## claude/demo-hop-tuong — quyền ADMIN (10/11)
+- Tài khoản Google admin (email đã xác minh, ghi trong `thap/js/admin.js`): bỏ mọi khoá (chế độ, màn, cửa hàng, vòng quay, lò rèn, Ấn Vàng/Đỏ, Leo Tháp, Săn Trùm, Thử thách, Vô tận, thử thách tuần, online, chỉ huy) và coi như sở hữu đủ 96 ụ.
+- Chỉ là "ảo": không ghi đè dữ liệu sở hữu / bản sao / cấp thẻ, không cộng tài nguyên; đăng xuất về đúng như cũ. Nhãn ADMIN ở chip phi công + hồ sơ.
+- Kiểm phía máy khách (sửa JS là bật được) — quyền thật ở server để giai đoạn F. Chi tiết: `docs/demo-hop-tuong/tuvan/admin/ADMIN.md`. Kiểm: `tools/thap-kt-admin.js`.
+
 ## claude/demo-hop-tuong — nhãn NEW cho ụ mới nhận (10/11)
 - Nhận được ụ lần đầu (mọi nguồn: rương, Rương Trận, quà hướng dẫn/Hành trình, Ấn Vàng/Ấn Đỏ, vòng quay, thưởng chế độ…) → thẻ hiện nhãn NEW! ở Xếp bộ bài và Bộ sưu tập; nút DECK + COLLECTION ở HOME có chấm đỏ khi còn ụ mới chưa xem.
 - Nhãn mất khi chạm thẻ (bộ bài), mở xem nhanh / trang ụ, hoặc đưa ụ vào bộ bài. Lưu ở `turret_kt.sh.moi` (khoá con sẵn có, trước đây gần như không được ghi do thứ tự trong `KT.themBan`); người chơi cũ không bị NEW hàng loạt.

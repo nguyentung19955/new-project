@@ -110,7 +110,7 @@ const TT = {
 
   // ---------- khoá bậc ----------
   bacMoVoi(b, L) { const c = TTC.moBac[b] | 0; return L >= c && (b !== 'do' || this.kyLuc() >= TTC.doWave); },
-  bacMo(b) { return this.bacMoVoi(b, this.cap()); },
+  bacMo(b) { return ADMIN.la() || this.bacMoVoi(b, this.cap()); },
   khoa(id) {
     if (!id || typeof SKILLS === 'undefined' || !SKILLS[id]) return false;
     if (typeof SH !== 'undefined') return !SH.co(id); // gacha thu thập: chỉ ụ ĐÃ SỞ HỮU dùng được (sohuu.js; giu + ụ có bản sao + ụ khởi đầu)
@@ -138,7 +138,7 @@ const TT = {
   hdXong() { try { return typeof HD === 'undefined' || HD.moKhoa(); } catch (e) { return true; } },
   tnMo(k) {
     const c = TTC.tn[k]; if (!c) return true;
-    if (this.st().giuTn[k]) return true;
+    if (this.st().giuTn[k] || ADMIN.la()) return true;
     if (c.hd) return this.hdXong() || this.cap() >= 2;
     if (c.do) return this.bacMo('do');
     return this.cap() >= c.cap;
@@ -207,7 +207,7 @@ const TT = {
   },
 
   // ---------- nhiệm vụ tuần ----------
-  nvtMo() { return this.cap() >= TTC.nvtCap; },
+  nvtMo() { return ADMIN.la() || this.cap() >= TTC.nvtCap; },
   nvtSt() { const t = this.st(), w = KT.tuan(); if (t.nvt.tuan !== w) t.nvt = { tuan: w, tien: {}, nhan: {}, bonus: 0 }; return t.nvt; },
   nvtDs() { const e = this.nvtSt(); return TTC.nvt.map(q => { const n = Math.min(q.can, e.tien[q.id] | 0); return Object.assign({}, q, { t: n, xong: n >= q.can, da: !!e.nhan[q.id] }); }); },
   nvtCong(id, v) { if (!this.nvtMo() || !v) return; const e = this.nvtSt(); e.tien[id] = (e.tien[id] | 0) + v; },

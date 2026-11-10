@@ -358,7 +358,7 @@ const CDDUI = {
 
   // ---- khoá tính năng ----
   Object.assign(TTC.tn, { vt: { cap: 0, ten: 'ENDLESS' } }); if (CDDC.tw.bat) TTC.tn.tw = { cap: CDDC.tw.cap, ten: 'WEEKLY CHALLENGE' };
-  { const g = TT.tnMo; TT.tnMo = function (k) { if (k === 'vt') { try { return !!this.st().giuTn.vt || VOTAN.moKhoa(); } catch (e) { return false; } } return g.apply(this, arguments); }; }
+  { const g = TT.tnMo; TT.tnMo = function (k) { if (k === 'vt') { try { return ADMIN.la() || !!this.st().giuTn.vt || VOTAN.moKhoa(); } catch (e) { return false; } } return g.apply(this, arguments); }; }
   { const g = TT.tnChu; TT.tnChu = function (k) { return k === 'vt' ? 'Unlocks after clearing Tower Climb floor ' + CDDC.vt.tang : g.apply(this, arguments); }; }
   { const g = TTUI.tnNhan; TTUI.tnNhan = function (k) { return k === 'vt' ? '<b>FLOOR ' + CDDC.vt.tang + '</b>' : g.apply(this, arguments); }; }
 
