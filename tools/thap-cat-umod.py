@@ -44,6 +44,9 @@ KHONG_KHOP = {'set', 'pandora', 'bua', 'thanhdia'}
 REL_TB = 0.90
 # phần phụ vẽ NGAY TẠI TRỤC trong game (ô 1 có nó ở giữa): set = vòng cuộn Tesla, mauhut = trái tim trong vòng, combo = lõi sáng
 PHU_GIUA = {'set': 'duoi', 'mauhut': 'duoi', 'combo': 'tren'}
+# bệ GIỮ cỡ bệ chung dù đầu (kèm mũi tên xoay) to phải thu (f < 1): chỉ đầu thu, bệ không nhỏ hơn các ụ cùng bậc.
+# xaotron (anime 10/11): 2 mũi tên đổi chỗ quanh khối rune làm f = 0,765 → bệ 0,78 thay vì ~1,02 như các ụ Tím khác.
+BE_GIU = {'xaotron'}
 
 
 def nguon(i):
@@ -253,8 +256,9 @@ def mot(i):
     # --- BỆ
     half = max(px - x0, x1 - px, py - y0, y1 - py) + 3
     de = dat_giua(c2, px, py, half)
-    kde = 2 * half / bmax * f                                           # render: SD = SB × kde
-    nde = int(round(PX_DE * 2 * half * g))
+    fb = 1.0 if i in BE_GIU else f                                      # BE_GIU: bệ không thu theo đầu
+    kde = 2 * half / bmax * fb                                          # render: SD = SB × kde
+    nde = int(round(PX_DE * 2 * half * g / f * fb))
     im_de = luu(thu(de, nde), i + '_de')
     luu_vien(i, im_de)
     # --- ĐẦU: khung vuông tâm = trục, nửa cạnh = rH + 3
