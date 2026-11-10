@@ -120,7 +120,7 @@ html.ua body #wrap #chon.bst #chon-luoi .luoi { grid-template-columns: repeat(4,
 html.ua body #wrap #chon #chon-luoi .c.ot { aspect-ratio: .6766 !important; height: auto !important; overflow: visible !important; contain-intrinsic-size: auto 72px auto 106px; }
 html.ua body #wrap #chon #chon-luoi .c.ot > img.kh, html.ua body #wrap #chon #chon-luoi .c.ot > .ot-p { display: none !important; }
 html.ua body #wrap #chon #chon-luoi .c.ot > img.ov.ov { position: absolute !important; left: -8.82% !important; top: -28.12% !important; width: 117.65% !important; height: 131.4% !important; max-width: none !important; max-height: none !important;
-  margin: 0 !important; z-index: 4 !important; pointer-events: none !important; object-fit: fill !important; transform: none !important; scale: none !important; clip-path: none !important; filter: none !important; content: url(../assets/ha_khung_trang.webp?v=772184c5); }
+  margin: 0 !important; z-index: 4 !important; pointer-events: none !important; object-fit: fill !important; transform: none !important; scale: none !important; clip-path: none !important; filter: none !important; content: url(../assets/ha_khung_trang.webp?v=84a32e9c); }
 
 
 
@@ -147,11 +147,11 @@ html.ua body #wrap #chon #chon-bo .o-bo.ot > img:not(.ov):not(.kh):not(.gl):not(
 html.ua body #wrap #chon #chon-bo .o-bo.ot > img.kh, html.ua body #wrap #chon #chon-bo .o-bo.ot > .ot-p { display: none !important; }
 /* thẻ có viền tràn: bỏ content-visibility (nó cắt vẽ ra ngoài hộp) */
 html.ua body #wrap #chon #chon-luoi .c.ot { content-visibility: visible !important; }
-html.ua body #wrap #chon #chon-bo .o-bo.ot > img.ov.ov { content: url(../assets/ha_khung_trang.webp?v=772184c5); }
-html.ua body #wrap #chon #chon-luoi .c.ot[data-otb="xanh"] > img.ov.ov, html.ua body #wrap #chon #chon-bo .o-bo.ot[data-otb="xanh"] > img.ov.ov { content: url(../assets/ha_khung_xanh.webp?v=5cbca510); }
-html.ua body #wrap #chon #chon-luoi .c.ot[data-otb="tim"] > img.ov.ov, html.ua body #wrap #chon #chon-bo .o-bo.ot[data-otb="tim"] > img.ov.ov { content: url(../assets/ha_khung_tim.webp?v=85f75157); }
-html.ua body #wrap #chon #chon-luoi .c.ot[data-otb="vang"] > img.ov.ov, html.ua body #wrap #chon #chon-bo .o-bo.ot[data-otb="vang"] > img.ov.ov { content: url(../assets/ha_khung_vang.webp?v=08db6d20); }
-html.ua body #wrap #chon #chon-luoi .c.ot[data-otb="do"] > img.ov.ov, html.ua body #wrap #chon #chon-bo .o-bo.ot[data-otb="do"] > img.ov.ov { content: url(../assets/ha_khung_do.webp?v=4fa2f176); }
+html.ua body #wrap #chon #chon-bo .o-bo.ot > img.ov.ov { content: url(../assets/ha_khung_trang.webp?v=84a32e9c); }
+html.ua body #wrap #chon #chon-luoi .c.ot[data-otb="xanh"] > img.ov.ov, html.ua body #wrap #chon #chon-bo .o-bo.ot[data-otb="xanh"] > img.ov.ov { content: url(../assets/ha_khung_xanh.webp?v=82945a87); }
+html.ua body #wrap #chon #chon-luoi .c.ot[data-otb="tim"] > img.ov.ov, html.ua body #wrap #chon #chon-bo .o-bo.ot[data-otb="tim"] > img.ov.ov { content: url(../assets/ha_khung_tim.webp?v=12593bfd); }
+html.ua body #wrap #chon #chon-luoi .c.ot[data-otb="vang"] > img.ov.ov, html.ua body #wrap #chon #chon-bo .o-bo.ot[data-otb="vang"] > img.ov.ov { content: url(../assets/ha_khung_vang.webp?v=0f43219b); }
+html.ua body #wrap #chon #chon-luoi .c.ot[data-otb="do"] > img.ov.ov, html.ua body #wrap #chon #chon-bo .o-bo.ot[data-otb="do"] > img.ov.ov { content: url(../assets/ha_khung_do.webp?v=f86da75b); }
 html.ua body #wrap #chon #chon-bo { padding-top: 30px !important; }
 /* đầu màn (BUILD DECK / COLLECTION): tấm chàm vát góc thay băng thép */
 html.ua body #wrap #chon .dk-dau { border: 0 solid transparent !important; border-image: var(--ua-t) / 16px 20px stretch !important; padding: 0 6px !important; }
@@ -198,10 +198,10 @@ html.ua body #wrap #chon .dkd-nhan i { font-style: normal; color: #B8C3E6; }
 html.ua body #wrap #chon #chon-luoi .c.ot.tt-khoa > img.anh, html.ua body #wrap #chon #chon-luoi .c.ot.khoa > img.anh { filter: grayscale(.6) brightness(.78) !important; }
 html.ua body #wrap #chon #chon-luoi .c.tt-khoa .tb-sb { display: none !important; }
 html.ua body #wrap #chon #chon-luoi .c.tt-khoa .tb-w { opacity: 1 !important; }
-html.ua body #wrap #chon #chon-luoi .c.ot.tt-khoa > .ten { display: block !important; position: absolute !important; left: 9% !important; right: 9% !important; bottom: 4% !important; top: auto !important; height: 9% !important; z-index: 9 !important;
-  margin: 0 !important; padding: 0 !important; background: none !important; border: 0 !important; text-align: center !important; line-height: 1.1 !important; display: block !important; padding-top: 1px !important;
-  font: 700 10px/1.1 var(--f-chu) !important; color: #F7F8FF !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis; text-shadow: 0 1px 1px #000 !important; transform: none !important; }
-html.ua body #wrap #chon.bst #chon-luoi .c.ot.tt-khoa > .ten { font-size: 11px !important; }
+html.ua body #wrap #chon #chon-luoi .c.ot.tt-khoa > .ten { display: block !important; position: absolute !important; left: 9% !important; right: 9% !important; bottom: 4% !important; top: auto !important; height: 13px !important; z-index: 9 !important;
+  margin: 0 !important; padding: 0 !important; background: none !important; border: 0 !important; text-align: center !important; line-height: 13px !important; display: block !important; padding-top: 0 !important;
+  font: 700 10px/13px var(--f-chu) !important; color: #F7F8FF !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis; text-shadow: 0 1px 1px #000 !important; transform: none !important; }
+html.ua body #wrap #chon.bst #chon-luoi .c.ot.tt-khoa > .ten { font-size: 11px !important; height: 14px !important; line-height: 14px !important; }
 html.ua body #wrap #chon #chon-luoi .c .tt-khoa-n { top: auto !important; bottom: 15% !important; left: 4% !important; right: 4% !important; height: auto; padding: 4px 0 !important; flex-direction: column !important; justify-content: center; gap: 1px !important;
   border: 0 solid transparent; border-image: var(--ua-p) / 9px 10px stretch; z-index: 9 !important; }
 html.ua body #wrap #chon #chon-luoi .c .tt-khoa-n b { font: 800 10.5px/1.05 var(--f-hien) !important; color: #FFB866 !important; letter-spacing: 0 !important; white-space: nowrap; }
@@ -245,11 +245,11 @@ html.ua body #wrap #up .up-spec div .up-tang { bottom: 12px !important; right: 1
 /* xem nhanh (bảng trượt khi chạm thẻ): chân dung thẻ dọc khung bậc như lưới */
 html.ua body #wrap .hm-xem-po.ot { width: 80px !important; height: auto !important; aspect-ratio: .6766; margin-top: 18px; overflow: visible !important; }
 html.ua body #wrap .hm-xem-po.ot > img:first-child:not(.ov) { position: absolute; left: 7.2% !important; top: 3.3% !important; width: 85.6% !important; height: 82% !important; }
-html.ua body #wrap .hm-xem-po.ot > img.ov { position: absolute !important; left: -8.82% !important; top: -28.12% !important; width: 117.65% !important; height: 131.4% !important; max-width: none !important; object-fit: fill !important; z-index: 2; pointer-events: none; content: url(../assets/ha_khung_trang.webp?v=772184c5); }
-html.ua body #wrap .hm-xem-po.ot[data-otb="xanh"] > img.ov { content: url(../assets/ha_khung_xanh.webp?v=5cbca510); }
-html.ua body #wrap .hm-xem-po.ot[data-otb="tim"] > img.ov { content: url(../assets/ha_khung_tim.webp?v=85f75157); }
-html.ua body #wrap .hm-xem-po.ot[data-otb="vang"] > img.ov { content: url(../assets/ha_khung_vang.webp?v=08db6d20); }
-html.ua body #wrap .hm-xem-po.ot[data-otb="do"] > img.ov { content: url(../assets/ha_khung_do.webp?v=4fa2f176); }
+html.ua body #wrap .hm-xem-po.ot > img.ov { position: absolute !important; left: -8.82% !important; top: -28.12% !important; width: 117.65% !important; height: 131.4% !important; max-width: none !important; object-fit: fill !important; z-index: 2; pointer-events: none; content: url(../assets/ha_khung_trang.webp?v=84a32e9c); }
+html.ua body #wrap .hm-xem-po.ot[data-otb="xanh"] > img.ov { content: url(../assets/ha_khung_xanh.webp?v=82945a87); }
+html.ua body #wrap .hm-xem-po.ot[data-otb="tim"] > img.ov { content: url(../assets/ha_khung_tim.webp?v=12593bfd); }
+html.ua body #wrap .hm-xem-po.ot[data-otb="vang"] > img.ov { content: url(../assets/ha_khung_vang.webp?v=0f43219b); }
+html.ua body #wrap .hm-xem-po.ot[data-otb="do"] > img.ov { content: url(../assets/ha_khung_do.webp?v=f86da75b); }
 /* nút trong bảng trượt: chữ dài (VI "THÊM VÀO BỘ BÀI") vừa nút */
 html.ua body #wrap .hm-tam .hm-cai2 .hm-nut2 { font-size: 13.5px !important; letter-spacing: .02em !important; padding: 0 16px !important; white-space: nowrap; }
 
@@ -351,3 +351,38 @@ html.ua body #wrap .hm-tam-loc .hm-chips.c3 .hm-chip, html.ua body #hm-mo .hm-ta
 
 /* 09/11: người dùng — màn XẾP BỘ BÀI không có nút PLAY (chơi từ HOME) */
 html.ua #chon .dk-choi, #chon #nut-vao.dk-choi { display: none !important; }
+
+/* 10/11 rà soát giao diện — bảng BẮN THỬ (trang ụ): bỏ khung thép xám góc xanh lá + nút thép → phong cách Royal Twilight.
+   Khung = ô vát góc viền vàng (ua_o), nền khung chàm; nút 1★/4★/7★ (và dạng) = pill chàm / pill cyan khi chọn;
+   nút dừng = nút tròn ua_nut_tron + 2 viên cyan (ha_ic_dung2, như HUD trận), đặt ở góc dưới phải DƯỚI pha lê lõi (khung cắt kéo dài tới y 592). */
+html.ua #up .up-tv { border: 0 solid transparent !important; border-image: var(--ua-o) / 14px 16px stretch !important; padding: 10px !important; background: none !important; }
+html.ua #up .up-tv .g { display: none !important; }
+html.ua #up .up-tv-khung { background: #10162F !important; }
+html.ua #up .up-tv-chu b { color: #71E4EE !important; }
+html.ua #up .up-tv > .up-tv-sao { color: #FFB866 !important; left: 16px !important; bottom: 16px !important; }
+html.ua #up .up-sao-chon button { border: 0 solid transparent !important; border-image: var(--ua-p) / 14px 20px stretch !important; background: none !important; color: #F7F8FF !important; text-shadow: 0 1px 2px #000 !important; }
+html.ua #up .up-sao-chon button.chon { border-image: var(--ua-pb) / 14px 20px stretch !important; color: #172040 !important; text-shadow: none !important; }
+html.ua #up .up-phat { right: 14px !important; bottom: 14px !important; width: 38px !important; height: 40px !important; border: 0 !important; border-radius: 0 !important;
+  background: url(../assets/ua_nut_tron.webp?v=e7aded9e) center / 100% 100% no-repeat !important; }
+html.ua #up .up-phat::before { content: '' !important; display: block !important; position: absolute !important; left: 50% !important; top: 50% !important; width: 18px !important; height: 15px !important; margin: -7.5px 0 0 -9px !important;
+  border: 0 !important; background: url(../assets/ha_ic_dung2.png?v=3d85163b) center / contain no-repeat !important; }
+html.ua #up .up-phat::after { content: none !important; display: none !important; }
+html.ua #up .up-phat.dung::before { width: 20px !important; height: 14px !important; margin: -7px 0 0 -9px !important; background-image: url(../assets/duong_mui.png?v=bd82535a) !important; }
+/* 10/11 rà soát: bảng "TURRETS LOCKED" (xếp bộ bài khi chưa qua hướng dẫn) — tấm chàm lớn ua_tam2 thay khung thép khung_tt; nút = chính cam (chơi) / phụ chàm (bỏ qua) */
+html.ua body #wrap #bb-khoa { border: 0 solid transparent !important; border-image: var(--ua-t2) / 22px 18px 18px 18px stretch !important; padding: 18px 16px 14px !important; gap: 8px !important; }
+html.ua body #wrap #bb-khoa b { color: #FFB866 !important; }
+html.ua body #wrap #bb-khoa span { color: #B8C3E6 !important; }
+html.ua body #wrap #bb-khoa .nut-xep { height: 46px !important; min-width: 140px; padding: 0 14px !important; border: 0 solid transparent !important; border-image: var(--ua-b) / 15px 25px stretch !important; background: none !important; color: #F7F8FF !important; text-shadow: 0 1px 2px #000 !important; font-size: 12px !important; }
+html.ua body #wrap #bb-khoa .nut-xep[data-act="hd-choi"] { border-image: var(--ua-a) / 19px 36px stretch !important; color: #172040 !important; text-shadow: none !important; }
+/* 10/11 rà soát: badge NEW! (gacha thu thập, sohuu.css) vẽ bằng gradient hồng + nhịp phóng liên tục → pill cyan anime (ua_pill_bat), đứng yên (đỡ nóng máy) */
+html.ua .sh-moi, html.ua #chon #chon-luoi .c.sh-moi-c::after { background: none !important; box-shadow: none !important; border-radius: 0 !important; animation: none !important;
+  border: 0 solid transparent !important; border-image: var(--ua-pb) / 7px 9px stretch !important; padding: 2px 7px 2px !important; color: #172040 !important; text-shadow: none !important; }
+/* dải số LUCKY SLOT trên thẻ khay trận (demkn.css): nền gradient tối vẽ code → tấm chàm vát góc anime (ua_tam) mờ nhẹ, vẫn đọc rõ số trên chân dung */
+html.ua body #wrap #bo-the .the > .cb-qua { background: none !important; border-radius: 0 !important; border: 0 solid transparent !important; border-image: var(--ua-t) / 6px 7px stretch !important; }
+html.ua #chon #chon-luoi .c.sh-moi-c::after { right: auto !important; left: 50% !important; top: 9% !important; transform: translateX(-50%) !important; } /* giữa mép trên chân dung: không đè huy hiệu LV (góc phải) / nút i (góc trái) */
+/* 10/11 rà soát: hàng CARD LV (trang ụ) — khung ua_o có mép ảnh ~12 px: thanh bản sao lòi lên mép trên, "Need 1 more copy" chạm mép dưới,
+   chữ LEVEL UP bị mép nút cắt → hàng cao hơn + đệm trên/dưới, nút cao 48 px (đủ 2 dòng trong vùng giữa của ảnh nút) */
+html.ua body #wrap #up .tb-cap { height: auto !important; min-height: 74px; padding: 11px 14px 10px !important; }
+html.ua body #wrap #up .tb-nut { height: 50px !important; width: 104px !important; padding: 6px 12px !important; gap: 0 !important; }
+html.ua body #wrap #up .tb-nut b { font-size: 13px; line-height: 15px; }
+html.ua body #wrap #up .tb-nut small { line-height: 14px; }
