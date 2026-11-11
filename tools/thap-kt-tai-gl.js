@@ -92,6 +92,7 @@ const WAVE = +(process.env.WAVE || 25), D1 = process.env.D1 || 'bocap,sinhdoi,tu
   console.error('moDau ' + JSON.stringify(kq.moDau).replace(/"/g, ''));
   await p.evaluate(() => { ketThuc = () => { }; window.__moiKhung = () => { for (const B of G.ban) { B.tim = 1e9; if (B.mana < 5000) B.mana = 99999; }
     for (const q of G.quai) if (q.trum && !window.__thay.has(q)) { window.__thay.add(q); window.__trum.push([window.__f, q.trum, G.wave]); } }; });
+  if (process.env.JS) await p.evaluate(process.env.JS); // JS="…": chạy trong trang ở mốc 0 (gỡ lỗi) · SAUJS="…": chạy cuối, in ở kq.sau
   kq.moc = []; let shotTrum = 0;
   for (let s = 10; s <= GIAY; s += 10) {
     await chay(600);

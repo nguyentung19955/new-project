@@ -6,6 +6,7 @@
 //  · trúng đòn: chớp trắng + giật lùi nhỏ có dịu; chết: nổ "pop" (phóng to + trắng + mờ dần) độc lập thời gian thực
 //  · bóng mềm dưới mỗi quái (quái bay: bóng nhỏ/nhạt theo độ cao)
 'use strict';
+const _glT = () => typeof GLR !== 'undefined' && GLR.bat && GLR.hien; // lớp WebGL đang vẽ: bản trắng của dải khung = chế độ trắng của shader (không dựng canvas trắng)
 
 // quái có dải 8 khung mới (quai_<id>_8.png / trum_<id>_8.png) — thêm id khi ảnh có trong assets/
 const QUAI8 = new Set(['bo', 'bay', 'bay_bang', 'khong_lo', 'tach', 'que_tach']);
@@ -169,7 +170,7 @@ Object.assign(REN, {
     if (bay && !dong) { ctx.globalAlpha = 0.22 * al; this.khung0(ctx, daiV, fV + 1, C * 1.035); }
     ctx.globalAlpha = al; this.khung0(ctx, daiV, fV, C);
     if (chiDai && f1 >= 0 && fr > 0.01) { ctx.globalAlpha = fr * al; this.khung0(ctx, daiV, f1, C); }
-    if (chiDai && fl > 0.02) { const w = this.coDai(wTen.ten, wTen.px, 'trang'); if (w) { ctx.globalAlpha = fl * al; this.khung0(ctx, w, fr > 0.5 && f1 >= 0 ? f1 : fV, C); } }
+    if (chiDai && fl > 0.02) { const gl = !!ctx.laGL, w = gl ? daiV : this.coDai(wTen.ten, wTen.px, 'trang'); if (w) { ctx.globalAlpha = fl * al; if (gl) ctx.trang = 1; this.khung0(ctx, w, fr > 0.5 && f1 >= 0 ? f1 : fV, C); if (gl) ctx.trang = 0; } } // WebGL: chớp trắng = chính dải đang vẽ ở chế độ trắng (GLR.x.trang) — không dựng + tải thêm 1 dải trắng cho mỗi dải (và không phải đọc ngược dải gốc đã thả bản CPU để dựng nó)
   },
   // vẽ khung f của dải (đã thu nhỏ sẵn) tại gốc toạ độ hiện tại, cỡ co
   khung0(ctx, dai, f, co) {
@@ -714,7 +715,8 @@ Object.assign(REN, {
       const sc = 1 + 0.32 * e, al = (1 - u) * (1 - u);
       ctx.save(); ctx.translate(X.x, X.y); if (X.goc) ctx.rotate(X.goc); if (X.lat < 0) ctx.scale(-1, 1);
       ctx.globalAlpha = al; this.khung0(ctx, X.dai, X.f, X.co * sc);
-      if (X.w) { ctx.globalAlpha = al * (0.9 - 0.6 * u); this.khung0(ctx, X.w, X.f, X.co * sc); }
+      const xw = ctx.laGL && X.dai ? X.dai : X.w; // WebGL: bản trắng = chính dải ở chế độ trắng
+      if (xw) { ctx.globalAlpha = al * (0.9 - 0.6 * u); if (xw === X.dai) ctx.trang = 1; this.khung0(ctx, xw, X.f, X.co * sc); if (xw === X.dai) ctx.trang = 0; }
       ctx.restore();
       if (X.t - dt <= 0) FX.vong1(X.x, X.y, X.co * 0.2, X.co * 0.9, '#ffffff', 0.25, 3);
     }
@@ -740,17 +742,17 @@ Object.assign(REN, {
           // nổ đúng hướng nhìn + đúng dải đang vẽ: chết giữa lúc tung chiêu → dải chiêu ở cỡ ×ATK_K (trước đây vẽ dải chiêu ở cỡ dải đi → trùm co lại 1/1.5 khi chết)
           const cfX = E._cdOn && this.cdCf(E);
           if (cfX && !E.trum) { // quái code: nổ từ ảnh gốc đã thu nhỏ (bộ đệm) + góc đang thấy — không dựng canvas mới mỗi con chết (đàn nho chết dồn)
-            const kq = K8[E.d.anh || E.id] || 1, gq = this.cdTen(E, cfX), aq = this.co(gq, co * kq), wq = aq && this.co(gq, co * kq, 'trang');
-            if (aq && wq) {
+            const kq = K8[E.d.anh || E.id] || 1, gq = this.cdTen(E, cfX), aq = this.co(gq, co * kq), wq = aq && !_glT() && this.co(gq, co * kq, 'trang');
+            if (aq && (wq || _glT())) {
               for (const q of [aq, wq]) { q.nf = 1; q.fm = q.width; q.gap = 0; }
               this._xac.push({ x: E.x + (E._cdOx || 0), y: E.y + (E._cdOy || 0), goc: (E._gv || 0) + (cfX.kieu === 'lan' ? E._cdA || 0 : 0), lat: 1, co: co * kq * (E._sc || 1), f: 0, t: 0, dai: aq, w: wq });
               continue;
             }
           }
           const sX = cfX && E.trum && this.cdChup(E, cfX, co, kc); // trùm vẽ bằng code: nổ đúng ảnh đang thấy
-          if (sX) { this._xac.push({ x: E.x + (E._cdOx || 0), y: E.y + (E._cdOy || 0), goc: E._gv || 0, lat: 1, co: co * kc * (E._sc || 1), f: 0, t: 0, dai: sX, w: this.toBien(sX, 'trang') }); continue; }
+          if (sX) { this._xac.push({ x: E.x + (E._cdOx || 0), y: E.y + (E._cdOy || 0), goc: E._gv || 0, lat: 1, co: co * kc * (E._sc || 1), f: 0, t: 0, dai: sX, w: _glT() ? null : this.toBien(sX, 'trang') }); continue; }
           const kX = E._kHv || 1, tX = E._tHv || ten, dX = this.coDai(tX, co * kc * kX) || dai;
-          this._xac.push({ x: E.x + (E._lechX || 0), y: E.y + (E._oy || 0), goc: E._gv || 0, lat: E._lat || 1, co: co * kc * kX * (E._sc || 1), f: E._f || 0, t: 0, dai: dX, w: this.coDai(tX, co * kc * kX, 'trang') });
+          this._xac.push({ x: E.x + (E._lechX || 0), y: E.y + (E._oy || 0), goc: E._gv || 0, lat: E._lat || 1, co: co * kc * kX * (E._sc || 1), f: E._f || 0, t: 0, dai: dX, w: _glT() ? null : this.coDai(tX, co * kc * kX, 'trang') });
         }
         continue;
       }

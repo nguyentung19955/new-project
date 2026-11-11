@@ -82,14 +82,14 @@
   // ảnh thu nhỏ 1 cỡ (REN.co): quá ngân sách khung → vẽ tạm từ ảnh gốc (người gọi luôn vẽ theo cỡ logic tự tính) + xếp dựng
   // WebGL — CỠ ĐỘNG (11/11 đêm): ảnh phóng theo hoạt ảnh (Rồng Máy đổi dạng / vỗ cánh, đầu ụ nảy…) xin MỖI KHUNG 1 cỡ điểm ảnh khác → mỗi cỡ 1 canvas + 1 lần tải texture
   //   (đo: 18 % số lần tải giữa trận). Lớp GL co giãn bằng GPU không tốn gì → cỡ CHƯA có mà đã có bản lớn hơn ≤ 9 % của cùng ảnh thì dùng bản đó (GPU thu ≤ 9 %, vẫn nét);
-  //   cùng 1 cỡ được xin 4 khung LIỀN nhau (= cỡ đứng yên) thì dựng đúng cỡ như cũ → hình lúc đứng yên không đổi. Bản 2D không chạy đoạn này.
+  //   chỉ áp cho ảnh đã có ≥ 3 cỡ (đúng là phóng động); cùng 1 cỡ được xin 4 khung LIỀN nhau (= cỡ đứng yên) thì dựng đúng cỡ như cũ → hình lúc đứng yên không đổi. Bản 2D không chạy đoạn này.
   const coGoc = REN.co, coGan = NS._coGan = new Map(), coLan = new Map(); let coTrong = 0;
   REN.co = function (ten, px, bien) {
     if (!coTrong && typeof GLR !== 'undefined' && GLR.bat && GLR.hien && trongTran()) {
       const k = this.s * this.dpr, n = Math.max(2, Math.round(px * k)), kb = ten + '|' + (bien || ''), key = ten + '|' + n + '|' + (bien || '');
       let c = this.cGet(key); if (c) return c;
       const L = coGan.get(kb);
-      if (L) {
+      if (L && L.length >= 3) { // ≥ 3 cỡ đã dựng = ảnh này đúng là phóng động (ảnh 1 cỡ cố định — đầu ụ, thân, biểu tượng — không vào đây)
         let best = 0; for (const q of L) if (q > n && q <= n * 1.09 + 1 && (!best || q < best)) best = q;
         const c2 = best && this.cGet(ten + '|' + best + '|' + (bien || ''));
         if (c2) { const f = GLR.f, q = coLan.get(key); if (!q) { if (coLan.size > 3000) coLan.clear(); coLan.set(key, [f, 1]); return c2; } if (f !== q[0]) { q[1] = f === q[0] + 1 ? q[1] + 1 : 1; q[0] = f; } if (q[1] < 4) return c2; }
@@ -266,7 +266,7 @@
     const td = REN.tenDanh && REN.tenDanh(E); if (td) ds.push(td);
     else if (typeof TRUM_ATK !== 'undefined' && TRUM_ATK.has(id)) { REN.img('trum_' + id + '_atk_16'); du = false; }
     for (const t of ds) REN.nongDai(t, t === td && typeof ATK_K !== 'undefined' ? co * ATK_K : co);
-    REN.nongDai(t0, co, 'trang');
+    if (!NS.glChay()) REN.nongDai(t0, co, 'trang'); // (WebGL: chớp trắng = chế độ trắng của shader trên chính dải — quaianim.js veThan)
     if (typeof TRUM_THU_TU !== 'undefined' && TRUM_THU_TU.includes(id)) REN.nongDai('trum_' + id, 86); // dải 4 khung lúc tung chiêu
     if (id === 'twin_core' && typeof TRM !== 'undefined') REN.nongDai(t0, Math.round(86 * TRM.CON_CO) * kc);
     if (id === 'janus') xep('xam|de_chung', () => REN.banXam && REN.banXam('de_chung')); // hoá đá ụ: bản xám của đế (getImageData cả ảnh)
@@ -400,7 +400,7 @@
         // nhất (20–60 ms ×4 CPU, đo p2_copycat / p2_halo) → dựng sẵn; tầng nhỏ hơn dựng từ tầng ¼ (rẻ) khi cần
         else if (it.b === 2) { NS._mipGoc.call(REN, c, Math.ceil(c.height / 2)); it.b = 3; }
         else if (it.b === 3) { NS._mipGoc.call(REN, c, Math.ceil(c.height / 4)); it.b = 4; }
-        else if (it.b === 4) { if (it.co) { REN.nongDai(t, it.co); REN.nongDai(t, it.co, 'trang'); } it.b = 5; }
+        else if (it.b === 4) { if (it.co) { REN.nongDai(t, it.co); if (!NS.glChay()) REN.nongDai(t, it.co, 'trang'); } it.b = 5; }
         if (it.b < 5 && c) this.ds.unshift(it);
       }
     } catch (e) { }
