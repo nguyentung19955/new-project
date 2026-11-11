@@ -216,6 +216,7 @@ const GLR = (() => {
       this.aoOn = AO_BAT && this.phien === 2 && gl.getParameter(gl.MAX_VERTEX_ATTRIBS) >= 8; this._nhapG = null; // ảnh ảo: chỉ WebGL2
       this.map = new WeakMap(); this.trang = []; this.rieng = []; this._riengB = 0; this._tDon = 0; this.atlasThe = 0; this._day = false; this._tDat = -1e9;
       this.nv = 0; this.ni = 0; this.bI0 = 0; this.bT = []; this.bOp = 0; this._g = new Array(NT_MAX).fill(null); this._loT = []; this._loO = []; this._loI = []; this._loN = [];
+      if (this.aoOn && !this.aoKiem()) { this.aoOn = false; this.aoLyDo = 'tự kiểm ảnh ảo trượt'; } // máy không chạy được chuỗi lệnh của ảnh ảo → đường GL cũ (như ?gla=0)
       this._dich = null; this._lop = null; this._tam = {}; this._ngan.length = 0; this._bb = null; this._vCo = false;
       this.o = []; this._cho.length = 0; this._fbDoc = null; this._donSom = false; this._fDung = this.f; this._taiDv = 0; this._taiTha = true; for (const q of this._napDs) q._napCho = 0; this._napDs.length = 0;
       return true;
@@ -551,6 +552,26 @@ const GLR = (() => {
       if (cho) { E = { tex: cho.p.tex, x: cho.x + LE, y: cho.y + LE, W: this.atlasCo, H: this.atlasCo, w, h, the: this.the, at: this.atlasThe, dung: this.f, rieng: 0, cv: new WR(g), bo: 0, lv: L, v: 0 }; this.o.push(E); }
       else { if (nho) this._day = true; E = { tex: this.taoTex(w, h), x: 0, y: 0, W: w, H: h, w, h, the: this.the, dung: this.f, rieng: 1, cv: new WR(g), bo: 0, lv: L, v: 0 }; this.rieng.push(E); this._riengB += w * h * 4; }
       return E;
+    },
+    // TỰ KIỂM ẢNH ẢO lúc khởi tạo (điều phối thêm 12/11 — Safari iOS chưa thử được trên máy đo): chạy đúng chuỗi lệnh GL mà ảnh ảo dùng trên 1 ảnh 6×10 (không phải luỹ thừa 2):
+    //   tải canvas → generateMipmap → lọc LINEAR_MIPMAP_NEAREST → bộ đệm khung + copyTexSubImage2D. Có lỗi GL / bộ đệm khung không hoàn chỉnh / ném lỗi → false.
+    aoKiem() {
+      const gl = this.gl; let t = null, t2 = null, t3 = null, fb = null, ok = false;
+      try {
+        while (gl.getError()) { }
+        const c = document.createElement('canvas'); c.width = 6; c.height = 10; const x = c.getContext('2d'); x.fillStyle = '#40c080'; x.fillRect(0, 0, 6, 10);
+        const tao = () => { const q = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, q); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE); return q; };
+        t = tao(); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, c); gl.generateMipmap(gl.TEXTURE_2D); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+        t2 = tao(); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 8, 8, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+        fb = gl.createFramebuffer(); gl.bindFramebuffer(gl.FRAMEBUFFER, fb); gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, t2, 0);
+        const xong = gl.checkFramebufferStatus(gl.FRAMEBUFFER) === gl.FRAMEBUFFER_COMPLETE;
+        gl.clearColor(0.25, 0.5, 0.75, 1); gl.clear(gl.COLOR_BUFFER_BIT); gl.clearColor(0, 0, 0, 0);
+        t3 = tao(); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 8, 8, 0, gl.RGBA, gl.UNSIGNED_BYTE, null); gl.copyTexSubImage2D(gl.TEXTURE_2D, 0, 1, 1, 0, 0, 4, 4);
+        const p = new Uint8Array(4); gl.readPixels(2, 2, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, p);
+        ok = xong && !gl.getError() && Math.abs(p[0] - 64) <= 3 && Math.abs(p[1] - 128) <= 3 && Math.abs(p[2] - 191) <= 3 && p[3] === 255;
+      } catch (e) { ok = false; }
+      try { gl.bindFramebuffer(gl.FRAMEBUFFER, null); gl.bindTexture(gl.TEXTURE_2D, null); if (fb) gl.deleteFramebuffer(fb); for (const q of [t, t2, t3]) if (q) gl.deleteTexture(q); while (gl.getError()) { } } catch (e) { }
+      return ok;
     },
     // Image → tầng L: tầng 0 tải thẳng vào ô; tầng > 0: tải vào texture tạm, generateMipmap, vẽ thu vào ô rồi bỏ texture tạm (GPU chỉ giữ tầng cần)
     nhapAnh(g, a, L) {
@@ -1067,7 +1088,7 @@ const GLR = (() => {
       if (goc) { X.save(); X.translate(x, y); X.rotate(goc); X.drawImage(im, -w / 2, -h / 2, w, h); X.restore(); } else X.drawImage(im, x - w / 2, y - h / 2, w, h);
       X.al = al0;
     },
-    thongTin() { return { bat: this.bat, phien: this.phien, nt: this.nt, gpu: this.gpu, mat: this.mat, lyDo: this.lyDo, kiem: this.kiem, trang: this.trang ? this.trang.length : 0, rieng: this.rieng ? this.rieng.length : 0, thieu: this.thieu, dem: this.dem, boNho: this.boNho() }; },
+    thongTin() { return { ao: !!this.aoOn, aoLyDo: this.aoLyDo || '', bat: this.bat, phien: this.phien, nt: this.nt, gpu: this.gpu, mat: this.mat, lyDo: this.lyDo, kiem: this.kiem, trang: this.trang ? this.trang.length : 0, rieng: this.rieng ? this.rieng.length : 0, thieu: this.thieu, dem: this.dem, boNho: this.boNho() }; },
   };
   R.bat = R.quyetDinh();
   return R;

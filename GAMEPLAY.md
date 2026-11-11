@@ -1550,3 +1550,8 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - Đo co-op 3× 120 s (wave 25 → 49): tải canvas → texture 11,3 → 3,7 / giây (60 s cuối 4,0 → 0,9; phần còn lại chủ yếu chữ số — phiên khác), canvas đệm 52–71 MB → 36–42 MB, GPU 94–122 → 79–114 MB, tổng 145–195 → 108–152 MB.
 - File: `thap/js/gl/glr.js` (mục ẢNH ẢO), `render.js`, `fxu.js`, `sigfx.js`, `nongskill.js`, `tools/thap-kt-tai-gl.js`. Chi tiết + việc còn lại: `docs/demo-hop-tuong/tuvan/webgl/KE-HOACH.md` mục 11.
 
+
+## claude/demo-hop-tuong — gộp WebGL hoàn toàn đợt 1 (W1 + W2) + tự kiểm ảnh ảo (12/11 sáng)
+- Gộp `claude/gl-full-w1` (chữ trong trận = tấm ký tự trên GPU, `chugl.js`; Hive lăn cầu bằng shader) và `claude/gl-full-w2` (ẢNH ẢO: ảnh gốc lên GPU 1 lần, thu nhỏ / tô màu / xám / trắng bằng shader; chỉ WebGL2; `?gla=0` tắt). Xung đột 1 dòng ở `GLR.ve` (màu đỉnh): gộp cả `E.al` (ảnh ảo) lẫn `X.nhuom` (chữ).
+- Thêm `GLR.aoKiem()`: lúc khởi tạo chạy thử chuỗi lệnh GL của ảnh ảo (tải canvas không luỹ thừa 2 → generateMipmap → bộ đệm khung → copyTexSubImage2D → đọc lại điểm ảnh); trượt → tự về đường GL cũ. Nhãn admin ghi `GLa` khi ảnh ảo đang chạy, `GL` khi không.
+- Kiểm sau gộp: băm co-op A gl0 = gl1 (`8b4f420b` / `2f83154d`); cùng trạng thái GL vs 2D lệch 1 902 / 2,96 triệu điểm ảnh (> 60 mức; mép khử răng cưa), đã xem ảnh cạnh nhau. CHƯA kiểm: Safari / iPhone thật, PVP, hồi quy đầy đủ.
