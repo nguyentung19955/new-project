@@ -7,6 +7,7 @@
 //  · Chip "Boss in N" trên ray: thêm chân dung trùm sắp tới (khung 0 của dải 8 khung, cắt bằng background-position).
 'use strict';
 const VT = {
+  THEM: 2.5,          // giây — nán thêm tối đa khi còn việc làm nóng hình (thường 0: 4 s là đủ)
   TONG: 4.0,          // giây — tự đóng (≥ 3 s đọc kịp; chạm CONTINUE / bất kỳ đâu để vào ngay)
   SO_TRUM: 3,         // số trùm xem trước
   NGUY: { mad_crown: 'Scrambles 3 turrets', freezer: 'Freezes 3–5 random turrets', janus: 'Petrifies 1 turret',
@@ -83,7 +84,9 @@ const VT = {
       this.el.hidden = false; void this.el.offsetWidth; this.el.classList.add('vao');
       this.el.querySelectorAll('.vt-ten b, .vt-tt b').forEach(b => fitText(b, parseFloat(getComputedStyle(b).fontSize), b.closest('.vt-sau') ? 13 : 6.5)); // ô trùm nhỏ: xuống dòng, không thu < 13 px (tư vấn C) // sau khi hiện (đo được bề rộng)
       this.t0 = performance.now(); this.dem();
-      this._h = setTimeout(() => this.dong(), this.TONG * 1000);
+      // tự đóng sau TONG giây; còn việc làm nóng (nongskill.js NS.conNong: dựng ảnh + nạp texture của bộ bài) thì nán thêm tối đa THEM giây (chạm vẫn vào ngay)
+      const het = () => { if (!this.mo) return; const qua = (performance.now() - this.t0) / 1000; if (qua < this.TONG + this.THEM && typeof NS !== 'undefined' && NS.conNong && NS.conNong()) { this._h = setTimeout(het, 200); return; } this.dong(); };
+      this._h = setTimeout(het, this.TONG * 1000);
     };
     cho();
   },

@@ -80,13 +80,32 @@
   };
 
   // ảnh thu nhỏ 1 cỡ (REN.co): quá ngân sách khung → vẽ tạm từ ảnh gốc (người gọi luôn vẽ theo cỡ logic tự tính) + xếp dựng
-  const coGoc = REN.co;
+  // WebGL — CỠ ĐỘNG (11/11 đêm): ảnh phóng theo hoạt ảnh (Rồng Máy đổi dạng / vỗ cánh, đầu ụ nảy…) xin MỖI KHUNG 1 cỡ điểm ảnh khác → mỗi cỡ 1 canvas + 1 lần tải texture
+  //   (đo: 18 % số lần tải giữa trận). Lớp GL co giãn bằng GPU không tốn gì → cỡ CHƯA có mà đã có bản lớn hơn ≤ 9 % của cùng ảnh thì dùng bản đó (GPU thu ≤ 9 %, vẫn nét);
+  //   cùng 1 cỡ được xin 4 khung LIỀN nhau (= cỡ đứng yên) thì dựng đúng cỡ như cũ → hình lúc đứng yên không đổi. Bản 2D không chạy đoạn này.
+  const coGoc = REN.co, coGan = NS._coGan = new Map(), coLan = new Map(); let coTrong = 0;
   REN.co = function (ten, px, bien) {
+    if (!coTrong && typeof GLR !== 'undefined' && GLR.bat && GLR.hien && trongTran()) {
+      const k = this.s * this.dpr, n = Math.max(2, Math.round(px * k)), kb = ten + '|' + (bien || ''), key = ten + '|' + n + '|' + (bien || '');
+      let c = this.cGet(key); if (c) return c;
+      const L = coGan.get(kb);
+      if (L) {
+        let best = 0; for (const q of L) if (q > n && q <= n * 1.09 + 1 && (!best || q < best)) best = q;
+        const c2 = best && this.cGet(ten + '|' + best + '|' + (bien || ''));
+        if (c2) { const f = GLR.f, q = coLan.get(key); if (!q) { if (coLan.size > 3000) coLan.clear(); coLan.set(key, [f, 1]); return c2; } if (f !== q[0]) { q[1] = f === q[0] + 1 ? q[1] + 1 : 1; q[0] = f; } if (q[1] < 4) return c2; }
+      }
+      coTrong++; try { c = coCu.apply(this, arguments); } finally { coTrong--; }
+      if (c && c._kho === 'cache') { const m = Math.max(c.width, c.height); let L2 = L || coGan.get(kb); if (!L2) { if (coGan.size > 2000) coGan.clear(); coGan.set(kb, L2 = []); } if (L2.indexOf(m) < 0) { if (L2.length > 40) L2.shift(); L2.push(m); } }
+      return c;
+    }
+    return coCu.apply(this, arguments);
+  };
+  const coCu = function (ten, px, bien) {
     if (!this.hetNgan()) return coGoc.apply(this, arguments);
     const k = this.s * this.dpr, n = Math.max(2, Math.round(px * k)), key = ten + '|' + n + '|' + (bien || '');
     const c = this.cGet(key); if (c) return c;
     NS.thongKe.hoan++;
-    xep('co|' + key, () => coGoc.call(this, ten, px, bien));
+    xep('co|' + key, () => { coTrong++; try { coGoc.call(this, ten, px, bien); } finally { coTrong--; } });
     if (bien === 'trang' || bien === 'den') return null;
     return this.img(ten);
   };
@@ -146,7 +165,29 @@
     };
   }
   // chữ số sát thương: dựng sẵn 0–9 cho 2 kiểu hay gặp nhất (thường / chí mạng) ngay đầu trận
-  NS.nongSo = function () { for (const [m, px] of [['#E9E8E2', 12], ['#F7D65B', 24]]) xep('so|' + m + px + '|' + REN.s * REN.dpr, () => REN.chuSo && REN.chuSo('0123456789', m, px)); };
+  NS.nongSo = function () { for (const [m, px] of [['#E9E8E2', 12], ['#F7D65B', 24]]) xep('so|' + m + px + '|' + REN.s * REN.dpr, () => { const c = REN.chuSo && REN.chuSo('0123456789', m, px); if (c && c.so && NS.glChay()) for (const g of c.so) { GLR.nap(g[0].v); GLR.nap(g[0].r); } }); }; // WebGL: nét + viền của từng chữ số lên GPU luôn (hàng nạp trước)
+  // WebGL — MỌI DẠNG của ụ trong 2 bộ bài (dạng grow-up _s1.._s3, đầu vẽ riêng theo số sao: Hydra, Rồng Lửa f1–f4…) vẽ thử vào canvas nháp REN.ctxNong ngay ở màn mở đầu trận
+  //   → ảnh thu nhỏ đúng cỡ ô dựng sẵn + texture nạp trước (trước đây: lần đầu 1 ụ đổi dạng / lên sao giữa trận mới dựng + tải). Chỉ hình: dùng BẢN CHÉP ụ mẫu của GF.nongTran
+  //   (không gọi taoU → G.uid / số ngẫu nhiên y như bản 2D), không chạm ụ thật; ?gl=0 không chạy.
+  NS._mau = [];
+  if (typeof GF !== 'undefined' && GF.nongU) { const g = GF.nongU; GF.nongU = function (B, T) { try { if (T && NS._mau.length < 24 && !NS._mau.some(q => q[1].id === T.id && q[0] === B)) NS._mau.push([B, T]); } catch (e) { } return g.apply(this, arguments); }; }
+  NS.nongDang = function () {
+    const ds = NS._mau.filter(q => G.ban.indexOf(q[0]) >= 0); NS._mau = [];
+    if (!glChay() && !(typeof GLR !== 'undefined' && GLR.bat && !GLR._thu)) return;
+    const saoMax = (typeof LUAT !== 'undefined' && LUAT.saoMax) || 7, kk = REN.s * REN.dpr;
+    for (const [B, T0] of ds) {
+      const sk = (typeof SKILLS !== 'undefined' && SKILLS[T0.id]) || {}, grow = typeof laGrow === 'function' && laGrow(T0.id);
+      const dang = grow ? [1, 2, 3] : [0], sao = sk.veDau ? Array.from({ length: saoMax }, (_, i) => i + 1) : [1];
+      for (const gd of dang) for (const n of sao) {
+        if (!grow && n === 1) continue; // dạng thường 1 sao: GF.nongU đã làm
+        xep('nd|' + B.i + '|' + T0.id + '|' + gd + '|' + n + '|' + kk, () => {
+          if (!glChay() || G.ban.indexOf(B) < 0) return;
+          const T = Object.assign({}, T0, { sao: n, st: Object.assign({}, T0.st) }); if (gd) T.gd = gd;
+          const x = REN.ctxNong(); x.save(); try { REN.veU(x, T, 0, 0, { noBadge: true }); } catch (e) { } x.restore();
+        });
+      }
+    }
+  };
 
   // âm thanh (tổng hợp WebAudio: mỗi tiếng dựng 5–20 nút, 0,2–1,2 ms): nhiều skill cùng khung → mọi tiếng dồn 1 khung (~6 ms).
   // Mỗi khung chỉ dựng tiếng tới khi tốn 2,5 ms; phần còn lại phát ở khung sau (trễ ≤ vài chục ms, tai không nhận ra); quá 0,25 s thì bỏ.
@@ -239,11 +280,15 @@
     return du;
   };
   // mỗi 0,5 s: trùm của wave hiện tại (chưa ra) + wave kế → làm nóng (mỗi trùm 1 lần / trận; ảnh chưa tải → thử lại lần sau)
+  // WebGL (11/11 đêm): làm nóng trùm từ khi còn TRUM_TRUOC wave (thanh trên "BOSS IN 3") thay vì 1 wave — dải dựng xong ở hàng nóng được lớp GL nạp texture TRƯỚC, rải ≤ 1 lần tải / khung
+  //   ở khung nhẹ (glr.js: nap mức "nạp trước" + ghim) → lúc trùm ra không còn gì phải tải. Bản 2D giữ 1 wave như cũ (kho đệm 2D xoay nhanh hơn, dựng sớm quá sẽ rơi khỏi kho).
+  const glChay = NS.glChay = () => typeof GLR !== 'undefined' && !!GLR.bat && !GLR.mat && !!GLR.gl;
+  const waveTrum = NS.waveTrum = () => { const ds = [G.wave, G.wave + 1]; if (glChay()) ds.push(G.wave + 2, G.wave + 3); return ds; };
   NS.kiemTra = function () {
     if (!trongTran() || typeof trumCuaWave !== 'function' || typeof coTrum !== 'function') return;
     const t = now(); if (t - NS._tKt < 500) return; NS._tKt = t;
     const ds = new Set();
-    for (const w of [G.wave, G.wave + 1]) if (w > 0 && coTrum(w)) for (let p = 0; p < (G.che === 'coop' ? 2 : 1); p++) ds.add(trumCuaWave(w, p));
+    for (const w of waveTrum()) if (w > 0 && coTrum(w)) for (let p = 0; p < (G.che === 'coop' ? 2 : 1); p++) ds.add(trumCuaWave(w, p));
     for (const h of G.hang || []) if (h.trum) ds.add(h.trum);
     if (typeof TRUM_DBG !== 'undefined' && TRUM_DBG) ds.add(TRUM_DBG);
     for (const id of ds) { const k = id + '|' + REN.s * REN.dpr; if (NS.daNong.has(k)) continue; if (NS.nongTrum(id)) NS.daNong.add(k); }
@@ -269,7 +314,7 @@
   // trận mới: làm nóng lại từ đầu
   if (typeof UI !== 'undefined' && UI.vaoTran) {
     const vt = UI.vaoTran;
-    UI.vaoTran = function () { NS.daNong.clear(); NS._tLuoi = 0; if (NS.am) NS.am.moi(); return vt.apply(this, arguments); };
+    UI.vaoTran = function () { NS.daNong.clear(); NS._tLuoi = 0; if (NS.am) NS.am.moi(); const r = vt.apply(this, arguments); try { NS.nongDang(); } catch (e) { } return r; };
   }
 })();
 
@@ -309,7 +354,7 @@
   // trùm của wave này / wave sau (cùng cách mục 3b): mọi tờ trum_<id>* / fx_trum_<id> đã tải
   AM.themTrum = function () {
     if (typeof trumCuaWave !== 'function' || typeof coTrum !== 'function') return;
-    for (const w of [G.wave, G.wave + 1]) if (w > 0 && coTrum(w)) for (let p = 0; p < (G.che === 'coop' ? 2 : 1); p++) {
+    for (const w of NS.waveTrum()) if (w > 0 && coTrum(w)) for (let p = 0; p < (G.che === 'coop' ? 2 : 1); p++) {
       const id = trumCuaWave(w, p); if (!id || this._trum.has(id)) continue;
       this._trum.add(id);
       for (const t in REN.anh) if (t.startsWith('trum_' + id) || t === 'fx_trum_' + id) this.ds.unshift({ t, lan: 0 });
