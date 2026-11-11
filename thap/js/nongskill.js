@@ -352,6 +352,7 @@
     if (typeof P2 !== 'undefined' && P2.TO) for (const B of G.ban) for (const id of B.deck || []) if (P2.TO[id]) ds.push(P2.TO[id]);
     if (typeof P3 !== 'undefined' && P3.M) for (const B of G.ban) for (const id of B.deck || []) if (P3.M['p3_' + id]) ds.push('p3_' + id); // tờ P3 (vfxp3.js) khi đã có
     for (const t of ds) if (!laTrum(t) && !laQuai(t)) themTen(t);
+    NS._napDs = null; if (typeof _GLA === 'function' && _GLA()) { NS._napDs = NS.dsHieuUng(); for (const t of NS._napDs.keys()) if (REN.anh[t] && !laTrum(t) && !laQuai(t)) themTen(t); } // WebGL ảnh ảo: ảnh gốc của hiệu ứng chắc dùng → GPU (NS.napGL)
   };
   // trùm của wave này / wave sau (cùng cách mục 3b): mọi tờ trum_<id>* / fx_trum_<id> đã tải
   AM.themTrum = function () {
@@ -409,16 +410,36 @@
     const ms = now() - t0; this.thongKe.lam++; this.thongKe.ms += ms; if (ms > this.thongKe.max) this.thongKe.max = ms; if (ms > 20 && this.thongKe.nang.length < 30) this.thongKe.nang.push(t + ' ' + Math.round(ms));
     return true;
   };
-  // WebGL ẢNH ẢO (KE-HOACH mục 13): mọi biến thể (cỡ, màu tô, hoà 'color', mặt nạ, dải dựng trên GPU) lấy mẫu từ texture ẢNH GỐC → làm nóng = đưa chính ảnh gốc lên GPU.
+  // WebGL ẢNH ẢO (KE-HOACH mục 13): mọi biến thể (cỡ, màu tô, hoà 'color', mặt nạ, dải dựng trên GPU) lấy mẫu từ texture ẢNH GỐC → làm nóng hiệu ứng = đưa chính ảnh gốc lên GPU.
   //   Trước: bản GL bỏ bước "vẽ thử" → ảnh hiệu ứng của bộ bài chỉ lên GPU ở LẦN DÙNG ĐẦU giữa trận (tải Image → texture: giải mã + tải, 3–50 ms trên iPhone).
-  //   Nay: mỗi ảnh của danh sách làm nóng (UI.dsTran theo 2 bộ bài + chỉ huy, tờ P2 / P3, ảnh tình huống, ảnh tải lười) vào hàng nạp nền của GLR ở tầng sẽ dùng:
-  //   tầng nét nhất từng được vẽ trong phiên (g._lvThay — glr.js ghi), chưa biết → tầng 0 nếu ảnh ≤ 512² điểm (vào atlas), tầng ½ nếu là tờ lớn (cần nét hơn thì GLR tải lần 2 ở tầng 0).
+  //   Atlas GPU có hạn (5 trang; giữa trận đã đầy ~0,8) → KHÔNG nạp cả danh sách UI.dsTran (đo: 290 ảnh, 5 trang đầy ngay màn mở đầu → gom atlas liên tục, tải lại). Chỉ nạp ảnh CHẮC DÙNG (NS.dsHieuUng):
+  //     · theo bộ bài: hình phát bắn đầu của từng ụ (FXU.dsAnh: _dan / _trung / _no / _tia), tờ P2 / P3, VXM.U (ảnh skill riêng), bảng NONG_META[id] nếu có (js/nong-meta.js — sinh bằng tools/thap-kt-tai-gl.js NONG=…, CHƯA có);
+  //     · HỌC TRONG PHIÊN: mọi ảnh đã từng được vẽ ở trận trước của phiên này (g._lvThay — glr.js ghi tầng nét nhất từng vẽ) mà trận này còn nạp.
+  //   Tầng nạp: tầng từng vẽ / tầng ghi trong bảng; chưa biết → tầng thô nhất mà cạnh ngắn còn ≥ NS.NAP_PX điểm (cần nét hơn thì GLR tải lần 2 ở tầng 0).
   //   Màn mở đầu trận tải không giới hạn; giữa trận ≤ 1 texture / khung nhẹ (GLR.napChay). Bộ bài có Rồng Máy: 8 dải vệt lửa dựng trên GPU luôn (VXM.rongDai).
+  NS.NAP_PX = 192;
+  NS.dsHieuUng = function () {
+    const m = new Map(), M = typeof NONG_META !== 'undefined' ? NONG_META : null, them = (t, L) => { if (t && (L != null || !m.has(t))) m.set(t, L); }, bang = (o) => { if (o) for (const t in o) them(t, o[t]); };
+    try {
+      if (typeof FXU !== 'undefined' && FXU.dsAnh) for (const t of FXU.dsAnh(G.ban)) if (/_(dan|trung|no|tia)$/.test(t)) them(t); // chỉ hình của PHÁT BẮN ĐẦU (đạn / nổ trúng / chớp nòng / tia) — dạng 2, 3, hiệu ứng đặc biệt để học trong phiên / bảng (đo: nạp cả FXU.dsAnh = +85 ảnh, +1–2 trang atlas, chỉ bớt 21 lần tải)
+      for (const B of G.ban) for (const id of B.deck || []) {
+        if (typeof P2 !== 'undefined' && P2.TO && P2.TO[id]) them(P2.TO[id]);
+        if (typeof P3 !== 'undefined' && P3.M && P3.M['p3_' + id]) them('p3_' + id);
+        if (typeof VXM !== 'undefined' && VXM.U && VXM.U[id]) for (const t of VXM.U[id]) them(t);
+        if (M) bang(M[id]);
+      }
+      if (M) { bang(M._chung); for (const B of G.ban) if (B.mv) bang(M['mv_' + B.mv.id]); }
+      for (const t in REN.anh) { const a = REN.anh[t], c = a && a._cv; if (c && c._lvThay != null && !laTrum(t) && !laQuai(t)) them(t, c._lvThay); } // học trong phiên
+    } catch (e) { }
+    return m;
+  };
   NS.napGL = function (t) {
-    if (typeof _GLA !== 'function' || !_GLA()) return;
+    const ds = NS._napDs; if (!ds || !ds.has(t) || typeof _GLA !== 'function' || !_GLA()) return;
     const c = REN.img(t); if (!c || !c._goc || c._napGL === GLR.the) return; c._napGL = GLR.the;
-    let L = c._lvThay; if (L == null) L = c.width * c.height > 262144 ? 1 : 0;
-    GLR.nap(L > 0 ? NS._mipGoc.call(REN, c, Math.min(c.width, c.height) / (2 << L) + 1) : c);
+    if (!(c._lv && c._lv.some(E => GLR.hopLe(E)))) { // (đã có 1 tầng trên GPU = ảnh đang được vẽ: không thêm tầng khác)
+      let L = c._lvThay; if (L == null) L = ds.get(t); if (L == null) L = Math.max(0, Math.floor(Math.log2(Math.min(c.width, c.height) / NS.NAP_PX)));
+      GLR.nap(L > 0 ? NS._mipGoc.call(REN, c, Math.min(c.width, c.height) / (2 << L) + 1) : c);
+    }
     if (t === 'fx_ronglua_vet' && typeof VXM !== 'undefined' && VXM.rongDai && G.ban.some(B => (B.deck || []).indexOf('ronglua') >= 0)) { const d = VXM.rongDai(); if (d) for (const s of d) if (s && s._veG) GLR.nap(s); }
   };
   AM.chay = function (han) {
