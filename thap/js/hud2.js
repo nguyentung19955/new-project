@@ -172,14 +172,23 @@ const HUD2 = {
         //   ở mốc cố định dưới mép trên ô (người dùng 'Cho sao ở giữa đi trên ụ 1 tý': giữa ô, ngay trên đầu ụ; 5★ = 3+2, 6★ = 3+3 lan lên trên).
         //   2–6★ cùng cỡ MỖI ngôi sao (SAO_PX = cỡ 1 sao trong ảnh gốc; lỗi tester: 3★ nhỏ hơn 2★/4★).
         //   7★ (người dùng 'Vàng viền đỏ đi'): 1 sao VÀNG to (hh_sao1) VIỀN ĐỎ + quầng sáng; nhịp sáng vẽ ở REN.veHuyHieu.
-        const E = 1.7, k = this.s * this.dpr, N = Math.max(8, Math.round(d * E * k)), key = 'hh7|' + n + '|' + N;
+        // WebGL + ẢNH ẢO (KE-HOACH mục 13), 1–6★: KHÔNG nướng canvas — trả canvas ảo VỪA KHÍT hàng sao (w×h) trỏ thẳng texture hh_sao<n>, kèm vị trí trong ô vẽ cũ (_N, _X0, _Y0)
+        //   → REN.veHH đặt đúng chỗ như canvas nướng; đổi số sao / đổi cỡ = 0 lần tải texture. 7★ (viền đỏ + quầng: cần ngưỡng alpha + blur) vẫn nướng như cũ.
+        const E = 1.7, k = this.s * this.dpr, N = Math.max(8, Math.round(d * E * k)), ao = n < 7 && !!sa._goc && typeof _GLA === 'function' && _GLA(), key = (ao ? 'hhA|' : 'hh7|') + n + '|' + N;
         let c = this.cGet(key); if (c) return c;
-        if (this.choRong && this.choRong(key)) return null;
-        c = document.createElement('canvas'); c.width = c.height = N;
-        const x = this.c2d(c), q = N / (d * E), mw = d * 1.6 * q, mh = d * (n >= 7 ? 0.68 : n === 1 ? 0.5 : 1.0) * q, SAO_PX = [0, 0, 85, 60, 85, 55, 52, 0][Math.max(1, Math.min(7, n | 0))];
+        if (!ao && this.choRong && this.choRong(key)) return null;
+        const q = N / (d * E), mw = d * 1.6 * q, mh = d * (n >= 7 ? 0.68 : n === 1 ? 0.5 : 1.0) * q, SAO_PX = [0, 0, 85, 60, 85, 55, 52, 0][Math.max(1, Math.min(7, n | 0))];
         // cỡ 1 sao: hàng đơn (2–4★) 0.46d · 2 hàng (5★, 6★) 0.38d cho thấp lại · 7★ cao 0.68d (REN.saoDay: đáy trên bàn)
         const sc = Math.min(mw / sa.width, mh / sa.height, SAO_PX ? d * (n >= 5 ? 0.38 : 0.46) * q / SAO_PX : Infinity), w = Math.round(sa.width * sc), h = Math.round(sa.height * sc);
         const X0 = Math.round(N / 2 - w / 2), Y0 = Math.round(N / 2 - h / 2);
+        if (ao) {
+          const ten = 'hh_sao' + Math.max(1, Math.min(7, n | 0));
+          c = GLR.ao(sa, Math.max(1, w), Math.max(1, h), { k: 0, t: 0, kho: 'cache', khoa: key, dung: (cv) => { const g = this.img(ten); if (!g || !g.width) return false; this.veNho(this.c2d(cv), g, 0, 0, g.width, g.height, 0, 0, cv.width, cv.height); return true; } });
+          c._N = N; c._X0 = X0; c._Y0 = Y0; c._E = E; c._hh = h / (q * d); c._v7 = false;
+          return this.cSet(key, c);
+        }
+        c = document.createElement('canvas'); c.width = c.height = N;
+        const x = this.c2d(c);
         if (n >= 7) {
           const t = document.createElement('canvas'); t.width = w; t.height = h; const tx = this.c2d(t);
           this.veNho(tx, sa, 0, 0, sa.width, sa.height, 0, 0, w, h);
@@ -215,7 +224,7 @@ const HUD2 = {
     };
     const vhGoc = REN.veHuyHieu;
     REN.veHuyHieu = function (ctx, x, y, n, d) { if (!this.img('hh_sao' + Math.max(1, Math.min(7, n | 0))) && !this.img(n >= 7 ? 'h2_sao_sang' : 'h2_sao')) return vhGoc.apply(this, arguments); const c = this.huyHieu(n, d); if (!c) return; const E = c._E || 1.7;
-      ctx.drawImage(c, x - d * E / 2, y - d * E / 2, d * E, d * E);
+      this.veHH(ctx, c, x - d * E / 2, y - d * E / 2, d * E);
       if (c._v7) { const a0 = ctx.globalAlpha, u = 0.5 + 0.5 * Math.sin(performance.now() / 1000 * Math.PI * 2 / 1.4); // 7★: nhịp sáng nhẹ 1.4 s (thêm 1 lớp cộng sáng)
         ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = a0 * 0.35 * u; ctx.drawImage(c, x - d * E / 2, y - d * E / 2, d * E, d * E); ctx.restore(); } };
     // 08/11 huy hiệu sao GIỮA ô, ngay trên đầu ụ: (x, yTren) = giữa ô, mép trên ô. Đáy hàng sao ở yTren + saoDay(n)·d

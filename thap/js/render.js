@@ -717,10 +717,11 @@ const REN = {
   veDauLop(ctx, id, gd, C, al, sc, da, bien) {
     const ten = this.dauTen(id, gd), D = C * this.dauK(id, gd) * (sc || 1);
     ctx.globalAlpha = al;
-    if (bien) { const c = this.co(ten, D, bien); if (c) ctx.drawImage(c, -D / 2, -D / 2, D, D); ctx.globalAlpha = 1; return; }
-    if ((ctx.laGL || ctx === this._cn) && _GLA()) { // (ctx === _cn: vẽ làm nóng — nạp texture ảnh gốc, không nướng canvas) ẢNH ẢO: đầu + bóng = 2 ô ảnh từ CÙNG texture ảnh gốc (bóng = phủ đen, tầng thô phóng lên, lệch xuống 3,5 %) — không nướng canvas đầu-kèm-bóng mỗi cỡ
-      const a = this.co(ten, D, da ? 'xam' : '');
-      if (a && a._ao) { const b = this.co(ten, D, 'bong'), m = Math.max(a.width, a.height), w = D * a.width / m, h = D * a.height / m; if (b && b._ao) ctx.drawImage(b, -w / 2, -h / 2 + D * 0.035, w, h); ctx.drawImage(a, -w / 2, -h / 2, w, h); ctx.globalAlpha = 1; return; }
+    const gla = (ctx.laGL || ctx === this._cn) && _GLA(), Dq = gla && sc && sc !== 1 && sc <= 1.07 ? D / sc : D; // ẢNH ẢO: đầu đang phóng theo hoạt ảnh (ghép / biến hình / đổi dạng) xin ảnh ở CỠ GỐC rồi để GPU co giãn → không sinh 1 canvas ảo + 1 mục kho đệm mỗi khung
+    if (bien) { const c = this.co(ten, Dq, bien); if (c) ctx.drawImage(c, -D / 2, -D / 2, D, D); ctx.globalAlpha = 1; return; }
+    if (gla) { // (ctx === _cn: vẽ làm nóng — nạp texture ảnh gốc, không nướng canvas) ẢNH ẢO: đầu + bóng = 2 ô ảnh từ CÙNG texture ảnh gốc (bóng = phủ đen, tầng thô phóng lên, lệch xuống 3,5 %) — không nướng canvas đầu-kèm-bóng mỗi cỡ
+      const a = this.co(ten, Dq, da ? 'xam' : '');
+      if (a && a._ao) { const b = this.co(ten, Dq, 'bong'), m = Math.max(a.width, a.height), w = D * a.width / m, h = D * a.height / m; if (b && b._ao) ctx.drawImage(b, -w / 2, -h / 2 + D * 0.035, w, h); ctx.drawImage(a, -w / 2, -h / 2, w, h); ctx.globalAlpha = 1; return; }
     }
     const db = this.dauBong(ten, D, da);
     if (db) { const P = D * db.sc; ctx.drawImage(db, -P / 2, -P / 2, P, P); }
@@ -1206,8 +1207,9 @@ const REN = {
     ctx.save(); ctx.translate(x, y + oy); ctx.scale(sx, sy);
     const da = T.st.da;
     // thân tĩnh (bệ chung) dựng sẵn 1 ảnh → mỗi khung chỉ 1 lần vẽ
-    const than = this.than(T, S, da, bongSan);
-    if (than) {
+    const thanGL = (ctx.laGL || ctx === this._cn) && _GLA(), than = thanGL ? null : this.than(T, S, da, bongSan); // WebGL + ảnh ảo: bệ = ô ảnh mỗi khung (veThanGL), không nướng canvas (ctx === _cn: vẽ làm nóng → chỉ xếp nạp texture ảnh gốc)
+    if (thanGL) this.veThanGL(ctx, T, S, da, bongSan, bongSan && !oy, x, y);
+    else if (than) {
       if (bongSan && !oy) { // đứng yên: vẽ 1:1 đúng lưới điểm ảnh (nhanh nhất, không lọc ảnh)
         const k = this.s * this.dpr, q = 1 / k;
         ctx.drawImage(than, Math.round((x + FX.rungX - S * 0.75) * k) * q - x - FX.rungX, Math.round((y + FX.rungY - S * 0.75) * k) * q - y - FX.rungY, than.width * q, than.height * q);
@@ -1351,8 +1353,8 @@ const REN = {
   // giá trị = khung ảnh <id>_de / cạnh lớn nhất của bệ (tâm ảnh = điểm gắn đầu) → bệ chiếm cùng chỗ với de_chung (SB)
   // 93 ụ (tools/thap-cat-umod.py → artscale.js window.DE_RIENG); ?ucu=1 (bộ đầu cũ) → bệ chung
   DE_RIENG: (!window.UCU && window.DE_RIENG) || {},
-  than(T, S, da, bong) {
-    const km = 0; // (vòng màu khoá đã bỏ)
+  // chọn ảnh bệ của ụ T (dùng chung cho bệ nướng `than` và bệ vẽ từng ô ảnh `veThanGL`): { rieng: tên ảnh bệ riêng đã tải | null, ten: ảnh bệ dùng, kR: hệ số cỡ, vId: id ảnh viền, lb / lbVe: mặt nạ hướng Pháo La Bàn }
+  thanChon(T) {
     // bệ riêng đã tải xong → dùng; đang tải / lỗi → bệ chung (không chờ)
     let kR = this.DE_RIENG[T.id], tenR = kR ? T.id + '_de' : null, vId = T.id;
     // bệ RIÊNG theo trạng thái (Rồng Máy: bệ mỗi dạng — SKILLS[id].deAnh(T) = [ảnh bệ, hệ số cỡ]); ảnh chưa tải → bệ thường
@@ -1362,6 +1364,11 @@ const REN = {
     const lb = T.id === 'canon' && typeof SKILLS !== 'undefined' && SKILLS.canon && SKILLS.canon.hb ? SKILLS.canon.hb(T) : 0;
     if (lb && window.LABAN_DE && this.img('canon_de_' + lb)) tenR = 'canon_de_' + lb;
     const rieng = tenR && this.img(tenR) ? tenR : null, ten = rieng || 'de_chung', lbVe = lb && rieng === 'canon_de' && typeof CM !== 'undefined' && CM.veDe ? lb : 0;
+    const r = this._tc || (this._tc = {}); r.kR = kR; r.vId = vId; r.lb = lb; r.rieng = rieng; r.ten = ten; r.lbVe = lbVe; return r; // (1 đối tượng dùng lại — gọi mỗi ụ mỗi khung)
+  },
+  than(T, S, da, bong) {
+    const km = 0; // (vòng màu khoá đã bỏ)
+    const q0 = this.thanChon(T), kR = q0.kR, vId = q0.vId, lb = q0.lb, rieng = q0.rieng, ten = q0.ten, lbVe = q0.lbVe;
     // VIỀN BẬC (người dùng 07/11 18:25): viền kim loại ôm hình bóng bệ, màu = bậc (Trắng bạc · Xanh · Tím · Vàng · Đỏ); đầu ụ giữ màu riêng
     const vb = rieng && this.VIEN_ON ? this.vienBac(vId, T.bac, da) : null, vCho = vb === 0; // 0 = ảnh viền đang tải → vẽ tạm không viền, không giữ cache
     const k = this.s * this.dpr, n = Math.round(S * 1.5 * k), key = 'than|' + (rieng || '') + '|' + T.bac + '|' + (da ? 1 : 0) + '|' + n + (bong ? '|b' : '') + '|' + km + (lbVe ? '|lb' + lbVe : '');
@@ -1385,6 +1392,40 @@ const REN = {
     // (BỎ vòng bậc tier_ring_<bac> quanh bệ — người dùng 2026-11-06: đầu ụ đã thể hiện bậc; mọi chế độ / bóng kéo / bảng kết quả đều qua hàm này)
     if (this.laRong(c) && this.boRong(key)) { c.width = c.height = 0; return null; } // thân dựng ra rỗng (iPhone hết bộ nhớ canvas): không giữ
     return vCho || lbCho ? c : this.cSet(key, c);
+  },
+  // BỆ BẰNG Ô ẢNH (full WebGL — KE-HOACH mục 13): khi lớp GL đang vẽ + ảnh ảo bật, bệ KHÔNG nướng canvas `than|…` nữa mà vẽ mỗi khung 3–4 ô ảnh từ texture ảnh gốc:
+  //   bóng (fx_cham_trang phủ đen, alpha 0,7) → viền bậc (<id>_vien NHÂN màu bậc bằng shader kiểu 3; Vàng / Đỏ thêm 1 ô cộng sáng 0,22 = ánh kim) → bệ (bản xám = shader kiểu 2).
+  //   Toạ độ = đúng toạ độ trong canvas nướng cũ (luoi: canvas cũ đặt tròn điểm ảnh thiết bị → cùng gốc + cùng tỉ lệ q / k). ctx đang ở tâm ụ (đã translate + scale), globalAlpha = al.
+  //   Trả false = ảnh bệ chưa tải (không vẽ gì, như bản cũ). Đường 2D / ?gl=0 / ?gla=0 / WebGL1: không gọi hàm này (REN.than như cũ).
+  veThanGL(ctx, T, S, da, bong, luoi, x, y) {
+    const q0 = this.thanChon(T), rieng = q0.rieng, lb = q0.lb;
+    const de0 = da ? this.banXam(q0.ten) : this.img(q0.ten); if (!de0) return false;
+    const vb = rieng && this.VIEN_ON ? this.vienAo(q0.vId, T.bac, da) : null;
+    const k = this.s * this.dpr, n = Math.round(S * 1.5 * k), q = n / (S * 1.5), al = ctx.globalAlpha;
+    const SB = S * 0.714, SD = rieng ? SB * q0.kR : SB, dw = de0.naturalWidth || de0.width;
+    ctx.save();
+    if (luoi) { const f = q / k, h = n / (2 * k); ctx.translate(Math.round((x + FX.rungX - S * 0.75) * k) / k - x - FX.rungX + h, Math.round((y + FX.rungY - S * 0.75) * k) / k - y - FX.rungY + h); if (f !== 1) ctx.scale(f, f); }
+    if (bong) { const b = this.cham1('#000000'); if (b !== this._rong) { ctx.globalAlpha = al * 0.7; ctx.drawImage(this.mip(b, SB * 1.24 * q), 2 - SB * 0.62, SB * 0.06 + 3 - SB * 0.62, SB * 1.24, SB * 1.24); ctx.globalAlpha = al; } } // bóng = PNG tô đen
+    if (vb) {
+      const SV = SD * vb.width / (vb.dw || dw); ctx.drawImage(this.mip(vb, SV * q), -SV / 2, -SV / 2, SV, SV);
+      if (vb._kim) { ctx.globalAlpha = al * 0.22; ctx.cong = 1; ctx.drawImage(this.mip(vb._kim, SV * q), -SV / 2, -SV / 2, SV, SV); ctx.cong = 0; ctx.globalAlpha = al; } // ánh kim: cộng sáng chính ảnh viền (ô cộng — không ngắt lô)
+    }
+    const SDv = rieng && lb && rieng !== 'canon_de' ? SD * dw / 177 : SD;
+    ctx.drawImage(this.mip(de0, SDv * q), -SDv / 2, -SDv / 2, SDv, SDv);
+    if (q0.lbVe) { CM.veDe(ctx, this, q0.lbVe, SD, da); ctx.globalCompositeOperation = 'source-over'; }
+    ctx.restore(); ctx.globalAlpha = al;
+    return true;
+  },
+  // viền bậc ẢO: <id>_vien nhân màu bậc bằng shader (kiểu 3) — không dựng canvas tô màu. Trả như vienBac: ảnh · 0 đang tải · null không có viền. c._kim = ảnh viền gốc (Vàng / Đỏ: cộng sáng 0,22)
+  vienAo(id, bac, da) {
+    const b = da || !this.MAU_VIEN[bac] ? 'trang' : bac, k = id + '_vien~' + b, M = this._vienAo || (this._vienAo = {});
+    const co = M[k]; if (co && co._ao) return co;
+    const a = this.img(id + '_vien'); if (!a) return this.anh[id + '_vien'] && this.anh[id + '_vien']._loi ? null : 0;
+    if (!a._goc || !_GLA()) return this.vienBac(id, bac, da);
+    const mau = this.MAU_VIEN[b], c = GLR.ao(a, a.width, a.height, { k: 3, t: GLR.mauSo(mau, 1), kho: M, khoa: k, dung: (cv) => { const g = this.img(id + '_vien'); if (!g || !g.width) return false; const x = cv.getContext('2d');
+      x.drawImage(g, 0, 0); x.globalCompositeOperation = 'multiply'; x.fillStyle = mau; x.fillRect(0, 0, cv.width, cv.height); x.globalCompositeOperation = 'destination-in'; x.drawImage(g, 0, 0); x.globalCompositeOperation = 'source-over'; return true; } }); // vetay-ok: png (tô màu bậc lên ảnh viền)
+    c.dw = a.width - 24; c._kim = b === 'vang' || b === 'do' ? a : null;
+    return (M[k] = c);
   },
   // VIỀN BẬC: <id>_vien.png (trắng, vát sẵn — tools/thap-cat-umod.py) tô màu bậc 1 lần (multiply giữ vát kim loại) → giữ trong REN.anh như DOTPHA.tenVong.
   // Vàng/Đỏ: thêm ánh kim nhẹ (cộng sáng chính ảnh viền). Ụ xám (da): viền bạc. Trả: ảnh đã tô · 0 đang tải · null không có viền (bệ chung / lỗi tải).
@@ -1434,15 +1475,17 @@ const REN = {
       return this.cSet(key, c);
     }
   },
-  veHuyHieu(ctx, x, y, n, d) { const c = this.huyHieu(n, d); if (!c) return; ctx.drawImage(c, x - d * 0.75, y - d * 0.75, d * 1.5, d * 1.5); },
+  veHuyHieu(ctx, x, y, n, d) { const c = this.huyHieu(n, d); if (!c) return; this.veHH(ctx, c, x - d * 0.75, y - d * 0.75, d * 1.5); },
+  // vẽ 1 huy hiệu sao (kết quả của REN.huyHieu / huyHieuDong) vào ô vuông cạnh P, góc trên-trái (x, y): canvas nướng = cả ô; canvas ảo vừa khít hàng sao (c._N — bản WebGL, hud2.js) = đặt đúng chỗ của nó trong ô
+  veHH(ctx, c, x, y, P) { if (c._N) { const r = P / c._N; ctx.drawImage(c, x + c._X0 * r, y + c._Y0 * r, c.width * r, c.height * r); } else ctx.drawImage(c, x, y, P, P); },
   // ---------- MƯỢT KÉO GHÉP (docs/demo-hop-tuong/tuvan/muotghep): cỡ ĐANG CHUYỂN ĐỘNG → bậc cỡ cố định ----------
   // Huy hiệu / tấm phóng to-nhỏ mỗi khung trước đây dựng 1 canvas MỚI mỗi khung (thu nhỏ nhiều bước từ PNG 3×) → giật.
   // qd(): làm tròn LÊN cỡ về lưới hình học 8 % (điểm ảnh thiết bị) → mỗi bậc dựng 1 lần, vẽ thu ≤ 8 % (vẫn nét).
   qd(d) { const k = this.s * this.dpr, n = Math.max(2, d * k), L = Math.log(_GLB() && GLR.hien ? 1.26 : 1.08); // (WebGL đang vẽ: bậc 26 % — GPU thu nhỏ không tốn gì, bớt 3 lần số canvas huy hiệu phải dựng + tải)
     if (_GLB() && GLR.hien) return Math.pow(1.26, Math.ceil(Math.log(n) / L - 1e-6)) / k; return Math.pow(1.08, Math.ceil(Math.log(n) / L - 1e-6)) / k; },
   // huy hiệu cỡ động: canvas ở bậc qd(d), vẽ đúng cỡ d (tỉ lệ ô vẽ / d đọc từ chính canvas → hợp cả bản hud2 1.7d lẫn bản gốc 1.5d)
-  huyHieuDong(n, d) { const dq = this.qd(d), c = this.huyHieu(n, dq); if (c) c._E = c.width / (dq * this.s * this.dpr); return c; },
-  veHuyHieuDong(ctx, x, y, n, d) { const c = this.huyHieuDong(n, d); if (!c) return; const P = d * c._E; ctx.drawImage(c, x - P / 2, y - P / 2, P, P); },
+  huyHieuDong(n, d) { const dq = this.qd(d), c = this.huyHieu(n, dq); if (c) c._E = (c._N || c.width) / (dq * this.s * this.dpr); return c; },
+  veHuyHieuDong(ctx, x, y, n, d) { const c = this.huyHieuDong(n, d); if (!c) return; const P = d * c._E; this.veHH(ctx, c, x - P / 2, y - P / 2, P); },
   // việc dựng sẵn rải theo khung: mỗi khung chạy 1 việc nhỏ (không dồn vào 1 khung)
   _nong: [], _nongCo: new Set(),
   nong(key, fn) { if (key && this._nongCo.has(key)) return; if (key) this._nongCo.add(key); this._nong.push(fn); },
