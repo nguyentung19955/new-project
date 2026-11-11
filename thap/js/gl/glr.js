@@ -536,7 +536,10 @@ const GLR = (() => {
           if (this._taiDv >= TAI_MAX || (w * h > GIAI_LON && a.decode && g._tha === 1)) return null;
         }
         this._taiDv += 1 + w * h / 131072;
-        return (lv[L] = this.nhapAnh(g, a, L));
+        // lần tải THỨ HAI của cùng ảnh (đã tải tầng thô, nay cần tầng nét hơn — tia / hạt vẽ nhiều cỡ): tải luôn tầng 0, các tầng sau thu trên GPU → mỗi ảnh gốc tối đa 2 lần tải / ngữ cảnh
+        const L0 = g._nhapThe === this.the ? 0 : L; g._nhapThe = this.the;
+        E = lv[L0] = this.nhapAnh(g, a, L0); if (!E || L0 === L) return E;
+        j = L0;
       }
       for (let i = j + 1; i <= L; i++) { const P = lv[i - 1]; E = this.taoO(g, i); this.chepGPU(P, P.x, P.y, P.w, P.h, E); lv[i] = E; this.bn.haTang = (this.bn.haTang | 0) + 1; }
       return E;

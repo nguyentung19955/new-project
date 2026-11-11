@@ -1535,3 +1535,12 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 
 - Thắng PVP / PUSH trúng túi thắng: Rương Trận **vào 1 trong 4 khe ở HOME** (trên ô chọn chế độ), không mở ngay; vàng trận vẫn phát. Đầy khe → `CHEST SLOTS FULL`. Mỗi lúc 1 rương đếm **15 phút** (giờ máy), xong chạm `OPEN`; mở ngay bằng ngọc ⌈phút còn lại / 3⌉. Rương mốc / nhiệm vụ / SHOP / RAID / CO-OP: mở ngay như cũ.
 - File: `thap/js/khe.js` (mới), `chedo-dd.js` (bọc `THEBAI.thuong`, dòng kết quả), `css/chedo-d.css`. Lưu `turret_kt.khe`. Kiểm: `tools/thap-kt-khe.js`; `thap-kt-cup.js` sửa 1 kỳ vọng (thắng trúng túi: không phát thẻ ngay).
+
+## claude/demo-hop-tuong — Full WebGL bước 1 + 2: ẢNH ẢO (nhánh `claude/gl-full-w2`, 11/11 tối)
+
+- Chỉ phần vẽ, không đổi luật / số (băm trạng thái gl=1 = gl=0: `8b4f420b` / `2f83154d`, cảnh trùm `277795d6`). `?gl=0` không đổi; `?gla=0` = đường GL cũ để so; chỉ WebGL2.
+- Bản GL: ảnh thu nhỏ / tô màu / trắng / xám / bóng **không còn dựng canvas trên CPU** — `REN.co`, `coDai`, `mip`, `banXam`, `banTrang`, `toMauA`, `FXU.mau` (→ `PX.*`), `SIG.khung` trả canvas ảo 0×0 trỏ về
+  texture ẢNH GỐC (Image tải thẳng lên GPU, tầng ½ ¼ dựng trên GPU); tô màu / trắng / xám / bóng đen bằng shader (thuộc tính đỉnh `a_t`, `a_k`), vẫn gom lô. Đầu ụ + bóng = 2 ô ảnh từ 1 texture (bỏ canvas `db|…`).
+- Đo co-op 3× 120 s (wave 25 → 49): tải canvas → texture 11,3 → 3,7 / giây (60 s cuối 4,0 → 0,9; phần còn lại chủ yếu chữ số — phiên khác), canvas đệm 52–71 MB → 36–42 MB, GPU 94–122 → 79–114 MB, tổng 145–195 → 108–152 MB.
+- File: `thap/js/gl/glr.js` (mục ẢNH ẢO), `render.js`, `fxu.js`, `sigfx.js`, `nongskill.js`, `tools/thap-kt-tai-gl.js`. Chi tiết + việc còn lại: `docs/demo-hop-tuong/tuvan/webgl/KE-HOACH.md` mục 11.
+

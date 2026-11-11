@@ -200,3 +200,57 @@ Chưa làm / cần xem trên iPhone thật:
 - +16 MB GPU (trang atlas thứ 5): nhãn `m` trên iPhone sẽ khoảng +15–20 so với `m60+104`; nếu Safari thu hồi → hạ `TRANG_MAX` về 4 (tải lại sẽ tăng).
 - "Khung nhẹ < 9 ms" đo bằng JS của khung trước; iPhone ở cảnh nặng hiếm khi < 9 ms → nạp trước chạy nhịp 6 khung 1 lần (10 texture / giây) — vẫn kịp 3 wave nhưng chưa đo thật.
 - Cỡ động dùng bản lớn hơn ≤ 9 %: hình có thể mềm hơn 1 chút trong lúc đang phóng (không đo được bằng mắt trên ảnh chụp ở đây).
+
+## 11. Full WebGL bước 1 + 2 — ẢNH ẢO: 1 texture gốc / ảnh, cỡ + biến thể bằng GPU (11/11 tối — nhánh `claude/gl-full-w2`)
+
+Gốc vấn đề: lớp GL mới chỉ "vẽ ra màn bằng GL"; khâu CHUẨN BỊ ảnh vẫn kiểu 2D — mỗi cỡ thu nhỏ, mỗi màu tô, bản trắng / xám / bóng là 1 canvas dựng trên CPU rồi tải canvas → texture
+(3–50 ms / lần trên iPhone), mỗi ảnh nằm 2 nơi.
+
+**Cách làm (`glr.js` mục "ẢNH ẢO", chỉ WebGL2; `?gla=0` tắt để so; WebGL1 / `?gl=0` chạy đường cũ nguyên vẹn):**
+- Các hàm dựng ảnh trả **canvas ảo**: phần tử canvas 0×0 (không điểm ảnh) báo đúng `width/height` cũ, mang `c._ao = { g: ảnh gốc, ô nguồn, k: kiểu tô, t: màu tô, al, them }` → mã vẽ cũ không đổi 1 dòng
+  (`ctx.drawImage(c, …)` như trước). Ai đọc điểm ảnh của nó bằng 2D (canvas ghép từ nó, đường 2D dự phòng khi mất ngữ cảnh, `toDataURL`) → dựng thật bằng đúng hàm dựng cũ (cơ chế "thả bản CPU" loại 1 ở mục 9).
+- **Ảnh gốc tải THẲNG `Image` → GPU** (không chép qua canvas; `REN.img` bản GL trả canvas 0×0 giữ `Image`). Mỗi ảnh gốc giữ sổ tầng `g._lv[L]` (L = 0 nguyên cỡ, 1 = ½, 2 = ¼ …): tầng > 0 dựng **ngay trên GPU** —
+  tải vào texture tạm, `generateMipmap`, vẽ thu vào ô atlas / texture riêng qua bộ đệm khung rồi bỏ texture tạm (GPU chỉ giữ tầng cần); đã có tầng nét hơn thì thu ½ dần trên GPU (không tải gì).
+  Chọn tầng nhỏ nhất còn ≥ cỡ cần (nới 6 %) → GPU chỉ thu ≤ 2× như chuỗi mip CPU cũ. Ảnh gốc cần lại ở tầng nét hơn: lần tải thứ 2 lấy luôn tầng 0 (≤ 2 lần tải / ảnh / ngữ cảnh).
+- **Biến thể bằng shader, vẫn gom lô**: thêm 2 thuộc tính đỉnh `a_t` (màu r g b + độ mạnh) và `a_k` (kiểu): 1 = phủ màu trong alpha ('source-atop' — `FXU.mau`, `REN.toMauA`, bản trắng, bóng đen),
+  2 = xám hoá đá (`toBien 'xam'`), 3 = nhân màu (chưa dùng). Bóng mềm (`'den'`, bóng đầu ụ) = phủ đen + lấy tầng thô hơn 2 bậc rồi phóng lên (thay `filter: blur`).
+- Ô tầng nằm chung atlas / texture riêng với mọi ảnh khác: gom atlas (mục 10), ngân sách tải mỗi khung, hàng nạp nền + giải mã nền `Image.decode()`, vẽ tạm bằng tầng khác — dùng lại hết.
+
+**Theo nhóm:**
+| nhóm | đã chuyển sang ảnh ảo | còn là canvas (lý do) |
+|---|---|---|
+| (a) quái + trùm | dải khung `REN.coDai` (mỗi khung 1 ô của dải gốc; bản trắng = shader), `REN.co` của quái code / lớp rig, bóng | canvas tạm của trùm đã là bộ đệm khung GPU từ trước; Hive lăn cầu (phiên W1); `bonglan|…` (bóng cắt theo thân — ghép 2 ảnh) |
+| (b) đầu ụ / bệ / huy hiệu | đầu ụ mọi cỡ + bản xám + chớp trắng (`REN.co`), **đầu-kèm-bóng `db|…` bỏ hẳn ở bản GL** (2 ô ảnh từ 1 texture), phần phụ, `banXam` / `banTrang`, bóng nhấc khi kéo (`'den'`) | bệ `than|…` (ghép bóng + viền bậc nhân màu + bệ: 1 canvas / loại ụ / cỡ, dựng ở màn mở đầu), huy hiệu sao `hh…` (có chữ số — nay bậc cỡ 26 % thay 8 % khi GL vẽ), tấm đếm (phiên W1) |
+| (c) đạn + nổ + chiêu | mọi ảnh tô màu `FXU.mau` / `PX.mau` / `toMauA` (hạt, vòng, vệt, tia, thanh máu) + chuỗi mip của chúng, chuỗi mip của ảnh gốc (`REN.mip`), khung chiêu `SIG.khung` | dải dựng bằng code: `vfxmoi.js dung()` (vệt lửa Rồng Máy), `camgiac.js dai`, mặt nạ `HU.matNa`, tô kiểu 'color' (`REN.toMau` / `HU.toMau` — cần thêm kiểu shader 4) |
+| (d) vòng / dây / triệu hồi / ghép | vòng + dây + chấm dùng `PX.*` (qua `FXU.mau`), vòng triệu hồi `REN.co` | cung hồi chiêu `PX.cung` (mặt nạ quạt nướng theo góc — nên chuyển thành quạt tam giác), chữ (`chuSo` / `chuAnh` / kho chữ — phiên W1) |
+
+**Số đo** (`tools/thap-kt-tai-gl.js`, nay tách `anh` = tải từ Image / `cvT` = tải từ canvas, thêm `cvN`, `tex`, `lenhTB`; co-op 3×, `ios=1`, wave 25 → 49, 120 s, bộ `bocap,sinhdoi,tudo,cobac,saochep` + `leviathan,ronglua,nemesis,khoisinh,vughep`;
+Chromium + GPU phần mềm → chỉ SỐ ĐẾM có nghĩa):
+| | trước (`8aa0478`) | sau |
+|---|---|---|
+| tải canvas → texture, cả 120 s (/ giây) | 1 352 (11,3) | 442 (3,7) |
+| … sau 10 s đầu (/ giây) · 60 s cuối (/ giây) | 642 (5,8) · 240 (4,0) | 166 (1,5) · 56 (0,9) |
+| tải Image → texture giữa trận | 0 | 151 (87 trong 10 s đầu; sau đó 0,6 / giây; 60 s cuối: 23) |
+| canvas đệm còn điểm ảnh: MB (số canvas) lúc 10 s · 60 s · 120 s | 52 (859) · 56 · 71 | 42 (494) · 36 (504) · 37 (531) |
+| MB GPU lúc 10 s · 60 s · 120 s | 94 · 122 · 119 | 79 · 109 · 102 |
+| tổng MB canvas + GPU (10 s … 120 s) | 145–195 | 108–152 |
+| màn mở đầu: tải canvas / tải Image / MB tổng | 78 / 0 / 90 | 55 / 88 / 91 |
+| số texture (trang atlas + texture riêng) | 20 (10 s) | 18–27 |
+| lệnh vẽ GL / khung (GPU phần mềm: 1 texture / lệnh — máy thật 8 texture / lệnh nên ít hơn 2–4 lần) | 132 (10 s đầu) | 104 (10 s đầu) · 178 (trung bình cả trận) |
+| canvas ảo đã tạo / tầng thu trên GPU / dựng lại bản CPU (`hoi`) | — | 1 539 / ~30–46 / 151 (85 ms tổng) |
+
+Phần tải canvas còn lại giữa trận (120 s): ~330 chữ số + tấm đếm (`REN.chuSo`, `demkn.js kyTu`, kho chữ — phiên W1 đang chuyển sang sprite glyph), 81 huy hiệu sao `hh…`, ~25 bệ / bóng / dải dựng bằng code.
+
+**Kiểm:** băm trạng thái có vẽ gl=1 = gl=0 — co-op A `8b4f420b` / `2f83154d`, cảnh trùm wave 30 (Octopus + Janus) `277795d6`; `MAT=200,320`: 2D dự phòng đủ hình (ảnh ảo dựng thật qua hàm cũ) → GL lại, 0 lỗi trang;
+ảnh cùng trạng thái `?gl=1` mới ↔ `?gl=1&gla=0` (đường cũ): khác > 60 mức ở 14–74 điểm ảnh / 2,96 triệu (mép khử răng cưa); ↔ 2D: ụ hoá đá, đầu ụ, bóng, tia tô màu khớp. Ảnh: `/home/claude/xem/gl-full-w2/`.
+
+**Giới hạn / cần xem trên iPhone thật:**
+- Khung ĐẦU sau khi đổi 2D → GL (chỉ xảy ra khi ngữ cảnh vừa có lại): vài hình trùm thiếu 1 khung (có từ trước; bản mới thiếu thêm thân trùm 1 khung) — khung sau đủ.
+- `texImage2D(Image)` ảnh chưa giải mã = giải mã đồng bộ: ảnh > 300 000 điểm giữa trận đã đi qua `Image.decode()` nền; ảnh nhỏ tải ngay trong ngân sách khung (`TAI_MAX`) — iPhone cần đo `up…` ở khung chậm.
+- Hình thu 1–2× bằng lọc song tuyến tính của GPU thay vì thu sẵn đúng cỡ (lọc 'high'): mép đầu ụ có thể hơi khác răng cưa; bóng đầu ụ / bóng nhấc mềm bằng tầng thô (không phải Gaussian).
+- `generateMipmap` + vẽ vào bộ đệm khung trên Safari WebGL2 chưa thử máy thật; lỗi → ảnh đó đánh dấu `_glLoi` (không vẽ) — nếu gặp, tắt bằng `?gla=0`.
+- `Image` giữ làm nguồn: Safari có thể giữ bản giải mã một lúc (không đo được ở đây).
+
+**Việc kế:** (1) bệ `than|…` vẽ 3 ô ảnh mỗi khung (bóng + viền nhân màu kiểu 3 + bệ) thay canvas ghép; (2) kiểu shader 4 'color' cho `REN.toMau` / `HU.toMau`; (3) `PX.cung` = quạt tam giác (thêm `GLR.quat`);
+(4) dải dựng bằng code (`vfxmoi`, `camgiac`) → ô của dải gốc; (5) sau khi phiên W1 xong chữ: đo lại, mục tiêu tải canvas giữa trận ≈ 0; (6) bỏ đường canvas cũ khi `?gl=0` không còn cần.
+

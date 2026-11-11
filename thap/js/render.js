@@ -711,7 +711,7 @@ const REN = {
     const ten = this.dauTen(id, gd), D = C * this.dauK(id, gd) * (sc || 1);
     ctx.globalAlpha = al;
     if (bien) { const c = this.co(ten, D, bien); if (c) ctx.drawImage(c, -D / 2, -D / 2, D, D); ctx.globalAlpha = 1; return; }
-    if (ctx.laGL && _GLA()) { // ẢNH ẢO: đầu + bóng = 2 ô ảnh từ CÙNG texture ảnh gốc (bóng = phủ đen, tầng thô phóng lên, lệch xuống 3,5 %) — không nướng canvas đầu-kèm-bóng mỗi cỡ
+    if ((ctx.laGL || ctx === this._cn) && _GLA()) { // (ctx === _cn: vẽ làm nóng — nạp texture ảnh gốc, không nướng canvas) ẢNH ẢO: đầu + bóng = 2 ô ảnh từ CÙNG texture ảnh gốc (bóng = phủ đen, tầng thô phóng lên, lệch xuống 3,5 %) — không nướng canvas đầu-kèm-bóng mỗi cỡ
       const a = this.co(ten, D, da ? 'xam' : '');
       if (a && a._ao) { const b = this.co(ten, D, 'bong'), m = Math.max(a.width, a.height), w = D * a.width / m, h = D * a.height / m; if (b && b._ao) ctx.drawImage(b, -w / 2, -h / 2 + D * 0.035, w, h); ctx.drawImage(a, -w / 2, -h / 2, w, h); ctx.globalAlpha = 1; return; }
     }
