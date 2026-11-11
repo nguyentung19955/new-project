@@ -52,6 +52,7 @@ const TRUM_KN = {
   },
   jammer: {
     chon(E, B, ds) {
+      if (B && B.t.some(T => T && T.xich && T.xich.E === E.uid)) return null; // 12/11: xích không tự hết → mỗi trùm chỉ giữ 1 cặp xích; còn xích thì KHÔNG niệm tiếp (bot: xích dồn kín bàn = bức tường)
       const r = rngTrum(E); // tất định (online lockstep) — game.js
       ds = ds.filter(T => !biKhoa(T)); // ụ khoá (băng) không nhận Câm mới — rà cộng hưởng 07/11, người dùng chốt
       const ht = tronTrum(ds.filter(T => SKILLS[T.id] && SKILLS[T.id].vai === 'ht' && !(T.st.cam > 0)), r);
