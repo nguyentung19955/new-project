@@ -1481,6 +1481,33 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - Kiểm thêm: mất ngữ cảnh (`MAT=200,320`) → 2D dự phòng đủ hình → GL lại; ảnh so cùng trạng thái GL ↔ 2D (kéo ghép co-op, Freezer đóng băng, Janus hoá đá) khác ≤ 633 điểm ảnh như bản live; `?gl=0` không tạo canvas GL, không lỗi trang. Hive vẫn tải ~4 texture nhỏ / khung (bẻ hình cầu trên CPU, y như bản live) — chưa sửa.
 - Công cụ: `tools/thap-kt-bonho-gl.js` (`dai` / `trieu`, `WAVE`, `VT=240`, `GC=1`, `TAO=1`). Máy đo = Chromium + GPU phần mềm: ms không đại diện, số đếm mới so được.
 
+## claude/demo-hop-tuong — lưới bộ bài ẩn không còn bị ghi lại mỗi lần chạm trong trận (11/11, nhánh song song A)
+- Nguyên nhân khung chậm `dom234 chon-luoi` trên iPhone: `OT.quet()` (`thap/js/otoigian.js`, gọi qua MutationObserver mỗi khi bảng chạm ụ `#tt` / khay thẻ có phần tử mới) chạy `OT.gan()` cho cả ~97 thẻ `#chon-luoi .c` đang ẨN; `classList.add('ot')` + `dataset.otb = …` luôn sinh mutation + tính lại style dù giá trị y cũ (194 mutation / lần chạm ụ hoặc nâng thẻ, cả tài khoản thường lẫn admin).
+- Sửa: `OT.gan` chỉ ghi khi giá trị đổi; `OT.quet` bỏ qua lưới + ô bộ bài khi `#chon` đang ẩn (đánh dấu `_choChon`), observer thuộc tính `hidden` của `#chon` quét lại ngay khi màn bộ bài hiện. Đo: 194 → 0 mutation trong `#chon-luoi` mỗi lần chạm ụ / nâng thẻ / triệu hồi; sau trận 97/97 thẻ đủ viền + ngọc đúng bậc. Chỉ hiển thị, không đổi luật.
+
+## claude/demo-hop-tuong — WebGL: tấm đếm dưới ụ không còn tải canvas lên GPU mỗi lần số đổi (11/11, nhánh song song A)
+- Trước: `DEMKN.ve` (`thap/js/demkn.js`) vẽ cả tấm (`2/90`, `1/14`, `×3`…) vào 1 canvas riêng của ụ rồi `GLR.ban` → mỗi lần số đổi = 1 lần tải canvas→texture (iPhone 3–50 ms / lần, `up1/50 76x23` trong khung chậm).
+- Giờ (chỉ đường GL, `ctx.laGL`): `DEMKN.veGL` vẽ tấm bằng các Ô ẢNH RỜI nằm sẵn trong atlas — khung `h2_tag` 3 mảnh + icon + TỪNG KÝ TỰ (`DEMKN.kyTu`: viền đen / ruột màu, dựng 1 lần theo cỡ + màu; vị trí đo theo tiền tố chuỗi, vẽ mọi viền rồi mọi ruột như `strokeText` + `fillText`). Số đổi chỉ tính lại vị trí ký tự, không tải gì. Bản 2D (`?gl=0`) giữ nguyên canvas như cũ.
+- Cờ Bạc (`thap/js/jackpot.js`): ô tối đỏ lúc "khác hết" ở lớp GL là `fillRect` (lệnh vector = 1 lần tải canvas nhỏ / ô / khung) → GL vẽ 1 ô ảnh màu đặc 4×4 dựng 1 lần × độ mờ.
+- Đo (Chromium + GPU phần mềm, co-op 3× wave 20→28, 2 bàn có Ember / Twin Anvil / Leviathan / Rồng Máy / Ngôi Sao / Cờ Bạc, bọc `texImage2D` / `texSubImage2D` 20 s): đầu trận 30,1 → ≤ 18,9 lần tải / s (tấm đếm 11,6 → 0 / s); sau 30 s khởi động 6,0 → 3–5 / s, trong đó TẢI LẠI (cùng canvas) 3,0 tấm đếm + 0,6 ô Cờ Bạc → 0; phần còn lại toàn ảnh tải LẦN ĐẦU (chữ số sát thương `chuSo` 19×27 / 25×36 — 60 ảnh là đủ bộ; đầu súng phóng to dần lúc ghép / biến hình `REN.co` mỗi cỡ 1 canvas; hạt hiệu ứng mới) — chưa sửa.
+- Kiểm: băm luật cảnh A `HASH=450,900` gl=1 = gl=0 (`8b4f420b` / `2f83154d`), không lỗi trang; ảnh cùng trạng thái gl=1 ↔ gl=0: tấm đếm khớp (lệch viền khử răng cưa ≤ ~10 % điểm ảnh của tấm, mắt thường không thấy). Lúc ụ đang mờ dần (alpha < 1) chữ trên tấm đậm hơn bản canvas một chút (các ô ảnh chồng nhau thay vì 1 ảnh gộp). Chỉ hiển thị, không đổi luật.
+## claude/demo-hop-tuong — WebGL: bớt tải texture giữa trận (11/11 đêm, nhánh song song `claude/gl-song-song-b`)
+- iPhone người dùng: khung chậm nào cũng có 2–6 lần tải canvas → texture. Đo (`tools/thap-kt-tai-gl.js`, co-op 3× 180 s wave 25 → 62): 2 441 lần tải ảnh tĩnh = 59 % tải lần đầu + 41 % tải LẠI (675 ảnh tải > 1 lần: atlas bỏ ô không vẽ 10 s, kho đệm xoay, texture riêng bỏ sau 10 s).
+- `thap/js/gl/glr.js`: gom atlas giữ theo ngân sách (mới dùng nhất trước, 5 trang) thay vì tuổi; texture riêng chỉ bỏ theo tuổi khi vượt mức; hàng nạp 2 mức (nạp trước ≤ 1 / khung ở khung nhẹ + ghim 60 s · đang cần); không đọc ngược GPU khi loại ảnh cũ. `render.js`: thế hệ kho đệm dài 1,6× khi GL vẽ.
+- `thap/js/nongskill.js`: trùm làm nóng từ "BOSS IN 3" (GL); mọi dạng ụ của 2 bộ bài vẽ thử ở màn mở đầu; `REN.co` cỡ động dùng lại bản gần cỡ (GL). `quaianim.js`: chớp trắng dải khung = chế độ trắng của shader (GL). `vaotran.js`: nán ≤ 2,5 s nếu còn việc làm nóng (GL; đo: không cần).
+- Chỉ hình — không đổi luật / số: băm gl0 = gl1 (co-op A `8b4f420b` / `2f83154d`, trùm wave 30 `e568d6c0`); mất ngữ cảnh `MAT=200,320` → 2D → GL lại, 0 lỗi.
+
+| 180 s | trước | sau |
+|---|---|---|
+| tải ảnh tĩnh / giây (cả trận · nửa sau) | 13,6 · 8,7 | 8,0 · 1,5 |
+| nguồn ≥ 256 điểm / giây | 1,23 | 0,84 |
+| ảnh tải > 1 lần (lần tải lại) | 675 (999) | 58 (58) |
+| tải trong 2 s sau trùm, wave 30/40/50/60 | 100/100/53/40 | 58/20/50/41 |
+| nhiều nhất 1 khung (tĩnh) | 4 | 4 |
+| MB canvas + GPU | 138–181 | 148–198 |
+| màn mở đầu | 4,0 s · 73 texture | 4,0 s · 136 texture |
+
+- Còn lại (chưa sửa, ngoài phạm vi phiên này): tấm đếm `ND.veHuyHieu` (demkn.js) vẽ lại + tải lại 27–44 lần / giây; tải lần đầu của ảnh tô màu / khung chiêu / chữ số theo cỡ. Chi tiết: `docs/demo-hop-tuong/tuvan/webgl/KE-HOACH.md` mục 10.
 ## claude/che-do-dcdw — hình mới cho xích Static Jammer + huy hiệu TWIN-FORGED (12/11)
 
 - Chỉ là hình (không đổi gameplay, không Math.random), 3 ảnh ChatGPT trong `thap/assets/`: `trum_xich_vong` (vòng xích + ổ khoá ở đáy, đứng yên, ~1,05 ô) thay vòng xích xoay trên từng ụ bị Static Jammer xích (`render.js` veU; Kẹp / Nhiễu vẫn dùng `vong_xich` cũ) · `trum_xich_day` lặp dọc đoạn nối tâm 2 ô của cùng một cặp xích, cao 0,22 ô, vẽ TRÊN lớp ụ (`REN.veXichDay`; đứt xích thì mất cùng lúc) · `loren_songsinh` = huy hiệu 0,34 ô ở góc dưới-phải ụ đang TWIN-FORGED (`demkn.js`), thay 2 con số nhỏ; ụ 1 buff giữ tấm đếm cũ.
@@ -1515,3 +1542,27 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - PVP: "next prize" = mốc cúp CHƯA ĐẠT kế tiếp; mốc đã vượt mà chưa nhận được phát bù khi vào HOME.
 - Thưởng "rương ×2" (mốc cúp 300 / 1 000, CO-OP wave 20 / 40, Raid bậc 3) trước chỉ phát 1 rương → nay phát đủ; kết quả hiện OPEN ×N.
 - RAID bậc 2: máu 14 000 → 22 000. Huy hiệu TWIN-FORGED có quầng sáng. Kiểm: `thap-kt-cup` (thêm 2 mục), `-push`, `-raid`, `-khe`.
+## claude/demo-hop-tuong — Full WebGL bước 3 + 4 (Hive): chữ trong trận = ô ảnh ký tự, Hive lăn cầu bằng shader (nhánh làm `claude/gl-full-w1`)
+- CHỈ HÌNH, chỉ bản WebGL (`?gl=0` / 2D dự phòng như cũ). Luật / số liệu không đổi → `TAI-LIEU-GOC.md` không đổi. Chi tiết + giới hạn: `docs/demo-hop-tuong/tuvan/webgl/KE-HOACH.md` mục 11.
+- **Chữ** (`thap/js/chugl.js` mới): số sát thương, chí mạng, +mana, nhãn kỹ năng, JACKPOT, +N huy hiệu, tên ụ khi kéo, ký tự tấm đếm vẽ bằng TỜ KÝ TỰ TRẮNG (dựng từ phông game, 1 tờ / bộ ký tự / cỡ) tô màu bằng màu đỉnh (`X.nhuom` ở `GLR.ve`) — số / màu / chuỗi mới không tải texture.
+  Tải texture do chữ: 30 s đầu 249 → ~35, sau đó 1,6 → 0,1–0,3 / giây; `GLR.thieu` (chữ đi đường 2D) 846 lệnh / 20 s → 0. `?chugl=0` tắt để so.
+- **Hive**: lăn cầu 3D tính bằng fragment shader (`GLR.veCT` + `CAU_FS` ở `quaianim.js`) vào bộ đệm khung — tải texture / khung khi Hive trên màn 4,08 → 0,08; hình = bản CPU (0–1 điểm ảnh khác). `?caugl=0` tắt để so. Patcher 0,07 · Octopus 0,45 (không tăng).
+- Kiểm: băm gl1 = gl0 (co-op A `8b4f420b` / `2f83154d`, Hive `f6b57405`, Patcher `6acc246e`, Octopus `fe56be3`); mất ngữ cảnh `MAT=200,320` → 2D → GL lại, 0 lỗi trang. File: `chugl.js` (mới), `gl/glr.js`, `render.js`, `demkn.js`, `quaianim.js`, `index.html`.
+## claude/demo-hop-tuong — Full WebGL bước 1 + 2: ẢNH ẢO (nhánh `claude/gl-full-w2`, 11/11 tối)
+
+- Chỉ phần vẽ, không đổi luật / số (băm trạng thái gl=1 = gl=0: `8b4f420b` / `2f83154d`, cảnh trùm `277795d6`). `?gl=0` không đổi; `?gla=0` = đường GL cũ để so; chỉ WebGL2.
+- Bản GL: ảnh thu nhỏ / tô màu / trắng / xám / bóng **không còn dựng canvas trên CPU** — `REN.co`, `coDai`, `mip`, `banXam`, `banTrang`, `toMauA`, `FXU.mau` (→ `PX.*`), `SIG.khung` trả canvas ảo 0×0 trỏ về
+  texture ẢNH GỐC (Image tải thẳng lên GPU, tầng ½ ¼ dựng trên GPU); tô màu / trắng / xám / bóng đen bằng shader (thuộc tính đỉnh `a_t`, `a_k`), vẫn gom lô. Đầu ụ + bóng = 2 ô ảnh từ 1 texture (bỏ canvas `db|…`).
+- Đo co-op 3× 120 s (wave 25 → 49): tải canvas → texture 11,3 → 3,7 / giây (60 s cuối 4,0 → 0,9; phần còn lại chủ yếu chữ số — phiên khác), canvas đệm 52–71 MB → 36–42 MB, GPU 94–122 → 79–114 MB, tổng 145–195 → 108–152 MB.
+- File: `thap/js/gl/glr.js` (mục ẢNH ẢO), `render.js`, `fxu.js`, `sigfx.js`, `nongskill.js`, `tools/thap-kt-tai-gl.js`. Chi tiết + việc còn lại: `docs/demo-hop-tuong/tuvan/webgl/KE-HOACH.md` mục 11.
+
+
+## claude/demo-hop-tuong — gộp WebGL hoàn toàn đợt 1 (W1 + W2) + tự kiểm ảnh ảo (12/11 sáng)
+- Gộp `claude/gl-full-w1` (chữ trong trận = tấm ký tự trên GPU, `chugl.js`; Hive lăn cầu bằng shader) và `claude/gl-full-w2` (ẢNH ẢO: ảnh gốc lên GPU 1 lần, thu nhỏ / tô màu / xám / trắng bằng shader; chỉ WebGL2; `?gla=0` tắt). Xung đột 1 dòng ở `GLR.ve` (màu đỉnh): gộp cả `E.al` (ảnh ảo) lẫn `X.nhuom` (chữ).
+- Thêm `GLR.aoKiem()`: lúc khởi tạo chạy thử chuỗi lệnh GL của ảnh ảo (tải canvas không luỹ thừa 2 → generateMipmap → bộ đệm khung → copyTexSubImage2D → đọc lại điểm ảnh); trượt → tự về đường GL cũ. Nhãn admin ghi `GLa` khi ảnh ảo đang chạy, `GL` khi không.
+- Kiểm sau gộp: băm co-op A gl0 = gl1 (`8b4f420b` / `2f83154d`); cùng trạng thái GL vs 2D lệch 1 902 / 2,96 triệu điểm ảnh (> 60 mức; mép khử răng cưa), đã xem ảnh cạnh nhau. CHƯA kiểm: Safari / iPhone thật, PVP, hồi quy đầy đủ.
+
+## claude/demo-hop-tuong — sửa nhanh từ phiên điều phối cũ (12/11 04:10)
+- CO-OP (không online): quái chết thì CẢ HAI bàn nhận mana (`game.js chet`) — người dùng: bàn mình trống, hết mana, đồng đội giết mà mình không có mana để triệu hồi. Online chưa áp (bàn bạn là bàn con rối).
+- Thẻ ở hàng dưới chỉ nâng cấp khi cú bấm BẮT ĐẦU trên chính thẻ đó trong 1,5 s (`ui.js` `_theDown`) — chặn "bấm ma" lúc vừa vào trận (bấm PLAY/CONTINUE ở màn trước, click rơi xuống hàng thẻ → tự nâng cấp, mất mana).
+- Chạm ụ: nhấc tay < 350 ms và đi < 0,35 ô thì vẫn là CHẠM dù ngón rung quá ngưỡng kéo (`ui.js het`) — iPhone hay "ấn ụ mà không hiện gợi ý ghép". Đã thử giả lập chạm rung 14 px: chọn được + sáng ô đích.

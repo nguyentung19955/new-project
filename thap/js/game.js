@@ -466,6 +466,8 @@ function chet(E, B) {
   const m = Math.round(E.trum ? manaGietGoc(G.wave) * 12 : manaGiet(G.wave) * E.d.mana); // 11/11: quái thường dùng manaGiet (đã nhân bù ít quái), trùm giữ công thức cũ × 12
   // ụ của bàn nào giết thì bàn đó nhận mana
   pB.mana += m; pB.manaNay += m; pB.dem.giet++;
+  // 12/11 người dùng: CO-OP — bên nào giết thì CẢ HAI bàn đều nhận mana (như DCDW). Chưa áp cho online (bàn bạn là bàn con rối — cần đồng bộ riêng).
+  if (G.che === 'coop' && G.ban.length === 2 && !(typeof ONS !== 'undefined' && ONS.on)) { const B2 = G.ban[1 - pB.i]; if (B2 && B2 !== pB) { B2.mana += m; B2.manaNay += m; } }
   FX.tiaLua(E.x, E.y, E.trum ? 30 : 8, '#ffb060', 160, 10);
   FX.khoi(E.x, E.y, E.d.co * 0.5);
   FX.no('laser_trung', E.x, E.y, E.d.co * (E.trum ? 2.2 : 1.3), 0.35);

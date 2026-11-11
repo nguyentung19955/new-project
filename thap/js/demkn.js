@@ -59,6 +59,7 @@ const DEMKN = {
     const h = Math.max(9, c * 0.2), m = ctx.getTransform(), k = m.a;
     if (!(k > 0) || Math.abs(m.b) > 1e-6 || Math.abs(m.c) > 1e-6 || Math.abs(m.d - k) > 1e-6 || typeof REN === 'undefined' || !REN.cGet) return this.ve0(ctx, v, x, yDay, h, al);
     const hp = Math.round(h * k * 4) / 4, key = 'dk|' + hp + '|' + (v.sang ? 1 : 0) + '|' + (v.mau || '') + '|' + (v.bac || 0) + (v.giuMau ? 'g' : '') + (v.v4 >= 0 ? 'h' + v.v4 : '') + '|' + v.m.map(p => p.ic + ':' + (p.xoay || 0) + ':' + p.s).join(',');
+    if (ctx.laGL) { if (!REN.img('h2_tag')) return; if (this.veGL(ctx, T, v, key, x, yDay, hp, k, m, al)) return; return this.ve0(ctx, v, x, yDay, h, al); } // WebGL: ô ảnh rời, số đổi không tải gì lên GPU
     // tối ưu giật co-op (11/11): mỗi ụ giữ 1 canvas RIÊNG, số đổi thì vẽ lại vào chính canvas đó (chỉ lớn thêm, không tạo mới).
     //   Trước: mỗi giá trị mới = 1 canvas mới giữ trong bộ đệm REN (cuối trận số nhảy liên tục → ~1 canvas / khung, đẩy bộ đệm xoay vòng + dọn rác).
     const RG = this._rieng || (this._rieng = new WeakMap());
@@ -77,6 +78,63 @@ const DEMKN = {
     }
     const dx = Math.round(m.a * (x - a._w / 2) + m.e) - 1, dy = Math.round(m.d * (yDay - hp / k - 1) + m.f) - 1;
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = al; ctx.drawImage(a.cv, 0, 0, a.w, a.h, dx, dy, a.w, a.h); ctx.restore();
+  },
+  // ---------- WEBGL (11/11): tấm đếm = các Ô ẢNH RỜI đã nằm sẵn trong atlas — khung h2_tag 3 mảnh + icon + TỪNG KÝ TỰ (viền đen / ruột màu, dựng 1 lần theo cỡ + màu).
+  //   Trước: cả tấm vẽ vào 1 canvas riêng của ụ rồi GLR.ban → mỗi lần số đổi = 1 lần tải canvas→texture (iPhone 3–50 ms / lần, "up1/50 76x23" trong khung chậm).
+  //   Giờ: số đổi chỉ tính lại vị trí ký tự (đo chữ 1 lần / giá trị mới), KHÔNG tải gì. Hình khớp bản canvas: cùng gốc bám điểm ảnh, cùng phông / nét viền / thứ tự
+  //   (mọi viền của 1 cặp rồi mọi ruột, như strokeText + fillText); mỗi ký tự bám điểm ảnh riêng (lệch ≤ 0,5 điểm ảnh so với chữ vẽ liền). Bản 2D giữ nguyên canvas.
+  kyTu(ch, font, f, hl, k, mau) { // mau = null → viền đen
+    const GM = this._kyTu || (this._kyTu = new Map()), key = ch + '|' + font + '|' + k + '|' + (mau || '');
+    let c = GM.get(key); if (c) return c;
+    const q = this._mx || (this._mx = document.createElement('canvas').getContext('2d')); q.font = font;
+    const lw = Math.max(1.5, f * 0.22), le = Math.ceil((lw * 0.75 + 1) * k) + 1;
+    c = document.createElement('canvas'); c.width = Math.ceil(q.measureText(ch).width * k) + 2 * le; c.height = Math.ceil(hl * k) + 3; // cao = canvas tấm cũ (chữ bị cắt đúng như cũ)
+    const y = REN.c2d(c); y.setTransform(k, 0, 0, k, le, 1); y.font = font; y.textBaseline = 'middle'; y.textAlign = 'left';
+    if (mau) { y.fillStyle = mau; y.fillText(ch, 0, hl / 2 + 0.5); } else { y.lineWidth = lw; y.strokeStyle = '#000'; y.lineJoin = 'round'; y.strokeText(ch, 0, hl / 2 + 0.5); }
+    c._ox = le; if (GM.size > 900) GM.clear(); GM.set(key, c); return c;
+  },
+  veGL(ctx, T, v, key, x, yDay, hp, k, m, al) {
+    const hl = hp / k, f = hl * 0.7, ic = hl * 0.92, gap = hl * 0.12, pad = hl * 0.42, font = '900 ' + f.toFixed(2) + 'px ' + FONT.display;
+    const anh = []; for (let i = 0; i < v.m.length; i++) { const im = REN.img(v.bac && !v.giuMau && typeof DOTPHA !== 'undefined' ? DOTPHA.ten(v.m[i].ic, v.bac, v.v4) : v.m[i].ic); if (!im || !REN.img(v.m[i].ic)) return false; anh.push(im); }
+    const RG = this._riengGL || (this._riengGL = new WeakMap());
+    let a = RG.get(T);
+    if (!a || a.key !== key) { // bố cục: x icon + x từng ký tự (đo theo tiền tố → đúng khoảng cách chữ vẽ liền)
+      const q = this._mx || (this._mx = document.createElement('canvas').getContext('2d')); q.font = font;
+      let xx = pad; const ds = [];
+      for (let i = 0; i < v.m.length; i++) {
+        const s = v.m[i].s; if (i) xx += hl * 0.3;
+        const xi = xx, cs = []; xx += ic + gap;
+        for (let j = 0; j < s.length; j++) cs.push(xx + (j ? q.measureText(s.slice(0, j)).width : 0));
+        xx += q.measureText(s).width; ds.push({ xi, cs });
+      }
+      a = { key, w: xx + pad, ds }; RG.set(T, a);
+    }
+    const Ox = Math.round(m.a * (x - a.w / 2) + m.e), Oy = Math.round(m.d * (yDay - hl - 1) + m.f), mau = v.sang ? '#ffe46b' : v.mau || '#f2f6fa';
+    ctx.save(); ctx.globalAlpha = al; ctx.setTransform(k, 0, 0, k, Ox, Oy);
+    this.khung(ctx, 0, 0, a.w, hl);
+    for (let i = 0; i < v.m.length; i++) {
+      const p = v.m[i], xi = a.ds[i].xi, im2 = REN.mip ? REN.mip(anh[i], ic * REN.s * REN.dpr) : anh[i];
+      if (p.xoay) { ctx.save(); ctx.translate(xi + ic / 2, hl / 2); ctx.rotate(p.xoay); ctx.drawImage(im2, -ic / 2, -ic / 2, ic, ic); ctx.restore(); }
+      else ctx.drawImage(im2, xi, (hl - ic) / 2, ic, ic);
+    }
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    // Ô ẢNH KÝ TỰ (js/chugl.js): 1 tờ ký tự trắng cho cỡ chữ của tấm đếm, tô màu bằng màu đỉnh → màu / ký tự mới không dựng canvas, không tải texture (trước: mỗi ký tự × màu 1 canvas)
+    const m4 = typeof CHU !== 'undefined' && CHU.chay() && ctx.op <= 1 ? CHU.mau(mau) : null;
+    if (m4) {
+      const M = CHU.layMat('900 ', ' ' + FONT.display, Math.round(f * k * 100) / 100), net = Math.round(Math.max(1.5, f * 0.22) * k * 100) / 100;
+      const yb = Oy + k * (hl / 2 + 0.5) + CHU.gocY(M, 'middle'), al2 = ctx.globalAlpha;
+      for (let i = 0; i < v.m.length; i++) {
+        const d = a.ds[i], D = d.D || (d.D = { cs: Array.from(v.m[i].s), xs: Float32Array.from(d.cs, (x) => Math.round(k * x)), w: 0 });
+        CHU.veDay(M, D, Ox, yb, 1, CHU.DEN, al2, ctx.op, ctx.cat, net, 'round'); CHU.veDay(M, D, Ox, yb, 1, m4, al2, ctx.op, ctx.cat, 0, '');
+      }
+      ctx.restore(); return true;
+    }
+    for (let i = 0; i < v.m.length; i++) {
+      const s = v.m[i].s, cs = a.ds[i].cs;
+      for (let j = 0; j < s.length; j++) { const g = this.kyTu(s[j], font, f, hl, k, null); ctx.drawImage(g, Ox + Math.round(k * cs[j]) - g._ox, Oy - 1); }
+      for (let j = 0; j < s.length; j++) { const g = this.kyTu(s[j], font, f, hl, k, mau); ctx.drawImage(g, Ox + Math.round(k * cs[j]) - g._ox, Oy - 1); }
+    }
+    ctx.restore(); return true;
   },
   rong(v, h) {
     const x = REN.ctxNong ? REN.ctxNong() : document.createElement('canvas').getContext('2d'), f = h * 0.7, ic = h * 0.92, gap = h * 0.12, pad = h * 0.42;

@@ -51,6 +51,8 @@ const SIG = {
     const key = 'sig|' + ten + '|' + i + '|' + q;
     let c = REN.cGet(key); if (c) return c;
     const qh = Math.max(2, Math.round(q * m[2] / m[1]));
+    if (a._goc && typeof _GLA === 'function' && _GLA()) return REN.cSet(key, GLR.ao(a, q, qh, { o: [{ lx: 0, ly: 0, lw: q, lh: qh, sx: i * m[1], sy: 0, sw: m[1], sh: m[2], p: null }], kho: 'cache', khoa: key, // ẢNH ẢO (glr.js): khung chiêu = ô của dải gốc trên GPU, không thu nhỏ + tải từng khung
+      dung: (cv) => { const g = a; if (!g || !g.width) return false; REN.veNho(REN.c2d(cv), g, i * m[1], 0, m[1], m[2], 0, 0, cv.width, cv.height); return true; } }));
     c = document.createElement('canvas'); c.width = q; c.height = qh;
     REN.veNho(REN.c2d(c), a, i * m[1], 0, m[1], m[2], 0, 0, q, qh);
     return REN.cSet(key, c);
