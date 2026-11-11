@@ -3,6 +3,7 @@
 Nhánh `claude/demo-hop-tuong` chỉ chứa game **TURRET MERGE** (merge tower-defense kiểu DCDW): game ở `thap/`, tài liệu/ảnh gốc/tư vấn ở `docs/demo-hop-tuong/`, công cụ ở `tools/thap-*`.
 
 ## Đọc trước khi làm
+- **Phiên ĐIỀU PHỐI mới đọc trước tiên**: `docs/demo-hop-tuong/BAN-GIAO-DIEU-PHOI.md` (việc đang làm, hàng đợi, cách xuất bản, câu hỏi còn treo — viết 11/11).
 - Bàn giao + luật game người dùng đã chốt: `docs/demo-hop-tuong/ban-giao/BAN-GIAO.md`.
 - Luật code/hình bắt buộc: `thap/QUY-TAC-HINH.md`.
 - Đụng tới tương tác giữa các ụ (ghép, biến hình, nâng/hạ sao, đá/băng, online): đọc `docs/demo-hop-tuong/tuvan/conghuong/NGUYEN-TAC.md`.
