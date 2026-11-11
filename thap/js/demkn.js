@@ -118,6 +118,17 @@ const DEMKN = {
       else ctx.drawImage(im2, xi, (hl - ic) / 2, ic, ic);
     }
     ctx.setTransform(1, 0, 0, 1, 0, 0);
+    // Ô ẢNH KÝ TỰ (js/chugl.js): 1 tờ ký tự trắng cho cỡ chữ của tấm đếm, tô màu bằng màu đỉnh → màu / ký tự mới không dựng canvas, không tải texture (trước: mỗi ký tự × màu 1 canvas)
+    const m4 = typeof CHU !== 'undefined' && CHU.chay() && ctx.op <= 1 ? CHU.mau(mau) : null;
+    if (m4) {
+      const M = CHU.layMat('900 ', ' ' + FONT.display, Math.round(f * k * 100) / 100), net = Math.round(Math.max(1.5, f * 0.22) * k * 100) / 100;
+      const yb = Oy + k * (hl / 2 + 0.5) + CHU.gocY(M, 'middle'), al2 = ctx.globalAlpha;
+      for (let i = 0; i < v.m.length; i++) {
+        const d = a.ds[i], D = d.D || (d.D = { cs: Array.from(v.m[i].s), xs: Float32Array.from(d.cs, (x) => Math.round(k * x)), w: 0 });
+        CHU.veDay(M, D, Ox, yb, 1, CHU.DEN, al2, ctx.op, ctx.cat, net, 'round'); CHU.veDay(M, D, Ox, yb, 1, m4, al2, ctx.op, ctx.cat, 0, '');
+      }
+      ctx.restore(); return true;
+    }
     for (let i = 0; i < v.m.length; i++) {
       const s = v.m[i].s, cs = a.ds[i].cs;
       for (let j = 0; j < s.length; j++) { const g = this.kyTu(s[j], font, f, hl, k, null); ctx.drawImage(g, Ox + Math.round(k * cs[j]) - g._ox, Oy - 1); }

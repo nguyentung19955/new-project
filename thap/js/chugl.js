@@ -10,13 +10,13 @@
 'use strict';
 const CHU = (() => {
   const TAT = (() => { try { return new URLSearchParams(location.search).get('chugl') === '0'; } catch (e) { return false; } })();
-  const RONG = 512, BAC = 1.25, BAC_NET = 1.12, MAT_MAX = 28;
+  const RONG = 512, BAC = 1.25, BAC_NET = 1.25, MAT_MAX = 28;
   // bộ ký tự dựng sẵn: SO = số sát thương / +N / tấm đếm · CHU = nhãn kỹ năng, tên ụ, JACKPOT… (chữ hoa + thường + dấu hay gặp)
   const SO = '0123456789KMB.,+-×x/%!★:', CHU_CAI = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz?\'()';
   let mx = null; const do_ = () => mx || (mx = document.createElement('canvas').getContext('2d'));
   const I = { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0, al: 1, op: 0, cat: null, trang: 0, nhuom: null }; // "ngữ cảnh" đơn vị (điểm ảnh thiết bị) cho GLR.ve
   const C = {
-    tat: TAT, mat: new Map(), _mau: new Map(), _font: new Map(), dem: { mat: 0, to: 0, kyTu: 0, them: 0, ve: 0 },
+    tat: TAT, SO, CHU_CAI, DEN: [0, 0, 0, 1], mat: new Map(), _mau: new Map(), _font: new Map(), dem: { mat: 0, to: 0, kyTu: 0, them: 0, ve: 0 },
     // lớp GL đang vẽ khung này (ngoài khung / 2D dự phòng / ?gl=0 → false → đường cũ)
     chay() { return !TAT && typeof GLR !== 'undefined' && GLR.bat && GLR.dangVe && !this._cho(); },
     _cho() { try { return !!(document.fonts && document.fonts.status === 'loading'); } catch (e) { return false; } }, // phông đang về: chưa dựng tờ (dựng bằng phông dự phòng là sai hình)
@@ -44,41 +44,52 @@ const CHU = (() => {
       if (this.mat.size >= MAT_MAX) { let cu = null, kc = null; for (const [k, v] of this.mat) if (!cu || v.f < cu.f) { cu = v; kc = k; } this.mat.delete(kc); } // quá nhiều cỡ (đổi cỡ màn…): bỏ mặt lâu không dùng nhất
       const x = do_(); x.font = dau + P + 'px' + duoi; x.textBaseline = 'alphabetic'; x.textAlign = 'left';
       const d = x.measureText('Hg'), as = Math.ceil(Math.max(d.fontBoundingBoxAscent || 0, d.actualBoundingBoxAscent || 0, P * 0.95)) + 1, de = Math.ceil(Math.max(d.fontBoundingBoxDescent || 0, d.actualBoundingBoxDescent || 0, P * 0.3)) + 1;
-      M = { key, font: x.font, fontDat: dau + P + 'px' + duoi, P, as, de, to: [], g: new Map(), adv: new Map(), day: new Map(), goc: new Map(), f: GLR.f };
+      M = { key, font: x.font, fontDat: dau + P + 'px' + duoi, P, as, de, to: [], le: null, g: new Map(), adv: new Map(), day: new Map(), goc: new Map(), f: GLR.f };
       this.mat.set(key, M); this.dem.mat++; return M;
     },
-    // 1 chỗ w×h trên tờ của mặt chữ (xếp kệ); cao = số hàng dự trù khi phải mở tờ mới
-    _cho1(M, w, h, hang) {
-      let T = M.to[M.to.length - 1];
-      if (T && T.x + w > T.c.width) { T.y += T.hh; T.x = 0; T.hh = 0; }
-      if (!T || T.y + h > T.c.height) {
-        const c = document.createElement('canvas'); c.width = RONG; c.height = Math.min(RONG, Math.max(h, Math.ceil(h * Math.max(1, hang || 2))));
-        const x = c.getContext('2d'); x.font = M.fontDat; x.textBaseline = 'alphabetic'; x.textAlign = 'left'; x.fillStyle = '#fff'; x.strokeStyle = '#fff';
-        T = { c, q: x, x: 0, y: 0, hh: 0 }; M.to.push(T); this.dem.to++;
-      }
-      const r = { T, x: T.x, y: T.y }; T.x += w; if (h > T.hh) T.hh = h; return r;
-    },
-    // ô ký tự: net = 0 → ruột; net > 0 → viền dày net (điểm ảnh của tờ), kiểu nối noi. Trả { p (canvas tờ), x, y, w, h, ox, oy } · null = ký tự trống
-    kyTu(M, ch, net, noi, hang) {
-      const key = net ? ch + '\n' + net + noi : ch; let g = M.g.get(key); if (g !== undefined) return g;
+    // đo 1 ô ký tự (điểm ảnh của tờ); null = ký tự trống (dấu cách…)
+    _do1(M, ch, net, noi) {
       const x = do_(); if (x.font !== M.font) x.font = M.fontDat; x.textBaseline = 'alphabetic'; x.textAlign = 'left';
       const d = x.measureText(ch), l = Math.max(0, Math.ceil(d.actualBoundingBoxLeft || 0)), r = Math.max(Math.ceil(d.width), Math.ceil(d.actualBoundingBoxRight || 0));
-      if (!(d.width > 0) || !((d.actualBoundingBoxLeft || 0) + (d.actualBoundingBoxRight || 0) > 0)) { M.g.set(key, null); return null; } // dấu cách…
+      if (!(d.width > 0) || !((d.actualBoundingBoxLeft || 0) + (d.actualBoundingBoxRight || 0) > 0)) return null;
       const le = Math.ceil(net ? net * (noi === 'miter' ? 3 : 0.75) : 0) + 2, as = Math.max(M.as, Math.ceil(d.actualBoundingBoxAscent || 0)), de = Math.max(M.de, Math.ceil(d.actualBoundingBoxDescent || 0));
-      const w = l + r + 2 * le, h = as + de + 2 * le, o = this._cho1(M, w + 1, h + 1, hang), q = o.T.q;
-      if (net) { q.lineWidth = net; q.lineJoin = noi || 'round'; q.strokeText(ch, o.x + le + l, o.y + le + as); } else q.fillText(ch, o.x + le + l, o.y + le + as);
-      GLR.ban(o.T.c); // tờ đã lên GPU thì tải lại (1 lần / tờ / khung dù thêm mấy ký tự); chưa lên: vô hại
-      g = { p: o.T.c, T: o.T, x: o.x, y: o.y, w, h, ox: le + l, oy: le + as }; M.g.set(key, g); this.dem.kyTu++; if (o.T.len) this.dem.them++;
-      return g;
+      return { ch, l, le, as, w: l + r + 2 * le, h: as + de + 2 * le };
     },
-    // dựng sẵn bộ ký tự (ruột + các kiểu viền) vào tờ đủ chỗ → 1 lần tải cho cả bộ
-    san(M, bo, nets) {
-      const kieu = [[0, '']].concat(nets || []), n = bo.length * kieu.length; let dai = 0;
-      const x = do_(); x.font = M.fontDat;
-      for (const [net] of kieu) dai += bo.length * (M.P * 0.72 + 2 * (Math.ceil(net * 0.75) + 2) + 2);
-      const hang = Math.ceil(dai / RONG) + 1;
-      for (const [net, noi] of kieu) for (const ch of bo) this.kyTu(M, ch, net, noi, hang);
-      return n;
+    _to(M, w, h) {
+      const c = document.createElement('canvas'); c.width = w; c.height = h;
+      const x = c.getContext('2d'); x.font = M.fontDat; x.textBaseline = 'alphabetic'; x.textAlign = 'left'; x.fillStyle = '#fff'; x.strokeStyle = '#fff';
+      const T = { c, q: x, x: 0, y: 0, hh: 0 }; M.to.push(T); this.dem.to++; return T;
+    },
+    _in(M, T, o, x, y, net, noi) {
+      const q = T.q; if (net) { q.lineWidth = net; q.lineJoin = noi || 'round'; q.strokeText(o.ch, x + o.le + o.l, y + o.le + o.as); } else q.fillText(o.ch, x + o.le + o.l, y + o.le + o.as);
+      const g = { p: T.c, T, x, y, w: o.w, h: o.h, ox: o.le + o.l, oy: o.le + o.as }; M.g.set(net ? o.ch + '\n' + net + noi : o.ch, g); this.dem.kyTu++; return g;
+    },
+    // ô ký tự: net = 0 → ruột; net > 0 → viền dày net (điểm ảnh của tờ), kiểu nối noi. Trả { p (canvas tờ), x, y, w, h, ox, oy } · null = ký tự trống.
+    //   Ký tự chưa có: dựng CẢ BỘ của nó (SO hoặc CHU_CAI) cho kiểu (ruột / viền) này vào 1 TỜ MỚI vừa khít → 1 lần tải / bộ / kiểu, không tải lại tờ cũ.
+    //   Ký tự ngoài 2 bộ (hiếm): thêm vào tờ lẻ của mặt chữ + GLR.ban (tải lại riêng tờ lẻ).
+    kyTu(M, ch, net, noi) {
+      const key = net ? ch + '\n' + net + noi : ch; let g = M.g.get(key); if (g !== undefined) return g;
+      const bo = SO.indexOf(ch) >= 0 ? SO : CHU_CAI.indexOf(ch) >= 0 ? CHU_CAI : null;
+      if (bo) {
+        const ds = []; for (const c of bo) { const o = this._do1(M, c, net, noi); if (o) ds.push(o); else M.g.set(net ? c + '\n' + net + noi : c, null); }
+        let k = 0;
+        while (k < ds.length) { // xếp kệ: hàng ≤ RONG, tờ cao ≤ RONG
+          const vt = []; let x = 0, y = 0, hh = 0, wMax = 0, n = k;
+          for (; n < ds.length; n++) { const o = ds[n]; if (x + o.w + 1 > RONG) { y += hh; x = 0; hh = 0; } if (y + o.h + 1 > RONG && n > k) break; vt.push(x, y); x += o.w + 1; if (o.h + 1 > hh) hh = o.h + 1; if (x > wMax) wMax = x; }
+          const T = this._to(M, wMax, y + hh);
+          for (let i = k; i < n; i++) this._in(M, T, ds[i], vt[(i - k) * 2], vt[(i - k) * 2 + 1], net, noi);
+          k = n;
+        }
+        g = M.g.get(key); if (g === undefined) { g = null; M.g.set(key, null); }
+        return g;
+      }
+      const o = this._do1(M, ch, net, noi); if (!o) { M.g.set(key, null); return null; }
+      let T = M.le;
+      if (T && T.x + o.w + 1 > T.c.width) { T.y += T.hh; T.x = 0; T.hh = 0; }
+      if (!T || T.y + o.h + 1 > T.c.height) T = M.le = this._to(M, RONG, Math.min(RONG, (o.h + 1) * 2));
+      g = this._in(M, T, o, T.x, T.y, net, noi); T.x += o.w + 1; if (o.h + 1 > T.hh) T.hh = o.h + 1;
+      GLR.ban(T.c); this.dem.them++; // tờ lẻ đã lên GPU thì tải lại (1 lần / khung dù thêm mấy ký tự); chưa lên: vô hại
+      return g;
     },
     rong1(M, ch) { let a = M.adv.get(ch); if (a === undefined) { const x = do_(); if (x.font !== M.font) x.font = M.fontDat; a = x.measureText(ch).width; M.adv.set(ch, a); } return a; },
     // bố cục 1 chuỗi (điểm ảnh của tờ): x từng ký tự + tổng rộng. roi = cộng bề rộng từng ký tự (như REN.chuSo); không thì đo theo tiền tố (đúng khoảng cách chữ vẽ liền)
@@ -120,9 +131,9 @@ const CHU = (() => {
       const Pd = F.px * k; if (!(Pd >= 3 && Pd <= 200)) return false;
       const key = F.dau + '|' + F.duoi + '|' + Math.round(Pd * 100) / 100;
       let M = this.mat.get(key), q = 1; // có sẵn mặt đúng cỡ (số sát thương, tấm đếm) → dùng luôn; không thì mặt theo bậc
-      if (M) M.f = GLR.f; else { const Pb = this.bac(Pd); q = Pd / Pb; M = this.layMat(F.dau, F.duoi, Pb); if (!M.to.length) this.san(M, /^[0-9.,+\-KMB%×x!★: ]*$/.test(chu) ? SO : SO + CHU_CAI, []); }
+      if (M) M.f = GLR.f; else { const Pb = this.bac(Pd); q = Pd / Pb; M = this.layMat(F.dau, F.duoi, Pb); }
       let L = 0, noi = '';
-      if (net) { L = this.bacNet(s.lineWidth * k / q); noi = s.lineJoin === 'bevel' ? 'bevel' : s.lineJoin === 'miter' ? 'miter' : 'round'; if (!(L > 0) || s.dash) return false; }
+      if (net) { L = q === 1 ? Math.round(s.lineWidth * k * 100) / 100 : this.bacNet(s.lineWidth * k / q); noi = s.lineJoin === 'bevel' ? 'bevel' : s.lineJoin === 'miter' ? 'miter' : 'round'; if (!(L > 0) || s.dash) return false; }
       const D = this.day(M, chu, false), ta = s.textAlign;
       let dx = Math.round(k * args[1] + X.e), dy = Math.round(k * args[2] + X.f) + this.gocY(M, s.textBaseline) * q;
       if (ta === 'center') dx -= D.w * q / 2; else if (ta === 'right' || ta === 'end') dx -= D.w * q;
@@ -138,7 +149,6 @@ const CHU = (() => {
       for (let i = 0; i < s.length; i++) if (s.charCodeAt(i) > 0x2BFF || s.charCodeAt(i) < 32) return null;
       const k = REN.s * REN.dpr, P = Math.round(px * k * 100) / 100, M = this.layMat('900 ', ' ' + FONT.display, P);
       const so = /^[0-9.KM+]{1,12}$/.test(s), net = Math.round(3.5 * k * 100) / 100;
-      if (!M.to.length) this.san(M, so ? SO : SO + CHU_CAI, [[net, 'round']]);
       const D = this.day(M, s, so), tw = D.w / k;
       return { gl: 1, s, mau, px, m, M, D, net, k, tw, lw: tw + 8, lh: px * 1.35 + 6, by: px + 3 };
     },
@@ -160,7 +170,7 @@ const CHU = (() => {
       const d = typeof DIU !== 'undefined' && DIU.bat;
       for (const px of [Math.round(12 * (d ? 0.85 : 1)), Math.round(15 * (d ? 1.3 : 1.6) * (d ? 0.85 : 1))]) { // FX.chu1 của số sát thương: cỡ 12 (thường) / 15 (chí mạng) → cỡ vẽ như REN.veChu
         const M = this.layMat('900 ', ' ' + FONT.display, Math.round(px * k * 100) / 100);
-        if (!M.to.length) { n += this.san(M, SO, [[net, 'round']]); for (const T of M.to) if (GLR.nap) GLR.nap(T.c); }
+        if (!M.to.length) { this.kyTu(M, '0', 0, ''); this.kyTu(M, '0', net, 'round'); n += M.to.length; for (const T of M.to) if (GLR.nap) GLR.nap(T.c); }
       }
       return n;
     },
