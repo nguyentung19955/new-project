@@ -233,7 +233,7 @@ Object.assign(REN, {
     } else if (cf.phan === 'lua') {
       ve(than, tw, 0, 0); // chậu đứng yên
       const yc = (cf.cat - 0.5) * C, N = 24, PX = 0.25, PY = 0.3;
-      const o = this._cdU || (this._cdU = [0, 1, 2].map(() => document.createElement('canvas')));
+      const o = this._cdU || (this._cdU = [0, 1, 2].map(() => Object.assign(document.createElement('canvas'), { _glD: 1 }))); // _glD: canvas vẽ lại mỗi khung (GLR tải lại texture mỗi lần vẽ)
       const uon = (k, a) => { // vào canvas tạm (1 lần ghép → không vạch nối khi chớp): dải ngang lệch x ∝ (độ cao trên mép chậu)², vươn dọc neo ở mép chậu
         const n = a.width, c = o[k], w = Math.round(n * (1 + 2 * PX)), h = Math.round(n * (1 + PY));
         if (c.width !== w || c.height !== h) { c.width = w; c.height = h; }
@@ -392,7 +392,7 @@ Object.assign(REN, {
     } else if (cf.kieu === 'lan' && !E.trum) { // quái lăn (đông quái late game): KHÔNG vẽ qua canvas tạm mỗi khung — thân quay thẳng trên ctx,
       lanQ = 1; bongLan = this.cdBongLan(g, Cb, than);   // bóng sáng/tối cố định = canvas dựng 1 lần / cỡ (cắt theo hình thân), phủ không xoay
     } else if (cf.kieu === 'lan') { // thân quay theo quãng đường trong canvas tạm, phủ bóng sáng/tối CỐ ĐỊNH (cắt theo thân)
-      const n = than.width, o = this._cdO || (this._cdO = document.createElement('canvas'));
+      const n = than.width, o = this._cdO || (this._cdO = Object.assign(document.createElement('canvas'), { _glD: 1 }));
       if (o.width !== n) { o.width = n; o.height = n; }
       const x2 = o.getContext('2d'); x2.setTransform(1, 0, 0, 1, 0, 0); x2.globalCompositeOperation = 'source-over'; x2.globalAlpha = 1; x2.clearRect(0, 0, n, n);
       x2.translate(n / 2, n / 2); x2.rotate(E._cdA); x2.drawImage(than, -n / 2, -n / 2); x2.setTransform(1, 0, 0, 1, 0, 0);
@@ -543,7 +543,7 @@ Object.assign(REN, {
   },
   // vẽ thân (và lớp sáng) đã lăn vào canvas tạm; quay tâm lệch (tam): drawImage quay; trả { anh, sang }
   cdLanAnh(E, cf, than, sang) {
-    const n = than.width, mk = (k) => { const c = this[k] || (this[k] = document.createElement('canvas')); if (c.width !== n) { c.width = n; c.height = n; } return c; };
+    const n = than.width, mk = (k) => { const c = this[k] || (this[k] = Object.assign(document.createElement('canvas'), { _glD: 1 })); if (c.width !== n) { c.width = n; c.height = n; } return c; };
     const o = mk('_cdO'), o2 = sang ? mk('_cdO2') : null;
     if (cf.tamQ) {
       const px = cf.tamQ[0] * n, py = cf.tamQ[1] * n;
@@ -611,7 +611,7 @@ Object.assign(REN, {
   },
   // bản trắng (chớp trúng đòn) của canvas tạm — canvas riêng, dựng lại mỗi lần cần
   cdTrang(c) {
-    const w = this._cdW3 || (this._cdW3 = document.createElement('canvas')); if (w.width !== c.width) { w.width = c.width; w.height = c.height; }
+    const w = this._cdW3 || (this._cdW3 = Object.assign(document.createElement('canvas'), { _glD: 1 })); if (w.width !== c.width) { w.width = c.width; w.height = c.height; }
     const x = w.getContext('2d'); x.globalCompositeOperation = 'source-over'; x.clearRect(0, 0, w.width, w.height); x.drawImage(c, 0, 0);
     x.globalCompositeOperation = 'source-in'; x.fillStyle = '#fff'; x.fillRect(0, 0, w.width, w.height); x.globalCompositeOperation = 'source-over'; // vetay-ok: png (bản trắng thân trùm)
     return w;

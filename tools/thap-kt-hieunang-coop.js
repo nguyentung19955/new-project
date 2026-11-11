@@ -19,8 +19,11 @@ const CANH = {
 };
 const C = CANH[canh];
 (async () => {
-  const b = await chromium.launch({ args: ['--enable-gpu-rasterization'] });
-  const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
+  // WebGL (js/gl/glr.js): máy đo không có GPU thật → GPU phần mềm SwiftShader; Q=gl=1 ép bật (mặc định game chỉ bật khi có GPU thật), Q=gl=0 tắt.
+  //   KHONGGL=1: chặn getContext('webgl…') trả null (kiểm đường dự phòng 2D). DPR=2 đổi mật độ điểm ảnh. GLTT=1 in GLR.thongTin().
+  const b = await chromium.launch({ args: ['--enable-gpu-rasterization', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'].concat(process.env.KHONGGPU ? ['--disable-gpu', '--disable-software-rasterizer'] : []) });
+  const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: +(process.env.DPR || 3), isMobile: true, hasTouch: true });
+  if (process.env.KHONGGL) await ctx.addInitScript(() => { const g = HTMLCanvasElement.prototype.getContext; HTMLCanvasElement.prototype.getContext = function (k) { return /webgl/.test(k) ? null : g.apply(this, arguments); }; });
   await ctx.addInitScript(() => {
     const mb = (a) => function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
     window.__mb = mb; Math.random = mb(12345);
@@ -88,11 +91,12 @@ const C = CANH[canh];
   if (process.env.SOAT) console.log('LỆCH NGOÀI BƯỚC:', await p.evaluate(() => window.__lech || 'không'));
   if (process.env.HUK) console.log('HU', await p.evaluate(() => { const m = {}; for (const o of G.hu) m[o.k] = (m[o.k] || 0) + 1; return JSON.stringify(m) + ' fx:' + JSON.stringify(Object.fromEntries(Object.keys(FX).filter(k => Array.isArray(FX[k])).map(k => [k, FX[k].length]))) + ' vx:' + (VX.ds ? VX.ds.length : 0); }));
   const kq = { canh, nhan, khung: KHUNG, giay: ((Date.now() - t0) / 1000).toFixed(1), bam, loi: await p.evaluate(() => window.__loi || ''), errs: errs.slice(0, 3) };
+  if (process.env.GLTT) kq.gl = await p.evaluate(() => typeof GLR === 'undefined' ? null : GLR.thongTin());
   if (process.env.BENCH) {
     const tn = [['goc', '']].concat((process.env.TN || '').split(';;').filter(Boolean).map(s => { const i = s.indexOf('='); return [s.slice(0, i), s.slice(i + 1)]; }));
     kq.bench = {};
     const do1 = (js) => p.evaluate(([n, js]) => { let hoan = null; if (js) hoan = (0, eval)(js);
-        const x = REN.ctx, ts = []; for (let i = 0; i < n + 2; i++) { const t0 = window.__now(); REN.noiSuy(1); try { REN.ve0(); } finally { REN.traLai(); } x.getImageData(0, 0, 1, 1); const t1 = window.__now(); if (i >= 2) ts.push(t1 - t0); }
+        const x = REN.ctx, ts = []; for (let i = 0; i < n + 2; i++) { const t0 = window.__now(); REN.noiSuy(1); try { REN.ve0(); } finally { REN.traLai(); } x.getImageData(0, 0, 1, 1); if (typeof GLR !== 'undefined' && GLR.hien) { GLR.gl.finish(); GLR.gl.readPixels(0, 0, 1, 1, GLR.gl.RGBA, GLR.gl.UNSIGNED_BYTE, new Uint8Array(4)); GLR.xTren.getImageData(0, 0, 1, 1); } const t1 = window.__now(); if (i >= 2) ts.push(t1 - t0); }
         if (typeof hoan === 'function') hoan(); ts.sort((a, b) => a - b); return ts[ts.length >> 1]; }, [+process.env.BENCH, js]);
     await do1('');
     for (const [ten, js] of tn) {

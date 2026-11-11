@@ -713,7 +713,7 @@ const REN = {
     if (this._nong.length) this.chayNong();
   },
   ve0() {
-    const ctx = this.ctx, k = this.s * this.dpr;
+    let ctx = this.ctx; const k = this.s * this.dpr;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     if (this._choNen && G.ban.length && !(performance.now() - this._tNen < 1500)) this.lamNen(); // nền tạm → thử dựng lại
     if (G.debug && G.debug.log && !(performance.now() - (this._tLog || 0) < 10000)) { this._tLog = performance.now(); console.log('[bo-nho]', JSON.stringify(this.boNho())); }
@@ -723,6 +723,11 @@ const REN = {
     if (coNen) ctx.clearRect(0, 0, this.cv.width, this.cv.height);
     else { ctx.fillStyle = '#1d1f23'; ctx.fillRect(0, 0, this.cv.width, this.cv.height); } // vetay-ok: nen
     ctx.setTransform(k, 0, 0, k, FX.rungX * k, FX.rungY * k);
+    // WEBGL đợt 1 (js/gl/glr.js, ?gl=0 tắt): quái + tia laser + đạn + thanh máu vẽ bằng GPU ở canvas #cv-gl nằm TRÊN canvas này; mọi thứ vẽ sau đạn
+    //   (lớp hiệu ứng, chữ, kéo ghép…) sang canvas 2D #cv-tren nằm trên nữa. gl = false (tắt / không có WebGL / mất ngữ cảnh) → cq = ct = ctx: y như cũ.
+    const gl = typeof GLR !== 'undefined' && GLR.khung(this, k, FX.rungX * k, FX.rungY * k), cq = gl ? GLR.x : ctx, ct = gl ? GLR.xTren : ctx;
+    if (this._glTruoc) GLR.chep(GLR.xTren, ctx); // trạng thái "dính" (phông, canh chữ…) nối tiếp từ cuối khung trước như khi chỉ có 1 ngữ cảnh
+    this._glTruoc = gl;
     if (!G.ban.length) return;
     if (typeof AN !== 'undefined') AN.khung(); // animation hybrid: cài đặt FX / giảm chuyển động / LOD bàn đông (anim.js)
     this.veDongChay(ctx);
@@ -737,20 +742,28 @@ const REN = {
     this._T = null;
     if (diu) this.gopLop(ctx, DIU.duoi, false);
     this._thanh = DIU.bat ? [] : null; // thanh máu quái gom lại, vẽ SAU lớp hiệu ứng (luôn đọc được)
-    this.veQuai(ctx);
+    if (gl) GLR.nhom = 'quai';
+    this.veQuai(cq);
     this._hang = [];
     this.veO(ctx);
-    this.veLaser(ctx);
-    this.veDan(ctx);
+    if (gl) GLR.nhom = 'laser';
+    this.veLaser(cq);
+    if (gl) GLR.nhom = 'dan';
+    this.veDan(cq);
+    if (gl) { GLR.nhom = 'thanh'; GLR.chep(ctx, ct); }
     // hiệu ứng trên quái (tường, nổ, tia chiêu, hạt…) vẽ vào lớp riêng → khoét mềm quanh từng quái → đổ lên với alpha DIU.tren
-    const cTren = DIU.bat ? this.lopFx() : ctx;
+    const cTren = DIU.bat ? this.lopFx() : ct;
     for (const o of G.hu) if (o.k === 'tuong') { this._T = o.T || o._T || null; HU.tuong.ve(cTren, o, this); }
     this._T = null;
     for (const o of G.hu) if (o.k !== 'hoden' && o.k !== 'tuong' && HU[o.k] && HU[o.k].ve && !HU[o.k].duoi) { this._T = o.T || o._T || null; HU[o.k].ve(cTren, o, this); }
     this._T = null;
     this.veFx(cTren);
-    if (DIU.bat) this.gopLop(ctx, DIU.tren, true);
+    // GL: thanh máu nằm ở lớp GL (dưới #cv-tren) → vẽ thanh máu TRƯỚC, ghi khung bao từng thanh rồi khoét lớp hiệu ứng đúng các ô đó → thanh máu vẫn đè lên hiệu ứng như cũ
+    let lo = null;
+    if (gl && DIU.bat) { GLR.ghiVung(true); const th = this._thanh; this._thanh = null; if (th) for (const f of th) f(); lo = GLR.ghiVung(false); }
+    if (DIU.bat) this.gopLop(ct, DIU.tren, true, lo);
     { const th = this._thanh; this._thanh = null; if (th) for (const f of th) f(); }
+    if (gl) { GLR.xong(); ctx = ct; } // hết phần GL của khung; phần còn lại vẽ ở lớp trên
     VX.veDs(ctx, this); // hiệu ứng sự kiện: sao lên mốc, kỹ năng ghép, dây liên kết, bingo, tiếng hú
     if (this.veHoTro) this.veHoTro(ctx); // chạm/giữ ụ hỗ trợ: hiển thị vùng & loại buff
     ND.veSoi(ctx); // chạm thẻ bộ bài: khoanh các ụ cùng loại
@@ -871,7 +884,7 @@ const REN = {
     }
   },
   // đổ lớp lên canvas chính; khoet: xoá mềm (destination-out, chấm mờ fx_cham_trang = mặt nạ) quanh từng quái sống → quái luôn lộ ra
-  gopLop(ctx, al, khoet) {
+  gopLop(ctx, al, khoet, lo) {
     const x = this._lopX, L = this._lop, V = x._vung, h = this._lopH || L.height;
     const r = V.khung(L.width, h); if (!r) return; // lớp rỗng: không khoét, không đổ (đợt 2 nóng máy 09/11)
     x.globalAlpha = 1; x.globalCompositeOperation = 'source-over';
@@ -880,6 +893,12 @@ const REN = {
       const mm = V.m, m = { a: mm[0], d: mm[3], e: mm[4], f: mm[5] }, kx = m.a, ky = m.d, x0 = r[0], y0 = r[1], x1 = r[0] + r[2], y1 = r[1] + r[3]; // đợt 3 giật: chỉ khoét quái chạm KHUNG BAO hình thật của lớp
       for (const E of G.quai) if (!E.chet) { const c = E.d.co * (E.trum ? 0.9 : 1.15), X = kx * (E.x - c / 2) + m.e, Y = ky * (E.y - c * 0.6) + m.f; if (X > x1 || Y > y1 || X + kx * c < x0 || Y + ky * c < y0) continue; x.globalAlpha = E.trum ? DIU.loTrum : DIU.lo; dI.call(x, lo, E.x - c / 2, E.y - c * 0.6, c, c); }
       x.globalAlpha = 1; x.globalCompositeOperation = 'source-over';
+    }
+    if (lo && lo.length) { // GL: ô thanh máu (điểm ảnh thiết bị, [x0, y0, x1, y1]…) — xoá hẳn hiệu ứng trong ô
+      const x0 = r[0], y0 = r[1], x1 = r[0] + r[2], y1 = r[1] + r[3];
+      x.save(); x.setTransform(1, 0, 0, 1, 0, 0);
+      for (let i = 0; i < lo.length; i += 4) { if (lo[i] > x1 || lo[i + 1] > y1 || lo[i + 2] < x0 || lo[i + 3] < y0) continue; x.clearRect(lo[i], lo[i + 1], lo[i + 2] - lo[i], lo[i + 3] - lo[i + 1]); }
+      x.restore();
     }
     // chỉ đổ vùng có hình (cùng toạ độ nguồn = đích → điểm ảnh y hệt đổ cả lớp)
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al; ctx.drawImage(L, r[0], r[1], r[2], r[3], r[0], r[1], r[2], r[3]); ctx.restore();
