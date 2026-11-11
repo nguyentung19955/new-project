@@ -48,7 +48,7 @@ let loi = 0; const ok = (c, t) => { console.log((c ? '  ✓ ' : '  ✗ ') + t); 
   ok(r.d0.n === 5 && /^(trang|xanh|trang,xanh)$/.test(r.d0.bac) && r.d0.dmg >= 3 && r.d0.cap === '00000' && r.d0.mana === 0.6, 'đối thủ 0 cúp: ' + JSON.stringify(r.d0));
   ok(r.d600.n === 5 && !/do/.test(r.d600.bac) && r.d600.mana === 1, 'đối thủ 600 cúp: không Đỏ ' + JSON.stringify(r.d600));
   ok(r.cung && r.tanSuat > 0.55 && r.tanSuat < 0.65, 'túi thắng tất định theo hạt, tần suất ' + r.tanSuat);
-  ok(/^[1-9]\d*:true$/.test(r.pvpThangTrung) && r.pvpThangTruot === '0:true' && r.pvpThua === '0:true' && /^[1-9]\d*:true$/.test(r.coop), 'Rương Trận: PVP thắng + trúng ' + r.pvpThangTrung + ' · thắng trượt ' + r.pvpThangTruot + ' · thua ' + r.pvpThua + ' · CO-OP như cũ ' + r.coop);
+  ok(r.pvpThangTrung === '0:true' /* 12/11: rương thắng vào KHE (thap-kt-khe.js), không phát thẻ ngay */ && r.pvpThangTruot === '0:true' && r.pvpThua === '0:true' && /^[1-9]\d*:true$/.test(r.coop), 'Rương Trận: PVP thắng + trúng ' + r.pvpThangTrung + ' · thắng trượt ' + r.pvpThangTruot + ' · thua ' + r.pvpThua + ' · CO-OP như cũ ' + r.coop);
   ok(r.pityV === 7 && r.poolV > 0 && r.dai <= 6 && r.pvMax <= 6, 'bảo hiểm Rương Vàng: pityV 7, chuỗi dài nhất không ra Huyền thoại = ' + r.dai + ' (≤ 6), bảo hiểm kích ' + r.pity + ' lần / 40 rương');
   // đồng đội người mới + đối thủ thật trong trận
   const t = await p.evaluate(() => {

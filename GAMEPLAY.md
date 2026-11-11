@@ -1503,3 +1503,8 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - Chế độ mới `thap/js/chedo-pu.js` (GAME MODE → PUSH, mở cấp phi công 4): PVP đấu máy theo cúp, mỗi bên 1 trùm không chết đi về lõi, sát thương đẩy lùi (K tăng theo chặng 12 s), không quái thường (mana theo giây), 3 phút, xa lõi hơn thắng, chạm lõi thua ngay. Cúp / túi thắng / XP / nhiệm vụ đi đường PVP. Bảng số: TAI-LIEU-GOC mục 4; bot + điểm tự quyết: THIET-KE §8.
 - Sửa kèm: thắng / thua PVP mà túi thắng không rơi thì không còn nút OPEN của rương rỗng (`chedo-dd.js`).
 - Bot `tools/thap-bot-tran.js --che pu --cup N` (pvp / pu không `--deck2`: game tự chọn đối thủ theo cúp); test `tools/thap-kt-push.js` đạt. Icon PUSH đang mượn `ua_ic_trum` (cần gen).
+
+## claude/che-do-dcdw — KHE RƯƠNG kiểu DCDW (12/11)
+
+- Thắng PVP / PUSH trúng túi thắng: Rương Trận **vào 1 trong 4 khe ở HOME** (trên ô chọn chế độ), không mở ngay; vàng trận vẫn phát. Đầy khe → `CHEST SLOTS FULL`. Mỗi lúc 1 rương đếm **15 phút** (giờ máy), xong chạm `OPEN`; mở ngay bằng ngọc ⌈phút còn lại / 3⌉. Rương mốc / nhiệm vụ / SHOP / RAID / CO-OP: mở ngay như cũ.
+- File: `thap/js/khe.js` (mới), `chedo-dd.js` (bọc `THEBAI.thuong`, dòng kết quả), `css/chedo-d.css`. Lưu `turret_kt.khe`. Kiểm: `tools/thap-kt-khe.js`; `thap-kt-cup.js` sửa 1 kỳ vọng (thắng trúng túi: không phát thẻ ngay).

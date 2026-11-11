@@ -79,3 +79,14 @@
 /* Đường Đua hết tim / bỏ cuộc: khung TRUNG TÍNH (không phải thua, không phải thắng) */
 #ketqua.dd-tt .bang-ten { color: #71E4EE !important; text-shadow: 0 2px 0 #000 !important; }
 html body #wrap #ketqua.dd-tt .kq-ic { content: url(../assets/ua_ic_sk.png) !important; filter: none !important; object-fit: contain !important; }
+
+/* ---- KHE RƯƠNG (khe.js, 12/11): 4 khe Rương Trận ở HOME, trên nút PLAY ---- */
+.khe { display: flex; gap: 8px; justify-content: center; }
+.khe-o { position: relative; flex: 1 1 0; max-width: 84px; height: 62px; border-radius: 10px; border: 1px solid rgba(140, 190, 255, .35); background: rgba(10, 20, 44, .72); display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 2px 2px 4px; color: #cfe1ff; font: inherit; }
+.khe-o.trong { border-style: dashed; opacity: .55; justify-content: center; }
+.khe-o small { font-size: 10px; letter-spacing: .5px; }
+.khe-o img { width: 38px; height: 38px; object-fit: contain; pointer-events: none; }
+.khe-o b { font-size: 11px; line-height: 1; letter-spacing: .5px; }
+.khe-o.dem { border-color: #6fd0ff; } .khe-o.dem b { color: #8fe0ff; }
+.khe-o.san { border-color: #ffd257; box-shadow: 0 0 10px rgba(255, 210, 87, .55); } .khe-o.san b { color: #ffe08a; }
+#ketqua .khe-kq { color: #8fe0ff; } #ketqua .khe-kq.day { color: #ff9a8a; }

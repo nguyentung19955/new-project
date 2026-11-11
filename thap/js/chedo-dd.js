@@ -206,7 +206,7 @@ const MOCW = {
 // ===================================================== CÚP PVP · TÚI THẮNG · ĐỒNG ĐỘI CHO NGƯỜI MỚI (theo DCDW, người dùng chốt 11/11 19:06) =====================================================
 //  · CÚP: thắng PVP +30, thua −20 (không âm). Mốc cúp CAO NHẤT đạt lần đầu → thưởng 1 lần (ghi cờ trước khi phát). Lưu: turret_kt.cd.cup { c, max, nhan }.
 //  · ĐỐI THỦ MÁY theo cúp (CUPC.doKho): bậc ụ được dùng + cấp thẻ → người mới 0 cúp gặp bộ Trắng / Xanh cấp đầu.
-//  · TÚI THẮNG: thắng PVP → Rương Trận rơi với xác suất CUPC.pRuong, TẤT ĐỊNH theo hạt trận (rngHat); thua PVP: chỉ vàng. Game chưa có khe rương hẹn giờ
+//  · TÚI THẮNG: thắng PVP → Rương Trận rơi với xác suất CUPC.pRuong, TẤT ĐỊNH theo hạt trận (rngHat); thua PVP: chỉ vàng. 12/11: rương thắng vào KHE RƯƠNG (khe.js). Trước đó: chưa có khe rương hẹn giờ
 //    → rương mở ngay như cũ (KHÔNG dựng khe / trần 4 rương).
 //  · CO-OP: chơi và nhận thưởng KHÔNG giới hạn như cũ (người dùng 19:08 bác "3 lượt thưởng / ngày" — không làm).
 //  · NGƯỜI MỚI (cấp phi công ≤ MOIC.cap): đồng đội máy CO-OP dùng bộ cố định toàn ụ gây sát thương Trắng / Xanh (MOIC.bo) thay vì ngẫu nhiên.
@@ -255,6 +255,8 @@ const CUP = {
     const r = this.ket(!!k.thang), ke = this.ke();
     let h = '<div class="tb-kq cd-kq dd-xd"><small><img src="' + CDUI.a('ic_cup') + '" alt="" style="width:18px;height:18px;vertical-align:-4px;margin-right:4px">CUPS ' + CDUI.so(r.c) + ' (' + (r.d >= 0 ? '+' : '−') + Math.abs(r.d) + ')' + (ke ? ' · NEXT PRIZE ' + CDUI.so(ke) : '') + '</small>';
     if (r.moc.length) h += '<small>CUP MILESTONE · ' + CDUI.so(Math.max.apply(null, r.moc)) + '</small>' + DDUI.thuongGon(r.ra);
+    const m = typeof KQ !== 'undefined' && KQ.m; // khe rương (khe.js): rương thắng đã vào khe / khe đầy
+    if (m && m._khe != null && typeof KHEC !== 'undefined') h += '<small class="khe-kq' + (m._khe < 0 ? ' day' : '') + '">' + (m._khe < 0 ? 'CHEST SLOTS FULL' : 'BATTLE CHEST → SLOT ' + (m._khe + 1) + '/' + KHEC.so + ' · OPENS IN ' + KHEC.phut + ' MIN') + '</small>';
     chi.insertAdjacentHTML('beforeend', h + '</div>');
     try { OT.quet(chi); } catch (e) { }
   },
@@ -435,10 +437,13 @@ function boDongDoiMoi() { const d = MOIC.bo.filter(id => SKILLS[id] && G.rosterM
     const th = THEBAI.thuong;
     THEBAI.thuong = function (k, m) {
       if (!m || m.tut || m._thuong || G.dd) return th.apply(this, arguments);
-      const khong = m.che === 'pvp' && !(k && k.thang && CUP.roi(G.hat));
-      if (!khong) return th.apply(this, arguments);
+      if (m.che !== 'pvp') return th.apply(this, arguments);
+      const roi = !!(k && k.thang && CUP.roi(G.hat)), khe = typeof KHE !== 'undefined'; // 12/11: có KHE RƯƠNG (khe.js) → rương thắng vào khe, mở sau; không có → mở ngay như cũ
+      if (roi && !khe) return th.apply(this, arguments);
       const sl = THEBAI.soLuot; THEBAI.soLuot = () => 0;
-      try { return th.apply(this, arguments); } finally { THEBAI.soLuot = sl; }
+      let r; try { r = th.apply(this, arguments); } finally { THEBAI.soLuot = sl; }
+      if (r && roi) { try { m._khe = KHE.them({ w: (k && k.wave) || G.wave || 1, d: m.deck }); } catch (e) { console.error('KHE', e); } }
+      return r;
     };
     const kq3 = UI.ketQua;
     UI.ketQua = function (k) {

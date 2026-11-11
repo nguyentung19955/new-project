@@ -270,7 +270,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     o.toast = (document.getElementById('chon-goi-nhac') || {}).textContent; o.che2 = HM.che;
     return o;
   });
-  ok(r.mo === '' && r.cheCoop === 'coop' && r.cheOnl === 'coop' && !r.shopMo && !r.vqMo && r.quay && r.ru && r.ruFree && r.sp && r.onl && r.nut && r.che === 'coop,pvp,online,dd' /* 11/11 bỏ thu/san/tw/vt, thêm dd (Đường Đua) */ && /Pilot Level 4/.test(r.toast) && r.che2 === 'coop',
+  ok(r.mo === '' && r.cheCoop === 'coop' && r.cheOnl === 'coop' && !r.shopMo && !r.vqMo && r.quay && r.ru && r.ruFree && r.sp && r.onl && r.nut && r.che === 'coop,pvp,online,dd,rd,pu' /* 11/11 bỏ thu/san/tw/vt, thêm dd (Đường Đua); 12/11 thêm rd (Raid), pu (Push) */ && /Pilot Level 4/.test(r.toast) && r.che2 === 'coop',
     'người mới (chưa xong hướng dẫn): khoá CO-OP/PVP/ONLINE/cửa hàng/vòng quay/rương (rương thưởng vẫn mở), nút tối + "LV 2", chạm → điều kiện', JSON.stringify(r));
   await chup('khoa-1-che-moi');
   await p.evaluate(() => HM.dong(true)); await chup('khoa-0-home-moi');
@@ -306,7 +306,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     KTUI.dong(); t.bao = []; KT.doc().tk.wave = 0; t.xp = TT.xpTong(4); KT.luu(true); HM.ve(); KTUI.capNhat();
     return o;
   });
-  ok(r.onl && r.bao4 === 'online' && r.che === 'online' && r.bao10 === 'nvt,ren,an' && r.ren && r.renUi && r.bao12 === 'ruThan,renDo' && r.do,
+  ok(r.onl && r.bao4 === 'online,pu' /* 12/11: PUSH mở cấp 4 */ && r.che === 'online' && r.bao10 === 'nvt,ren,an,rd' /* 12/11: RAID mở cấp 10 */ && r.ren && r.renUi && r.bao12 === 'ruThan,renDo' && r.do,
     'cấp 4 → ONLINE · cấp 10 → lò rèn + Ấn Vàng (Lò rèn Đỏ / Rương Thần thoại còn khoá) · cấp 12 + kỷ lục 30 → mở hết', JSON.stringify(r));
   await chup('khoa-5-home-cap4');
   await p.evaluate(async () => { const t = TT.st(); t.xp = TT.xpTong(10); KT.luu(true); KTUI.moTab('shop'); await new Promise(r => setTimeout(r, 200)); const e = [...document.querySelectorAll('#kt .kt-muc')].find(x => /FORGE/.test(x.textContent)); e && e.scrollIntoView(); });
