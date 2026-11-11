@@ -1542,3 +1542,11 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
   Tải texture do chữ: 30 s đầu 249 → ~35, sau đó 1,6 → 0,1–0,3 / giây; `GLR.thieu` (chữ đi đường 2D) 846 lệnh / 20 s → 0. `?chugl=0` tắt để so.
 - **Hive**: lăn cầu 3D tính bằng fragment shader (`GLR.veCT` + `CAU_FS` ở `quaianim.js`) vào bộ đệm khung — tải texture / khung khi Hive trên màn 4,08 → 0,08; hình = bản CPU (0–1 điểm ảnh khác). `?caugl=0` tắt để so. Patcher 0,07 · Octopus 0,45 (không tăng).
 - Kiểm: băm gl1 = gl0 (co-op A `8b4f420b` / `2f83154d`, Hive `f6b57405`, Patcher `6acc246e`, Octopus `fe56be3`); mất ngữ cảnh `MAT=200,320` → 2D → GL lại, 0 lỗi trang. File: `chugl.js` (mới), `gl/glr.js`, `render.js`, `demkn.js`, `quaianim.js`, `index.html`.
+## claude/demo-hop-tuong — Full WebGL bước 1 + 2: ẢNH ẢO (nhánh `claude/gl-full-w2`, 11/11 tối)
+
+- Chỉ phần vẽ, không đổi luật / số (băm trạng thái gl=1 = gl=0: `8b4f420b` / `2f83154d`, cảnh trùm `277795d6`). `?gl=0` không đổi; `?gla=0` = đường GL cũ để so; chỉ WebGL2.
+- Bản GL: ảnh thu nhỏ / tô màu / trắng / xám / bóng **không còn dựng canvas trên CPU** — `REN.co`, `coDai`, `mip`, `banXam`, `banTrang`, `toMauA`, `FXU.mau` (→ `PX.*`), `SIG.khung` trả canvas ảo 0×0 trỏ về
+  texture ẢNH GỐC (Image tải thẳng lên GPU, tầng ½ ¼ dựng trên GPU); tô màu / trắng / xám / bóng đen bằng shader (thuộc tính đỉnh `a_t`, `a_k`), vẫn gom lô. Đầu ụ + bóng = 2 ô ảnh từ 1 texture (bỏ canvas `db|…`).
+- Đo co-op 3× 120 s (wave 25 → 49): tải canvas → texture 11,3 → 3,7 / giây (60 s cuối 4,0 → 0,9; phần còn lại chủ yếu chữ số — phiên khác), canvas đệm 52–71 MB → 36–42 MB, GPU 94–122 → 79–114 MB, tổng 145–195 → 108–152 MB.
+- File: `thap/js/gl/glr.js` (mục ẢNH ẢO), `render.js`, `fxu.js`, `sigfx.js`, `nongskill.js`, `tools/thap-kt-tai-gl.js`. Chi tiết + việc còn lại: `docs/demo-hop-tuong/tuvan/webgl/KE-HOACH.md` mục 11.
+

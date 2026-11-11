@@ -5,6 +5,7 @@
 //   BASE=http://localhost:8765/thap/ (hoặc PORT=8765) · GIAY=180 (giây trận, 60 khung / giây, tốc 3×) · WAVE=25 · D1 / D2 = 2 bộ bài · DPR=3 (ios=1 tự kẹp 2×)
 //   VTMAX=900: số khung tối đa cho màn mở đầu trận (trận đứng; chạy tới khi NS.conNong() hết việc, ít nhất VT.TONG giây) · SHOT=thư-mục: chụp lúc có trùm + cuối trận
 // Cách đếm: bọc gl.texImage2D / gl.texSubImage2D (nguồn là ảnh / canvas) → mỗi lần tải ghi [khung, khoá, rộng, cao, loại]:
+//   (tk.anh = nguồn là Image — tải THẲNG ảnh gốc, 1 lần / ảnh; tk.cvT = nguồn là canvas dựng trên CPU; cvN = số canvas còn điểm ảnh; tex = số texture; lenhTB = lệnh vẽ GL / khung; ao = số canvas ảo đã tạo)
 //   loại 'd' = canvas vẽ lại mỗi lần vẽ (_glD / canvas nháp: cụm vector, Hive lăn cầu) · 'b' = canvas vẽ lại tại chỗ (GLR.ban: tấm đếm…) · 't' = ảnh tĩnh (phải ~0 giữa trận).
 //   Khoá ảnh tĩnh: tên ảnh gốc (REN.anh) · 'c:<khoá kho đệm>' · '<gốc>#m<tầng mip>' · 'mau:<khoá tô màu>' · 'chu:<chữ>' (kho chữ của GLR) · '?<số>' (canvas khác, theo đối tượng).
 // In JSON: moDau (màn mở đầu: số khung, số lần tải) · mỗi 10 s: tải tĩnh / d / b, MB · tong: tải tĩnh / giây (mọi cỡ và nguồn ≥ 256 điểm), số khoá tải > 1 lần (+ danh sách),
@@ -29,6 +30,7 @@ const WAVE = +(process.env.WAVE || 25), D1 = process.env.D1 || 'bocap,sinhdoi,tu
       if (!window.__fVT && typeof VT !== 'undefined' && VT.mo && !(typeof TAI !== 'undefined' && TAI.cho)) window.__fVT = window.__f; // khung đầu của màn mở đầu trận
       const cb = window.__raf; window.__raf = []; for (const f of cb) { try { f(window.__vt); } catch (e) { window.__loi = String(e && e.stack || e); } }
       window.__ms.push(window.__now() - t0);
+      if (typeof GLR !== 'undefined' && GLR.dangVe === false && GLR.hien) { window.__lenh = (window.__lenh || 0) + GLR.dem.lenh; window.__lenhN = (window.__lenhN || 0) + 1; } // lệnh vẽ GL trung bình / khung (cộng dồn cả trận)
       if (window.__moiKhung) window.__moiKhung();
     } };
     // tên của 1 nguồn tải
@@ -57,17 +59,17 @@ const WAVE = +(process.env.WAVE || 25), D1 = process.env.D1 || 'bocap,sinhdoi,tu
           if (!im.__chu && GLR.khoChu) { /* canvas chữ: gắn tên lười */ }
           const loai = im._glD || im._nhap ? 'd' : (im._glV | 0) ? 'b' : 't';
           const k = ten(im), kk = k + ' ' + w + 'x' + h, lap = loai === 't' && window.__da.has(kk) ? 1 : 0; if (loai === 't') window.__da.add(kk);
-          window.__up.push([window.__f, k, w, h, loai, GLR._dangNap ? 1 : 0, GLR._taiTha ? 1 : 0, im.__tao || '', lap, GLR._napTruoc ? 1 : 0]);
+          window.__up.push([window.__f, k, w, h, loai, GLR._dangNap ? 1 : 0, GLR._taiTha ? 1 : 0, im.__tao || '', lap, GLR._napTruoc ? 1 : 0, im.tagName === 'IMG' ? 1 : 0]);
         }
         return g.apply(null, arguments);
       }; }
       const s = GLR.khoChu.set.bind(GLR.khoChu); GLR.khoChu.set = (k, E) => { if (E && E.c) E.c.__chu = k.split('\n').slice(0, 2).join(' ') + ' ' + E.c.width; return s(k, E); };
       return true;
     };
-    window.__bn = () => { const r = REN.boNho(), g = GLR.bat && GLR.boNho ? GLR.boNho() : null, m = (v) => Math.round(v / 1048576); return { cv: Math.round(r.canvasMB), gpu: g ? m(g.tong) : 0, at: g ? g.atlasTrang + 'x' + g.atlasDay : '', rieng: g ? m(g.rieng) + '/' + g.riengN : '', tong: Math.round(r.canvasMB + (g ? g.tong / 1048576 : 0)) }; };
+    window.__bn = () => { const r = REN.boNho(), g = GLR.bat && GLR.boNho ? GLR.boNho() : null, m = (v) => Math.round(v / 1048576); return { cv: Math.round(r.canvasMB), cvN: r.soCanvas, tex: g ? g.atlasTrang + g.riengN : 0, ao: g ? (g.bn.ao | 0) : 0, gpu: g ? m(g.tong) : 0, at: g ? g.atlasTrang + 'x' + g.atlasDay : '', rieng: g ? m(g.rieng) + '/' + g.riengN : '', tong: Math.round(r.canvasMB + (g ? g.tong / 1048576 : 0)) }; };
     // tóm tắt các lần tải từ khung f0 (không gồm) trở đi
     window.__tk = (f0, f1) => { const a = window.__up.filter(u => u[0] > f0 && u[0] <= f1), t = a.filter(u => u[4] === 't'); const pk = {}; for (const u of a) pk[u[0]] = (pk[u[0]] || 0) + 1; const pt = {}; for (const u of t) pt[u[0]] = (pt[u[0]] || 0) + 1;
-      return { tinh: t.length, lap: t.filter(u => u[8]).length, luc_ve: t.filter(u => !u[5]).length, nap_truoc: t.filter(u => u[9]).length, kb: Math.round(t.reduce((n, u) => n + u[2] * u[3] * 4, 0) / 1024), tinh256: t.filter(u => Math.max(u[2], u[3]) >= 256).length, d: a.filter(u => u[4] === 'd').length, b: a.filter(u => u[4] === 'b').length, max1: Math.max(0, ...Object.values(pk)), maxTinh1: Math.max(0, ...Object.values(pt)), khungCoTinh: Object.keys(pt).length }; };
+      return { tinh: t.length, anh: t.filter(u => u[10]).length, cvT: t.filter(u => !u[10]).length, lenhTB: window.__lenhN ? +(window.__lenh / window.__lenhN).toFixed(1) : 0, lap: t.filter(u => u[8]).length, luc_ve: t.filter(u => !u[5]).length, nap_truoc: t.filter(u => u[9]).length, kb: Math.round(t.reduce((n, u) => n + u[2] * u[3] * 4, 0) / 1024), tinh256: t.filter(u => Math.max(u[2], u[3]) >= 256).length, d: a.filter(u => u[4] === 'd').length, b: a.filter(u => u[4] === 'b').length, max1: Math.max(0, ...Object.values(pk)), maxTinh1: Math.max(0, ...Object.values(pt)), khungCoTinh: Object.keys(pt).length }; };
   });
   if (process.env.TAO) await ctx.addInitScript(() => { // TAO=1: ghi nơi tạo của mọi canvas → khoá '?…[nơi tạo]' + bảng tải 'b' / 'd' theo nơi tạo (kq.tong.noiB / noiD)
     const goc = document.createElement.bind(document);
