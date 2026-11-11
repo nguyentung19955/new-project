@@ -96,10 +96,12 @@ const GLR = (() => {
       const r = this._r; if (!r || this._duong) { this.R.ghiThieu('bo:clip'); return; } // cắt theo đường bất kỳ: không có (đếm)
       const dt = r[4] * r[7] - r[5] * r[6]; if (!dt) return;
       // nghịch đảo: điểm thiết bị → toạ độ lúc gọi rect
-      const k = { x0: r[0], y0: r[1], x1: r[2], y1: r[3], a: r[7] / dt, b: -r[5] / dt, c: -r[6] / dt, d: r[4] / dt, e: (r[6] * r[9] - r[7] * r[8]) / dt, f: (r[5] * r[8] - r[4] * r[9]) / dt };
+      const k = { x0: r[0], y0: r[1], x1: r[2], y1: r[3], a: r[7] / dt, b: -r[5] / dt, c: -r[6] / dt, d: r[4] / dt, e: (r[6] * r[9] - r[7] * r[8]) / dt, f: (r[5] * r[8] - r[4] * r[9]) / dt, m: r.slice(4) };
       this.cat = this.cat ? this.cat.concat([k]) : [k];
     }
-    dat(k, rx, ry) { this.a = k; this.b = 0; this.c = 0; this.d = k; this.e = rx; this.f = ry; this.al = 1; this.op = 0; this.cat = null; this.trang = 0; this._st.length = 0; this._r = null; this._duong = 0; }
+    // đầu khung: ma trận gốc, bỏ cắt + ngăn xếp. globalAlpha / kiểu hoà màu / kiểu vẽ KHÔNG đặt lại — "dính" qua các khung y như ngữ cảnh 2D thật
+    //   (code vẽ cũ có chỗ dựa vào trạng thái khung trước để lại) → hình GL = hình 2D cả ở những chỗ đó.
+    dat(k, rx, ry) { this.a = k; this.b = 0; this.c = 0; this.d = k; this.e = rx; this.f = ry; this.cat = null; this.trang = 0; this._st.length = 0; this._r = null; this._duong = 0; }
   }
   for (const k of KIEU) Object.defineProperty(Gx.prototype, k, { get() { return this._s[k]; }, set(v) { this._ghi(k, v); }, enumerable: true, configurable: true });
   // LỆNH KHÔNG PHẢI ẢNH. Đường nét (moveTo/lineTo/arc…) chuyển sang canvas 2D nháp (GLR.xVe = #cv) với đúng ma trận hiện hành + ghi khung bao của đường;
@@ -196,16 +198,16 @@ const GLR = (() => {
       try {
         cv.width = 8; cv.height = 8; gl.viewport(0, 0, 8, 8); gl.uniform3f(this._kt, 2 / 8, 2 / 8, 1); gl.clear(gl.COLOR_BUFFER_BIT);
         const mk = (m) => { const c = document.createElement('canvas'); c.width = c.height = 4; const x = c.getContext('2d'); x.fillStyle = m; x.fillRect(0, 0, 4, 4); return c; };
-        const x = this.x; x.dat(1, 0, 0); this.dangVe = true;
+        const x = this.x; x.dat(1, 0, 0); x.al = 1; x.op = 0; this.dangVe = true;
         x.drawImage(mk('#ff0000'), 0, 0, 4, 8); x.globalAlpha = 0.5; x.drawImage(mk('#0000ff'), 4, 0, 4, 8);
         x.globalAlpha = 1; x.globalCompositeOperation = 'lighter'; x.drawImage(mk('#00ff00'), 0, 0, 4, 8);
-        this.xa(); this.dangVe = false; x.dat(1, 0, 0);
+        this.xa(); this.dangVe = false; x.dat(1, 0, 0); x.al = 1; x.op = 0;
         const p = new Uint8Array(8); gl.readPixels(1, 4, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, p); gl.readPixels(6, 4, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, p.subarray(4));
         gl.clear(gl.COLOR_BUFFER_BIT); cv.width = w0; cv.height = h0;
         const gan = (a, b) => Math.abs(a - b) <= 3;
         this.kiem = Array.from(p).join(',');
         return gan(p[0], 255) && gan(p[1], 255) && gan(p[2], 0) && gan(p[3], 255) && gan(p[4], 0) && gan(p[5], 0) && gan(p[6], 128) && gan(p[7], 128) && !gl.getError();
-      } catch (e) { this.dangVe = false; return false; }
+      } catch (e) { this.dangVe = false; this.x.al = 1; this.x.op = 0; return false; }
     },
 
     // ---------- khung hình ----------
@@ -225,16 +227,16 @@ const GLR = (() => {
       if (this.f % 300 === 0) this.donRieng();
       this._dich = null; gl.bindFramebuffer(gl.FRAMEBUFFER, null);
       gl.viewport(0, 0, cv.width, cv.height); gl.uniform3f(this._kt, 2 / cv.width, 2 / cv.height, 1); gl.clear(gl.COLOR_BUFFER_BIT);
-      if (this._lopTT) { const q = this._lopTT; this._lopTT = null; X._s = q[3]; X._st = q[4]; X._sC = true; X._sv++; } // khung trước dừng giữa lớp hiệu ứng
+      if (this._lopTT) { const q = this._lopTT; this._lopTT = null; X.al = q[0]; X.op = q[1]; X._s = q[3]; X._st = q[4]; X._sC = true; X._sv++; } // khung trước dừng giữa lớp hiệu ứng
       X.dat(k, rx, ry); this.dangVe = true; this._bb = null; this._ngan.length = 0;
       this.cvVe = goc; this.xVe = REN.ctx; this._svVe = -1; this._vCo = false; const vb = this._vb; vb[0] = vb[1] = Infinity; vb[2] = vb[3] = -Infinity; this._chuMoi = 0;
       const d = this.dem; d.lenh = 0; d.o = 0; d.tai = 0; d.px = 0; d.vec = 0; d.chu = 0;
       return true;
     },
     xong() { if (!this.dangVe) return; this.xa(); if (this._dich) this.datDich(null); this.dangVe = false; },
-    // chép trạng thái "dính" (phông, canh chữ, màu, nét…) a → b (ngữ cảnh 2D thật ↔ GLR.x) ở khung đổi chế độ vẽ: nối nhau như 1 ngữ cảnh liền mạch
+    // chép trạng thái "dính" (alpha, kiểu hoà màu, phông, canh chữ, màu, nét…) a → b (ngữ cảnh 2D thật ↔ GLR.x) ở khung đổi chế độ vẽ: nối nhau như 1 ngữ cảnh liền mạch
     chep(a, b) {
-      for (const k of ['font', 'textAlign', 'textBaseline', 'fillStyle', 'strokeStyle', 'lineWidth', 'lineCap', 'lineJoin', 'miterLimit', 'shadowBlur', 'shadowColor', 'shadowOffsetX', 'shadowOffsetY', 'filter', 'lineDashOffset']) {
+      for (const k of ['globalAlpha', 'globalCompositeOperation', 'font', 'textAlign', 'textBaseline', 'fillStyle', 'strokeStyle', 'lineWidth', 'lineCap', 'lineJoin', 'miterLimit', 'shadowBlur', 'shadowColor', 'shadowOffsetX', 'shadowOffsetY', 'filter', 'lineDashOffset']) {
         const v = a[k]; if (b[k] !== v) b[k] = v;
       }
     },
@@ -333,9 +335,9 @@ const GLR = (() => {
     },
     // LỚP HIỆU ỨNG: lopMo() → mọi lệnh GLR.x vẽ vào bộ đệm khung cỡ canvas (ma trận giữ nguyên; alpha 1, source-over, kiểu vẽ riêng của lớp như ngữ cảnh 2D riêng)
     //   → REN khoét ('destination-out') → lopGop(al, cao) đổ vùng có hình xuống canvas với alpha al (chỉ tới hàng `cao`, như lớp 2D chỉ cao tới hết đường).
-    lopMo() {
-      const cv = this.cv, X = this.x; let L = this._lop;
-      if (!L || L.the !== this.the || L.width !== cv.width || L.height !== cv.height) { this.huyDich(L); L = this._lop = this.taoDich(cv.width, cv.height); }
+    lopMo(cao) { // cao (điểm ảnh thiết bị): lớp chỉ cao tới hết đường + lề như lớp 2D (phần thẻ bài phía dưới không bao giờ có hiệu ứng) → bớt bộ nhớ GPU + điểm ảnh xoá
+      const cv = this.cv, X = this.x, lh = Math.max(2, Math.min(cv.height, cao || cv.height)); let L = this._lop;
+      if (!L || L.the !== this.the || L.width !== cv.width || L.height !== lh) { this.huyDich(L); L = this._lop = this.taoDich(cv.width, lh); }
       this.datDich(L); this.gl.clear(this.gl.COLOR_BUFFER_BIT);
       this._lopTT = [X.al, X.op, X.cat, X._s, X._st];
       X.al = 1; X.op = 0; X.cat = null; X._st = this._lopSt || (this._lopSt = []); X._st.length = 0;
@@ -346,7 +348,7 @@ const GLR = (() => {
     // khung bao (điểm ảnh thiết bị) hình đã vẽ vào lớp: [x0, y0, x1, y1] kẹp trong canvas, null = lớp rỗng
     lopBao(cao) {
       const b = this._bb; if (!b) return null; if (this._vCo) this.vecXa();
-      const x0 = Math.max(0, Math.floor(b[0]) - 1), y0 = Math.max(0, Math.floor(b[1]) - 1), x1 = Math.min(this.cv.width, Math.ceil(b[2]) + 1), y1 = Math.min(this.cv.height, cao || 1e9, Math.ceil(b[3]) + 1);
+      const x0 = Math.max(0, Math.floor(b[0]) - 1), y0 = Math.max(0, Math.floor(b[1]) - 1), x1 = Math.min(this.cv.width, Math.ceil(b[2]) + 1), y1 = Math.min(this.cv.height, cao || 1e9, this._lop ? this._lop.height : 1e9, Math.ceil(b[3]) + 1);
       return x1 > x0 && y1 > y0 ? [x0, y0, x1, y1] : null;
     },
     lopGop(al, cao) {
@@ -386,7 +388,6 @@ const GLR = (() => {
       this.ghiThieu(f);
       const t = this.dangVe && this.xVe; if (!t) return;
       const s = X._s; let op = X.op; if (op > 1) { this.ghiThieu('bo:gco-vec:' + OP_TEN[op]); op = 0; }
-      if (X.cat) this.ghiThieu('bo:clip-vec');
       if (this._vCo && this._vOp !== op) this.vecXa();
       this._vOp = op;
       t.setTransform(X.a, X.b, X.c, X.d, X.e, X.f); this.apKieu(t, X);
@@ -408,7 +409,14 @@ const GLR = (() => {
       if (ca) { vb[0] = vb[1] = 0; vb[2] = this.cvVe.width; vb[3] = this.cvVe.height; }
       else { if (x0 - le < vb[0]) vb[0] = x0 - le; if (y0 - le < vb[1]) vb[1] = y0 - le; if (x1 + le > vb[2]) vb[2] = x1 + le; if (y1 + le > vb[3]) vb[3] = y1 + le; }
       this._vCo = true;
+      const cat = X.cat;
+      if (cat) { // cắt chữ nhật đang hiệu lực (ô kính Lucky Slot…): áp lên canvas nháp bằng Path2D (không đụng đường đang dựng), trả lại sau lệnh
+        t.save();
+        for (const k of cat) { const q = new Path2D(); q.rect(k.x0, k.y0, k.x1 - k.x0, k.y1 - k.y0); t.setTransform(k.m[0], k.m[1], k.m[2], k.m[3], k.m[4], k.m[5]); t.clip(q); }
+        t.setTransform(X.a, X.b, X.c, X.d, X.e, X.f);
+      }
       try { t[f].apply(t, args); } catch (e) { }
+      if (cat) t.restore();
     },
     // chép cụm vector vừa vẽ ở canvas nháp thành 1 ô ảnh (texture riêng, tải 1 lần) chèn vào lô đúng thứ tự, rồi xoá vùng đó ở canvas nháp
     vecXa() {

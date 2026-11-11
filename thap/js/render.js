@@ -796,7 +796,7 @@ const REN = {
 
   // ---- dịu VFX (claude/diu-vfx): lớp hiệu ứng riêng cùng cỡ canvas chính ----
   lopFx(gl) {
-    if (gl) return GLR.lopMo(); // GL: lớp = bộ đệm khung của GLR (cùng ngữ cảnh GLR.x), không cần canvas 2D
+    if (gl) return GLR.lopMo(Math.min(this.cv.height, Math.ceil((this.lopCao() + 10) * this.s * this.dpr))); // GL: lớp = bộ đệm khung của GLR (cùng ngữ cảnh GLR.x), không cần canvas 2D
     const cv = this.cv; let L = this._lop;
     if (!L) { L = this._lop = document.createElement('canvas'); this._lopX = L.getContext('2d'); this.theoVung(this._lopX); }
     const x = this._lopX, V = x._vung;

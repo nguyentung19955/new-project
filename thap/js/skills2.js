@@ -1282,6 +1282,7 @@ function veDaiDuong(ctx, o, img, P, sA, sB, h, lech, alpha, r0) {
       c.drawImage(img, x, 0, cw, img.height, 0, -G2.sg * R0 - h / 2, w, h);
     }
   }
+  if (typeof GLR !== 'undefined') GLR.ban(cv); // WebGL: canvas phụ vừa vẽ lại → báo lớp GL tải lại texture
   return dan();
   function dan() {
     const ga = ctx.globalAlpha, co = ctx.globalCompositeOperation;
