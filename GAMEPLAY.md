@@ -1413,3 +1413,13 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - **Bỏ trần wave 70:** `LUAT.waveMax = 0` — solo / co-op (cả online) đánh tới khi hết tim, kết quả là DEFEAT "Reached WAVE n"; bảng trùm sắp tới (`vaotran.js`) không dừng ở 70. Chế độ có điều kiện kết thúc riêng không đổi.
 - **Thưởng:** mốc Thử thách tuần 15/25/35/45 → 20/30/40/50; mốc Vô tận 80–120 → 75–115 (thưởng giữ nguyên).
 - **Chữ:** mẹo "Splitters burst into 3" + mẹo 3 quái mới (`ketqua.js`), từ điển VI (`vi.json` → `ngonngu-vi.js`).
+
+## claude/che-do-dcdw — BỎ LEO THÁP + hướng dẫn là một bản riêng + thưởng theo cấu trúc DCDW (11/11, bổ sung 18:41)
+
+- **Người dùng (18:41, 18:42):** "Leo tháp xoá, làm tutorial 1 bản riêng" · "Tham khảo thưởng DCDW". Game còn: **CO-OP (chính, PLAY mặc định)** · PVP · ONLINE · ĐƯỜNG ĐUA · TUTORIAL.
+- **Bỏ Leo Tháp** (`chedo-c.js: CDC.bo.thap`; bản lưu `cd.thap` giữ nguyên): ẩn GAME MODE, không vào được; `home.js` mặc định `coop`, bản lưu chọn Solo / Leo Tháp → CO-OP; `tientrinh.js` chế độ dự phòng → CO-OP.
+- **Đo lại theo WAVE** (tầng đã qua vẫn tính, tầng f ≙ wave 9 + ⌊0,62·(f−1)⌋): Hành trình (wave 11/14/17/20/23/30), nhiệm vụ ngày wave 15, nhiệm vụ Lò rèn wave 30, nhiệm vụ tuần "5 wave quanh kỷ lục", thành tựu wave 30/50/70, mốc Huyền thoại wave CO-OP 20–70 (`MH.sw` nay ghi cả CO-OP / online), Đỏ LV12 + wave 30, chỉ huy wave 15/30/50, hồ sơ BEST WAVE. Bảng đầy đủ: `TAI-LIEU-GOC.md` mục 4.
+- **Mốc wave CO-OP lần đầu** (`chedo-dd.js: MOCWC / MOCW`, lưu `turret_kt.cd.cm`): 7 mốc 10–70, tổng = tổng thưởng lần đầu 100 tầng (55 500 vàng · 460 ngọc · 3 Rương Thường · 3 Rương Vàng · 5 Rương HH · 8 Tinh thể Đỏ) — SỐ TẠM. Người đã qua tầng: mốc tương đương coi như đã nhận.
+- **Hướng dẫn**: vẫn là trận riêng của `huongdan.js` (bàn solo ẩn, bộ cố định, 7 bước, xong = hạ trùm wave 10); thêm mục **TUTORIAL** trong GAME MODE (Settings → REPLAY TUTORIAL vẫn còn); xong hướng dẫn nút chính = **PLAY CO-OP**.
+- **Test**: `tools/thap-kt-duong-dua.js` (thêm phần 2b), `thap-kt-tien-trinh`, `thap-kt-admin`, `thap-kt-an-do` đạt; `thap-kt-thap-leo` in SKIP. Việc "sửa tầng 1 Leo Tháp cho tài khoản mới" của phiên cân bằng thành THỪA.
+- **Chưa làm / còn dở**: cúp + mốc thắng PVP, giới hạn lượt co-op, Pass… (ghi ở THIET-KE §5); màn mở đầu trận hướng dẫn vẫn liệt kê trùm wave 20 / 30; ô vàng đầu hàng thưởng mốc wave hơi sát mép trái; chữ CO-OP trong GAME MODE xuống 3 dòng.

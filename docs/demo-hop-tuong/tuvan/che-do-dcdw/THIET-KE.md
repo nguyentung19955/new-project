@@ -43,3 +43,10 @@ Máy phiên cũ còn ~640 MB ổ đĩa (không dựng được bản làm việc
     "v":  { ".validate": "newData.isNumber()" },
     "$other": { ".validate": false } } } }
 ```
+
+## 5. BỔ SUNG 11/11 18:41–18:42 — "Leo tháp xoá, làm tutorial 1 bản riêng", "tham khảo thưởng DCDW" (đã làm trên cùng nhánh)
+- **Bỏ Leo Tháp**: `CDC.bo.thap` (ẩn GAME MODE, `CD.vao` từ chối, bỏ khoá tính năng); HOME PLAY mặc định = **CO-OP** (`HM.chuan`: Solo / Leo Tháp cũ → CO-OP). Bảng quy đổi tầng → wave: `TAI-LIEU-GOC.md` mục 4.
+- **Tiến trình kiểu DCDW**: mốc wave CO-OP đạt lần đầu (`chedo-dd.js: MOCWC`) thay thưởng lần đầu mỗi tầng; thưởng tuần = mốc điểm Đường Đua. Rương Trận mỗi trận CO-OP / PVP (theo wave) GIỮ như cũ.
+- **Hướng dẫn riêng**: `huongdan.js` vốn đã là 1 trận độc lập (bàn `solo` ẩn, bộ cố định, xong = hạ trùm wave 10) — thêm mục TUTORIAL trong GAME MODE, xong → PLAY CO-OP.
+- **DCDW có, mình CHƯA có (đề xuất, chưa làm — chờ người dùng quyết):** cúp PVP + mốc cúp lần đầu + Crystal Crown cuối mùa · túi thắng PVP rơi theo xác suất, giữ tối đa 4, mở mất thời gian · CO-OP giới hạn 3 lượt/ngày, lọt 1 quái là hết trận (mình: 3 tim chung), wave 30 = 1 túi rồi vàng / vật liệu theo trùm · token Raid · Pass mùa 70 bậc · nhiệm vụ nhóm Archfiend Race · bảo hiểm Huyền thoại túi thứ 7 · mốc số trận THẮNG PVP lần đầu (mình chưa có bộ đếm thắng riêng PVP).
+- Bot CO-OP bộ khởi đầu (cấp 0, 3 hạt, cân bằng wave biến thể B): `tia,lien,sungluc,bang,set` + đồng đội bộ ngẫu nhiên: wave 42 / 16 / 49; + đồng đội cùng bộ: 10 / 10 / 17. `lien,set,mana,doc,phagiap` + ngẫu nhiên: 39 / 7 / 43; + cùng bộ: 2 / 2 / 2. → trận CO-OP đầu của tài khoản mới phụ thuộc nặng vào bộ ngẫu nhiên của đồng đội máy.

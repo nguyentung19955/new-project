@@ -7,6 +7,7 @@
 //  Ảnh (SHOTS, mặc định /tmp/thap-thap-leo): 390×844 + 844×390, EN + VI — bảng GAME MODE, bảng tầng, trong trận, kết quả, mở rương.
 // Chạy: python3 -m http.server 8765 (gốc repo) · NODE_PATH=/opt/npm-tools/node_modules node tools/thap-kt-thap-leo.js [BASE]
 'use strict';
+console.log('SKIP — Leo Tháp đã BỎ khỏi game (người dùng chốt 11/11 18:41, nhánh claude/che-do-dcdw) — code còn nhưng không còn lối vào'); process.exit(0); // 11/11
 const { chromium } = require('playwright');
 const fs = require('fs');
 const BASE = process.argv[2] || process.env.BASE || 'http://localhost:8765/thap/';

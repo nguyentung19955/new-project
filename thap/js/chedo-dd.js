@@ -195,7 +195,7 @@ const MOCW = {
   kq(k) {
     const chi = document.getElementById('kq-chi'); if (!chi || !k) return;
     const r = this.nhan(Math.max(1, k.wave | 0)); if (!r.moc.length) return;
-    chi.insertAdjacentHTML('beforeend', '<div class="cdd-kq"><small>FIRST TIME · WAVE ' + Math.max.apply(null, r.moc) + '</small>' + CDDUI.thuongHtml(r.ra) + '</div>');
+    chi.insertAdjacentHTML('beforeend', '<div class="tb-kq cd-kq"><small>FIRST TIME · WAVE ' + Math.max.apply(null, r.moc) + '</small>' + CDDUI.thuongHtml(r.ra) + '</div>');
     try { OT.quet(chi); } catch (e) { }
   },
 };
