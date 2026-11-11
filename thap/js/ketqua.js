@@ -18,7 +18,10 @@ const KQ = {
       bay_bang: 'Frost Flyers ignore slows: bring raw damage or Tesla chains.',
       khong_lo: 'Giants: heavy single-target turrets (Sniper, Revolver) and Armor Breaker.',
       que_tach: 'Big Splitters: splash (Cannon, Mortar) cleans up the pieces.',
-      tach: 'Splitters burst into 5: splash damage (Cannon, Mortar) handles them.',
+      tach: 'Splitters burst into ' + QUAI.tach.tach.n + ': splash damage (Cannon, Mortar) handles them.',
+      bay_dan: 'Swarmlings come in packs: splash or chain damage clears swarms.',
+      toc_hanh: 'Runners ignore slows: bring raw damage or Tesla chains.',
+      tinh_anh: 'Elites: heavy single-target turrets (Sniper, Revolver) and Armor Breaker.',
       nho: 'Spawnlings: splash or chain damage clears swarms.',
       bo: 'Crawlers slipped through: summon earlier and merge pairs right away.',
     })[k] || 'Try swapping one card for a turret with a different role.';

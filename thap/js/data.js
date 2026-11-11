@@ -29,7 +29,7 @@ const LUAT = {
   nangPct: 0.25,         // +% sát thương GỐC mỗi bước power-up (cộng dồn tuyến tính như DCDW: gốc × (1 + k·bước))
   timSolo: 3, timPvp: 3, timCoop: 3, // CO-OP: 3 tim CHUNG (giữ ở bàn 0); quái to / trùm lọt mất 2 tim
   songTrum: 10,          // trùm mỗi 10 wave
-  waveMax: 70,
+  waveMax: 0,            // 11/11: BỎ trần wave 70 — solo / co-op đánh tới khi hết tim (0 = không trần; > 0 chỉ để công cụ đo đặt trần)
   pvpDotTu: 30,          // PVP: từ wave 30 = ĐỘT TỬ — wave nào cũng có trùm, máu trùm tăng dần tới khi 1 bên vỡ
   thoiGianWave: 20,      // giây / wave thường
 };
@@ -40,10 +40,14 @@ const QUAI = {
   bo:       { ten: TEXT.mob.bo,      hp: 1.0, v: 34, co: 40, tim: 1, mana: 1 },
   bay:      { ten: TEXT.mob.bay,     hp: 0.6, v: 62, co: 40, tim: 1, bay: true, mana: 1 },
   bay_bang: { ten: TEXT.mob.bay_bang, hp: 0.85, v: 50, co: 42, tim: 1, bay: true, khangCham: true, mana: 1 },
-  khong_lo: { ten: TEXT.mob.khong_lo,    hp: 4.5, v: 22, co: 60, tim: 2, to: true, mana: 2 },
-  tach:     { ten: TEXT.mob.tach,    hp: 1.6, v: 30, co: 46, tim: 1, tach: { id: 'nho', n: 5 }, mana: 1 },
-  que_tach: { ten: TEXT.mob.que_tach,    hp: 3.2, v: 26, co: 54, tim: 2, to: true, tach: { id: 'tach', n: 3, hs: 0.5 }, mana: 2 },
+  khong_lo: { ten: TEXT.mob.khong_lo,    hp: 4.5, v: 22, co: 60, tim: 2, to: true, mana: 4 },
+  tach:     { ten: TEXT.mob.tach,    hp: 1.6, v: 30, co: 46, tim: 1, tach: { id: 'nho', n: 3 }, mana: 1 },
+  que_tach: { ten: TEXT.mob.que_tach,    hp: 3.2, v: 26, co: 54, tim: 2, to: true, tach: { id: 'tach', n: 2, hs: 0.5 }, mana: 3 },
   nho:      { ten: TEXT.mob.nho,     hp: 0.22, v: 44, co: 26, tim: 1, anh: 'tach', mana: 0.3 },
+  // 11/11 CÂN BẰNG WAVE (biến thể B): 3 loại "thuần số liệu" cho wave có chủ đề — mượn ảnh quái sẵn có (chưa có hình riêng)
+  bay_dan:  { ten: TEXT.mob.bay_dan,  hp: 0.5, v: 44, co: 28, tim: 1, anh: 'tach', mana: 0.5 },
+  toc_hanh: { ten: TEXT.mob.toc_hanh, hp: 0.9, v: 60, co: 38, tim: 1, khangCham: true, anh: 'bo', mana: 1 },
+  tinh_anh: { ten: TEXT.mob.tinh_anh, hp: 12, v: 20, co: 66, tim: 2, to: true, anh: 'khong_lo', mana: 10 },
 };
 
 // TRÙM (trum_<id>.png: khung 0–2 đi, khung 3 tung chiêu) — mỗi 10 wave, lọt mất 2 tim
@@ -131,12 +135,19 @@ function mauWave(w) {
   if (pvp || w <= MAU_GAY) m = Math.pow(1.15, w - 1);
   else if (w <= MAU_GAY2) m = Math.pow(1.15, MAU_GAY - 1) * Math.pow(MAU_TANG_SAU, w - MAU_GAY);
   else m = Math.pow(1.15, MAU_GAY - 1) * Math.pow(MAU_TANG_SAU, MAU_GAY2 - MAU_GAY) * Math.pow(MAU_TANG_SAU2, w - MAU_GAY2);
-  return Math.round(80 * m + 30 * w);
+  return Math.round(Math.round(80 * m + 30 * w) * mauHeSo(w));
+}
+// 11/11 CÂN BẰNG WAVE (biến thể B, người dùng duyệt): ít quái hơn + gánh hậu kỳ Vàng/Đỏ thấp hơn → máu quái × hệ số:
+//   giảm dần đều từ ×1 (wave 1) tới ×0,95 (wave 30); wave 41–60 thêm ×0,99 mỗi wave (×1,08 → ×1,069/wave); từ wave 61 thêm ×1,01 mỗi wave (→ ×1,091/wave).
+//   Không trần wave: sau wave 70 máu tiếp tục ×1,091/wave. Áp mọi chế độ (kể cả PVP ×1,15). Tất định, chỉ theo w.
+const MAU_B = { k0: 0.95, wK: 30, w1: 40, g1: 0.99, w2: 60, g2: 1.01 };
+function mauHeSo(w) {
+  return (1 + (MAU_B.k0 - 1) * Math.min(1, (w - 1) / (MAU_B.wK - 1))) * Math.pow(MAU_B.g1, Math.max(0, Math.min(w, MAU_B.w2) - MAU_B.w1)) * Math.pow(MAU_B.g2, Math.max(0, w - MAU_B.w2));
 }
 // GÁNH HẬU KỲ: ụ Tấn công VÀNG / ĐỎ được +k sát thương mỗi wave sau wave HAU_KY.tu (nhân riêng trong dmgU — gồm cả đòn kỹ năng / chủ động dùng dmgU)
-//   wave ≤ 40 tuyến tính (wave 40: Vàng ×1.70, Đỏ ×1.80); sau wave 40 (10/11, khớp máu ×1.08) nhân mũ: Vàng ×1.02, Đỏ ×1.023 mỗi wave
-//   (wave 50: ×2.07 / ×2.26 · wave 60: ×2.53 / ×2.83). Tất định (chỉ theo G.wave), mọi chế độ.
-const HAU_KY = { tu: 20, vang: 0.035, do: 0.04, tu2: 40, mu: { vang: 1.02, do: 1.023 } };
+//   11/11 (biến thể B, người dùng duyệt): Vàng và Đỏ cùng +2%/wave từ wave 20 tới 40 (wave 40: ×1.40), SAU WAVE 40 KHÔNG TĂNG NỮA (mu = 1).
+//   (trước: Vàng +3.5% / Đỏ +4% mỗi wave, sau 40 nhân ×1.02 / ×1.023 mỗi wave → wave 70 ×3.08 / ×3.56). Tất định (chỉ theo G.wave), mọi chế độ.
+const HAU_KY = { tu: 20, vang: 0.02, do: 0.02, tu2: 40, mu: { vang: 1, do: 1 } };
 function heHauKy(T) {
   const k = T && HAU_KY[T.bac], sk = T && typeof SKILLS !== 'undefined' && SKILLS[T.id];
   if (!k || !sk || sk.vai !== 'tc' || typeof G === 'undefined') return 1;
@@ -168,28 +179,48 @@ function heDoNen(id, sao) {
 }
 function heSaoToc(T) { return T && saoMoi(T.id) ? SAO_TOC * ((T.sao | 0) - 1) : 0; }
 // mana khi giết
-function manaGiet(w) { return 10 + 2 * (w - 1); }
+// 11/11 CÂN BẰNG WAVE: số quái mỗi wave giảm ~2–3 lần → mỗi con quái THƯỜNG cho × (1 + 1,7·min(w,30)/30) để TỔNG mana/wave gần như cũ
+//   (đo bot: mana giết tới wave 30 lệch +1%). manaGietGoc = công thức cũ, TRÙM vẫn dùng (× 12) vì số trùm không đổi.
+const MANA_GIET_K = 1.7, MANA_GIET_W = 30;
+function manaGietGoc(w) { return 10 + 2 * (w - 1); }
+function manaGiet(w) { return Math.round(manaGietGoc(w) * (1 + MANA_GIET_K * Math.min(w, MANA_GIET_W) / MANA_GIET_W)); }
 
 // thành phần wave
-function taoWave(w, rng) { // rng: RNG có hạt giống (PVP: 2 bên cùng wave)
+// 11/11 CÂN BẰNG WAVE (biến thể B): số quái min(20, 8 + ⌊w/4⌋) (cũ min(32, 9 + ⌊0,75w⌋)) + WAVE CÓ CHỦ ĐỀ theo w % 10:
+//   1, 6 Hỗn hợp · 2 Bầy đàn · 3 Không kích · 4 Thiết giáp · 5 Tinh anh · 7 Tốc hành · 8 Phân bào · 9 Hỗn loạn · 0 Trùm (wave ≡ 0 không có trùm, vd Leo Tháp: Hỗn hợp).
+//   Slime (Splitter) chỉ còn ở wave Phân bào. Mọi ngẫu nhiên lấy từ r (RNG có hạt do nơi gọi đưa vào) → 2 máy online ra cùng danh sách.
+function soQuaiWave(w) { return Math.min(20, 8 + Math.floor(w / 4)); }
+const CHU_DE = ['trum', 'hon', 'baydan', 'khongkich', 'thietgiap', 'tinhanh', 'hon', 'tochanh', 'phanbao', 'honloan'];
+function chuDeWave(w) { return CHU_DE[((w % 10) + 10) % 10]; }
+const CHU_DE_LAM = {
+  hon(w, n, r) { const ds = []; for (let i = 0; i < n; i++) { const x = r(); let id = 'bo'; if (w >= 2 && x < 0.2) id = 'bay'; else if (w >= 8 && x < 0.3) id = 'bay_bang'; if (w >= 4 && i % 6 === 5) id = 'khong_lo'; ds.push(id); } return ds; },
+  baydan(w, n) { return Array(Math.round(n * 1.8)).fill('bay_dan'); },
+  khongkich(w, n, r) { const ds = []; for (let i = 0; i < n; i++) ds.push(w >= 8 && r() < 0.4 ? 'bay_bang' : 'bay'); return ds; },
+  thietgiap(w, n) { return Array(Math.max(2, Math.round(n / 3.2))).fill('khong_lo'); },
+  tinhanh(w, n) { return ['tinh_anh'].concat(Array(Math.round(n * 0.5)).fill('bo')); },
+  tochanh(w, n) { return Array(Math.round(n * 0.9)).fill('toc_hanh'); },
+  phanbao(w, n) { const m = Math.max(3, Math.round(n * 0.45)), ds = []; for (let i = 0; i < m; i++) ds.push(w >= 30 && i % 4 === 3 ? 'que_tach' : 'tach'); return ds; },
+};
+// danh sách quái 1 wave THƯỜNG. c (tuỳ chọn) = luật sinh của Leo Tháp / Thử thách: c.n (× số quái) · c.kl (cứ c.kl con có 1 Giant) · c.bay (tỉ lệ Crawler đổi thành quái bay)
+function dsQuaiChuDe(w, r, c) {
+  const n = Math.round(soQuaiWave(w) * ((c && c.n) || 1)), k = chuDeWave(w) === 'trum' ? 'hon' : chuDeWave(w);
+  let ds;
+  if (k === 'honloan') {
+    const bo = ['baydan', 'khongkich', 'thietgiap', 'tochanh'], a = bo.splice(Math.floor(r() * bo.length), 1)[0], b = bo[Math.floor(r() * bo.length)];
+    const A = CHU_DE_LAM[a](w, Math.ceil(n / 2), r), B = CHU_DE_LAM[b](w, Math.floor(n / 2), r);
+    ds = []; for (let i = 0; i < Math.max(A.length, B.length); i++) { if (A[i]) ds.push(A[i]); if (B[i]) ds.push(B[i]); }
+  } else ds = CHU_DE_LAM[k](w, n, r);
+  if (c && c.kl) ds = ds.map((id, i) => (i % c.kl === c.kl - 1 && id !== 'tinh_anh' ? 'khong_lo' : id));
+  if (c && c.bay) ds = ds.map((id) => (id === 'bo' && r() < c.bay ? (w >= 8 && r() < 0.4 ? 'bay_bang' : 'bay') : id));
+  return ds;
+}
+function taoWave(w, rng) { // rng: RNG có hạt giống (PVP: 2 bên cùng wave; co-op online: dongbo.js đặt RNG có hạt quanh wavMoi)
   rng = rng || Math.random;
   if (w % LUAT.songTrum === 0) {
     const id = typeof trumCuaWave === 'function' ? trumCuaWave(w, 0) : TRUM_THU_TU[(w / LUAT.songTrum - 1) % TRUM_THU_TU.length]; // lịch trùm: game.js
     return { trum: id, ds: Array(4).fill('bo') };
   }
-  const n = Math.min(32, 9 + Math.floor(w * 0.75));
-  const ds = [];
-  for (let i = 0; i < n; i++) {
-    let id = 'bo';
-    const r = rng();
-    if (w >= 2 && r < 0.2) id = 'bay';
-    else if (w >= 8 && r < 0.33) id = 'bay_bang';
-    else if (w >= 6 && r < 0.46) id = 'tach';
-    if (w >= 4 && i % 7 === 6) id = 'khong_lo';
-    if (w >= 30 && i % 9 === 4) id = 'que_tach';
-    ds.push(id);
-  }
-  return { ds };
+  return { ds: dsQuaiChuDe(w, rng, null) };
 }
 
 // Bố cục bàn theo chế độ. Khay 5×3 (khay.png 900×532): tâm ô theo tỉ lệ đo trên ảnh

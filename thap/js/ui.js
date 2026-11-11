@@ -283,7 +283,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
   },
   bangWave(w, trum) {
     const b = $('#bang-wave');
-    b.querySelector('b').textContent = TEXT.ui.wave + ' ' + w; const sp = b.querySelector('span'); sp.textContent = trum ? TEXT.ui.bossComing : (w === 1 ? TEXT.ui.wave1Hint : ''); sp.hidden = !sp.textContent;
+    b.querySelector('b').textContent = TEXT.ui.wave + ' ' + w; const sp = b.querySelector('span'); sp.textContent = trum ? TEXT.ui.bossComing : (w === 1 ? TEXT.ui.wave1Hint : (typeof chuDeWave === 'function' && TEXT.chuDe[chuDeWave(w)]) || ''); // 11/11: wave thường hiện tên CHỦ ĐỀ (data.js CHU_DE) sp.hidden = !sp.textContent;
     b.hidden = false; b.classList.remove('chay'); void b.offsetWidth; fitText(b.querySelector('b'), 32, 16); b.classList.add('chay');
     clearTimeout(this._bw); this._bw = setTimeout(() => b.hidden = true, 1700);
   },
