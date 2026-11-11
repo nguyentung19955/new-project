@@ -53,7 +53,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   // ---- 1. khách (mặc định): như cũ ----
   await vao(LS0);
   let k0 = await khoa();
-  ok(k0.dem.startsWith('1') && k0.uKhoa > 70 && k0.tnKhoa.length > 5 && !k0.thap && k0.trum.startsWith('0/') && k0.mv.length > 0 && !(await p.evaluate(() => ADMIN.la())),
+  ok(k0.dem.startsWith('1') && k0.uKhoa > 70 && k0.tnKhoa.length >= 5 /* 11/11: bỏ khoá san / vt / tw (chế độ đã bỏ) */ && !k0.thap && k0.trum.startsWith('0/') && k0.mv.length > 0 && !(await p.evaluate(() => ADMIN.la())),
     'khách: ụ / tính năng / chế độ / chỉ huy vẫn khoá như cũ', JSON.stringify(k0));
   const truoc = await that();
 

@@ -128,14 +128,15 @@ const DDUI = {
     const nh = document.querySelector('#tb-wave [data-t="wave"]'), so = document.getElementById('tb-so'); // ô trái: KO + số quái đã diệt (thay WAVE n — chế độ này không chia wave)
     if (nh && nh.dataset.dd !== '1') { nh.dataset.dd = '1'; nh.textContent = 'KO'; }
     if (so && so.textContent !== String(d.giet)) so.textContent = d.giet;
-    const trum = G.quai.some(x => x.trum && !x.chet);
-    if (trum) {
+    const top = document.getElementById('top'), trum = G.quai.some(x => x.trum && !x.chet);
+    if (trum && top && top.classList.contains('trum')) { // .trum = HUD đã đổi thanh trên sang băng trùm
       const wr = document.getElementById('wrap');
       if (!e && wr) { e = document.createElement('div'); e.id = 'dd-chip'; e.className = 'cd-chip'; wr.appendChild(e); }
       if (e) { if (e._t !== t) { e._t = t; e.textContent = t; } e.classList.toggle('gap', con <= 30); if (e.hidden) e.hidden = false; }
       return;
     }
     if (e && !e.hidden) e.hidden = true;
+    if (trum) return;
     const f = document.querySelector('#ha-thanh .f'); if (f) { const w = (con / DDC.gio * 100).toFixed(1) + '%'; if (f.style.width !== w) f.style.width = w; }
   },
   kq(k, c) {
@@ -149,7 +150,7 @@ const DDUI = {
     const o = (nhan, v, em) => '<div class="kq-o"><small>' + nhan + '</small><b>' + v + '</b>' + (em ? '<em>' + em + '</em>' : '') + '</div>';
     let th;
     if (r.cu) th = '<small>LAST WEEK\'S RACE · NOT COUNTED</small>';
-    else if (CDDUI.coThuong(r.ra)) th = '<small>WEEKLY MILESTONE · ' + r.moc.map(this.nhanMoc).join(' · ') + '</small>' + CDDUI.thuongHtml(r.ra);
+    else if (CDDUI.coThuong(r.ra)) th = '<small>MILESTONE REWARDS · ' + this.nhanMoc(Math.max.apply(null, r.moc)) + '</small>' + CDDUI.thuongHtml(r.ra);
     else th = '<small>' + (r.moi ? 'NEW WEEKLY BEST' : 'NO NEW MILESTONE') + '</small>';
     chi.innerHTML = '<div class="kq-hang">' + o('WEEK BEST', s.best ? CDUI.so(s.best) : '—', r.moi ? 'NEW BEST' : '') + o('KILLS', CDUI.so(r.giet)) + o('LIVES', tim + '/' + DDC.tim) + '</div><div class="tb-kq cd-kq">' + th + '</div>';
     try { OT.quet(chi); } catch (e) { }
@@ -320,6 +321,6 @@ const DDUI = {
     'RACE TRACK · WEEK #': 'ĐƯỜNG ĐUA · TUẦN #', 'RACE TRACK · #:#': 'ĐƯỜNG ĐUA · #:#', 'RACE TRACK · WEEK': 'ĐƯỜNG ĐUA · TUẦN',
     'Time up': 'Hết giờ', 'Out of lives · score kept': 'Hết mạng · giữ điểm', 'Left the race · score kept': 'Đã rời đường đua · giữ điểm',
     'LAST WEEK\'S RACE · NOT COUNTED': 'LƯỢT ĐUA TUẦN TRƯỚC · KHÔNG TÍNH',
-    'WEEKLY MILESTONE · # PTS': 'MỐC TUẦN · # ĐIỂM', 'WEEKLY MILESTONE · # PTS · # PTS': 'MỐC TUẦN · # ĐIỂM · # ĐIỂM', 'WEEKLY MILESTONE · # PTS · # PTS · # PTS': 'MỐC TUẦN · # ĐIỂM · # ĐIỂM · # ĐIỂM',
+    'MILESTONE REWARDS · # PTS': 'THƯỞNG MỐC · # ĐIỂM', 'MILESTONE REWARDS · #,# PTS': 'THƯỞNG MỐC · #.# ĐIỂM',
   });
 })();

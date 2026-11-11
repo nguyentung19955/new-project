@@ -270,7 +270,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     o.toast = (document.getElementById('chon-goi-nhac') || {}).textContent; o.che2 = HM.che;
     return o;
   });
-  ok(r.mo === '' && r.cheCoop === 'thap' && r.cheOnl === 'thap' && !r.shopMo && !r.vqMo && r.quay && r.ru && r.ruFree && r.sp && r.onl && r.nut && r.che === 'thap,coop,pvp,online,thu,san,tw,vt' && /Pilot Level 4/.test(r.toast) && r.che2 === 'thap',
+  ok(r.mo === '' && r.cheCoop === 'thap' && r.cheOnl === 'thap' && !r.shopMo && !r.vqMo && r.quay && r.ru && r.ruFree && r.sp && r.onl && r.nut && r.che === 'thap,coop,pvp,online,dd' /* 11/11 bỏ thu/san/tw/vt, thêm dd (Đường Đua) */ && /Pilot Level 4/.test(r.toast) && r.che2 === 'thap',
     'người mới (chưa xong hướng dẫn): khoá CO-OP/PVP/ONLINE/cửa hàng/vòng quay/rương (rương thưởng vẫn mở), nút tối + "LV 2", chạm → điều kiện', JSON.stringify(r));
   await chup('khoa-1-che-moi');
   await p.evaluate(() => HM.dong(true)); await chup('khoa-0-home-moi');
@@ -287,7 +287,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     KTUI.dong();
     return o;
   });
-  ok(r.hd === 'coop,thu,thap' && r.c2 === 'coop,pvp,nvd,shop,vq,thu,thap' && r.bao2 === 'pvp,nvd,shop,vq' && r.chePvp === 'pvp' && r.shopMo && r.ruV && r.ren === 3 && r.ruVLogic && r.c3 && r.ruV3,
+  ok(r.hd === 'coop,thap,dd' && r.c2 === 'coop,pvp,nvd,shop,vq,thap,dd' && r.bao2 === 'pvp,nvd,shop,vq' && r.chePvp === 'pvp' && r.shopMo && r.ruV && r.ren === 3 && r.ruVLogic && r.c3 && r.ruV3,
     'xong hướng dẫn → CO-OP · cấp 2 → PVP/nhiệm vụ ngày/cửa hàng/vòng quay (báo mở khoá) · Rương Vàng cấp 3 · lò rèn còn khoá', JSON.stringify(r));
   await p.evaluate(() => { const t = TT.st(); t.bao = []; t.xp = TT.xpTong(2); KT.luu(true); HM.ve(); KTUI.capNhat(); });
   await chup('khoa-2-home-cap2');
@@ -306,7 +306,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     KTUI.dong(); t.bao = []; KT.doc().tk.wave = 0; t.xp = TT.xpTong(4); KT.luu(true); HM.ve(); KTUI.capNhat();
     return o;
   });
-  ok(r.onl && r.bao4 === 'online' && r.che === 'online' && r.bao10 === 'nvt,ren,an,tw' && r.ren && r.renUi && r.bao12 === 'ruThan,renDo' && r.do,
+  ok(r.onl && r.bao4 === 'online' && r.che === 'online' && r.bao10 === 'nvt,ren,an' && r.ren && r.renUi && r.bao12 === 'ruThan,renDo' && r.do,
     'cấp 4 → ONLINE · cấp 10 → lò rèn + Ấn Vàng (Lò rèn Đỏ / Rương Thần thoại còn khoá) · cấp 12 + kỷ lục 30 → mở hết', JSON.stringify(r));
   await chup('khoa-5-home-cap4');
   await p.evaluate(async () => { const t = TT.st(); t.xp = TT.xpTong(10); KT.luu(true); KTUI.moTab('shop'); await new Promise(r => setTimeout(r, 200)); const e = [...document.querySelectorAll('#kt .kt-muc')].find(x => /FORGE/.test(x.textContent)); e && e.scrollIntoView(); });

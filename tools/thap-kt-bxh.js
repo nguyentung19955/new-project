@@ -12,6 +12,7 @@
 //  Ảnh (SHOTS, mặc định /tmp/thap-bxh): 393×852 EN + VI.
 // Chạy: python3 -m http.server 8765 (gốc repo) · NODE_PATH=/opt/npm-tools/node_modules node tools/thap-kt-bxh.js [BASE]
 'use strict';
+console.log('SKIP — bảng xếp hạng 3 tab (tw / vt / vtAll) đã thay bằng 1 bảng Đường Đua tuần — kiểm ở tools/thap-kt-duong-dua.js'); process.exit(0); // 11/11
 const { chromium } = require('playwright');
 const fs = require('fs');
 const BASE = process.argv[2] || process.env.BASE || 'http://localhost:8765/thap/';

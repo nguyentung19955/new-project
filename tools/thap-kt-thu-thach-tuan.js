@@ -11,6 +11,7 @@
 //  Ảnh (SHOTS, mặc định /tmp/thap-thu-thach-tuan): 393×852 EN + VI — GAME MODE, EVENT, màn tuần, trận, kết quả.
 // Chạy: python3 -m http.server 8765 (gốc repo) · NODE_PATH=/opt/npm-tools/node_modules node tools/thap-kt-thu-thach-tuan.js [BASE]
 'use strict';
+console.log('SKIP — chế độ này đã BỎ khỏi game (người dùng chốt 11/11, nhánh claude/che-do-dcdw) — code còn nhưng không còn lối vào'); process.exit(0); // 11/11
 const { chromium } = require('playwright');
 const fs = require('fs'), path = require('path');
 const BASE = process.argv[2] || process.env.BASE || 'http://localhost:8765/thap/';
