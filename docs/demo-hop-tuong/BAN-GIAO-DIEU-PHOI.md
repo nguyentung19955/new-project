@@ -53,6 +53,7 @@
 - Tối ưu giật co-op (lọc ảnh `'low'` khi vẽ khung…): −26–40% thời gian khung trên máy đo; CHƯA xác nhận trên iPhone.
 
 ## 6. Việc đang làm và hàng đợi (theo thứ tự)
+> **QUYẾT ĐỊNH MỚI CỦA NGƯỜI DÙNG (11/11 11:31): "Làm và để mặc định đi nhé"** → khi WebGL đợt 2+3 xong (cả màn trận ở GL, băm trạng thái không đổi, so hình đạt, dự phòng 2D chạy được) thì đặt `MAC_DINH = true` và xuất bản LUÔN, KHÔNG chờ người dùng thử iPhone trước. Vẫn giữ `?gl=0` để tắt và tự rơi về 2D khi không có WebGL/GPU thật. Dòng "chỉ bật mặc định khi người dùng đã thử" bên dưới KHÔNG còn áp dụng.
 1. **WebGL đợt 1 — XONG, đã lên bản thật nhưng mặc định TẮT** (`MAC_DINH = false` trong `thap/js/gl/glr.js`; thử bằng `?gl=1`). Đã sang GL: quái, bóng, quầng trạng thái, 12 trùm, lưới DRAG NET, tia laser, đạn + vệt, thanh máu. `GLR.x` = ngữ cảnh thay thế kiểu canvas 2D (hàm vẽ cũ chỉ cần nhận `GLR.x` thay `ctx`). Băm trạng thái trước = gl0 = gl1. Chi tiết + số đo: `docs/demo-hop-tuong/tuvan/webgl/KE-HOACH.md`, công cụ `tools/thap-kt-webgl.js`.
    - VÌ SAO TẮT: (a) trên máy đo (GPU giả lập bằng CPU) bản lai GL + 2D CHẬM hơn (trung vị 32 → 51 ms cảnh A) — lợi ích trên iPhone chưa chứng minh; (b) khi ụ + hiệu ứng còn ở 2D thì thứ tự lớp lệch: quái nằm trên ụ, chớp đầu nòng tối hơn, hình sự kiện trên ụ nằm dưới quái; (c) trùm Hive/Patcher/Octopus tải lại 6 texture canvas tạm mỗi khung (33,5 → 44,9 ms).
    - Người dùng đã bảo "có công tắc thì cứ làm luôn WebGL" → cứ làm tiếp, nhưng CHỈ bật mặc định khi cả màn trận ở GL, hết lệch lớp, và người dùng thử `?gl=1` trên iPhone thấy mát/mượt hơn.
