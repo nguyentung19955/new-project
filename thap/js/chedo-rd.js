@@ -19,7 +19,7 @@ const RDC = {
   knDau: 40, knNghi: 12,                                       // chiêu trùm: lần đầu sau 40 s, mỗi lần sau nghỉ thêm 12 s (trùm đứng đó cả trận — niệm dày như trùm wave thì bàn đầu trận bị phá sạch)
   dau(b) { return b <= 3 ? [{ vang: 500 + 500 * b }, { ruong: 'thuong', n: b === 3 ? 2 : 1 }].concat(b === 3 ? [{ ngoc: 30 }] : []) : b <= 5 ? [{ vang: 1000 * (b - 1) }, { ruong: 'vang' }].concat(b === 5 ? [{ ngoc: 50 }] : []) : b === 6 ? [{ vang: 5000 }, { ruong: 'hh', n: 1 }] : b === 7 ? [{ vang: 6000 }, { ngoc: 80 }, { ruong: 'hh', n: 1 }, { tt: 1 }] : b === 8 ? [{ vang: 8000 }, { ruong: 'hh', n: 2 }, { tt: 1 }] : b === 9 ? [{ vang: 10000 }, { ngoc: 100 }, { ruong: 'hh', n: 2 }, { tt: 2 }] : [{ vang: 15000 }, { ruong: 'hh', n: 3 }, { tt: 3 }]; },
   lai: (b) => [{ vang: 150 * b }, { the: { bac: 'xanh', n: 2 + Math.floor(b / 3) } }],
-  ICON: 'ua_ic_trum', // icon tạm (biểu tượng trùm sẵn có) — CẦN ảnh riêng cho RAID
+  ICON: 'ic_raid', // ảnh ChatGPT 12/11
 };
 
 const RD = {

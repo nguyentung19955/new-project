@@ -18,7 +18,7 @@ const PUC = {
   waveThuong: 10,        // "wave" ghi cho Rương Trận / XP / điểm sự kiện của 1 trận Đẩy Trùm (cố định)
   H: 1e9,                // máu trùm (không bao giờ hết — được hồi đầy mỗi bước)
   knDau: 30, knNghi: 10, // chiêu trùm: lần đầu sau 30 s, mỗi lần sau nghỉ thêm 10 s
-  ICON: 'ua_ic_trum',    // icon tạm — CẦN ảnh riêng cho PUSH
+  ICON: 'ic_push',       // ảnh ChatGPT 12/11
 };
 
 const PU = {
