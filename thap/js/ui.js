@@ -234,7 +234,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     const cao = (el, k, v) => { if (el['_' + k] !== v) { el['_' + k] = v; el.style[k] = v; } };
     const m = Math.floor(B.mana);
     const mEl = $('#mana');
-    if (m !== this.manaCu) { chu(mEl, m); if (m > this.manaCu && !this._nay) { this._nay = true; mEl.classList.add('nay'); setTimeout(() => { mEl.classList.remove('nay'); this._nay = false; }, 120); } this.manaCu = m; }
+    if (m !== this.manaCu) { chu(mEl, m); const nc = m >= 100000 ? String(Math.min(8, ('' + m).length)) : ''; if (mEl._nc !== nc) { mEl._nc = nc; if (nc) mEl.dataset.n = nc; else delete mEl.dataset.n; } /* ≥ 6 chữ số: chữ nhỏ lại cho vừa khung (css/hud-anime.css) */ if (m > this.manaCu && !this._nay) { this._nay = true; mEl.classList.add('nay'); setTimeout(() => { mEl.classList.remove('nay'); this._nay = false; }, 120); } this.manaCu = m; }
     chu($('#gia-trieu'), B.gia);
     const nt = $('#nut-trieu'), du = B.mana >= B.gia && oTrong(B).length > 0;
     nt.classList.toggle('du', du); nt.classList.toggle('thieu', !du);
