@@ -15,12 +15,14 @@
 const GLR = (() => {
   const TS = (() => { try { return new URLSearchParams(location.search); } catch (e) { return { get: () => null }; } })();
   const MAC_DINH = false; // (commit trung gian: mặc định TẮT, ?gl=1 để thử)
-  const ATLAS = 2048, TRANG_MAX = 3, LE = 1, DINH_MAX = 16384, W9 = 9; // 9 từ 4 byte / đỉnh: x y u v u0 v0 u1 v1 màu
-  const VS = 'attribute vec2 a_p;attribute vec2 a_uv;attribute vec4 a_gh;attribute vec4 a_m;uniform vec2 u_kt;varying vec2 v_uv;varying vec4 v_gh;varying vec4 v_m;' +
-    'void main(){v_uv=a_uv;v_gh=a_gh;v_m=a_m;gl_Position=vec4(a_p.x*u_kt.x-1.0,1.0-a_p.y*u_kt.y,0.0,1.0);}';
+  const ATLAS = 2048, TRANG_MAX = 3, LE = 1, DINH_MAX = 16384, W9 = 13; // 13 từ 4 byte / đỉnh: x y · u v · u0 v0 u1 v1 (giới hạn lấy mẫu) · lx ly lw lh (toạ độ trong ô, điểm ảnh thiết bị → khử răng cưa mép) · màu
+  const VS = 'attribute vec2 a_p;attribute vec2 a_uv;attribute vec4 a_gh;attribute vec4 a_c;attribute vec4 a_m;uniform vec2 u_kt;varying vec2 v_uv;varying vec4 v_gh;varying vec4 v_c;varying vec4 v_m;' +
+    'void main(){v_uv=a_uv;v_gh=a_gh;v_c=a_c;v_m=a_m;gl_Position=vec4(a_p.x*u_kt.x-1.0,1.0-a_p.y*u_kt.y,0.0,1.0);}';
   // highp: UV trên atlas 2048 cần > 10 bit (mediump của GPU iPhone = float 16 bit → lệch điểm ảnh)
   const FS = '#ifdef GL_FRAGMENT_PRECISION_HIGH\nprecision highp float;\n#else\nprecision mediump float;\n#endif\n' +
-    'uniform sampler2D u_t;varying vec2 v_uv;varying vec4 v_gh;varying vec4 v_m;void main(){gl_FragColor=texture2D(u_t,clamp(v_uv,v_gh.xy,v_gh.zw))*v_m;}';
+    // mép ô: độ phủ điểm ảnh như canvas 2D (ô nới 0,5 điểm ảnh mỗi phía, ngoài ô nguồn lấy màu mép) → thanh máu / ảnh sát khung không nhảy từng điểm ảnh
+    'uniform sampler2D u_t;varying vec2 v_uv;varying vec4 v_gh;varying vec4 v_c;varying vec4 v_m;void main(){' +
+    'vec2 p=clamp(min(v_c.xy+0.5,v_c.zw)-max(v_c.xy-0.5,vec2(0.0)),0.0,1.0);gl_FragColor=texture2D(u_t,clamp(v_uv,v_gh.xy,v_gh.zw))*(v_m*(p.x*p.y));}';
   const huu = Number.isFinite;
 
   // ---------- ngữ cảnh giả kiểu canvas 2D ----------
@@ -140,14 +142,14 @@ const GLR = (() => {
       const gl = this.gl, mk = (t, s) => { const o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); return gl.getShaderParameter(o, gl.COMPILE_STATUS) ? o : null; };
       const v = mk(gl.VERTEX_SHADER, VS), f = mk(gl.FRAGMENT_SHADER, FS); if (!v || !f) return false;
       const p = gl.createProgram(); gl.attachShader(p, v); gl.attachShader(p, f);
-      gl.bindAttribLocation(p, 0, 'a_p'); gl.bindAttribLocation(p, 1, 'a_uv'); gl.bindAttribLocation(p, 2, 'a_gh'); gl.bindAttribLocation(p, 3, 'a_m');
+      gl.bindAttribLocation(p, 0, 'a_p'); gl.bindAttribLocation(p, 1, 'a_uv'); gl.bindAttribLocation(p, 2, 'a_gh'); gl.bindAttribLocation(p, 3, 'a_c'); gl.bindAttribLocation(p, 4, 'a_m');
       gl.linkProgram(p); if (!gl.getProgramParameter(p, gl.LINK_STATUS)) return false;
       gl.useProgram(p); this._kt = gl.getUniformLocation(p, 'u_kt'); gl.uniform1i(gl.getUniformLocation(p, 'u_t'), 0);
       if (!this._buf) { this._buf = new ArrayBuffer(DINH_MAX * W9 * 4); this._f = new Float32Array(this._buf); this._u = new Uint32Array(this._buf); this._i = new Uint16Array(DINH_MAX * 3); }
       this._vb = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, this._vb); gl.bufferData(gl.ARRAY_BUFFER, this._buf.byteLength, gl.DYNAMIC_DRAW);
       this._ib = gl.createBuffer(); gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._ib); gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this._i.byteLength, gl.DYNAMIC_DRAW);
-      for (let i = 0; i < 4; i++) gl.enableVertexAttribArray(i);
-      gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 36, 0); gl.vertexAttribPointer(1, 2, gl.FLOAT, false, 36, 8); gl.vertexAttribPointer(2, 4, gl.FLOAT, false, 36, 16); gl.vertexAttribPointer(3, 4, gl.UNSIGNED_BYTE, true, 36, 32);
+      for (let i = 0; i < 5; i++) gl.enableVertexAttribArray(i);
+      gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 52, 0); gl.vertexAttribPointer(1, 2, gl.FLOAT, false, 52, 8); gl.vertexAttribPointer(2, 4, gl.FLOAT, false, 52, 16); gl.vertexAttribPointer(3, 4, gl.FLOAT, false, 52, 32); gl.vertexAttribPointer(4, 4, gl.UNSIGNED_BYTE, true, 52, 48);
       gl.disable(gl.DEPTH_TEST); gl.disable(gl.CULL_FACE); gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA); this._op = 0;
       gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true); gl.activeTexture(gl.TEXTURE0); gl.clearColor(0, 0, 0, 0);
       const mx = gl.getParameter(gl.MAX_TEXTURE_SIZE) || 1024; this.atlasCo = Math.min(ATLAS, mx); this.texMax = mx;
@@ -296,42 +298,48 @@ const GLR = (() => {
       }
       const E = this.tra(im, w, h); if (!E) return;
       if (E.tex !== this.bTex || X.op !== this.bOp || this.nv + 12 > DINH_MAX) { this.xa(); this.bTex = E.tex; this.bOp = X.op; }
-      const a = X.a, b = X.b, c = X.c, d = X.d, e = X.e, f = X.f, x1 = dx + dw, y1 = dy + dh;
+      const a = X.a, b = X.b, c = X.c, d = X.d, e = X.e, f = X.f;
       const iw = 1 / E.W, ih = 1 / E.H, u0 = (E.x + sx) * iw, v0 = (E.y + sy) * ih, u1 = (E.x + sx + sw) * iw, v1 = (E.y + sy + sh) * ih;
       // giới hạn lấy mẫu = trong ô nguồn (như canvas: không lem điểm ảnh khung/ảnh bên cạnh)
       let g0 = u0 + 0.5 * iw, g2 = u1 - 0.5 * iw, g1 = v0 + 0.5 * ih, g3 = v1 - 0.5 * ih;
       if (g0 > g2) g0 = g2 = (u0 + u1) / 2; if (g1 > g3) g1 = g3 = (v0 + v1) / 2;
       const A = Math.round(al * 255), mau = (A | (A << 8) | (A << 16) | (A << 24)) >>> 0; // màu nhân sẵn alpha (tô màu: để dành đợt sau)
       const F = this._f, U = this._u, I = this._i;
-      const X0 = a * dx + c * dy + e, Y0 = b * dx + d * dy + f, X1 = a * x1 + c * dy + e, Y1 = b * x1 + d * dy + f, X2 = a * x1 + c * y1 + e, Y2 = b * x1 + d * y1 + f, X3 = a * dx + c * y1 + e, Y3 = b * dx + d * y1 + f;
+      // 4 góc ô đích (điểm ảnh thiết bị) nới 0,5 điểm ảnh mỗi phía dọc 2 cạnh; UV + toạ độ trong ô (lx, ly) nới theo
+      const wx = a * dw, wy = b * dw, hx = c * dh, hy = d * dh, lw = Math.hypot(wx, wy), lh = Math.hypot(hx, hy); if (!(lw > 0 && lh > 0)) return;
+      const ox = wx / lw * 0.5, oy = wy / lw * 0.5, px = hx / lh * 0.5, py = hy / lh * 0.5, du = (u1 - u0) / lw * 0.5, dv = (v1 - v0) / lh * 0.5;
+      const bx = a * dx + c * dy + e, by = b * dx + d * dy + f;
+      const X0 = bx - ox - px, Y0 = by - oy - py, X1 = bx + wx + ox - px, Y1 = by + wy + oy - py, X2 = bx + wx + hx + ox + px, Y2 = by + wy + hy + oy + py, X3 = bx + hx - ox + px, Y3 = by + hy - oy + py;
+      const ua = u0 - du, ub = u1 + du, va = v0 - dv, vb = v1 + dv, la = -0.5, lb = lw + 0.5, ma = -0.5, mb = lh + 0.5;
       if (this._vung) this._vung.push(Math.min(X0, X1, X2, X3), Math.min(Y0, Y1, Y2, Y3), Math.max(X0, X1, X2, X3), Math.max(Y0, Y1, Y2, Y3));
-      if (this.demPx) this.dem.px += Math.abs((X1 - X0) * (Y3 - Y0) - (X3 - X0) * (Y1 - Y0));
-      if (X.cat) { this.veCat(X.cat, [X0, Y0, u0, v0, X1, Y1, u1, v0, X2, Y2, u1, v1, X3, Y3, u0, v1], g0, g1, g2, g3, mau); return; }
+      if (this.demPx) this.dem.px += lw * lh;
+      if (X.cat) { this.veCat(X.cat, [X0, Y0, ua, va, la, ma, X1, Y1, ub, va, lb, ma, X2, Y2, ub, vb, lb, mb, X3, Y3, ua, vb, la, mb], g0, g1, g2, g3, lw, lh, mau); return; }
       let o = this.nv * W9; const v = this.nv;
-      F[o] = X0; F[o + 1] = Y0; F[o + 2] = u0; F[o + 3] = v0; F[o + 4] = g0; F[o + 5] = g1; F[o + 6] = g2; F[o + 7] = g3; U[o + 8] = mau; o += W9;
-      F[o] = X1; F[o + 1] = Y1; F[o + 2] = u1; F[o + 3] = v0; F[o + 4] = g0; F[o + 5] = g1; F[o + 6] = g2; F[o + 7] = g3; U[o + 8] = mau; o += W9;
-      F[o] = X2; F[o + 1] = Y2; F[o + 2] = u1; F[o + 3] = v1; F[o + 4] = g0; F[o + 5] = g1; F[o + 6] = g2; F[o + 7] = g3; U[o + 8] = mau; o += W9;
-      F[o] = X3; F[o + 1] = Y3; F[o + 2] = u0; F[o + 3] = v1; F[o + 4] = g0; F[o + 5] = g1; F[o + 6] = g2; F[o + 7] = g3; U[o + 8] = mau;
+      F[o] = X0; F[o + 1] = Y0; F[o + 2] = ua; F[o + 3] = va; F[o + 4] = g0; F[o + 5] = g1; F[o + 6] = g2; F[o + 7] = g3; F[o + 8] = la; F[o + 9] = ma; F[o + 10] = lw; F[o + 11] = lh; U[o + 12] = mau; o += W9;
+      F[o] = X1; F[o + 1] = Y1; F[o + 2] = ub; F[o + 3] = va; F[o + 4] = g0; F[o + 5] = g1; F[o + 6] = g2; F[o + 7] = g3; F[o + 8] = lb; F[o + 9] = ma; F[o + 10] = lw; F[o + 11] = lh; U[o + 12] = mau; o += W9;
+      F[o] = X2; F[o + 1] = Y2; F[o + 2] = ub; F[o + 3] = vb; F[o + 4] = g0; F[o + 5] = g1; F[o + 6] = g2; F[o + 7] = g3; F[o + 8] = lb; F[o + 9] = mb; F[o + 10] = lw; F[o + 11] = lh; U[o + 12] = mau; o += W9;
+      F[o] = X3; F[o + 1] = Y3; F[o + 2] = ua; F[o + 3] = vb; F[o + 4] = g0; F[o + 5] = g1; F[o + 6] = g2; F[o + 7] = g3; F[o + 8] = la; F[o + 9] = mb; F[o + 10] = lw; F[o + 11] = lh; U[o + 12] = mau;
       const i = this.ni; I[i] = v; I[i + 1] = v + 1; I[i + 2] = v + 2; I[i + 3] = v; I[i + 4] = v + 2; I[i + 5] = v + 3;
       this.nv = v + 4; this.ni = i + 6; this.dem.o++;
     },
     // ô bị cắt bởi (các) hình chữ nhật clip: cắt đa giác lồi (Sutherland–Hodgman) trong toạ độ của clip, nội suy cả UV → quạt tam giác
-    veCat(cat, P, g0, g1, g2, g3, mau) {
+    veCat(cat, P, g0, g1, g2, g3, lw, lh, mau) {
+      const K = 6; // x y u v lx ly
       for (const k of cat) {
-        for (let m = 0; m < 4 && P.length >= 12; m++) {
-          const Q = [], n = P.length / 4, gh = m === 0 ? k.x0 : m === 1 ? k.x1 : m === 2 ? k.y0 : k.y1;
-          const kc = (i) => { const x = P[i * 4], y = P[i * 4 + 1], t = m < 2 ? k.a * x + k.c * y + k.e : k.b * x + k.d * y + k.f; return (m & 1) ? gh - t : t - gh; }; // ≥ 0 = bên trong
+        for (let m = 0; m < 4 && P.length >= 3 * K; m++) {
+          const Q = [], n = P.length / K, gh = m === 0 ? k.x0 : m === 1 ? k.x1 : m === 2 ? k.y0 : k.y1;
+          const kc = (i) => { const x = P[i * K], y = P[i * K + 1], t = m < 2 ? k.a * x + k.c * y + k.e : k.b * x + k.d * y + k.f; return (m & 1) ? gh - t : t - gh; }; // ≥ 0 = bên trong
           for (let i = 0; i < n; i++) {
             const j = (i + 1) % n, di = kc(i), dj = kc(j);
-            if (di >= 0) Q.push(P[i * 4], P[i * 4 + 1], P[i * 4 + 2], P[i * 4 + 3]);
-            if ((di >= 0) !== (dj >= 0)) { const t = di / (di - dj); for (let q = 0; q < 4; q++) Q.push(P[i * 4 + q] + (P[j * 4 + q] - P[i * 4 + q]) * t); }
+            if (di >= 0) for (let q = 0; q < K; q++) Q.push(P[i * K + q]);
+            if ((di >= 0) !== (dj >= 0)) { const t = di / (di - dj); for (let q = 0; q < K; q++) Q.push(P[i * K + q] + (P[j * K + q] - P[i * K + q]) * t); }
           }
           P = Q;
         }
-        if (P.length < 12) return;
+        if (P.length < 3 * K) return;
       }
-      const n = P.length / 4, F = this._f, U = this._u, I = this._i, v = this.nv; let o = v * W9;
-      for (let i = 0; i < n; i++, o += W9) { F[o] = P[i * 4]; F[o + 1] = P[i * 4 + 1]; F[o + 2] = P[i * 4 + 2]; F[o + 3] = P[i * 4 + 3]; F[o + 4] = g0; F[o + 5] = g1; F[o + 6] = g2; F[o + 7] = g3; U[o + 8] = mau; }
+      const n = P.length / K, F = this._f, U = this._u, I = this._i, v = this.nv; let o = v * W9;
+      for (let i = 0; i < n; i++, o += W9) { F[o] = P[i * K]; F[o + 1] = P[i * K + 1]; F[o + 2] = P[i * K + 2]; F[o + 3] = P[i * K + 3]; F[o + 4] = g0; F[o + 5] = g1; F[o + 6] = g2; F[o + 7] = g3; F[o + 8] = P[i * K + 4]; F[o + 9] = P[i * K + 5]; F[o + 10] = lw; F[o + 11] = lh; U[o + 12] = mau; }
       let i = this.ni; for (let q = 1; q < n - 1; q++) { I[i++] = v; I[i++] = v + q; I[i++] = v + q + 1; }
       this.nv = v + n; this.ni = i; this.dem.o++;
     },
