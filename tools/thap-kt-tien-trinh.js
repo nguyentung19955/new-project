@@ -222,7 +222,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   });
   ok(r.khoa9 && r.thieuVang && r.duoc && r.ra && r.tuan2, 'Ấn Vàng (khoá dưới cấp 10): 6 bản Vàng thừa (thẻ MAX → ngoài bộ → trong bộ) + 20 000 vàng → 1 bản tự chọn, 1 lần/tuần', JSON.stringify(r));
   r = await p.evaluate(async () => { const s = KT.doc(); s.ru.pv = 3; s.ru.pd = 17; KTUI.moTab('shop'); await new Promise(r => setTimeout(r, 200)); const c = document.querySelector('#kt .kt-rc-vang small'); const e = [...document.querySelectorAll('#kt .kt-muc')].find(x => /CHESTS/.test(x.textContent)); e && e.scrollIntoView(); return c && c.textContent; });
-  ok(/Legendary in ≤ 7/.test(r) && /Mythic in ≤ 103/.test(r), 'Rương Vàng hiện bộ đếm bảo hiểm Vàng + Đỏ', r);
+  ok(/Legendary in ≤ 4/.test(r) /* 11/11: bảo hiểm Vàng 10 → 7 rương */ && /Mythic in ≤ 103/.test(r), 'Rương Vàng hiện bộ đếm bảo hiểm Vàng + Đỏ', r);
   await chup('shop-baohiem-an');
   await p.evaluate(() => { document.querySelector('[data-act=kt-mha]') && document.querySelector('[data-act=kt-mha]').click(); });
   await chup('shop-an-chon');

@@ -45,8 +45,22 @@ Máy phiên cũ còn ~640 MB ổ đĩa (không dựng được bản làm việc
 ```
 
 ## 5. BỔ SUNG 11/11 18:41–18:42 — "Leo tháp xoá, làm tutorial 1 bản riêng", "tham khảo thưởng DCDW" (đã làm trên cùng nhánh)
+- **19:06 người dùng duyệt** 3 bảng (tầng → wave, nguồn thưởng, số Đường Đua); thưởng một lần của Săn Trùm + 6 Thử thách ngắn BỎ HẲN.
 - **Bỏ Leo Tháp**: `CDC.bo.thap` (ẩn GAME MODE, `CD.vao` từ chối, bỏ khoá tính năng); HOME PLAY mặc định = **CO-OP** (`HM.chuan`: Solo / Leo Tháp cũ → CO-OP). Bảng quy đổi tầng → wave: `TAI-LIEU-GOC.md` mục 4.
 - **Tiến trình kiểu DCDW**: mốc wave CO-OP đạt lần đầu (`chedo-dd.js: MOCWC`) thay thưởng lần đầu mỗi tầng; thưởng tuần = mốc điểm Đường Đua. Rương Trận mỗi trận CO-OP / PVP (theo wave) GIỮ như cũ.
 - **Hướng dẫn riêng**: `huongdan.js` vốn đã là 1 trận độc lập (bàn `solo` ẩn, bộ cố định, xong = hạ trùm wave 10) — thêm mục TUTORIAL trong GAME MODE, xong → PLAY CO-OP.
 - **DCDW có, mình CHƯA có (đề xuất, chưa làm — chờ người dùng quyết):** cúp PVP + mốc cúp lần đầu + Crystal Crown cuối mùa · túi thắng PVP rơi theo xác suất, giữ tối đa 4, mở mất thời gian · CO-OP giới hạn 3 lượt/ngày, lọt 1 quái là hết trận (mình: 3 tim chung), wave 30 = 1 túi rồi vàng / vật liệu theo trùm · token Raid · Pass mùa 70 bậc · nhiệm vụ nhóm Archfiend Race · bảo hiểm Huyền thoại túi thứ 7 · mốc số trận THẮNG PVP lần đầu (mình chưa có bộ đếm thắng riêng PVP).
 - Bot CO-OP bộ khởi đầu (cấp 0, 3 hạt, cân bằng wave biến thể B): `tia,lien,sungluc,bang,set` + đồng đội bộ ngẫu nhiên: wave 42 / 16 / 49; + đồng đội cùng bộ: 10 / 10 / 17. `lien,set,mana,doc,phagiap` + ngẫu nhiên: 39 / 7 / 43; + cùng bộ: 2 / 2 / 2. → trận CO-OP đầu của tài khoản mới phụ thuộc nặng vào bộ ngẫu nhiên của đồng đội máy.
+
+## 6. BỔ SUNG 11/11 19:06–19:08 — "thêm đủ" (đã làm): cúp PVP, túi thắng, bảo hiểm rương, người mới
+| Thứ | Số | Ở đâu |
+|---|---|---|
+| Cúp | thắng +30 · thua −20 · không âm (chưa chỉnh theo chênh lệch: đối thủ là máy, không có cúp) | `CUPC.thang / thua` |
+| Mốc cúp lần đầu | 100 / 200 / 300 / 500 / 700 / 1 000 / 1 300 / 1 600 / 2 000 / 2 500 (thưởng: `TAI-LIEU-GOC.md` mục 4, hàng PVP) | `CUPC.moc` |
+| Đối thủ máy theo cúp | 0: Trắng / Xanh, cấp 0, mana ×0,6 · 200: tới Tím, cấp ≤ 2, ×0,8 · 500: tới Vàng · 1 000: mọi bậc · 2 000: cấp +1 | `CUPC.doKho` |
+| Túi thắng | thắng PVP → Rương Trận rơi 60% (tất định theo hạt trận); thua / trượt: chỉ vàng | `CUPC.pRuong`, `CUP.roi` |
+| Bảo hiểm | Rương Vàng (500 ngọc — rương cao nhất có TỈ LỆ ra Huyền thoại; Rương Thần thoại vốn bảo đảm sẵn): 6 liên tiếp không ra → thứ 7 chắc chắn (trước 10) | `KTC.ruong.vang.pityV` |
+| Người mới | CO-OP cấp phi công ≤ 5: đồng đội máy bộ cố định Sniper, Gatling, Tesla, Revolver, Laser | `MOIC` |
+- **KHÔNG làm (người dùng bác 19:08):** giới hạn 3 lượt co-op có thưởng / ngày → CO-OP không giới hạn; PLAY mặc định vẫn CO-OP, PVP vẫn mở ở cấp phi công 2.
+- **Chưa làm (đề xuất):** khe rương hẹn giờ + trần 4 rương chưa mở (game chưa có cơ chế hẹn giờ mở rương — rương mở ngay); mùa cúp + Crystal Crown; cúp theo chênh lệch; token Raid; Pass mùa; nhiệm vụ nhóm.
+- Bot người mới (cấp 0): CO-OP với đồng đội cố định: bộ A `tia,lien,sungluc,bang,set` wave 17 / 17 / 17 · bộ B `lien,set,mana,doc,phagiap` 13 / 10 / 13 (trước: 2–49 tuỳ bộ ngẫu nhiên). PVP 0 cúp (6 hạt): A thắng 4/6 · B thắng 2/6 (B tự thua ở wave 2 trong 3/6 trận — do bộ, không do đối thủ).

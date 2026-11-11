@@ -1423,3 +1423,14 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - **Hướng dẫn**: vẫn là trận riêng của `huongdan.js` (bàn solo ẩn, bộ cố định, 7 bước, xong = hạ trùm wave 10); thêm mục **TUTORIAL** trong GAME MODE (Settings → REPLAY TUTORIAL vẫn còn); xong hướng dẫn nút chính = **PLAY CO-OP**.
 - **Test**: `tools/thap-kt-duong-dua.js` (thêm phần 2b), `thap-kt-tien-trinh`, `thap-kt-admin`, `thap-kt-an-do` đạt; `thap-kt-thap-leo` in SKIP. Việc "sửa tầng 1 Leo Tháp cho tài khoản mới" của phiên cân bằng thành THỪA.
 - **Chưa làm / còn dở**: cúp + mốc thắng PVP, giới hạn lượt co-op, Pass… (ghi ở THIET-KE §5); màn mở đầu trận hướng dẫn vẫn liệt kê trùm wave 20 / 30; ô vàng đầu hàng thưởng mốc wave hơi sát mép trái; chữ CO-OP trong GAME MODE xuống 3 dòng.
+
+## claude/che-do-dcdw — cúp PVP + mốc cúp, túi thắng, bảo hiểm Rương Vàng 7, đồng đội cho người mới, sửa hiển thị (11/11 19:06)
+
+- **Người dùng duyệt** 3 bảng (tầng → wave, nguồn thưởng cũ → mới, số Đường Đua) → bỏ nhãn TẠM; thưởng một lần của Săn Trùm + 6 Thử thách ngắn BỎ HẲN. **Bác** "3 lượt co-op có thưởng / ngày" (19:08) → không làm, CO-OP không giới hạn, PLAY mặc định vẫn CO-OP.
+- **Cúp PVP** (`chedo-dd.js: CUPC / CUP`, lưu `turret_kt.cd.cup`): thắng +30, thua −20, không âm; 10 mốc cúp lần đầu 100–2 500 (bảng ở TAI-LIEU-GOC mục 4); cúp hiện ở nút PLAY khi chọn PVP, dòng PVP trong GAME MODE, màn kết quả PVP.
+- **Đối thủ máy theo cúp**: 0–199 cúp bộ chỉ Trắng / Xanh, cấp thẻ 0, mana mỗi mạng ×0,6; 200: tới Tím, ×0,8; 500: tới Vàng; 1 000: mọi bậc; 2 000: cấp +1.
+- **Túi thắng**: thắng PVP → Rương Trận (thẻ) rơi 60%, tất định theo hạt trận; thua / trượt chỉ còn vàng trận. Game chưa có khe rương hẹn giờ → rương mở ngay, CHƯA có trần 4 rương.
+- **Bảo hiểm**: Rương Vàng `pityV` 10 → 7 (6 rương liên tiếp không ra Huyền thoại → rương thứ 7 chắc chắn), bộ đếm có sẵn ở SHOP.
+- **Người mới**: CO-OP cấp phi công ≤ 5 → đồng đội máy bộ cố định Sniper / Gatling / Tesla / Revolver / Laser.
+- **Sửa hiển thị**: hàng thưởng mốc xuống dòng + gọn (có rương thì chỉ hiện nút OPEN, vàng, ngọc, Tinh thể Đỏ); dòng CO-OP / PVP trong GAME MODE ≤ 2 dòng; màn mở đầu trận hướng dẫn chỉ báo trùm wave 10; Đường Đua hết tim / bỏ cuộc = khung trung tính RACE OVER; nhãn thưởng "TOWER FLOOR n" → "CO-OP WAVE n".
+- **Test**: mới `tools/thap-kt-cup.js`; `thap-kt-duong-dua`, `thap-kt-tien-trinh` (sửa mong đợi bộ đếm bảo hiểm), `thap-kt-admin` đạt.

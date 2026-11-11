@@ -99,6 +99,8 @@ const DD = {
 };
 
 const DDUI = {
+  // hàng thưởng mốc GỌN: có rương thì chỉ hiện nút OPEN + vàng / ngọc / Tinh thể Đỏ (thẻ xem khi mở rương) → không tràn khung kết quả
+  thuongGon(ra) { return CDDUI.thuongHtml(ra.ru && ra.ru.length ? Object.assign({}, ra, { the: [] }) : ra); },
   gio(s) { s = Math.max(0, Math.ceil(s)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); },
   nhanMoc: (m) => CDUI.so(m) + ' PTS',
   // bảng trước trận: luật + mốc tuần + bảng xếp hạng tuần + START
@@ -153,7 +155,7 @@ const DDUI = {
     const o = (nhan, v, em) => '<div class="kq-o"><small>' + nhan + '</small><b>' + v + '</b>' + (em ? '<em>' + em + '</em>' : '') + '</div>';
     let th;
     if (r.cu) th = '<small>LAST WEEK\'S RACE · NOT COUNTED</small>';
-    else if (CDDUI.coThuong(r.ra)) th = '<small>MILESTONE REWARDS · ' + this.nhanMoc(Math.max.apply(null, r.moc)) + '</small>' + CDDUI.thuongHtml(r.ra);
+    else if (CDDUI.coThuong(r.ra)) th = '<small>MILESTONE REWARDS · ' + this.nhanMoc(Math.max.apply(null, r.moc)) + '</small>' + DDUI.thuongGon(r.ra);
     else th = '<small>' + (r.moi ? 'NEW WEEKLY BEST' : 'NO NEW MILESTONE') + '</small>';
     chi.innerHTML = '<div class="kq-hang">' + o('WEEK BEST', s.best ? CDUI.so(s.best) : '—', r.moi ? 'NEW BEST' : '') + o('KILLS', CDUI.so(r.giet)) + o('LIVES', tim + '/' + DDC.tim) + '</div><div class="tb-kq cd-kq dd-xd">' + th + '</div>';
     try { OT.quet(chi); } catch (e) { }
@@ -196,7 +198,7 @@ const MOCW = {
   kq(k) {
     const chi = document.getElementById('kq-chi'); if (!chi || !k) return;
     const r = this.nhan(Math.max(1, k.wave | 0)); if (!r.moc.length) return;
-    chi.insertAdjacentHTML('beforeend', '<div class="tb-kq cd-kq dd-xd"><small>FIRST TIME · WAVE ' + Math.max.apply(null, r.moc) + '</small>' + CDDUI.thuongHtml(r.ra) + '</div>');
+    chi.insertAdjacentHTML('beforeend', '<div class="tb-kq cd-kq dd-xd"><small>FIRST TIME · WAVE ' + Math.max.apply(null, r.moc) + '</small>' + DDUI.thuongGon(r.ra) + '</div>');
     try { OT.quet(chi); } catch (e) { }
   },
 };
@@ -252,7 +254,7 @@ const CUP = {
     const chi = document.getElementById('kq-chi'); if (!chi || !k) return;
     const r = this.ket(!!k.thang), ke = this.ke();
     let h = '<div class="tb-kq cd-kq dd-xd"><small>CUPS ' + CDUI.so(r.c) + ' (' + (r.d >= 0 ? '+' : '−') + Math.abs(r.d) + ')' + (ke ? ' · NEXT PRIZE ' + CDUI.so(ke) : '') + '</small>';
-    if (r.moc.length) h += '<small>CUP MILESTONE · ' + CDUI.so(Math.max.apply(null, r.moc)) + '</small>' + CDDUI.thuongHtml(r.ra);
+    if (r.moc.length) h += '<small>CUP MILESTONE · ' + CDUI.so(Math.max.apply(null, r.moc)) + '</small>' + DDUI.thuongGon(r.ra);
     chi.insertAdjacentHTML('beforeend', h + '</div>');
     try { OT.quet(chi); } catch (e) { }
   },
@@ -526,6 +528,7 @@ function boDongDoiMoi() { const d = MOIC.bo.filter(id => SKILLS[id] && G.rosterM
     'Mythic / Gold Chest · Daily Specials (~# day a week) · CO-OP waves #, #, # · defeat all bosses · event #,# pts · Shard Forge': 'Rương Thần thoại / Vàng · Ưu đãi hôm nay (~# ngày/tuần) · CO-OP wave #, #, # · hạ đủ trùm · sự kiện #.# điểm · Lò rèn',
     'Mythic / Gold Chest · Daily Specials (~# day a week) · CO-OP waves #, #, # · defeat all bosses · event # pts · Shard Forge': 'Rương Thần thoại / Vàng · Ưu đãi hôm nay (~# ngày/tuần) · CO-OP wave #, #, # · hạ đủ trùm · sự kiện # điểm · Lò rèn',
     // 11/11 19:06 cúp PVP · túi thắng · lượt thưởng CO-OP
+    'CO-OP WAVE #': 'CO-OP WAVE #', 'CO-OP WAVE #/#': 'CO-OP WAVE #/#', 'CO-OP WAVE #/#/#': 'CO-OP WAVE #/#/#',
     'CUPS': 'CÚP', 'Cups #': 'Cúp #', 'Cups #,#': 'Cúp #.#', 'CUPS # (+#)': 'CÚP # (+#)', 'CUPS # (−#)': 'CÚP # (−#)', 'CUPS #,# (+#)': 'CÚP #.# (+#)', 'CUPS #,# (−#)': 'CÚP #.# (−#)',
     'CUPS # (+#) · NEXT PRIZE #': 'CÚP # (+#) · MỐC KẾ #', 'CUPS # (−#) · NEXT PRIZE #': 'CÚP # (−#) · MỐC KẾ #', 'CUPS # (+#) · NEXT PRIZE #,#': 'CÚP # (+#) · MỐC KẾ #.#', 'CUPS # (−#) · NEXT PRIZE #,#': 'CÚP # (−#) · MỐC KẾ #.#',
     'CUPS #,# (+#) · NEXT PRIZE #,#': 'CÚP #.# (+#) · MỐC KẾ #.#', 'CUPS #,# (−#) · NEXT PRIZE #,#': 'CÚP #.# (−#) · MỐC KẾ #.#',

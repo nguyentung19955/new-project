@@ -115,7 +115,7 @@ const MH = {
   // ---------- hết trận: ghi kỷ lục / trùm rồi tự nhận mọi thứ mới mở ----------
   tuDong() {
     const ds = [];
-    for (const o of this.mocDs()) if (o.xong && !o.da) { const ra = this.mocNhan(o.w); if (ra) ds.push({ nhan: 'TOWER FLOOR ' + o.f, w: o.w, f: o.f, ra }); }
+    for (const o of this.mocDs()) if (o.xong && !o.da) { const ra = this.mocNhan(o.w); if (ra) ds.push({ nhan: 'CO-OP WAVE ' + o.w, w: o.w, f: o.f, ra }); }
     const t = this.trumNhan(); if (t) ds.push({ nhan: 'FIRST KILL', ra: t });
     const b = this.boNhan(); if (b) ds.push({ nhan: 'ALL BOSSES', ra: b });
     return ds;
@@ -179,7 +179,7 @@ const MHUI = {
     for (const g of r.mh) for (const x of g.ra.the || []) gom[x.id] = (gom[x.id] || 0) + x.n;
     if (hang && !hang.querySelector('.mh-kq-t')) (hang.querySelector('.tb-kq-v') || hang).insertAdjacentHTML(hang.querySelector('.tb-kq-v') ? 'afterend' : 'afterbegin', Object.entries(gom).map(([id, n]) => '<span class="tb-kq-t mh-kq-t"><i class="ot-mini" data-id="' + id + '"><img class="po" src="' + portraitOf(id) + '" alt="" draggable="false"></i><b>×' + n + '</b></span>').join(''));
     let e = d.querySelector('.mh-kq'); if (!e) { e = document.createElement('small'); e.className = 'kt-kq mh-kq'; d.appendChild(e); }
-    const w = r.mh.filter(g => g.f).map(g => g.f), ten = (w.length ? ['TOWER FLOOR ' + w.join('/')] : []).concat(r.mh.filter(g => !g.f).map(g => g.nhan));
+    const w = r.mh.filter(g => g.f).map(g => g.w), ten = (w.length ? ['CO-OP WAVE ' + w.join('/')] : []).concat(r.mh.filter(g => !g.f).map(g => g.nhan));
     e.textContent = ten.join(' · ');
     try { if (typeof OT !== 'undefined' && OT.quet) OT.quet(d); } catch (er) { }
   },
