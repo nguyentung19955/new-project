@@ -71,5 +71,6 @@
 /* ĐƯỜNG ĐUA (js/chedo-dd.js): 6 mốc điểm tuần = 2 hàng × 3 ô; bảng chỉ 1 tab → nhãn tĩnh */
 #tt-phu.cdd-dd .cdd-moc { flex-wrap: wrap; }
 #tt-phu.cdd-dd .cdd-m { flex: 1 1 30%; }
+#tt-phu.cdd-dd .cdd-m .kt-r { transform: none; margin: 0 2px; }
 #tt-phu.cdd-dd .cdd-ds { max-height: 96px; }
 .cdd-tab .cdd-tb:only-child { pointer-events: none; }

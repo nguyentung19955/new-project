@@ -20,8 +20,8 @@ const DDC = {
   can: { bo: 1, bay: 1, bay_bang: 1, tach: 2, khong_lo: 4, que_tach: 5, trum: 30 }, // cân nặng = điểm
   trumMoi: 120, trumHp: 25,                                     // trùm nhỏ mỗi 120 s; máu = trumHp × máu 1 con thường lúc đó
   moc: {                                                        // mốc ĐIỂM tuần → thưởng (thay nguồn tuần của Săn Trùm / Vô tận / Thử thách tuần)
-    100: [{ vang: 1000 }], 250: [{ ngoc: 30 }], 400: [{ vang: 2000 }, { tt: 1 }],
-    550: [{ ngoc: 50 }, { ruong: 'hh', n: 1 }], 700: [{ vang: 2000 }, { ngoc: 30 }, { tt: 1 }], 850: [{ ngoc: 50 }, { ruong: 'hh', n: 2 }, { tt: 1 }],
+    100: [{ vang: 1000 }, { ngoc: 50 }], 250: [{ ngoc: 50 }], 400: [{ vang: 2000 }, { tt: 1 }],
+    550: [{ ngoc: 60 }, { ruong: 'hh', n: 1 }], 700: [{ vang: 2000 }, { tt: 1 }], 850: [{ ruong: 'hh', n: 2 }, { tt: 1 }],
   },
   ICON: 'ua_ic_sk',
 };
@@ -119,18 +119,31 @@ const DDUI = {
       '<button class="hm-nut2" data-act="cdd-lb"><b>RANKS</b></button><button class="hm-nut2 vang" data-act="dd-sk"' + (mo ? '' : ' disabled') + '><b>PLAY</b></button></div>';
   },
   // nhãn giữa thanh trên: đồng hồ + điểm (thay "BOSS IN N"); thanh = thời gian còn lại (trùm ở sân: giữ thanh máu trùm của HUD)
+  //  trùm ở sân: HUD ẩn thanh trên (băng chiêu trùm thay chỗ) → hiện nhãn nhỏ #dd-chip (khuôn .cd-chip của chế độ C) để vẫn thấy đồng hồ + điểm
   chip() {
-    const d = G.dd; if (!d || !G.ban.length) return;
+    const d = G.dd; let e = document.getElementById('dd-chip');
+    if (!d || !G.ban.length || G.ketThuc) { if (e && !e.hidden) e.hidden = true; return; }
     const con = DD.conGio(), t = this.gio(con) + ' · ' + CDUI.so(d.diem) + ' PTS', tc = document.getElementById('tb-trum-chu');
     if (tc && tc.textContent !== t) tc.textContent = t;
-    if (G.quai.some(x => x.trum && !x.chet)) return;
+    const nh = document.querySelector('#tb-wave [data-t="wave"]'), so = document.getElementById('tb-so'); // ô trái: KO + số quái đã diệt (thay WAVE n — chế độ này không chia wave)
+    if (nh && nh.dataset.dd !== '1') { nh.dataset.dd = '1'; nh.textContent = 'KO'; }
+    if (so && so.textContent !== String(d.giet)) so.textContent = d.giet;
+    const trum = G.quai.some(x => x.trum && !x.chet);
+    if (trum) {
+      const wr = document.getElementById('wrap');
+      if (!e && wr) { e = document.createElement('div'); e.id = 'dd-chip'; e.className = 'cd-chip'; wr.appendChild(e); }
+      if (e) { if (e._t !== t) { e._t = t; e.textContent = t; } e.classList.toggle('gap', con <= 30); if (e.hidden) e.hidden = false; }
+      return;
+    }
+    if (e && !e.hidden) e.hidden = true;
     const f = document.querySelector('#ha-thanh .f'); if (f) { const w = (con / DDC.gio * 100).toFixed(1) + '%'; if (f.style.width !== w) f.style.width = w; }
   },
   kq(k, c) {
     const kq = document.getElementById('ketqua'), chi = document.getElementById('kq-chi'); if (!kq || !chi || !k.dd) return;
     const r = DD.ket(c, k.dd), s = DD.st(), tim = G.ban[0] ? Math.max(0, G.ban[0].tim | 0) : 0;
     const dich = (x) => (typeof NN !== 'undefined' && NN.t ? NN.t(x) : x);
-    const phu = document.getElementById('kq-phu'); if (phu) phu.textContent = dich('RACE TRACK · WEEK ' + c.tuan) + (k.ly ? ' · ' + dich(k.ly) : '');
+    const phu = document.getElementById('kq-phu'); if (phu) phu.textContent = dich('RACE TRACK · WEEK ' + c.tuan) + ' · ' + this.gio(r.t) + (k.ly && !k.thang ? ' · ' + dich(k.ly) : '');
+    const ten = document.getElementById('kq-ten'); if (ten) ten.textContent = k.thang ? 'TIME UP!' : 'RACE OVER';
     const so = document.getElementById('kq-so'), chuSo = 'SCORE <b>' + CDUI.so(r.diem) + '</b>';
     if (so) { so.innerHTML = chuSo; setTimeout(() => { if (G.ketThuc === k && !kq.hidden) { so.innerHTML = chuSo; try { NN.quet(so); } catch (e) { } } }, 800); } // sau hoạt ảnh đếm WAVE của ketqua.js
     const o = (nhan, v, em) => '<div class="kq-o"><small>' + nhan + '</small><b>' + v + '</b>' + (em ? '<em>' + em + '</em>' : '') + '</div>';
@@ -138,7 +151,7 @@ const DDUI = {
     if (r.cu) th = '<small>LAST WEEK\'S RACE · NOT COUNTED</small>';
     else if (CDDUI.coThuong(r.ra)) th = '<small>WEEKLY MILESTONE · ' + r.moc.map(this.nhanMoc).join(' · ') + '</small>' + CDDUI.thuongHtml(r.ra);
     else th = '<small>' + (r.moi ? 'NEW WEEKLY BEST' : 'NO NEW MILESTONE') + '</small>';
-    chi.innerHTML = '<div class="kq-hang">' + o('TIME', this.gio(r.t)) + o('WEEK BEST', s.best ? CDUI.so(s.best) : '—', r.moi ? 'NEW BEST' : '') + o('KILLS', CDUI.so(r.giet)) + o('LIVES', tim + '/' + DDC.tim) + '</div><div class="tb-kq cd-kq">' + th + '</div>';
+    chi.innerHTML = '<div class="kq-hang">' + o('WEEK BEST', s.best ? CDUI.so(s.best) : '—', r.moi ? 'NEW BEST' : '') + o('KILLS', CDUI.so(r.giet)) + o('LIVES', tim + '/' + DDC.tim) + '</div><div class="tb-kq cd-kq">' + th + '</div>';
     try { OT.quet(chi); } catch (e) { }
     DD.lap = true;
     const lai = kq.querySelector('[data-act="choilai"]'); if (lai) lai.textContent = 'RACE AGAIN';
@@ -157,6 +170,7 @@ const DDUI = {
   const bd = batDau;
   batDau = function (che, deck, mv) {
     const c = DD.cho; DD.cho = null; DD.lap = false; G.dd = null;
+    try { const nh = document.querySelector('#tb-wave [data-t="wave"]'); if (nh && nh.dataset.dd) { delete nh.dataset.dd; nh.textContent = TEXT.ui.wave; } } catch (e) { } // trả nhãn WAVE cho chế độ khác
     if (!c || che !== 'coop') return bd.apply(this, arguments);
     G.dd = Object.assign({}, c, { t0: null, tKe: 0, tTrum: DDC.trumMoi, n: 0, nT: 0, giet: 0, diem: 0, don: 0, donCan: 0, _hs: 1, het: false,
       r: rngHat((c.hat * 2654435761 + 97) | 0), rT: rngHat((c.hat * 2246822519 + 131) | 0) });
@@ -301,7 +315,7 @@ const DDUI = {
     'Week # · best #,#': 'Tuần # · cao nhất #.#',
     'You and an AI ally hold the track for # minutes. No waves: enemies never stop, and every kill makes the next ones tougher. A mini boss comes every # minutes. Score = enemies defeated.':
       'Bạn và đồng đội máy giữ đường đua trong # phút. Không chia đợt: quái ra liên tục, mỗi con bị diệt làm các con sau trâu hơn. Trùm nhỏ xuất hiện mỗi # phút. Điểm = số quái đã diệt.',
-    'TIME': 'THỜI GIAN', 'START RACE': 'BẮT ĐẦU ĐUA', 'RACE AGAIN': 'ĐUA LẠI', 'SCORE': 'ĐIỂM', 'KILLS': 'DIỆT', 'GO!': 'XUẤT PHÁT!',
+    'TIME': 'THỜI GIAN', 'KO': 'HẠ', 'TIME UP!': 'HẾT GIỜ!', 'RACE OVER': 'KẾT THÚC ĐUA', 'RACE TRACK · WEEK # · #:#': 'ĐƯỜNG ĐUA · TUẦN # · #:#', 'START RACE': 'BẮT ĐẦU ĐUA', 'RACE AGAIN': 'ĐUA LẠI', 'SCORE': 'ĐIỂM', 'KILLS': 'DIỆT', 'GO!': 'XUẤT PHÁT!',
     '# PTS': '# ĐIỂM', '#,# PTS': '#.# ĐIỂM', '#:# · # PTS': '#:# · # ĐIỂM', '#:# · #,# PTS': '#:# · #.# ĐIỂM',
     'RACE TRACK · WEEK #': 'ĐƯỜNG ĐUA · TUẦN #', 'RACE TRACK · #:#': 'ĐƯỜNG ĐUA · #:#', 'RACE TRACK · WEEK': 'ĐƯỜNG ĐUA · TUẦN',
     'Time up': 'Hết giờ', 'Out of lives · score kept': 'Hết mạng · giữ điểm', 'Left the race · score kept': 'Đã rời đường đua · giữ điểm',
