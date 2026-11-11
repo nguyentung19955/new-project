@@ -213,7 +213,7 @@ const XICH = {
   GIU: 9, // st.kep được giữ ở mức này (game.js tự trừ mỗi khung) → vòng xích + ×0,6 tốc có sẵn không tắt
   dut(B, T, chu) {
     if (!T || !T.xich) return; T.xich = null; T.st.cam = 0; T.st.kep = 0; T.sang = 1;
-    if (chu) { const c = B.o[T.o]; if (c) TRM.chu(c.x, c.y - 22, 'FREED', '#b8ffc8', 12); }
+    if (chu) { const c = B.o[T.o]; if (c) { TRM.chu(c.x, c.y - 22, 'FREED', '#b8ffc8', 12); try { TRM.fx('jammer', 'set_nho', c.x, c.y, 70, 0.4); FX.tiaLua(c.x, c.y, 10, '#d9a8ff', 150, 9); } catch (e) { } } } // xích đứt: nổ nhỏ + tia (hiệu ứng sẵn có, chỉ hình)
   },
   cap(B, T) { const d = T.xich && T.xich.doi; return d ? B.t.find(N => N && N.uid === d && N.xich) : null; },
   buoc(B) {

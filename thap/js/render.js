@@ -1112,8 +1112,11 @@ const REN = {
   veXichDay(ctx, B) {
     let im = null;
     for (const T of B.t) {
-      if (!T || !T.xich || !T.xich.doi) continue;
-      const D = B.t.find(N => N && N.uid === T.xich.doi && N.xich); if (!D || D.uid < T.uid) continue; // mỗi cặp vẽ 1 lần
+      if (!T) continue;
+      let D = null;
+      if (T.xich && T.xich.doi) { D = B.t.find(N => N && N.uid === T.xich.doi && N.xich); if (D && D.uid < T.uid) D = null; } // mỗi cặp vẽ 1 lần
+      else if (B.net && T.xichO && T.st.cam > 0) { D = B.t[T.xichO - 1]; if (D && !(D.st.cam > 0 && D.o > T.o)) D = null; } // bàn con rối online: ô của ụ cùng cặp đi theo cờ ô
+      if (!D) continue;
       if (!im && !(im = this.img('trum_xich_day'))) return;
       const a = B.o[T.o], b = B.o[D.o], L = Math.hypot(b.x - a.x, b.y - a.y), h = Math.min(B.cw, B.ch) * 0.22, tw0 = h * im.width / im.height;
       const n = Math.max(1, Math.round(L / tw0)), tw = L / n, g = Math.atan2(b.y - a.y, b.x - a.x), al = ctx.globalAlpha;

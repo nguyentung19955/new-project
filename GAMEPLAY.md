@@ -1487,3 +1487,7 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - Nhãn "Skill, not a merge" khi kéo Twin Anvil: đưa lên trên mép bàn (`ghepfx.js` veMeo), không còn che ụ.
 - 3 ảnh thêm vào danh sách tải trước của trận (`ui.js`). Đường vẽ chung `REN.anhGiua` → chạy cả 2D lẫn WebGL (đã xem ảnh `?gl=1` và `?gl=0`).
 - Chưa làm: hiệu ứng riêng lúc xích đứt (chỉ có chữ FREED); bàn con rối online chưa vẽ dây nối (chỉ có vòng); huy hiệu song sinh chưa thêm vào trang chi tiết / khung demo.
+
+## claude/che-do-dcdw — huy hiệu TWIN-FORGED to hơn, hiệu ứng đứt xích, dây nối trên bàn đồng đội online (12/11)
+
+- Huy hiệu `loren_songsinh` trên ụ song sinh 0,34 → 0,46 ô; trang chi tiết Twin Anvil có dòng TWIN-FORGED kèm huy hiệu. Xích Static Jammer đứt: thêm nổ nhỏ + tia (hiệu ứng sẵn có) ở từng ụ. Online: cờ ô `Z<ô+1>;` mang ô của ụ cùng cặp → bàn con rối cũng vẽ dây nối (gói cũ `Z` vẫn đọc được). Chỉ là hình.
