@@ -151,3 +151,52 @@ Giới hạn / cần xem trên iPhone thật:
 - `Image` giữ làm nguồn dựng lại: Safari có thể vẫn giữ bản giải mã của `Image` một lúc (không đo được ở đây) → MB thật có thể cao hơn nhãn `m`.
 - Đọc ngược GPU (`readPixels`) còn ở 2 chỗ hiếm (ảnh kho đệm bị đọc 2D sau khi thả; dọn texture riêng quá 40 MB): máy đo 5–10 ms (114 ms khi dồn), iPhone chưa đo — xem `GLR.bn.hoiGPU / docDon / donMax`.
 - Thời gian khung trên máy đo (GPU phần mềm, 2 nhân) không đại diện; chỉ số đếm (MB, số texture tải, số ảnh dựng) mới so được.
+
+## 10. Tải texture giữa trận (11/11 đêm — nhánh `claude/gl-song-song-b`)
+
+iPhone người dùng (bản `m60+104`, co-op wave 39–40, 3×): khung chậm nào cũng có 2–6 lần tải canvas → texture (`up5/18 235x147`, `up3/14 2016x250`, `up5/30 1016x159`…).
+Đo bằng `tools/thap-kt-tai-gl.js` (bọc `gl.texImage2D / texSubImage2D`, ghi TỪNG lần tải theo khoá ảnh; co-op 3×, `ios=1`, wave 25 → 62, 180 s, bộ `bocap,sinhdoi,tudo,cobac,saochep` +
+`leviathan,ronglua,nemesis,khoisinh,vughep`; máy đo tải gần như miễn phí → chỉ so SỐ ĐẾM):
+
+**Nguồn nào chính?** Cả hai, theo số lần: trong 2 441 lần tải ảnh tĩnh / 180 s có 1 442 lần tải LẦN ĐẦU (59 %) và 999 lần tải LẠI (41 %, 675 khoá tải > 1 lần — nhiều khoá 4–5 lần).
+- Tải lại: (1) gom atlas bỏ mọi ô không vẽ 10 s (ụ đổi dạng, hiệu ứng theo đợt, chữ số → cần lại là tải lại; atlas 4 trang luôn đầy 0,8–0,99); (2) kho đệm `REN.cSet` xoay → canvas rơi khỏi kho bị huỷ
+  (768 canvas) → dựng lại + tải lại; (3) texture riêng (dải lớn) bỏ sau 10 s.
+- Tải lần đầu rải giữa trận: ảnh tô màu `FXU.mau` + tầng mip (548), chữ số `REN.chuSo` (mỗi chữ × màu × cỡ 2 canvas), huy hiệu sao theo bậc cỡ (227), khung chiêu `sig|…` (179), và ẢNH CỠ ĐỘNG:
+  Rồng Máy phóng theo hoạt ảnh xin mỗi khung 1 cỡ điểm ảnh (`ronglua_f1_nong|92`, `|91`, `|90`… + bản trắng) = ~420 lần tải.
+- Ngoài 2 nguồn trên (KHÔNG sửa ở đây — file của phiên A): **tấm đếm `ND.veHuyHieu` (demkn.js:66/179) vẽ lại tại chỗ + `GLR.ban` = 27–44 lần tải / giây** (canvas 58–73 × 22), nhiều hơn mọi nguồn khác cộng lại;
+  `mau:tai_day#<màu>` của demkn tải mới ở mỗi wave trùm. Cụm vector (`vecXa`) ~6 / giây.
+
+**Đã làm (chỉ hình; băm gl0 = gl1):**
+1. KHÔNG TẢI LẠI — `glr.js`: gom atlas giữ theo NGÂN SÁCH (mới dùng nhất trước, tới `GIU_DAY` = 78 % của `TRANG_MAX` = 5 trang; trước: bỏ theo tuổi 10 s, 4 trang); texture riêng chỉ bỏ theo tuổi khi tổng >
+   `RIENG_GIU` (70 % `RIENG_MAX`); ảnh dựng đã thả bản CPU bị loại → gỡ khỏi kho đệm (`chet`), không đọc ngược GPU. `render.js`: thế hệ kho đệm dài 1,6 lần khi GL đang vẽ.
+2. NẠP TRƯỚC — `GLR.nap` 2 mức: "nạp trước" (làm nóng) giữa trận ≤ 1 texture / khung, chỉ ở khung nhẹ (< 9 ms; khung nặng: 6 khung 1 lần), texture nạp xong được ghim 3 600 khung;
+   "đang cần" (ảnh bị hoãn vẽ / vẽ tạm) theo `NAP_DV` như cũ. `nongskill.js`: trùm làm nóng từ khi còn 3 wave (trước: 1) — `NS.waveTrum`; mọi dạng grow-up + đầu vẽ riêng theo sao của ụ trong 2 bộ bài
+   vẽ thử ở màn mở đầu (`NS.nongDang`); chữ số 0–9 lên GPU sẵn. `vaotran.js`: màn mở đầu nán thêm ≤ 2,5 s nếu còn việc làm nóng (chỉ khi GL bật; đo: không cần nán — hết việc ở khung 24 / 240).
+3. BỚT ẢNH PHẢI TẢI — `nongskill.js` `REN.co` (chỉ GL): ảnh đã có ≥ 3 cỡ (= phóng động) mà cỡ mới chưa có → dùng bản lớn hơn ≤ 9 % (GPU thu), cùng cỡ xin 4 khung liền mới dựng đúng cỡ.
+   `quaianim.js`: chớp trắng trúng đòn / xác quái của DẢI KHUNG = chính dải ở chế độ trắng của shader (`ctx.trang`) → không dựng + tải dải trắng (và hết khung 1,5–1,9 s trên máy đo do đọc ngược GPU dải
+   đánh của trùm đã thả bản CPU để dựng bản trắng — lỗi sẵn có, lộ ra khi làm nóng trùm sớm hơn 10 s).
+
+| co-op 3×, 180 s, wave 25 → 62 | trước (`ec20350`) | sau |
+|---|---|---|
+| tải ảnh tĩnh / giây (cả trận · bỏ 10 s đầu · nửa sau 90–180 s) | 13,6 · 10,2 · 8,7 | 8,0 · 4,4 · **1,5** |
+| trong đó nguồn ≥ 256 điểm / giây | 1,23 | 0,84 |
+| khoá tải > 1 lần (số lần tải lại · nguồn ≥ 256) | 675 (999 · 71) | **58 (58 · 13)** |
+| tải tĩnh trong 2 s sau khi trùm ra, wave 30 / 40 / 50 / 60 (nguồn ≥ 256) | 100 / 100 / 53 / 40 (19 / 19 / 17 / 4) | 58 / 20 / 50 / 41 (14 / 1 / 14 / 5) |
+| tải tĩnh nhiều nhất 1 khung (mọi loại) | 4 (10) | 4 (9) — ngân sách `TAI_MAX` không đổi |
+| khung có tải tĩnh | 1 171 / 10 800 | 705 / 10 800 |
+| MB canvas + GPU mỗi 10 s | 138–181 (đỉnh 181 ở 80 s) | 148–198 (đỉnh 198 ở 110 s; thường 175–190) |
+| màn mở đầu: số khung · texture tải trong đó · hết việc làm nóng ở khung | 240 (4,0 s) · 73 · 12 | 240 (4,0 s) · 136 · 24 |
+| đọc ngược GPU (`hoiGPU` + `docDon`) | 0 | 0 |
+
+Phần tải sau khi trùm ra còn lại KHÔNG phải dải của trùm (đã nạp trước: 0 lần tải lúc vẽ ở wave 50) mà là: `mau:tai_day#…` (demkn), 8 dải vệt lửa Rồng Máy 1016×159 (`vfxmoi.js dung()`, dựng ở lần bổ nhào
+đầu — biến riêng của module, chưa làm nóng được), khung chiêu `sig|…` và ảnh tô màu của ụ ra chiêu lần đầu đúng lúc wave trùm.
+
+Kiểm: băm có vẽ co-op A `8b4f420b` / `2f83154d` (gl=1 = gl=0); cảnh trùm co-op wave 30 (Octopus + Janus) `e568d6c0` (gl=1 = gl=0); `MAT=200,320` → 2D dự phòng → GL lại, 0 lỗi trang, `veChet` 0;
+`?gl=0` không khởi tạo GL. Ảnh: `/home/claude/xem/song-song-b/`.
+
+Chưa làm / cần xem trên iPhone thật:
+- Tải LẦN ĐẦU của ảnh không đoán trước được từ bộ bài (ảnh tô màu theo màu hạt, khung chiêu theo cỡ, chữ số theo cỡ) vẫn rải giữa trận, mỗi ảnh 1 lần / trận; muốn hết phải ghi "danh sách đã dùng" theo bộ bài
+  (lần chơi sau nạp ở màn mở đầu) hoặc tô màu bằng shader — chưa làm.
+- +16 MB GPU (trang atlas thứ 5): nhãn `m` trên iPhone sẽ khoảng +15–20 so với `m60+104`; nếu Safari thu hồi → hạ `TRANG_MAX` về 4 (tải lại sẽ tăng).
+- "Khung nhẹ < 9 ms" đo bằng JS của khung trước; iPhone ở cảnh nặng hiếm khi < 9 ms → nạp trước chạy nhịp 6 khung 1 lần (10 texture / giây) — vẫn kịp 3 wave nhưng chưa đo thật.
+- Cỡ động dùng bản lớn hơn ≤ 9 %: hình có thể mềm hơn 1 chút trong lúc đang phóng (không đo được bằng mắt trên ảnh chụp ở đây).
