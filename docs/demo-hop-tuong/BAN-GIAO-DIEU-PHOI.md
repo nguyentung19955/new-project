@@ -70,3 +70,9 @@
 
 ## 8. Bài kiểm đang trượt sẵn (không phải do thay đổi mới)
 `vetay` (61 dòng), `vach` ("cả đầu > 60% ô"), `kynang-vd` (crash hotro.js), `vang-moi`, `vang-moi2`, `co-bac` (2 ca "ẩn giá"), `chi-huy-moi` (1), `giat` (trum:hive), `keo` (cuon-doc). Phát hiện có sẵn chưa sửa: `VX.bien` (`growfx.js`) đặt `T.cd = 0.01` theo đồng hồ khung vẽ.
+
+## 9. Ảnh người dùng đã gửi, CHỜ GHÉP (lưu ở `docs/demo-hop-tuong/thap-art/cho-ghep/`)
+Ghép theo đúng quy trình commit `2ac6673d2` (ụ: `tools/thap-cat-u-tudo.py`) và `4b751c7c2` (phi công: `tools/thap-cat-phicong-moi.py`); ghép xong thì xoá dòng ở đây.
+- `t15_cuongno_vungdoc_khuech.png` — tấm ụ 3 hàng × 4 cột (lắp ráp · bệ · đầu · huy hiệu): hàng 1 Berserker `cuongno` (đầu lợn rừng mào đỏ), hàng 2 Toxic Pool `vungdoc` (đầu cá sấu ngậm độc tím), hàng 3 Amplifier `khuech` (vẹt mào + 2 loa). Giữ bệ hiện có trong game; đầu đứng thẳng, không xoay lộn.
+- Người dùng ĐANG tạo 10 ảnh phi công mới cho khớp ụ: Signal Jammer `nhieusong` (sứa tím), Bounty Beacon `santhuong` (sói đồng cỏ săn tiền thưởng), Salvo Battery `railgun` (hải mã chơi đàn ống), Twin Maker `sinhdoi` (đôi cá koi), Orbital `orbital` (cú máy), Resonance Grid `luoicheo` (dế âm thoa), Overclock `epxung` (robot nồi hơi), Fifth Shot `no5` (hoa thép), Hex Saboteur `nguyenrua` (búp bê bùa), Star Lift `nangsao` (ngôi sao sống). Khi người dùng gửi thì lưu vào thư mục này rồi ghép.
+- Đề xuất chưa được người dùng trả lời: gợi ý cách chơi Prism Thief (đường mờ + ngón tay vuốt khi đủ 4 màu liền nhau; chấm màu còn thiếu trên thẻ) — người dùng nói "Prism Thief tôi chẳng biết chơi".
