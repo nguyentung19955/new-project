@@ -4,6 +4,9 @@
 //   · HASH=450,900            : như trên nhưng có vẽ (REN.ve / FX / HUD chạy mỗi khung)
 //   · BENCH=15                : ms vẽ + tô 1 khung ở đúng trạng thái đó (trung vị);  TN="tên=js;;…" đo thêm từng biến thể (js trả về hàm hoàn tác)
 //   · SHOT=1 OUT=thư-mục      : chụp màn ở đúng trạng thái đó (so hình 2 bản code)
+//   · DEM=1                   : đếm lệnh vẽ 1 khung theo nhóm (drawImage 2D + điểm ảnh đích, lệnh không-ảnh, draw call WebGL) — chỉ số độc lập máy
+//   · THUC=25                 : sau các bước trên, chạy 25 s THỜI GIAN THỰC (rAF thật) → khoảng khung trung vị/p95/p99/max, số khung > 33 ms
+//   · Q=gl=1 | Q=gl=0         : ép bật / tắt lớp WebGL (js/gl/glr.js); GLTT=1 in GLR.thongTin(); KHONGGL=1 chặn WebGL (kiểm dự phòng 2D); DPR=2
 // Chạy (gốc repo): python3 -m http.server 8765 &   NODE_PATH=/opt/npm-tools/node_modules node tools/thap-kt-hieunang-coop.js <A|B|C|D> <nhãn>
 //   BASE=http://localhost:8765/thap/ (đổi để trỏ bản code khác) · KHUNG=1200 · cảnh: A = video người dùng (wave 38, DRAG NET), B = nhiều đạn/hiệu ứng wave 55,
 //   C = bocap + cuuvi + hydra wave 45, D = đường đặc quái wave 35 (≈ 100 quái). Bản đo khung hình thời gian thực: xem docs/demo-hop-tuong/tuvan/hieu-nang/BAO-CAO.md.
@@ -29,6 +32,7 @@ const C = CANH[canh];
     window.__mb = mb; Math.random = mb(12345);
     window.__now = performance.now.bind(performance); window.__vt = 1000;
     performance.now = () => window.__vt; Date.now = () => 1.7e12 + window.__vt;
+    window.__rafGoc = window.requestAnimationFrame.bind(window);
     window.__raf = []; window.requestAnimationFrame = (f) => { window.__raf.push(f); return window.__raf.length; }; window.cancelAnimationFrame = () => { };
     window.__f = 0;
     window.__buoc = (n, C) => { for (let i = 0; i < n; i++) {
@@ -92,6 +96,55 @@ const C = CANH[canh];
   if (process.env.HUK) console.log('HU', await p.evaluate(() => { const m = {}; for (const o of G.hu) m[o.k] = (m[o.k] || 0) + 1; return JSON.stringify(m) + ' fx:' + JSON.stringify(Object.fromEntries(Object.keys(FX).filter(k => Array.isArray(FX[k])).map(k => [k, FX[k].length]))) + ' vx:' + (VX.ds ? VX.ds.length : 0); }));
   const kq = { canh, nhan, khung: KHUNG, giay: ((Date.now() - t0) / 1000).toFixed(1), bam, loi: await p.evaluate(() => window.__loi || ''), errs: errs.slice(0, 3) };
   if (process.env.GLTT) kq.gl = await p.evaluate(() => typeof GLR === 'undefined' ? null : GLR.thongTin());
+  if (process.env.DEM) kq.dem = await p.evaluate(() => {
+    // ĐẾM LỆNH VẼ 1 KHUNG ở đúng trạng thái này (chỉ số độc lập máy): theo nhóm (quái / ụ / laser / đạn / hiệu ứng / thanh máu / sự kiện / khác) —
+    //   anh = số drawImage 2D, px = điểm ảnh đích của chúng (triệu), dacBiet = drawImage kèm filter / bóng / kiểu hoà màu khác source-over|lighter,
+    //   vec = lệnh không-ảnh (fill, stroke, chữ, clip, putImageData…) kèm tên; gl = { lenh (draw call), o (ảnh), px } của lớp WebGL nếu bật.
+    const P = CanvasRenderingContext2D.prototype, goc = {}, kq = {}, lop = [];
+    let nhom = 'khac';
+    const N = (k) => kq[k] || (kq[k] = { anh: 0, px: 0, dacBiet: 0, vec: 0, loai: {} });
+    const boc = (o, ten, nh) => { const f = o && o[ten]; if (typeof f !== 'function') return; o[ten] = function () { const cu = nhom; nhom = nh; try { return f.apply(this, arguments); } finally { nhom = cu; } }; lop.push(() => { o[ten] = f; }); };
+    boc(REN, 'veQuai', 'quai'); boc(REN, 'veO', 'u'); boc(REN, 'veLaser', 'laser'); boc(REN, 'veDan', 'dan'); boc(REN, 'veFx', 'hieuung'); boc(PX, 'thanh', 'thanhmau'); boc(REN, 'thanhAnh', 'thanhmau');
+    boc(VX, 'veDs', 'sukien'); boc(REN, 'veChu', 'chu'); boc(REN, 'gopLop', 'goplop'); if (typeof CHMU !== 'undefined') boc(CHMU, 'veLuoi', 'luoi');
+    for (const k in HU) if (HU[k] && HU[k].ve) boc(HU[k], 've', 'hieuung');
+    goc.drawImage = P.drawImage;
+    const dI = function (im, a1, a2, a3, a4, a5, a6, a7, a8) {
+      const n = arguments.length, g = N(nhom); let dw, dh; if (n >= 9) { dw = a7; dh = a8; } else if (n >= 5) { dw = a3; dh = a4; } else { dw = im.width; dh = im.height; }
+      const m = P.getTransform.call(this); g.anh++; g.px += Math.abs(dw * dh * (m.a * m.d - m.b * m.c));
+      if ((this.filter && this.filter !== 'none') || this.shadowBlur > 0 || (this.globalCompositeOperation !== 'source-over' && this.globalCompositeOperation !== 'lighter')) g.dacBiet++;
+      return goc.drawImage.apply(this, arguments);
+    };
+    P.drawImage = dI;
+    // lớp hiệu ứng (REN._lopX) có drawImage riêng gọi thẳng bản gốc → đếm ở đó bằng cách bọc lại
+    const lx = REN._lopX; let lxGoc = null;
+    if (lx && Object.prototype.hasOwnProperty.call(lx, 'drawImage')) { lxGoc = lx.drawImage; lx.drawImage = function (im, a1, a2, a3, a4, a5, a6, a7, a8) { const n = arguments.length, g = N(nhom); let dw, dh; if (n >= 9) { dw = a7; dh = a8; } else if (n >= 5) { dw = a3; dh = a4; } else { dw = im.width; dh = im.height; } const m = P.getTransform.call(this); g.anh++; g.px += Math.abs(dw * dh * (m.a * m.d - m.b * m.c)); if ((this.filter && this.filter !== 'none') || this.shadowBlur > 0 || (this.globalCompositeOperation !== 'source-over' && this.globalCompositeOperation !== 'lighter')) g.dacBiet++; return lxGoc.apply(this, arguments); }; }
+    const VEC = ['fill', 'stroke', 'fillRect', 'strokeRect', 'fillText', 'strokeText', 'clip', 'putImageData', 'getImageData'];
+    const lxV = {};
+    for (const f of VEC) { goc[f] = P[f]; P[f] = function () { const g = N(nhom); g.vec++; g.loai[f] = (g.loai[f] || 0) + 1; return goc[f].apply(this, arguments); };
+      if (lx && Object.prototype.hasOwnProperty.call(lx, f)) { const h = lxV[f] = lx[f]; lx[f] = function () { const g = N(nhom); g.vec++; g.loai[f] = (g.loai[f] || 0) + 1; return h.apply(this, arguments); }; } }
+    if (typeof GLR !== 'undefined') { GLR.demPx = true; GLR.thieu = {}; }
+    REN.noiSuy(1); try { REN.ve0(); } finally { REN.traLai(); }
+    P.drawImage = goc.drawImage; if (lxGoc) lx.drawImage = lxGoc; for (const f of VEC) { P[f] = goc[f]; if (lxV[f]) lx[f] = lxV[f]; } for (const f of lop) f();
+    let anh = 0, px = 0, vec = 0; for (const k in kq) { anh += kq[k].anh; px += kq[k].px; vec += kq[k].vec; kq[k].px = +(kq[k].px / 1e6).toFixed(3); }
+    const r = { tong: { anh, px: +(px / 1e6).toFixed(2), vec }, nhom: kq };
+    if (typeof GLR !== 'undefined' && GLR.hien) { r.gl = { lenh: GLR.dem.lenh, o: GLR.dem.o, tai: GLR.dem.tai, px: +(GLR.dem.px / 1e6).toFixed(3), thieu: GLR.thieu }; GLR.demPx = false; }
+    return r;
+  });
+  if (process.env.THUC) kq.thuc = await p.evaluate(([giay, C]) => new Promise((xong) => {
+    // KHUNG HÌNH THỜI GIAN THỰC: rAF thật của trình duyệt, đồng hồ trận chạy theo thời gian thật; khoảng khung (ms) trung vị / p95 / p99 / max, số khung > 33 / 50 ms
+    const raf = window.__rafGoc, now = window.__now, ds = [], ln = []; let t0 = now(), tr = t0, n = 0;
+    const vong = () => {
+      const t = now(), dt = t - tr; tr = t; if (++n > 30) ds.push(dt);
+      window.__vt += Math.min(dt, 100); window.__f++;
+      const cb = window.__raf; window.__raf = []; for (const f of cb) { try { f(window.__vt); } catch (e) { window.__loi = String(e && e.stack || e); } }
+      if (typeof GLR !== 'undefined' && GLR.hien) ln.push(GLR.dem.lenh);
+      if (t - t0 < giay * 1000) raf(vong);
+      else { const a = ds.slice().sort((x, y) => x - y), q = (u) => +a[Math.min(a.length - 1, Math.floor(a.length * u))].toFixed(1);
+        xong({ khung: a.length, tb: +(ds.reduce((s, v) => s + v, 0) / ds.length).toFixed(1), tv: q(0.5), p95: q(0.95), p99: q(0.99), max: +a[a.length - 1].toFixed(1), hon33: ds.filter(v => v > 33.4).length, hon50: ds.filter(v => v > 50).length, hon100: ds.filter(v => v > 100).length,
+          lenhGL: ln.length ? +(ln.reduce((s, v) => s + v, 0) / ln.length).toFixed(1) : 0, lenhGLmax: ln.length ? Math.max(...ln) : 0 }); }
+    };
+    raf(vong);
+  }), [+process.env.THUC, C]);
   if (process.env.BENCH) {
     const tn = [['goc', '']].concat((process.env.TN || '').split(';;').filter(Boolean).map(s => { const i = s.indexOf('='); return [s.slice(0, i), s.slice(i + 1)]; }));
     kq.bench = {};
