@@ -478,10 +478,11 @@ const GLR = (() => {
       this.tha(c, 1, a.naturalWidth, a.naturalHeight); this.bn.tha--; this.bn.ao = (this.bn.ao | 0) + 1; this._nguon.push(new WR(c)); return c;
     },
     // canvas ảo cỡ w×h lấy hình từ ảnh gốc g (canvas của REN.img, có g._goc). q: { o: [ô…] (dải khung: mỗi ô { lx, ly, lw, lh → sx, sy, sw, sh của ảnh gốc }), k, t (kiểu + màu tô),
-    //   kho, khoa (kho đệm giữ nó — như GLR.tinh), dung(canvas) = vẽ nội dung thật vào canvas (đường 2D) }
+    //   kho, khoa (kho đệm giữ nó — như GLR.tinh), dung(canvas) = vẽ nội dung thật vào canvas (đường 2D), al: nhân alpha (bóng đen 0,55…),
+    //   them: lấy tầng THÔ hơn `them` bậc rồi để GPU phóng lên = làm mềm (thay filter blur của bóng đổ) }
     ao(g, w, h, q) {
       const c = document.createElement('canvas');
-      c._ao = { g, L: -1, o: q.o || null, k: q.k | 0, t: (q.t || 0) >>> 0, lx: 0, ly: 0, lw: w, lh: h, sx: 0, sy: 0, sw: g.width, sh: g.height, p: null, c0: null };
+      c._ao = { g, L: -1, o: q.o || null, k: q.k | 0, t: (q.t || 0) >>> 0, al: q.al, them: q.them | 0, lx: 0, ly: 0, lw: w, lh: h, sx: 0, sy: 0, sw: g.width, sh: g.height, p: null, c0: null };
       c._tinh = 1; c._docF = c._taoF = this.f; c._hoiN = 0; c._kho = q.kho; c._khoa = q.khoa; c._dungLai = q.dung;
       this.tha(c, 1, w, h); this.bn.tha--; this.bn.ao = (this.bn.ao | 0) + 1; this._nguon.push(new WR(c));
       if (this.ren && this.ren._dangNong) this.nap(c);
@@ -490,7 +491,7 @@ const GLR = (() => {
     coTex(im) { const ao = im._ao; if (ao) { const lv = ao.g._lv; return !!lv && ao.L >= 0 && this.hopLe(lv[ao.L]); } return this.hopLe(this.map.get(im)); },
     // tầng cần cho 1 ảnh ảo: tầng nhỏ nhất mà điểm ảnh tầng còn ≥ điểm ảnh cần (nới AO_NOI)
     lvCan(ao) {
-      const c = ao.o ? ao.o[0] : ao, r = Math.min(c.sw / c.lw, c.sh / c.lh), g = ao.g; let L = r > 1 ? Math.floor(Math.log2(r * AO_NOI)) : 0;
+      const c = ao.o ? ao.o[0] : ao, r = Math.min(c.sw / c.lw, c.sh / c.lh), g = ao.g; let L = (r > 1 ? Math.floor(Math.log2(r * AO_NOI)) : 0) + (ao.them | 0);
       while (L > 0 && (Math.min(g.width, g.height) >> L) < 4) L--;
       return L;
     },
@@ -517,7 +518,7 @@ const GLR = (() => {
       let p = c.p;
       if (!p || p.E !== E || p.ex !== E.x || p.ey !== E.y || p.tex !== E.tex) {
         const fx = E.w / g.width, fy = E.h / g.height, kx = c.lw / (c.sw * fx), ky = c.lh / (c.sh * fy);
-        p = c.p = { tex: E.tex, x: (E.x + c.sx * fx) * kx - c.lx, y: (E.y + c.sy * fy) * ky - c.ly, W: E.W * kx, H: E.H * ky, k: ao.k, t: ao.t, E, ex: E.x, ey: E.y };
+        p = c.p = { tex: E.tex, x: (E.x + c.sx * fx) * kx - c.lx, y: (E.y + c.sy * fy) * ky - c.ly, W: E.W * kx, H: E.H * ky, k: ao.k, t: ao.t, al: ao.al, E, ex: E.x, ey: E.y };
       }
       return p;
     },
@@ -976,7 +977,7 @@ const GLR = (() => {
       // giới hạn lấy mẫu = trong ô nguồn (như canvas: không lem điểm ảnh khung/ảnh bên cạnh)
       let g0 = u0 + 0.5 * iw, g2 = u1 - 0.5 * iw, g1 = v0 + 0.5 * ih, g3 = v1 - 0.5 * ih;
       if (g0 > g2) g0 = g2 = (u0 + u1) / 2; if (g1 > g3) g1 = g3 = (v0 + v1) / 2;
-      const A = Math.round(al * 255), mau = (A | (A << 8) | (A << 16) | (A << 24)) >>> 0, tr = (X.trang || 0) + 2 * ti; // màu nhân sẵn alpha
+      const A = Math.round((E.al !== undefined ? al * E.al : al) * 255), mau = (A | (A << 8) | (A << 16) | (A << 24)) >>> 0, tr = (X.trang || 0) + 2 * ti; // màu nhân sẵn alpha
       const F = this._f, U = this._u, I = this._i;
       // 4 góc ô đích (điểm ảnh thiết bị) nới 0,5 điểm ảnh mỗi phía dọc 2 cạnh; UV + toạ độ trong ô (lx, ly) nới theo
       const wx = a * dw, wy = b * dw, hx = c * dh, hy = d * dh; let lw = Math.hypot(wx, wy), lh = Math.hypot(hx, hy); if (!(lw > 0 && lh > 0)) return;

@@ -304,11 +304,13 @@ const REN = {
   co(ten, px, bien) {
     const k = this.s * this.dpr, n = Math.max(2, Math.round(px * k)), key = ten + '|' + n + '|' + (bien || '');
     let c = this.cGet(key); if (c) return c;
-    if (bien !== 'den' && _GLA()) { // ẢNH ẢO (WebGL2): không dựng canvas thu nhỏ / trắng / xám — canvas ảo cỡ nw×nh, GPU lấy mẫu tầng của ảnh gốc + shader tô
+    if (_GLA()) { // ẢNH ẢO (WebGL2): không dựng canvas thu nhỏ / trắng / xám / bóng — canvas ảo cỡ nw×nh, GPU lấy mẫu tầng của ảnh gốc + shader tô
+      //   bóng ('den' 0,55 · 'bong' 0,6 = bóng đầu ụ, chỉ bản GL xin): ảnh phủ đen, lấy tầng thô hơn 2 bậc rồi phóng lên = mềm như filter blur cũ
       const a = this.img(ten); if (!a) return null;
       if (a._goc) {
         const w = a.width, h = a.height, nw = Math.max(2, Math.round(n * w / Math.max(w, h))), nh = Math.max(2, Math.round(n * h / Math.max(w, h)));
-        return this.cSet(key, GLR.ao(a, nw, nh, { k: bien === 'trang' ? 1 : bien === 'xam' ? 2 : 0, t: bien === 'trang' ? 0xffffffff : 0, kho: 'cache', khoa: key, dung: (cv) => this.coDung(cv, ten, bien) }));
+        return this.cSet(key, GLR.ao(a, nw, nh, bien === 'den' || bien === 'bong' ? { k: 1, t: 0xff000000, al: bien === 'den' ? 0.55 : 0.6, them: 2, kho: 'cache', khoa: key, dung: (cv) => this.coDung(cv, ten, bien) }
+          : { k: bien === 'trang' ? 1 : bien === 'xam' ? 2 : 0, t: bien === 'trang' ? 0xffffffff : 0, kho: 'cache', khoa: key, dung: (cv) => this.coDung(cv, ten, bien) }));
       }
     }
     if (bien === 'xam' || bien === 'trang') { // biến thể dựng từ bản ĐÃ THU NHỎ (không giữ bản trắng/xám cỡ gốc)
@@ -331,7 +333,9 @@ const REN = {
   // đường 2D của ảnh ảo REN.co: vẽ nội dung thật (thu nhỏ chất lượng cao + biến thể) vào canvas cv — y như bản 2D dựng
   coDung(cv, ten, bien) {
     const a = this.img(ten); if (!a || !a.width) return false;
-    const x = this.c2d(cv); this.veNho(x, a, 0, 0, a.width, a.height, 0, 0, cv.width, cv.height);
+    const x = this.c2d(cv);
+    if (bien === 'den' || bien === 'bong') { const n = Math.max(cv.width, cv.height); x.filter = 'blur(' + Math.max(1, n / (bien === 'den' ? 40 : 30)) + 'px)'; this.veNho(x, a, 0, 0, a.width, a.height, 0, 0, cv.width, cv.height); x.filter = 'none'; x.globalCompositeOperation = 'source-in'; x.fillStyle = bien === 'den' ? 'rgba(0,0,0,.55)' : 'rgba(0,0,0,.6)'; x.fillRect(0, 0, cv.width, cv.height); x.globalCompositeOperation = 'source-over'; return true; } // vetay-ok: png (bóng = ảnh tô đen)
+    this.veNho(x, a, 0, 0, a.width, a.height, 0, 0, cv.width, cv.height);
     if (bien) this.bienTaiCho(x, cv, bien);
     return true;
   },
@@ -707,6 +711,10 @@ const REN = {
     const ten = this.dauTen(id, gd), D = C * this.dauK(id, gd) * (sc || 1);
     ctx.globalAlpha = al;
     if (bien) { const c = this.co(ten, D, bien); if (c) ctx.drawImage(c, -D / 2, -D / 2, D, D); ctx.globalAlpha = 1; return; }
+    if (ctx.laGL && _GLA()) { // ẢNH ẢO: đầu + bóng = 2 ô ảnh từ CÙNG texture ảnh gốc (bóng = phủ đen, tầng thô phóng lên, lệch xuống 3,5 %) — không nướng canvas đầu-kèm-bóng mỗi cỡ
+      const a = this.co(ten, D, da ? 'xam' : '');
+      if (a && a._ao) { const b = this.co(ten, D, 'bong'), m = Math.max(a.width, a.height), w = D * a.width / m, h = D * a.height / m; if (b && b._ao) ctx.drawImage(b, -w / 2, -h / 2 + D * 0.035, w, h); ctx.drawImage(a, -w / 2, -h / 2, w, h); ctx.globalAlpha = 1; return; }
+    }
     const db = this.dauBong(ten, D, da);
     if (db) { const P = D * db.sc; ctx.drawImage(db, -P / 2, -P / 2, P, P); }
     else { const a = this.co(ten, D, da ? 'xam' : ''); if (a) ctx.drawImage(a, -D / 2, -D / 2, D, D); }
@@ -1423,7 +1431,8 @@ const REN = {
   // ---------- MƯỢT KÉO GHÉP (docs/demo-hop-tuong/tuvan/muotghep): cỡ ĐANG CHUYỂN ĐỘNG → bậc cỡ cố định ----------
   // Huy hiệu / tấm phóng to-nhỏ mỗi khung trước đây dựng 1 canvas MỚI mỗi khung (thu nhỏ nhiều bước từ PNG 3×) → giật.
   // qd(): làm tròn LÊN cỡ về lưới hình học 8 % (điểm ảnh thiết bị) → mỗi bậc dựng 1 lần, vẽ thu ≤ 8 % (vẫn nét).
-  qd(d) { const k = this.s * this.dpr, n = Math.max(2, d * k), L = Math.log(1.08); return Math.pow(1.08, Math.ceil(Math.log(n) / L - 1e-6)) / k; },
+  qd(d) { const k = this.s * this.dpr, n = Math.max(2, d * k), L = Math.log(_GLB() && GLR.hien ? 1.26 : 1.08); // (WebGL đang vẽ: bậc 26 % — GPU thu nhỏ không tốn gì, bớt 3 lần số canvas huy hiệu phải dựng + tải)
+    if (_GLB() && GLR.hien) return Math.pow(1.26, Math.ceil(Math.log(n) / L - 1e-6)) / k; return Math.pow(1.08, Math.ceil(Math.log(n) / L - 1e-6)) / k; },
   // huy hiệu cỡ động: canvas ở bậc qd(d), vẽ đúng cỡ d (tỉ lệ ô vẽ / d đọc từ chính canvas → hợp cả bản hud2 1.7d lẫn bản gốc 1.5d)
   huyHieuDong(n, d) { const dq = this.qd(d), c = this.huyHieu(n, dq); if (c) c._E = c.width / (dq * this.s * this.dpr); return c; },
   veHuyHieuDong(ctx, x, y, n, d) { const c = this.huyHieuDong(n, d); if (!c) return; const P = d * c._E; ctx.drawImage(c, x - P / 2, y - P / 2, P, P); },

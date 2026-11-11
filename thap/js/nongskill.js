@@ -86,7 +86,7 @@
   //   chỉ áp cho ảnh đã có ≥ 3 cỡ (đúng là phóng động); cùng 1 cỡ được xin 4 khung LIỀN nhau (= cỡ đứng yên) thì dựng đúng cỡ như cũ → hình lúc đứng yên không đổi. Bản 2D không chạy đoạn này.
   const coGoc = REN.co, coGan = NS._coGan = new Map(), coLan = new Map(); let coTrong = 0;
   REN.co = function (ten, px, bien) {
-    if (bien !== 'den' && _GLA()) return coGoc.apply(this, arguments); // ẢNH ẢO (glr.js): mọi cỡ lấy mẫu từ texture ảnh gốc — không dựng, không ngân sách, không mẹo cỡ động
+    if (_GLA()) return coGoc.apply(this, arguments); // ẢNH ẢO (glr.js): mọi cỡ lấy mẫu từ texture ảnh gốc — không dựng, không ngân sách, không mẹo cỡ động
     if (!coTrong && typeof GLR !== 'undefined' && GLR.bat && GLR.hien && trongTran()) {
       const k = this.s * this.dpr, n = Math.max(2, Math.round(px * k)), kb = ten + '|' + (bien || ''), key = ten + '|' + n + '|' + (bien || '');
       let c = this.cGet(key); if (c) return c;
