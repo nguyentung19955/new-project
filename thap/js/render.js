@@ -45,7 +45,7 @@ const REN = {
   // ---------- bộ nhớ đệm ảnh thu nhỏ: 2 THẾ HỆ theo ngân sách điểm ảnh ----------
   // vượt ngân sách → thế hệ hiện tại thành "cũ", bắt đầu thế hệ mới; tra trúng ở thế hệ cũ → chuyển lên mới (không dựng lại).
   // Ảnh không dùng nữa (ụ đã bán/không còn trên bàn, cỡ cũ) tự rơi khỏi bộ nhớ sau 2 lần xoay → tổng ≤ ~2 × ngân sách.
-  _cacheCu: {}, _cachePx: 0,
+  _cacheCu: {}, _cachePx: 0, dungN: 0, xoayN: 0,
   nganSach() { return (this.laIOS ? 6 : 9) * 1048576 * Math.min(1, this.dpr * this.dpr / 9) * 9 / 4; }, // điểm ảnh (≈ 13.5 MB iOS / 20 MB máy khác mỗi thế hệ ở 3×)
   cGet(key) {
     let c = this.cache[key]; if (c) return c;
@@ -55,11 +55,12 @@ const REN = {
   cSet(key, c) {
     if (!c) return c;
     this._cachePx += c.width * c.height;
-    if (this._cachePx > this.nganSach() || Object.keys(this.cache).length > 900) { if (_GLB()) GLR.boKho(this._cacheCu); this._cacheCu = this.cache; this.cache = {}; this._cachePx = c.width * c.height; }
+    if (this._cachePx > this.nganSach() || Object.keys(this.cache).length > 900) { if (_GLB()) { GLR.boKho(this._cacheCu); GLR.huyKho(this._cacheCu); } this._cacheCu = this.cache; this.cache = {}; this._cachePx = c.width * c.height; this.xoayN++; }
+    this.dungN++; // chẩn đoán (nhãn admin): số ảnh dựng vào kho / số lần kho xoay thế hệ
     if (_GLB()) GLR.tinh(c, 'cache', key); // WebGL: canvas đệm tĩnh — có bản GPU rồi thì thả bản CPU (glr.js mục BỘ NHỚ)
     return (this.cache[key] = c);
   },
-  donCache() { if (_GLB()) { GLR.boKho(this.cache); GLR.boKho(this._cacheCu); } this.cache = {}; this._cacheCu = {}; this._cachePx = 0; if (this._nongCo) this._nongCo.clear(); if (this._rongDs) this._rongDs.clear(); },
+  donCache() { if (_GLB()) { GLR.boKho(this.cache); GLR.boKho(this._cacheCu); GLR.huyKho(this.cache); GLR.huyKho(this._cacheCu); } this.cache = {}; this._cacheCu = {}; this._cachePx = 0; if (this._nongCo) this._nongCo.clear(); if (this._rongDs) this._rongDs.clear(); },
   // ---------- ẢNH DỰNG RA RỖNG (sửa gấp 09/11 — iPhone: Ember / Cổng Ấp Nở mất thân + đầu, chỉ còn vòng/nhãn) ----------
   // Safari iOS: vượt trần tổng bộ nhớ canvas → canvas mới vẫn có ngữ cảnh nhưng lệnh vẽ KHÔNG có tác dụng; chép ảnh chưa giải mã → trong suốt.
   // Ảnh rỗng đó từng được giữ VĨNH VIỄN (REN.cache / REN.anh._cv) → ụ mất hình tới khi mở lại app.

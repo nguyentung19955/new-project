@@ -25,7 +25,7 @@ const WAVE = +(process.env.WAVE || 35), D1 = process.env.D1 || 'nguyenrua,sinhdo
       const gl = typeof GLR !== 'undefined' && GLR.hien, d = window.__dk || (window.__dk = { set: 0, xoay: 0 }); window.__k.push([window.__now() - t0, gl ? GLR.dem.tai : 0, gl ? GLR.dem.nap | 0 : 0, d.set, d.xoay]); d.set = 0; d.xoay = 0;
       if (window.__moiKhung) window.__moiKhung();
     } };
-    window.__tk = (a) => { const s = a.map(q => q[0]).sort((x, y) => x - y), q = (u) => +s[Math.min(s.length - 1, Math.floor(s.length * u))].toFixed(1); return { khung: a.length, msTV: q(0.5), msP95: q(0.95), msP99: q(0.99), msMax: +s[s.length - 1].toFixed(1), taiMax: Math.max(...a.map(x => x[1])), taiTong: a.reduce((t, x) => t + x[1], 0), dung: a.reduce((t, x) => t + (x[3] | 0), 0), dungMax: Math.max(...a.map(x => x[3] | 0)), xoay: a.reduce((t, x) => t + (x[4] | 0), 0), k20: a.filter(x => x[0] > 20).length, k50: a.filter(x => x[0] > 50).length, khungTai8: a.filter(x => x[1] >= 8).length, napTong: a.reduce((t, x) => t + x[2], 0) }; };
+    window.__tk = (a) => { const s = a.map(q => q[0]).sort((x, y) => x - y), q = (u) => +s[Math.min(s.length - 1, Math.floor(s.length * u))].toFixed(1); return { khung: a.length, msTV: q(0.5), msP95: q(0.95), msP99: q(0.99), msMax: +s[s.length - 1].toFixed(1), taiMax: Math.max(...a.map(x => x[1])), taiTong: a.reduce((t, x) => t + x[1], 0), dung: a.reduce((t, x) => t + (x[3] | 0), 0), dungMax: Math.max(...a.map(x => x[3] | 0)), xoay: a.reduce((t, x) => t + (x[4] | 0), 0), k20: a.filter(x => x[0] > 20).length, k50: a.filter(x => x[0] > 50).length, top: a.map((x, i) => [i, Math.round(x[0]), x[1], x[3] | 0]).sort((p, q) => q[1] - p[1]).slice(0, 4).map(x => x.join('/')).join(' '), khungTai8: a.filter(x => x[1] >= 8).length, napTong: a.reduce((t, x) => t + x[2], 0) }; };
     window.__bn = () => { if (window.gc) { window.gc(); window.gc(); } const r = REN.boNho(), g = typeof GLR !== 'undefined' && GLR.bat && GLR.boNho ? GLR.boNho() : null, m = (v) => Math.round(v / 1048576); return { canvas: Math.round(r.canvasMB), soCanvas: r.soCanvas, gpu: g ? m(g.tong) : 0, atlas: g ? g.atlasTrang + '×' + g.atlasDay : '', rieng: g ? m(g.rieng) + '/' + g.riengN : '', tong: Math.round(r.canvasMB + (g ? g.tong / 1048576 : 0)) }; };
   });
   if (process.env.TAO) await ctx.addInitScript(() => { // TAO=1: ghi nơi tạo của mọi canvas → kq.noiTao = MB canvas còn sống cuối trận theo hàm tạo
@@ -41,9 +41,13 @@ const WAVE = +(process.env.WAVE || 35), D1 = process.env.D1 || 'nguyenrua,sinhdo
   await p.evaluate(() => { // đếm ảnh dựng vào kho đệm (REN.cSet = 1 lần dựng trên CPU) + số lần kho xoay thế hệ, theo khung
     const d = window.__dk = { set: 0, xoay: 0 }, g = REN.cSet; REN.cSet = function (k, c) { const cu = this._cacheCu; const r = g.call(this, k, c); if (c) d.set++; if (this._cacheCu !== cu) d.xoay++; return r; };
   });
+  const chay = async (n) => { for (let f = 0; f < n;) { const k = Math.min(30, n - f); await p.evaluate((k) => window.__buoc(k), k); f += k; await p.waitForTimeout(15); } };
+  if (process.env.VT) { // VT=240: để màn mở đầu trận (vaotran.js, trận đứng yên) chạy ngần ấy khung trước khi vào trận — lúc game làm nóng ảnh
+    await p.evaluate(() => { if (typeof GLR !== 'undefined') GLR.now = window.__now; }); await chay(+process.env.VT);
+    kq.vt = await p.evaluate(() => { const r = Object.assign(window.__bn(), window.__tk(window.__k)); window.__k = []; return JSON.stringify(r).replace(/"/g, ''); }); console.error('vt ' + kq.vt);
+  }
   await p.evaluate(() => { try { VT.dong(); } catch (e) { } G.dung = false; if (typeof GLR !== 'undefined') GLR.now = window.__now; Math.random = window.__mb(555); });
   if (process.env.JS) await p.evaluate(process.env.JS); // JS="…": chạy trong trang ở mốc 0 (gỡ lỗi); SAUJS="…": chạy cuối, in ở kq.sau
-  const chay = async (n) => { for (let f = 0; f < n;) { const k = Math.min(30, n - f); await p.evaluate((k) => window.__buoc(k), k); f += k; await p.waitForTimeout(15); } };
   if (kb === 'trieu') {
     await p.evaluate(() => { window.__gKT = ketThuc; ketThuc = () => { }; window.__moiKhung = () => { for (const B of G.ban) { B.tim = 1e9; B.mana = 99999; } }; });
     await chay(240); // 4 s đầu trận (làm nóng nền chạy)

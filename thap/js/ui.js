@@ -38,10 +38,11 @@ const UI = {
     // CHỐNG NÓNG MÁY (tuvan/nong): 1 vòng rAF duy nhất · trần 60 khung/giây (màn 120 Hz bỏ khung thừa) · Tiết kiệm pin = 30 ·
     // tạm dừng = vẽ lại 10 lần/giây · ngoài trận (HOME/menu) KHÔNG vẽ canvas (vẽ 1 lần rồi nghỉ) · tab ẩn: trình duyệt tự dừng rAF.
     let tr = -1, tichLuy = 0, alpha = 1, tVe = -1e9, nghi = false;
+    // trận đứng (G.dung): vẽ ~10 lần / giây. Riêng màn mở đầu trận còn việc làm nóng (NS.conNong — nongskill.js): vẽ đủ 60 lần / giây để hàng nóng + hàng nạp texture chạy hết trước khi vào trận
     const vong = (n) => {
       requestAnimationFrame(vong);
       const tran = G.ban.length > 0;
-      const khoang = !tran ? 1e9 : (G.dung && !this.keo) ? 99 : (typeof TKP !== 'undefined' && TKP.on()) ? 1000 / 30 : 1000 / 60;
+      const khoang = !tran ? 1e9 : (G.dung && !this.keo && !(typeof NS !== 'undefined' && NS.conNong && NS.conNong())) ? 99 : (typeof TKP !== 'undefined' && TKP.on()) ? 1000 / 30 : 1000 / 60;
       if (!tran && !nghi) { nghi = true; tVe = -1e9; } else if (tran) nghi = false;
       const veNay = this.veLai > 0 || n - tVe >= khoang - 3.5;
       if (this.veLai > 0) this.veLai--;

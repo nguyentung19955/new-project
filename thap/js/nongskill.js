@@ -11,9 +11,13 @@
 'use strict';
 (() => {
   if (typeof REN === 'undefined') return;
-  const NS = window.NS = { NGAN: 4, NONG: 3, NONG_MAX: 40, daNong: new Set(), _tKt: 0, _tLuoi: 0, thongKe: { hoan: 0, dung: 0 } };
+  const NS = window.NS = { NGAN: 4, NONG: 3, NONG_VT: 10, NONG_MAX: 40, daNong: new Set(), _tKt: 0, _tLuoi: 0, thongKe: { hoan: 0, dung: 0 } };
   const now = () => performance.now();
   const trongTran = () => typeof G !== 'undefined' && G.ban && G.ban.length && !(typeof TAI !== 'undefined' && TAI.cho) && !REN._dangNong;
+  // MÀN MỞ ĐẦU TRẬN (vaotran.js, ~4 s, trận đứng yên, bàn vẽ dưới màn): khoảng làm nóng chính — hàng nóng chạy NONG_VT ms / khung thay vì NONG,
+  //   ảnh dựng thẳng đúng cỡ (không vẽ tạm rồi dựng sau), tờ ảnh lớn của trận chép ngay (mục 5), lớp GL tải texture không giới hạn (glr.js: _taiTha).
+  //   → vào trận thì thân / đầu ụ của bộ bài, hiệu ứng triệu hồi + ghép, quái 2 wave tới đã dựng + nằm trên GPU. Chạm bỏ qua màn mở đầu: phần còn lại rải theo khung như cũ.
+  const moDau = NS.moDau = () => typeof VT !== 'undefined' && !!VT.mo && typeof G !== 'undefined' && !!G.dung && !G.ketThuc;
 
   // ---------- 1) ngân sách dựng ảnh mỗi khung ----------
   REN._xay = 0;
@@ -21,11 +25,11 @@
   REN.ve = function () { this._xay = 0; if (NS.amThanh) try { NS.amThanh(); } catch (e) { } return veGoc.apply(this, arguments); };
   const vnGoc = REN.veNho;
   REN.veNho = function () { const t0 = now(); try { return vnGoc.apply(this, arguments); } finally { this._xay += now() - t0; } };
-  REN.hetNgan = function () { return trongTran() && this._xay > NS.NGAN; };
+  REN.hetNgan = function () { return trongTran() && this._xay > (moDau() ? NS.NONG_VT : NS.NGAN); };
   // hàng nóng theo thời gian: chạy việc tới khi tốn NONG ms (ít nhất 1 việc); việc tự xếp lại (chờ ảnh) không chạy lại trong cùng khung
   REN.chayNong = function () {
-    const t0 = now(), n0 = this._nong.length; this._dangNong = true;
-    try { for (let i = 0; i < n0 && this._nong.length; i++) { const f = this._nong.shift(); try { f(); } catch (e) { } if (now() - t0 > NS.NONG) break; } }
+    const t0 = now(), n0 = this._nong.length, han = moDau() ? NS.NONG_VT : NS.NONG; this._dangNong = true;
+    try { for (let i = 0; i < n0 && this._nong.length; i++) { const f = this._nong.shift(); try { f(); } catch (e) { } if (now() - t0 > han) break; } }
     finally { this._dangNong = false; }
   };
   const xep = (key, fn) => { if (REN._nong.length > 400) return; REN.nong(key, fn); };
@@ -359,17 +363,20 @@
     return true;
   };
   AM.chay = function (han) {
-    if (!this.BAT || !NS._trongTran() || G.ketThuc || G.dung) return;
+    if (!this.BAT || !NS._trongTran() || G.ketThuc || (G.dung && !NS.moDau())) return;
     if (!this._lap) { if (typeof TAI !== 'undefined' && TAI.doi) return; this.lap(); }
     const t = now(); if (t - this._t > 500) { this._t = t; this.themQuai(); this.themTrum(); }
     if (!this.ds.length) return;
     const t0 = now();
     do { if (!this.mot()) break; } while (this.ds.length && now() - t0 < han);
   };
+  // màn mở đầu trận còn việc làm nóng? (ui.js: còn thì vẽ 60 khung / giây dù trận đứng — mỗi khung chạy 1 lượt hàng nóng + hàng nạp texture của lớp GL)
+  NS.conNong = () => NS.moDau() && (REN._nong.length > 0 || !AM._lap || AM.ds.length > 0 || (typeof GLR !== 'undefined' && GLR.bat && !GLR.mat && !!GLR._napDs && GLR._napDs.length > 0));
   AM.RIC = typeof requestIdleCallback === 'function';
   let tKhung = 0;
   // gọi sau mỗi khung vẽ (dv = ms khung này)
   AM.sauKhung = function (dv) {
+    if (NS.moDau()) { if (dv < 24) this.chay(Math.max(2, NS.NONG_VT - dv * 0.5)); tKhung = dv; return; } // màn mở đầu trận: làm ngay sau mỗi khung (không đợi lúc rảnh)
     if (this.ds.length || !this._lap || now() - this._t > 500) {
       if (this.RIC) { if (!this._cho) { this._cho = true; requestIdleCallback((d) => { this._cho = false; if (d.timeRemaining() > 3) this.chay(Math.max(2, d.timeRemaining() - 2)); }, { timeout: 400 }); } }
       else if (dv < 12 && tKhung < 12) this.chay(2); // Safari: khung này + khung trước nhẹ → 1 việc (≤ 2 ms thêm; tờ lớn: chỉ 1 lần mỗi trận)
