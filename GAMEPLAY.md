@@ -1440,8 +1440,16 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - Người dùng chốt 18:41: BỎ Leo Tháp + 4 chế độ (làm trên nhánh `claude/che-do-dcdw`), không sửa tầng 1 Leo Tháp nữa, tránh sửa `chedo-c.js` / `chedo-d.js` / `home.js` → trả 2 tệp `chedo-c.js`, `chedo-d.js` và 3 bài kiểm (`thap-kt-thap-leo`, `thap-kt-vo-tan`, `thap-kt-thu-thach-tuan`) về trạng thái trước cân bằng B.
 - Còn hiệu lực (CO-OP / PVP / solo thử): số quái/wave `min(20, 8+⌊w/4⌋)`, slime tách 3 / 2 và chỉ ở wave Phân bào, wave có chủ đề theo `w % 10` (tên chủ đề ở băng WAVE), mana quái thường ×(1+1,7·min(w,30)/30), đà ST Vàng/Đỏ +2%/wave từ wave 20–40 rồi phẳng, máu quái theo B, KHÔNG trần wave 70.
 
+## claude/demo-hop-tuong — nhãn admin thêm số bộ nhớ (11/11 19:40)
+- Người dùng bị văng khỏi game GIỮA TRẬN (~16:30, iPhone, GL bật) → không phải nạp bản mới (chỉ nạp lại ở menu); nghi iOS thu hồi trang vì bộ nhớ. Đo máy đo, co-op wave 35→48 tốc 3×, chế độ iOS: bản 2D ≈ 250–300 MB canvas đệm (≈ 1 800 canvas); bản GL ≈ 234 MB canvas đệm + 133 MB texture GPU (atlas 4 × 16 MB + 52 MB texture riêng) → GL nặng hơn ~35–45%.
+- Nhãn admin thêm ` · m234+133` (MB canvas đệm + MB texture GL, 5 s đo 1 lần). CHƯA giảm bộ nhớ — việc của phần hoàn tất WebGL đợt 2+3 (bỏ bản canvas CPU sau khi đã vào atlas / hạ ngân sách trên iOS).
 - Biểu tượng chế độ mới (ảnh ChatGPT 11/11, cắt từ 1 tấm 3×2, 192 px): `ic_coop`, `ic_pvp` (thay hình ụ cơ khí cũ), `ic_online`, `ic_race`, `ic_tutorial`, `ic_cup` (ô cúp ở kết quả PVP). Đã xem ảnh GAME MODE 390×844.
 
 - Merge King VÀNG: bỏ 2 ngôi sao ở mũi vương miện trong ảnh `vughepvang_nong.png` (người dùng 11/11: lẫn với sao cấp ★ vẽ trên đầu ụ); vẫn phân biệt bằng màu vàng + kim cương trắng.
 
 - Chạm–chạm để ghép (ui.js): chọn ụ TRƯỚC khi mở dải thông tin và bọc try/catch `moTT` (6 lớp bọc; lỗi riêng trên iPhone làm mất lựa chọn → không sáng ô đích); `pointercancel` khi không có thao tác dở không còn xoá lựa chọn. Chưa tái hiện được trên máy thử — chờ người dùng thử lại trên iPhone.
+## claude/demo-hop-tuong — gộp claude/che-do-dcdw + sửa sau gộp (11/11 tối)
+- Gộp `cb056a1` (người dùng duyệt): bỏ Leo Tháp + Săn Trùm / Thử thách ngắn / Thử thách tuần / Vô tận, thêm Đường Đua (Race Track), cúp PVP + túi thắng + bảo hiểm rương, hướng dẫn riêng, 6 biểu tượng chế độ. Thiết kế: `docs/demo-hop-tuong/tuvan/che-do-dcdw/THIET-KE.md`.
+- Sửa sau gộp: nhãn nhiệm vụ `CO-OP: wave #` có bản tiếng Việt (`CO-OP: đợt #`); nút SUMMON tắt KHÔNG dùng `opacity` nữa (vi phạm `thap-kt-nut-trieu`: nút phải hiện rõ) → phủ lớp tối tròn `::after`; nhật ký khung chậm của admin mặc định ẨN (chạm nhãn FPS để hiện).
+- Kiểm: `thap-kt-cup`, `thap-kt-duong-dua`, `thap-kt-nut-trieu` đạt; ảnh HOME / GAME MODE / Đường Đua / kết quả CO-OP / PVP đã xem. Hồi quy đầy đủ: các lỗi còn lại đã đối chiếu với bản TRƯỚC gộp và trước lô hình/cân bằng — có sẵn từ trước (vetay, kéo-thả cuon-doc, conghuong2, vang-sua, matran, cong-huong-luat 34/406, CARD LV khoisinh/congap, online-sanh); CHƯA đối chiếu: "ngâm ngắn: ketqua-tran | B ra ngoài màn" (2×).
+- Rules Firebase cho `lb/dd` (mẫu ở THIET-KE mục 4): người dùng tự Publish (ràng buộc: phiên không đổi cấu hình production) → tới lúc đó bảng Đường Đua hiện "NOT CONNECTED · personal best only".

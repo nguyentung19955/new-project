@@ -63,9 +63,10 @@ const FXU = {
     const c = document.createElement('canvas'); c.width = a.width; c.height = a.height;
     const x = c.getContext('2d'); x.drawImage(a, 0, 0);
     x.globalCompositeOperation = 'source-atop'; x.globalAlpha = 0.78; x.fillStyle = mau; x.fillRect(0, 0, c.width, c.height); // vetay-ok: png — tô màu trong alpha của ảnh PNG
+    if (typeof GLR !== 'undefined' && GLR.bat) GLR.tinh(c, this._mau, key, (cv) => { const g = REN.img(ten); if (!g || !g.width) return false; const q = cv.getContext('2d'); q.drawImage(g, 0, 0); q.globalCompositeOperation = 'source-atop'; q.globalAlpha = 0.78; q.fillStyle = mau; q.fillRect(0, 0, cv.width, cv.height); return true; }); // vetay-ok: png — WebGL: bản tô màu dựng lại được từ ảnh gốc → thả bản CPU khi yên
     return (this._mau[key] = c);
   },
-  donMau() { this._mau = {}; },
+  donMau() { if (typeof GLR !== 'undefined' && GLR.bat) GLR.boKho(this._mau); this._mau = {}; },
   // 1 ảnh nổ/bật tĩnh (dùng chung lượt vẽ FX.anim 'trung' của render.js: phóng 0.6→1.1, mờ sau 65%) — pool của FX.anim
   pop(ten, x, y, co, song, goc) {
     if (!this.co(ten) || typeof FX === 'undefined') return false;

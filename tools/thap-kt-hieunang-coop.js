@@ -55,6 +55,10 @@ const C = CANH[canh];
       return h.toString(16);
     };
   });
+  if (process.env.BONHO === '2') await ctx.addInitScript(() => { // BONHO=2: ghi nơi tạo của mọi canvas → kq.bonho.noiTao = MB canvas còn sống theo hàm tạo
+    const goc = document.createElement.bind(document);
+    document.createElement = function (ten, o) { const e = goc(ten, o); if (typeof ten === 'string' && ten.toLowerCase() === 'canvas') e.__tao = String(new Error().stack).split('\n').slice(2, 5).map(s => s.trim().replace(/^at /, '').replace(/https?:\/\/[^/]+\/thap\/js\//, '').replace(/\?[^:]*/, '')).join(' < '); return e; };
+  });
   const p = await ctx.newPage(); const errs = [];
   p.on('pageerror', e => errs.push(e.message));
   await p.goto(`${BASE}index.html?notut=1&mode=coop&deck=${C.d1}&deck2=${C.d2}&wave=${C.wave}&fill=1&auto=1&net=0&ios=1&seed=777&af=tide&mana=99999${process.env.Q ? '&' + process.env.Q : ''}`, { waitUntil: 'load' });
@@ -95,6 +99,16 @@ const C = CANH[canh];
   if (process.env.SOAT) console.log('LỆCH NGOÀI BƯỚC:', await p.evaluate(() => window.__lech || 'không'));
   if (process.env.HUK) console.log('HU', await p.evaluate(() => { const m = {}; for (const o of G.hu) m[o.k] = (m[o.k] || 0) + 1; return JSON.stringify(m) + ' fx:' + JSON.stringify(Object.fromEntries(Object.keys(FX).filter(k => Array.isArray(FX[k])).map(k => [k, FX[k].length]))) + ' vx:' + (VX.ds ? VX.ds.length : 0); }));
   const kq = { canh, nhan, khung: KHUNG, giay: ((Date.now() - t0) / 1000).toFixed(1), bam, loi: await p.evaluate(() => window.__loi || ''), errs: errs.slice(0, 3) };
+  if (process.env.BONHO) kq.bonho = await p.evaluate(() => { // BONHO=1: bộ nhớ canvas đệm (REN.boNho) + texture GPU (GLR.boNho) + phân loại canvas còn sống
+    const r = REN.boNho(), g = typeof GLR !== 'undefined' && GLR.bat && GLR.boNho ? GLR.boNho() : null, mb = (v) => +(v / 1048576).toFixed(1);
+    const thay = new Set(); let kho = 0, mip = 0, mipAnh = 0, nKho = 0;
+    const them = (c, loai) => { if (!c || !c.width || !(c instanceof HTMLCanvasElement) || thay.has(c)) return; thay.add(c); const b = c.width * c.height * 4; if (loai === 0) { kho += b; nKho++; } else if (loai === 1) mip += b; else mipAnh += b; };
+    for (const kh of [REN.cache, REN._cacheCu]) for (const k in kh) { const c = kh[k]; them(c, 0); if (c && c._mip) for (const m of c._mip) if (m !== c) them(m, 1); }
+    for (const k in REN.anh) { const a = REN.anh[k]; if (a && a._mip) for (const m of a._mip) if (m !== a) them(m, 2); }
+    const noi = {}; for (const w of _DS_CV) { const c = w.deref(); if (c && c.width && !c._tha && c.__tao) { const q = noi[c.__tao] || (noi[c.__tao] = [0, 0]); q[0] += c.width * c.height * 4; q[1]++; } }
+    const noiTao = Object.entries(noi).sort((a, b) => b[1][0] - a[1][0]).slice(0, 25).map(([k, v]) => mb(v[0]) + ' MB ×' + v[1] + ' ' + k);
+    return { noiTao: noiTao.length ? noiTao : undefined, canvasMB: r.canvasMB, soCanvas: r.soCanvas, khoMB: mb(kho), khoN: nKho, mipKhoMB: mb(mip), mipAnhMB: mb(mipAnh), anhGocMB: r.anhGocMB, gl: g && { tongMB: mb(g.tong), atlasTrang: g.atlasTrang, atlasDay: g.atlasDay, riengMB: mb(g.rieng), riengN: g.riengN, lopMB: mb(g.lop), tamMB: mb(g.tam), canvasGLMB: mb(g.canvasGL), datLai: GLR.atlasThe, bn: g.bn }, tongMB: +(r.canvasMB + (g ? g.tong / 1048576 : 0)).toFixed(1) };
+  });
   if (process.env.GLTT) kq.gl = await p.evaluate(() => typeof GLR === 'undefined' ? null : GLR.thongTin());
   if (process.env.DEM) kq.dem = await p.evaluate(() => {
     // ĐẾM LỆNH VẼ 1 KHUNG ở đúng trạng thái này (chỉ số độc lập máy): theo nhóm (quái / ụ / laser / đạn / hiệu ứng / thanh máu / sự kiện / khác) —
@@ -159,7 +173,7 @@ const C = CANH[canh];
     }
   }
   console.log(JSON.stringify(kq, null, 1));
-  if (process.env.SAUJS) await p.evaluate(process.env.SAUJS); // chạy JS ngay trước khi chụp (vd ẩn bớt lớp canvas để soi)
+  if (process.env.SAUJS) { const r = await p.evaluate(process.env.SAUJS); if (r !== undefined && r !== null) console.log('SAUJS', JSON.stringify(r, null, 1)); } // chạy JS ngay trước khi chụp (vd ẩn bớt lớp canvas để soi)
   if (process.env.SHOT) await p.screenshot({ path: `${OUT}/lai_${canh}_${nhan}.png` });
   if (process.env.GHI) { const fk = `${OUT}/${process.env.GHI}.json`; let cu = {}; try { cu = JSON.parse(fs.readFileSync(fk)); } catch (e) { } cu[canh] = Object.assign(cu[canh] || {}, kq); fs.writeFileSync(fk, JSON.stringify(cu, null, 1)); }
   await b.close();

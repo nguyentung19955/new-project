@@ -519,7 +519,7 @@ function boDongDoiMoi() { const d = MOIC.bo.filter(id => SKILLS[id] && G.rosterM
   // ---- Tiếng Việt (ngonngu.js: từ điển mẫu, # = số) ----
   if (typeof VI_MAU !== 'undefined') Object.assign(VI_MAU, {
     // 11/11 bỏ Leo Tháp + hướng dẫn riêng + mốc wave CO-OP
-    'Reach wave #': 'Đạt wave #', 'PLAY CO-OP': 'CHƠI CO-OP', 'CO-OP: wave #': 'CO-OP: wave #', 'BEST WAVE #': 'WAVE CAO NHẤT #', 'BEST WAVE': 'WAVE CAO NHẤT',
+    'Reach wave #': 'Đạt wave #', 'PLAY CO-OP': 'CHƠI CO-OP', 'CO-OP: wave #': 'CO-OP: đợt #', 'BEST WAVE #': 'WAVE CAO NHẤT #', 'BEST WAVE': 'WAVE CAO NHẤT',
     'Pilot Level # and wave #': 'Cấp phi công # và wave #', 'Unlocks at Pilot Level # and wave #': 'Mở ở cấp phi công # và wave #',
     'Locked · reach wave # or unlock with gems': 'Đang khoá · đạt wave # hoặc mở bằng ngọc', 'Wave # or # gems': 'Wave # hoặc # ngọc',
     'Play # battles within # waves of your best': 'Chơi # trận cách wave cao nhất không quá # wave', 'CO-OP · PVP': 'CO-OP · PVP',
