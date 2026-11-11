@@ -744,8 +744,8 @@ Object.assign(REN, {
           if (cfX && !E.trum) { // quái code: nổ từ ảnh gốc đã thu nhỏ (bộ đệm) + góc đang thấy — không dựng canvas mới mỗi con chết (đàn nho chết dồn)
             const kq = K8[E.d.anh || E.id] || 1, gq = this.cdTen(E, cfX), aq = this.co(gq, co * kq), wq = aq && !_glT() && this.co(gq, co * kq, 'trang');
             if (aq && (wq || _glT())) {
-              for (const q of [aq, wq]) { q.nf = 1; q.fm = q.width; q.gap = 0; }
-              this._xac.push({ x: E.x + (E._cdOx || 0), y: E.y + (E._cdOy || 0), goc: (E._gv || 0) + (cfX.kieu === 'lan' ? E._cdA || 0 : 0), lat: 1, co: co * kq * (E._sc || 1), f: 0, t: 0, dai: aq, w: wq });
+              for (const q of [aq, wq]) if (q) { q.nf = 1; q.fm = q.width; q.gap = 0; }
+              this._xac.push({ x: E.x + (E._cdOx || 0), y: E.y + (E._cdOy || 0), goc: (E._gv || 0) + (cfX.kieu === 'lan' ? E._cdA || 0 : 0), lat: 1, co: co * kq * (E._sc || 1), f: 0, t: 0, dai: aq, w: wq || null });
               continue;
             }
           }

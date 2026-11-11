@@ -84,8 +84,8 @@ const VT = {
       this.el.hidden = false; void this.el.offsetWidth; this.el.classList.add('vao');
       this.el.querySelectorAll('.vt-ten b, .vt-tt b').forEach(b => fitText(b, parseFloat(getComputedStyle(b).fontSize), b.closest('.vt-sau') ? 13 : 6.5)); // ô trùm nhỏ: xuống dòng, không thu < 13 px (tư vấn C) // sau khi hiện (đo được bề rộng)
       this.t0 = performance.now(); this.dem();
-      // tự đóng sau TONG giây; còn việc làm nóng (nongskill.js NS.conNong: dựng ảnh + nạp texture của bộ bài) thì nán thêm tối đa THEM giây (chạm vẫn vào ngay)
-      const het = () => { if (!this.mo) return; const qua = (performance.now() - this.t0) / 1000; if (qua < this.TONG + this.THEM && typeof NS !== 'undefined' && NS.conNong && NS.conNong()) { this._h = setTimeout(het, 200); return; } this.dong(); };
+      // tự đóng sau TONG giây; còn việc làm nóng (nongskill.js NS.conNong: dựng ảnh + nạp texture của bộ bài) thì nán thêm tối đa THEM giây (chỉ khi lớp WebGL đang bật; chạm vẫn vào ngay)
+      const het = () => { if (!this.mo) return; const qua = (performance.now() - this.t0) / 1000; if (qua < this.TONG + this.THEM && typeof NS !== 'undefined' && NS.conNong && typeof GLR !== 'undefined' && GLR.bat && !GLR.mat && NS.conNong()) { this._h = setTimeout(het, 200); return; } this.dong(); };
       this._h = setTimeout(het, this.TONG * 1000);
     };
     cho();

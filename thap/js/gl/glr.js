@@ -28,7 +28,7 @@ const GLR = (() => {
   // THẢ BẢN CPU (mục "BỘ NHỚ" bên dưới): ?glm=0 tắt (giữ mọi canvas như trước — để so). NGUON_MAX = byte ảnh gốc chép sang canvas được giữ sống (vừa đọc điểm ảnh);
   //   THA_CHO / NGUON_CHO = số khung 1 ảnh dựng / ảnh gốc phải yên (không ai đọc điểm ảnh 2D) trước khi thả, nhân đôi sau mỗi lần phải dựng lại (≤ ×32).
   const THA_BAT = !!(WR && CVW && CVW.set && CVH && CVH.set) && TS.get('glm') !== '0', NGUON_MAX = (IOS ? 16 : 32) << 20, THA_CHO = 600, NGUON_CHO = 600, THA_NHO = 16384, TAI_MAX = 4, NAP_DV = 2, HUY_CHO = 90; // TAI_MAX / NAP_DV: ngân sách tải texture 1 khung giữa trận (đơn vị = 1 + điểm ảnh / 131072 mỗi lần tải), phần của hàng nạp nền · THA_NHO: điểm ảnh — ảnh dựng nhỏ hơn (64 KB) không thả
-  const ATLAS = 2048, TRANG_MAX = 5, GIU_DAY = 0.7, RIENG_MAX = (IOS ? 40 : 64) << 20, RIENG_GIU = RIENG_MAX * 0.5, GHIM = 3600, // GIỮ TEXTURE TRONG TRẬN (mục "KHÔNG TẢI LẠI" ở datLaiAtlas / donRieng): TRANG_MAX 4 → 5; GIU_DAY = phần atlas giữ lại sau khi gom (theo mới dùng nhất); RIENG_GIU = dưới mức này texture riêng không bị bỏ theo tuổi; GHIM = số khung 1 texture NẠP TRƯỚC được coi như vừa dùng
+  const ATLAS = 2048, TRANG_MAX = 5, GIU_DAY = 0.78, RIENG_MAX = (IOS ? 40 : 64) << 20, RIENG_GIU = RIENG_MAX * 0.7, GHIM = 3600, // GIỮ TEXTURE TRONG TRẬN (mục "KHÔNG TẢI LẠI" ở datLaiAtlas / donRieng): TRANG_MAX 4 → 5; GIU_DAY = phần atlas giữ lại sau khi gom (theo mới dùng nhất); RIENG_GIU = dưới mức này texture riêng không bị bỏ theo tuổi; GHIM = số khung 1 texture NẠP TRƯỚC được coi như vừa dùng
      NT_MAX = 8, LE = 1, DINH_MAX = 32768, W9 = 14; // 14 từ 4 byte / đỉnh: x y · u v · u0 v0 u1 v1 (giới hạn lấy mẫu) · lx ly lw lh (toạ độ trong ô, điểm ảnh thiết bị → khử răng cưa mép) · màu · trắng
   const VS = 'attribute vec2 a_p;attribute vec2 a_uv;attribute vec4 a_gh;attribute vec4 a_c;attribute vec4 a_m;attribute float a_w;uniform vec3 u_kt;varying vec2 v_uv;varying vec4 v_gh;varying vec4 v_c;varying vec4 v_m;varying float v_w;' +
     // u_kt.z = 1: vẽ ra canvas (y lật) · −1: vẽ vào bộ đệm khung (hàng 0 của texture = mép trên ảnh → dùng lại làm nguồn như ảnh thường)
@@ -304,7 +304,7 @@ const GLR = (() => {
             gl.bindFramebuffer(gl.FRAMEBUFFER, fb); gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, p.tex, 0);
             for (const E of L) {
               const cho = this.xep(E.w + 2 * LE, E.h + 2 * LE); // (xep có thể tạo trang mới: taoTex gắn texture mới vào đơn vị 0 — bộ đệm khung đang gắn không đổi)
-              if (!cho) { const c = E.cv.deref(); if (c && c._tha === 2) this.docLai(c, E); continue; } // hết chỗ: canvas đã thả lấy lại bản CPU từ texture cũ
+              if (!cho) { const c = E.cv.deref(); if (c && c._tha === 2) { if (f - E.dung > 120) this.chet(c); else this.docLai(c, E); } continue; } // hết chỗ: canvas đã thả — vừa vẽ thì lấy lại bản CPU từ texture cũ (đọc ngược GPU, chậm), không thì gỡ khỏi kho đệm (cần lại sẽ dựng lại)
               this.gan(cho.p.tex); gl.copyTexSubImage2D(gl.TEXTURE_2D, 0, cho.x, cho.y, E.x - LE, E.y - LE, E.w + 2 * LE, E.h + 2 * LE);
               E.tex = cho.p.tex; E.x = cho.x + LE; E.y = cho.y + LE; E.at = this.atlasThe; this.o.push(E);
             }
