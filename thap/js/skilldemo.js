@@ -642,8 +642,7 @@ SD.moc = function () {
   REN.veNhanBan = function () { };
   // khiên chặn (Máy Khiên / Holy Shield / Hào Quang): đánh dấu để vẽ ảnh khiên lớn + chú thích chờ sự kiện 'chan'
   if (VX.chanKhien) { const _ck = VX.chanKhien.bind(VX); VX.chanKhien = function (B, T) { try { if (SD.ks && T) { SD.chan.push({ T, t0: performance.now() }); SD.phat('chan'); } } catch (e) { } return _ck(B, T); }; } // bàn đối thủ thu nhỏ: nhãn riêng ở cột phải (không dùng nhãn bàn PVP)
-  const _ve0 = REN.ve0.bind(REN);
-  REN.ve0 = function () { _ve0(); try { SD.veLop(REN.ctx); } catch (e) { console.error(e); } };
+  REN.veSau = function (x) { try { SD.veLop(x); } catch (e) { console.error(e); } }; // lớp chú thích của video bắn thử: vẽ trên cùng bằng ngữ cảnh của khung (2D hoặc GLR.x — WebGL)
 };
 
 // ===================================================== lớp vẽ chú thích =====================================================
