@@ -63,7 +63,7 @@ const FXU = {
     const c = document.createElement('canvas'); c.width = a.width; c.height = a.height;
     const x = c.getContext('2d'); x.drawImage(a, 0, 0);
     x.globalCompositeOperation = 'source-atop'; x.globalAlpha = 0.78; x.fillStyle = mau; x.fillRect(0, 0, c.width, c.height); // vetay-ok: png — tô màu trong alpha của ảnh PNG
-    if (typeof GLR !== 'undefined' && GLR.bat) GLR.tinh(c, this._mau, key); // WebGL: có bản GPU rồi thì thả bản CPU
+    if (typeof GLR !== 'undefined' && GLR.bat) GLR.tinh(c, this._mau, key, (cv) => { const g = REN.img(ten); if (!g || !g.width) return false; const q = cv.getContext('2d'); q.drawImage(g, 0, 0); q.globalCompositeOperation = 'source-atop'; q.globalAlpha = 0.78; q.fillStyle = mau; q.fillRect(0, 0, cv.width, cv.height); return true; }); // vetay-ok: png — WebGL: bản tô màu dựng lại được từ ảnh gốc → thả bản CPU khi yên
     return (this._mau[key] = c);
   },
   donMau() { if (typeof GLR !== 'undefined' && GLR.bat) GLR.boKho(this._mau); this._mau = {}; },

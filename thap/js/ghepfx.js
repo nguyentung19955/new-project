@@ -443,7 +443,23 @@ const GF = {
     });
     for (const t of ds) lam(t, 0);
     // mọi loại ụ trong bộ bài (kết quả ghép = loại NGẪU NHIÊN trong bộ; triệu hồi cũng vậy): giải mã + dựng sẵn thân/đầu cỡ ô
-    for (const B of G.ban) for (const id of new Set(B.deck || [])) { try { GF.nongU(B, taoU(B, id, 1, 0)); } catch (e) { } }
+    const dsT = [];
+    for (const B of G.ban) for (const id of new Set(B.deck || [])) { try { const T = taoU(B, id, 1, 0); GF.nongU(B, T); dsT.push([B, T]); } catch (e) { } }
+    // WebGL: hiệu ứng TRIỆU HỒI (cột sáng, vòng phù văn, sóng tròn — màu theo bậc) dựng + tải texture sẵn theo vài mốc thời gian của hoạt ảnh
+    //   (vẽ vào canvas nháp REN.ctxNong = hàng nạp nền của GLR) → khung triệu hồi đầu tiên không phải dựng + tải cả chục ảnh. Chỉ hình: dùng BẢN CHÉP của
+    //   các ụ mẫu ở trên (không gọi thêm taoU → G.uid / số ngẫu nhiên y như bản 2D); ?gl=0 không chạy.
+    if (typeof GLR !== 'undefined' && GLR.bat && typeof VX !== 'undefined' && VX.truoc) {
+      const bac = new Set();
+      for (const [B, T0] of dsT) {
+        if (bac.has(T0.bac)) continue; bac.add(T0.bac);
+        const S = Math.min(B.cw, B.ch), T = Object.assign({}, T0);
+        for (const tt of [0.03, 0.08, 0.13, 0.19, 0.25, 0.31]) REN.nong('nt|' + T.bac + '|' + tt + '|' + (REN.s * REN.dpr), () => {
+          if (!GLR.bat || GLR.mat) return;
+          const x = REN.ctxNong(); T.vxA = { k: 'trieu', t0: VX.t - tt, nhe: false, dat: true }; // dat: không bắn bụi / tia lửa / tiếng
+          try { VX.truoc(x, T, 0, 0, S, {}); } catch (e) { } T.vxA = null;
+        });
+      }
+    }
   };
   // dựng sẵn 1 ụ theo từng bước nhỏ (1 bước / khung): ảnh gốc → bản đứng yên → bản đang nảy (không bóng nướng sẵn)
   GF.nongU = function (B, T) {

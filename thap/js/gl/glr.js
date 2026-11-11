@@ -27,8 +27,8 @@ const GLR = (() => {
   const CVW = CVP && Object.getOwnPropertyDescriptor(CVP, 'width'), CVH = CVP && Object.getOwnPropertyDescriptor(CVP, 'height');
   // THẢ BẢN CPU (mục "BỘ NHỚ" bên dưới): ?glm=0 tắt (giữ mọi canvas như trước — để so). NGUON_MAX = byte ảnh gốc chép sang canvas được giữ sống (vừa đọc điểm ảnh);
   //   THA_CHO / NGUON_CHO = số khung 1 ảnh dựng / ảnh gốc phải yên (không ai đọc điểm ảnh 2D) trước khi thả, nhân đôi sau mỗi lần phải dựng lại (≤ ×32).
-  const THA_BAT = !!(WR && CVW && CVW.set && CVH && CVH.set) && TS.get('glm') !== '0', NGUON_MAX = (IOS ? 16 : 32) << 20, THA_CHO = 120, NGUON_CHO = 600, THA_NHO = 16384, TAI_MAX = 4, NAP_DV = 2; // TAI_MAX / NAP_DV: ngân sách tải texture 1 khung giữa trận (đơn vị = 1 + điểm ảnh / 131072 mỗi lần tải), phần của hàng nạp nền · THA_NHO: điểm ảnh — ảnh dựng nhỏ hơn (64 KB) không thả
-  const ATLAS = 2048, TRANG_MAX = 4, RIENG_MAX = 64 << 20, NT_MAX = 8, LE = 1, DINH_MAX = 32768, W9 = 14; // 14 từ 4 byte / đỉnh: x y · u v · u0 v0 u1 v1 (giới hạn lấy mẫu) · lx ly lw lh (toạ độ trong ô, điểm ảnh thiết bị → khử răng cưa mép) · màu · trắng
+  const THA_BAT = !!(WR && CVW && CVW.set && CVH && CVH.set) && TS.get('glm') !== '0', NGUON_MAX = (IOS ? 16 : 32) << 20, THA_CHO = 600, NGUON_CHO = 600, THA_NHO = 16384, TAI_MAX = 4, NAP_DV = 2; // TAI_MAX / NAP_DV: ngân sách tải texture 1 khung giữa trận (đơn vị = 1 + điểm ảnh / 131072 mỗi lần tải), phần của hàng nạp nền · THA_NHO: điểm ảnh — ảnh dựng nhỏ hơn (64 KB) không thả
+  const ATLAS = 2048, TRANG_MAX = 4, RIENG_MAX = (IOS ? 40 : 64) << 20, NT_MAX = 8, LE = 1, DINH_MAX = 32768, W9 = 14; // 14 từ 4 byte / đỉnh: x y · u v · u0 v0 u1 v1 (giới hạn lấy mẫu) · lx ly lw lh (toạ độ trong ô, điểm ảnh thiết bị → khử răng cưa mép) · màu · trắng
   const VS = 'attribute vec2 a_p;attribute vec2 a_uv;attribute vec4 a_gh;attribute vec4 a_c;attribute vec4 a_m;attribute float a_w;uniform vec3 u_kt;varying vec2 v_uv;varying vec4 v_gh;varying vec4 v_c;varying vec4 v_m;varying float v_w;' +
     // u_kt.z = 1: vẽ ra canvas (y lật) · −1: vẽ vào bộ đệm khung (hàng 0 của texture = mép trên ảnh → dùng lại làm nguồn như ảnh thường)
     'void main(){v_uv=a_uv;v_gh=a_gh;v_c=a_c;v_m=a_m;v_w=a_w;gl_Position=vec4(a_p.x*u_kt.x-1.0,(1.0-a_p.y*u_kt.y)*u_kt.z,0.0,1.0);}';
@@ -285,9 +285,9 @@ const GLR = (() => {
         const nhom = new Map(); // trang cũ → các ô giữ lại
         for (const E of ds) {
           if (E.at !== the0 || E.bo) continue; const c = E.cv && E.cv.deref(); if (!c || this.map.get(c) !== E) continue;
-          const tha = c._tha === 1 || c._tha === 2; // đã thả bản CPU: bản GPU là bản duy nhất (ảnh dựng) / bỏ thì phải giải mã lại (ảnh gốc)
+          const tha = c._tha === 2 || (c._tha === 1 && !!c._goc); // đã thả bản CPU: bản GPU là bản duy nhất (ảnh dựng loại 2) / bỏ thì phải giải mã lại (ảnh gốc)
           if (!tha && f - E.dung > 600) continue;
-          if (tha && f - E.dung > 3600) { if (c._tha === 2) this.chet(c); continue; } // đã thả mà cả phút không vẽ: bỏ hẳn (ảnh dựng: gỡ khỏi kho đệm → cần lại thì dựng lại theo khoá)
+          if (tha && f - E.dung > 1500) { if (c._tha === 2) this.chet(c); continue; } // đã thả mà 25 s không vẽ: bỏ hẳn (ảnh dựng: gỡ khỏi kho đệm → cần lại thì dựng lại theo khoá)
           let L = nhom.get(E.tex); if (!L) nhom.set(E.tex, L = []); L.push(E);
         }
         const fb = this._fbDoc || (this._fbDoc = gl.createFramebuffer());
@@ -316,7 +316,7 @@ const GLR = (() => {
       this.xa(); this._donSom = false;
       for (let i = 0; i < ds.length; i++) {
         const E = ds[i], c = E.cv ? E.cv.deref() : null;
-        const duyNhat = c && (c._tha === 1 || c._tha === 2) && !E.bo && this.map.get(c) === E; // canvas đã thả bản CPU: texture là bản duy nhất (ảnh dựng) / bỏ thì phải giải mã lại (ảnh gốc) → không bỏ theo tuổi, chỉ theo ngân sách (trừ khi kho đệm đã bỏ nó: E.bo)
+        const duyNhat = c && (c._tha === 2 || (c._tha === 1 && !!c._goc)) && !E.bo && this.map.get(c) === E; // canvas đã thả bản CPU: texture là bản duy nhất (ảnh dựng) / bỏ thì phải giải mã lại (ảnh gốc) → không bỏ theo tuổi, chỉ theo ngân sách (trừ khi kho đệm đã bỏ nó: E.bo)
         if ((this.f - E.dung > 600 && !duyNhat) || (E.cv && !c) || E.bo) { if (E.tex) gl.deleteTexture(E.tex); E.tex = null; } else ds[j++] = E;
       }
       ds.length = j; this.quenGan(); this._tDon = this.f;
@@ -388,10 +388,13 @@ const GLR = (() => {
       }
       if (im._tha) { // canvas đã thả bản CPU mà chưa có / không còn texture
         if (im._tha === 1 && !this._dangNap) {
-          // ẢNH GỐC: không giải mã đồng bộ giữa khung vẽ — vẽ tạm bằng tầng mip ½ (đã có sẵn do làm nóng) trong lúc ảnh giải mã nền (hàng nạp) rồi mới tải bản đủ nét
-          const m = im._mip && im._mip[1], E1 = m && m !== im && m._tha !== 3 ? this.tra(m, m.width, m.height) : null;
-          if (E1) { this.nap(im); this.bn.thayThe++; const kx = w / m.width, ky = h / m.height; return { tex: E1.tex, x: E1.x * kx, y: E1.y * ky, W: E1.W * kx, H: E1.H * ky }; }
-          if (w * h > 300000 && im._goc && im._goc.decode) { this.nap(im); this.bn.boQua++; return null; } // tờ lớn không có tầng mip: bỏ vẽ 1–3 khung, giải mã nền (không khựng 5–20 ms)
+          // LOẠI 1 (ảnh gốc / tầng mip / ảnh tô màu — dựng lại được trên CPU): không dựng lại đồng bộ giữa khung vẽ nếu tránh được —
+          //   vẽ tạm bằng tầng mip khác của cùng ảnh đã có trên GPU (hoặc tầng ½ còn bản CPU), ảnh thật dựng + tải ở hàng nạp nền (ảnh gốc: Image.decode nền trước)
+          let st = this.thayMip(im, w, h);
+          if (!st && im._goc) { const m = im._mip && im._mip[1], E1 = m && m !== im && !m._tha ? this.tra(m, m.width, m.height) : null; if (E1 && E1.tex) { const kx = w / m.width, ky = h / m.height; st = { tex: E1.tex, x: E1.x * kx, y: E1.y * ky, W: E1.W * kx, H: E1.H * ky }; } }
+          if (st) { this.nap(im); this.bn.thayThe++; return st; }
+          const g = this.gocCua(im);
+          if (g && g._tha === 1 && g.width * g.height > 300000 && g._goc.decode) { this.nap(im); this.bn.boQua++; return null; } // phải giải mã lại tờ lớn: bỏ vẽ 1–3 khung, giải mã nền (không khựng 5–20 ms)
           this.bn.hoiVe++;
         }
         if (!this.hoi(im)) { this.bn.veChet++; return null; } // ảnh gốc → dựng lại từ Image; ảnh dựng → hết (kho đệm sẽ dựng lại)
@@ -412,7 +415,7 @@ const GLR = (() => {
         }
       } catch (e) { im._glLoi = this.the; this.ghiThieu('bo:tai-loi'); return null; }
       E.v = im._glV | 0; this.dem.tai++; this.map.set(im, E); if (this.soat) this.soat(im, E, 1);
-      if (im._tinh && THA_BAT) this._cho.push({ r: E.cv, f: this.f }); // canvas dựng tĩnh vừa có bản GPU: chờ THA_CHO khung yên rồi thả bản CPU (quet)
+      if (im._tinh && !im._dungLai && THA_BAT) this._cho.push({ r: E.cv, f: this.f }); // canvas dựng tĩnh vừa có bản GPU: chờ THA_CHO khung yên rồi thả bản CPU (quet)
       return E;
     },
 
@@ -425,8 +428,15 @@ const GLR = (() => {
     //   · loại 2 — ẢNH DỰNG tĩnh (GLR.tinh: kho đệm REN.cSet, tầng mip, ảnh tô màu): chỉ thả sau khi đã có texture + THA_CHO khung; dựng lại = đọc ngược texture
     //     (readPixels, không mất chất lượng). Texture mất (mất ngữ cảnh) → canvas "hết" (_tha = 3): gỡ khỏi kho theo khoá → lần gọi kế kho dựng lại từ ảnh gốc.
     //   Canvas vẽ lại tại chỗ (GLR.ban / _glD) không bao giờ thả. ?gl=0: không có gì ở đây chạy. Chẩn đoán: GLR.bn (tha / hoi / chet / veChet…).
-    nguon(c, a) { if (!THA_BAT || !c || c._tha !== undefined) return; c._goc = a; c._tha = 0; c._docF = this.f; c._hoiN = 0; this._nguon.push(new WR(c)); },
-    tinh(c, kho, khoa) { if (!THA_BAT || !c || c._tha !== undefined || c._glD || c._nhap || c._glV || !(c instanceof HTMLCanvasElement)) return; c._tinh = 1; c._tha = 0; c._docF = this.f; c._hoiN = 0; c._kho = kho; c._khoa = khoa; if (this.ren && this.ren._dangNong) this.nap(c); }, // dựng trước trong hàng nóng (chưa ai vẽ): tải lên GPU nền luôn
+    nguon(c, a) { if (!THA_BAT || !c || c._tha !== undefined) return; c._goc = a; c._tha = 0; c._docF = c._taoF = this.f; c._hoiN = 0; this._nguon.push(new WR(c)); },
+    // dung (tuỳ chọn) = hàm (canvas) → vẽ lại nội dung từ nguồn của nó (tầng mip từ tầng trên, ảnh tô màu từ ảnh gốc), trả false nếu chưa dựng được:
+    //   có dung → canvas thuộc loại 1 (dựng lại trên CPU, không cần GPU): thả khi yên THA_CHO khung dù chưa từng lên GPU.
+    tinh(c, kho, khoa, dung) {
+      if (!THA_BAT || !c || c._tha !== undefined || c._glD || c._nhap || c._glV || !(c instanceof HTMLCanvasElement)) return;
+      c._tinh = 1; c._tha = 0; c._docF = c._taoF = this.f; c._hoiN = 0; c._kho = kho; c._khoa = khoa;
+      if (dung) { c._dungLai = dung; this._nguon.push(new WR(c)); }
+      if (this.ren && this.ren._dangNong) this.nap(c); // dựng trước trong hàng nóng (chưa ai vẽ): tải lên GPU nền luôn
+    },
     // kho đệm bỏ canvas này (xoay thế hệ / dọn kho): texture của nó không cần giữ nữa
     bo(c) { if (!c || c._tha === undefined || !this.map) return; const E = this.map.get(c); if (E && E.the === this.the && !E.bo) { E.bo = 1; if (E.rieng) this._donSom = true; } },
     boKho(kho) { if (!THA_BAT || !this.gl || !kho) return; for (const k in kho) { const c = kho[k]; if (c && c._tha !== undefined) this.bo(c); } },
@@ -446,10 +456,10 @@ const GLR = (() => {
       const t = c._tha; if (!t) return true; if (t === 3) return false;
       const t0 = this.now(), w = c.width, h = c.height;
       if (t === 1) {
-        this.boTha(c); CVW.set.call(c, w); CVH.set.call(c, h);
-        try { CVP.getContext.call(c, '2d').drawImage(c._goc, 0, 0); } catch (e) { }
+        this.boTha(c); CVW.set.call(c, w); CVH.set.call(c, h); let ok = true;
+        try { if (c._goc) CVP.getContext.call(c, '2d').drawImage(c._goc, 0, 0); else ok = c._dungLai(c) !== false; } catch (e) { ok = false; }
         c._docF = this.f; c._hoiN++; this.bn.hoi++;
-        if (typeof REN !== 'undefined' && REN.laRong(c)) { this.bn.hoiLoi++; this.tha(c, 1); return false; } // giải mã lại ra rỗng (iOS hết bộ nhớ): thả lại, lần đọc sau thử tiếp
+        if (!ok || (c._goc && typeof REN !== 'undefined' && REN.laRong(c))) { this.bn.hoiLoi++; this.tha(c, 1); return false; } // dựng lại ra rỗng (iOS hết bộ nhớ / nguồn chưa có): thả lại, lần đọc sau thử tiếp. Chỉ kiểm ảnh gốc (đã qua kiểm lúc chép lần đầu): tầng mip / ảnh tô màu của tia mảnh thu về 16×16 có thể ra rỗng dù đúng
         this.ghiHoi(t0); return true;
       }
       const E = this.map && this.map.get(c);
@@ -482,7 +492,8 @@ const GLR = (() => {
     },
     matHet() { // mất ngữ cảnh / tắt GL: mọi ảnh dựng đã thả hết bản duy nhất
       for (const r of this._thaDs) { const c = r.deref(); if (c && c._tha === 2) this.chet(c); }
-      this._thaDs.length = 0; this._cho.length = 0;
+      this._thaDs.length = 0; this._cho.length = 0; for (const q of this._napDs) q._napCho = 0; this._napDs.length = 0;
+      if (!this.bat) for (const r of this._nguon) { const c = r.deref(); if (c && !c._tha) c._goc = null; } // GL tắt hẳn: ảnh gốc còn bản canvas không cần giữ Image nữa (như bản 2D: 1 bản điểm ảnh)
     },
     // 30 khung 1 lần: thả ảnh gốc đã yên + ảnh dựng đã có texture đủ lâu
     quet() {
@@ -490,6 +501,7 @@ const GLR = (() => {
       for (let i = 0; i < ng.length; i++) {
         const c = ng[i].deref(); if (!c || (!c._tha && !c.width)) continue; ng[j++] = ng[i];
         if (c._tha) continue;
+        if (c._dungLai && (c._glV || c.width * c.height < 4096)) continue; // vẽ lại tại chỗ / rất nhỏ: không thả
         if (f - c._docF > (NGUON_CHO << Math.min(5, c._hoiN)) && !c._napCho) this.tha(c, 1); else { b += c.width * c.height * 4; song.push(c); }
       }
       ng.length = j;
@@ -500,7 +512,6 @@ const GLR = (() => {
         if (f - Math.max(q.f, c._docF) <= (THA_CHO << Math.min(5, c._hoiN))) { ch[j++] = q; continue; }
         const E = this.map.get(c); if (!this.hopLe(E) || E.bo || E.v !== (c._glV | 0)) continue;
         if (c.width * c.height < THA_NHO) continue; // canvas nhỏ (biểu tượng, hạt): giữ bản CPU — rẻ, lại hay bị đọc lại để dựng biến thể
-        if (Array.isArray(c._kho) && c._kho[c._kho.length - 1] === c && Math.min(c.width, c.height) >= 16) { q.f = f; ch[j++] = q; continue; } // tầng mip cuối chuỗi: nguồn dựng tầng kế → giữ
         this.tha(c, 2); this._thaDs.push(q.r);
       }
       ch.length = j;
@@ -513,7 +524,7 @@ const GLR = (() => {
       P.drawImage = function (im) {
         if (im) {
           if (R.bat && !R.mat && R.ren && this === R.ren._cn) { R.nap(im); return; } // vẽ "làm nóng" vào canvas nháp 2×2 (REN.ctxNong): bản GL = xếp tải texture nền, không đọc điểm ảnh
-          const t = im._tha; if (t !== undefined) { if (t && !R.hoi(im)) return; im._docF = R.f; if (!R.ren || this !== R.ren._rk) im._doc2 = 1; } // _doc2: có người đọc điểm ảnh 2D (nguồn dựng ảnh khác) → ảnh dựng này không thả nữa
+          const t = im._tha; if (t !== undefined) { if (t && !R.hoi(im)) return; im._docF = R.f; if (R.f - im._taoF > 300 && (!R.ren || this !== R.ren._rk)) im._doc2 = 1; } // _doc2: bị đọc điểm ảnh 2D MUỘN (> 5 s sau khi dựng = nguồn dựng ảnh khác, dùng lặp lại) → ảnh dựng loại 2 này không thả
         }
         return g.apply(this, arguments);
       };
@@ -526,6 +537,8 @@ const GLR = (() => {
       if (this.hopLe(this.map.get(im)) || this._napDs.length > 600) return;
       im._napCho = 1; if (truoc) this._napDs.unshift(im); else this._napDs.push(im);
     },
+    // ảnh gốc (canvas chép từ Image) mà canvas loại 1 này dựng lại từ đó: chính nó, hoặc gốc chuỗi mip của nó; không rõ → null
+    gocCua(im) { if (im._goc) return im; const r = Array.isArray(im._kho) ? im._kho[0] : null; return r && r._goc ? r : null; },
     // hình thay thế: tầng mip khác (gần nhất) của cùng chuỗi đã có texture → mục texture "ảo" co giãn về toạ độ của im; không có → null
     thayMip(im, w, h) {
       const ch = Array.isArray(im._kho) ? im._kho : im._mip; if (!ch || ch.length < 2) return null;
@@ -545,10 +558,13 @@ const GLR = (() => {
           if ((n && (n >= nMax || px >= pxMax)) || (!tai && this._taiDv >= NAP_DV)) { ds[j++] = im; continue; }
           const w = im.naturalWidth || im.width, h = im.naturalHeight || im.height;
           if (!w || !h || im._tha === 3 || (im.tagName === 'IMG' && !im.complete)) { im._napCho = 0; continue; }
-          if (im._tha === 1) { // ảnh gốc đã thả: giải mã nền trước
-            if (!im._giai) { im._giai = 1; const a = im._goc, xong = () => { im._giai = 2; }; try { a.decode().then(xong, xong); } catch (e) { im._giai = 2; } }
-            if (im._giai === 1) { ds[j++] = im; continue; }
-            im._giai = 0;
+          if (im._tha === 1) { // loại 1 đã thả: ảnh gốc của nó (nếu cũng đã thả) giải mã NỀN trước, xong mới dựng lại (chép / thu nhỏ: rẻ)
+            const g = this.gocCua(im);
+            if (g && g._tha === 1 && g._goc.decode) {
+              if (!g._giai) { g._giai = 1; const xong = () => { g._giai = 2; }; try { g._goc.decode().then(xong, xong); } catch (e) { g._giai = 2; } }
+              if (g._giai === 1) { ds[j++] = im; continue; }
+              g._giai = 0;
+            }
           }
           im._napCho = 0; const t0 = this.dem.tai;
           if (this.tra(im, w, h) && this.dem.tai > t0) { n++; px += w * h; this.bn.nap++; }

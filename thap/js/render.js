@@ -188,7 +188,8 @@ const REN = {
       if (d / 2 < can || d < 8) return c;
       if (!ch[i + 1]) {
         const t = document.createElement('canvas'); t.width = Math.max(1, Math.round(c.width / 2)); t.height = Math.max(1, Math.round(c.height / 2));
-        this.c2d(t).drawImage(c, 0, 0, t.width, t.height); ch[i + 1] = t; if (_GLB()) GLR.tinh(t, ch, i + 1);
+        this.c2d(t).drawImage(c, 0, 0, t.width, t.height); ch[i + 1] = t;
+        if (_GLB()) { const r = ch[0], cpu = r && (r._goc || r._dungLai); GLR.tinh(t, ch, i + 1, cpu ? (cv) => { const p = ch[i]; if (!p || p._tha === 3 || !p.width) return false; this.c2d(cv).drawImage(p, 0, 0, cv.width, cv.height); return true; } : null); } // WebGL: tầng mip của ảnh gốc / ảnh tô màu dựng lại được trên CPU → thả khi yên
       }
       i++;
     }
@@ -341,7 +342,7 @@ const REN = {
     const c = document.createElement('canvas'); c.width = im.width; c.height = im.height;
     const x = c.getContext('2d'); x.drawImage(im, 0, 0);
     x.globalCompositeOperation = 'source-atop'; x.globalAlpha = a || 0.78; x.fillStyle = mau; x.fillRect(0, 0, c.width, c.height); // vetay-ok: png (tô màu ảnh trắng fx_*)
-    if (_GLB()) GLR.tinh(c, M, key);
+    if (_GLB()) GLR.tinh(c, M, key, (cv) => { const g = this.img(ten); if (!g || !g.width) return false; const q = cv.getContext('2d'); q.drawImage(g, 0, 0); q.globalCompositeOperation = 'source-atop'; q.globalAlpha = a || 0.78; q.fillStyle = mau; q.fillRect(0, 0, cv.width, cv.height); return true; }); // vetay-ok: png (dựng lại đúng bản tô màu)
     return (M[key] = c);
   },
   // thanh máu = h2_thanh.png: nền tô đen + phần đầy CẮT theo tỉ lệ, tô màu (QUY-TAC-HINH mục 3)
