@@ -9,7 +9,7 @@
 
 const TRUM_MOI = {
   hive:      { ten: 'HIVE MOTHER',   kn: 'SWARM',        mo: 'Launches 4 drones ahead of itself (6 from wave 40)',            nguy: 'Launches drone swarms',            mau: '#ffb648', tuWave: 10, hp: 0.85, v: 13, anhTam: 'mad_crown' },
-  jammer:    { ten: 'STATIC JAMMER', kn: 'JAM',          mo: 'Jams 2 turrets (supports first): no fire, no merge, no aura 6 s', nguy: 'Jams 2 turrets — supports first', mau: '#b77dff', tuWave: 20, hp: 0.9, v: 15, anhTam: 'freezer' },
+  jammer:    { ten: 'STATIC JAMMER', kn: 'JAM',          mo: 'Chains 2 turrets (supports first) until you merge onto one of them: no fire, no aura, cannot be dragged', nguy: 'Chains 2 turrets — merge onto one to free both', mau: '#b77dff', tuWave: 20, hp: 0.9, v: 15, anhTam: 'freezer' },
   prism:     { ten: 'PRISM WARDEN',  kn: 'PRISM SHIELD', mo: '−90% damage until hit by 3 different turret types (4 from wave 40); re-shields ~8 s after breaking', nguy: '−90% damage until hit by 3–4 turret types', mau: '#7ff0ff', tuWave: 20, hp: 1.15, v: 13, anhTam: 'janus' },
   twin_core: { ten: 'TWIN CORE',     kn: 'SPLIT',        mo: 'Splits into 2 fast cores when destroyed',      nguy: 'Splits in two when destroyed',     mau: '#ff4b5a', tuWave: 30, hp: 0.7, v: 15, anhTam: 'joker_king' },
   patcher:   { ten: 'PATCH TITAN',   kn: 'REPAIR',       mo: 'Heals itself 12% and every enemy in its lane 35%', nguy: 'Repairs itself and every enemy',  mau: '#5dff8a', tuWave: 30, hp: 0.85, v: 12, anhTam: 'octopus' },
@@ -52,6 +52,7 @@ const TRUM_KN = {
   },
   jammer: {
     chon(E, B, ds) {
+      if (B && B.t.some(T => T && T.xich && T.xich.E === E.uid)) return null; // 12/11: xích không tự hết → mỗi trùm chỉ giữ 1 cặp xích; còn xích thì KHÔNG niệm tiếp (bot: xích dồn kín bàn = bức tường)
       const r = rngTrum(E); // tất định (online lockstep) — game.js
       ds = ds.filter(T => !biKhoa(T)); // ụ khoá (băng) không nhận Câm mới — rà cộng hưởng 07/11, người dùng chốt
       const ht = tronTrum(ds.filter(T => SKILLS[T.id] && SKILLS[T.id].vai === 'ht' && !(T.st.cam > 0)), r);
@@ -61,8 +62,10 @@ const TRUM_KN = {
     lam(E, B, muc) {
       for (const T of muc) {
         const c = B.o[T.o]; G.hu.push({ k: 'chieuTrum', t: 0, song: 0.45, x0: E.x, y0: E.y, x1: c.x, y1: c.y, mau: TRUM_MOI.jammer.mau });
-        T.st.kep = Math.max(T.st.kep || 0, TRM.JAM_S); T.st.cam = TRM.JAM_S; // xích có sẵn (vong_xich) + cờ câm → xoá debuff gỡ được
-        TRM.fx('jammer', 'set_nho', c.x, c.y, 80, 0.45); TRM.chu(c.x, c.y - 22, 'JAMMED', TRUM_MOI.jammer.mau, 12);
+        // 12/11 (người dùng: "giống hệt Freezer"): XÍCH KHÔNG TỰ HẾT — T.xich = { E: uid trùm, doi: uid ụ bị xích cùng lượt }; XICH.buoc giữ st.kep (vòng xích có sẵn) + st.cam
+        const doi = muc.find(X => X !== T);
+        T.xich = { E: E.uid, doi: doi ? doi.uid : 0 }; T.st.kep = Math.max(T.st.kep || 0, XICH.GIU); T.st.cam = 1;
+        TRM.fx('jammer', 'set_nho', c.x, c.y, 80, 0.45); TRM.chu(c.x, c.y - 22, 'CHAINED', TRUM_MOI.jammer.mau, 12);
       }
     },
   },
@@ -202,20 +205,60 @@ chet = function (E, B) {
   }
 };
 
-// ---------- STATIC JAMMER: ụ bị câm không bắn, không ghép (hết khi xích st.kep bị gỡ / hết giờ) ----------
+// ---------- STATIC JAMMER: ụ bị XÍCH không bắn, không hào quang, không kéo đi được — KHÔNG tự hết theo giờ (12/11) ----------
+//  GỠ: ghép một ụ bất kỳ VÀO ụ bị xích (ghép thường đúng luật sao / loại, Wild Link, hoặc ghép đặc biệt quaKhoa như Merge King +★) → đứt cho CẢ HAI ụ của lượt đó.
+//  AN TOÀN: trùm đã xích chết / lọt → đứt · ụ còn lại của cặp biến mất / đổi loại → đứt · xoá debuff (Cleanser, Eve… đặt st.kep = 0) → đứt cả cặp · hoá đá → đứt.
+//  Tất định: chỉ đọc / ghi trạng thái trận. Online: bàn con rối (B.net) lấy st.kep ('y') + st.cam ('Z') từ cờ ô của máy chủ bàn (dongbo.js).
+const XICH = {
+  GIU: 9, // st.kep được giữ ở mức này (game.js tự trừ mỗi khung) → vòng xích + ×0,6 tốc có sẵn không tắt
+  dut(B, T, chu) {
+    if (!T || !T.xich) return; T.xich = null; T.st.cam = 0; T.st.kep = 0; T.sang = 1;
+    if (chu) { const c = B.o[T.o]; if (c) { TRM.chu(c.x, c.y - 22, 'FREED', '#b8ffc8', 12); try { TRM.fx('jammer', 'set_nho', c.x, c.y, 70, 0.4); FX.tiaLua(c.x, c.y, 10, '#d9a8ff', 150, 9); } catch (e) { } } } // xích đứt: nổ nhỏ + tia (hiệu ứng sẵn có, chỉ hình)
+  },
+  cap(B, T) { const d = T.xich && T.xich.doi; return d ? B.t.find(N => N && N.uid === d && N.xich) : null; },
+  buoc(B) {
+    if (B.net) return;
+    for (const T of B.t) {
+      if (!T || !T.xich) continue;
+      const doi = this.cap(B, T), song = G.quai.some(E => E.uid === T.xich.E && !E.chet);
+      if (!song || T.st.da || !(T.st.kep > 0)) { this.dut(B, T, true); if (doi) this.dut(B, doi, true); continue; } // trùm chết · hoá đá · bị xoá debuff: đứt cả cặp
+      if (T.xich.doi && !doi) { this.dut(B, T, true); continue; } // ụ kia đã biến mất / được gỡ
+      T.st.kep = Math.max(T.st.kep, this.GIU); T.st.cam = 1;
+    }
+  },
+  // đích b đang bị xích có nhận a không: ghép thường đúng luật / Wild Link, hoặc ghép đặc biệt quaKhoa của ụ KÉO
+  nhan(a, b) { const db = ghepDBHop(a, b); return db ? !db.dao && !!db.sk.ghepDB.quaKhoa : _hopLeGhepGoc(a, b); },
+};
+window.XICH = XICH; // cho công cụ kiểm thử (tools/thap-kt-b3.js)
+{ const cb = capNhatBan; capNhatBan = function (B, dt) { try { XICH.buoc(B); } catch (e) { console.error('XICH', e); } return cb.apply(this, arguments); }; }
 const _capNhatUGoc = capNhatU;
 capNhatU = function (B, T, dt) {
   if (T.st.cam > 0) {
     if (!(T.st.kep > 0)) T.st.cam = 0;
-    else { T.st.cam -= dt; if (T.anim) T.anim.t += dt; T.sang = Math.max(0, T.sang - dt * 3); return; }
+    else { if (!T.xich) T.st.cam -= dt; if (T.anim) T.anim.t += dt; T.sang = Math.max(0, T.sang - dt * 3); return; }
   }
   return _capNhatUGoc(B, T, dt);
 };
 const _hopLeGhepGoc = hopLeGhep;
 hopLeGhep = function (a, b) {
-  if ((a && a.st && a.st.cam > 0) || (b && b.st && b.st.cam > 0)) return false;
+  if (a && a.st && a.st.cam > 0) return false; // ụ bị xích / câm không kéo đi được
+  if (b && b.st && b.st.cam > 0) return !!(a && b.xich && a !== b) && XICH.nhan(a, b); // ụ bị XÍCH làm ĐÍCH được (ghép vào để gỡ); câm kiểu cũ (không xích): không
   return _hopLeGhepGoc(a, b);
 };
+// ghép VÀO ụ bị xích thành công → đứt xích cho cả cặp
+{ const g0 = ghep; ghep = function (B, a, b, ep) {
+  const x = b && b.xich && !ep ? { ban: b.ban, uid: b.uid, doi: b.xich.doi } : null;
+  const r = g0.apply(this, arguments);
+  if (x && r) { const BB = G.ban[x.ban]; if (BB) for (const T of BB.t) if (T && T.xich && (T.uid === x.uid || T.uid === x.doi)) XICH.dut(BB, T, true); }
+  return r;
+}; }
+// máy (đồng đội / đối thủ / bot ?auto): ưu tiên ghép gỡ xích trước mọi việc khác
+{ const ai0 = aiBan; aiBan = function (B, dt) {
+  if (B.aiT - dt <= 0 && B.t.some(T => T && T.xich)) {
+    for (const b of B.t) if (b && b.xich) for (const a of B.t) if (a && a !== b && !a.xich && hopLeGhep(a, b)) { B.aiT = G.che === 'pvp' && B.ai ? 0.9 : 0.6; ghep(B, a, b); return; }
+  }
+  return ai0.apply(this, arguments);
+}; }
 
 // ---------- lịch trùm: ?trum=<id> ----------
 const _trumCuaWaveGoc = trumCuaWave;

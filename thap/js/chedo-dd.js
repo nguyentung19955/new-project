@@ -206,7 +206,7 @@ const MOCW = {
 // ===================================================== CÚP PVP · TÚI THẮNG · ĐỒNG ĐỘI CHO NGƯỜI MỚI (theo DCDW, người dùng chốt 11/11 19:06) =====================================================
 //  · CÚP: thắng PVP +30, thua −20 (không âm). Mốc cúp CAO NHẤT đạt lần đầu → thưởng 1 lần (ghi cờ trước khi phát). Lưu: turret_kt.cd.cup { c, max, nhan }.
 //  · ĐỐI THỦ MÁY theo cúp (CUPC.doKho): bậc ụ được dùng + cấp thẻ → người mới 0 cúp gặp bộ Trắng / Xanh cấp đầu.
-//  · TÚI THẮNG: thắng PVP → Rương Trận rơi với xác suất CUPC.pRuong, TẤT ĐỊNH theo hạt trận (rngHat); thua PVP: chỉ vàng. Game chưa có khe rương hẹn giờ
+//  · TÚI THẮNG: thắng PVP → Rương Trận rơi với xác suất CUPC.pRuong, TẤT ĐỊNH theo hạt trận (rngHat); thua PVP: chỉ vàng. 12/11: rương thắng vào KHE RƯƠNG (khe.js). Trước đó: chưa có khe rương hẹn giờ
 //    → rương mở ngay như cũ (KHÔNG dựng khe / trần 4 rương).
 //  · CO-OP: chơi và nhận thưởng KHÔNG giới hạn như cũ (người dùng 19:08 bác "3 lượt thưởng / ngày" — không làm).
 //  · NGƯỜI MỚI (cấp phi công ≤ MOIC.cap): đồng đội máy CO-OP dùng bộ cố định toàn ụ gây sát thương Trắng / Xanh (MOIC.bo) thay vì ngẫu nhiên.
@@ -255,6 +255,8 @@ const CUP = {
     const r = this.ket(!!k.thang), ke = this.ke();
     let h = '<div class="tb-kq cd-kq dd-xd"><small><img src="' + CDUI.a('ic_cup') + '" alt="" style="width:18px;height:18px;vertical-align:-4px;margin-right:4px">CUPS ' + CDUI.so(r.c) + ' (' + (r.d >= 0 ? '+' : '−') + Math.abs(r.d) + ')' + (ke ? ' · NEXT PRIZE ' + CDUI.so(ke) : '') + '</small>';
     if (r.moc.length) h += '<small>CUP MILESTONE · ' + CDUI.so(Math.max.apply(null, r.moc)) + '</small>' + DDUI.thuongGon(r.ra);
+    const m = typeof KQ !== 'undefined' && KQ.m; // khe rương (khe.js): rương thắng đã vào khe / khe đầy
+    if (m && m._khe != null && typeof KHEC !== 'undefined') h += '<small class="khe-kq' + (m._khe < 0 ? ' day' : '') + '">' + (m._khe < 0 ? 'CHEST SLOTS FULL' : 'BATTLE CHEST → SLOT ' + (m._khe + 1) + '/' + KHEC.so + ' · OPENS IN ' + KHEC.phut + ' MIN') + '</small>';
     chi.insertAdjacentHTML('beforeend', h + '</div>');
     try { OT.quet(chi); } catch (e) { }
   },
@@ -435,10 +437,13 @@ function boDongDoiMoi() { const d = MOIC.bo.filter(id => SKILLS[id] && G.rosterM
     const th = THEBAI.thuong;
     THEBAI.thuong = function (k, m) {
       if (!m || m.tut || m._thuong || G.dd) return th.apply(this, arguments);
-      const khong = m.che === 'pvp' && !(k && k.thang && CUP.roi(G.hat));
-      if (!khong) return th.apply(this, arguments);
+      if (m.che !== 'pvp') return th.apply(this, arguments);
+      const roi = !!(k && k.thang && CUP.roi(G.hat)), khe = typeof KHE !== 'undefined'; // 12/11: có KHE RƯƠNG (khe.js) → rương thắng vào khe, mở sau; không có → mở ngay như cũ
+      if (roi && !khe) return th.apply(this, arguments);
       const sl = THEBAI.soLuot; THEBAI.soLuot = () => 0;
-      try { return th.apply(this, arguments); } finally { THEBAI.soLuot = sl; }
+      let r; try { r = th.apply(this, arguments); } finally { THEBAI.soLuot = sl; }
+      if (r && roi) { try { m._khe = KHE.them({ w: (k && k.wave) || G.wave || 1, d: m.deck }); } catch (e) { console.error('KHE', e); } }
+      return r;
     };
     const kq3 = UI.ketQua;
     UI.ketQua = function (k) {
@@ -447,6 +452,7 @@ function boDongDoiMoi() { const d = MOIC.bo.filter(id => SKILLS[id] && G.rosterM
       if (G.dd || tut || thu || !G.ban.length) return kq3.apply(this, arguments);
       const x = kq3.apply(this, arguments);
       try { if (G.che === 'pvp') CUP.kq(k); } catch (e) { console.error('CUP', e); }
+      try { const m = typeof KQ !== 'undefined' && KQ.m; if (G.che === 'pvp' && m && m._thuong && !m._thuong.the.length) { const b = document.querySelector('#ketqua .tb-kq [data-act="sh-kq-mo"]'); if (b) b.remove(); } } catch (e) { } // túi thắng không rơi: không hiện nút OPEN của rương rỗng
       return x;
     };
     if (typeof HM !== 'undefined') {
@@ -479,6 +485,9 @@ function boDongDoiMoi() { const d = MOIC.bo.filter(id => SKILLS[id] && G.rosterM
   }
   // hướng dẫn: màn mở đầu trận chỉ nói tới trùm wave 10 của hướng dẫn (không liệt kê trùm wave 20 / 30)
   if (typeof VT !== 'undefined' && VT.dsTrum && typeof HD !== 'undefined') { const ds3 = VT.dsTrum; VT.dsTrum = function () { return HD.dang ? [HD.WAVE_TRUM] : ds3.apply(this, arguments); }; }
+
+  // trang chi tiết Twin Anvil: dòng TWIN-FORGED kèm huy hiệu (ảnh ChatGPT loren_songsinh)
+  if (typeof TBUI !== 'undefined' && TBUI.hang) { const hg = TBUI.hang; TBUI.hang = function (id) { const s = hg.apply(this, arguments); return s && id === 'loren' ? s + '<div class="mh-nguon"><small>TWIN-FORGED</small><span><img src="assets/loren_songsinh.png" alt="" style="width:30px;height:30px;vertical-align:middle;margin-right:6px">Equal Damage and Speed stacks on one turret: both stay, each ×' + SKILLS.loren.SONG + '</span></div>' : s; }; }
 
   // ---- HOME → EVENT: thẻ Đường Đua + bảng xếp hạng ở đầu tab sự kiện ----
   if (typeof KTUI !== 'undefined' && KTUI.ve_sk) { const g = KTUI.ve_sk; KTUI.ve_sk = function () { let t = ''; try { t = DDUI.theSk(); } catch (e) { console.error('DD', e); } return t + g.apply(this, arguments); }; }
@@ -536,6 +545,15 @@ function boDongDoiMoi() { const d = MOIC.bo.filter(id => SKILLS[id] && G.rosterM
     'Beat an AI rival · cups #': 'Thắng đối thủ máy · cúp #', 'Beat an AI rival · cups # · next prize: #': 'Thắng đối thủ máy · cúp # · mốc kế: #', 'Beat an AI rival · cups # · next prize: #,#': 'Thắng đối thủ máy · cúp # · mốc kế: #.#',
     'Beat an AI rival · cups #,# · next prize: #,#': 'Thắng đối thủ máy · cúp #.# · mốc kế: #.#', 'Beat an AI rival · cups #,#': 'Thắng đối thủ máy · cúp #.#',
     'AI ally · # shared lives': 'Đồng đội máy · # mạng chung', 'AI ally · # shared lives · next prize: wave #': 'Đồng đội máy · # mạng chung · mốc kế: wave #',
+    // 12/11 Twin Anvil (sát cạnh · song sinh · +★ = +cộng dồn) + trùm Static Jammer (xích)
+    'CHAINED': 'BỊ XÍCH', 'FREED': 'ĐÃ GỠ XÍCH', 'chained · merge a turret onto it': 'bị xích · ghép một ụ vào để gỡ',
+    'Chains # turrets (supports first) until you merge onto one of them: no fire, no aura, cannot be dragged': 'Xích # ụ (ưu tiên hỗ trợ) tới khi bạn ghép một ụ vào một trong hai: không bắn, không hào quang, không kéo đi được',
+    'Chains # turrets — merge onto one to free both': 'Xích # ụ — ghép vào một ụ để gỡ cả hai',
+    'JAM: Chains # turrets (supports first) until you merge onto one of them: no fire, no aura, cannot be dragged': 'JAM: Xích # ụ (ưu tiên hỗ trợ) tới khi bạn ghép một ụ vào một trong hai: không bắn, không hào quang, không kéo đi được',
+    'Equal Damage and Speed stacks on one turret: both stay, each ×#.#': 'Cộng dồn Sát thương và Tốc bằng nhau trên một ụ: giữ cả hai, mỗi buff ×#.#',
+    'TWIN-FORGED': 'SONG SINH', 'NOT ADJACENT': 'KHÔNG SÁT CẠNH', 'Drag onto a turret next to it': 'Kéo lên ụ sát cạnh nó', 'Equal Damage + Speed stacks: TWIN-FORGED ×#.#': 'Cộng dồn ST = Tốc: SONG SINH ×#.#', 'Max # · +# per ★ gained': 'Tối đa # · +# mỗi ★ nhận',
+    'Special: each Anvil is a Damage or a Speed type. Drag onto an Anvil of the SAME type to add stacks (max #, risky: it can fail and lose the dragged one). Drag onto a turret NEXT TO it (not diagonal): it gets +#% damage or +#% fire rate per stack for good (lost if that turret merges). A turret with both forges at EQUAL stacks is TWIN-FORGED: both stay, each ×#.#; unequal: the bigger one stays. Each ★ the Anvil gains in place adds # stack': 'Đặc biệt: mỗi Anvil là dạng Sát thương hoặc dạng Tốc. Kéo lên Anvil CÙNG dạng để cộng dồn (tối đa #, có rủi ro: hỏng thì mất ụ kéo). Kéo lên ụ SÁT CẠNH nó (không chéo): ụ đó +#% sát thương hoặc +#% tốc bắn mỗi cộng dồn, vĩnh viễn (mất nếu ụ đó đem ghép). Ụ có cả hai kiểu rèn với cộng dồn BẰNG NHAU là SONG SINH: giữ cả hai, mỗi buff ×#.#; lệch nhau: chỉ giữ kiểu lớn hơn. Mỗi ★ Anvil nhận tại chỗ cộng # cộng dồn',
+    'Special: each Anvil is a Damage or a Speed type. Drag onto an Anvil of the SAME type to add stacks (max #, risky: it can fail and lose the dragged one). Drag onto a turret NEXT TO it (not diagonal): it gets +#% damage or +#% fire rate per stack for good (lost if that turret merges). A turret with both forges at EQUAL stacks is TWIN-FORGED: both stay, each ×#.#; unequal: the bigger one stays. Each ★ the Anvil gains in place adds # stack.': 'Đặc biệt: mỗi Anvil là dạng Sát thương hoặc dạng Tốc. Kéo lên Anvil CÙNG dạng để cộng dồn (tối đa #, có rủi ro: hỏng thì mất ụ kéo). Kéo lên ụ SÁT CẠNH nó (không chéo): ụ đó +#% sát thương hoặc +#% tốc bắn mỗi cộng dồn, vĩnh viễn (mất nếu ụ đó đem ghép). Ụ có cả hai kiểu rèn với cộng dồn BẰNG NHAU là SONG SINH: giữ cả hai, mỗi buff ×#.#; lệch nhau: chỉ giữ kiểu lớn hơn. Mỗi ★ Anvil nhận tại chỗ cộng # cộng dồn.',
     'RACE TRACK': 'ĐƯỜNG ĐUA', '8 minutes with an AI ally · beat your weekly score': '8 phút cùng đồng đội máy · vượt điểm tuần của bạn',
     'Week best #': 'Điểm tuần #', 'Week best #,#': 'Điểm tuần #.#', 'Week best —': 'Điểm tuần —',
     'Week # · best #,#': 'Tuần # · cao nhất #.#',

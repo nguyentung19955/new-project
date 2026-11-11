@@ -114,6 +114,7 @@ const KG = {
     if (this.soMeo() >= 3 && (s === this.TXT.tip || s === this.TXT.tapTip)) return;
     if (!this._tip || this._tip.s !== s) this._tip = { s, t0: performance.now() };
     const u = Math.min(1, (performance.now() - this._tip.t0) / 140);
+    if (src.id === 'loren') { this.tam(ctx, s, B.x + B.w / 2, B.y - 12, 13, '#eaf6ff', u, 0.9 + 0.1 * u); return; } // Twin Anvil (12/11): nhãn nằm TRÊN mép bàn — trước đó che ụ ở hàng trên ô đích
     this.tam(ctx, s, c.x, c.y - Math.min(B.cw, B.ch) * 0.78, 13, '#eaf6ff', u, 0.9 + 0.1 * u);
   },
   // tấm chữ (ảnh nhan_kn) + chữ canvas

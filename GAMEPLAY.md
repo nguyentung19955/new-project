@@ -1445,12 +1445,23 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - Nhãn admin thêm ` · m234+133` (MB canvas đệm + MB texture GL, 5 s đo 1 lần). CHƯA giảm bộ nhớ — việc của phần hoàn tất WebGL đợt 2+3 (bỏ bản canvas CPU sau khi đã vào atlas / hạ ngân sách trên iOS).
 - Biểu tượng chế độ mới (ảnh ChatGPT 11/11, cắt từ 1 tấm 3×2, 192 px): `ic_coop`, `ic_pvp` (thay hình ụ cơ khí cũ), `ic_online`, `ic_race`, `ic_tutorial`, `ic_cup` (ô cúp ở kết quả PVP). Đã xem ảnh GAME MODE 390×844.
 
+- Merge King VÀNG: bỏ 2 ngôi sao ở mũi vương miện trong ảnh `vughepvang_nong.png` (người dùng 11/11: lẫn với sao cấp ★ vẽ trên đầu ụ); vẫn phân biệt bằng màu vàng + kim cương trắng.
+
+- Chạm–chạm để ghép (ui.js): chọn ụ TRƯỚC khi mở dải thông tin và bọc try/catch `moTT` (6 lớp bọc; lỗi riêng trên iPhone làm mất lựa chọn → không sáng ô đích); `pointercancel` khi không có thao tác dở không còn xoá lựa chọn. Chưa tái hiện được trên máy thử — chờ người dùng thử lại trên iPhone.
 ## claude/demo-hop-tuong — gộp claude/che-do-dcdw + sửa sau gộp (11/11 tối)
 - Gộp `cb056a1` (người dùng duyệt): bỏ Leo Tháp + Săn Trùm / Thử thách ngắn / Thử thách tuần / Vô tận, thêm Đường Đua (Race Track), cúp PVP + túi thắng + bảo hiểm rương, hướng dẫn riêng, 6 biểu tượng chế độ. Thiết kế: `docs/demo-hop-tuong/tuvan/che-do-dcdw/THIET-KE.md`.
 - Sửa sau gộp: nhãn nhiệm vụ `CO-OP: wave #` có bản tiếng Việt (`CO-OP: đợt #`); nút SUMMON tắt KHÔNG dùng `opacity` nữa (vi phạm `thap-kt-nut-trieu`: nút phải hiện rõ) → phủ lớp tối tròn `::after`; nhật ký khung chậm của admin mặc định ẨN (chạm nhãn FPS để hiện).
 - Kiểm: `thap-kt-cup`, `thap-kt-duong-dua`, `thap-kt-nut-trieu` đạt; ảnh HOME / GAME MODE / Đường Đua / kết quả CO-OP / PVP đã xem. Hồi quy đầy đủ: các lỗi còn lại đã đối chiếu với bản TRƯỚC gộp và trước lô hình/cân bằng — có sẵn từ trước (vetay, kéo-thả cuon-doc, conghuong2, vang-sua, matran, cong-huong-luat 34/406, CARD LV khoisinh/congap, online-sanh); CHƯA đối chiếu: "ngâm ngắn: ketqua-tran | B ra ngoài màn" (2×).
 - Rules Firebase cho `lb/dd` (mẫu ở THIET-KE mục 4): người dùng tự Publish (ràng buộc: phiên không đổi cấu hình production) → tới lúc đó bảng Đường Đua hiện "NOT CONNECTED · personal best only".
 
+## claude/che-do-dcdw — QUESTS 3 thẻ con · Twin Anvil (sát cạnh, song sinh, +★) · Static Jammer xích không tự hết (12/11, người dùng duyệt 11/11 23:56)
+
+- **QUESTS** (`thap/js/nv-the.js`, chỉ đổi cách bày, không đổi thưởng): 3 thẻ con REWARDS (Pilot Level + 7-Day Journey + Daily Login) · DAILY (Daily Quests + Weekly Quests) · ACHIEVEMENTS (Legendary & Mythic + Achievements); chấm đỏ từng thẻ; mở màn vào thẻ đầu tiên có chấm đỏ. Thẻ không chọn vẫn nằm trong DOM (hidden).
+- **Twin Anvil** (`skills4.js`): (a) +★ tại chỗ = +1 cộng dồn / ★ (trần 14, hạ sao không trừ); (b) chỉ rèn ụ SÁT CẠNH (không chéo), thả lên ụ xa báo "NOT ADJACENT"; Anvil + Anvil cùng dạng vẫn ở đâu cũng được; (c) SONG SINH: ụ mang cả rèn ST + rèn tốc khi cộng dồn bằng nhau, mỗi buff ×1,25 (`SKILLS.loren.SONG` — số tạm); lệch → loại lớn hơn thắng. `T.anv = { k, v, lo [, x] }`; cờ ô online thêm `R<cộng dồn>` + `T<buff thứ 2>` (gói cũ vẫn đọc được). Huy hiệu đếm dưới ụ đã rèn (`demkn.js`). Ghép thường ụ có buff: ụ ra là ụ mới → mất buff (như trước nay; tài liệu cũ ghi "lấy buff mạnh hơn" là SAI so với code).
+- **Static Jammer** (`trum.js: XICH`): JAM xích 2 ụ KHÔNG tự hết; gỡ bằng cách ghép một ụ vào ụ bị xích → đứt cả hai; trùm chết / xoá debuff / hoá đá / ụ kia biến mất → đứt; mỗi Jammer chỉ giữ 1 cặp (còn xích thì không niệm tiếp — bản đầu để xích dồn làm bot Tím chết ngay wave 20); máy ưu tiên ghép gỡ; cờ ô online thêm `Z` (đang bị xích).
+- **Bot CO-OP, mọi trùm từ wave 20 là Jammer** (trước → sau): Tím +4: wave 30 / 30 → 30 / 30 / 37 · Vàng +6: 60 / 60 → 60 / 60 / 60 (trần đo 60) · bộ Hỗ trợ +3 chết ở wave 6–7 cả trước lẫn sau (chưa gặp Jammer).
+- **Test**: mới `tools/thap-kt-b3.js` đạt; `thap-kt-vang-g2` sửa 1 mục Anvil (8 mục khác trượt từ trước lượt này), `thap-kt-cong-huong-luat` 34 cặp lệch + `thap-kt-freezer` 1 mục trượt từ trước (không đổi); `thap-kt-kynang-vd`, `thap-kt-trum-don` vỡ từ trước.
+- **Chưa có hình**: dây xích nối 2 ụ bị xích (đang dùng vòng xích sẵn có trên từng ụ); dấu TWIN-FORGED cố định trên ụ (đang chỉ có chữ nổi lúc rèn + 2 số nhỏ dưới ụ).
 ## claude/demo-hop-tuong — WebGL: cắt bộ nhớ + khựng (thả bản CPU, gom atlas trên GPU, làm nóng ở màn mở đầu trận) (11/11 đêm)
 - Chỉ phần vẽ, KHÔNG đổi luật / số liệu (băm trạng thái `?gl=0` = `?gl=1` có vẽ: co-op A `8b4f420b`/`2f83154d`, Hive `f6b57405`, PVP `49b2c42a`). Chưa xuất bản. Chi tiết + giới hạn: `docs/demo-hop-tuong/tuvan/webgl/KE-HOACH.md` mục 9.
 - Nguyên nhân đo được ở bản live GL (`b34f385`; iPhone báo `ve 21/310 · m317+88`): mọi ảnh nằm 2 nơi (canvas + GPU) và tăng dần; atlas đầy → tải lại 185–200 texture trong 1 khung; khung đầu trận 0,45–0,9 s. Giả thuyết "kho đệm xoay → dựng lại dồn dập, canvas rác không thu" KHÔNG đúng trên máy đo (kho xoay 3–6 lần / 300 s trận, ≤ 10 ảnh dựng / khung; ép GC không giảm MB). Khung 310 ms với `t7` chưa tái hiện được → nhãn admin thêm `d…x…h…` để đo tiếp trên máy thật.
@@ -1497,3 +1508,30 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 | màn mở đầu | 4,0 s · 73 texture | 4,0 s · 136 texture |
 
 - Còn lại (chưa sửa, ngoài phạm vi phiên này): tấm đếm `ND.veHuyHieu` (demkn.js) vẽ lại + tải lại 27–44 lần / giây; tải lần đầu của ảnh tô màu / khung chiêu / chữ số theo cỡ. Chi tiết: `docs/demo-hop-tuong/tuvan/webgl/KE-HOACH.md` mục 10.
+## claude/che-do-dcdw — hình mới cho xích Static Jammer + huy hiệu TWIN-FORGED (12/11)
+
+- Chỉ là hình (không đổi gameplay, không Math.random), 3 ảnh ChatGPT trong `thap/assets/`: `trum_xich_vong` (vòng xích + ổ khoá ở đáy, đứng yên, ~1,05 ô) thay vòng xích xoay trên từng ụ bị Static Jammer xích (`render.js` veU; Kẹp / Nhiễu vẫn dùng `vong_xich` cũ) · `trum_xich_day` lặp dọc đoạn nối tâm 2 ô của cùng một cặp xích, cao 0,22 ô, vẽ TRÊN lớp ụ (`REN.veXichDay`; đứt xích thì mất cùng lúc) · `loren_songsinh` = huy hiệu 0,34 ô ở góc dưới-phải ụ đang TWIN-FORGED (`demkn.js`), thay 2 con số nhỏ; ụ 1 buff giữ tấm đếm cũ.
+- Nhãn "Skill, not a merge" khi kéo Twin Anvil: đưa lên trên mép bàn (`ghepfx.js` veMeo), không còn che ụ.
+- 3 ảnh thêm vào danh sách tải trước của trận (`ui.js`). Đường vẽ chung `REN.anhGiua` → chạy cả 2D lẫn WebGL (đã xem ảnh `?gl=1` và `?gl=0`).
+- Chưa làm: hiệu ứng riêng lúc xích đứt (chỉ có chữ FREED); bàn con rối online chưa vẽ dây nối (chỉ có vòng); huy hiệu song sinh chưa thêm vào trang chi tiết / khung demo.
+
+## claude/che-do-dcdw — huy hiệu TWIN-FORGED to hơn, hiệu ứng đứt xích, dây nối trên bàn đồng đội online (12/11)
+
+- Huy hiệu `loren_songsinh` trên ụ song sinh 0,34 → 0,46 ô; trang chi tiết Twin Anvil có dòng TWIN-FORGED kèm huy hiệu. Xích Static Jammer đứt: thêm nổ nhỏ + tia (hiệu ứng sẵn có) ở từng ụ. Online: cờ ô `Z<ô+1>;` mang ô của ụ cùng cặp → bàn con rối cũng vẽ dây nối (gói cũ `Z` vẫn đọc được). Chỉ là hình.
+
+## claude/che-do-dcdw — ĐỘT KÍCH (RAID) theo DCDW (12/11)
+
+- Chế độ mới `thap/js/chedo-rd.js` (GAME MODE → RAID, mở cấp phi công 6): co-op với đồng đội máy hạ 1 trùm đứng yên ở cổng, trùm gọi quái mỗi 12 s, 6 phút, 3 tim chung, 10 bậc máu trùm (5 000 → 1 800 000), trùm xoay theo bậc. Vé: token Raid (thắng PVP +5, CO-OP wave ≥ 30 +10, trần 100, vào tốn 20). Thưởng lần đầu mỗi bậc + thưởng lặp nhỏ. Lưu `turret_kt.cd.rd`. Bảng số: TAI-LIEU-GOC mục 4; bot + các điểm tự quyết: THIET-KE §7.
+- Đụng code ụ (không đổi số ngoài Raid): 3 chỗ sát thương theo % máu (`skills.js`, `skills4.js` Nemesis, `skills5.js`) dùng `E.maxPct || E.max` — chỉ trùm Raid có `maxPct`.
+- Bot `tools/thap-bot-tran.js --che rd --bac N`; test `tools/thap-kt-raid.js` đạt. Icon RAID đang mượn `ua_ic_trum` (cần gen).
+
+## claude/che-do-dcdw — ĐẨY TRÙM (PUSH) theo DCDW (12/11)
+
+- Chế độ mới `thap/js/chedo-pu.js` (GAME MODE → PUSH, mở cấp phi công 4): PVP đấu máy theo cúp, mỗi bên 1 trùm không chết đi về lõi, sát thương đẩy lùi (K tăng theo chặng 12 s), không quái thường (mana theo giây), 3 phút, xa lõi hơn thắng, chạm lõi thua ngay. Cúp / túi thắng / XP / nhiệm vụ đi đường PVP. Bảng số: TAI-LIEU-GOC mục 4; bot + điểm tự quyết: THIET-KE §8.
+- Sửa kèm: thắng / thua PVP mà túi thắng không rơi thì không còn nút OPEN của rương rỗng (`chedo-dd.js`).
+- Bot `tools/thap-bot-tran.js --che pu --cup N` (pvp / pu không `--deck2`: game tự chọn đối thủ theo cúp); test `tools/thap-kt-push.js` đạt. Icon PUSH đang mượn `ua_ic_trum` (cần gen).
+
+## claude/che-do-dcdw — KHE RƯƠNG kiểu DCDW (12/11)
+
+- Thắng PVP / PUSH trúng túi thắng: Rương Trận **vào 1 trong 4 khe ở HOME** (trên ô chọn chế độ), không mở ngay; vàng trận vẫn phát. Đầy khe → `CHEST SLOTS FULL`. Mỗi lúc 1 rương đếm **15 phút** (giờ máy), xong chạm `OPEN`; mở ngay bằng ngọc ⌈phút còn lại / 3⌉. Rương mốc / nhiệm vụ / SHOP / RAID / CO-OP: mở ngay như cũ.
+- File: `thap/js/khe.js` (mới), `chedo-dd.js` (bọc `THEBAI.thuong`, dòng kết quả), `css/chedo-d.css`. Lưu `turret_kt.khe`. Kiểm: `tools/thap-kt-khe.js`; `thap-kt-cup.js` sửa 1 kỳ vọng (thắng trúng túi: không phát thẻ ngay).

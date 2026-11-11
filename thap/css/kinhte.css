@@ -211,3 +211,8 @@ html body #wrap #kt .kt-lat-m .ot-mini { width: 70px; height: 70px; }
 .kt-mr.bay .kt-lat:nth-child(5) { animation-delay: .2s; } .kt-mr.bay .kt-lat:nth-child(6) { animation-delay: .25s; } .kt-mr.bay .kt-lat:nth-child(n+7) { animation-delay: .3s; }
 @keyframes kt-bay { from { transform: translateY(-90px) scale(.45); opacity: 0; } to { transform: none; opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .kt-mr.bay .kt-lat, .kt-mr.chot .kt-mr-anh, .kt-mr.khe .kt-mr-khe { animation-duration: .01s; } }
+/* màn QUESTS: 3 thẻ con (js/nv-the.js) — cùng kiểu nút hm-nut2 của hàng thẻ chính */
+.nvt-thanh { position: sticky; top: 0; z-index: 3; display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 0 0 8px; }
+#chon .nvt-thanh button { position: relative; height: 40px; min-width: 0; padding: 0 4px; color: var(--m-chu); }
+.nvt-thanh b { font: 800 12px/1 var(--f-hien); letter-spacing: .05em; white-space: nowrap; }
+.nvt-thanh .kt-cham { position: absolute; top: 2px; right: 6px; }

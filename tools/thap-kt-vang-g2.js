@@ -143,8 +143,8 @@ ok(gan(R('SKILLS.loren.tiLe(8, 0)'), 50) && gan(R('SKILLS.loren.tiLe(8, 8)'), 82
 tran(['loren', 'lien', 'canon', 'bang', 'tia'], { loren: 8 });
 R(`var d1 = dat(0, 'loren', 1, T => { T.dang = 'dmg'; T.lo = 14; }), L = dat(5, 'lien', 2); ghep(B, d1, L); cn();`);
 ok(gan(R('L.anv.v'), 0.5208) && gan(R('L.buf.dmg'), 0.5208, 1e-4) && !R('B.t[0]'), 'B5-4: LV17 14 cộng dồn rèn ST → +52.08% ST, Anvil mất');
-R(`var d2 = dat(1, 'loren', 1, T => { T.dang = 'toc'; T.lo = 14; }); ghep(B, d2, L); cn();`);
-ok(R('L.anv.k') === 'toc' && gan(R('L.anv.v'), 0.3472) && gan(R('L.buf.dmg'), 0, 1e-9), 'LV17 rèn tốc 14 → +34.72% tốc; chỉ 1 loại buff / ụ (thay buff ST)');
+R(`var d2 = dat(6, 'loren', 1, T => { T.dang = 'toc'; T.lo = 14; }); ghep(B, d2, L); cn();`); // 12/11: chỉ rèn ụ SÁT CẠNH (ô 6 kề ô 5) · 14 + 14 = SONG SINH ×1,25
+ok(R('L.anv.x && L.anv.x.k') === 'toc' && gan(R('L.anv.x.v'), 0.3472) && gan(R('L.buf.dmg'), 0.5208 * 1.25, 1e-4), 'LV17 rèn tốc 14 lên ụ đã có ST 14 → SONG SINH: giữ cả hai, mỗi buff ×1,25 (ST +65,1%, tốc +43,4%)');
 R(`L.st.da = true; cn();`); ok(gan((R('L.buf.toc') - R('heSaoToc(L)')), 0, 1e-9), 'ụ hoá đá: buff tắt'); R('L.st.da = false');
 R(`B.t.fill(null); B.capThe = {}; var p1 = dat(5, 'lien', 2, T => T.anv = { k: 'dmg', v: 0.42 }), p2 = dat(6, 'lien', 2, T => T.anv = { k: 'dmg', v: 0.27 }); B.deck = ['canon']; var con = ghep(B, p1, p2);`);
 ok(R('con') && !R('con.anv'), 'B5-4 (09/11 Q2 = A): 2 ụ có buff Anvil ghép THƯỜNG → ụ con là ụ MỚI, không mang buff');

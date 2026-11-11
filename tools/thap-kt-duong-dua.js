@@ -39,7 +39,7 @@ let loi = 0; const ok = (c, t) => { console.log((c ? '  ✓ ' : '  ✗ ') + t); 
     const c = CD.st();
     return { che, vao, macDinh, tn: ['san', 'thu', 'tw', 'vt', 'thap'].filter(k => TTC.tn[k]), dd: !!TTC.tn.dd, skDD: /RACE TRACK/.test(sk), skTW: /WEEKLY CHALLENGE/.test(sk), tab, cu: [c.san.da['x:1'], c.thu.da[1], c.vt.best, c.tw.best] };
   });
-  ok(g.che.join() === 'coop,pvp,online,dd,hd' && g.macDinh === 'coop', 'GAME MODE = ' + g.che.join() + ' · mặc định ' + g.macDinh + ' (không còn Leo Tháp)');
+  ok(g.che.join() === 'coop,pvp,online,dd,hd,rd,pu' /* 12/11: thêm RAID, PUSH */ && g.macDinh === 'coop', 'GAME MODE = ' + g.che.join() + ' · mặc định ' + g.macDinh + ' (không còn Leo Tháp)');
   ok(g.vao.every(x => x === false), 'CD.vao(san / thu / thap) không vào được');
   ok(!g.tn.length && g.dd, 'khoá tính năng: không còn san/thu/tw/vt (' + g.tn.join() + '), có dd');
   ok(g.skDD && !g.skTW, 'tab EVENT: có thẻ RACE TRACK, không còn WEEKLY CHALLENGE');
