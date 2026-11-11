@@ -1384,6 +1384,16 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - **4 ụ 3 dạng mà tấm chỉ có MỘT đầu** (`cuongno`, `ngaithoigian`, `pandora`, `marionette`): cả 3 dạng dùng chung đầu mới, dạng 2/3 lớn ×1,04 / ×1,08 + quầng màu dạng (cơ chế `STAGE_DAU_MOI` sẵn có — growfx.js mục 7); rút 4 id khỏi `STAGE_ANIME` / `STAGE_VE`, khai `STAGE_MOT_DAU` (artscale.js). Ảnh `_nong_s1..s3` cũ của 4 ụ còn trong `assets/` nhưng không dùng nữa (bản `?ucu=1` vẫn dùng `_v1`). **Cần người dùng xem:** 3 dạng không còn hình riêng (trước: rương Pandora mở dần, Berserker bốc lửa…) — muốn giữ thì cần 2 hình dạng 2/3 theo sinh vật mới.
 - **Kiểm:** `node --check` artscale.js, skills7.js; ảnh đã xem 390×844 (0 lỗi trang): bàn SOLO 1★ / 4★ / 7★ + 3 dạng `/home/claude/xem/ghep/dau_tren_ban_1_4_7sao.png`, cắt trên nền tối / xanh `dau_cat_nen_toi_xanh.png`, icon thẻ + huy hiệu + glyph `dau_icon_huyhieu_glyph.png`. Không tăng phiên bản (session con).
 
+## claude/che-do-dcdw — chế độ như DCDW: BỎ 4 chế độ + thêm ĐƯỜNG ĐUA (RACE TRACK) (11/11)
+
+- **Người dùng chốt 11/11 18:05** ("bỏ bớt chế độ", "làm y như DCDW"): game còn LEO THÁP (chính) · CO-OP · PVP · ONLINE · **ĐƯỜNG ĐUA** (Raid, Push làm đợt sau).
+- **BỎ (ẩn mọi lối vào, code + bản lưu `turret_kt.cd.san / thu / vt / tw` giữ nguyên):** Săn Trùm, Thử thách ngắn (`chedo-c.js: CDC.bo` → `HM.CHE[k].an`, `CD.vao` / `CDUI.mo` từ chối, bỏ khỏi `TTC.tn`), Vô tận, Thử thách tuần (`chedo-d.js: CDDC.vt.bat / tw.bat = false`). Thắng tầng 100 Leo Tháp = kết thúc bình thường (không hỏi FINISH / ENDLESS). Thẻ WEEKLY CHALLENGE ở tab EVENT → thẻ RACE TRACK. Bảng xếp hạng 3 tab → 1 bảng Đường Đua tuần. Không có nhiệm vụ / thành tựu / Hành trình / điều kiện mở khoá nào đòi 4 chế độ này (đã rà `kinhte.js`, `tientrinh.js`, `manh.js`, `sohuu.js`, `huongdan.js`).
+- **ĐƯỜNG ĐUA** (`thap/js/chedo-dd.js`, nạp sau `chedo-d.js`): bàn CO-OP (bạn + đồng đội máy dùng cùng bộ bài), 3 tim chung, 8:00, không chia wave; chuỗi quái theo `rngHat(hạt tuần)`; máu = `110 × loại × (1 + 0,015·g) × (1 + (g/270)^4)` (g = số đã diệt); trùm nhỏ mỗi 120 s; trần 34 quái sống lúc sinh (quá trần: dồn máu + điểm vào con kế); điểm = tổng cân nặng. HUD: ô trái `KO n`, giữa `m:ss · điểm` (khi băng chiêu trùm che thanh trên: nhãn nhỏ `#dd-chip`). Hết giờ / hết tim / bỏ cuộc đều giữ điểm. Lưu `turret_kt.cd.dd`; gộp Firebase lấy lớn nhất + cờ OR.
+- **Thưởng (SỐ TẠM, chờ duyệt)** — mốc điểm tuần: 100: 1 000 vàng + 50 ngọc · 250: 50 ngọc · 400: 2 000 vàng + 1 Tinh thể Đỏ · 550: 60 ngọc + Rương HH · 700: 2 000 vàng + 1 TT Đỏ · 850: Rương HH×2 + 1 TT Đỏ = 5 000 vàng + 160 ngọc + 3 Rương HH + 3 TT Đỏ / tuần (= tổng mốc tuần cũ của Săn Trùm + Vô tận + Thử thách tuần; thẻ Vàng tuần đổi thành 1 Rương HH). Thưởng MỘT LẦN của Săn Trùm (lần đầu mỗi bậc, đủ trùm) và 6 Thử thách ngắn KHÔNG chuyển.
+- **Bot** (`tools/thap-bot-tran.js --che dd`, 3 hạt): Trắng cấp 0: 142–344 điểm (hết tim phút 3–5) · Xanh +2: 440–486 · Tím +4: 597–622 · Vàng +6: 622–778 · Đỏ +8: 889–943 (hết giờ, 3 tim). Cùng hạt chạy 2 lần → cùng điểm.
+- **Bảng xếp hạng**: đường mới `lb/dd/{tuần}/{uid}` — rules Firebase hiện tại CHƯA cho ghi → bảng hiện "NOT CONNECTED · personal best only" tới khi người dùng Publish rules (mẫu: `docs/demo-hop-tuong/tuvan/che-do-dcdw/THIET-KE.md` §4). Không đổi cấu hình production.
+- **Test**: mới `tools/thap-kt-duong-dua.js` (27 mục đạt); `thap-kt-thap-leo`, `thap-kt-an-do`, `thap-kt-tien-trinh`, `thap-kt-admin` đạt (2 bài sau sửa danh sách mong đợi); `thap-kt-san-trum / thu-thach / thu-thach-tuan / vo-tan / bxh` in SKIP (chế độ đã bỏ). Chưa chạy hồi quy đầy đủ, chưa thử iPhone thật, chưa thử ghi bảng xếp hạng lên Firebase thật.
+- **Ảnh đã xem** (390×844): `docs/demo-hop-tuong/tuvan/che-do-dcdw/anh/`. Tiếng Việt: chuỗi mới nằm trong `VI_MAU` ở `chedo-dd.js` (như chedo-c/d) — `ngonngu-vi.js` là tệp sinh tự động nên không sửa tay.
 ## claude/demo-hop-tuong — hình riêng cho biến thể: Merge King VÀNG, Twin Anvil 2 dạng (11/11)
 
 - **Việc:** 3 hình từ tấm người dùng gen `docs/demo-hop-tuong/thap-art/raw_bienthe2_vughep_loren.png` (1 hàng × 3). Chỉ hình — không đổi số liệu / luật (tỉ lệ ra vàng, +2★, buff đe giữ nguyên).
@@ -1403,6 +1413,27 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - **Bỏ trần wave 70:** `LUAT.waveMax = 0` — solo / co-op (cả online) đánh tới khi hết tim, kết quả là DEFEAT "Reached WAVE n"; bảng trùm sắp tới (`vaotran.js`) không dừng ở 70. Chế độ có điều kiện kết thúc riêng không đổi.
 - **Thưởng:** mốc Thử thách tuần 15/25/35/45 → 20/30/40/50; mốc Vô tận 80–120 → 75–115 (thưởng giữ nguyên).
 - **Chữ:** mẹo "Splitters burst into 3" + mẹo 3 quái mới (`ketqua.js`), từ điển VI (`vi.json` → `ngonngu-vi.js`).
+
+## claude/che-do-dcdw — BỎ LEO THÁP + hướng dẫn là một bản riêng + thưởng theo cấu trúc DCDW (11/11, bổ sung 18:41)
+
+- **Người dùng (18:41, 18:42):** "Leo tháp xoá, làm tutorial 1 bản riêng" · "Tham khảo thưởng DCDW". Game còn: **CO-OP (chính, PLAY mặc định)** · PVP · ONLINE · ĐƯỜNG ĐUA · TUTORIAL.
+- **Bỏ Leo Tháp** (`chedo-c.js: CDC.bo.thap`; bản lưu `cd.thap` giữ nguyên): ẩn GAME MODE, không vào được; `home.js` mặc định `coop`, bản lưu chọn Solo / Leo Tháp → CO-OP; `tientrinh.js` chế độ dự phòng → CO-OP.
+- **Đo lại theo WAVE** (tầng đã qua vẫn tính, tầng f ≙ wave 9 + ⌊0,62·(f−1)⌋): Hành trình (wave 11/14/17/20/23/30), nhiệm vụ ngày wave 15, nhiệm vụ Lò rèn wave 30, nhiệm vụ tuần "5 wave quanh kỷ lục", thành tựu wave 30/50/70, mốc Huyền thoại wave CO-OP 20–70 (`MH.sw` nay ghi cả CO-OP / online), Đỏ LV12 + wave 30, chỉ huy wave 15/30/50, hồ sơ BEST WAVE. Bảng đầy đủ: `TAI-LIEU-GOC.md` mục 4.
+- **Mốc wave CO-OP lần đầu** (`chedo-dd.js: MOCWC / MOCW`, lưu `turret_kt.cd.cm`): 7 mốc 10–70, tổng = tổng thưởng lần đầu 100 tầng (55 500 vàng · 460 ngọc · 3 Rương Thường · 3 Rương Vàng · 5 Rương HH · 8 Tinh thể Đỏ) — SỐ TẠM. Người đã qua tầng: mốc tương đương coi như đã nhận.
+- **Hướng dẫn**: vẫn là trận riêng của `huongdan.js` (bàn solo ẩn, bộ cố định, 7 bước, xong = hạ trùm wave 10); thêm mục **TUTORIAL** trong GAME MODE (Settings → REPLAY TUTORIAL vẫn còn); xong hướng dẫn nút chính = **PLAY CO-OP**.
+- **Test**: `tools/thap-kt-duong-dua.js` (thêm phần 2b), `thap-kt-tien-trinh`, `thap-kt-admin`, `thap-kt-an-do` đạt; `thap-kt-thap-leo` in SKIP. Việc "sửa tầng 1 Leo Tháp cho tài khoản mới" của phiên cân bằng thành THỪA.
+- **Chưa làm / còn dở**: cúp + mốc thắng PVP, giới hạn lượt co-op, Pass… (ghi ở THIET-KE §5); màn mở đầu trận hướng dẫn vẫn liệt kê trùm wave 20 / 30; ô vàng đầu hàng thưởng mốc wave hơi sát mép trái; chữ CO-OP trong GAME MODE xuống 3 dòng.
+
+## claude/che-do-dcdw — cúp PVP + mốc cúp, túi thắng, bảo hiểm Rương Vàng 7, đồng đội cho người mới, sửa hiển thị (11/11 19:06)
+
+- **Người dùng duyệt** 3 bảng (tầng → wave, nguồn thưởng cũ → mới, số Đường Đua) → bỏ nhãn TẠM; thưởng một lần của Săn Trùm + 6 Thử thách ngắn BỎ HẲN. **Bác** "3 lượt co-op có thưởng / ngày" (19:08) → không làm, CO-OP không giới hạn, PLAY mặc định vẫn CO-OP.
+- **Cúp PVP** (`chedo-dd.js: CUPC / CUP`, lưu `turret_kt.cd.cup`): thắng +30, thua −20, không âm; 10 mốc cúp lần đầu 100–2 500 (bảng ở TAI-LIEU-GOC mục 4); cúp hiện ở nút PLAY khi chọn PVP, dòng PVP trong GAME MODE, màn kết quả PVP.
+- **Đối thủ máy theo cúp**: 0–199 cúp bộ chỉ Trắng / Xanh, cấp thẻ 0, mana mỗi mạng ×0,6; 200: tới Tím, ×0,8; 500: tới Vàng; 1 000: mọi bậc; 2 000: cấp +1.
+- **Túi thắng**: thắng PVP → Rương Trận (thẻ) rơi 60%, tất định theo hạt trận; thua / trượt chỉ còn vàng trận. Game chưa có khe rương hẹn giờ → rương mở ngay, CHƯA có trần 4 rương.
+- **Bảo hiểm**: Rương Vàng `pityV` 10 → 7 (6 rương liên tiếp không ra Huyền thoại → rương thứ 7 chắc chắn), bộ đếm có sẵn ở SHOP.
+- **Người mới**: CO-OP cấp phi công ≤ 5 → đồng đội máy bộ cố định Sniper / Gatling / Tesla / Revolver / Laser.
+- **Sửa hiển thị**: hàng thưởng mốc xuống dòng + gọn (có rương thì chỉ hiện nút OPEN, vàng, ngọc, Tinh thể Đỏ); dòng CO-OP / PVP trong GAME MODE ≤ 2 dòng; màn mở đầu trận hướng dẫn chỉ báo trùm wave 10; Đường Đua hết tim / bỏ cuộc = khung trung tính RACE OVER; nhãn thưởng "TOWER FLOOR n" → "CO-OP WAVE n".
+- **Test**: mới `tools/thap-kt-cup.js`; `thap-kt-duong-dua`, `thap-kt-tien-trinh` (sửa mong đợi bộ đếm bảo hiểm), `thap-kt-admin` đạt.
 - **Kiểm (11/11):** lô bot 28 ca × 4 hạt trên code thật (`--bt goc`, trần 100) → `tocban/bot-wave-sau-ap.json`: 108/112 trận giống hệt `bot-wave-B.json`; 4 trận bộ Tím khác nhưng giống hệt "code trước khi áp + `--bt B`" chạy hôm nay (lệch do code ụ đổi sau lúc đo đề xuất, không do bản áp). Không trần: bộ Đỏ nặng solo và co-op chạy tới wave 80 rồi thua vì hết tim; cùng hạt 2 lần ra y hệt; host/khách sinh wave 1–150 giống hệt; băm trạng thái co-op (`thap-kt-hieunang-coop.js B`, `KHONGVE=1`) 2 lần giống nhau. Test `thap-kt-thap-leo`, `vo-tan`, `thu-thach-tuan` (cập nhật số mới), `thu-thach` qua hết.
 
 ## claude/demo-hop-tuong — cân bằng B: rút phần Leo Tháp / Tuần / Vô tận (11/11 19:00)
@@ -1412,3 +1443,4 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 ## claude/demo-hop-tuong — nhãn admin thêm số bộ nhớ (11/11 19:40)
 - Người dùng bị văng khỏi game GIỮA TRẬN (~16:30, iPhone, GL bật) → không phải nạp bản mới (chỉ nạp lại ở menu); nghi iOS thu hồi trang vì bộ nhớ. Đo máy đo, co-op wave 35→48 tốc 3×, chế độ iOS: bản 2D ≈ 250–300 MB canvas đệm (≈ 1 800 canvas); bản GL ≈ 234 MB canvas đệm + 133 MB texture GPU (atlas 4 × 16 MB + 52 MB texture riêng) → GL nặng hơn ~35–45%.
 - Nhãn admin thêm ` · m234+133` (MB canvas đệm + MB texture GL, 5 s đo 1 lần). CHƯA giảm bộ nhớ — việc của phần hoàn tất WebGL đợt 2+3 (bỏ bản canvas CPU sau khi đã vào atlas / hạ ngân sách trên iOS).
+- Biểu tượng chế độ mới (ảnh ChatGPT 11/11, cắt từ 1 tấm 3×2, 192 px): `ic_coop`, `ic_pvp` (thay hình ụ cơ khí cũ), `ic_online`, `ic_race`, `ic_tutorial`, `ic_cup` (ô cúp ở kết quả PVP). Đã xem ảnh GAME MODE 390×844.

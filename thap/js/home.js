@@ -15,14 +15,14 @@ const HM = {
     solo: { ten: 'SOLO', ic: 'ic_solo', phu: () => TEXT.ui.soloSub, mo: 'Just you · 1 board · 3 lives', an: 1 }, // an: ẩn khỏi GAME MODE (chỉ ?mode=solo)
     coop: { ten: 'CO-OP', ic: 'ic_coop', phu: () => TEXT.ui.coopSub, mo: 'Team up with an AI ally · 3 shared lives' },
     pvp: { ten: 'PVP', ic: 'ic_pvp', phu: () => TEXT.ui.pvpSub, mo: 'Outlast an AI rival on the same waves' },
-    online: { ten: 'ONLINE', ic: 'ic_coop', phu: () => 'Co-op with a friend', mo: 'Friend room · join with a 4-letter code' },
+    online: { ten: 'ONLINE', ic: 'ic_online', phu: () => 'Co-op with a friend', mo: 'Friend room · join with a 4-letter code' },
   },
   ICHE: {}, // ảnh biểu tượng chế độ riêng (E32, khi có) — trống = dùng ic_solo/ic_coop/ic_pvp
-  che: 'thap', bac: 'all', armed: -1, noi: null, bst: false, sheet: null,
+  che: 'coop', bac: 'all', armed: -1, noi: null, bst: false, sheet: null,
   giam: () => matchMedia('(prefers-reduced-motion: reduce)').matches,
   esc: (v) => String(v == null ? '' : v).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])),
   // chế độ hợp lệ trên HOME: 'solo' (bản lưu cũ) → Leo Tháp, trừ khi kiểm thử ?mode=solo
-  chuan(k) { return k === 'solo' && !(typeof G !== 'undefined' && G.debug && G.debug.mode === 'solo') ? 'thap' : k; },
+  chuan(k) { return (k === 'solo' || k === 'thap') && !(typeof G !== 'undefined' && G.debug && G.debug.mode === 'solo') ? 'coop' : k; }, // 11/11 bỏ Leo Tháp: Solo / Leo Tháp cũ → CO-OP (chế độ chính như DCDW)
   doc() { try { const l = JSON.parse(localStorage.getItem(this.KEY) || 'null'); if (l) { if (this.CHE[l.che] && !this.CHE[l.che].an) this.che = l.che; if (l.bac === 'all' || (typeof TIERS !== 'undefined' && typeof l.bac === 'string' && TIERS[l.bac])) this.bac = l.bac; } } catch (e) { } },
   luu() { try { localStorage.setItem(this.KEY, JSON.stringify({ che: this.che, bac: this.bac })); } catch (e) { } },
   luuBo() { try { localStorage.setItem('turret_bo', JSON.stringify({ chon: UI.chon, mv: UI.mv, che: UI.che })); } catch (e) { } },
@@ -194,7 +194,7 @@ const HM = {
   },
   // CÁCH CÓ chỉ huy (08/11): mo2 = { wave, tang, ngoc } — tầng Leo Tháp (10/11; kỷ lục wave cũ vẫn tính) HOẶC trả ngọc (mvCo — data.js); chỉ huy miễn phí không có mo2
   mvKhoa(id) { return typeof mvCo === 'function' && !mvCo(id); },
-  mvMoChu(id) { const m = MAVUONG[id].mo2; return this.mvKhoa(id) ? '<i class="hm-mv-mo">Locked · clear Tower floor ' + m.tang + ' or unlock with gems</i>' : ''; },
+  mvMoChu(id) { const m = MAVUONG[id].mo2; return this.mvKhoa(id) ? '<i class="hm-mv-mo">Locked · reach wave ' + m.wave + ' or unlock with gems</i>' : ''; },
   mvNutMua(id) { const m = MAVUONG[id].mo2; return '<button class="hm-mv-mua" data-act="hm-mv-mua" data-id="' + id + '"><img src="' + (typeof KTUI !== 'undefined' ? KTUI.a(KTA.ngoc) : 'assets/shop_ngoc.png') + '" alt="Gems"><b>' + m.ngoc + '</b></button>'; },
   mvMua(id) { // mở bằng ngọc: trừ ngọc 1 lần, lưu turret_kt.mvMo (không bao giờ lấy lại)
     const d = MAVUONG[id]; if (!d || !d.mo2 || !this.mvKhoa(id) || typeof KT === 'undefined') return false;
@@ -263,7 +263,7 @@ const HM = {
       UI.nhac('Pick 5 turrets'); return;
     }
     if (this.che === 'online') { if (typeof ONL !== 'undefined') ONL.moBang(); return; }
-    if (this.chuan(this.che) !== this.che) { this.che = 'thap'; this.luu(); return this.choi(); } // Solo cũ → Leo Tháp (HM.choi đã bọc ở chedo-c.js)
+    if (this.chuan(this.che) !== this.che) { this.che = 'coop'; this.luu(); return this.choi(); } // Solo / Leo Tháp cũ → CO-OP
     UI.che = this.che; this.luuBo(); UI.vao();
   },
 
@@ -373,7 +373,7 @@ const HM = {
   const initGoc = UI.init;
   UI.init = async function () {
     const r = await initGoc.apply(this, arguments);
-    if (HM.che !== 'online' && HM.CHE[UI.che]) HM.che = HM.chuan(UI.che);
+    if (HM.che !== 'online' && HM.CHE[UI.che]) { HM.che = HM.chuan(UI.che); if (HM.che !== UI.che && !G.debug.mode) UI.che = HM.che; }
     try { HM.ve(); } catch (e) { console.error('HM', e); }
     return r;
   };

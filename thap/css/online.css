@@ -16,7 +16,7 @@
 #tk-chip.google small { color: #9dffb0; }
 
 /* nút ONLINE trong hàng chế độ */
-.che.onl-che::before { background-image: url(../assets/ic_coop.png); }
+.che.onl-che::before { background-image: url(../assets/ic_online.png); }
 .che.onl-che::after { content: ''; position: absolute; left: 24px; top: 8px; width: 10px; height: 10px; background: url(../assets/led_xanh.png) center / contain no-repeat; }
 
 /* bảng chung */

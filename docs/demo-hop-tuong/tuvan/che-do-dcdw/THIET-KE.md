@@ -23,3 +23,44 @@ Game mình có thêm mà DCDW không có: Leo Tháp, Săn Trùm, Thử thách ng
 
 ## 3. Chưa làm vì
 Máy phiên cũ còn ~640 MB ổ đĩa (không dựng được bản làm việc + Playwright), và phiên điều phối mới đang sửa cân bằng trên cùng các file (data.js, chedo-c.js). Làm khi: người dùng cho xoá thư mục test cũ trong /tmp của máy này (làm trên nhánh `claude/che-do-dcdw`, phiên mới gộp), HOẶC phiên mới nhận mục 2.1 sau khi xong bảng cân bằng. Trước khi áp số (nhịp ra quái, k, mốc điểm, thưởng) phải gửi bảng cho người dùng.
+
+## 4. ĐÃ LÀM 11/11 (nhánh `claude/che-do-dcdw`) — người dùng chốt 18:05: "bỏ bớt chế độ", "làm y như DCDW"
+- **Bỏ khỏi game** (ẩn mọi lối vào; code + bản lưu giữ nguyên): Săn Trùm, Thử thách ngắn (`chedo-c.js: CDC.bo`), Vô tận, Thử thách tuần (`chedo-d.js: CDDC.vt.bat / tw.bat = false`). Thắng tầng 100 = kết thúc bình thường.
+- **Đường Đua** (`thap/js/chedo-dd.js`, số ở `DDC` — TẠM): luật + số ghi ở `TAI-LIEU-GOC.md` mục 4. Kiểm: `tools/thap-kt-duong-dua.js`; đo bot: `tools/thap-bot-tran.js --che dd`.
+- Khác mục 2.1: quái lọt chỉ mất tim (không trừ điểm); đồng đội máy dùng CÙNG bộ bài của người chơi (điểm không phụ thuộc bộ ngẫu nhiên của máy); máu có thêm thừa số `(1 + (g/270)^4)` để bộ mạnh không dọn hết mọi con; hạt TRẬN vẫn ngẫu nhiên mỗi lượt (chỉ chuỗi quái theo hạt tuần).
+- Bot (bộ → điểm · diệt · thời gian, 3 hạt): khởi đầu Trắng cấp 0: 142–344 · 110–226 · 168–287 s | Xanh +2: 440–486 · 273–295 · 327–342 s | Tím +4: 597–622 · 364–374 · 404–410 s | Vàng +6: 622–778 · 375–450 · 399–448 s | Đỏ +8: 889–943 · 503–540 · 480 s (hết giờ, còn 3 tim). Bộ yếu CHƯA trụ đủ 8 phút (hết tim ở phút 3–6).
+- **Bảng xếp hạng**: đường mới `turretmerge/lb/dd/{tuần}/{uid}`. Rules hiện tại (`che-do-d/THIET-KE.md` §3.2) có `"$other": { ".validate": false }` dưới `lb` → CHƯA ghi được; tới khi publish thì bảng hiện "NOT CONNECTED · personal best only". ĐỀ XUẤT thêm vào `"lb"` (cạnh `tw`, `vt`, `vtAll`; người dùng tự Publish, phiên này không đổi cấu hình):
+
+```json
+"dd": { "$tuan": { ".indexOn": ["k"], "$uid": { ".write": "auth != null && auth.uid === $uid",
+    ".validate": "newData.hasChildren(['n','w','t','k','at']) && (!data.exists() || newData.child('k').val() > data.child('k').val())",
+    "n":  { ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 16" },
+    "av": { ".validate": "newData.isString() && newData.val().length <= 24" },
+    "w":  { ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 999999" },
+    "t":  { ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 480" },
+    "k":  { ".validate": "newData.isNumber() && newData.val() === newData.parent().child('w').val() * 100000 + 99999 - newData.parent().child('t').val()" },
+    "at": { ".validate": "newData.val() === now" },
+    "v":  { ".validate": "newData.isNumber()" },
+    "$other": { ".validate": false } } } }
+```
+
+## 5. BỔ SUNG 11/11 18:41–18:42 — "Leo tháp xoá, làm tutorial 1 bản riêng", "tham khảo thưởng DCDW" (đã làm trên cùng nhánh)
+- **19:06 người dùng duyệt** 3 bảng (tầng → wave, nguồn thưởng, số Đường Đua); thưởng một lần của Săn Trùm + 6 Thử thách ngắn BỎ HẲN.
+- **Bỏ Leo Tháp**: `CDC.bo.thap` (ẩn GAME MODE, `CD.vao` từ chối, bỏ khoá tính năng); HOME PLAY mặc định = **CO-OP** (`HM.chuan`: Solo / Leo Tháp cũ → CO-OP). Bảng quy đổi tầng → wave: `TAI-LIEU-GOC.md` mục 4.
+- **Tiến trình kiểu DCDW**: mốc wave CO-OP đạt lần đầu (`chedo-dd.js: MOCWC`) thay thưởng lần đầu mỗi tầng; thưởng tuần = mốc điểm Đường Đua. Rương Trận mỗi trận CO-OP / PVP (theo wave) GIỮ như cũ.
+- **Hướng dẫn riêng**: `huongdan.js` vốn đã là 1 trận độc lập (bàn `solo` ẩn, bộ cố định, xong = hạ trùm wave 10) — thêm mục TUTORIAL trong GAME MODE, xong → PLAY CO-OP.
+- **DCDW có, mình CHƯA có (đề xuất, chưa làm — chờ người dùng quyết):** cúp PVP + mốc cúp lần đầu + Crystal Crown cuối mùa · túi thắng PVP rơi theo xác suất, giữ tối đa 4, mở mất thời gian · CO-OP giới hạn 3 lượt/ngày, lọt 1 quái là hết trận (mình: 3 tim chung), wave 30 = 1 túi rồi vàng / vật liệu theo trùm · token Raid · Pass mùa 70 bậc · nhiệm vụ nhóm Archfiend Race · bảo hiểm Huyền thoại túi thứ 7 · mốc số trận THẮNG PVP lần đầu (mình chưa có bộ đếm thắng riêng PVP).
+- Bot CO-OP bộ khởi đầu (cấp 0, 3 hạt, cân bằng wave biến thể B): `tia,lien,sungluc,bang,set` + đồng đội bộ ngẫu nhiên: wave 42 / 16 / 49; + đồng đội cùng bộ: 10 / 10 / 17. `lien,set,mana,doc,phagiap` + ngẫu nhiên: 39 / 7 / 43; + cùng bộ: 2 / 2 / 2. → trận CO-OP đầu của tài khoản mới phụ thuộc nặng vào bộ ngẫu nhiên của đồng đội máy.
+
+## 6. BỔ SUNG 11/11 19:06–19:08 — "thêm đủ" (đã làm): cúp PVP, túi thắng, bảo hiểm rương, người mới
+| Thứ | Số | Ở đâu |
+|---|---|---|
+| Cúp | thắng +30 · thua −20 · không âm (chưa chỉnh theo chênh lệch: đối thủ là máy, không có cúp) | `CUPC.thang / thua` |
+| Mốc cúp lần đầu | 100 / 200 / 300 / 500 / 700 / 1 000 / 1 300 / 1 600 / 2 000 / 2 500 (thưởng: `TAI-LIEU-GOC.md` mục 4, hàng PVP) | `CUPC.moc` |
+| Đối thủ máy theo cúp | 0: Trắng / Xanh, cấp 0, mana ×0,6 · 200: tới Tím, cấp ≤ 2, ×0,8 · 500: tới Vàng · 1 000: mọi bậc · 2 000: cấp +1 | `CUPC.doKho` |
+| Túi thắng | thắng PVP → Rương Trận rơi 60% (tất định theo hạt trận); thua / trượt: chỉ vàng | `CUPC.pRuong`, `CUP.roi` |
+| Bảo hiểm | Rương Vàng (500 ngọc — rương cao nhất có TỈ LỆ ra Huyền thoại; Rương Thần thoại vốn bảo đảm sẵn): 6 liên tiếp không ra → thứ 7 chắc chắn (trước 10) | `KTC.ruong.vang.pityV` |
+| Người mới | CO-OP cấp phi công ≤ 5: đồng đội máy bộ cố định Sniper, Gatling, Tesla, Revolver, Laser | `MOIC` |
+- **KHÔNG làm (người dùng bác 19:08):** giới hạn 3 lượt co-op có thưởng / ngày → CO-OP không giới hạn; PLAY mặc định vẫn CO-OP, PVP vẫn mở ở cấp phi công 2.
+- **Chưa làm (đề xuất):** khe rương hẹn giờ + trần 4 rương chưa mở (game chưa có cơ chế hẹn giờ mở rương — rương mở ngay); mùa cúp + Crystal Crown; cúp theo chênh lệch; token Raid; Pass mùa; nhiệm vụ nhóm.
+- Bot người mới (cấp 0): CO-OP với đồng đội cố định: bộ A `tia,lien,sungluc,bang,set` wave 17 / 17 / 17 · bộ B `lien,set,mana,doc,phagiap` 13 / 10 / 13 (trước: 2–49 tuỳ bộ ngẫu nhiên). PVP 0 cúp (6 hạt): A thắng 4/6 · B thắng 2/6 (B tự thua ở wave 2 trong 3/6 trận — do bộ, không do đối thủ).
