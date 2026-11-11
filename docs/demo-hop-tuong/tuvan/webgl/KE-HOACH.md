@@ -200,3 +200,41 @@ Chưa làm / cần xem trên iPhone thật:
 - +16 MB GPU (trang atlas thứ 5): nhãn `m` trên iPhone sẽ khoảng +15–20 so với `m60+104`; nếu Safari thu hồi → hạ `TRANG_MAX` về 4 (tải lại sẽ tăng).
 - "Khung nhẹ < 9 ms" đo bằng JS của khung trước; iPhone ở cảnh nặng hiếm khi < 9 ms → nạp trước chạy nhịp 6 khung 1 lần (10 texture / giây) — vẫn kịp 3 wave nhưng chưa đo thật.
 - Cỡ động dùng bản lớn hơn ≤ 9 %: hình có thể mềm hơn 1 chút trong lúc đang phóng (không đo được bằng mắt trên ảnh chụp ở đây).
+
+## 11. Full WebGL bước 3 + 4 (phần Hive) — chữ trong trận = ô ảnh ký tự, Hive lăn cầu bằng shader (nhánh `claude/gl-full-w1`)
+
+Vì sao: iPhone tải canvas → texture 3–50 ms / lần. Hai nguồn còn lại do CHỮ và TRÙM: (1) chữ trong trận sinh canvas nhỏ liên tục — số sát thương `REN.chuSo` (mỗi ký tự × màu × cỡ = 2 canvas),
+chữ nổi `REN.chuAnh` (mỗi chuỗi 1 canvas), `fillText/strokeText` qua kho chữ của GLR (mỗi chuỗi × cỡ × màu 1 canvas; "JACKPOT!" / "+2" phóng dần = mỗi cỡ 1 lần tải), ký tự tấm đếm `DEMKN.kyTu`;
+(2) Hive bẻ hình cầu trên CPU mỗi khung (2 canvas 155² / con + `GLR.ban`).
+
+**Đã làm (chỉ hình; `?gl=0` và 2D dự phòng đi đường cũ nguyên vẹn):**
+1. `thap/js/chugl.js` (mới) — `CHU`: mỗi (phông, cỡ điểm ảnh thiết bị) 1 "mặt chữ"; mỗi bộ ký tự (SỐ `0-9 K M B . , + - × x / % ! ★ :` · CHỮ HOA · chữ thường) × kiểu (ruột / viền theo độ dày) = 1 TỜ canvas vừa khít,
+   ký tự TRẮNG dựng bằng chính phông game, dựng ở lần dùng đầu → 1 lần tải / tờ / trận. Màu = màu đỉnh: `GLR.ve` đọc `X.nhuom = [r, g, b]` (1 dòng ở glr.js, shader không đổi). Ký tự ngoài 3 bộ → "tờ lẻ" (+ `GLR.ban`).
+   - `REN.chuAnh / veChuAnh` (số sát thương, chí mạng, +N mana, nhãn "to", tên ụ lúc kéo ghép): khi GL đang vẽ trả BỐ CỤC (cùng trường `tw / lw / lh / by`), vẽ bằng tờ ĐÚNG CỠ (1:1, viền 3,5 đơn vị, 2 lượt viền → ruột như cũ).
+   - `GLR.veChu` (mọi `fillText / strokeText` không xoay, màu đặc — nhãn kỹ năng, JACKPOT, +N huy hiệu…): tờ theo BẬC CỠ (8 × 1,25ⁿ điểm ảnh, GPU thu nhỏ ≤ 20 %), nét viền theo bậc × 1,25 (sai ≤ 12 % độ dày);
+     có sẵn mặt đúng cỡ thì dùng luôn. Không còn đếm ở `GLR.thieu` (đã là lệnh ảnh; đếm ở `GLR.dem.kt`). Chữ xoay / gradient / bóng / `maxWidth` / ký tự > U+2BFF (emoji…) → đường cũ (kho chữ / vector).
+   - `DEMKN.veGL`: ký tự tấm đếm dùng chung `CHU` (trước: canvas riêng mỗi ký tự × màu).
+   - Màn mở đầu: `NS.nongSo` (bọc lại từ chugl.js, không sửa nongskill.js) nạp trước tờ số của 2 cỡ sát thương (thường / chí mạng) thay cho 40 canvas chữ số.
+   - Tờ chưa lên GPU (hết ngân sách tải của khung) → CẢ chuỗi đợi 1–vài khung (`CHU.du`), không hiện dở viền / thiếu chữ. `?chugl=0` tắt riêng để so.
+2. Hive — `GLR.veCT(khoá, fs, ảnh, uniform)` (mới, glr.js): tô kín đích vẽ phụ đang mở (`GLR.vao … ra`) bằng 1 fragment shader riêng lấy mẫu ảnh đã trên GPU. `quaianim.js` `CAU_FS` = bản GLSL của vòng lặp
+   điểm ảnh trong `cdLanAnh` (quay Qᵀ, ba mặt chiếu ở xích đạo, nén mép, viền tối, mép mềm, gai quay phẳng) vẽ vào `GLR.tam('cdO' / 'cdO2')`, rồi phủ bóng sáng / tối `source-atop` như cũ. Hỏng shader / ảnh chưa có → nhánh CPU cũ. `?caugl=0` tắt để so.
+
+**Số đo** (máy đo Chromium + GPU phần mềm — chỉ so SỐ ĐẾM; `tools/thap-kt-tai-gl.js` `TAO=1`, co-op 3×, wave 25 →, `ios=1`, 2 bộ `lien,sungluc,bocap,cobac,lualien`):
+
+| | trước (`8aa0478`) | sau |
+|---|---|---|
+| tải texture do chữ, 30 s đầu trận | 249 (100 ô chữ số `chuSo`, 49 ký tự tấm đếm, ~90 kho chữ GLR, 10 `chuAnh`) | 34–36 (mỗi tờ 1 lần; 12 mặt chữ, 41–43 tờ / trận) |
+| tải texture do chữ, 20 s kế (giây 30–50) | 32 = 1,6 / giây | 2–6 = 0,1–0,3 / giây (tờ của cỡ chữ mới gặp lần đầu) |
+| `GLR.thieu` trong 20 s đó | `hieuung` strokeText 255 + fillText 255 · `huyhieu` strokeText 168 + fillText 168 | rỗng (0) |
+| Hive (2 con), tải texture / khung, 240 khung cuối | 4,08 | 0,08 |
+| Patcher · Octopus (cùng cách đo) | 0,16 · 0,66 (số ghi ở mục 9) | 0,07 · 0,45 |
+
+Kiểm: băm có vẽ gl=1 = gl=0 — co-op A `8b4f420b` / `2f83154d`, Hive `f6b57405`, Patcher `6acc246e`, Octopus `fe56be3`; `MAT=200,320` (Hive và co-op có chữ): 2D dự phòng đủ chữ + Hive (đường CPU), có lại GL vẽ tiếp, 0 lỗi trang, `veChet` 0;
+`?gl=0`: chỉ `cv-nen, cv`. Hình CÙNG trạng thái (`SOSANH=1`): Hive GL-shader ↔ GL-CPU 0 điểm ảnh khác (ngưỡng 40/255), ↔ 2D 1 điểm; chữ GL ↔ 2D không thấy khác bằng mắt ở ảnh phóng 3×. Ảnh: `/home/claude/xem/gl-full-w1/`.
+
+**Còn lại / cần xem trên iPhone thật:**
+- Cỡ chữ gặp LẦN ĐẦU trong trận vẫn tải 2–6 tờ (≤ 512², phần lớn < 512 × 150); nhãn chữ to gặp lần đầu có thể hiện trễ 1–vài khung (đợi ngân sách tải). Muốn hết: nạp trước theo "danh sách cỡ đã dùng" (chưa làm; nạp mọi bậc ≈ 0,3 trang atlas).
+- Chữ theo bậc cỡ bị GPU thu ≤ 20 % → có thể mềm hơn chút so với chữ vẽ đúng cỡ (ảnh chụp ở máy đo không thấy).
+- Nguồn tải do chữ / trùm còn lại (không sửa ở đây): Octopus 0,45 / khung (ảnh cỡ động 83–124 điểm, mỗi cỡ 1 ảnh — việc của phần kho ảnh), `mau:tai_day#…` của demkn ở wave trùm, ảnh dựng khi trùm chết (`cdPhanChup` 159², 1 lần),
+  chữ xoay / gradient (vector, hiếm: 0 lần ở các cảnh đo), `DEMKN.ve0` vẽ thẳng khi icon chưa nạp (nay cũng qua `CHU`).
+- Shader Hive dùng `highp` nếu có; GPU chỉ có `mediump` ở fragment (không phải iPhone) có thể lệch hoa văn → `?caugl=0`.

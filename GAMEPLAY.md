@@ -1535,3 +1535,10 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 
 - Thắng PVP / PUSH trúng túi thắng: Rương Trận **vào 1 trong 4 khe ở HOME** (trên ô chọn chế độ), không mở ngay; vàng trận vẫn phát. Đầy khe → `CHEST SLOTS FULL`. Mỗi lúc 1 rương đếm **15 phút** (giờ máy), xong chạm `OPEN`; mở ngay bằng ngọc ⌈phút còn lại / 3⌉. Rương mốc / nhiệm vụ / SHOP / RAID / CO-OP: mở ngay như cũ.
 - File: `thap/js/khe.js` (mới), `chedo-dd.js` (bọc `THEBAI.thuong`, dòng kết quả), `css/chedo-d.css`. Lưu `turret_kt.khe`. Kiểm: `tools/thap-kt-khe.js`; `thap-kt-cup.js` sửa 1 kỳ vọng (thắng trúng túi: không phát thẻ ngay).
+
+## claude/demo-hop-tuong — Full WebGL bước 3 + 4 (Hive): chữ trong trận = ô ảnh ký tự, Hive lăn cầu bằng shader (nhánh làm `claude/gl-full-w1`)
+- CHỈ HÌNH, chỉ bản WebGL (`?gl=0` / 2D dự phòng như cũ). Luật / số liệu không đổi → `TAI-LIEU-GOC.md` không đổi. Chi tiết + giới hạn: `docs/demo-hop-tuong/tuvan/webgl/KE-HOACH.md` mục 11.
+- **Chữ** (`thap/js/chugl.js` mới): số sát thương, chí mạng, +mana, nhãn kỹ năng, JACKPOT, +N huy hiệu, tên ụ khi kéo, ký tự tấm đếm vẽ bằng TỜ KÝ TỰ TRẮNG (dựng từ phông game, 1 tờ / bộ ký tự / cỡ) tô màu bằng màu đỉnh (`X.nhuom` ở `GLR.ve`) — số / màu / chuỗi mới không tải texture.
+  Tải texture do chữ: 30 s đầu 249 → ~35, sau đó 1,6 → 0,1–0,3 / giây; `GLR.thieu` (chữ đi đường 2D) 846 lệnh / 20 s → 0. `?chugl=0` tắt để so.
+- **Hive**: lăn cầu 3D tính bằng fragment shader (`GLR.veCT` + `CAU_FS` ở `quaianim.js`) vào bộ đệm khung — tải texture / khung khi Hive trên màn 4,08 → 0,08; hình = bản CPU (0–1 điểm ảnh khác). `?caugl=0` tắt để so. Patcher 0,07 · Octopus 0,45 (không tăng).
+- Kiểm: băm gl1 = gl0 (co-op A `8b4f420b` / `2f83154d`, Hive `f6b57405`, Patcher `6acc246e`, Octopus `fe56be3`); mất ngữ cảnh `MAT=200,320` → 2D → GL lại, 0 lỗi trang. File: `chugl.js` (mới), `gl/glr.js`, `render.js`, `demkn.js`, `quaianim.js`, `index.html`.

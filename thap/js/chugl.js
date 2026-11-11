@@ -12,7 +12,7 @@ const CHU = (() => {
   const TAT = (() => { try { return new URLSearchParams(location.search).get('chugl') === '0'; } catch (e) { return false; } })();
   const RONG = 512, BAC = 1.25, BAC_NET = 1.25, MAT_MAX = 28;
   // bộ ký tự dựng sẵn: SO = số sát thương / +N / tấm đếm · CHU = nhãn kỹ năng, tên ụ, JACKPOT… (chữ hoa + thường + dấu hay gặp)
-  const SO = '0123456789KMB.,+-×x/%!★:', CHU_CAI = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz?\'()';
+  const SO = '0123456789KMB.,+-×x/%!★:', HOA = 'ACDEFGHIJLNOPQRSTUVWXYZ?\'()', THUONG = 'abcdefghijklmnopqrstuvwxyz', CHU_CAI = HOA + THUONG, BO = [SO, HOA, THUONG]; // K M B nằm ở bộ SO
   let mx = null; const do_ = () => mx || (mx = document.createElement('canvas').getContext('2d'));
   const I = { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0, al: 1, op: 0, cat: null, trang: 0, nhuom: null }; // "ngữ cảnh" đơn vị (điểm ảnh thiết bị) cho GLR.ve
   const C = {
@@ -65,11 +65,11 @@ const CHU = (() => {
       const g = { p: T.c, T, x, y, w: o.w, h: o.h, ox: o.le + o.l, oy: o.le + o.as }; M.g.set(net ? o.ch + '\n' + net + noi : o.ch, g); this.dem.kyTu++; return g;
     },
     // ô ký tự: net = 0 → ruột; net > 0 → viền dày net (điểm ảnh của tờ), kiểu nối noi. Trả { p (canvas tờ), x, y, w, h, ox, oy } · null = ký tự trống.
-    //   Ký tự chưa có: dựng CẢ BỘ của nó (SO hoặc CHU_CAI) cho kiểu (ruột / viền) này vào 1 TỜ MỚI vừa khít → 1 lần tải / bộ / kiểu, không tải lại tờ cũ.
+    //   Ký tự chưa có: dựng CẢ BỘ của nó (SO / HOA / THUONG) cho kiểu (ruột / viền) này vào 1 TỜ MỚI vừa khít → 1 lần tải / bộ / kiểu, không tải lại tờ cũ.
     //   Ký tự ngoài 2 bộ (hiếm): thêm vào tờ lẻ của mặt chữ + GLR.ban (tải lại riêng tờ lẻ).
     kyTu(M, ch, net, noi) {
       const key = net ? ch + '\n' + net + noi : ch; let g = M.g.get(key); if (g !== undefined) return g;
-      const bo = SO.indexOf(ch) >= 0 ? SO : CHU_CAI.indexOf(ch) >= 0 ? CHU_CAI : null;
+      let bo = null; for (const q of BO) if (q.indexOf(ch) >= 0) { bo = q; break; }
       if (bo) {
         const ds = []; for (const c of bo) { const o = this._do1(M, c, net, noi); if (o) ds.push(o); else M.g.set(net ? c + '\n' + net + noi : c, null); }
         let k = 0;
@@ -117,6 +117,14 @@ const CHU = (() => {
       }
       I.nhuom = null; I.cat = null; this.dem.ve += cs.length;
     },
+    // các tờ của 1 lượt vẽ chuỗi đã trên GPU chưa (chưa: tra() tải ngay nếu còn ngân sách tải của khung, hết thì xếp hàng nạp). 1 = đủ · 0 = đợi (khung sau) · -1 = tờ hỏng (đường cũ)
+    //   → chuỗi không bao giờ hiện dở (có viền chưa có ruột / thiếu chữ) trong 1–3 khung tờ mới đang chờ tải
+    du(M, D, net, noi) {
+      const k = net ? net + noi : '', B = D.to || (D.to = {}); let L = B[k], kq = 1;
+      if (!L) { L = B[k] = []; for (const ch of D.cs) { const g = this.kyTu(M, ch, net, noi); if (g && L.indexOf(g.p) < 0) L.push(g.p); } }
+      for (const p of L) { if (p._glLoi === GLR.the) return -1; if (!GLR.tra(p, p.width, p.height)) kq = 0; }
+      return kq;
+    },
     // cỡ theo bậc: bậc nhỏ nhất ≥ P (8 × 1,25ⁿ điểm ảnh)
     bac(P) { let b = 8; while (b < P - 1e-6) b *= BAC; return Math.round(b * 100) / 100; },
     bacNet(L) { let b = 0.5; while (b * Math.sqrt(BAC_NET) < L) b *= BAC_NET; return Math.round(b * 100) / 100; },
@@ -137,6 +145,7 @@ const CHU = (() => {
       const D = this.day(M, chu, false), ta = s.textAlign;
       let dx = Math.round(k * args[1] + X.e), dy = Math.round(k * args[2] + X.f) + this.gocY(M, s.textBaseline) * q;
       if (ta === 'center') dx -= D.w * q / 2; else if (ta === 'right' || ta === 'end') dx -= D.w * q;
+      const d = this.du(M, D, L, noi); if (d < 0) return false; if (!d) return true;
       this.veDay(M, D, dx, dy, q, mau, X.al, X.op, X.cat, L, noi);
       return true;
     },
@@ -159,6 +168,7 @@ const CHU = (() => {
       M.f = GLR.f;
       const q0 = w / im.lw, kd = ctx.a, q = q0 * kd / im.k; // q0 = phóng của hoạt ảnh nảy · q = điểm ảnh thiết bị / điểm ảnh tờ
       const dx = (x + 4 * q0) * kd + ctx.e, dy = (y + im.by * q0) * kd + ctx.f, qq = Math.abs(q - 1) < 1e-4 ? 1 : q;
+      const d1 = this.du(M, im.D, im.net, 'round'), d2 = this.du(M, im.D, 0, ''); if (d1 < 0 || d2 < 0) return false; if (!d1 || !d2) return true;
       this.veDay(M, im.D, dx, dy, qq, this.VIEN, ctx.al, ctx.op, ctx.cat, im.net, 'round');
       this.veDay(M, im.D, dx, dy, qq, im.m, ctx.al, ctx.op, ctx.cat, 0, '');
       return true;
