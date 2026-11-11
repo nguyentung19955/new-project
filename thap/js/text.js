@@ -39,7 +39,9 @@ const TEXT = {
   tier: {
     trang: 'COMMON', xanh: 'RARE', tim: 'EPIC', vang: 'LEGENDARY', do: 'MYTHIC',
   },
-  mob: { bo: 'Crawler', bay: 'Flyer', bay_bang: 'Frost Flyer', khong_lo: 'Giant', tach: 'Splitter', que_tach: 'Big Splitter', nho: 'Spawnling' },
+  mob: { bo: 'Crawler', bay: 'Flyer', bay_bang: 'Frost Flyer', khong_lo: 'Giant', tach: 'Splitter', que_tach: 'Big Splitter', nho: 'Spawnling', bay_dan: 'Swarmling', toc_hanh: 'Runner', tinh_anh: 'Elite' },
+  // 11/11 tên chủ đề wave (data.js CHU_DE) — hiện ở bảng WAVE n đầu mỗi wave
+  chuDe: { hon: 'MIXED', baydan: 'SWARM', khongkich: 'AIR RAID', thietgiap: 'ARMORED', tinhanh: 'ELITE', tochanh: 'EXPRESS', phanbao: 'MITOSIS', honloan: 'CHAOS' },
   boss: {
     mad_crown:  { name: 'MAD CROWN',    skill: 'SCRAMBLE',    desc: 'Turns 3 random turrets into random deck types (same star)' },
     freezer:    { name: 'FREEZER',      skill: 'DEEP FREEZE', desc: 'Freezes 3 random turrets for 6 s (+1 every 20 waves, max 5; co-op: split across both boards)', descN: (n) => 'Freezes ' + n + ' random turrets for 6 s' },

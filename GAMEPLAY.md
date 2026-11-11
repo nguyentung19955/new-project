@@ -1392,3 +1392,14 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - **Công cụ:** `tools/thap-cat-bienthe.py` (khoá magenta của `thap-cat-umod.py`, không nướng viền màu nhấn); `tools/thap-cat-u-tudo.py` không còn ghi `loren_nong` / `lorentoc_nong`.
 - **Không làm:** Eclipse Ngày/Đêm (không có ảnh mới), tấm `bienthe_vughep_loren_nhatthuc.png` cũ không dùng.
 - **Kiểm:** `node --check` skills2.js, skills4.js, skills7.js; ảnh đã xem 390×844 SOLO + CO-OP (0 lỗi trang): `/home/claude/xem/ghep/bienthe_vuavang_loren_tren_ban.png` (cột: Merge King thường · đe Sát thương · Merge King vàng · đe Tốc, hàng 1★ / 4★ / 7★). Không tăng phiên bản (session con).
+
+## claude/demo-hop-tuong — ÁP cân bằng wave biến thể B vào game + BỎ trần wave 70 (11/11, người dùng duyệt)
+
+- **Nguồn số:** `docs/demo-hop-tuong/tocban/CAN-BANG-WAVE-DE-XUAT.md` (biến thể B của `tools/thap-bot-bienthe.js`). Tài liệu gốc đã cập nhật cùng commit (mục 2, 3, 4).
+- **Leo Tháp:** wave đầu tầng t = `min(t, 5 + ⌊0,62(t−1)⌋)` → tầng 1–11 bắt đầu ở wave 1–11; mana đầu giữ công thức theo wave đầu (`chedo-c.js CDC.thap.w`).
+- **Quái:** số quái/wave `min(20, 8 + ⌊w/4⌋)`; Splitter tách 3 (cũ 5), Big Splitter tách 2 (cũ 3); slime chỉ ở wave Phân bào; 3 loại thuần số liệu Swarmling / Runner / Elite (mượn hình sẵn có). **Wave có chủ đề** theo `w % 10` (`data.js CHU_DE, dsQuaiChuDe` — dùng chung cho `taoWave` và `CD.dsQuai`); tên chủ đề hiện ở bảng "WAVE n" đầu wave (`ui.js bangWave`, `TEXT.chuDe`).
+- **Mana:** quái thường × `(1 + 1,7·min(w,30)/30)` (`manaGiet`), hệ số loại Giant 4 / Big Splitter 3; trùm giữ công thức gốc ×12 (`manaGietGoc`). Không đổi khoản mana nào khác.
+- **Riêng B:** gánh hậu kỳ Vàng / Đỏ +2%/wave (wave 20–40), sau 40 không tăng (`HAU_KY`); máu quái × `mauHeSo` (×0,95 ở wave 30, ×1,069/wave 41–60, ×1,091/wave từ 61).
+- **Bỏ trần wave 70:** `LUAT.waveMax = 0` — solo / co-op (cả online) đánh tới khi hết tim, kết quả là DEFEAT "Reached WAVE n"; bảng trùm sắp tới (`vaotran.js`) không dừng ở 70. Chế độ có điều kiện kết thúc riêng không đổi.
+- **Thưởng:** mốc Thử thách tuần 15/25/35/45 → 20/30/40/50; mốc Vô tận 80–120 → 75–115 (thưởng giữ nguyên).
+- **Chữ:** mẹo "Splitters burst into 3" + mẹo 3 quái mới (`ketqua.js`), từ điển VI (`vi.json` → `ngonngu-vi.js`).
