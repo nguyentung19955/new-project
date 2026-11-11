@@ -1443,3 +1443,5 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - Biểu tượng chế độ mới (ảnh ChatGPT 11/11, cắt từ 1 tấm 3×2, 192 px): `ic_coop`, `ic_pvp` (thay hình ụ cơ khí cũ), `ic_online`, `ic_race`, `ic_tutorial`, `ic_cup` (ô cúp ở kết quả PVP). Đã xem ảnh GAME MODE 390×844.
 
 - Merge King VÀNG: bỏ 2 ngôi sao ở mũi vương miện trong ảnh `vughepvang_nong.png` (người dùng 11/11: lẫn với sao cấp ★ vẽ trên đầu ụ); vẫn phân biệt bằng màu vàng + kim cương trắng.
+
+- Chạm–chạm để ghép (ui.js): chọn ụ TRƯỚC khi mở dải thông tin và bọc try/catch `moTT` (6 lớp bọc; lỗi riêng trên iPhone làm mất lựa chọn → không sáng ô đích); `pointercancel` khi không có thao tác dở không còn xoá lựa chọn. Chưa tái hiện được trên máy thử — chờ người dùng thử lại trên iPhone.
