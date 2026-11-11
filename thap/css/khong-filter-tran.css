@@ -1,0 +1,14 @@
+/* KHÔNG CSS FILTER Ở THANH DƯỚI MÀN TRẬN (11/11 — đo trên iPhone bằng nhật ký admin + chế độ "NF"):
+   Safari iOS phải tô lại cả lớp có filter (drop-shadow / saturate / brightness / grayscale) mỗi lần phần tử bên trong đổi (số mana, nút SUMMON lún, thẻ nâng cấp,
+   thẻ chỉ huy hồi chiêu) → khung cách nhau 85–150 ms dù code game chỉ chạy 5–19 ms. Tắt filter: 45–60 khung/giây, không còn khung chậm khi thao tác.
+   → Bỏ bóng đổ trang trí; trạng thái "tắt / thiếu mana / bàn đầy / đang hồi" đổi từ làm xám bằng filter sang làm mờ bằng opacity (ghép lớp trên GPU, không tô lại).
+   Nạp CUỐI; 5 id để thắng mọi quy tắc `html.ha2 body #wrap #duoi … !important`. Không đổi bố cục, không đổi luật. */
+html body #wrap#wrap#wrap#wrap #duoi, html body #wrap#wrap#wrap#wrap #duoi *, html body #wrap#wrap#wrap#wrap #duoi *::before, html body #wrap#wrap#wrap#wrap #duoi *::after { filter: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+/* nút SUMMON thiếu mana / bàn đầy */
+html body #wrap#wrap#wrap#wrap #duoi #nut-trieu.thieu, html body #wrap#wrap#wrap#wrap #duoi #nut-trieu.tn-day { opacity: .55 !important; }
+/* thẻ chỉ huy: thiếu mana / bàn đầy / đang hồi */
+html body #wrap#wrap#wrap#wrap #duoi #the-mv.cht-thieu .mv-ic, html body #wrap#wrap#wrap#wrap #duoi #the-mv.cht-day .mv-ic, html body #wrap#wrap#wrap#wrap #duoi #the-mv.cht-hoi .mv-ic, html body #wrap#wrap#wrap#wrap #duoi #the-mv.tn-day .mv-ic { opacity: .55 !important; }
+/* nút tốc độ chưa bật */
+html body #wrap#wrap#wrap#wrap #duoi .nut-cot #nut-tocdo:not(.bat)::before { opacity: .6 !important; }
+/* thẻ kích hoạt (Hydra…) chưa dùng được */
+html body #wrap#wrap#wrap#wrap #duoi #bo-the .the.hy-kich.hy-tat > *:not(.gia) { opacity: .5 !important; }

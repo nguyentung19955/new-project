@@ -1350,3 +1350,9 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 ## claude/demo-hop-tuong — nhật ký khung chậm trên màn cho admin; WebGL bật mặc định lại (11/11 15:40)
 - `ADMIN.nk` (`thap/js/admin.js`, `#adm-nk`): mỗi khung cách khung trước > 80 ms ghi 1 dòng dưới nhãn FPS: `+giây khoảng-cách | raf ve gl up n/ms WxH | ev n/ms` (9 dòng gần nhất). Chạm nhãn FPS để ẩn/hiện. Chỉ admin (bọc requestAnimationFrame / REN.ve / GLR.xong / tải texture chỉ khi `ADMIN.la()` lúc nạp trang).
 - `MAC_DINH = true` lại theo yêu cầu người dùng (thử trên icon màn hình chính iPhone); lỗi đang theo dõi: chạm là GL tụt 4–6 khung/giây; lùi `?gl=0`.
+
+## claude/demo-hop-tuong — hết giật khi thao tác trên iPhone: bỏ CSS filter ở thanh dưới màn trận (11/11 16:30)
+- Nguyên nhân (đo trên iPhone người dùng bằng nhật ký admin `ADMIN.nk`): khung cách nhau 85–150 ms khi chạm nhưng code game chỉ 5–19 ms, GPU 0 ms, không tải texture; mỗi khung chậm đều có đổi DOM ở `#nut-trieu` / `#mana` / `#the-mv` / `#bo-the` — các phần tử có `filter: drop-shadow / saturate / brightness`. Safari iOS tô lại cả lớp có filter mỗi lần đổi. Bật chế độ thử "NF" (tắt mọi filter): 45–60 khung/giây, 0 khung chậm khi thao tác. KHÔNG phải do WebGL.
+- Sửa: `thap/css/khong-filter-tran.css` (nạp cuối): `#duoi` và mọi phần tử con `filter: none`; trạng thái tắt (SUMMON thiếu mana / bàn đầy, thẻ chỉ huy thiếu / đầy / hồi, nút tốc độ chưa bật, thẻ kích hoạt tắt) đổi sang `opacity`. Mất bóng đổ mềm dưới nút/thẻ. Không đổi luật.
+- Nhãn admin: chạm để đổi nhật ký → NF (tắt filter toàn #wrap, để thử phần còn lại) → ẩn.
+- CHƯA kiểm trên iPhone bản sửa chính thức (mới có kết quả của chế độ NF); thanh trên (#top) và bảng nổi còn filter.
