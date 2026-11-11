@@ -145,8 +145,9 @@ const DDUI = {
     const kq = document.getElementById('ketqua'), chi = document.getElementById('kq-chi'); if (!kq || !chi || !k.dd) return;
     const r = DD.ket(c, k.dd), s = DD.st(), tim = G.ban[0] ? Math.max(0, G.ban[0].tim | 0) : 0;
     const dich = (x) => (typeof NN !== 'undefined' && NN.t ? NN.t(x) : x);
-    const phu = document.getElementById('kq-phu'); if (phu) phu.textContent = dich('RACE TRACK · WEEK ' + c.tuan) + ' · ' + this.gio(r.t) + (k.ly && !k.thang ? ' · ' + dich(k.ly) : '');
-    const ten = document.getElementById('kq-ten'); if (ten) ten.textContent = k.thang ? 'TIME UP!' : 'RACE OVER';
+    const phu = document.getElementById('kq-phu'); if (phu) phu.textContent = dich('RACE TRACK · WEEK ' + c.tuan) + ' · ' + this.gio(r.t) + (k.ly && !k.dd.het ? ' · ' + dich(k.ly) : '');
+    const ten = document.getElementById('kq-ten'); if (ten) ten.textContent = k.dd.het ? 'TIME UP!' : 'RACE OVER';
+    kq.classList.toggle('dd-tt', !k.dd.het); // hết tim / bỏ cuộc: khung trung tính (css/chedo-d.css) — không phải thua, không phải thắng
     const so = document.getElementById('kq-so'), chuSo = 'SCORE <b>' + CDUI.so(r.diem) + '</b>';
     if (so) { so.innerHTML = chuSo; setTimeout(() => { if (G.ketThuc === k && !kq.hidden) { so.innerHTML = chuSo; try { NN.quet(so); } catch (e) { } } }, 800); } // sau hoạt ảnh đếm WAVE của ketqua.js
     const o = (nhan, v, em) => '<div class="kq-o"><small>' + nhan + '</small><b>' + v + '</b>' + (em ? '<em>' + em + '</em>' : '') + '</div>';
@@ -154,7 +155,7 @@ const DDUI = {
     if (r.cu) th = '<small>LAST WEEK\'S RACE · NOT COUNTED</small>';
     else if (CDDUI.coThuong(r.ra)) th = '<small>MILESTONE REWARDS · ' + this.nhanMoc(Math.max.apply(null, r.moc)) + '</small>' + CDDUI.thuongHtml(r.ra);
     else th = '<small>' + (r.moi ? 'NEW WEEKLY BEST' : 'NO NEW MILESTONE') + '</small>';
-    chi.innerHTML = '<div class="kq-hang">' + o('WEEK BEST', s.best ? CDUI.so(s.best) : '—', r.moi ? 'NEW BEST' : '') + o('KILLS', CDUI.so(r.giet)) + o('LIVES', tim + '/' + DDC.tim) + '</div><div class="tb-kq cd-kq">' + th + '</div>';
+    chi.innerHTML = '<div class="kq-hang">' + o('WEEK BEST', s.best ? CDUI.so(s.best) : '—', r.moi ? 'NEW BEST' : '') + o('KILLS', CDUI.so(r.giet)) + o('LIVES', tim + '/' + DDC.tim) + '</div><div class="tb-kq cd-kq dd-xd">' + th + '</div>';
     try { OT.quet(chi); } catch (e) { }
     DD.lap = true;
     const lai = kq.querySelector('[data-act="choilai"]'); if (lai) lai.textContent = 'RACE AGAIN';
@@ -195,10 +196,70 @@ const MOCW = {
   kq(k) {
     const chi = document.getElementById('kq-chi'); if (!chi || !k) return;
     const r = this.nhan(Math.max(1, k.wave | 0)); if (!r.moc.length) return;
-    chi.insertAdjacentHTML('beforeend', '<div class="tb-kq cd-kq"><small>FIRST TIME · WAVE ' + Math.max.apply(null, r.moc) + '</small>' + CDDUI.thuongHtml(r.ra) + '</div>');
+    chi.insertAdjacentHTML('beforeend', '<div class="tb-kq cd-kq dd-xd"><small>FIRST TIME · WAVE ' + Math.max.apply(null, r.moc) + '</small>' + CDDUI.thuongHtml(r.ra) + '</div>');
     try { OT.quet(chi); } catch (e) { }
   },
 };
+
+// ===================================================== CÚP PVP · TÚI THẮNG · ĐỒNG ĐỘI CHO NGƯỜI MỚI (theo DCDW, người dùng chốt 11/11 19:06) =====================================================
+//  · CÚP: thắng PVP +30, thua −20 (không âm). Mốc cúp CAO NHẤT đạt lần đầu → thưởng 1 lần (ghi cờ trước khi phát). Lưu: turret_kt.cd.cup { c, max, nhan }.
+//  · ĐỐI THỦ MÁY theo cúp (CUPC.doKho): bậc ụ được dùng + cấp thẻ → người mới 0 cúp gặp bộ Trắng / Xanh cấp đầu.
+//  · TÚI THẮNG: thắng PVP → Rương Trận rơi với xác suất CUPC.pRuong, TẤT ĐỊNH theo hạt trận (rngHat); thua PVP: chỉ vàng. Game chưa có khe rương hẹn giờ
+//    → rương mở ngay như cũ (KHÔNG dựng khe / trần 4 rương).
+//  · CO-OP: chơi và nhận thưởng KHÔNG giới hạn như cũ (người dùng 19:08 bác "3 lượt thưởng / ngày" — không làm).
+//  · NGƯỜI MỚI (cấp phi công ≤ MOIC.cap): đồng đội máy CO-OP dùng bộ cố định toàn ụ gây sát thương Trắng / Xanh (MOIC.bo) thay vì ngẫu nhiên.
+const CUPC = {
+  thang: 30, thua: 20, pRuong: 0.6,
+  moc: {
+    100: [{ vang: 500 }, { ruong: 'thuong' }], 200: [{ vang: 1000 }, { ngoc: 20 }], 300: [{ ngoc: 30 }, { ruong: 'thuong', n: 2 }], 500: [{ vang: 2000 }, { ruong: 'vang' }],
+    700: [{ vang: 3000 }, { ngoc: 50 }], 1000: [{ ruong: 'vang', n: 2 }, { tt: 1 }], 1300: [{ vang: 5000 }, { ruong: 'hh', n: 1 }], 1600: [{ ngoc: 80 }, { ruong: 'hh', n: 1 }],
+    2000: [{ vang: 8000 }, { ruong: 'hh', n: 2 }, { tt: 2 }], 2500: [{ vang: 10000 }, { ruong: 'hh', n: 3 }, { tt: 3 }],
+  },
+  // [từ cúp, bậc cao nhất của bộ đối thủ, cấp thẻ: số = trần so với mức trung bình của người chơi · 'tb' = bằng · 'tb+1', hệ số MANA đối thủ nhận khi diệt quái]
+  doKho: [[0, 'xanh', 0, 0.6], [200, 'tim', 2, 0.8], [500, 'vang', 'tb', 1], [1000, 'do', 'tb', 1], [2000, 'do', 'tb+1', 1]],
+};
+const CUP = {
+  st() {
+    const c = CD.st(); let s = c.cup;
+    if (!s || typeof s !== 'object' || Array.isArray(s)) s = c.cup = {};
+    s.c = Math.max(0, s.c | 0); s.max = Math.max(s.c, s.max | 0); if (!s.nhan || typeof s.nhan !== 'object') s.nhan = {};
+    return s;
+  },
+  ds: () => Object.keys(CUPC.moc).map(Number).sort((a, b) => a - b),
+  ke() { const s = this.st(); return this.ds().find(m => !s.nhan[m]) || 0; },
+  muc(c) { let m = CUPC.doKho[0]; for (const x of CUPC.doKho) if (c >= x[0]) m = x; return m; },
+  // bộ + cấp thẻ của đối thủ máy theo cúp (bốc bằng deckNgauNhien của game — như deckDoiThu: ≥ 3 ụ gây sát thương, ≤ 1 hỗ trợ)
+  doiThu(c) {
+    const m = this.muc(c), tt = TIERS[m[1]].thuTu, tru = (G.roster || []).filter(r => TIERS[r.bac].thuTu > tt).map(r => r.id);
+    let d = null;
+    for (let lan = 0; lan < 40; lan++) { const x = deckNgauNhien(tru); if (x.length === 5 && x.filter(id => SKILLS[id].dmg && SKILLS[id].vai !== 'ht').length >= 3 && x.filter(id => SKILLS[id].vai === 'ht').length <= 1) { d = x; break; } }
+    if (!d) d = deckNgauNhien(tru);
+    const cm = THEBAI.capMay(d), cap = {};
+    for (const id of d) cap[id] = typeof m[2] === 'number' ? Math.min(cm[id] | 0, m[2]) : m[2] === 'tb+1' ? Math.min((cm[id] | 0) + 1, THE.maxLv(THEBAI.bac(id)) - THE.lvDau[THEBAI.bac(id)]) : cm[id] | 0;
+    return { deck: d, cap, mana: m[3] };
+  },
+  roi(hat) { return rngHat(((hat | 0) * 7919 + 4421) | 0)() < CUPC.pRuong; }, // túi thắng: tất định theo hạt trận
+  // hết trận PVP: đổi cúp + mốc lần đầu → { d, c, ra, moc }
+  ket(thang) {
+    const s = this.st(), c0 = s.c;
+    s.c = Math.max(0, s.c + (thang ? CUPC.thang : -CUPC.thua)); s.max = Math.max(s.max, s.c);
+    const ra = { vang: 0, ngoc: 0, the: [], tt: 0 }, moc = [];
+    for (const m of this.ds()) { if (s.max < m || s.nhan[m]) continue; s.nhan[m] = 1; moc.push(m); CD.gop(ra, CD.phat(CUPC.moc[m], 'cdcup' + m, 'cup')); }
+    KT.luu();
+    return { d: s.c - c0, c: s.c, ra, moc };
+  },
+  kq(k) {
+    const chi = document.getElementById('kq-chi'); if (!chi || !k) return;
+    const r = this.ket(!!k.thang), ke = this.ke();
+    let h = '<div class="tb-kq cd-kq dd-xd"><small>CUPS ' + CDUI.so(r.c) + ' (' + (r.d >= 0 ? '+' : '−') + Math.abs(r.d) + ')' + (ke ? ' · NEXT PRIZE ' + CDUI.so(ke) : '') + '</small>';
+    if (r.moc.length) h += '<small>CUP MILESTONE · ' + CDUI.so(Math.max.apply(null, r.moc)) + '</small>' + CDDUI.thuongHtml(r.ra);
+    chi.insertAdjacentHTML('beforeend', h + '</div>');
+    try { OT.quet(chi); } catch (e) { }
+  },
+};
+const MOIC = { cap: 5, bo: ['tia', 'lien', 'set', 'sungluc', 'laser', 'mortar', 'phun', 'maychem'] };
+// bộ cố định của đồng đội máy cho người mới: 5 ụ gây sát thương Trắng / Xanh đầu tiên trong MOIC.bo
+function boDongDoiMoi() { const d = MOIC.bo.filter(id => SKILLS[id] && G.rosterMap[id] && SKILLS[id].dmg && SKILLS[id].vai !== 'ht' && TIERS[G.rosterMap[id].bac].thuTu <= TIERS.xanh.thuTu).slice(0, 5); return d.length === 5 ? d : null; }
 
 (function () {
   if (typeof KT === 'undefined' || typeof TT === 'undefined' || typeof CD === 'undefined' || typeof CDD === 'undefined' || typeof batDau !== 'function') return;
@@ -247,8 +308,9 @@ const MOCW = {
   const kt0 = ketThuc;
   ketThuc = function (thang, ly) {
     const d = G.dd; if (!d || G.ketThuc || !G.ban.length) return kt0.apply(this, arguments);
-    const x = kt0.call(this, !!d.het, d.het ? 'Time up' : d.bo ? 'Left the race · score kept' : 'Out of lives · score kept');
-    if (G.ketThuc) G.ketThuc.dd = { diem: d.diem, giet: d.giet, t: Math.max(1, Math.min(DDC.gio, Math.round(d.t0 == null ? 0 : G.t - d.t0))) };
+    const x = kt0.call(this, true, d.het ? 'Time up' : d.bo ? 'Left the race · score kept' : 'Out of lives · score kept'); // luôn "không thua": hết tim / bỏ cuộc dùng khung TRUNG TÍNH (DDUI.kq)
+    setTimeout(() => { try { document.documentElement.classList.remove('cg-thua'); } catch (e) { } }, 0); // camgiac.js tô màn thua theo đối số gốc của lot()
+    if (G.ketThuc) G.ketThuc.dd = { het: !!d.het, diem: d.diem, giet: d.giet, t: Math.max(1, Math.min(DDC.gio, Math.round(d.t0 == null ? 0 : G.t - d.t0))) };
     return x;
   };
   // bỏ cuộc (menu tạm dừng): kết thúc lượt, vẫn có màn kết quả + điểm
@@ -327,8 +389,6 @@ const MOCW = {
     };
   }
   if (typeof HM !== 'undefined' && HM.CHE.coop) {
-    const mo0 = HM.CHE.coop.mo; // bảng GAME MODE: CO-OP ghi mốc thưởng kế tiếp
-    Object.defineProperty(HM.CHE.coop, 'mo', { configurable: true, get() { let w = 0; try { w = MOCW.ke(); } catch (e) { } return w ? mo0 + ' · next reward: wave ' + w : mo0; } });
     // ---- HƯỚNG DẪN là một bản riêng: mục TUTORIAL trong GAME MODE = chơi lại trận hướng dẫn (huongdan.js HD.batDau, bộ + luật cố định của nó) ----
     if (typeof HD !== 'undefined') {
       HM.CHE.hd = { ten: 'TUTORIAL', ic: 'ic_solo', phu: () => '', mo: 'One guided battle: summon, merge, commander, boss · replay any time' };
@@ -346,6 +406,77 @@ const MOCW = {
       return x;
     };
   }
+
+  // ---- CÚP PVP + đối thủ theo cúp · đồng đội cố định cho người mới · túi thắng ----
+  for (const n of ['cup']) if (!KT.NGUON.includes(n)) KT.NGUON.splice(KT.NGUON.length - 1, 0, n);
+  try { CUP.st(); } catch (e) { console.error('CUP', e); }
+  {
+    const bd2 = batDau;
+    batDau = function (che, deck, mv) {
+      const tu = G.debug.deck2 || G.debug.cap2 || (typeof ONS !== 'undefined' && ONS.on) || (typeof HD !== 'undefined' && HD.dang) || G.dd || DD.cho;
+      let dat = false, hsM = 1;
+      try {
+        if (!tu && che === 'pvp') { const x = CUP.doiThu(CUP.st().c); G.debug.deck2 = x.deck; G.debug.cap2 = x.cap; hsM = x.mana; dat = true; }
+        else if (!tu && che === 'coop' && TT.cap() <= MOIC.cap) { const d = boDongDoiMoi(); if (d) { G.debug.deck2 = d; dat = true; } }
+      } catch (e) { console.error('CUP', e); }
+      try { return bd2.apply(this, arguments); } finally { G.cupM = hsM; if (dat) { delete G.debug.deck2; delete G.debug.cap2; } }
+    };
+    // đối thủ máy ở mức cúp thấp nhận ít mana hơn mỗi mạng (G.cupM < 1) — chỉ đọc / ghi trạng thái trận, tất định
+    const ch2 = chet;
+    chet = function (E, B) {
+      const B1 = G.che === 'pvp' && G.cupM < 1 && G.ban[1] && G.ban[1].ai ? G.ban[1] : null, m0 = B1 ? B1.mana : 0, n0 = B1 ? B1.manaNay : 0;
+      const r = ch2.apply(this, arguments);
+      if (B1 && B1.mana > m0) { const bo = (B1.mana - m0) * (1 - G.cupM); B1.mana -= bo; B1.manaNay = Math.max(n0, B1.manaNay - bo); }
+      return r;
+    };
+    // Rương Trận (thebai.js): PVP = túi thắng (thắng + trúng xác suất tất định mới có thẻ; không thì chỉ vàng) · CO-OP giữ như cũ
+    const th = THEBAI.thuong;
+    THEBAI.thuong = function (k, m) {
+      if (!m || m.tut || m._thuong || G.dd) return th.apply(this, arguments);
+      const khong = m.che === 'pvp' && !(k && k.thang && CUP.roi(G.hat));
+      if (!khong) return th.apply(this, arguments);
+      const sl = THEBAI.soLuot; THEBAI.soLuot = () => 0;
+      try { return th.apply(this, arguments); } finally { THEBAI.soLuot = sl; }
+    };
+    const kq3 = UI.ketQua;
+    UI.ketQua = function (k) {
+      const tut = typeof KQ !== 'undefined' && KQ.m && KQ.m.tut, thu = G.debug && (G.debug.mana || G.debug.wave || G.debug.fill);
+      const kq0 = document.getElementById('ketqua'); if (kq0) kq0.classList.remove('dd-tt');
+      if (G.dd || tut || thu || !G.ban.length) return kq3.apply(this, arguments);
+      const x = kq3.apply(this, arguments);
+      try { if (G.che === 'pvp') CUP.kq(k); } catch (e) { console.error('CUP', e); }
+      return x;
+    };
+    if (typeof HM !== 'undefined') {
+      // GAME MODE: dòng CO-OP / PVP ngắn (≤ 2 dòng) + mốc kế / cúp; HOME: ô BEST → CUPS
+      if (HM.CHE.coop) Object.defineProperty(HM.CHE.coop, 'mo', { configurable: true, get() { let w = 0; try { w = MOCW.ke(); } catch (e) { } return 'AI ally · 3 shared lives' + (w ? ' · next prize: wave ' + w : ''); } });
+      if (HM.CHE.pvp) {
+        Object.defineProperty(HM.CHE.pvp, 'mo', { configurable: true, get() { let c = 0, ke = 0; try { c = CUP.st().c; ke = CUP.ke(); } catch (e) { } return 'Beat an AI rival · cups ' + CDUI.so(c) + (ke ? ' · next prize: ' + CDUI.so(ke) : ''); } });
+        HM.CHE.pvp.phu = () => 'Cups ' + CDUI.so(CUP.st().c);
+      }
+      const vh = HM.veHome;
+      HM.veHome = function () {
+        const r = vh.apply(this, arguments);
+        try { const b = this.el('hm-best'), nh = b && b.previousElementSibling; if (b) b.textContent = CDUI.so(CUP.st().c); if (nh && nh.dataset.cup !== '1') { nh.dataset.cup = '1'; nh.textContent = 'CUPS'; } } catch (e) { }
+        return r;
+      };
+    }
+    // gộp hồ sơ Firebase: cúp lấy lớn nhất, cờ mốc OR
+    const gp3 = KT.gop;
+    KT.gop = function (o) {
+      let a = null; const cd = o && o.kt && o.kt.cd, b = cd && cd.cup;
+      try { a = JSON.parse(JSON.stringify(CUP.st())); } catch (e) { }
+      const x = gp3.apply(this, arguments);
+      try {
+        const s = CUP.st();
+        for (const y of [a, b]) if (y && typeof y === 'object') { s.c = Math.max(s.c, y.c | 0); s.max = Math.max(s.max, y.max | 0, s.c); for (const i in (y.nhan || {})) if (y.nhan[i]) s.nhan[i] = 1; }
+        KT.luu(true);
+      } catch (e) { console.error('CUP', e); }
+      return x;
+    };
+  }
+  // hướng dẫn: màn mở đầu trận chỉ nói tới trùm wave 10 của hướng dẫn (không liệt kê trùm wave 20 / 30)
+  if (typeof VT !== 'undefined' && VT.dsTrum && typeof HD !== 'undefined') { const ds3 = VT.dsTrum; VT.dsTrum = function () { return HD.dang ? [HD.WAVE_TRUM] : ds3.apply(this, arguments); }; }
 
   // ---- HOME → EVENT: thẻ Đường Đua + bảng xếp hạng ở đầu tab sự kiện ----
   if (typeof KTUI !== 'undefined' && KTUI.ve_sk) { const g = KTUI.ve_sk; KTUI.ve_sk = function () { let t = ''; try { t = DDUI.theSk(); } catch (e) { console.error('DD', e); } return t + g.apply(this, arguments); }; }
@@ -391,10 +522,17 @@ const MOCW = {
     'Locked · reach wave # or unlock with gems': 'Đang khoá · đạt wave # hoặc mở bằng ngọc', 'Wave # or # gems': 'Wave # hoặc # ngọc',
     'Play # battles within # waves of your best': 'Chơi # trận cách wave cao nhất không quá # wave', 'CO-OP · PVP': 'CO-OP · PVP',
     'FIRST TIME · WAVE #': 'LẦN ĐẦU · WAVE #', 'TUTORIAL': 'HƯỚNG DẪN', 'One guided battle: summon, merge, commander, boss · replay any time': 'Một trận có hướng dẫn: triệu hồi, ghép, chỉ huy, trùm · chơi lại bất cứ lúc nào',
-    'Team up with an AI ally · # shared lives · next reward: wave #': 'Lập đội với đồng đội AI · # mạng chung · thưởng kế: wave #',
     'Battle rewards · Gold Chest · Daily Specials · CO-OP wave milestones · first boss kills · daily quest · Shard Forge · Legendary Seal': 'Thưởng trận · Rương Vàng · Ưu đãi hôm nay · mốc wave CO-OP · hạ trùm lần đầu · nhiệm vụ ngày · Lò rèn · Ấn Vàng',
     'Mythic / Gold Chest · Daily Specials (~# day a week) · CO-OP waves #, #, # · defeat all bosses · event #,# pts · Shard Forge': 'Rương Thần thoại / Vàng · Ưu đãi hôm nay (~# ngày/tuần) · CO-OP wave #, #, # · hạ đủ trùm · sự kiện #.# điểm · Lò rèn',
     'Mythic / Gold Chest · Daily Specials (~# day a week) · CO-OP waves #, #, # · defeat all bosses · event # pts · Shard Forge': 'Rương Thần thoại / Vàng · Ưu đãi hôm nay (~# ngày/tuần) · CO-OP wave #, #, # · hạ đủ trùm · sự kiện # điểm · Lò rèn',
+    // 11/11 19:06 cúp PVP · túi thắng · lượt thưởng CO-OP
+    'CUPS': 'CÚP', 'Cups #': 'Cúp #', 'Cups #,#': 'Cúp #.#', 'CUPS # (+#)': 'CÚP # (+#)', 'CUPS # (−#)': 'CÚP # (−#)', 'CUPS #,# (+#)': 'CÚP #.# (+#)', 'CUPS #,# (−#)': 'CÚP #.# (−#)',
+    'CUPS # (+#) · NEXT PRIZE #': 'CÚP # (+#) · MỐC KẾ #', 'CUPS # (−#) · NEXT PRIZE #': 'CÚP # (−#) · MỐC KẾ #', 'CUPS # (+#) · NEXT PRIZE #,#': 'CÚP # (+#) · MỐC KẾ #.#', 'CUPS # (−#) · NEXT PRIZE #,#': 'CÚP # (−#) · MỐC KẾ #.#',
+    'CUPS #,# (+#) · NEXT PRIZE #,#': 'CÚP #.# (+#) · MỐC KẾ #.#', 'CUPS #,# (−#) · NEXT PRIZE #,#': 'CÚP #.# (−#) · MỐC KẾ #.#',
+    'CUP MILESTONE · #': 'MỐC CÚP · #', 'CUP MILESTONE · #,#': 'MỐC CÚP · #.#',
+    'Beat an AI rival · cups #': 'Thắng đối thủ máy · cúp #', 'Beat an AI rival · cups # · next prize: #': 'Thắng đối thủ máy · cúp # · mốc kế: #', 'Beat an AI rival · cups # · next prize: #,#': 'Thắng đối thủ máy · cúp # · mốc kế: #.#',
+    'Beat an AI rival · cups #,# · next prize: #,#': 'Thắng đối thủ máy · cúp #.# · mốc kế: #.#', 'Beat an AI rival · cups #,#': 'Thắng đối thủ máy · cúp #.#',
+    'AI ally · # shared lives': 'Đồng đội máy · # mạng chung', 'AI ally · # shared lives · next prize: wave #': 'Đồng đội máy · # mạng chung · mốc kế: wave #',
     'RACE TRACK': 'ĐƯỜNG ĐUA', '8 minutes with an AI ally · beat your weekly score': '8 phút cùng đồng đội máy · vượt điểm tuần của bạn',
     'Week best #': 'Điểm tuần #', 'Week best #,#': 'Điểm tuần #.#', 'Week best —': 'Điểm tuần —',
     'Week # · best #,#': 'Tuần # · cao nhất #.#',

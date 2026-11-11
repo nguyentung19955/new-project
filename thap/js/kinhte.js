@@ -18,7 +18,7 @@ const KTC = {
   // ---- Rương: tỉ lệ % độ hiếm MỖI thẻ; bảo hiểm ----
   ruong: {
     thuong: { ten: 'NORMAL CHEST', gia: { vang: 2000 }, so: 6, tiLe: { trang: 62, xanh: 29, tim: 8.5, vang: 0.5, do: 0 } },
-    vang: { ten: 'GOLD CHEST', gia: { ngoc: 500 }, so: 8, tiLe: { trang: 44, xanh: 36, tim: 16, vang: 3.8, do: 0.2 }, bao: { tim: 1 }, pityV: 10, pityD: 120 },
+    vang: { ten: 'GOLD CHEST', gia: { ngoc: 500 }, so: 8, tiLe: { trang: 44, xanh: 36, tim: 16, vang: 3.8, do: 0.2 }, bao: { tim: 1 }, pityV: 7, pityD: 120 }, // 11/11 (theo DCDW, người dùng chốt): 6 Rương Vàng liên tiếp không ra Huyền thoại → rương thứ 7 chắc chắn ra (trước: 10); bộ đếm s.ru.pv có sẵn
     than: { ten: 'MYTHIC CHEST', gia: { ngoc: 6000 }, so: 12, tiLe: { trang: 30, xanh: 38, tim: 24, vang: 7, do: 1 }, bao: { do: 1, vang: 2 } },
     // RƯƠNG "VỎ" của phần thưởng (gacha thu thập 09/11 — tuvan/gacha-thu-thap/BANG-MO-NHOM.md §3): không bán (ban: 0).
     //  co = ô cố định: n (tham số khi phát, mặc định 1) bản Vàng nổi bật của tuần / Vàng / Đỏ trong bể rơi + 'so' thẻ thấp ngẫu nhiên.

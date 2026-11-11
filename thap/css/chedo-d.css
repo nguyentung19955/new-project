@@ -74,3 +74,8 @@
 #tt-phu.cdd-dd .cdd-m .kt-r { transform: none; margin: 0 2px; }
 #tt-phu.cdd-dd .cdd-ds { max-height: 96px; }
 .cdd-tab .cdd-tb:only-child { pointer-events: none; }
+/* hàng thưởng mốc (Đường Đua / mốc wave CO-OP / mốc cúp PVP): xuống dòng, không cuộn ngang (trước: ô đầu / cuối bị cắt mép) */
+#ketqua.kq7 .dd-xd .tb-kq-h { flex-wrap: wrap; overflow: visible; justify-content: center; padding: 0; gap: 4px 6px; touch-action: auto; }
+/* Đường Đua hết tim / bỏ cuộc: khung TRUNG TÍNH (không phải thua, không phải thắng) */
+#ketqua.dd-tt .bang-ten { color: #71E4EE !important; text-shadow: 0 2px 0 #000 !important; }
+html body #wrap #ketqua.dd-tt .kq-ic { content: url(../assets/ua_ic_sk.png) !important; filter: none !important; object-fit: contain !important; }
