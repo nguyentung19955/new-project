@@ -53,19 +53,19 @@ ADMIN.fps = {
     const fps = F.n * 1000 / (t - F.t0); F.t0 = t; F.n = 0;
     if (!F.hien()) { if (F.el) F.el.style.display = 'none'; F.ds.length = 0; F.dv.length = 0; return; }
     F.ds.push(fps); if (F.ds.length > 20) F.ds.shift();
-    if (!F.el) { F.el = document.createElement('div'); F.el.id = 'adm-fps'; document.body.appendChild(F.el); }
+    if (!F.el) { F.el = document.createElement('div'); F.el.id = 'adm-fps'; document.body.appendChild(F.el); F.el.style.pointerEvents = 'auto'; F.el.addEventListener('pointerdown', (e) => { e.stopPropagation(); e.preventDefault(); const N = ADMIN.nk; N.che = ((N.che | 0) + 1) % 3; N.an = N.che === 2; document.documentElement.classList.toggle('adm-nf', N.che === 1); N.ve(); }, true); }
     const gl = typeof GLR !== 'undefined' && GLR.bat && !GLR.mat;
     // chẩn đoán: "ve a/b" = ms của REN.ve (trung bình / lớn nhất 10 s) — FPS thấp mà ve nhỏ → nghẽn NGOÀI phần vẽ trận (sự kiện chạm, DOM, ghép lớp);
     //   "t" = số texture GL tải lớn nhất trong 1 khung (10 s)
     if (!F.boc && typeof REN !== 'undefined' && REN.ve) { F.boc = 1; const g = REN.ve; REN.ve = function () { const t0 = performance.now(); try { return g.apply(this, arguments); } finally { const d = performance.now() - t0; F.vs += d; F.vn++; if (d > F.vm) F.vm = d; if (gl0() && GLR.dem && GLR.dem.tai > F.tm) F.tm = GLR.dem.tai; } }; }
     F.dv.push([F.vn ? F.vs / F.vn : 0, F.vm, F.tm]); if (F.dv.length > 20) F.dv.shift(); F.vs = F.vn = F.vm = F.tm = 0;
     const tb = F.dv.reduce((a, x) => a + x[0], 0) / F.dv.length, mx = Math.max.apply(null, F.dv.map(x => x[1])), tx = Math.max.apply(null, F.dv.map(x => x[2]));
-    F.el.textContent = (gl ? 'GL ' : '2D ') + Math.round(fps) + ' · min ' + Math.round(Math.min.apply(null, F.ds)) + ' · ve ' + Math.round(tb) + '/' + Math.round(mx) + (gl ? ' · t' + tx : '');
+    F.el.textContent = (ADMIN.nk.che === 1 ? 'NF ' : '') + (gl ? 'GL ' : '2D ') + Math.round(fps) + ' · min ' + Math.round(Math.min.apply(null, F.ds)) + ' · ve ' + Math.round(tb) + '/' + Math.round(mx) + (gl ? ' · t' + tx : '');
     F.el.style.display = '';
   },
 };
 requestAnimationFrame(ADMIN.fps.khung);
-// NHẬT KÝ KHUNG CHẬM trên màn (chỉ admin; chạm nhãn FPS để ẩn/hiện): mỗi khung cách khung trước > 80 ms ghi 1 dòng
+// NHẬT KÝ KHUNG CHẬM trên màn (chỉ admin; chạm nhãn FPS để đổi: nhật ký → nhật ký + "NF" (thử TẮT mọi CSS filter của giao diện trận: html.adm-nf) → ẩn): mỗi khung cách khung trước > 80 ms ghi 1 dòng
 //   "+giây  khoảng-cách | raf = tổng ms mọi hàm requestAnimationFrame | ve = REN.ve | gl = GLR.xong (phát lệnh GPU) | up n/ms WxH = số lần tải texture / ms / canvas lớn nhất
 //    | ev n/ms = số sự kiện chạm / ms xử lý | dom n id:n = số lần đổi DOM trong khung + phần tử đổi nhiều nhất". gpu = ms chờ GPU vẽ xong (gl.finish, chỉ khi bảng đang hiện); L = lệnh vẽ GL; v = cụm vector. raf nhỏ mà khoảng cách lớn → nghẽn ở trình duyệt (ghép lớp, dọn rác, DOM), không phải code vẽ.
 ADMIN.nk = {
@@ -103,7 +103,6 @@ ADMIN.nk = {
   ve() {
     if (!this.el) {
       this.el = document.createElement('div'); this.el.id = 'adm-nk'; document.body.appendChild(this.el);
-      const f = document.getElementById('adm-fps'); if (f) { f.style.pointerEvents = 'auto'; f.addEventListener('pointerdown', (e) => { e.stopPropagation(); this.an = !this.an; this.ve(); }, true); }
     }
     this.el.style.display = this.an || !ADMIN.fps.hien() ? 'none' : ''; this.el.textContent = this.ds.join('\n');
   },
