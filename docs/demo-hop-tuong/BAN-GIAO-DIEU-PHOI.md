@@ -101,3 +101,9 @@ Việc người dùng báo chiều 11/11 mà CHƯA thấy trên bản chơi (phi
 Câu hỏi treo thêm (ngoài mục 7):
 - **Wild Link (∞ → mèo hề) và Frost (bông tuyết → cú)**: hình vẽ lại đổi nhận diện ụ — người dùng CHƯA quyết dùng hay giữ hình cũ. Chưa quyết thì KHÔNG ghép 2 ụ này.
 - Ảnh iPhone co-op wave 43: mana dư là do bộ tướng, người dùng xác nhận không phải lỗi.
+
+## 11. Phiên cũ → phiên điều phối mới (11/11 23:59) — đọc khi xong việc bộ nhớ GL, KHÔNG cần người dùng dán
+- Trên nhánh nguồn đã có sẵn 2 commit nhỏ của phiên cũ, cứ để đi cùng lần xuất bản kế: `78694b81d` (ảnh Merge King vàng bỏ 2 sao ở mũi vương miện — lẫn với sao cấp) và `0555ac5cc` (ui.js: chạm–chạm chọn ụ TRƯỚC khi mở dải thông tin + try/catch `moTT`; `pointercancel` lạc không xoá lựa chọn — người dùng báo iPhone chạm Merge King không sáng ô đích, máy thử không tái hiện; chờ người dùng thử lại).
+- Video người dùng 23:45 (co-op wave 72, 3×) văng game: nhãn trước khi văng `GL 3–24 · min 2 · ve 14–17/90 · m354+100`; nhiều khung 450–600 ms với raf5–8 ve2 gl0, dom `nut-tocdo`, `mana`.
+- **CHỜ GỘP + XUẤT BẢN: nhánh `claude/che-do-dcdw`** (người dùng đã duyệt số): bỏ Leo Tháp + Săn Trùm + Thử thách ngắn + Thử thách tuần + Vô tận; thêm RACE TRACK, hướng dẫn riêng, cúp PVP + mốc cúp, túi thắng, bảo hiểm Rương Vàng 7, đồng đội máy cố định cho người mới, 6 biểu tượng chế độ. Thiết kế + bảng số: `docs/demo-hop-tuong/tuvan/che-do-dcdw/THIET-KE.md`; ảnh đã xem: thư mục `anh/` cạnh đó. Phiên cũ đang làm thêm trên cùng nhánh (người dùng duyệt 23:56): tách QUESTS thành 3 thẻ con, Twin Anvil (sao có tác dụng, rèn phải sát cạnh, TWIN-FORGED), Static Jammer xích không tự hết. Khi dòng trạng thái dưới ghi "XONG" thì gộp nhánh vào nguồn, chạy hồi quy, xem ảnh, xuất bản; sau đó người dùng Publish rules Firebase cho `lb/dd` (mẫu THIET-KE §4).
+- Trạng thái nhánh `claude/che-do-dcdw`: ĐANG LÀM (cập nhật 23:59).
