@@ -1346,3 +1346,7 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 ## claude/demo-hop-tuong — WebGL TẮT mặc định lại + nhãn admin thêm số chẩn đoán (11/11 14:45)
 - Người dùng (iPhone, co-op wave 7, 3×): để yên thì mượt, chạm/thao tác bất kỳ là nhãn tụt `GL 6 · min 6` / `GL 4 · min 4`. Chưa tái hiện được trên máy đo (lượng tải texture/khung nhỏ) → `MAC_DINH = false` (thử GL bằng `?gl=1`).
 - Nhãn admin: `2D 60 · min 48 · ve 8/31` (+ ` · t12` khi GL) — `ve a/b` = ms của `REN.ve` trung bình / lớn nhất 10 s; `t` = số texture GL tải nhiều nhất trong 1 khung. FPS thấp mà `ve` nhỏ → nghẽn ngoài phần vẽ trận.
+
+## claude/demo-hop-tuong — nhật ký khung chậm trên màn cho admin; WebGL bật mặc định lại (11/11 15:40)
+- `ADMIN.nk` (`thap/js/admin.js`, `#adm-nk`): mỗi khung cách khung trước > 80 ms ghi 1 dòng dưới nhãn FPS: `+giây khoảng-cách | raf ve gl up n/ms WxH | ev n/ms` (9 dòng gần nhất). Chạm nhãn FPS để ẩn/hiện. Chỉ admin (bọc requestAnimationFrame / REN.ve / GLR.xong / tải texture chỉ khi `ADMIN.la()` lúc nạp trang).
+- `MAC_DINH = true` lại theo yêu cầu người dùng (thử trên icon màn hình chính iPhone); lỗi đang theo dõi: chạm là GL tụt 4–6 khung/giây; lùi `?gl=0`.
