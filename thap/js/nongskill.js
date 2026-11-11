@@ -352,7 +352,7 @@
     if (typeof P2 !== 'undefined' && P2.TO) for (const B of G.ban) for (const id of B.deck || []) if (P2.TO[id]) ds.push(P2.TO[id]);
     if (typeof P3 !== 'undefined' && P3.M) for (const B of G.ban) for (const id of B.deck || []) if (P3.M['p3_' + id]) ds.push('p3_' + id); // tờ P3 (vfxp3.js) khi đã có
     for (const t of ds) if (!laTrum(t) && !laQuai(t)) themTen(t);
-    NS._napDs = null; if (typeof _GLA === 'function' && _GLA()) { NS._napDs = NS.dsHieuUng(); for (const t of NS._napDs.keys()) if (REN.anh[t] && !laTrum(t) && !laQuai(t)) themTen(t); } // WebGL ảnh ảo: ảnh gốc của hiệu ứng chắc dùng → GPU (NS.napGL)
+    NS._napDs = null; if (typeof _GLA === 'function' && _GLA()) { NS._napDs = NS.dsHieuUng(); for (const t of NS._napDs.keys()) if (!laTrum(t) && !laQuai(t)) { if (!REN.anh[t]) REN.img(t); /* ảnh skill tải lười (VXM.U, tờ P2): gọi tải ngay đầu trận thay vì ở lần dùng đầu */ themTen(t); } } // WebGL ảnh ảo: ảnh gốc của hiệu ứng chắc dùng → GPU (NS.napGL)
   };
   // trùm của wave này / wave sau (cùng cách mục 3b): mọi tờ trum_<id>* / fx_trum_<id> đã tải
   AM.themTrum = function () {

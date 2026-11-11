@@ -49,12 +49,13 @@ const GLR = (() => {
       //   bản trắng = phủ trắng độ mạnh 1) · 2 = bản xám hoá đá (REN.toBien 'xam': độ sáng × 0,85 + 18, ngả ấm) · 3 = nhân màu. 0 = ảnh nguyên (không rẽ nhánh nào chạy).
       //   4 = hoà 'color' của canvas (REN.toMau / HU.toMau: fillRect màu kiểu 'color' rồi 'destination-in' ảnh): Cb = t.rgb / t.a, B = SetLum(màu, Lum(Cb)) + ClipColor (Lum = 0,3 R + 0,59 G + 0,11 B — chuẩn W3C Compositing),
       //       kết quả nhân sẵn = a × mix(màu, B, a) (điểm bán trong suốt ngả về màu tô y như canvas; a = 0 → 0, không viền) · 5 = như 4 trên bản TRẮNG của ảnh (Lum = 1 → B = trắng).
+      //   6 = phủ màu như kiểu 1 rồi alpha^2,2 (ảnh vòng GỌN của vòng hồi chiêu — PX.anhHoi: quầng mờ thu hẹp; nhân sẵn nên cả 4 kênh × a^1,2).
       //   v_w.z = mặt nạ alpha tuyến tính (kẹp 0..1; 1 = không mặt nạ).
       'varying vec2 v_uv;varying vec4 v_gh;varying vec4 v_c;varying vec4 v_m;varying vec3 v_w;varying vec4 v_t;void main(){float v_k=v_w.y;' +
       'vec2 p=clamp(min(v_c.xy+0.5,v_c.zw)-max(v_c.xy-0.5,vec2(0.0)),0.0,1.0);vec2 uv=clamp(v_uv,v_gh.xy,v_gh.zw);float i=floor(v_w.x*0.5+0.01);float w=clamp(v_w.x-2.0*i,0.0,1.0);vec4 t;' + lay +
       'if(v_k>0.5){if(v_k<1.5)t.rgb=mix(t.rgb,v_t.rgb*t.a,v_t.a);else if(v_k<2.5){float l=dot(t.rgb,vec3(0.3,0.59,0.11))*0.85+0.0706*t.a;t.rgb=vec3(l*1.02,l,l*0.94);}else if(v_k<3.5)t.rgb*=v_t.rgb;' +
-      'else if(t.a>0.0){vec3 c=vec3(1.0);if(v_k<4.5){float l=clamp(dot(t.rgb,vec3(0.3,0.59,0.11))/t.a,0.0,1.0);c=v_t.rgb+(l-dot(v_t.rgb,vec3(0.3,0.59,0.11)));float n=min(min(c.r,c.g),c.b);float x=max(max(c.r,c.g),c.b);' +
-      'if(n<0.0)c=l+(c-l)*l/(l-n);if(x>1.0)c=l+(c-l)*(1.0-l)/(x-l);}t.rgb=t.a*mix(v_t.rgb,clamp(c,0.0,1.0),t.a);}}' +
+      'else if(v_k<5.5){if(t.a>0.0){vec3 c=vec3(1.0);if(v_k<4.5){float l=clamp(dot(t.rgb,vec3(0.3,0.59,0.11))/t.a,0.0,1.0);c=v_t.rgb+(l-dot(v_t.rgb,vec3(0.3,0.59,0.11)));float n=min(min(c.r,c.g),c.b);float x=max(max(c.r,c.g),c.b);' +
+      'if(n<0.0)c=l+(c-l)*l/(l-n);if(x>1.0)c=l+(c-l)*(1.0-l)/(x-l);}t.rgb=t.a*mix(v_t.rgb,clamp(c,0.0,1.0),t.a);}}else{t.rgb=mix(t.rgb,v_t.rgb*t.a,v_t.a);t*=pow(t.a,1.2);}}' +
       'gl_FragColor=mix(t,vec4(t.a),w)*(v_m*(p.x*p.y*clamp(v_w.z,0.0,1.0)));}';
   };
   const huu = Number.isFinite;
@@ -636,7 +637,7 @@ const GLR = (() => {
     aoTu(c, q) {
       if (!c || !this.aoOn) return null; const s = c._ao || (c._goc && !c._glV ? this.aoGoc(c) : null); if (!s || c._veG) return null;
       let k = q.k | 0, t = (q.t || 0) >>> 0;
-      if (s.k) { if (s.k === 1 && s.t === 0xffffffff && k === 4) k = 5; else if (!k) { k = s.k; t = s.t; } else return null; }
+      if (s.k) { if (s.k === 1 && s.t === 0xffffffff && k === 4) k = 5; else if (s.k === 1 && k === 6) t = s.t; else if (!k) { k = s.k; t = s.t; } else return null; }
       if (s.mn && q.mn) return null;
       const r = this.ao(s.g, c.width, c.height, { k, t, al: s.al, them: s.them, mn: q.mn || s.mn, kho: q.kho, khoa: q.khoa, dung: q.dung, o: s.o ? s.o.map(v => ({ lx: v.lx, ly: v.ly, lw: v.lw, lh: v.lh, sx: v.sx, sy: v.sy, sw: v.sw, sh: v.sh, p: null })) : null });
       const a = r._ao; a.lx = s.lx; a.ly = s.ly; a.lw = s.lw; a.lh = s.lh; a.sx = s.sx; a.sy = s.sy; a.sw = s.sw; a.sh = s.sh;

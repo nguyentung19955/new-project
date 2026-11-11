@@ -230,6 +230,11 @@ const PX = {
   anhHoi(mau) {
     const c0 = this._hoiIm[mau]; if (c0) return c0;
     const a = this.mau('fx_vong_mong', mau); if (!a) return null;
+    if ((a._ao || a._goc) && typeof _GLA === 'function' && _GLA()) { // WebGL (ảnh ảo): alpha^2,2 = kiểu tô 6 của shader trên chính ảnh vòng tô màu — không dựng canvas + chuỗi mip thật, không tải
+      const r = GLR.aoTu(a, { k: 6, kho: this._hoiIm, khoa: mau, dung: (cv) => { const s = this.mau('fx_vong_mong', mau); if (!s || !s.width) return false; const x = cv.getContext('2d'); x.drawImage(s, 0, 0);
+        try { const d = x.getImageData(0, 0, cv.width, cv.height), p = d.data; for (let i = 3; i < p.length; i += 4) p[i] = Math.round(255 * Math.pow(p[i] / 255, 2.2)); x.putImageData(d, 0, 0); } catch (e) { } return true; } }); // vetay-ok: png — chỉnh alpha của chính ảnh PNG fx_vong_mong (thu quầng)
+      if (r) return (this._hoiIm[mau] = r);
+    }
     const c = document.createElement('canvas'); c.width = a.width; c.height = a.height;
     const x = c.getContext('2d'); x.drawImage(a, 0, 0);
     try { const d = x.getImageData(0, 0, c.width, c.height), p = d.data; for (let i = 3; i < p.length; i += 4) p[i] = Math.round(255 * Math.pow(p[i] / 255, 2.2)); x.putImageData(d, 0, 0); } catch (e) { } // vetay-ok: png — chỉnh alpha của chính ảnh PNG fx_vong_mong (thu quầng)
