@@ -303,6 +303,8 @@ const GLR = (() => {
       // giới hạn lấy mẫu = trong ô nguồn (như canvas: không lem điểm ảnh khung/ảnh bên cạnh)
       let g0 = u0 + 0.5 * iw, g2 = u1 - 0.5 * iw, g1 = v0 + 0.5 * ih, g3 = v1 - 0.5 * ih;
       if (g0 > g2) g0 = g2 = (u0 + u1) / 2; if (g1 > g3) g1 = g3 = (v0 + v1) / 2;
+      // 'lighter' = đúng nghĩa canvas (cộng cả màu lẫn alpha, hoà màu ONE/ONE; đổi kiểu hoà màu = ngắt lô). Lưu ý xếp lớp: ảnh cộng sáng nằm ĐÈ lên hình của
+      //   canvas 2D bên dưới (#cv: ụ) thì hoà kiểu alpha thường với lớp dưới chứ không cộng thật (chỉ lệch ở chớp đầu nòng ngay trên thân ụ) — hết khi ụ sang GL (đợt 2)
       const A = Math.round(al * 255), mau = (A | (A << 8) | (A << 16) | (A << 24)) >>> 0; // màu nhân sẵn alpha (tô màu: để dành đợt sau)
       const F = this._f, U = this._u, I = this._i;
       // 4 góc ô đích (điểm ảnh thiết bị) nới 0,5 điểm ảnh mỗi phía dọc 2 cạnh; UV + toạ độ trong ô (lx, ly) nới theo

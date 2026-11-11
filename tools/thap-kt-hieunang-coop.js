@@ -106,6 +106,7 @@ const C = CANH[canh];
     }
   }
   console.log(JSON.stringify(kq, null, 1));
+  if (process.env.SAUJS) await p.evaluate(process.env.SAUJS); // chạy JS ngay trước khi chụp (vd ẩn bớt lớp canvas để soi)
   if (process.env.SHOT) await p.screenshot({ path: `${OUT}/lai_${canh}_${nhan}.png` });
   if (process.env.GHI) { const fk = `${OUT}/${process.env.GHI}.json`; let cu = {}; try { cu = JSON.parse(fs.readFileSync(fk)); } catch (e) { } cu[canh] = Object.assign(cu[canh] || {}, kq); fs.writeFileSync(fk, JSON.stringify(cu, null, 1)); }
   await b.close();

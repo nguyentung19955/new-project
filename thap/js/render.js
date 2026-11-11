@@ -763,11 +763,15 @@ const REN = {
     if (gl && DIU.bat) { GLR.ghiVung(true); const th = this._thanh; this._thanh = null; if (th) for (const f of th) f(); lo = GLR.ghiVung(false); }
     if (DIU.bat) this.gopLop(ct, DIU.tren, true, lo);
     { const th = this._thanh; this._thanh = null; if (th) for (const f of th) f(); }
-    if (gl) { GLR.xong(); ctx = ct; } // hết phần GL của khung; phần còn lại vẽ ở lớp trên
+    // GL: hết phần GL của khung. Hình SỰ KIỆN TRÊN Ụ (sao lên mốc, kỹ năng ghép, dây liên kết, vùng hỗ trợ, khoanh/viền kéo ghép) vẽ ngay trên canvas có ụ (#cv):
+    //   quầng 'lighter' của chúng phải CỘNG SÁNG lên thân ụ — vẽ ở #cv-tren (canvas trong suốt) thì quầng bị đục. Đổi lại chúng nằm dưới quái/đạn/lớp hiệu ứng
+    //   (trước: trên) — hết khi ụ + hiệu ứng sang GL (đợt 2–3). Huy hiệu sao, ụ đang kéo, chữ số: ở #cv-tren, vẫn trên cùng như cũ.
+    if (gl) { GLR.xong(); GLR.chep(ct, ctx); }
     VX.veDs(ctx, this); // hiệu ứng sự kiện: sao lên mốc, kỹ năng ghép, dây liên kết, bingo, tiếng hú
     if (this.veHoTro) this.veHoTro(ctx); // chạm/giữ ụ hỗ trợ: hiển thị vùng & loại buff
     ND.veSoi(ctx); // chạm thẻ bộ bài: khoanh các ụ cùng loại
     ND.veKeo(ctx); // kéo ghép: viền ô hợp lệ / cung nối / gạch chéo
+    if (gl) { GLR.chep(ctx, ct); ctx = ct; }
     { const hg = this._hang; this._hang = null; if (hg) for (const h of hg) ND.veHuyHieu(ctx, h); } // lớp huy hiệu (loại + sao)
     this.veKeo(ctx);
     ND.veKeoTren(ctx);
