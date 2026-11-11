@@ -678,6 +678,36 @@ const GLR = (() => {
       const q = this._ngan.pop(), X = this.x; if (!q) return;
       this.datDich(q[0]); X.a = q[1]; X.b = q[2]; X.c = q[3]; X.d = q[4]; X.e = q[5]; X.f = q[6]; X.al = q[7]; X.op = q[8]; X.cat = q[9]; X.trang = q[10]; this._bb = q[11];
     },
+    // CHƯƠNG TRÌNH RIÊNG (bước 4 full WebGL — Hive lăn cầu): tô KÍN đích vẽ phụ đang mở (GLR.vao(t) … GLR.ra()) bằng 1 fragment shader riêng lấy mẫu ảnh `im`
+    //   (đã / sẽ nằm trên GPU qua tra — atlas hoặc texture riêng) → phép bẻ hình từng điểm ảnh chạy trên GPU, không canvas tạm + tải texture mỗi khung.
+    //   fs: GLSL ES 1.0, nhận `varying vec2 v_p` (0..1, gốc trên-trái của đích), `uniform sampler2D u_s`, `uniform vec4 u_r` (ô của im trong texture: x0, y0, rộng, cao theo UV);
+    //   phải xuất màu NHÂN SẴN alpha. uni = { tên: số | mảng 2/3/4 số | mảng 9 số (mat3 theo cột) }. Trả false = không vẽ được (ảnh chưa lên GPU, shader lỗi…) → nơi gọi đi đường CPU.
+    veCT(khoa, fs, im, uni) {
+      const gl = this.gl, D = this._dich; if (!this.dangVe || !D || !im) return false;
+      const w = im.naturalWidth || im.width, h = im.naturalHeight || im.height; if (!w || !h) return false;
+      const E = this.tra(im, w, h); if (!E || !E.tex || E.tex === D.tex) return false;
+      this.xa();
+      const K = this._ct && this._ct.the === this.the ? this._ct : (this._ct = { the: this.the, p0: gl.getParameter(gl.CURRENT_PROGRAM), ds: {} });
+      let P = K.ds[khoa];
+      if (P === undefined) {
+        P = null;
+        try {
+          const mk = (t, m) => { const o = gl.createShader(t); gl.shaderSource(o, m); gl.compileShader(o); return gl.getShaderParameter(o, gl.COMPILE_STATUS) ? o : null; };
+          const v = mk(gl.VERTEX_SHADER, 'attribute vec2 a_p;uniform vec2 u_cd;varying vec2 v_p;void main(){v_p=a_p/u_cd;gl_Position=vec4(v_p*2.0-1.0,0.0,1.0);}'), f = mk(gl.FRAGMENT_SHADER, fs);
+          if (v && f) { const p = gl.createProgram(); gl.attachShader(p, v); gl.attachShader(p, f); gl.bindAttribLocation(p, 0, 'a_p'); gl.linkProgram(p); if (gl.getProgramParameter(p, gl.LINK_STATUS)) P = { p, u: {} }; }
+        } catch (e) { P = null; }
+        K.ds[khoa] = P;
+      }
+      if (!P || !K.p0) return false;
+      const vt = (t) => t in P.u ? P.u[t] : (P.u[t] = gl.getUniformLocation(P.p, t));
+      gl.useProgram(P.p); gl.disable(gl.BLEND); this.gan(E.tex);
+      gl.uniform2f(vt('u_cd'), D.width, D.height); gl.uniform1i(vt('u_s'), 0); gl.uniform4f(vt('u_r'), E.x / E.W, E.y / E.H, w / E.W, h / E.H);
+      for (const t in uni) { const g = uni[t], l = vt(t); if (!l) continue; if (typeof g === 'number') gl.uniform1f(l, g); else if (g.length === 2) gl.uniform2f(l, g[0], g[1]); else if (g.length === 3) gl.uniform3f(l, g[0], g[1], g[2]); else if (g.length === 4) gl.uniform4f(l, g[0], g[1], g[2], g[3]); else if (g.length === 9) gl.uniformMatrix3fv(l, false, g); }
+      const F = this._f; F[0] = 0; F[1] = 0; F[W9] = D.width; F[W9 + 1] = 0; F[2 * W9] = D.width; F[2 * W9 + 1] = D.height; F[3 * W9] = 0; F[3 * W9 + 1] = D.height;
+      gl.bufferSubData(gl.ARRAY_BUFFER, 0, F.subarray(0, 4 * W9)); gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
+      gl.useProgram(K.p0); gl.enable(gl.BLEND); this.dem.lenh++; this.dem.ct = (this.dem.ct | 0) + 1;
+      return true;
+    },
 
     // ---------- lệnh vector + chữ ----------
     apKieu(t, X) {
