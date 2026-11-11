@@ -775,8 +775,11 @@ SKILLS.vughep = { // Vua Ghép (Aurora King): kéo lên ụ CÙNG SAO → ụ đ
       return b;
     },
   },
-  veThem(ctx, T, S, al, R) { if (T.vang) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * 0.4; R.anhGiua(ctx, R.cham1('#ffd23f'), 0, 0, S * 1.4); } }, // VFX P3: quầng vàng đứng yên
+  // 11/11: Merge King VÀNG có HÌNH RIÊNG — vương miện vàng 2 sao (tools/thap-cat-bienthe.py → vughepvang_nong, cùng khung + cỡ với vương miện thường; render.js REN.datDauEp)
+  dauAnh: (T) => (T.vang ? 'vughepvang_nong' : null),
+  veThem(ctx, T, S, al, R) { if (T.vang && !(R.img && R.img('vughepvang_nong'))) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * 0.4; R.anhGiua(ctx, R.cham1('#ffd23f'), 0, 0, S * 1.4); } }, // dự phòng khi ảnh vương miện vàng chưa tải: quầng vàng đứng yên như trước
 };
+{ const _bdVg = batDau; batDau = function () { const r = _bdVg.apply(this, arguments); try { if (typeof REN !== 'undefined' && REN.img && G.ban.some(B => B.deck.includes('vughep'))) REN.img('vughepvang_nong'); } catch (e) { } return r; }; } // nạp sẵn ảnh vương miện vàng
 SKILLS.sinhdoi = { // Máy Sinh Đôi (Berit): khi GHÉP THƯỜNG gọi thêm 1 ụ ngẫu nhiên CÙNG SAO nguyên liệu (luôn có ô: ghép trả 1 ô)
   // · 2 Twin Maker ghép nhau / Twin + Mimic → đúng 1 ụ thêm (kỹ năng chạy 1 lần mỗi lần ghép).
   // · Ghép ĐẶC BIỆT (Merge King/Bộ Trộn… kéo vào Twin) KHÔNG kích hoạt: đó là kỹ năng của ụ kéo, không phải ghép thường (giữ như cũ).

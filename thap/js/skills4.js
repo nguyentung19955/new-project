@@ -280,7 +280,7 @@ SKILLS.loren = {
     return (d === 'dmg' ? 'DAMAGE ANVIL' : 'SPEED ANVIL') + ' · stacks ' + lo + '/14 · drag onto another turret: it gets +' + +(b.v * 100).toFixed(1) + '% ' + (d === 'dmg' ? 'damage' : 'fire rate') + ' for good (' + (d === 'dmg' ? '3' : '2') + '% per stack; one buff type per turret; lost if it merges) · drag onto an Anvil of the SAME type: stacks add up (max 14), two ' + lo + '-stack Anvils: ' + Math.min(14, lo * 2) + ' stacks, ' + this.tiLe(Math.min(14, lo * 2), n) + '% success — more stacks = more risk · fail: the dragged Anvil is lost, the target keeps the bigger stacks' + (n ? ' · +' + 4 * n + '% success when the total is 8+' : '');
   },
   gocDau: (T, t) => -Math.PI / 2,
-  dauAnh: (T) => (T.dang === 'toc' ? 'lorentoc_nong' : null), // dạng tốc: đầu riêng (render.js REN.dauEp) — 11/11: cùng hình đe mới lật gương + quầng xanh băng (tools/thap-cat-u-tudo.py loren_toc)
+  dauAnh: (T) => (T.dang === 'toc' ? 'lorentoc_nong' : null), // dạng tốc: đầu riêng (render.js REN.dauEp) — 11/11: loren_nong = dạng SÁT THƯƠNG (2 búa lửa), lorentoc_nong = dạng TỐC (2 búa băng), cả hai nguyên khối kèm tấm nền = bệ riêng (tools/thap-cat-bienthe.py)
   sinh(G, T) {
     if (!T.dang) { const B = G.ban[T.ban]; const hat = (typeof ONS !== 'undefined' && ONS.on ? ONS.seed : G.hat) || 1; B._anN = ((B && B._anN) | 0) + 1; if (B) B._anN = B._anN; const r = rngHat((hat * 6007 + ((B && B.i) | 0) * 911 + (T.o | 0) * 131 + ((B && B._anN) | 0) * 7919) | 0); T.dang = r() < 0.5 ? 'dmg' : 'toc'; }
     if (T.lo == null) T.lo = Math.min(this.MAX, T.sao | 0);
