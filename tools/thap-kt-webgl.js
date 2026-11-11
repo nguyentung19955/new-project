@@ -8,6 +8,7 @@
 //   KHONGGPU=1 : Chromium --disable-gpu --disable-software-rasterizer
 //   SOAT=1     : rà canvas đệm bị vẽ lại sau khi đã tải lên GPU mà không báo (GLR.ban / _glD) → in ở kq.cu (rỗng = không sót)
 //   JS="…"    : chạy đoạn JS trong trang ở mốc 0 (thử nghiệm / gỡ lỗi) · SAUJS="…": chạy sau khung cuối, kết quả in ở kq.sau
+//   CHUPJS="…" : chạy ở mỗi khung chụp, ngay trước khi chụp (rồi vẽ lại dt = 0) — vd dựng trạng thái đang kéo ghép (UI.keo)
 //   SOSANH=1   : (với gl=1) ở mỗi khung chụp, chụp thêm CÙNG trạng thái vẽ bằng 2D (tắt GLR tạm, vẽ lại dt = 0) → <nhãn>_<khung>_2d.png, rồi vẽ lại GL → _gl2.png (nền nhiễu)
 //                — so đúng từng điểm ảnh 2 đường vẽ (2 lần tải trang không cùng trạng thái hình: ảnh trùm về lúc nào tuỳ mạng)
 //   MAT=200,320: khung 200 làm MẤT ngữ cảnh WebGL (WEBGL_lose_context), khung 320 trả lại → không trắng màn, không lỗi trang
@@ -55,8 +56,10 @@ const CHUP = (process.env.CHUP || String(KHUNG)).split(',').map(Number), MAT = (
     if (MAT[1] === f) kq.lai = await p.evaluate(() => { if (!window.__ext) return 'bỏ'; window.__ext.restoreContext(); return 'đã trả lại'; });
     if (MAT.includes(f)) { await p.waitForTimeout(120); kq['gl@' + f] = await p.evaluate(() => { window.__buoc(2); return { mat: GLR.mat, hien: GLR.hien, bat: GLR.bat }; }); }
     if (CHUP.includes(f) && process.env.CHICANVAS) await p.evaluate(() => document.querySelectorAll('#wrap > :not(canvas), body > :not(#wrap)').forEach(e => { if (e.style) e.style.visibility = 'hidden'; }));
+    if (CHUP.includes(f) && process.env.CHUPJS) kq.chupjs = await p.evaluate((js) => { const r = (0, eval)(js); REN.ve(0, REN.a); return r; }, process.env.CHUPJS);
     if (CHUP.includes(f)) { const fn = `${OUT}/${nhan}_${f}.png`; await p.screenshot({ path: fn }); kq.anh.push(fn); }
-    if (CHUP.includes(f) && process.env.SOSANH && await p.evaluate(() => typeof GLR !== 'undefined' && GLR.bat)) {
+    if (CHUP.includes(f) && process.env.SOSANH === 'lap') { for (const i of [1, 2]) { await p.evaluate(() => REN.ve(0, REN.a)); await p.screenshot({ path: `${OUT}/${nhan}_${f}_l${i}.png` }); } } // vẽ lại 2 lần CÙNG chế độ: đo nền nhiễu của chính việc vẽ lại
+    else if (CHUP.includes(f) && process.env.SOSANH && await p.evaluate(() => typeof GLR !== 'undefined' && GLR.bat)) {
       await p.evaluate(() => { GLR.bat = false; GLR.an(); REN.ve(0, REN.a); }); await p.screenshot({ path: `${OUT}/${nhan}_${f}_2d.png` });
       await p.evaluate(() => { GLR.bat = true; REN.ve(0, REN.a); }); await p.screenshot({ path: `${OUT}/${nhan}_${f}_gl2.png` });
     }

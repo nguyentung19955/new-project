@@ -47,9 +47,9 @@ function CAI() {
     // mọi lệnh khác của canvas chính (save/restore/fill…): 1 lệnh > 2 ms = máy đo raster bản ghi lệnh (CPU), không phải việc của game
     for (const k of ['save', 'restore', 'fillRect', 'fill', 'stroke', 'fillText', 'strokeText', 'setTransform', 'clip', 'putImageData', 'getImageData', 'clearRect', 'beginPath']) { const f = x[k]; if (typeof f !== 'function') continue; x[k] = function () { const t0 = now(); const r = f.apply(this, arguments); const d = now() - t0; if (d > 2) D.fl += d; return r; }; } };
   ganCv(REN.ctx);
-  // WebGL (js/gl/glr.js) bật: nửa sau của khung vẽ ở canvas 2D #cv-tren (cũng là "canvas chính") + lệnh xả lô GL — máy đo raster/giả lập GPU bằng CPU → trừ như trên
+  // WebGL (js/gl/glr.js) bật (đợt 2+3: cả khung vẽ ở lớp GL, không còn #cv-tren): lệnh xả lô GL — máy đo raster/giả lập GPU bằng CPU → trừ như trên
   if (typeof GLR !== 'undefined') {
-    const ganGL = () => { if (GLR.xTren && !GLR.xTren.__do) { GLR.xTren.__do = 1; ganCv(GLR.xTren); const xa = GLR.xa; GLR.xa = function () { const t0 = now(); const r = xa.apply(this, arguments); const d = now() - t0; if (d > 2) D.fl += d; return r; }; } };
+    const ganGL = () => { if (GLR.x && !GLR.__do) { GLR.__do = 1; const xa = GLR.xa; GLR.xa = function () { const t0 = now(); const r = xa.apply(this, arguments); const d = now() - t0; if (d > 2) D.fl += d; return r; }; } };
     ganGL(); const kt = GLR.khoiTao; GLR.khoiTao = function () { const r = kt.apply(this, arguments); ganGL(); return r; };
   }
   // DOM

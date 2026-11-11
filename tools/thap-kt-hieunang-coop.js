@@ -149,7 +149,7 @@ const C = CANH[canh];
     const tn = [['goc', '']].concat((process.env.TN || '').split(';;').filter(Boolean).map(s => { const i = s.indexOf('='); return [s.slice(0, i), s.slice(i + 1)]; }));
     kq.bench = {};
     const do1 = (js) => p.evaluate(([n, js]) => { let hoan = null; if (js) hoan = (0, eval)(js);
-        const x = REN.ctx, ts = []; for (let i = 0; i < n + 2; i++) { const t0 = window.__now(); REN.noiSuy(1); try { REN.ve0(); } finally { REN.traLai(); } x.getImageData(0, 0, 1, 1); if (typeof GLR !== 'undefined' && GLR.hien) { GLR.gl.finish(); GLR.gl.readPixels(0, 0, 1, 1, GLR.gl.RGBA, GLR.gl.UNSIGNED_BYTE, new Uint8Array(4)); GLR.xTren.getImageData(0, 0, 1, 1); } const t1 = window.__now(); if (i >= 2) ts.push(t1 - t0); }
+        const x = REN.ctx, ts = []; for (let i = 0; i < n + 2; i++) { const t0 = window.__now(); REN.noiSuy(1); try { REN.ve0(); } finally { REN.traLai(); } x.getImageData(0, 0, 1, 1); if (typeof GLR !== 'undefined' && GLR.hien) { GLR.gl.finish(); GLR.gl.readPixels(0, 0, 1, 1, GLR.gl.RGBA, GLR.gl.UNSIGNED_BYTE, new Uint8Array(4)); } const t1 = window.__now(); if (i >= 2) ts.push(t1 - t0); }
         if (typeof hoan === 'function') hoan(); ts.sort((a, b) => a - b); return ts[ts.length >> 1]; }, [+process.env.BENCH, js]);
     await do1('');
     for (const [ten, js] of tn) {
