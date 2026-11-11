@@ -42,10 +42,16 @@ function CAI() {
     boc(SND, k, g => function () { const t0 = now(); const r = g.apply(this, arguments); const ms = now() - t0; tag('snd:' + k + (ms > 1 ? ':' + ms.toFixed(1) : '')); return r; });
   // lệnh vẽ trên canvas chính: số lệnh + diện tích phủ (megapixel thiết bị) — thước đo tải GPU không phụ thuộc máy đo
   D.nv = 0; D.dt = 0; D.dtL = 0; D.fl = 0;
-  { const x = REN.ctx, g = x.drawImage;
+  const ganCv = (x) => { const g = x.drawImage;
     x.drawImage = function (im) { D.nv++; const n = arguments.length; const w = n >= 9 ? arguments[7] : n >= 5 ? arguments[3] : im.width, h = n >= 9 ? arguments[8] : n >= 5 ? arguments[4] : im.height; const t = this.getTransform(); const a = Math.abs(w * h * (t.a * t.d - t.b * t.c)) / 1e6; D.dt += a; if (this.globalCompositeOperation === 'lighter') D.dtL += a; const t0 = now(); const r = g.apply(this, arguments); const d = now() - t0; if (d > 2) D.fl += d; return r; };
     // mọi lệnh khác của canvas chính (save/restore/fill…): 1 lệnh > 2 ms = máy đo raster bản ghi lệnh (CPU), không phải việc của game
-    for (const k of ['save', 'restore', 'fillRect', 'fill', 'stroke', 'fillText', 'strokeText', 'setTransform', 'clip', 'putImageData', 'getImageData', 'clearRect', 'beginPath']) { const f = x[k]; if (typeof f !== 'function') continue; x[k] = function () { const t0 = now(); const r = f.apply(this, arguments); const d = now() - t0; if (d > 2) D.fl += d; return r; }; } }
+    for (const k of ['save', 'restore', 'fillRect', 'fill', 'stroke', 'fillText', 'strokeText', 'setTransform', 'clip', 'putImageData', 'getImageData', 'clearRect', 'beginPath']) { const f = x[k]; if (typeof f !== 'function') continue; x[k] = function () { const t0 = now(); const r = f.apply(this, arguments); const d = now() - t0; if (d > 2) D.fl += d; return r; }; } };
+  ganCv(REN.ctx);
+  // WebGL (js/gl/glr.js) bật: nửa sau của khung vẽ ở canvas 2D #cv-tren (cũng là "canvas chính") + lệnh xả lô GL — máy đo raster/giả lập GPU bằng CPU → trừ như trên
+  if (typeof GLR !== 'undefined') {
+    const ganGL = () => { if (GLR.xTren && !GLR.xTren.__do) { GLR.xTren.__do = 1; ganCv(GLR.xTren); const xa = GLR.xa; GLR.xa = function () { const t0 = now(); const r = xa.apply(this, arguments); const d = now() - t0; if (d > 2) D.fl += d; return r; }; } };
+    ganGL(); const kt = GLR.khoiTao; GLR.khoiTao = function () { const r = kt.apply(this, arguments); ganGL(); return r; };
+  }
   // DOM
   new MutationObserver((ms) => { D.mut += ms.length; for (const m of ms) { const e = m.target.nodeType === 1 ? m.target : m.target.parentElement; const id = e && e.closest && e.closest('[id]'); if (id) D.mutT.add(id.id); } })
     .observe(document.body, { subtree: true, childList: true, attributes: true, characterData: true });
