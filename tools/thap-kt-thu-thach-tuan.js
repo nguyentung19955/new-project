@@ -3,10 +3,10 @@
 //  ✓ khoá Cấp phi công 8 (người mới: khoá, chữ "Pilot Level 8"; cấp 8: mở) · ADMIN (stub tài khoản Google đúng email) thấy + mở được
 //  ✓ cấu hình TẤT ĐỊNH theo tuần (cùng hạt cho mọi người): 5 ụ = 1 Vàng + 2 Tím + 1 Xanh + 1 Trắng, không Đỏ, ≥ 3 ụ gây sát thương;
 //    chỉ huy cố định; 2 đột biến khác nhau trong {Swift, Thick Hide, Horde, Giants, Sky Raid}; tuần khác → hạt khác
-//  ✓ bảng tuần: bộ 5 ụ + chỉ huy, mốc 20/30/40/50 (11/11), 3 tab bảng xếp hạng (ngoại tuyến: NOT CONNECTED + kỷ lục cá nhân)
+//  ✓ bảng tuần: bộ 5 ụ + chỉ huy, mốc 15/25/35/45, 3 tab bảng xếp hạng (ngoại tuyến: NOT CONNECTED + kỷ lục cá nhân)
 //  ✓ trận: bộ cho mượn (không cần sở hữu), cấp thẻ chuẩn hoá +5, mana 100, 3 tim, hạt = hạt tuần; trùm wave 10/20; wave tất định
-//  ✓ hết tim ở wave 21 → mốc 20 = +1 000 vàng (1 lần), kỷ lục tuần 21, điểm chờ gửi bảng 'tw'; không ghi kỷ lục Solo (turret_best)
-//  ✓ qua wave 50 → CLEAR (51): mốc 30 (+30 ngọc), 40 (thẻ Vàng tuần nếu trong bể / Rương HT), 50 (+1 Tinh thể Đỏ); không phát lại
+//  ✓ hết tim ở wave 16 → mốc 15 = +1 000 vàng (1 lần), kỷ lục tuần 16, điểm chờ gửi bảng 'tw'; không ghi kỷ lục Solo (turret_best)
+//  ✓ qua wave 50 → CLEAR (51): mốc 25 (+30 ngọc), 35 (thẻ Vàng tuần nếu trong bể / Rương HT), 45 (+1 Tinh thể Đỏ); không phát lại
 //  ✓ RETRY · WEEKLY vào lại thử thách tuần · HOME → EVENT: thẻ WEEKLY CHALLENGE (PLAY / RANKS)
 //  Ảnh (SHOTS, mặc định /tmp/thap-thu-thach-tuan): 393×852 EN + VI — GAME MODE, EVENT, màn tuần, trận, kết quả.
 // Chạy: python3 -m http.server 8765 (gốc repo) · NODE_PATH=/opt/npm-tools/node_modules node tools/thap-kt-thu-thach-tuan.js [BASE]
@@ -77,7 +77,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   await p.evaluate(() => { const x = document.querySelector('#hm-tam [data-che="tw"]'); x.click(); }); await sleep(300);
   await p.evaluate(() => HM.choi()); await sleep(900);
   r = await p.evaluate(() => { const q = document.querySelector('#tt-phu.cdd-tw'); return { hien: !!q && !q.hidden, txt: q ? q.textContent : '', u: q ? q.querySelectorAll('.cdd-u').length : 0, tab: q ? [...q.querySelectorAll('.cdd-tb')].map(x => x.dataset.id).join() : '' }; });
-  ok(r.hien && r.u === 5 && /WAVE 20/.test(r.txt) && /WAVE 50/.test(r.txt) && /\+5/.test(r.txt) && r.tab === 'tw,vt,vtAll' && /NOT CONNECTED/.test(r.txt), 'màn tuần: 5 ụ + chỉ huy, mốc 15–45, CARD LEVEL +5, 3 tab bảng xếp hạng, ngoại tuyến', JSON.stringify(r).slice(0, 400));
+  ok(r.hien && r.u === 5 && /WAVE 15/.test(r.txt) && /WAVE 45/.test(r.txt) && /\+5/.test(r.txt) && r.tab === 'tw,vt,vtAll' && /NOT CONNECTED/.test(r.txt), 'màn tuần: 5 ụ + chỉ huy, mốc 15–45, CARD LEVEL +5, 3 tab bảng xếp hạng, ngoại tuyến', JSON.stringify(r).slice(0, 400));
   await chup(p, '393-en-man-tuan');
   // START → trận
   const best0 = await p.evaluate(() => localStorage.getItem('turret_best'));
@@ -91,12 +91,12 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   await sleep(300); await chup(p, '393-en-tran');
   // tất định wave
   r = await p.evaluate(() => { const giu = { w: G.wave, h: G.hang.slice() }; const lay = () => { G.wave = 13; G.hang.length = 0; TTUAN.wave(); return G.hang.map(h => (h.trum || h.id) + '@' + (h.t - G.t).toFixed(2)).join(','); }; const a = lay(), b2 = lay(); G.wave = giu.w; G.hang = giu.h; return { same: a === b2, n: a.split(',').length }; });
-  ok(r.same && r.n >= 3, 'tất định: cùng hạt tuần → wave 14 (Thiết giáp: ít Giant) giống hệt (' + r.n + ' quái)', JSON.stringify(r));
-  r = await toi(p, 21);
+  ok(r.same && r.n > 5, 'tất định: cùng hạt tuần → wave 14 giống hệt (' + r.n + ' quái)', JSON.stringify(r));
+  r = await toi(p, 16);
   await p.evaluate(() => { G.ban[0].tim = 0; ketThuc(false, 'The core fell'); }); let k = await ketqua(p);
   let s = await p.evaluate((v0) => ({ tw: CDD.st().tw, dv: KT.vang - v0, lb: CDD.st().lb.tw, best: localStorage.getItem('turret_best') }), v0);
-  ok(!k.thang && /WEEKLY CHALLENGE/.test(k.phu) && /WAVE 20/.test(k.chi) && s.tw.best === 21 && s.tw.nhan[20] && !s.tw.nhan[30] && s.dv >= 1000, 'hết tim wave 21 → mốc 20 = +1 000 vàng, kỷ lục tuần 21', JSON.stringify([k, s]));
-  ok(!!(s.lb && s.lb.w === 21 && s.lb.t > 0), 'điểm chờ gửi bảng tuần (ngoại tuyến) w=21', JSON.stringify(s.lb));
+  ok(!k.thang && /WEEKLY CHALLENGE/.test(k.phu) && /WAVE 15/.test(k.chi) && s.tw.best === 16 && s.tw.nhan[15] && !s.tw.nhan[25] && s.dv >= 1000, 'hết tim wave 16 → mốc 15 = +1 000 vàng, kỷ lục tuần 16', JSON.stringify([k, s]));
+  ok(!!(s.lb && s.lb.w === 16 && s.lb.t > 0), 'điểm chờ gửi bảng tuần (ngoại tuyến) w=16', JSON.stringify(s.lb));
   ok(s.best === best0, 'không ghi kỷ lục Solo (turret_best)', s.best + ' vs ' + best0);
   ok(/RETRY · WEEKLY/.test(k.lai), 'nút RETRY · WEEKLY', k.lai);
   await chup(p, '393-en-kq-thua');
@@ -107,7 +107,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   k = await ketqua(p);
   s = await p.evaluate((g0) => ({ tw: CDD.st().tw, dn: KT.ngoc - g0.ngoc, dtt: CD.tt() - g0.tt }), g0);
   ok(r.kt && r.w === 50 && k.thang && /CLEAR/.test(k.chi) && s.tw.best === 51, 'qua wave 50 → hoàn thành (CLEAR = 51)', JSON.stringify([r, k, s.tw]));
-  ok(s.tw.nhan[30] && s.tw.nhan[40] && s.tw.nhan[50] && s.dn >= 30 && s.dtt === 1, 'mốc 30 (+30 ngọc) · 40 (thẻ Vàng tuần / Rương HT) · 50 (+1 Tinh thể Đỏ)', JSON.stringify(s));
+  ok(s.tw.nhan[25] && s.tw.nhan[35] && s.tw.nhan[45] && s.dn >= 30 && s.dtt === 1, 'mốc 25 (+30 ngọc) · 35 (thẻ Vàng tuần / Rương HT) · 45 (+1 Tinh thể Đỏ)', JSON.stringify(s));
   await chup(p, '393-en-kq-clear');
   // lần nữa: không phát lại mốc
   await p.evaluate(() => document.querySelector('#ketqua [data-act="choilai"]').click()); await vaoTran(p);
@@ -134,7 +134,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   await p.evaluate(() => { HM.chonChe('tw'); HM.choi(); }); await sleep(900); await chup(p, '393-vi-man-tuan');
   r = await p.evaluate(() => document.querySelector('#tt-phu').textContent); ok(/THỬ THÁCH TUẦN/.test(r) && /CHƯA KẾT NỐI/.test(r), 'tiếng Việt: màn tuần dịch', r.slice(0, 200));
   await p.evaluate(() => document.querySelector('#tt-phu [data-act="cdd-tw-vao"]').click()); await vaoTran(p);
-  await p.evaluate(() => { for (let i = 0; i < 8; i++) trieu(G.ban[0]); }); await toi(p, 21); await sleep(300); await chup(p, '393-vi-tran');
+  await p.evaluate(() => { for (let i = 0; i < 8; i++) trieu(G.ban[0]); }); await toi(p, 16); await sleep(300); await chup(p, '393-vi-tran');
   await p.evaluate(() => { G.ban[0].tim = 0; ketThuc(false, 'The core fell'); }); k = await ketqua(p); await chup(p, '393-vi-kq');
   ok(/THỬ THÁCH TUẦN/.test(k.phu) && /MỐC TUẦN/.test(k.chi), 'tiếng Việt: màn kết quả dịch', JSON.stringify(k));
   ok(!errs.length, 'không lỗi trang (393 VI)', errs.slice(0, 3).join(' | '));

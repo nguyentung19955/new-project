@@ -83,20 +83,20 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   r = await toi(p, 81);
   ok(!r.kt && r.trum.join() === '75,80', 'trùm ở wave 75, 80 (mỗi 5 wave sau 70)', JSON.stringify(r));
   r = await p.evaluate(() => ({ s: [91, 92, 93, 94, 100, 101, 102].map(w => VOTAN.coTrum(w) ? 1 : 0).join(''), d100: VOTAN.dot(100).length, d101: VOTAN.dot(101).length, d111: VOTAN.dot(111).length, d150: VOTAN.dot(150).length, hp: Math.round(mauWave(81) / mauWave(80) * 100) }));
-  ok(r.s === '0101111' && r.d100 === 0 && r.d101 === 1 && r.d111 === 2 && r.d150 === 5 && r.hp === 109, 'lịch: 91–100 mỗi 2 wave, từ 101 mọi wave · đột biến 0/1/2/…/5 ở 100/101/111/150 · máu ×1,091/wave (11/11 cân bằng B)', JSON.stringify(r));
+  ok(r.s === '0101111' && r.d100 === 0 && r.d101 === 1 && r.d111 === 2 && r.d150 === 5 && r.hp === 108, 'lịch: 91–100 mỗi 2 wave, từ 101 mọi wave · đột biến 0/1/2/…/5 ở 100/101/111/150 · máu ×1,08/wave', JSON.stringify(r));
   // tất định: cùng hạt → cùng wave
   r = await p.evaluate(() => { const giu = { w: G.wave, h: G.hang.slice(), t: G.t }; const lay = () => { G.wave = 86; G.hang.length = 0; VOTAN.wave(); return G.hang.map(h => (h.trum || h.id) + '@' + (h.t - G.t).toFixed(2)).join(','); }; const a = lay(), b2 = lay(); G.wave = giu.w; G.hang = giu.h; return { a: a.slice(0, 80), same: a === b2, n: a.split(',').length }; });
   ok(r.same && r.n > 10, 'tất định: cùng hạt trận → wave 87 giống hệt (' + r.n + ' quái)', JSON.stringify(r));
   // hết tim → kết quả
   await p.evaluate(() => { G.ban[0].tim = 0; ketThuc(false, 'The core fell'); }); k = await ketqua(p);
   const s1 = await p.evaluate((v0) => ({ vt: CDD.st().vt, dv: KT.vang - v0 }), v0);
-  ok(k.thang && /ENDLESS/.test(k.chi) && /81/.test(k.chi) && s1.vt.best === 81 && s1.vt.tBest === 81 && s1.vt.nhan[75] && s1.vt.nhan[85] === undefined && s1.dv >= 2000, 'hết tim ở wave 81 → THẮNG tầng 100 + khối ENDLESS, kỷ lục 81, mốc tuần wave 75 = +2 000 vàng', JSON.stringify([k, s1]));
+  ok(k.thang && /ENDLESS/.test(k.chi) && /81/.test(k.chi) && s1.vt.best === 81 && s1.vt.tBest === 81 && s1.vt.nhan[80] && s1.dv >= 2000, 'hết tim ở wave 81 → THẮNG tầng 100 + khối ENDLESS, kỷ lục 81, mốc tuần wave 80 = +2 000 vàng', JSON.stringify([k, s1]));
   await chup(p, '390-en-kq-vo-tan');
   // GAME MODE → ENDLESS: bảng + START → tự vào Vô tận; mốc tuần không lặp; bỏ cuộc
   await p.evaluate(() => document.querySelector('#ketqua [data-act="doibo"]').click()); await sleep(400);
   await p.evaluate(() => { HM.chonChe('vt'); HM.choi(); }); await sleep(900);
   r = await p.evaluate(() => { const q = document.querySelector('#tt-phu.cdd-vt'); return { hien: !!q && !q.hidden, txt: q ? q.textContent : '' }; });
-  ok(r.hien && /FLOOR 100/.test(r.txt) && /NOT CONNECTED/.test(r.txt) && /WAVE 81/.test(r.txt) && /WAVE 75/.test(r.txt) && /WAVE 115/.test(r.txt), 'bảng ENDLESS: mốc 75–115 + bảng xếp hạng ngoại tuyến (NOT CONNECTED, WAVE 81 của mình)', r.txt.slice(0, 300));
+  ok(r.hien && /FLOOR 100/.test(r.txt) && /NOT CONNECTED/.test(r.txt) && /WAVE 81/.test(r.txt) && /WAVE 80/.test(r.txt) && /WAVE 120/.test(r.txt), 'bảng ENDLESS: mốc 80–120 + bảng xếp hạng ngoại tuyến (NOT CONNECTED, WAVE 81 của mình)', r.txt.slice(0, 300));
   await chup(p, '390-en-bang-vo-tan');
   const v1 = await p.evaluate(() => KT.vang);
   await p.evaluate(() => document.querySelector('#tt-phu [data-act="cdd-vt-vao"]').click()); await p.waitForFunction(() => G.ban.length && !G.ketThuc, null, { timeout: 120000 }); await sleep(400);
