@@ -412,19 +412,19 @@
   };
   // WebGL ẢNH ẢO (KE-HOACH mục 13): mọi biến thể (cỡ, màu tô, hoà 'color', mặt nạ, dải dựng trên GPU) lấy mẫu từ texture ẢNH GỐC → làm nóng hiệu ứng = đưa chính ảnh gốc lên GPU.
   //   Trước: bản GL bỏ bước "vẽ thử" → ảnh hiệu ứng của bộ bài chỉ lên GPU ở LẦN DÙNG ĐẦU giữa trận (tải Image → texture: giải mã + tải, 3–50 ms trên iPhone).
-  //   Atlas GPU có hạn (5 trang; giữa trận đã đầy ~0,8) → KHÔNG nạp cả danh sách UI.dsTran (đo: 290 ảnh, 5 trang đầy ngay màn mở đầu → gom atlas liên tục, tải lại). Chỉ nạp ảnh CHẮC DÙNG (NS.dsHieuUng):
-  //     · theo bộ bài: hình phát bắn đầu của từng ụ (FXU.dsAnh: _dan / _trung / _no / _tia), tờ P2 / P3, VXM.U (ảnh skill riêng), bảng NONG_META[id] nếu có (js/nong-meta.js — sinh bằng tools/thap-kt-tai-gl.js NONG=…, CHƯA có);
-  //     · HỌC TRONG PHIÊN: mọi ảnh đã từng được vẽ ở trận trước của phiên này (g._lvThay — glr.js ghi tầng nét nhất từng vẽ) mà trận này còn nạp.
+  //   Atlas GPU có hạn (5 trang; giữa trận đã đầy ~0,8) → KHÔNG nạp theo danh sách rộng. Đã đo (KE-HOACH mục 13): cả UI.dsTran = 290 ảnh, 5 trang đầy ngay màn mở đầu, gom atlas liên tục;
+  //     chỉ hình phát bắn đầu (FXU.dsAnh _dan / _trung / _no / _tia) + tờ P2 / P3 = +47–58 ảnh ở màn mở đầu, +23–41 MB GPU lúc vào trận, bớt 15–21 lần tải Image giữa trận nhưng atlas gom sớm hơn
+  //     (bộ B: +25 lần tải lại canvas ở 60 s cuối) → cũng bỏ. Không biết TẦNG sẽ vẽ thì nạp trước chỉ là đoán. Nay chỉ nạp ảnh CHẮC DÙNG + biết tầng (NS.dsHieuUng):
+  //     · ảnh skill riêng của ụ trong bộ bài (VXM.U — ít, gọi tải luôn nếu là ảnh tải lười) + 8 dải vệt lửa Rồng Máy dựng trên GPU (VXM.rongDai);
+  //     · HỌC TRONG PHIÊN: mọi ảnh đã từng được vẽ ở trận trước của phiên này (g._lvThay — glr.js ghi tầng nét nhất từng vẽ) mà trận này còn nạp;
+  //     · bảng NONG_META[id ụ | _chung | mv_<chỉ huy>] = { tên ảnh: tầng } nếu có (js/nong-meta.js — sinh bằng tools/thap-kt-tai-gl.js kq.nong theo từng ụ; CHƯA có).
   //   Tầng nạp: tầng từng vẽ / tầng ghi trong bảng; chưa biết → tầng thô nhất mà cạnh ngắn còn ≥ NS.NAP_PX điểm (cần nét hơn thì GLR tải lần 2 ở tầng 0).
-  //   Màn mở đầu trận tải không giới hạn; giữa trận ≤ 1 texture / khung nhẹ (GLR.napChay). Bộ bài có Rồng Máy: 8 dải vệt lửa dựng trên GPU luôn (VXM.rongDai).
+  //   Màn mở đầu trận tải không giới hạn; giữa trận ≤ 1 texture / khung nhẹ (GLR.napChay).
   NS.NAP_PX = 192;
   NS.dsHieuUng = function () {
     const m = new Map(), M = typeof NONG_META !== 'undefined' ? NONG_META : null, them = (t, L) => { if (t && (L != null || !m.has(t))) m.set(t, L); }, bang = (o) => { if (o) for (const t in o) them(t, o[t]); };
     try {
-      if (typeof FXU !== 'undefined' && FXU.dsAnh) for (const t of FXU.dsAnh(G.ban)) if (/_(dan|trung|no|tia)$/.test(t)) them(t); // chỉ hình của PHÁT BẮN ĐẦU (đạn / nổ trúng / chớp nòng / tia) — dạng 2, 3, hiệu ứng đặc biệt để học trong phiên / bảng (đo: nạp cả FXU.dsAnh = +85 ảnh, +1–2 trang atlas, chỉ bớt 21 lần tải)
       for (const B of G.ban) for (const id of B.deck || []) {
-        if (typeof P2 !== 'undefined' && P2.TO && P2.TO[id]) them(P2.TO[id]);
-        if (typeof P3 !== 'undefined' && P3.M && P3.M['p3_' + id]) them('p3_' + id);
         if (typeof VXM !== 'undefined' && VXM.U && VXM.U[id]) for (const t of VXM.U[id]) them(t);
         if (M) bang(M[id]);
       }
