@@ -43,6 +43,7 @@
   REN.nongDai = function (ten, px, bien) {
     const k = this.s * this.dpr, m = Math.max(2, Math.round(px * k)), key = daiKey(ten, m, bien);
     if (this.cache[key] || this._cacheCu[key]) return;
+    if (_GLA()) { if (cdGoc.call(this, ten, px, bien)) ghiCo(ten, bien, m); return; } // ẢNH ẢO (glr.js): dải khung không dựng trên CPU → không cần chia việc
     const st = { c: null, i: 0, n: 0, lan: 0 };
     const buoc = () => {
       if (this.cache[key] || this._cacheCu[key]) return;
@@ -69,7 +70,7 @@
   REN.coDai = function (ten, px, bien) {
     const k = this.s * this.dpr, m = Math.max(2, Math.round(px * k)), key = daiKey(ten, m, bien);
     const c = this.cGet(key); if (c) return c;
-    if (!trongTran()) { const r = cdGoc.apply(this, arguments); if (r) ghiCo(ten, bien, m); return r; }
+    if (!trongTran() || _GLA()) { const r = cdGoc.apply(this, arguments); if (r) ghiCo(ten, bien, m); return r; }
     // giữa trận: không dựng một lèo — xếp dựng từng khung, trả hình tạm (cỡ gần nhất đã có / dải gốc / chưa có chớp trắng)
     NS.thongKe.hoan++;
     this.nongDai(ten, px, bien);
@@ -85,6 +86,7 @@
   //   chỉ áp cho ảnh đã có ≥ 3 cỡ (đúng là phóng động); cùng 1 cỡ được xin 4 khung LIỀN nhau (= cỡ đứng yên) thì dựng đúng cỡ như cũ → hình lúc đứng yên không đổi. Bản 2D không chạy đoạn này.
   const coGoc = REN.co, coGan = NS._coGan = new Map(), coLan = new Map(); let coTrong = 0;
   REN.co = function (ten, px, bien) {
+    if (bien !== 'den' && _GLA()) return coGoc.apply(this, arguments); // ẢNH ẢO (glr.js): mọi cỡ lấy mẫu từ texture ảnh gốc — không dựng, không ngân sách, không mẹo cỡ động
     if (!coTrong && typeof GLR !== 'undefined' && GLR.bat && GLR.hien && trongTran()) {
       const k = this.s * this.dpr, n = Math.max(2, Math.round(px * k)), kb = ten + '|' + (bien || ''), key = ten + '|' + n + '|' + (bien || '');
       let c = this.cGet(key); if (c) return c;
@@ -112,7 +114,7 @@
   // chuỗi mip: quá ngân sách → dùng tầng lớn hơn đã có (GPU thu thêm 1 bậc), tầng thiếu dựng trong hàng nóng
   const mipGoc = REN.mip;
   REN.mip = function (a, can) {
-    if (!a || !(can > 0) || !this.hetNgan()) return mipGoc.apply(this, arguments);
+    if (!a || !(can > 0) || !this.hetNgan() || ((a._ao || a._goc) && _GLA())) return mipGoc.apply(this, arguments);
     const ch = a._mip || (a._mip = [a]);
     let i = 0;
     for (;;) {

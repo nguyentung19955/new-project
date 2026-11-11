@@ -24,6 +24,7 @@ const MAU_VET = { dan_lien: '#ffb347', dan_bang: '#8fe3ff', dan_doc: '#8dff4a', 
 //  lo / loTrum = độ khoét mềm lớp trên quanh mỗi quái / trùm (1 = xoá hẳn)
 const DIU = { bat: !(typeof location !== 'undefined' && /[?&]diu=0\b/.test(location.search)), duoi: 0.55, tren: 0.88, lo: 0.6, loTrum: 0.4 };
 const _GLB = () => typeof GLR !== 'undefined' && GLR.bat; // lớp WebGL đang bật (?gl=0 / không có WebGL: false → không gì thêm chạy)
+const _GLA = () => typeof GLR !== 'undefined' && GLR.bat && GLR.aoBat(); // ẢNH ẢO (glr.js mục "ẢNH ẢO"): ảnh thu nhỏ / tô màu / trắng / xám = canvas 0×0 trỏ về texture ảnh gốc, không dựng trên CPU
 const REN = {
   dbg: /[?&]debug(=|&|$)/.test(location.search), // ?debug: cho phép hình vẽ code dự phòng khi thiếu ảnh (chỉ để gỡ lỗi)
   cv: null, ctx: null, s: 1, dpr: 1, anh: {}, nen: null, xam: {}, trang: {}, cham: {}, cache: {}, t: 0, thieu: new Set(), dt: 0, a: 1, _vet: {}, _glow: {},
@@ -50,13 +51,13 @@ const REN = {
   cGet(key) {
     let c = this.cache[key]; if (c) return c;
     c = this._cacheCu[key]; if (!c) return null;
-    delete this._cacheCu[key]; this.cache[key] = c; this._cachePx += c.width * c.height; return c;
+    delete this._cacheCu[key]; this.cache[key] = c; if (!c._ao) this._cachePx += c.width * c.height; return c;
   },
   cSet(key, c) {
     if (!c) return c;
-    this._cachePx += c.width * c.height;
+    if (!c._ao) this._cachePx += c.width * c.height; // (ảnh ảo không có điểm ảnh: không tính vào ngân sách kho)
     const glGiu = _GLB() && GLR.hien ? 1.6 : 1; // WebGL đang vẽ: ảnh kho đã thả bản CPU (chỉ còn texture) → thế hệ kho dài hơn 1,6 lần, đỡ dựng lại + tải lại texture của ảnh vừa rơi khỏi kho (giới hạn thật = atlas GPU, glr.js datLaiAtlas)
-    if (this._cachePx > this.nganSach() * glGiu || Object.keys(this.cache).length > 900 * glGiu) { if (_GLB()) { GLR.boKho(this._cacheCu); GLR.huyKho(this._cacheCu); } this._cacheCu = this.cache; this.cache = {}; this._cachePx = c.width * c.height; this.xoayN++; }
+    if (this._cachePx > this.nganSach() * glGiu || Object.keys(this.cache).length > 900 * glGiu) { if (_GLB()) { GLR.boKho(this._cacheCu); GLR.huyKho(this._cacheCu); } this._cacheCu = this.cache; this.cache = {}; this._cachePx = c._ao ? 0 : c.width * c.height; this.xoayN++; }
     this.dungN++; // chẩn đoán (nhãn admin): số ảnh dựng vào kho / số lần kho xoay thế hệ
     if (_GLB()) GLR.tinh(c, 'cache', key); // WebGL: canvas đệm tĩnh — có bản GPU rồi thì thả bản CPU (glr.js mục BỘ NHỚ)
     return (this.cache[key] = c);
@@ -189,6 +190,12 @@ const REN = {
       const c = ch[i], d = Math.min(c.width, c.height);
       if (d / 2 < can || d < 8) return c;
       if (!ch[i + 1]) {
+        const ao = c._ao || (ch[0]._goc && _GLA() && !ch[0]._glV ? GLR.aoGoc(ch[0]) : null);
+        if (ao && !ao.o && _GLA()) { // ẢNH ẢO: tầng mip của ảnh gốc / ảnh ảo = canvas ảo cùng nguồn + cùng kiểu tô (không dựng, không tải) — đọc 2D thì dựng từ tầng trên như cũ
+          const tren = i; ch[i + 1] = GLR.ao(ao.g, Math.max(1, Math.round(c.width / 2)), Math.max(1, Math.round(c.height / 2)), { k: ao.k, t: ao.t, kho: ch, khoa: i + 1,
+            dung: (cv) => { const p = ch[tren]; if (!p || p === cv || p._tha === 3 || !p.width) return false; this.c2d(cv).drawImage(p, 0, 0, cv.width, cv.height); return true; } });
+          i++; continue;
+        }
         const t = document.createElement('canvas'); t.width = Math.max(1, Math.round(c.width / 2)); t.height = Math.max(1, Math.round(c.height / 2));
         this.c2d(t).drawImage(c, 0, 0, t.width, t.height); ch[i + 1] = t;
         if (_GLB()) { const r = ch[0], cpu = r && (r._goc || r._dungLai), tren = i; GLR.tinh(t, ch, i + 1, cpu ? (cv) => { const p = ch[tren]; if (!p || p === cv || p._tha === 3 || !p.width) return false; /* tren = chỉ số tầng TRÊN lúc dựng (biến i của vòng lặp còn chạy tiếp) */ this.c2d(cv).drawImage(p, 0, 0, cv.width, cv.height); return true; } : null); } // WebGL: tầng mip của ảnh gốc / ảnh tô màu dựng lại được trên CPU → thả khi yên
@@ -243,6 +250,11 @@ const REN = {
     // chép sang canvas 1 lần: vẽ từ canvas không đụng bộ nhớ đệm giải mã ảnh của trình duyệt (bị dọn → giải mã lại mỗi khung)
     const kr = 'img|' + ten; // mọi ảnh chép sang canvas đều kiểm (1 lần / ảnh — rẻ hơn chính lần chép)
     if (this.choRong(kr)) return null; // bản chép trước bị rỗng: đợi tới lượt thử lại
+    if (_GLA()) { // ẢNH ẢO: không chép Image sang canvas — canvas 0×0 giữ Image, lớp GL tải THẲNG Image lên GPU; ai đọc điểm ảnh 2D mới chép (GLR.hoi, có kiểm rỗng)
+      const c = GLR.nguonAo(a); a.onload = a.onerror = null;
+      this.anh[ten] = { _cv: c, complete: true, naturalWidth: c.width, naturalHeight: c.height };
+      return c;
+    }
     const c = document.createElement('canvas'); c.width = a.naturalWidth; c.height = a.naturalHeight;
     const x = c.getContext('2d');
     if (!x) { c.width = c.height = 0; return a; } // hết trần bộ nhớ canvas: vẽ thẳng từ ảnh còn hơn trả null
@@ -272,6 +284,7 @@ const REN = {
   banTrang(ten) {
     if (this.trang[ten]) return this.trang[ten];
     const a = this.img(ten); if (!a) return null;
+    if (a._goc && _GLA()) return (this.trang[ten] = GLR.ao(a, a.width, a.height, { k: 1, t: 0xffffffff, kho: this.trang, khoa: ten, dung: (cv) => { const g = this.img(ten); if (!g || !g.width) return false; const q = cv.getContext('2d'); q.drawImage(g, 0, 0); this.bienTaiCho(q, cv, 'trang'); return true; } }));
     const c = document.createElement('canvas'); c.width = a.width; c.height = a.height;
     const x = c.getContext('2d'); x.drawImage(a, 0, 0); x.globalCompositeOperation = 'source-in'; x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); // vetay-ok: png (bản trắng của ảnh)
     return (this.trang[ten] = c);
@@ -279,6 +292,7 @@ const REN = {
   banXam(ten) {
     if (this.xam[ten]) return this.xam[ten];
     const a = this.img(ten); if (!a) return null;
+    if (a._goc && _GLA()) return (this.xam[ten] = GLR.ao(a, a.width, a.height, { k: 2, kho: this.xam, khoa: ten, dung: (cv) => { const g = this.img(ten); if (!g || !g.width) return false; const q = cv.getContext('2d'); q.drawImage(g, 0, 0); this.bienTaiCho(q, cv, 'xam'); return true; } }));
     const c = document.createElement('canvas'); c.width = a.width; c.height = a.height;
     const x = c.getContext('2d'); x.drawImage(a, 0, 0);
     const d = x.getImageData(0, 0, c.width, c.height), p = d.data;
@@ -290,6 +304,13 @@ const REN = {
   co(ten, px, bien) {
     const k = this.s * this.dpr, n = Math.max(2, Math.round(px * k)), key = ten + '|' + n + '|' + (bien || '');
     let c = this.cGet(key); if (c) return c;
+    if (bien !== 'den' && _GLA()) { // ẢNH ẢO (WebGL2): không dựng canvas thu nhỏ / trắng / xám — canvas ảo cỡ nw×nh, GPU lấy mẫu tầng của ảnh gốc + shader tô
+      const a = this.img(ten); if (!a) return null;
+      if (a._goc) {
+        const w = a.width, h = a.height, nw = Math.max(2, Math.round(n * w / Math.max(w, h))), nh = Math.max(2, Math.round(n * h / Math.max(w, h)));
+        return this.cSet(key, GLR.ao(a, nw, nh, { k: bien === 'trang' ? 1 : bien === 'xam' ? 2 : 0, t: bien === 'trang' ? 0xffffffff : 0, kho: 'cache', khoa: key, dung: (cv) => this.coDung(cv, ten, bien) }));
+      }
+    }
     if (bien === 'xam' || bien === 'trang') { // biến thể dựng từ bản ĐÃ THU NHỎ (không giữ bản trắng/xám cỡ gốc)
       const b = this.co(ten, px, ''); if (!b) return null;
       // nongskill.js (hết ngân sách khung) trả TẠM ảnh gốc cỡ lớn: không dựng + giữ biến thể từ ảnh gốc (đệm sai cỡ) — khung sau dựng lại đúng cỡ
@@ -307,16 +328,26 @@ const REN = {
     if (this.laRong(c) && this.boRong(key)) { c.width = c.height = 0; return null; } // dựng ra rỗng: không giữ (vẽ vòng tải, thử lại sau)
     return this.cSet(key, c);
   },
-  // bản trắng (source-in) / xám (độ sáng) của 1 canvas đã thu nhỏ
-  toBien(b, bien) {
-    const c = document.createElement('canvas'); c.width = b.width; c.height = b.height;
-    const x = c.getContext('2d'); x.drawImage(b, 0, 0);
-    if (bien === 'trang') { x.globalCompositeOperation = 'source-in'; x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); } // vetay-ok: png
+  // đường 2D của ảnh ảo REN.co: vẽ nội dung thật (thu nhỏ chất lượng cao + biến thể) vào canvas cv — y như bản 2D dựng
+  coDung(cv, ten, bien) {
+    const a = this.img(ten); if (!a || !a.width) return false;
+    const x = this.c2d(cv); this.veNho(x, a, 0, 0, a.width, a.height, 0, 0, cv.width, cv.height);
+    if (bien) this.bienTaiCho(x, cv, bien);
+    return true;
+  },
+  bienTaiCho(x, c, bien) {
+    if (bien === 'trang') { x.save(); x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; x.globalCompositeOperation = 'source-in'; x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.restore(); } // vetay-ok: png
     else {
       const d = x.getImageData(0, 0, c.width, c.height), p = d.data;
       for (let i = 0; i < p.length; i += 4) { const l = (p[i] * 0.3 + p[i + 1] * 0.59 + p[i + 2] * 0.11) * 0.85 + 18; p[i] = l * 1.02; p[i + 1] = l; p[i + 2] = l * 0.94; }
       x.putImageData(d, 0, 0); // vetay-ok: png
     }
+  },
+  // bản trắng (source-in) / xám (độ sáng) của 1 canvas đã thu nhỏ
+  toBien(b, bien) {
+    const c = document.createElement('canvas'); c.width = b.width; c.height = b.height;
+    const x = c.getContext('2d'); x.drawImage(b, 0, 0);
+    this.bienTaiCho(x, c, bien);
     for (const q of ['nf', 'fm', 'gap']) if (b[q] != null) c[q] = b[q];
     return c;
   },
@@ -325,9 +356,19 @@ const REN = {
   coDai(ten, px, bien) {
     const k = this.s * this.dpr, m = Math.max(2, Math.round(px * k)), key = 'dai|' + ten + '|' + m + '|' + (bien || '');
     let c = this.cGet(key); if (c) return c;
-    if (bien === 'trang') { const b = this.coDai(ten, px, ''); return b ? this.cSet(key, this.toBien(b, 'trang')) : null; }
+    if (bien === 'trang' && !_GLA()) { const b = this.coDai(ten, px, ''); return b ? this.cSet(key, this.toBien(b, 'trang')) : null; }
     const a = this.img(ten); if (!a) return null;
     const n = Math.max(1, Math.round(a.width / a.height)), fw = a.width / n, G2 = 2;
+    if (a._goc && _GLA()) { // ẢNH ẢO: dải khung = canvas ảo, mỗi khung 1 ô trỏ về đúng khung của dải gốc trên GPU; bản trắng = shader
+      const o = []; for (let i = 0; i < n; i++) o.push({ lx: i * (m + G2), ly: 0, lw: m, lh: m, sx: Math.round(i * fw), sy: 0, sw: Math.round(fw), sh: a.height, p: null });
+      c = GLR.ao(a, n * (m + G2), m, { o, k: bien === 'trang' ? 1 : 0, t: bien === 'trang' ? 0xffffffff : 0, kho: 'cache', khoa: key, dung: (cv) => {
+        const g = this.img(ten); if (!g || !g.width) return false; const x = this.c2d(cv);
+        for (let i = 0; i < n; i++) this.veNho(x, g, Math.round(i * fw), 0, Math.round(fw), g.height, i * (m + G2), 0, m, m);
+        if (bien === 'trang') this.bienTaiCho(x, cv, 'trang'); return true;
+      } });
+      c.nf = n; c.fm = m; c.gap = G2;
+      return this.cSet(key, c);
+    }
     c = document.createElement('canvas'); c.width = n * (m + G2); c.height = m;
     const x = this.c2d(c);
     for (let i = 0; i < n; i++) this.veNho(x, a, Math.round(i * fw), 0, Math.round(fw), a.height, i * (m + G2), 0, m, m);
@@ -341,6 +382,7 @@ const REN = {
     const M = this._toMau || (this._toMau = {}), key = ten + '|' + mau + '|' + (a || 0.78);
     if (M[key]) return M[key];
     const im = this.img(ten); if (!im) return this.rong();
+    if (im._goc && _GLA()) return (M[key] = GLR.ao(im, im.width, im.height, { k: 1, t: GLR.mauSo(mau, a || 0.78), kho: M, khoa: key, dung: (cv) => { const g = this.img(ten); if (!g || !g.width) return false; const q = cv.getContext('2d'); q.drawImage(g, 0, 0); q.globalCompositeOperation = 'source-atop'; q.globalAlpha = a || 0.78; q.fillStyle = mau; q.fillRect(0, 0, cv.width, cv.height); return true; } })); // vetay-ok: png — ẢNH ẢO: tô màu bằng shader
     const c = document.createElement('canvas'); c.width = im.width; c.height = im.height;
     const x = c.getContext('2d'); x.drawImage(im, 0, 0);
     x.globalCompositeOperation = 'source-atop'; x.globalAlpha = a || 0.78; x.fillStyle = mau; x.fillRect(0, 0, c.width, c.height); // vetay-ok: png (tô màu ảnh trắng fx_*)
