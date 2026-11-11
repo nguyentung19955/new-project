@@ -88,6 +88,23 @@ const CAU_PHI = 35 * Math.PI / 180, CAU_S = Math.sin(CAU_PHI), CAU_C = Math.cos(
 // lấy hoa văn: bán kính thân ≤ CAU_R0 giữ nguyên, ngoài đó nén êm về CAU_K → không bao giờ lấy vùng mép tối + viền đen của ảnh gốc
 // (mặt sau = soi gương mặt trước: lấy mép thì lăn tới đâu hiện dải tối giữa thân tới đó); viền vẽ lại theo bóng
 const CAU_R0 = 0.55, CAU_K = 0.8;
+// LĂN CẦU TRÊN GPU (chỉ bản WebGL, GLR.veCT): bản GLSL của vòng lặp điểm ảnh trong cdLanAnh — cùng công thức (quay Qᵀ, ba mặt chiếu ở dải xích đạo, nén mép CAU_R0 → CAU_K,
+//   viền tối vẽ lại, mép mềm, gai ngoài thân quay phẳng ψ). Khác bản CPU: nội suy trên màu nhân sẵn alpha (đúng hơn ở mép trong suốt). ?caugl=0: tắt (về CPU + tải texture) để so.
+const CAU_GL_TAT = typeof location !== 'undefined' && /[?&]caugl=0\b/.test(location.search);
+const CAU_FS = '#ifdef GL_FRAGMENT_PRECISION_HIGH\nprecision highp float;\n#else\nprecision mediump float;\n#endif\n' +
+  'varying vec2 v_p;uniform sampler2D u_s;uniform vec4 u_r;uniform float u_n;uniform vec4 u_e;uniform mat3 u_q;uniform vec2 u_ps;uniform vec4 u_v;uniform vec2 u_k;' +
+  // lấy mẫu song tuyến tại toạ độ điểm ảnh nguồn (tâm điểm ảnh = số nguyên, như bản CPU); ngoài ảnh → trong suốt; trả màu KHÔNG nhân alpha
+  'vec4 lay(vec2 s){if(s.x<0.0||s.y<0.0||s.x>=u_n-1.0||s.y>=u_n-1.0)return vec4(0.0);vec4 t=texture2D(u_s,u_r.xy+(s+0.5)/u_n*u_r.zw);return t.a>0.0?vec4(t.rgb/t.a,t.a):vec4(0.0);}' +
+  'vec4 mau(vec2 b,float k){float r=length(b);if(r>' + CAU_R0.toFixed(4) + '){float q=min(1.0,(r-' + CAU_R0.toFixed(4) + ')/' + (1 - CAU_R0).toFixed(4) + ');b*=(' + CAU_R0.toFixed(4) + '+' + (CAU_K - CAU_R0).toFixed(4) + '*(1.0-(1.0-q)*(1.0-q)))/r;}' +
+  'return lay(u_e.xy*u_n-0.5+b*u_e.zw*u_n)*k;}' +
+  'void main(){vec2 xy=(v_p-u_e.xy)/u_e.zw;float q=dot(xy,xy),v=sqrt(q),w=u_v.w;vec4 o=vec4(0.0);' +
+  'if(v<1.0){if(u_k.y>0.5)o=lay(v_p*u_n-0.5);else{' +
+  'vec3 b=u_q*vec3(xy,-sqrt(1.0-q));float al=min(1.0,(1.0-v)/w*0.9+0.1),vv=clamp((v-(1.0-w*1.6))/(w*1.2),0.0,1.0),wt=1.0-clamp((abs(b.z)-0.28)/0.3,0.0,1.0);' +
+  'if(wt<1.0)o+=mau(b.xy,1.0-wt);' +
+  'if(wt>0.0){vec3 a=b*b*b*b;float sw=wt/max(a.x+a.y+a.z,1e-9);if(a.z*sw>0.01)o+=mau(b.xy*0.75,a.z*sw);if(a.x*sw>0.01)o+=mau(vec2(b.z*0.75*sign(b.x),b.y*0.75),a.x*sw);if(a.y*sw>0.01)o+=mau(vec2(b.x*0.75,b.z*0.75*sign(b.y)),a.y*sw);}' +
+  'if(u_k.x>0.5)o.a*=1.0-vv;else{if(vv>0.0){o.rgb+=(u_v.rgb-o.rgb)*vv;o.a=max(o.a,vv);}o.a*=al;}}}' +
+  'else if(v<1.7&&u_k.x<0.5){vec2 r=vec2(xy.x*u_ps.x+xy.y*u_ps.y,-xy.x*u_ps.y+xy.y*u_ps.x);o=lay(u_e.xy*u_n-0.5+r*u_e.zw*u_n);}' +
+  'gl_FragColor=vec4(o.rgb*o.a,o.a);}';
 const maTranQuay = (ax, ay, az, a) => { const c = Math.cos(a), s = Math.sin(a), t = 1 - c; return [t * ax * ax + c, t * ax * ay - s * az, t * ax * az + s * ay, t * ax * ay + s * az, t * ay * ay + c, t * ay * az - s * ax, t * ax * az - s * ay, t * ay * az + s * ax, t * az * az + c]; };
 const nhanMT = (A, B) => { const o = new Array(9); for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) o[i * 3 + j] = A[i * 3] * B[j] + A[i * 3 + 1] * B[3 + j] + A[i * 3 + 2] * B[6 + j]; return o; };
 const chuanMT = (Q) => { // trực chuẩn lại (Gram–Schmidt theo cột) — chống trôi số sau nhiều phép nhân
@@ -558,6 +575,19 @@ Object.assign(REN, {
         GLR.ra();
       }
       return { anh: o, sang: o2 };
+    }
+    if (gx && cf.cau && !CAU_GL_TAT && GLR.veCT) { // WebGL — LĂN CẦU 3D BẰNG SHADER (bước 4 full WebGL): cùng phép tính từng điểm ảnh như nhánh CPU bên dưới nhưng chạy trên GPU,
+      //   nguồn = ảnh thân / lớp sáng ĐÃ nằm trên GPU, đích = 2 bộ đệm khung → không putImageData + tải 2 texture mỗi khung (trước: ~4 lần tải / khung khi có 2 Hive). Hỏng → nhánh CPU.
+      const T = this.cdBang(than, cf), Q = E._cdQ3 || [1, 0, 0, 0, 1, 0, 0, 0, 1], ps = E._cdPsi || 0;
+      const o = GLR.tam('cdO', n, n), o2 = sang ? GLR.tam('cdO2', n, n) : null; let ok = true;
+      for (const [D, im, la] of [[o, than, 0], [o2, sang, 1]]) {
+        if (!D || !ok) continue;
+        const x2 = GLR.vao(D);
+        ok = GLR.veCT('cau', CAU_FS, im, { u_n: n, u_e: [T.cx, T.cy, T.rx, T.ry], u_q: Q, u_ps: [Math.cos(ps), Math.sin(ps)], u_v: [T.vien[0] / 255, T.vien[1] / 255, T.vien[2] / 255, T.w], u_k: [la, cf.truc ? 1 : 0] });
+        if (ok && !la) { x2.globalCompositeOperation = 'source-atop'; x2.globalAlpha = 0.5; x2.drawImage(this.bong1(), n * 0.12, n * 0.18, n * 1.15, n * 1.15); x2.globalAlpha = 0.25; x2.drawImage(this.cham1('#fff3cf'), n * 0.06, n * 0.02, n * 0.55, n * 0.55); }
+        GLR.ra();
+      }
+      if (ok) return { anh: o, sang: o2 };
     }
     const mk = (k) => { const c = this[k] || (this[k] = document.createElement('canvas')); if (c.width !== n) { c.width = n; c.height = n; } return c; };
     const o = mk('_cdO'), o2 = sang ? mk('_cdO2') : null;

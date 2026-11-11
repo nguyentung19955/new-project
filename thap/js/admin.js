@@ -63,7 +63,7 @@ ADMIN.fps = {
     const tb = F.dv.reduce((a, x) => a + x[0], 0) / F.dv.length, mx = Math.max.apply(null, F.dv.map(x => x[1])), tx = Math.max.apply(null, F.dv.map(x => x[2])), dx = F.dv.reduce((a, x) => (x[1] > a[1] ? x : a), F.dv[0])[3];
     // bộ nhớ (5 s đo 1 lần): "m a+b" = MB canvas đệm đang sống (REN.boNho) + MB texture GL — iPhone hay thu hồi trang giữa trận khi tổng quá lớn
     F.mn = (F.mn | 0) + 1; if (F.mn % 10 === 1) { try { const r = REN.boNho(), g = gl && GLR.thongTin().boNho; F.mt = ' · m' + Math.round(r.canvasMB) + (g ? '+' + Math.round(g.tong / 1048576) : ''); } catch (e) { F.mt = ''; } }
-    F.el.textContent = (ADMIN.nk.che === 1 ? 'NF ' : '') + (gl ? 'GL ' : '2D ') + Math.round(fps) + ' · min ' + Math.round(Math.min.apply(null, F.ds)) + ' · ve ' + Math.round(tb) + '/' + Math.round(mx) + (gl ? ' · t' + tx : '') + ' · d' + dx + 'x' + (REN.xoayN | 0) + (gl && GLR.bn ? 'h' + Math.round(GLR.bn.hoiMax) : '') + (F.mt || '');
+    F.el.textContent = (ADMIN.nk.che === 1 ? 'NF ' : '') + (gl ? (GLR.aoOn ? 'GLa ' : 'GL ') : '2D ') + Math.round(fps) + ' · min ' + Math.round(Math.min.apply(null, F.ds)) + ' · ve ' + Math.round(tb) + '/' + Math.round(mx) + (gl ? ' · t' + tx : '') + ' · d' + dx + 'x' + (REN.xoayN | 0) + (gl && GLR.bn ? 'h' + Math.round(GLR.bn.hoiMax) : '') + (F.mt || '');
     F.el.style.display = '';
   },
 };

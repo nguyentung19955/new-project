@@ -8,7 +8,7 @@
 // CÁCH DÙNG: GLR.x là "ngữ cảnh giả" cùng tập lệnh canvas 2D → hàm vẽ cũ nhận GLR.x thay cho ctx là chạy, toán học giữ nguyên:
 //   · ẢNH (drawImage 3-5-9 tham số, save/restore, biến đổi, globalAlpha, cắt chữ nhật) → ô ảnh gom lô. Hoà màu: source-over, lighter, destination-out,
 //     source-atop, source-in, screen (đúng nghĩa canvas trên nền alpha nhân sẵn).
-//   · CHỮ (fillText/strokeText không xoay) → dựng 1 lần thành ảnh nhỏ (kho chữ), các khung sau là 1 ô ảnh.
+//   · CHỮ (fillText/strokeText không xoay) → Ô ẢNH KÝ TỰ tô màu bằng màu đỉnh (js/chugl.js: 1 tờ ký tự trắng / cỡ, không tải texture theo chuỗi); chữ ngoài bảng / gradient → kho chữ cũ (ảnh nhỏ dựng 1 lần).
 //   · VECTOR (fill/stroke/fillRect/… + chữ xoay): vẽ vào canvas 2D nháp (#cv — bản GL không vẽ gì khác lên đó) rồi chép đúng vùng vừa vẽ thành 1 ô ảnh
 //     chèn ĐÚNG THỨ TỰ vào lô → không còn canvas phủ #cv-tren, thứ tự lớp y bản 2D. Hiếm (khiên Prism, ?debug): 1 lần tải texture nhỏ / cụm lệnh.
 //   · GLR.thieu[nhóm][lệnh] đếm mọi lệnh không-ảnh; tiền tố 'bo:' = lệnh BỎ QUA (clip theo đường cong, filter/bóng, kiểu hoà màu lạ, clearRect…).
@@ -29,10 +29,12 @@ const GLR = (() => {
   //   THA_CHO / NGUON_CHO = số khung 1 ảnh dựng / ảnh gốc phải yên (không ai đọc điểm ảnh 2D) trước khi thả, nhân đôi sau mỗi lần phải dựng lại (≤ ×32).
   const THA_BAT = !!(WR && CVW && CVW.set && CVH && CVH.set) && TS.get('glm') !== '0', NGUON_MAX = (IOS ? 16 : 32) << 20, THA_CHO = 600, NGUON_CHO = 600, THA_NHO = 16384, TAI_MAX = 4, NAP_DV = 2, HUY_CHO = 90; // TAI_MAX / NAP_DV: ngân sách tải texture 1 khung giữa trận (đơn vị = 1 + điểm ảnh / 131072 mỗi lần tải), phần của hàng nạp nền · THA_NHO: điểm ảnh — ảnh dựng nhỏ hơn (64 KB) không thả
   const ATLAS = 2048, TRANG_MAX = 5, GIU_DAY = 0.78, RIENG_MAX = (IOS ? 40 : 64) << 20, RIENG_GIU = RIENG_MAX * 0.7, GHIM = 3600, // GIỮ TEXTURE TRONG TRẬN (mục "KHÔNG TẢI LẠI" ở datLaiAtlas / donRieng): TRANG_MAX 4 → 5; GIU_DAY = phần atlas giữ lại sau khi gom (theo mới dùng nhất); RIENG_GIU = dưới mức này texture riêng không bị bỏ theo tuổi; GHIM = số khung 1 texture NẠP TRƯỚC được coi như vừa dùng
-     NT_MAX = 8, LE = 1, DINH_MAX = 32768, W9 = 14; // 14 từ 4 byte / đỉnh: x y · u v · u0 v0 u1 v1 (giới hạn lấy mẫu) · lx ly lw lh (toạ độ trong ô, điểm ảnh thiết bị → khử răng cưa mép) · màu · trắng
-  const VS = 'attribute vec2 a_p;attribute vec2 a_uv;attribute vec4 a_gh;attribute vec4 a_c;attribute vec4 a_m;attribute float a_w;uniform vec3 u_kt;varying vec2 v_uv;varying vec4 v_gh;varying vec4 v_c;varying vec4 v_m;varying float v_w;' +
+     NT_MAX = 8, LE = 1, DINH_MAX = 32768, W9 = 16; // 16 từ 4 byte / đỉnh: x y · u v · u0 v0 u1 v1 (giới hạn lấy mẫu) · lx ly lw lh (toạ độ trong ô, điểm ảnh thiết bị → khử răng cưa mép) · màu · trắng · màu tô (r g b + độ mạnh) · kiểu tô
+  // ẢNH ẢO (mục "ẢNH ẢO" bên dưới — kế hoạch full WebGL bước 1 + 2): ?gla=0 tắt (mọi ảnh thu nhỏ / tô màu lại là canvas dựng trên CPU rồi tải lên như trước — để so). Chỉ WebGL2 (generateMipmap ảnh cỡ bất kỳ).
+  const AO_BAT = THA_BAT && TS.get('gla') !== '0', AO_NOI = 1.06, GIAI_LON = 300000; // AO_NOI: cỡ cần nhỉnh hơn tầng ≤ 6 % thì vẫn dùng tầng đó (GPU phóng ≤ 6 %) · GIAI_LON: ảnh gốc lớn hơn (điểm ảnh) giải mã nền trước khi tải giữa trận
+  const VS = 'attribute vec2 a_p;attribute vec2 a_uv;attribute vec4 a_gh;attribute vec4 a_c;attribute vec4 a_m;attribute float a_w;attribute vec4 a_t;attribute float a_k;uniform vec3 u_kt;varying vec2 v_uv;varying vec4 v_gh;varying vec4 v_c;varying vec4 v_m;varying float v_w;varying vec4 v_t;varying float v_k;' +
     // u_kt.z = 1: vẽ ra canvas (y lật) · −1: vẽ vào bộ đệm khung (hàng 0 của texture = mép trên ảnh → dùng lại làm nguồn như ảnh thường)
-    'void main(){v_uv=a_uv;v_gh=a_gh;v_c=a_c;v_m=a_m;v_w=a_w;gl_Position=vec4(a_p.x*u_kt.x-1.0,(1.0-a_p.y*u_kt.y)*u_kt.z,0.0,1.0);}';
+    'void main(){v_uv=a_uv;v_gh=a_gh;v_c=a_c;v_m=a_m;v_w=a_w;v_t=a_t;v_k=a_k;gl_Position=vec4(a_p.x*u_kt.x-1.0,(1.0-a_p.y*u_kt.y)*u_kt.z,0.0,1.0);}';
   // n texture / 1 lệnh vẽ (1..8; WebGL bảo đảm ≥ 8 đơn vị texture ở fragment): v_w = 2 × (số thứ tự texture trong dãy) + độ "trắng" → ô ảnh khác texture (các trang atlas,
   //   dải khung ụ, bộ đệm khung…) vẫn chung 1 lệnh vẽ; chỉ ngắt lô khi đổi kiểu hoà màu hoặc quá n texture. n = 1: shader không rẽ nhánh (GPU phần mềm tô theo kiểu
   //   "chạy mọi nhánh" → n lớn chậm hẳn; GPU thật rẽ nhánh rẻ, đổi lại bớt 2–4 lần số lệnh vẽ). Chọn n: GLR.dung().
@@ -41,8 +43,11 @@ const GLR = (() => {
     for (let i = 0; i < n; i++) { u += 'uniform sampler2D u_t' + i + ';'; lay += i === n - 1 ? 't=texture2D(u_t' + i + ',uv);' : 'if(i<' + i + '.5)t=texture2D(u_t' + i + ',uv);else '; }
     return '#ifdef GL_FRAGMENT_PRECISION_HIGH\nprecision highp float;\n#else\nprecision mediump float;\n#endif\n' + u + // highp: UV trên atlas 2048 cần > 10 bit (mediump của GPU iPhone = float 16 bit → lệch điểm ảnh)
       // mép ô: độ phủ điểm ảnh như canvas 2D (ô nới 0,5 điểm ảnh mỗi phía, ngoài ô nguồn lấy màu mép) → thanh máu / ảnh sát khung không nhảy từng điểm ảnh
-      'varying vec2 v_uv;varying vec4 v_gh;varying vec4 v_c;varying vec4 v_m;varying float v_w;void main(){' +
+      // KIỂU TÔ (v_k — biến thể dựng bằng shader từ 1 texture gốc, không còn canvas tô sẵn; màu t nhân sẵn alpha): 1 = phủ màu v_t.rgb độ mạnh v_t.a trong alpha của ảnh ('source-atop' — ảnh tô màu FXU.mau / toMauA,
+      //   bản trắng = phủ trắng độ mạnh 1) · 2 = bản xám hoá đá (REN.toBien 'xam': độ sáng × 0,85 + 18, ngả ấm) · 3 = nhân màu. 0 = ảnh nguyên (không rẽ nhánh nào chạy).
+      'varying vec2 v_uv;varying vec4 v_gh;varying vec4 v_c;varying vec4 v_m;varying float v_w;varying vec4 v_t;varying float v_k;void main(){' +
       'vec2 p=clamp(min(v_c.xy+0.5,v_c.zw)-max(v_c.xy-0.5,vec2(0.0)),0.0,1.0);vec2 uv=clamp(v_uv,v_gh.xy,v_gh.zw);float i=floor(v_w*0.5+0.01);float w=clamp(v_w-2.0*i,0.0,1.0);vec4 t;' + lay +
+      'if(v_k>0.5){if(v_k<1.5)t.rgb=mix(t.rgb,v_t.rgb*t.a,v_t.a);else if(v_k<2.5){float l=dot(t.rgb,vec3(0.3,0.59,0.11))*0.85+0.0706*t.a;t.rgb=vec3(l*1.02,l,l*0.94);}else t.rgb*=v_t.rgb;}' +
       'gl_FragColor=mix(t,vec4(t.a),w)*(v_m*(p.x*p.y));}';
   };
   const huu = Number.isFinite;
@@ -193,22 +198,25 @@ const GLR = (() => {
       this.nt = nt = Math.max(1, Math.min(NT_MAX, nt, gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS) || 1));
       const v = mk(gl.VERTEX_SHADER, VS), f = mk(gl.FRAGMENT_SHADER, FS(nt)); if (!v || !f) return false;
       const p = gl.createProgram(); gl.attachShader(p, v); gl.attachShader(p, f);
-      gl.bindAttribLocation(p, 0, 'a_p'); gl.bindAttribLocation(p, 1, 'a_uv'); gl.bindAttribLocation(p, 2, 'a_gh'); gl.bindAttribLocation(p, 3, 'a_c'); gl.bindAttribLocation(p, 4, 'a_m'); gl.bindAttribLocation(p, 5, 'a_w');
+      gl.bindAttribLocation(p, 0, 'a_p'); gl.bindAttribLocation(p, 1, 'a_uv'); gl.bindAttribLocation(p, 2, 'a_gh'); gl.bindAttribLocation(p, 3, 'a_c'); gl.bindAttribLocation(p, 4, 'a_m'); gl.bindAttribLocation(p, 5, 'a_w'); gl.bindAttribLocation(p, 6, 'a_t'); gl.bindAttribLocation(p, 7, 'a_k');
       gl.linkProgram(p); if (!gl.getProgramParameter(p, gl.LINK_STATUS)) return false;
       gl.useProgram(p); this._kt = gl.getUniformLocation(p, 'u_kt'); for (let i = 0; i < nt; i++) gl.uniform1i(gl.getUniformLocation(p, 'u_t' + i), i);
       if (!this._buf) { this._buf = new ArrayBuffer(DINH_MAX * W9 * 4); this._f = new Float32Array(this._buf); this._u = new Uint32Array(this._buf); this._i = new Uint16Array(DINH_MAX * 3); }
       this._vb0 = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, this._vb0); gl.bufferData(gl.ARRAY_BUFFER, this._buf.byteLength, gl.DYNAMIC_DRAW);
       this._ib = gl.createBuffer(); gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._ib); gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this._i.byteLength, gl.DYNAMIC_DRAW);
-      for (let i = 0; i < 6; i++) gl.enableVertexAttribArray(i);
+      for (let i = 0; i < 8; i++) gl.enableVertexAttribArray(i);
       const B = W9 * 4;
       gl.vertexAttribPointer(0, 2, gl.FLOAT, false, B, 0); gl.vertexAttribPointer(1, 2, gl.FLOAT, false, B, 8); gl.vertexAttribPointer(2, 4, gl.FLOAT, false, B, 16); gl.vertexAttribPointer(3, 4, gl.FLOAT, false, B, 32);
       gl.vertexAttribPointer(4, 4, gl.UNSIGNED_BYTE, true, B, 48); gl.vertexAttribPointer(5, 1, gl.FLOAT, false, B, 52);
+      gl.vertexAttribPointer(6, 4, gl.UNSIGNED_BYTE, true, B, 56); gl.vertexAttribPointer(7, 1, gl.FLOAT, false, B, 60);
       gl.disable(gl.DEPTH_TEST); gl.disable(gl.CULL_FACE); gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA); this._op = 0;
       gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true); gl.activeTexture(gl.TEXTURE0); gl.clearColor(0, 0, 0, 0);
       const mx = gl.getParameter(gl.MAX_TEXTURE_SIZE) || 1024; this.atlasCo = Math.min(ATLAS, mx); this.texMax = mx;
       this.the = (this.the || 0) + 1; // thế hệ ngữ cảnh: mọi texture / bộ đệm khung cũ vô hiệu
+      this.aoOn = AO_BAT && this.phien === 2 && gl.getParameter(gl.MAX_VERTEX_ATTRIBS) >= 8; this._nhapG = null; // ảnh ảo: chỉ WebGL2
       this.map = new WeakMap(); this.trang = []; this.rieng = []; this._riengB = 0; this._tDon = 0; this.atlasThe = 0; this._day = false; this._tDat = -1e9;
       this.nv = 0; this.ni = 0; this.bI0 = 0; this.bT = []; this.bOp = 0; this._g = new Array(NT_MAX).fill(null); this._loT = []; this._loO = []; this._loI = []; this._loN = [];
+      if (this.aoOn && !this.aoKiem()) { this.aoOn = false; this.aoLyDo = 'tự kiểm ảnh ảo trượt'; } // máy không chạy được chuỗi lệnh của ảnh ảo → đường GL cũ (như ?gla=0)
       this._dich = null; this._lop = null; this._tam = {}; this._ngan.length = 0; this._bb = null; this._vCo = false;
       this.o = []; this._cho.length = 0; this._fbDoc = null; this._donSom = false; this._fDung = this.f; this._taiDv = 0; this._taiTha = true; for (const q of this._napDs) q._napCho = 0; this._napDs.length = 0;
       return true;
@@ -285,7 +293,7 @@ const GLR = (() => {
       this.trang = []; this.atlasThe++; this._day = false; this._tDat = f; this.o = []; this.bn.gom++;
       if (ds.length && WR) {
         const nhom = new Map(), ung = []; // trang cũ → các ô giữ lại
-        for (const E of ds) { if (E.at !== the0 || E.bo) continue; const c = E.cv && E.cv.deref(); if (!c || this.map.get(c) !== E) continue; ung.push(E); }
+        for (const E of ds) { if (E.at !== the0 || E.bo) continue; const c = E.cv && E.cv.deref(); if (!c || (E.lv != null ? !(c._lv && c._lv[E.lv] === E) : this.map.get(c) !== E)) continue; ung.push(E); } // (E.lv: ô tầng của ảnh gốc — sổ ở c._lv, không ở map)
         // KHÔNG TẢI LẠI (11/11 đêm — đo tools/thap-kt-tai-gl.js: 41 % số lần tải texture giữa trận là tải LẠI ảnh đã từng tải, vì ô không vẽ 10 s bị bỏ ở mỗi lần gom):
         //   giữ theo NGÂN SÁCH thay vì theo tuổi — xếp mới dùng nhất trước, giữ tới khi đầy GIU_DAY của atlas (ô vừa dùng trong 600 khung luôn giữ); phần cũ nhất mới bỏ.
         //   Texture nạp trước (trùm sắp ra, bộ bài) có E.dung đặt ở tương lai (GHIM) → đứng đầu danh sách tới khi được dùng thật.
@@ -363,7 +371,8 @@ const GLR = (() => {
       for (const k in this._tam) tam += this._tam[k].width * this._tam[k].height * 4;
       const atlas = this.trang.length * this.atlasCo * this.atlasCo * 4, lop = this._lop ? this._lop.width * this._lop.height * 4 : 0, cv = this.cv.width * this.cv.height * 4 * 2;
       const day = this.trang.reduce((s, p) => s + p.y, 0) / Math.max(1, this.trang.length * this.atlasCo);
-      return { atlasTrang: this.trang.length, atlas, atlasDay: +day.toFixed(2), riengN: n, rieng, lop, tam, canvasGL: cv, chu: this.khoChu.size, tong: atlas + rieng + lop + tam + cv, bn: this.bn };
+      const nh = this._nhapG ? this._nhapG.W * this._nhapG.H * 4 : 0;
+      return { atlasTrang: this.trang.length, atlas, atlasDay: +day.toFixed(2), riengN: n, rieng, lop, tam, canvasGL: cv, chu: this.khoChu.size, tong: atlas + rieng + lop + tam + cv + nh, bn: this.bn, ao: this.aoOn };
     },
     // xếp kệ: tìm chỗ w×h (đã cộng lề) trong các trang atlas; hết chỗ → null
     xep(w, h) {
@@ -382,6 +391,7 @@ const GLR = (() => {
     tra(im, w, h) {
       const gl = this.gl; let E;
       if (im._dich) return im.the === this.the && im !== this._dich ? im.E : null; // bộ đệm khung (lớp hiệu ứng / canvas tạm GPU): dùng thẳng texture của nó
+      { const ao = im._ao || (this.aoOn && im._goc && !im._glV ? this.aoGoc(im) : null); if (ao) return this.traAo(im, ao, -1, 0, 0, 0, w, h); } // ảnh ảo / ảnh gốc (hàng nạp nền gọi tới đây): tầng ảnh gốc trên GPU
       E = this.map.get(im);
       if (im._glD || im._nhap) { // canvas vẽ lại mỗi khung: texture riêng, tải lại ở MỖI lần vẽ (xả lô trước để các ô vẽ trước đó giữ hình cũ)
         this.xa();
@@ -440,6 +450,175 @@ const GLR = (() => {
       return E;
     },
 
+    // ---------- ẢNH ẢO: 1 texture gốc / ảnh, mọi cỡ + biến thể lấy mẫu từ đó (kế hoạch full WebGL bước 1 + 2 — KE-HOACH.md mục 11) ----------
+    // Trước: mỗi cỡ thu nhỏ (REN.co / coDai / mip), mỗi màu tô (FXU.mau / toMauA), bản trắng / xám = 1 canvas dựng trên CPU rồi tải canvas → texture (3–50 ms / lần trên iPhone).
+    // Nay (WebGL2): các hàm đó trả 1 "canvas ảo" — phần tử canvas 0×0 (không điểm ảnh) báo đúng cỡ cũ, mang c._ao = { g: ảnh gốc, ô nguồn, k: kiểu tô, t: màu tô }.
+    //   · Lớp GL vẽ nó bằng TẦNG của ảnh gốc: Image tải THẲNG lên GPU 1 lần (không chép qua canvas), tầng ½ ¼ ⅛… dựng NGAY TRÊN GPU (generateMipmap + vẽ vào bộ đệm khung,
+    //     hoặc thu ½ từ tầng trên đã có) — chọn tầng nhỏ nhất còn ≥ cỡ cần → GPU chỉ thu ≤ 2× như chuỗi mip CPU cũ. Tô màu / trắng / xám = shader (thuộc tính a_k, a_t), cùng lô.
+    //   · Ai đọc điểm ảnh của nó bằng 2D (canvas dựng từ nó, đường 2D dự phòng khi mất ngữ cảnh) → dựng thật bằng hàm dung cũ (cơ chế "thả bản CPU" loại 1 có sẵn) — hình như bản 2D.
+    //   · Ô tầng nằm trong atlas / texture riêng như mọi ảnh (gom, ngân sách, nạp nền dùng chung); sổ tầng ở ảnh gốc: g._lv[tầng].
+    //   Ảnh gốc (REN.img) cũng là ảnh ảo của chính nó ở tầng 0. ?gla=0 / WebGL1 / ?gl=0: không có gì ở đây chạy.
+    aoBat() {
+      if (!this.bat || !AO_BAT) return false;
+      if (!this.gl && !this._thu && typeof REN !== 'undefined' && REN.cv && typeof G !== 'undefined' && G.ban && G.ban.length) this.khoiTao(REN); // trận đã dựng mà chưa vẽ khung nào: khởi tạo GL sớm để ảnh dựng lúc tải đã là ảnh ảo
+      return !!this.gl && this.aoOn && !this.mat && !!this._va;
+    },
+    // màu CSS + độ mạnh → 4 byte (r g b độ-mạnh) của thuộc tính a_t; màu có alpha → nhân vào độ mạnh (như fillStyle rgba trên 'source-atop')
+    mauSo(mau, a) {
+      const M = this._mauSo || (this._mauSo = new Map()), key = mau + '|' + a; let v = M.get(key); if (v !== undefined) return v;
+      let r = 255, g = 255, b = 255, al = 1; const x = this.xDo(); x.fillStyle = '#000000'; x.fillStyle = mau; const q = String(x.fillStyle);
+      if (q[0] === '#') { const n = parseInt(q.slice(1), 16); r = n >> 16; g = (n >> 8) & 255; b = n & 255; }
+      else { const m = q.match(/[\d.]+/g) || []; r = +m[0] || 0; g = +m[1] || 0; b = +m[2] || 0; al = m[3] === undefined ? 1 : +m[3]; }
+      v = ((r & 255) | ((g & 255) << 8) | ((b & 255) << 16) | (Math.round(Math.max(0, Math.min(1, a * al)) * 255) << 24)) >>> 0;
+      if (M.size > 4000) M.clear(); M.set(key, v); return v;
+    },
+    aoGoc(g) { return g._ao || (g._ao = { g, L: 0, o: null, k: 0, t: 0, lx: 0, ly: 0, lw: g.width, lh: g.height, sx: 0, sy: 0, sw: g.width, sh: g.height, p: null, c0: null }); },
+    // ảnh gốc "sinh ra đã thả": canvas 0×0 giữ Image (a) — không chép Image sang canvas; ai đọc điểm ảnh 2D mới chép (hoi)
+    nguonAo(a) {
+      const c = document.createElement('canvas'); c._goc = a; c._docF = c._taoF = this.f; c._hoiN = 0;
+      this.tha(c, 1, a.naturalWidth, a.naturalHeight); this.bn.tha--; this.bn.ao = (this.bn.ao | 0) + 1; this._nguon.push(new WR(c)); return c;
+    },
+    // canvas ảo cỡ w×h lấy hình từ ảnh gốc g (canvas của REN.img, có g._goc). q: { o: [ô…] (dải khung: mỗi ô { lx, ly, lw, lh → sx, sy, sw, sh của ảnh gốc }), k, t (kiểu + màu tô),
+    //   kho, khoa (kho đệm giữ nó — như GLR.tinh), dung(canvas) = vẽ nội dung thật vào canvas (đường 2D), al: nhân alpha (bóng đen 0,55…),
+    //   them: lấy tầng THÔ hơn `them` bậc rồi để GPU phóng lên = làm mềm (thay filter blur của bóng đổ) }
+    ao(g, w, h, q) {
+      const c = document.createElement('canvas');
+      c._ao = { g, L: -1, o: q.o || null, k: q.k | 0, t: (q.t || 0) >>> 0, al: q.al, them: q.them | 0, lx: 0, ly: 0, lw: w, lh: h, sx: 0, sy: 0, sw: g.width, sh: g.height, p: null, c0: null };
+      c._tinh = 1; c._docF = c._taoF = this.f; c._hoiN = 0; c._kho = q.kho; c._khoa = q.khoa; c._dungLai = q.dung;
+      this.tha(c, 1, w, h); this.bn.tha--; this.bn.ao = (this.bn.ao | 0) + 1; this._nguon.push(new WR(c));
+      if (this.ren && this.ren._dangNong) this.nap(c);
+      return c;
+    },
+    coTex(im) { const ao = im._ao; if (ao) { const lv = ao.g._lv; return !!lv && ao.L >= 0 && this.hopLe(lv[ao.L]); } return this.hopLe(this.map.get(im)); },
+    // tầng cần cho 1 ảnh ảo: tầng nhỏ nhất mà điểm ảnh tầng còn ≥ điểm ảnh cần (nới AO_NOI)
+    lvCan(ao) {
+      const c = ao.o ? ao.o[0] : ao, r = Math.min(c.sw / c.lw, c.sh / c.lh), g = ao.g; let L = (r > 1 ? Math.floor(Math.log2(r * AO_NOI)) : 0) + (ao.them | 0);
+      while (L > 0 && (Math.min(g.width, g.height) >> L) < 4) L--;
+      return L;
+    },
+    // mục texture ảo của ảnh ảo im cho ô nguồn (sx, sy, sw, sh) (toạ độ canvas ảo; sx = −1: ô đầu — hàng nạp nền); null = chưa vẽ được (đã xếp hàng nạp)
+    traAo(im, ao, sx, sy, sw, sh, w, h) {
+      const g = ao.g; let L = ao.L; if (L < 0) L = ao.L = this.lvCan(ao);
+      let E = this.traLv(g, L);
+      if (!E) { // chưa có tầng (hết ngân sách tải khung này / ảnh lớn chờ giải mã nền): vẽ tạm bằng tầng khác của cùng ảnh, không có thì hoãn
+        const lv = g._lv;
+        if (lv) for (let d = 1; d < 12 && !E; d++) { if (this.hopLe(lv[L + d])) E = lv[L + d]; else if (L >= d && this.hopLe(lv[L - d])) E = lv[L - d]; }
+        if (g._glLoi === this.the) return null;
+        if (!E) { this.nap(im, true); this.bn.hoan++; return null; }
+        E.dung = this.f; this.nap(im, 2); this.bn.thayThe++;
+      }
+      let c = ao;
+      if (ao.o) {
+        c = sx === -1 ? ao.o[0] : ao.c0;
+        if (!c || (sx !== -1 && (sx < c.lx - 0.01 || sy < c.ly - 0.01 || sx + sw > c.lx + c.lw + 0.01 || sy + sh > c.ly + c.lh + 0.01))) {
+          c = null; for (const q of ao.o) if (sx >= q.lx - 0.01 && sy >= q.ly - 0.01 && sx + sw <= q.lx + q.lw + 0.01 && sy + sh <= q.ly + q.lh + 0.01) { c = q; break; }
+          if (!c) { this.bn.aoBo = (this.bn.aoBo | 0) + 1; if (!this.hoi(im)) return null; im._ao = null; return this.tra(im, w, h); } // vùng nguồn trùm nhiều ô (vẽ cả dải): thành canvas thường
+          ao.c0 = c;
+        }
+      }
+      let p = c.p;
+      if (!p || p.E !== E || p.ex !== E.x || p.ey !== E.y || p.tex !== E.tex) {
+        const fx = E.w / g.width, fy = E.h / g.height, kx = c.lw / (c.sw * fx), ky = c.lh / (c.sh * fy);
+        p = c.p = { tex: E.tex, x: (E.x + c.sx * fx) * kx - c.lx, y: (E.y + c.sy * fy) * ky - c.ly, W: E.W * kx, H: E.H * ky, k: ao.k, t: ao.t, al: ao.al, E, ex: E.x, ey: E.y };
+      }
+      return p;
+    },
+    // tầng L của ảnh gốc g trên GPU: có → trả; có tầng nét hơn → thu ½ dần trên GPU; không → tải Image (1 lần tải ảnh → texture, theo ngân sách khung giữa trận)
+    traLv(g, L) {
+      const lv = g._lv || (g._lv = []); let E = lv[L];
+      if (E && this.hopLe(E)) { E.dung = this.f; return E; }
+      if (g._glLoi === this.the) return null;
+      let j = L - 1; while (j >= 0 && !this.hopLe(lv[j])) j--;
+      if (j < 0) {
+        const a = g._goc, w = g.width, h = g.height;
+        if (!a || !(a.complete && a.naturalWidth)) return null;
+        if (w > this.texMax || h > this.texMax) { g._glLoi = this.the; return null; }
+        if (!this._taiTha && !this._dangNap) { // giữa trận, ngay lúc vẽ: theo ngân sách khung; ảnh lớn giải mã nền trước (hàng nạp nền)
+          if (this._taiDv >= TAI_MAX || (w * h > GIAI_LON && a.decode && g._tha === 1)) return null;
+        }
+        this._taiDv += 1 + w * h / 131072;
+        // lần tải THỨ HAI của cùng ảnh (đã tải tầng thô, nay cần tầng nét hơn — tia / hạt vẽ nhiều cỡ): tải luôn tầng 0, các tầng sau thu trên GPU → mỗi ảnh gốc tối đa 2 lần tải / ngữ cảnh
+        const L0 = g._nhapThe === this.the ? 0 : L; g._nhapThe = this.the;
+        E = lv[L0] = this.nhapAnh(g, a, L0); if (!E || L0 === L) return E;
+        j = L0;
+      }
+      for (let i = j + 1; i <= L; i++) { const P = lv[i - 1]; E = this.taoO(g, i); this.chepGPU(P, P.x, P.y, P.w, P.h, E); lv[i] = E; this.bn.haTang = (this.bn.haTang | 0) + 1; }
+      return E;
+    },
+    // chỗ cho tầng L của g: ô atlas (ảnh nhỏ) hoặc texture riêng
+    taoO(g, L) {
+      const w = Math.max(1, Math.round(g.width / (1 << L))), h = Math.max(1, Math.round(g.height / (1 << L)));
+      const nho = w <= 1024 && h <= 1024 && w * h <= 262144 && w + 2 * LE <= this.atlasCo && h + 2 * LE <= this.atlasCo, cho = nho && !this._day ? this.xep(w + 2 * LE, h + 2 * LE) : null; let E;
+      if (cho) { E = { tex: cho.p.tex, x: cho.x + LE, y: cho.y + LE, W: this.atlasCo, H: this.atlasCo, w, h, the: this.the, at: this.atlasThe, dung: this.f, rieng: 0, cv: new WR(g), bo: 0, lv: L, v: 0 }; this.o.push(E); }
+      else { if (nho) this._day = true; E = { tex: this.taoTex(w, h), x: 0, y: 0, W: w, H: h, w, h, the: this.the, dung: this.f, rieng: 1, cv: new WR(g), bo: 0, lv: L, v: 0 }; this.rieng.push(E); this._riengB += w * h * 4; }
+      return E;
+    },
+    // TỰ KIỂM ẢNH ẢO lúc khởi tạo (điều phối thêm 12/11 — Safari iOS chưa thử được trên máy đo): chạy đúng chuỗi lệnh GL mà ảnh ảo dùng trên 1 ảnh 6×10 (không phải luỹ thừa 2):
+    //   tải canvas → generateMipmap → lọc LINEAR_MIPMAP_NEAREST → bộ đệm khung + copyTexSubImage2D. Có lỗi GL / bộ đệm khung không hoàn chỉnh / ném lỗi → false.
+    aoKiem() {
+      const gl = this.gl; let t = null, t2 = null, t3 = null, fb = null, ok = false;
+      try {
+        while (gl.getError()) { }
+        const c = document.createElement('canvas'); c.width = 6; c.height = 10; const x = c.getContext('2d'); x.fillStyle = '#40c080'; x.fillRect(0, 0, 6, 10);
+        const tao = () => { const q = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, q); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE); return q; };
+        t = tao(); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, c); gl.generateMipmap(gl.TEXTURE_2D); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+        t2 = tao(); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 8, 8, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+        fb = gl.createFramebuffer(); gl.bindFramebuffer(gl.FRAMEBUFFER, fb); gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, t2, 0);
+        const xong = gl.checkFramebufferStatus(gl.FRAMEBUFFER) === gl.FRAMEBUFFER_COMPLETE;
+        gl.clearColor(0.25, 0.5, 0.75, 1); gl.clear(gl.COLOR_BUFFER_BIT); gl.clearColor(0, 0, 0, 0);
+        t3 = tao(); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 8, 8, 0, gl.RGBA, gl.UNSIGNED_BYTE, null); gl.copyTexSubImage2D(gl.TEXTURE_2D, 0, 1, 1, 0, 0, 4, 4);
+        const p = new Uint8Array(4); gl.readPixels(2, 2, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, p);
+        ok = xong && !gl.getError() && Math.abs(p[0] - 64) <= 3 && Math.abs(p[1] - 128) <= 3 && Math.abs(p[2] - 191) <= 3 && p[3] === 255;
+      } catch (e) { ok = false; }
+      try { gl.bindFramebuffer(gl.FRAMEBUFFER, null); gl.bindTexture(gl.TEXTURE_2D, null); if (fb) gl.deleteFramebuffer(fb); for (const q of [t, t2, t3]) if (q) gl.deleteTexture(q); while (gl.getError()) { } } catch (e) { }
+      return ok;
+    },
+    // Image → tầng L: tầng 0 tải thẳng vào ô; tầng > 0: tải vào texture tạm, generateMipmap, vẽ thu vào ô rồi bỏ texture tạm (GPU chỉ giữ tầng cần)
+    nhapAnh(g, a, L) {
+      const gl = this.gl, w = g.width, h = g.height; let E = null, t = null;
+      try {
+        if (L === 0) {
+          const nho = w <= 1024 && h <= 1024 && w * h <= 262144 && w + 2 * LE <= this.atlasCo && h + 2 * LE <= this.atlasCo, cho = nho && !this._day ? this.xep(w + 2 * LE, h + 2 * LE) : null;
+          if (cho) { this.gan(cho.p.tex); gl.texSubImage2D(gl.TEXTURE_2D, 0, cho.x + LE, cho.y + LE, gl.RGBA, gl.UNSIGNED_BYTE, a); E = { tex: cho.p.tex, x: cho.x + LE, y: cho.y + LE, W: this.atlasCo, H: this.atlasCo, w, h, the: this.the, at: this.atlasThe, dung: this.f, rieng: 0, cv: new WR(g), bo: 0, lv: 0, v: 0 }; this.o.push(E); }
+          else { if (nho) this._day = true; t = this.taoTex(0, 0); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, a); E = { tex: t, x: 0, y: 0, W: w, H: h, w, h, the: this.the, dung: this.f, rieng: 1, cv: new WR(g), bo: 0, lv: 0, v: 0 }; t = null; this.rieng.push(E); this._riengB += w * h * 4; }
+        } else {
+          this.xa(); t = this.taoTex(0, 0); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, a);
+          gl.generateMipmap(gl.TEXTURE_2D); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+          E = this.taoO(g, L); this.chepGPU({ tex: t, W: w, H: h }, 0, 0, w, h, E);
+          gl.deleteTexture(t); t = null; this.quenGan();
+        }
+      } catch (e) { if (t) { try { gl.deleteTexture(t); this.quenGan(); } catch (e2) { } } g._glLoi = this.the; this.ghiThieu('bo:tai-loi'); return null; }
+      this.dem.tai++; this.bn.anh = (this.bn.anh | 0) + 1;
+      return E;
+    },
+    // vẽ vùng (sx, sy, sw, sh) của texture S vào ô E (E.w × E.h) NGAY TRÊN GPU: vẽ chép đè vào bộ đệm khung nháp rồi copyTexSubImage2D sang ô (không bao giờ vừa vẽ vào vừa lấy mẫu 1 texture)
+    chepGPU(S, sx, sy, sw, sh, E) {
+      const gl = this.gl, w = E.w, h = E.h; this.xa();
+      let N = this._nhapG;
+      if (!N || N.W < w || N.H < h) {
+        if (N) { gl.deleteFramebuffer(N.fb); gl.deleteTexture(N.tex); this.quenGan(); }
+        let W = 256, H = 256; while (W < w) W *= 2; while (H < h) H *= 2;
+        N = this._nhapG = { W, H, tex: this.taoTex(W, H), fb: gl.createFramebuffer() };
+        gl.bindFramebuffer(gl.FRAMEBUFFER, N.fb); gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, N.tex, 0);
+        this.gan(null);
+      } else gl.bindFramebuffer(gl.FRAMEBUFFER, N.fb);
+      gl.viewport(0, 0, w, h); gl.uniform3f(this._kt, 2 / w, 2 / h, -1);
+      const F = this._f, U = this._u, I = this._i, iw = 1 / S.W, ih = 1 / S.H, u0 = sx * iw, v0 = sy * ih, u1 = (sx + sw) * iw, v1 = (sy + sh) * ih;
+      let g0 = u0 + 0.5 * iw, g2 = u1 - 0.5 * iw, g1 = v0 + 0.5 * ih, g3 = v1 - 0.5 * ih; if (g0 > g2) g0 = g2 = (u0 + u1) / 2; if (g1 > g3) g1 = g3 = (v0 + v1) / 2;
+      for (let i = 0, o = 0; i < 4; i++, o += W9) {
+        const px = i === 1 || i === 2, py = i >= 2;
+        F[o] = px ? w : 0; F[o + 1] = py ? h : 0; F[o + 2] = px ? u1 : u0; F[o + 3] = py ? v1 : v0; F[o + 4] = g0; F[o + 5] = g1; F[o + 6] = g2; F[o + 7] = g3;
+        F[o + 8] = 1e4; F[o + 9] = 1e4; F[o + 10] = 2e4; F[o + 11] = 2e4; U[o + 12] = 0xffffffff; F[o + 13] = 0; U[o + 14] = 0; F[o + 15] = 0;
+      }
+      I[0] = 0; I[1] = 1; I[2] = 2; I[3] = 0; I[4] = 2; I[5] = 3; this.nv = 4; this.ni = 6; this.bI0 = 0;
+      const op0 = this.bOp; this.bT = [S.tex]; this.bOp = 6; this.xa();
+      this.gan(E.tex); gl.copyTexSubImage2D(gl.TEXTURE_2D, 0, E.x, E.y, 0, 0, w, h);
+      if (N.W * N.H > 1048576) { gl.bindFramebuffer(gl.FRAMEBUFFER, null); gl.deleteFramebuffer(N.fb); gl.deleteTexture(N.tex); this._nhapG = null; this.quenGan(); } // nháp lớn (dải khung to): trả ngay
+      const D = this._dich, vw = D ? D.width : this.cv.width, vh = D ? D.height : this.cv.height;
+      gl.bindFramebuffer(gl.FRAMEBUFFER, D ? D.fb : null); gl.viewport(0, 0, vw, vh); gl.uniform3f(this._kt, 2 / vw, 2 / vh, D ? -1 : 1);
+      this.bT = []; this.bOp = op0;
+    },
+
     // ---------- BỘ NHỚ: thả bản CPU của canvas đã có bản khác ----------
     // Bản 2D giữ ~1 800 canvas đệm (ảnh gốc chép sang canvas ~110 MB + ảnh thu nhỏ / tô màu / mip ~50 MB); bản GL tải chúng lên GPU → mỗi ảnh nằm 2 nơi.
     // Ở đây: canvas "thả được" bị thu về 0×0 (trả bộ nhớ ngay) nhưng VẪN là cùng đối tượng — width/height báo cỡ cũ (thuộc tính riêng che thuộc tính gốc),
@@ -463,7 +642,7 @@ const GLR = (() => {
       if (this.ren && this.ren._dangNong) this.nap(c); // dựng trước trong hàng nóng (chưa ai vẽ): tải lên GPU nền luôn
     },
     // kho đệm bỏ canvas này (xoay thế hệ / dọn kho): texture của nó không cần giữ nữa
-    bo(c) { if (!c || c._tha === undefined || !this.map) return; const E = this.map.get(c); if (E && E.the === this.the && !E.bo) { E.bo = 1; if (E.rieng) this._donSom = true; } },
+    bo(c) { if (!c || c._tha === undefined || !this.map) return; if (c._lv) for (const q of c._lv) if (q && q.the === this.the && !q.bo) { q.bo = 1; if (q.rieng) this._donSom = true; } const E = this.map.get(c); if (E && E.the === this.the && !E.bo) { E.bo = 1; if (E.rieng) this._donSom = true; } },
     boKho(kho) { if (!THA_BAT || !this.gl || !kho) return; for (const k in kho) { const c = kho[k]; if (c && c._tha !== undefined) this.bo(c); } },
     // HUỶ HẲN canvas kho đệm đã rơi khỏi cả 2 thế hệ (REN.cSet xoay / REN.donCache): thu về 0×0 để trình duyệt trả bộ nhớ NGAY (Safari thu gom canvas rất chậm).
     //   Chờ HUY_CHO khung rồi mới huỷ, và chỉ khi từ lúc rơi không ai vẽ (E.dung) / đọc 2D (_docF) nó nữa — ai còn giữ tham chiếu và vẫn dùng thì để nguyên cho GC.
@@ -482,13 +661,14 @@ const GLR = (() => {
       d.length = j;
     },
     hopLe(E) { return !!E && E.the === this.the && !this.mat && (E.rieng ? !!E.tex : E.at === this.atlasThe); },
-    boTha(c) { delete c.width; delete c.height; delete c.getContext; c._tha = 0; },
-    tha(c, loai) {
-      if (c._tha || !c.width) return; const w = c.width, h = c.height, R = this;
+    boTha(c) { delete c.width; delete c.height; delete c.getContext; delete c.toDataURL; c._tha = 0; },
+    tha(c, loai, w0, h0) {
+      if (c._tha) return; const w = w0 || c.width, h = h0 || c.height, R = this; if (!w) return;
       CVW.set.call(c, 0); CVH.set.call(c, 0); c._tha = loai; this.bn.tha++;
       Object.defineProperty(c, 'width', { configurable: true, enumerable: true, get() { return w; }, set(v) { R.boTha(c); CVH.set.call(c, h); c.width = v; } });
       Object.defineProperty(c, 'height', { configurable: true, enumerable: true, get() { return h; }, set(v) { R.boTha(c); CVW.set.call(c, w); c.height = v; } });
       c.getContext = function () { R.hoi(c); return CVP.getContext.apply(c, arguments); };
+      c.toDataURL = function () { R.hoi(c); return CVP.toDataURL.apply(c, arguments); }; // (ảnh ảo / đã thả đưa vào DOM bằng data URL: dựng thật trước)
     },
     now() { return performance.now(); },
     ghiHoi(t0) { const d = this.now() - t0, b = this.bn; b.hoiMs = +(b.hoiMs + d).toFixed(2); if (d > b.hoiMax) b.hoiMax = +d.toFixed(2); },
@@ -580,11 +760,11 @@ const GLR = (() => {
     nap(im, truoc) {
       if (!this.gl || this.mat || !im || im._glD || im._nhap || im._dich || im._tha === 3) return;
       if (im._napCho) { if (truoc && im._napCho === 1) im._napCho = 2; return; }
-      if (this.hopLe(this.map.get(im)) || this._napDs.length > (truoc ? 900 : 800)) return;
+      if (this.coTex(im) || this._napDs.length > (truoc ? 900 : 800)) return;
       im._napCho = truoc ? 2 : 1; if (truoc === true) this._napDs.unshift(im); else this._napDs.push(im);
     },
     // ảnh gốc (canvas chép từ Image) mà canvas loại 1 này dựng lại từ đó: chính nó, hoặc gốc chuỗi mip của nó; không rõ → null
-    gocCua(im) { if (im._goc) return im; const r = Array.isArray(im._kho) ? im._kho[0] : null; return r && r._goc ? r : null; },
+    gocCua(im) { if (im._goc) return im; if (im._ao) return im._ao.g._goc ? im._ao.g : null; const r = Array.isArray(im._kho) ? im._kho[0] : null; return r && r._goc ? r : null; },
     // hình thay thế: tầng mip khác (gần nhất) của cùng chuỗi đã có texture → mục texture "ảo" co giãn về toạ độ của im; không có → null
     thayMip(im, w, h) {
       const ch = Array.isArray(im._kho) ? im._kho : im._mip; if (!ch || ch.length < 2) return null;
@@ -613,7 +793,7 @@ const GLR = (() => {
             }
           }
           const truoc = im._napCho === 1; im._napCho = 0; const t0 = this.dem.tai; this._napTruoc = truoc;
-          if (this.tra(im, w, h) && this.dem.tai > t0) { n++; px += w * h; this.bn.nap++; if (truoc) { nen++; const E = this.map.get(im); if (E) E.dung = this.f + GHIM; } }
+          if (this.tra(im, w, h) && this.dem.tai > t0) { n++; px += w * h; this.bn.nap++; if (truoc) { nen++; const ao = im._ao, E = ao ? (ao.g._lv && ao.g._lv[ao.L]) : this.map.get(im); if (E) E.dung = this.f + GHIM; } }
         }
       } finally { this._dangNap = false; this._napTruoc = false; }
       ds.length = j; return n;
@@ -678,6 +858,36 @@ const GLR = (() => {
       const q = this._ngan.pop(), X = this.x; if (!q) return;
       this.datDich(q[0]); X.a = q[1]; X.b = q[2]; X.c = q[3]; X.d = q[4]; X.e = q[5]; X.f = q[6]; X.al = q[7]; X.op = q[8]; X.cat = q[9]; X.trang = q[10]; this._bb = q[11];
     },
+    // CHƯƠNG TRÌNH RIÊNG (bước 4 full WebGL — Hive lăn cầu): tô KÍN đích vẽ phụ đang mở (GLR.vao(t) … GLR.ra()) bằng 1 fragment shader riêng lấy mẫu ảnh `im`
+    //   (đã / sẽ nằm trên GPU qua tra — atlas hoặc texture riêng) → phép bẻ hình từng điểm ảnh chạy trên GPU, không canvas tạm + tải texture mỗi khung.
+    //   fs: GLSL ES 1.0, nhận `varying vec2 v_p` (0..1, gốc trên-trái của đích), `uniform sampler2D u_s`, `uniform vec4 u_r` (ô của im trong texture: x0, y0, rộng, cao theo UV);
+    //   phải xuất màu NHÂN SẴN alpha. uni = { tên: số | mảng 2/3/4 số | mảng 9 số (mat3 theo cột) }. Trả false = không vẽ được (ảnh chưa lên GPU, shader lỗi…) → nơi gọi đi đường CPU.
+    veCT(khoa, fs, im, uni) {
+      const gl = this.gl, D = this._dich; if (!this.dangVe || !D || !im) return false;
+      const w = im.naturalWidth || im.width, h = im.naturalHeight || im.height; if (!w || !h) return false;
+      const E = this.tra(im, w, h); if (!E || !E.tex || E.tex === D.tex) return false;
+      this.xa();
+      const K = this._ct && this._ct.the === this.the ? this._ct : (this._ct = { the: this.the, p0: gl.getParameter(gl.CURRENT_PROGRAM), ds: {} });
+      let P = K.ds[khoa];
+      if (P === undefined) {
+        P = null;
+        try {
+          const mk = (t, m) => { const o = gl.createShader(t); gl.shaderSource(o, m); gl.compileShader(o); return gl.getShaderParameter(o, gl.COMPILE_STATUS) ? o : null; };
+          const v = mk(gl.VERTEX_SHADER, 'attribute vec2 a_p;uniform vec2 u_cd;varying vec2 v_p;void main(){v_p=a_p/u_cd;gl_Position=vec4(v_p*2.0-1.0,0.0,1.0);}'), f = mk(gl.FRAGMENT_SHADER, fs);
+          if (v && f) { const p = gl.createProgram(); gl.attachShader(p, v); gl.attachShader(p, f); gl.bindAttribLocation(p, 0, 'a_p'); gl.linkProgram(p); if (gl.getProgramParameter(p, gl.LINK_STATUS)) P = { p, u: {} }; }
+        } catch (e) { P = null; }
+        K.ds[khoa] = P;
+      }
+      if (!P || !K.p0) return false;
+      const vt = (t) => t in P.u ? P.u[t] : (P.u[t] = gl.getUniformLocation(P.p, t));
+      gl.useProgram(P.p); gl.disable(gl.BLEND); this.gan(E.tex);
+      gl.uniform2f(vt('u_cd'), D.width, D.height); gl.uniform1i(vt('u_s'), 0); gl.uniform4f(vt('u_r'), E.x / E.W, E.y / E.H, w / E.W, h / E.H);
+      for (const t in uni) { const g = uni[t], l = vt(t); if (!l) continue; if (typeof g === 'number') gl.uniform1f(l, g); else if (g.length === 2) gl.uniform2f(l, g[0], g[1]); else if (g.length === 3) gl.uniform3f(l, g[0], g[1], g[2]); else if (g.length === 4) gl.uniform4f(l, g[0], g[1], g[2], g[3]); else if (g.length === 9) gl.uniformMatrix3fv(l, false, g); }
+      const F = this._f; F[0] = 0; F[1] = 0; F[W9] = D.width; F[W9 + 1] = 0; F[2 * W9] = D.width; F[2 * W9 + 1] = D.height; F[3 * W9] = 0; F[3 * W9 + 1] = D.height;
+      gl.bufferSubData(gl.ARRAY_BUFFER, 0, F.subarray(0, 4 * W9)); gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
+      gl.useProgram(K.p0); gl.enable(gl.BLEND); this.dem.lenh++; this.dem.ct = (this.dem.ct | 0) + 1;
+      return true;
+    },
 
     // ---------- lệnh vector + chữ ----------
     apKieu(t, X) {
@@ -737,6 +947,7 @@ const GLR = (() => {
     // fillText / strokeText không xoay, màu đặc: ảnh chữ dựng 1 lần (kho ≤ 400 mục, khoá = chữ + phông + màu + canh + tỉ lệ) → mỗi khung 1 ô ảnh bám điểm ảnh thiết bị.
     //   Chữ xoay / gradient / bóng / quá 12 chữ MỚI trong 1 khung (số nhảy liên tục) → đường vector (không giữ texture).
     veChu(X, f, args) {
+      if (typeof CHU !== 'undefined' && args.length <= 3 && !X.b && !X.c && X.a > 0 && Math.abs(X.d - X.a) <= 1e-6 * X.a && X._s.shadowBlur <= 0 && X._s.filter === 'none' && X.op <= 1 && CHU.veLenh(X, f, args)) { this.dem.kt = (this.dem.kt | 0) + 1; return; } // Ô ẢNH KÝ TỰ (js/chugl.js): không dựng canvas / tải texture theo chuỗi; không đếm ở GLR.thieu (đã là lệnh ảnh)
       const s = X._s, k = X.a, st = f === 'fillText' ? s.fillStyle : s.strokeStyle;
       if (args.length > 3 || X.b || X.c || !(k > 0) || Math.abs(X.d - k) > 1e-6 * k || typeof st !== 'string' || s.shadowBlur > 0 || s.filter !== 'none' || X.op > 1) return this.veVec(X, f, args);
       const chu = String(args[0]), net = f === 'strokeText';
@@ -773,6 +984,7 @@ const GLR = (() => {
       else if (op === 3) gl.blendFunc(gl.DST_ALPHA, gl.ONE_MINUS_SRC_ALPHA); // source-atop
       else if (op === 4) gl.blendFunc(gl.DST_ALPHA, gl.ZERO); // source-in (chỉ trong ô vẽ)
       else if (op === 5) gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_COLOR); // screen
+      else if (op === 6) gl.blendFunc(gl.ONE, gl.ZERO); // chép đè (nội bộ: dựng tầng ảnh trên GPU)
       else gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA); // source-over (alpha nhân sẵn)
     },
     // khép dãy đang gom (cùng texture + kiểu hoà màu) thành 1 lệnh vẽ chờ phát
@@ -808,7 +1020,8 @@ const GLR = (() => {
         const x0 = Math.max(0, sx), y0 = Math.max(0, sy), x1 = Math.min(w, sx + sw), y1 = Math.min(h, sy + sh); if (!(x1 > x0 && y1 > y0)) return;
         const kx = dw / sw, ky = dh / sh; dx += (x0 - sx) * kx; dy += (y0 - sy) * ky; dw = (x1 - x0) * kx; dh = (y1 - y0) * ky; sx = x0; sy = y0; sw = x1 - x0; sh = y1 - y0;
       }
-      const E = this.tra(im, w, h); if (!E) return;
+      const ao = im._ao || (this.aoOn && im._goc && !im._glV ? this.aoGoc(im) : null), E = ao ? this.traAo(im, ao, sx, sy, sw, sh, w, h) : this.tra(im, w, h); if (!E) return;
+      const km = E.k || 0, tm = E.t || 0; // kiểu tô + màu tô của ảnh ảo (0 = ảnh nguyên)
       const op = X.op;
       if (op !== this.bOp) { this.ngat(); this.bOp = op; }
       let bT = this.bT, ti = bT.indexOf(E.tex);
@@ -819,7 +1032,7 @@ const GLR = (() => {
       // giới hạn lấy mẫu = trong ô nguồn (như canvas: không lem điểm ảnh khung/ảnh bên cạnh)
       let g0 = u0 + 0.5 * iw, g2 = u1 - 0.5 * iw, g1 = v0 + 0.5 * ih, g3 = v1 - 0.5 * ih;
       if (g0 > g2) g0 = g2 = (u0 + u1) / 2; if (g1 > g3) g1 = g3 = (v0 + v1) / 2;
-      const A = Math.round(al * 255), mau = (A | (A << 8) | (A << 16) | (A << 24)) >>> 0, tr = (X.trang || 0) + 2 * ti; // màu nhân sẵn alpha
+      const al2 = E.al !== undefined ? al * E.al : al, A = Math.round(al2 * 255), nh = X.nhuom, mau = (nh ? (Math.round(nh[0] * al2) | (Math.round(nh[1] * al2) << 8) | (Math.round(nh[2] * al2) << 16) | (A << 24)) : (A | (A << 8) | (A << 16) | (A << 24))) >>> 0, tr = (X.trang || 0) + 2 * ti; // màu nhân sẵn alpha · E.al = alpha của ảnh ảo (gl-full-w2) · X.nhuom = [r, g, b] (0–255): nhân màu ô ảnh (ký tự trắng của CHU → chữ màu, js/chugl.js)
       const F = this._f, U = this._u, I = this._i;
       // 4 góc ô đích (điểm ảnh thiết bị) nới 0,5 điểm ảnh mỗi phía dọc 2 cạnh; UV + toạ độ trong ô (lx, ly) nới theo
       const wx = a * dw, wy = b * dw, hx = c * dh, hy = d * dh; let lw = Math.hypot(wx, wy), lh = Math.hypot(hx, hy); if (!(lw > 0 && lh > 0)) return;
@@ -836,17 +1049,17 @@ const GLR = (() => {
         const m0 = Math.min(X0, X1, X2, X3), m1 = Math.min(Y0, Y1, Y2, Y3), m2 = Math.max(X0, X1, X2, X3), m3 = Math.max(Y0, Y1, Y2, Y3);
         if (m0 < bb[0]) bb[0] = m0; if (m1 < bb[1]) bb[1] = m1; if (m2 > bb[2]) bb[2] = m2; if (m3 > bb[3]) bb[3] = m3;
       }
-      if (X.cat) { this.veCat(X.cat, [X0, Y0, ua, va, la, ma, X1, Y1, ub, va, lb, ma, X2, Y2, ub, vb, lb, mb, X3, Y3, ua, vb, la, mb], g0, g1, g2, g3, lw, lh, mau, tr); return; }
+      if (X.cat) { this.veCat(X.cat, [X0, Y0, ua, va, la, ma, X1, Y1, ub, va, lb, ma, X2, Y2, ub, vb, lb, mb, X3, Y3, ua, vb, la, mb], g0, g1, g2, g3, lw, lh, mau, tr, km, tm); return; }
       let o = this.nv * W9; const v = this.nv;
-      F[o] = X0; F[o + 1] = Y0; F[o + 2] = ua; F[o + 3] = va; F[o + 4] = g0; F[o + 5] = g1; F[o + 6] = g2; F[o + 7] = g3; F[o + 8] = la; F[o + 9] = ma; F[o + 10] = lw; F[o + 11] = lh; U[o + 12] = mau; F[o + 13] = tr; o += W9;
-      F[o] = X1; F[o + 1] = Y1; F[o + 2] = ub; F[o + 3] = va; F[o + 4] = g0; F[o + 5] = g1; F[o + 6] = g2; F[o + 7] = g3; F[o + 8] = lb; F[o + 9] = ma; F[o + 10] = lw; F[o + 11] = lh; U[o + 12] = mau; F[o + 13] = tr; o += W9;
-      F[o] = X2; F[o + 1] = Y2; F[o + 2] = ub; F[o + 3] = vb; F[o + 4] = g0; F[o + 5] = g1; F[o + 6] = g2; F[o + 7] = g3; F[o + 8] = lb; F[o + 9] = mb; F[o + 10] = lw; F[o + 11] = lh; U[o + 12] = mau; F[o + 13] = tr; o += W9;
-      F[o] = X3; F[o + 1] = Y3; F[o + 2] = ua; F[o + 3] = vb; F[o + 4] = g0; F[o + 5] = g1; F[o + 6] = g2; F[o + 7] = g3; F[o + 8] = la; F[o + 9] = mb; F[o + 10] = lw; F[o + 11] = lh; U[o + 12] = mau; F[o + 13] = tr;
+      F[o] = X0; F[o + 1] = Y0; F[o + 2] = ua; F[o + 3] = va; F[o + 4] = g0; F[o + 5] = g1; F[o + 6] = g2; F[o + 7] = g3; F[o + 8] = la; F[o + 9] = ma; F[o + 10] = lw; F[o + 11] = lh; U[o + 12] = mau; F[o + 13] = tr; U[o + 14] = tm; F[o + 15] = km; o += W9;
+      F[o] = X1; F[o + 1] = Y1; F[o + 2] = ub; F[o + 3] = va; F[o + 4] = g0; F[o + 5] = g1; F[o + 6] = g2; F[o + 7] = g3; F[o + 8] = lb; F[o + 9] = ma; F[o + 10] = lw; F[o + 11] = lh; U[o + 12] = mau; F[o + 13] = tr; U[o + 14] = tm; F[o + 15] = km; o += W9;
+      F[o] = X2; F[o + 1] = Y2; F[o + 2] = ub; F[o + 3] = vb; F[o + 4] = g0; F[o + 5] = g1; F[o + 6] = g2; F[o + 7] = g3; F[o + 8] = lb; F[o + 9] = mb; F[o + 10] = lw; F[o + 11] = lh; U[o + 12] = mau; F[o + 13] = tr; U[o + 14] = tm; F[o + 15] = km; o += W9;
+      F[o] = X3; F[o + 1] = Y3; F[o + 2] = ua; F[o + 3] = vb; F[o + 4] = g0; F[o + 5] = g1; F[o + 6] = g2; F[o + 7] = g3; F[o + 8] = la; F[o + 9] = mb; F[o + 10] = lw; F[o + 11] = lh; U[o + 12] = mau; F[o + 13] = tr; U[o + 14] = tm; F[o + 15] = km;
       const i = this.ni; I[i] = v; I[i + 1] = v + 1; I[i + 2] = v + 2; I[i + 3] = v; I[i + 4] = v + 2; I[i + 5] = v + 3;
       this.nv = v + 4; this.ni = i + 6; this.dem.o++;
     },
     // ô bị cắt bởi (các) hình chữ nhật clip: cắt đa giác lồi (Sutherland–Hodgman) trong toạ độ của clip, nội suy cả UV → quạt tam giác
-    veCat(cat, P, g0, g1, g2, g3, lw, lh, mau, tr) {
+    veCat(cat, P, g0, g1, g2, g3, lw, lh, mau, tr, km, tm) {
       const K = 6; // x y u v lx ly
       for (const k of cat) {
         for (let m = 0; m < 4 && P.length >= 3 * K; m++) {
@@ -863,19 +1076,19 @@ const GLR = (() => {
       }
       const n = P.length / K; if (this.nv + n > DINH_MAX) this.xa();
       const F = this._f, U = this._u, I = this._i, v = this.nv; let o = v * W9;
-      for (let i = 0; i < n; i++, o += W9) { F[o] = P[i * K]; F[o + 1] = P[i * K + 1]; F[o + 2] = P[i * K + 2]; F[o + 3] = P[i * K + 3]; F[o + 4] = g0; F[o + 5] = g1; F[o + 6] = g2; F[o + 7] = g3; F[o + 8] = P[i * K + 4]; F[o + 9] = P[i * K + 5]; F[o + 10] = lw; F[o + 11] = lh; U[o + 12] = mau; F[o + 13] = tr; }
+      for (let i = 0; i < n; i++, o += W9) { F[o] = P[i * K]; F[o + 1] = P[i * K + 1]; F[o + 2] = P[i * K + 2]; F[o + 3] = P[i * K + 3]; F[o + 4] = g0; F[o + 5] = g1; F[o + 6] = g2; F[o + 7] = g3; F[o + 8] = P[i * K + 4]; F[o + 9] = P[i * K + 5]; F[o + 10] = lw; F[o + 11] = lh; U[o + 12] = mau; F[o + 13] = tr; U[o + 14] = tm; F[o + 15] = km; }
       let i = this.ni; for (let q = 1; q < n - 1; q++) { I[i++] = v; I[i++] = v + q; I[i++] = v + q + 1; }
       this.nv = v + n; this.ni = i; this.dem.o++;
     },
     // canvas đệm vừa được vẽ lại (không phải mỗi khung): báo bẩn → lần vẽ kế tải lại texture. Canvas vẽ lại MỖI khung: đặt c._glD = 1 một lần lúc tạo.
-    ban(c) { if (!c) return; if (c._tha) { this.hoi(c); this.bn.banTha = (this.bn.banTha | 0) + 1; } c._tinh = 0; c._glV = (c._glV | 0) + 1; },
+    ban(c) { if (!c) return; if (c._ao) { this.hoi(c); c._ao = null; } /* ảnh ảo bị vẽ lại tại chỗ: thành canvas thường */ if (c._tha) { this.hoi(c); this.bn.banTha = (this.bn.banTha | 0) + 1; } c._tinh = 0; c._glV = (c._glV | 0) + 1; },
     // tiện ích cho code mới: ảnh tâm (x, y), cỡ w×h (đơn vị logic của trận), xoay goc, alpha
     sprite(im, x, y, w, h, goc, alpha) {
       const X = this.x, al0 = X.al; if (alpha != null) X.globalAlpha = alpha;
       if (goc) { X.save(); X.translate(x, y); X.rotate(goc); X.drawImage(im, -w / 2, -h / 2, w, h); X.restore(); } else X.drawImage(im, x - w / 2, y - h / 2, w, h);
       X.al = al0;
     },
-    thongTin() { return { bat: this.bat, phien: this.phien, nt: this.nt, gpu: this.gpu, mat: this.mat, lyDo: this.lyDo, kiem: this.kiem, trang: this.trang ? this.trang.length : 0, rieng: this.rieng ? this.rieng.length : 0, thieu: this.thieu, dem: this.dem, boNho: this.boNho() }; },
+    thongTin() { return { ao: !!this.aoOn, aoLyDo: this.aoLyDo || '', bat: this.bat, phien: this.phien, nt: this.nt, gpu: this.gpu, mat: this.mat, lyDo: this.lyDo, kiem: this.kiem, trang: this.trang ? this.trang.length : 0, rieng: this.rieng ? this.rieng.length : 0, thieu: this.thieu, dem: this.dem, boNho: this.boNho() }; },
   };
   R.bat = R.quyetDinh();
   return R;

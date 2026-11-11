@@ -60,6 +60,7 @@ const FXU = {
   mau(ten, mau) {
     const key = ten + mau; if (this._mau[key]) return this._mau[key];
     const a = REN.img(ten); if (!a) return null;
+    if (a._goc && typeof _GLA === 'function' && _GLA()) return (this._mau[key] = GLR.ao(a, a.width, a.height, { k: 1, t: GLR.mauSo(mau, 0.78), kho: this._mau, khoa: key, dung: (cv) => { const g = REN.img(ten); if (!g || !g.width) return false; const q = cv.getContext('2d'); q.drawImage(g, 0, 0); q.globalCompositeOperation = 'source-atop'; q.globalAlpha = 0.78; q.fillStyle = mau; q.fillRect(0, 0, cv.width, cv.height); return true; } })); // vetay-ok: png — ẢNH ẢO (glr.js): tô màu bằng shader từ texture ảnh gốc, không dựng + tải canvas mỗi màu
     const c = document.createElement('canvas'); c.width = a.width; c.height = a.height;
     const x = c.getContext('2d'); x.drawImage(a, 0, 0);
     x.globalCompositeOperation = 'source-atop'; x.globalAlpha = 0.78; x.fillStyle = mau; x.fillRect(0, 0, c.width, c.height); // vetay-ok: png — tô màu trong alpha của ảnh PNG
