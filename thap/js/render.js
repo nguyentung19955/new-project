@@ -190,7 +190,7 @@ const REN = {
       if (!ch[i + 1]) {
         const t = document.createElement('canvas'); t.width = Math.max(1, Math.round(c.width / 2)); t.height = Math.max(1, Math.round(c.height / 2));
         this.c2d(t).drawImage(c, 0, 0, t.width, t.height); ch[i + 1] = t;
-        if (_GLB()) { const r = ch[0], cpu = r && (r._goc || r._dungLai); GLR.tinh(t, ch, i + 1, cpu ? (cv) => { const p = ch[i]; if (!p || p._tha === 3 || !p.width) return false; this.c2d(cv).drawImage(p, 0, 0, cv.width, cv.height); return true; } : null); } // WebGL: tầng mip của ảnh gốc / ảnh tô màu dựng lại được trên CPU → thả khi yên
+        if (_GLB()) { const r = ch[0], cpu = r && (r._goc || r._dungLai), tren = i; GLR.tinh(t, ch, i + 1, cpu ? (cv) => { const p = ch[tren]; if (!p || p === cv || p._tha === 3 || !p.width) return false; /* tren = chỉ số tầng TRÊN lúc dựng (biến i của vòng lặp còn chạy tiếp) */ this.c2d(cv).drawImage(p, 0, 0, cv.width, cv.height); return true; } : null); } // WebGL: tầng mip của ảnh gốc / ảnh tô màu dựng lại được trên CPU → thả khi yên
       }
       i++;
     }
