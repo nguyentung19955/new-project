@@ -28,7 +28,7 @@ const MHC = {
     { k: 'tv', tu: 'tim', can: 30, gia: 2000, ra: 'vang', tuan: 3 },
     { k: 'vd', tu: 'vang', can: 10, gia: 10000, ra: 'do', tuan: 1 },
   ],
-  nv: { id: 'wave30', ten: 'Clear floor 40 or higher', can: 40, k: 'tang', max: 1, kl: 28, kt: 38, r: { ruong: 'hh', n: 1 } }, // kl: kỷ lục wave cũ ≥ 28 / kt: tầng ≥ 38 mới vào bể (tien-trinh §3.4)
+  nv: { id: 'wave30', ten: 'Reach wave 30', can: 30, k: 'wave', max: 1, kl: 28, kt: 38, r: { ruong: 'hh', n: 1 } }, // kl: kỷ lục wave cũ ≥ 28 / kt: tầng ≥ 38 mới vào bể (tien-trinh §3.4)
   // ẤN VÀNG (tien-trinh §6.3, người dùng chốt 6:1): 6 bản Vàng thừa (nhiều thẻ, trừ thẻ đích) + 20 000 vàng → 1 bản Vàng TỰ CHỌN, 1 lần/tuần.
   //  Bản lấy tự động theo thứ tự: thẻ đã MAX → thẻ ngoài bộ bài → thẻ trong bộ; trong mỗi nhóm lấy chồng nhiều bản trước.
   an: { k: 'an', can: 6, gia: 20000, tuan: 1 },
@@ -54,7 +54,7 @@ const MH = {
   phat(ds, khoa) { const ra = { vang: 0, ngoc: 0, the: [] }; ds.forEach((r, i) => this.gop(ra, KT.cho(r, khoa + ':' + i, 'achieve'))); return ra; },
   // ---------- 1) mốc wave Solo ----------
   tang() { try { return typeof CD !== 'undefined' ? CD.st().thap.max | 0 : 0; } catch (e) { return 0; } },
-  mocDs() { const m = this.st(), f = this.tang(); return MHC.moc.map(o => { const xong = m.sw >= o.w || f >= o.t; return { w: o.w, f: o.t, r: o.r, t: xong ? o.t : Math.min(o.t, f), can: o.t, xong, da: !!m.moc[o.w] }; }); }, // khoá cờ giữ theo w (bản lưu cũ)
+  mocDs() { const m = this.st(), f = this.tang(); return MHC.moc.map(o => { const xong = m.sw >= o.w || f >= o.t; return { w: o.w, f: o.t, r: o.r, t: xong ? o.w : Math.min(o.w, m.sw), can: o.w, xong, da: !!m.moc[o.w] }; }); }, // 11/11 bỏ Leo Tháp: hiện tiến độ theo WAVE (CO-OP), tầng đã qua ≥ o.t vẫn tính là xong · khoá cờ giữ theo w (bản lưu cũ)
   mocNhan(w) {
     const o = this.mocDs().find(x => x.w === +w); if (!o || !o.xong || o.da) return null;
     this.st().moc[o.w] = 1; const ra = this.phat(o.r, 'mhm' + o.w); KT.luu(); return ra;
@@ -138,8 +138,8 @@ const MHUI = {
   },
   ve_nv() {
     const m = MH.st(), tr = MH.trumDs(), ha = tr.filter(x => x.ha).length, chua = tr.some(x => x.ha && !x.da);
-    let h = KTUI.muc('LEGENDARY & MYTHIC', 'BEST FLOOR ' + MH.tang());
-    for (const o of MH.mocDs()) h += this.hang('Tower: floor ' + o.f, o, o.r, 'kt-mhm', o.w);
+    let h = KTUI.muc('LEGENDARY & MYTHIC', 'BEST WAVE ' + MH.st().sw);
+    for (const o of MH.mocDs()) h += this.hang('CO-OP: wave ' + o.w, o, o.r, 'kt-mhm', o.w);
     h += this.hang('First kill of each boss', { t: ha, can: tr.length, xong: chua, da: !chua && tr.length > 0 && tr.every(x => x.da) }, [MHC.trum], 'kt-mht', 't');
     h += '<div class="mh-trum">' + tr.map(x => '<i class="' + (x.ha ? 'ha' : '') + '" title="' + x.ten + '"><img src="assets/trum_' + x.id + '_portrait.png" alt="' + x.ten + '" loading="lazy" draggable="false"></i>').join('') + '</div>';
     h += this.hang('Defeat all ' + tr.length + ' bosses', { t: ha, can: tr.length, xong: MH.boXong(), da: !!m.bo }, [MHC.trumDu], 'kt-mhb', 'b');
@@ -185,8 +185,8 @@ const MHUI = {
   },
   // trang ụ: thẻ Vàng/Đỏ ghi "kiếm ở đâu"
   NGUON: {
-    vang: 'Battle rewards · Gold Chest · Daily Specials · Tower floors 20–100 · first boss kills · daily quest · Shard Forge · Legendary Seal',
-    do: 'Mythic / Gold Chest · Daily Specials (~1 day a week) · Tower floors 70, 85, 100 · defeat all bosses · event 3,600 pts · Shard Forge',
+    vang: 'Battle rewards · Gold Chest · Daily Specials · CO-OP wave milestones · first boss kills · daily quest · Shard Forge · Legendary Seal',
+    do: 'Mythic / Gold Chest · Daily Specials (~1 day a week) · CO-OP waves 50, 60, 70 · defeat all bosses · event 3,600 pts · Shard Forge',
   },
   nguon(id) { const b = THEBAI.bac(id); return this.NGUON[b] ? '<div class="mh-nguon"><small>WHERE TO GET</small><span>' + this.NGUON[b] + '</span></div>' : ''; },
 };
@@ -210,7 +210,7 @@ const MHUI = {
     const r = kt.apply(this, arguments); if (!r) return r;
     try {
       const st = MH.st(), wave = Math.max(1, (k && k.wave) | 0), che = (KT.tran && KT.tran.onl) ? 'online' : ((KT.tran && KT.tran.che) || (m && m.che) || 'solo');
-      if (che === 'solo') st.sw = Math.max(st.sw, wave);
+      if (che === 'solo' || che === 'coop' || che === 'online') st.sw = Math.max(st.sw, wave); // 11/11 bỏ Leo Tháp: mốc Huyền thoại đo bằng wave CO-OP (kỷ lục Solo cũ vẫn giữ trong sw)
       for (const id in (MH.tran || {})) if (typeof TRUM === 'undefined' || TRUM[id]) st.tr[id] = 1;
       MH.tran = null;
       KT.luu();

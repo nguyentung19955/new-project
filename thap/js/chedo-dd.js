@@ -162,6 +162,44 @@ const DDUI = {
   },
 };
 
+// ===================================================== MỐC WAVE CO-OP (đạt LẦN ĐẦU) =====================================================
+//  11/11 (người dùng: "Leo tháp xoá", "tham khảo thưởng DCDW"): tiến trình chính = mốc wave CO-OP đạt lần đầu (kiểu DCDW: Infinite Defense
+//  thưởng theo wave / trùm mỗi 10 wave), THAY "thưởng lần đầu mỗi tầng" của Leo Tháp. Tổng 7 mốc = tổng thưởng lần đầu 100 tầng cũ
+//  (55 500 vàng · 460 ngọc · 3 Rương Thường · 3 Rương Vàng · 5 Rương HH · 8 Tinh thể Đỏ) — SỐ TẠM, chờ duyệt.
+//  Tiến độ cũ không mất, không lĩnh 2 lần: tầng đã qua f ≥ TT.tangTuWave(W) (W 10 ≙ tầng 4, 20 ≙ 20, 30 ≙ 36, 40 ≙ 52, 50 ≙ 68, 60 ≙ 84, 70 ≙ 100)
+//  → mốc W coi như ĐÃ NHẬN (đã lĩnh thưởng các tầng đó). Lưu: khoá con mới turret_kt.cd.cm { nhan, qd }.
+const MOCWC = {
+  moc: {
+    10: [{ vang: 3000 }, { ngoc: 40 }, { ruong: 'thuong' }], 20: [{ vang: 5000 }, { ngoc: 50 }, { ruong: 'thuong', n: 2 }], 30: [{ vang: 7000 }, { ngoc: 60 }, { ruong: 'vang' }],
+    40: [{ vang: 8000 }, { ngoc: 70 }, { ruong: 'vang', n: 2 }, { tt: 3 }], 50: [{ vang: 10000 }, { ngoc: 80 }, { ruong: 'hh', n: 1 }],
+    60: [{ vang: 10000 }, { ngoc: 80 }, { ruong: 'hh', n: 2 }], 70: [{ vang: 12500 }, { ngoc: 80 }, { ruong: 'hh', n: 2 }, { tt: 5 }],
+  },
+};
+const MOCW = {
+  ds: () => Object.keys(MOCWC.moc).map(Number).sort((a, b) => a - b),
+  st() {
+    const c = CD.st(); let s = c.cm;
+    if (!s || typeof s !== 'object' || Array.isArray(s)) s = c.cm = {};
+    if (!s.nhan || typeof s.nhan !== 'object') s.nhan = {};
+    if (!s.qd) { s.qd = 1; const f = c.thap.max | 0; for (const w of this.ds()) if (f > 0 && f >= TT.tangTuWave(w)) s.nhan[w] = 1; } // quy đổi 1 lần từ tầng Leo Tháp đã qua
+    return s;
+  },
+  ke() { const s = this.st(); return this.ds().find(w => !s.nhan[w]) || 0; },
+  // hết trận CO-OP tới wave w: phát mọi mốc ≤ w chưa nhận (ghi cờ TRƯỚC) → { ra, moc[] }
+  nhan(w) {
+    const s = this.st(), ra = { vang: 0, ngoc: 0, the: [], tt: 0 }, moc = [];
+    for (const m of this.ds()) { if (w < m || s.nhan[m]) continue; s.nhan[m] = 1; moc.push(m); CD.gop(ra, CD.phat(MOCWC.moc[m], 'cdcm' + m, 'coopmoc')); }
+    if (moc.length) KT.luu();
+    return { ra, moc };
+  },
+  kq(k) {
+    const chi = document.getElementById('kq-chi'); if (!chi || !k) return;
+    const r = this.nhan(Math.max(1, k.wave | 0)); if (!r.moc.length) return;
+    chi.insertAdjacentHTML('beforeend', '<div class="cdd-kq"><small>FIRST TIME · WAVE ' + Math.max.apply(null, r.moc) + '</small>' + CDDUI.thuongHtml(r.ra) + '</div>');
+    try { OT.quet(chi); } catch (e) { }
+  },
+};
+
 (function () {
   if (typeof KT === 'undefined' || typeof TT === 'undefined' || typeof CD === 'undefined' || typeof CDD === 'undefined' || typeof batDau !== 'function') return;
   if (typeof UP_XEM !== 'undefined' && UP_XEM) return; // khung xem trước trang ụ
@@ -277,6 +315,38 @@ const DDUI = {
       return r;
     };
   }
+  // ---- MỐC WAVE CO-OP: phát ở màn kết quả trận CO-OP thật (không phải Đường Đua / hướng dẫn / trận thử ?mana ?wave) ----
+  if (!KT.NGUON.includes('coopmoc')) KT.NGUON.splice(KT.NGUON.length - 1, 0, 'coopmoc');
+  try { MOCW.st(); } catch (e) { console.error('MOCW', e); }
+  if (typeof UI !== 'undefined' && UI.ketQua) {
+    const kq2 = UI.ketQua;
+    UI.ketQua = function (k) {
+      const x = kq2.apply(this, arguments);
+      try { if (G.che === 'coop' && !G.dd && !(typeof KQ !== 'undefined' && KQ.m && KQ.m.tut) && !(G.debug && (G.debug.mana || G.debug.wave || G.debug.fill))) MOCW.kq(k); } catch (e) { console.error('MOCW', e); }
+      return x;
+    };
+  }
+  if (typeof HM !== 'undefined' && HM.CHE.coop) {
+    const mo0 = HM.CHE.coop.mo; // bảng GAME MODE: CO-OP ghi mốc thưởng kế tiếp
+    Object.defineProperty(HM.CHE.coop, 'mo', { configurable: true, get() { let w = 0; try { w = MOCW.ke(); } catch (e) { } return w ? mo0 + ' · next reward: wave ' + w : mo0; } });
+    // ---- HƯỚNG DẪN là một bản riêng: mục TUTORIAL trong GAME MODE = chơi lại trận hướng dẫn (huongdan.js HD.batDau, bộ + luật cố định của nó) ----
+    if (typeof HD !== 'undefined') {
+      HM.CHE.hd = { ten: 'TUTORIAL', ic: 'ic_solo', phu: () => '', mo: 'One guided battle: summon, merge, commander, boss · replay any time' };
+      const cc2 = HM.chonChe;
+      HM.chonChe = function (k) { if (k !== 'hd') return cc2.apply(this, arguments); try { SND.nut(); } catch (e) { } this.dong(true); HD.batDau(); };
+    }
+  }
+  { // gộp hồ sơ Firebase: cờ mốc OR
+    const gp2 = KT.gop;
+    KT.gop = function (o) {
+      let a = null; const b = o && o.kt && o.kt.cd && o.kt.cd.cm;
+      try { a = JSON.parse(JSON.stringify(MOCW.st())); } catch (e) { }
+      const x = gp2.apply(this, arguments);
+      try { const s = MOCW.st(); for (const y of [a, b]) if (y && typeof y === 'object') for (const i in (y.nhan || {})) if (y.nhan[i]) s.nhan[i] = 1; KT.luu(true); } catch (e) { console.error('MOCW', e); }
+      return x;
+    };
+  }
+
   // ---- HOME → EVENT: thẻ Đường Đua + bảng xếp hạng ở đầu tab sự kiện ----
   if (typeof KTUI !== 'undefined' && KTUI.ve_sk) { const g = KTUI.ve_sk; KTUI.ve_sk = function () { let t = ''; try { t = DDUI.theSk(); } catch (e) { console.error('DD', e); } return t + g.apply(this, arguments); }; }
 
@@ -315,6 +385,16 @@ const DDUI = {
 
   // ---- Tiếng Việt (ngonngu.js: từ điển mẫu, # = số) ----
   if (typeof VI_MAU !== 'undefined') Object.assign(VI_MAU, {
+    // 11/11 bỏ Leo Tháp + hướng dẫn riêng + mốc wave CO-OP
+    'Reach wave #': 'Đạt wave #', 'PLAY CO-OP': 'CHƠI CO-OP', 'CO-OP: wave #': 'CO-OP: wave #', 'BEST WAVE #': 'WAVE CAO NHẤT #', 'BEST WAVE': 'WAVE CAO NHẤT',
+    'Pilot Level # and wave #': 'Cấp phi công # và wave #', 'Unlocks at Pilot Level # and wave #': 'Mở ở cấp phi công # và wave #',
+    'Locked · reach wave # or unlock with gems': 'Đang khoá · đạt wave # hoặc mở bằng ngọc', 'Wave # or # gems': 'Wave # hoặc # ngọc',
+    'Play # battles within # waves of your best': 'Chơi # trận cách wave cao nhất không quá # wave', 'CO-OP · PVP': 'CO-OP · PVP',
+    'FIRST TIME · WAVE #': 'LẦN ĐẦU · WAVE #', 'TUTORIAL': 'HƯỚNG DẪN', 'One guided battle: summon, merge, commander, boss · replay any time': 'Một trận có hướng dẫn: triệu hồi, ghép, chỉ huy, trùm · chơi lại bất cứ lúc nào',
+    'Team up with an AI ally · # shared lives · next reward: wave #': 'Lập đội với đồng đội AI · # mạng chung · thưởng kế: wave #',
+    'Battle rewards · Gold Chest · Daily Specials · CO-OP wave milestones · first boss kills · daily quest · Shard Forge · Legendary Seal': 'Thưởng trận · Rương Vàng · Ưu đãi hôm nay · mốc wave CO-OP · hạ trùm lần đầu · nhiệm vụ ngày · Lò rèn · Ấn Vàng',
+    'Mythic / Gold Chest · Daily Specials (~# day a week) · CO-OP waves #, #, # · defeat all bosses · event #,# pts · Shard Forge': 'Rương Thần thoại / Vàng · Ưu đãi hôm nay (~# ngày/tuần) · CO-OP wave #, #, # · hạ đủ trùm · sự kiện #.# điểm · Lò rèn',
+    'Mythic / Gold Chest · Daily Specials (~# day a week) · CO-OP waves #, #, # · defeat all bosses · event # pts · Shard Forge': 'Rương Thần thoại / Vàng · Ưu đãi hôm nay (~# ngày/tuần) · CO-OP wave #, #, # · hạ đủ trùm · sự kiện # điểm · Lò rèn',
     'RACE TRACK': 'ĐƯỜNG ĐUA', '8 minutes with an AI ally · beat your weekly score': '8 phút cùng đồng đội máy · vượt điểm tuần của bạn',
     'Week best #': 'Điểm tuần #', 'Week best #,#': 'Điểm tuần #.#', 'Week best —': 'Điểm tuần —',
     'Week # · best #,#': 'Tuần # · cao nhất #.#',

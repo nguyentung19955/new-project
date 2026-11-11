@@ -33,14 +33,14 @@ let loi = 0; const ok = (c, t) => { console.log((c ? '  ✓ ' : '  ✗ ') + t); 
   await p.evaluate(() => { const c = CD.st(); c.san.da = { 'x:1': 1 }; c.thu.da = { 1: 1 }; c.vt = { best: 88 }; c.tw = { best: 20, tuan: 1 }; KT.luu(); });
   const g = await p.evaluate(() => {
     HM.moChe(); const che = [...document.querySelectorAll('#hm-tam .hm-chec')].map(x => x.dataset.che); HM.dong(true);
-    const vao = [CD.vao('san', (CD.dsTrum()[0]), 1), CD.vao('thu', 1)];
+    const vao = [CD.vao('san', (CD.dsTrum()[0]), 1), CD.vao('thu', 1), CD.vao('thap', 1)], macDinh = HM.che;
     KTUI.moTab('sk'); const sk = document.getElementById('kt').textContent; KTUI.dong();
     CDDUI.bxhMo(); const tab = [...document.querySelectorAll('#tt-phu .cdd-tb')].map(x => x.textContent); TTUI.dong();
     const c = CD.st();
-    return { che, vao, tn: ['san', 'thu', 'tw', 'vt'].filter(k => TTC.tn[k]), dd: !!TTC.tn.dd, skDD: /RACE TRACK/.test(sk), skTW: /WEEKLY CHALLENGE/.test(sk), tab, cu: [c.san.da['x:1'], c.thu.da[1], c.vt.best, c.tw.best] };
+    return { che, vao, macDinh, tn: ['san', 'thu', 'tw', 'vt', 'thap'].filter(k => TTC.tn[k]), dd: !!TTC.tn.dd, skDD: /RACE TRACK/.test(sk), skTW: /WEEKLY CHALLENGE/.test(sk), tab, cu: [c.san.da['x:1'], c.thu.da[1], c.vt.best, c.tw.best] };
   });
-  ok(g.che.join() === 'thap,coop,pvp,online,dd', 'GAME MODE = ' + g.che.join());
-  ok(g.vao.every(x => x === false), 'CD.vao(san / thu) không vào được');
+  ok(g.che.join() === 'coop,pvp,online,dd,hd' && g.macDinh === 'coop', 'GAME MODE = ' + g.che.join() + ' · mặc định ' + g.macDinh + ' (không còn Leo Tháp)');
+  ok(g.vao.every(x => x === false), 'CD.vao(san / thu / thap) không vào được');
   ok(!g.tn.length && g.dd, 'khoá tính năng: không còn san/thu/tw/vt (' + g.tn.join() + '), có dd');
   ok(g.skDD && !g.skTW, 'tab EVENT: có thẻ RACE TRACK, không còn WEEKLY CHALLENGE');
   ok(g.tab.length === 1 && /RACE TRACK/.test(g.tab[0]), 'bảng xếp hạng 1 tab: ' + g.tab.join(' | '));
@@ -48,7 +48,7 @@ let loi = 0; const ok = (c, t) => { console.log((c ? '  ✓ ' : '  ✗ ') + t); 
   // ---------- 2. tầng 100 Leo Tháp ----------
   const t100 = await p.evaluate(() => {
     CD.st().thap.max = 99; G.debug.auto = true;
-    if (!CD.vao('thap', 100)) return null;
+    CD.cho = CD.cauHinh('thap', 100); UI.che = 'solo'; UI.vao(); if (!G.cd) return null; // Leo Tháp đã bỏ: vào thẳng bằng cấu hình (chỉ để kiểm không còn hỏi ENDLESS)
     const dung0 = !!G.dung; // màn mở đầu trận có thể đang giữ G.dung — chỉ so trước/sau
     for (let i = 0; i < 400; i++) capNhat(1 / 60);
     G.wave = G.cd.w1; G.cd.het = true; G.hang.length = 0; for (const E of G.quai) { E.chet = true; E.tChet = 1; } capNhat(1 / 60); capNhat(1 / 60);
@@ -59,6 +59,26 @@ let loi = 0; const ok = (c, t) => { console.log((c ? '  ✓ ' : '  ✗ ') + t); 
   await p.waitForTimeout(1500);
   ok(await p.evaluate(() => CD.st().thap.max === 100 && !document.getElementById('ketqua').hidden), 'màn kết quả tầng 100 hiện, thap.max = 100');
   ok(!p._e.length, 'không lỗi trang (phần 1–2) ' + p._e.join(' | ')); await p.close();
+  // ---------- 2b. bỏ Leo Tháp: mốc wave CO-OP lần đầu + quy đổi tầng cũ + hướng dẫn riêng ----------
+  p = await mo();
+  const cm = await p.evaluate(async () => {
+    const o = {}, v0 = KT.vang, n0 = KT.ngoc;
+    o.ke0 = MOCW.ke(); const a = MOCW.nhan(25); o.moc = a.moc.join(); o.vang = KT.vang - v0; o.ngoc = KT.ngoc - n0; o.lai = MOCW.nhan(25).moc.length; o.ke1 = MOCW.ke();
+    o.luu = Object.keys(JSON.parse(localStorage.getItem('turret_kt')).cd.cm.nhan).join();
+    const c = CD.st(); c.thap.max = 40; delete c.cm; o.qd = Object.keys(MOCW.st().nhan).join(); o.wave = TT.giaTri('wave'); o.tang = TT.giaTri('tang');
+    c.thap.max = 0; TT.st().dem.wave = 17; o.wave2 = TT.giaTri('wave');
+    o.hj = TTC.hj.map(d => d.v.map(x => x[0] + x[1]).join('/')).join(' ');
+    o.do = TT.dk('do'); o.mv = HM.mvMoChu(Object.keys(MAVUONG).find(id => MAVUONG[id].mo2));
+    HM.chonChe('hd'); await new Promise(r => setTimeout(r, 300));
+    o.hd = { dang: HD.dang, che: G.che, deck: G.ban[0] && G.ban[0].deck.join(), cd: !!G.cd, dd: !!G.dd, home: HM.che };
+    return o;
+  });
+  ok(cm.ke0 === 10 && cm.moc === '10,20' && cm.vang === 8000 && cm.ngoc === 90 && cm.lai === 0 && cm.ke1 === 30 && cm.luu === '10,20', 'mốc wave CO-OP lần đầu: tới wave 25 → mốc 10 + 20 (8 000 vàng, 90 ngọc), không phát lại, kế tiếp 30 ' + JSON.stringify(cm).slice(0, 120));
+  ok(cm.qd === '10,20,30' && cm.wave === 33 && cm.tang === 40, 'quy đổi tầng cũ: tầng 40 → mốc 10/20/30 coi như đã nhận, Hành trình thấy wave ' + cm.wave);
+  ok(cm.wave2 === 17 && !/tang/.test(cm.hj), 'Hành trình đo theo wave: ' + cm.hj);
+  ok(/wave 30/.test(cm.do) && !/floor/i.test(cm.do) && /wave/.test(cm.mv) && !/floor/i.test(cm.mv), 'điều kiện Đỏ / chỉ huy ghi theo wave: ' + cm.do);
+  ok(cm.hd.dang && cm.hd.che === 'solo' && cm.hd.deck === 'tia,lien,bang,set,sungluc' && !cm.hd.cd && !cm.hd.dd && cm.hd.home === 'coop', 'GAME MODE → TUTORIAL: trận hướng dẫn riêng (bộ cố định, không cấu hình chế độ nào) ' + JSON.stringify(cm.hd));
+  ok(!p._e.length, 'không lỗi trang (phần 2b) ' + p._e.join(' | ')); await p.close();
   // ---------- 3. Đường Đua: 2 lượt cùng hạt ----------
   const chay = async (lan) => {
     const p = await mo();
@@ -106,7 +126,7 @@ let loi = 0; const ok = (c, t) => { console.log((c ? '  ✓ ' : '  ✗ ') + t); 
   // ---------- 4. tiếng Việt ----------
   p = await mo('&lang=vi');
   const vi = await p.evaluate(async () => { HM.moChe(); await new Promise(r => setTimeout(r, 400)); const t = document.getElementById('hm-tam').textContent; HM.dong(true); HM.chonChe('dd'); HM.choi(); await new Promise(r => setTimeout(r, 600)); return [t, document.getElementById('tt-phu').textContent]; });
-  ok(/ĐƯỜNG ĐUA/.test(vi[0]) && !/SĂN TRÙM|VÔ TẬN|THỬ THÁCH/.test(vi[0]), 'VI: GAME MODE có ĐƯỜNG ĐUA, không còn 4 chế độ cũ');
+  ok(/ĐƯỜNG ĐUA/.test(vi[0]) && /HƯỚNG DẪN/.test(vi[0]) && !/SĂN TRÙM|VÔ TẬN|THỬ THÁCH|LEO THÁP/.test(vi[0]), 'VI: GAME MODE có ĐƯỜNG ĐUA, không còn 4 chế độ cũ');
   ok(/ĐƯỜNG ĐUA/.test(vi[1]) && /MỐC TUẦN/.test(vi[1]) && /BẮT ĐẦU ĐUA/.test(vi[1]) && !/RACE|WEEK |PTS/.test(vi[1]), 'VI: bảng Đường Đua đã dịch');
   ok(!p._e.length, 'không lỗi trang (VI) ' + p._e.join(' | ')); await p.close();
   await b.close();

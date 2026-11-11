@@ -52,7 +52,7 @@ const CDC = {
     { ten: 'Sky Storm', w0: 15, w1: 20, trum: 1, dot: ['BAY', 'NHANH'], r: [{ ruong: 'vang' }] },
   ],
   thuXp: 20,
-  bo: { san: 1, thu: 1 },                                      // 11/11 người dùng chốt BỎ Săn Trùm + Thử thách ngắn (chế độ như DCDW): ẩn khỏi GAME MODE, không vào được; bản lưu cd.san / cd.thu giữ nguyên
+  bo: { san: 1, thu: 1, thap: 1 },                             // 11/11 người dùng chốt BỎ Săn Trùm + Thử thách ngắn, rồi (18:41) BỎ cả LEO THÁP (chế độ như DCDW): ẩn khỏi GAME MODE, không vào được; bản lưu cd.san / cd.thu / cd.thap giữ nguyên
   // Tinh thể Đỏ → ẤN ĐỎ (Lò rèn): 15 tinh thể + 50 000 vàng → 1 bản Đỏ tự chọn trong các Đỏ đã mở / đã có
   anDo: { tt: 15, vang: 50000 },
   ICON: { thap: 'ua_ts_xp', san: 'ua_ic_trum', thu: 'ua_ic_nv', tt: 'ua_ts_do' },
@@ -404,9 +404,9 @@ const CDUI = {
   },
   // xong trận hướng dẫn (thắng): nút chơi tiếp = vào tầng Leo Tháp kế (không còn trận Solo)
   sauHd(k) {
-    if (!k || !k.thang || typeof KQ === 'undefined' || !KQ.m || !KQ.m.tut || !TT.tnMo('thap')) return;
+    if (!k || !k.thang || typeof KQ === 'undefined' || !KQ.m || !KQ.m.tut || !TT.tnMo('coop')) return;
     const lai = document.querySelector('#ketqua [data-act="choilai"]'); if (!lai) return;
-    lai.textContent = 'CLIMB · FLOOR ' + CD.thapKe(); lai.dataset.cdThap = '1';
+    lai.textContent = 'PLAY CO-OP'; lai.dataset.cdThap = '1'; // 11/11 bỏ Leo Tháp: xong hướng dẫn → trận CO-OP (đồng đội máy) với bộ hướng dẫn
   },
   moKq() {
     const ru = this._ru || []; if (!ru.length) return;
@@ -550,9 +550,9 @@ const CDUI = {
   // RETRY / NEXT sau trận C (pha capture, trước ketqua.js / ui.js): nạp cấu hình chờ rồi để ui.js gọi batDau như thường
   document.addEventListener('click', (e) => { // xong hướng dẫn → CLIMB · FLOOR n (bộ hướng dẫn đang chọn)
     const el = e.target.closest && e.target.closest('#ketqua [data-act="choilai"][data-cd-thap]'); if (!el) return;
-    delete el.dataset.cdThap; if (G.cd || !TT.tnMo('thap')) return;
-    CD.cho = CD.cauHinh('thap', CD.thapKe()); UI.che = 'solo'; if (typeof KQ !== 'undefined' && KQ.m) KQ.m.che = 'solo';
-    if (typeof HM !== 'undefined') { HM.che = 'thap'; HM.luu(); }
+    delete el.dataset.cdThap; if (G.cd || !TT.tnMo('coop')) return;
+    UI.che = 'coop'; if (typeof KQ !== 'undefined' && KQ.m) KQ.m.che = 'coop';
+    if (typeof HM !== 'undefined') { HM.che = 'coop'; HM.luu(); }
   }, true);
   document.addEventListener('click', (e) => {
     const el = e.target.closest && e.target.closest('#ketqua [data-act="choilai"]'); if (!el || !CD.lap || !G.cd) return;

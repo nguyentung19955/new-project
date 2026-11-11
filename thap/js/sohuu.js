@@ -109,7 +109,7 @@ const SH = {
   tt(id) { return this.co(id) ? 'co' : this.mo(id) ? 'chua' : 'khoa'; },
   dem() { const ds = this.dsCo(); let co = 0, mo = 0; for (const id of ds) { const c = this.co(id); if (c) co++; if (c || this.mo(id)) mo++; } return { co, mo, tong: ds.length }; },
   nguon(id) { return SHC.nguon[THEBAI.bac(id)] || ''; },
-  dk(id) { const L = this.capMoBac(id); return THEBAI.bac(id) === 'do' ? 'Pilot Level ' + L + ' and Tower floor ' + TTC.doTang : 'Pilot Level ' + L; },
+  dk(id) { const L = this.capMoBac(id); return THEBAI.bac(id) === 'do' ? 'Pilot Level ' + L + ' and wave ' + TTC.doWave : 'Pilot Level ' + L; },
   chuKhoa(id) { return this.tt(id) === 'khoa' ? 'Unlocks at ' + this.dk(id) : 'Not owned yet · ' + this.nguon(id); },
   // nhóm mở ở cấp L (ụ có kỹ năng)
   nhomCap(L) { const n = SHC.nhom[L]; return n ? n.ds.filter(id => SKILLS[id] && G.rosterMap[id]) : []; },
