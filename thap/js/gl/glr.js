@@ -2,7 +2,7 @@
 //  · Đợt 1: quái + thanh máu + đạn + tia laser. Đợt 2+3: Ụ, nhãn bàn, cổng/lõi, dòng chảy, huy hiệu, kéo ghép, vùng phủ dưới quái, lớp hiệu ứng
 //    (bộ đệm khung riêng + khoét 'destination-out' + đổ alpha), VX.veDs, chữ số, chớp màn → MỌI thứ của khung vẽ vào 1 canvas GL (#cv-gl), đúng thứ tự bản 2D.
 //  · CHỈ HÌNH: không đụng luật / mô phỏng / Math.random. Tắt: ?gl=0 · ép bật: ?gl=1 (kể cả GPU phần mềm) · ?glv=1 ép WebGL1.
-//  · MAC_DINH = false: mặc định TẮT (REN vẽ 2D như cũ, không tạo canvas nào). Bật mặc định = có GPU thật (failIfMajorPerformanceCaveat) + tự kiểm đạt.
+//  · MAC_DINH = true: mặc định BẬT (false = REN vẽ 2D như cũ, không tạo canvas nào; ?gl=0 = tắt). Bật mặc định = có GPU thật (failIfMajorPerformanceCaveat) + tự kiểm đạt.
 //  · Mất ngữ cảnh (webglcontextlost) → ngay khung sau REN vẽ 2D như cũ; có lại (webglcontextrestored) → dựng lại, vẽ GL tiếp.
 //  · Không dùng localStorage. Không thư viện ngoài. WebGL1 là đủ (WebGL2 có thì dùng, cùng shader GLSL ES 1.0).
 // CÁCH DÙNG: GLR.x là "ngữ cảnh giả" cùng tập lệnh canvas 2D → hàm vẽ cũ nhận GLR.x thay cho ctx là chạy, toán học giữ nguyên:
@@ -21,7 +21,7 @@
 'use strict';
 const GLR = (() => {
   const TS = (() => { try { return new URLSearchParams(location.search); } catch (e) { return { get: () => null }; } })();
-  const MAC_DINH = false; // mặc định bật (khi có GPU thật + tự kiểm đạt)
+  const MAC_DINH = true; // mặc định BẬT khi có GPU thật + tự kiểm đạt (người dùng chốt 11/11); lùi: ?gl=0
   const ATLAS = 2048, TRANG_MAX = 4, RIENG_MAX = 64 << 20, NT_MAX = 8, LE = 1, DINH_MAX = 32768, W9 = 14; // 14 từ 4 byte / đỉnh: x y · u v · u0 v0 u1 v1 (giới hạn lấy mẫu) · lx ly lw lh (toạ độ trong ô, điểm ảnh thiết bị → khử răng cưa mép) · màu · trắng
   const VS = 'attribute vec2 a_p;attribute vec2 a_uv;attribute vec4 a_gh;attribute vec4 a_c;attribute vec4 a_m;attribute float a_w;uniform vec3 u_kt;varying vec2 v_uv;varying vec4 v_gh;varying vec4 v_c;varying vec4 v_m;varying float v_w;' +
     // u_kt.z = 1: vẽ ra canvas (y lật) · −1: vẽ vào bộ đệm khung (hàng 0 của texture = mép trên ảnh → dùng lại làm nguồn như ảnh thường)

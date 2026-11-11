@@ -1329,3 +1329,8 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - **Công cụ:** `tools/thap-kt-hieunang-coop.js` thêm `Q=gl=1|gl=0`, `DEM=1` (đếm lệnh vẽ theo nhóm), `THUC=20` (khung hình thời gian thực), `GLTT`, `KHONGGL`, `KHONGGPU`, `DPR`, `SAUJS`; mới `tools/thap-kt-webgl.js` (1 cảnh bất kỳ: trùm, PVP, mất ngữ cảnh, không WebGL).
 - **Cần thử trên iPhone Safari / PWA** (KE-HOACH.md mục 8): có bật không (`GLR.thongTin()`), quái/đạn có mờ hoặc lệch so với `?gl=0`, mép thanh máu, chớp đầu nòng trên ụ, quay lại app sau khi khoá máy lâu (mất ngữ cảnh), nhiệt/pin/khung hình 10 phút co-op wave 35+, bộ nhớ (thêm 2 canvas cỡ màn + ≤ 48 MB texture).
 - Không tăng phiên bản (session con).
+
+## claude/demo-hop-tuong — WebGL bật MẶC ĐỊNH (11/11, người dùng chốt)
+- `MAC_DINH = true` trong `thap/js/gl/glr.js`: không tham số = vẽ GL (khi tạo được ngữ cảnh + tự kiểm đạt); **lùi bằng `?gl=0`**.
+- Xuất bản ở trạng thái WebGL đợt 2+3 "dở dang 5" theo yêu cầu người dùng (hiện chỉ admin chơi), BỎ QUA so hình chi tiết gl0/gl1; lỗi hình người dùng chơi thấy sẽ báo sau.
+- Đã kiểm: `node --check`, mở trận co-op wave 20 ở 3 chế độ (`gl=1`, mặc định, `gl=0`) không lỗi trang, xem 2 ảnh chụp. CHƯA kiểm: băm trạng thái gl0 = gl1 ở bản này, trùm/PVP/mất ngữ cảnh, iPhone thật.
