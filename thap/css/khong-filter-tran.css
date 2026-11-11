@@ -5,7 +5,8 @@
    Nạp CUỐI; 5 id để thắng mọi quy tắc `html.ha2 body #wrap #duoi … !important`. Không đổi bố cục, không đổi luật. */
 html body #wrap#wrap#wrap#wrap #duoi, html body #wrap#wrap#wrap#wrap #duoi *, html body #wrap#wrap#wrap#wrap #duoi *::before, html body #wrap#wrap#wrap#wrap #duoi *::after { filter: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
 /* nút SUMMON thiếu mana / bàn đầy */
-html body #wrap#wrap#wrap#wrap #duoi #nut-trieu.thieu, html body #wrap#wrap#wrap#wrap #duoi #nut-trieu.tn-day { opacity: .55 !important; }
+/* (không dùng opacity trên chính nút: quy tắc "nút SUMMON luôn hiện rõ" — tools/thap-kt-nut-trieu.js) → phủ 1 lớp tối tròn lên mặt nút */
+html body #wrap#wrap#wrap#wrap #duoi #nut-trieu.thieu::after, html body #wrap#wrap#wrap#wrap #duoi #nut-trieu.tn-day::after { content: '' !important; display: block !important; position: absolute !important; left: 9% !important; right: 9% !important; top: 9% !important; bottom: 9% !important; border-radius: 50% !important; background: rgba(9, 11, 30, .5) !important; opacity: 1 !important; animation: none !important; pointer-events: none !important; z-index: 5 !important; }
 /* thẻ chỉ huy: thiếu mana / bàn đầy / đang hồi */
 html body #wrap#wrap#wrap#wrap #duoi #the-mv.cht-thieu .mv-ic, html body #wrap#wrap#wrap#wrap #duoi #the-mv.cht-day .mv-ic, html body #wrap#wrap#wrap#wrap #duoi #the-mv.cht-hoi .mv-ic, html body #wrap#wrap#wrap#wrap #duoi #the-mv.tn-day .mv-ic { opacity: .55 !important; }
 /* nút tốc độ chưa bật */

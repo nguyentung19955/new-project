@@ -62,7 +62,7 @@
 .che::before { content: ''; position: absolute; left: 4px; top: 50%; width: 30px; height: 30px; margin-top: -15px; background: center / contain no-repeat; filter: drop-shadow(0 1px 0 #000); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 .che[data-che="coop"]::before { background-image: url(../assets/ic_coop.webp?v=16c8e2ff); }
 .che[data-che="solo"]::before { background-image: url(../assets/ic_solo.webp?v=2c431b86); }
-.che[data-che="pvp"]::before { background-image: url(../assets/ic_pvp.png?v=0ab38083); }
+.che[data-che="pvp"]::before { background-image: url(../assets/ic_pvp.webp?v=0cc926be); }
 
 /* ---------- nền (S7b, S7c) ---------- */
 /* màn chọn bộ bài (M2): sàn xưởng thép, giữa ít chi tiết để thẻ đọc rõ */

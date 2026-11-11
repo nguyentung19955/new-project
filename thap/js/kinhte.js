@@ -18,7 +18,7 @@ const KTC = {
   // ---- Rương: tỉ lệ % độ hiếm MỖI thẻ; bảo hiểm ----
   ruong: {
     thuong: { ten: 'NORMAL CHEST', gia: { vang: 2000 }, so: 6, tiLe: { trang: 62, xanh: 29, tim: 8.5, vang: 0.5, do: 0 } },
-    vang: { ten: 'GOLD CHEST', gia: { ngoc: 500 }, so: 8, tiLe: { trang: 44, xanh: 36, tim: 16, vang: 3.8, do: 0.2 }, bao: { tim: 1 }, pityV: 10, pityD: 120 },
+    vang: { ten: 'GOLD CHEST', gia: { ngoc: 500 }, so: 8, tiLe: { trang: 44, xanh: 36, tim: 16, vang: 3.8, do: 0.2 }, bao: { tim: 1 }, pityV: 7, pityD: 120 }, // 11/11 (theo DCDW, người dùng chốt): 6 Rương Vàng liên tiếp không ra Huyền thoại → rương thứ 7 chắc chắn ra (trước: 10); bộ đếm s.ru.pv có sẵn
     than: { ten: 'MYTHIC CHEST', gia: { ngoc: 6000 }, so: 12, tiLe: { trang: 30, xanh: 38, tim: 24, vang: 7, do: 1 }, bao: { do: 1, vang: 2 } },
     // RƯƠNG "VỎ" của phần thưởng (gacha thu thập 09/11 — tuvan/gacha-thu-thap/BANG-MO-NHOM.md §3): không bán (ban: 0).
     //  co = ô cố định: n (tham số khi phát, mặc định 1) bản Vàng nổi bật của tuần / Vàng / Đỏ trong bể rơi + 'so' thẻ thấp ngẫu nhiên.
@@ -41,7 +41,7 @@ const KTC = {
     { id: 'ghep30', ten: 'Merge 30 times', can: 30, k: 'ghep', r: { ngoc: 10 } },
     // 10/11 bỏ Solo: 'Reach wave 15' → qua tầng ≥ 15 Leo Tháp (k 'tang' = số tầng vừa qua, lấy lớn nhất trong ngày). kt = tầng cao nhất tối thiểu để vào bể
     //  (kl cũ = kỷ lục wave: người chơi cũ vẫn được giao như trước — KT.nvVaoBe)
-    { id: 'wave15', ten: 'Clear floor 15 or higher', can: 15, k: 'tang', max: 1, kl: 12, kt: 12, r: { ngoc: 10 } }, // kl = kỷ lục wave tối thiểu để vào bể (tien-trinh §3.4)
+    { id: 'wave15', ten: 'Reach wave 15', can: 15, k: 'wave', max: 1, kl: 12, kt: 12, r: { ngoc: 10 } }, // 11/11 bỏ Leo Tháp: lại đo theo wave (trước: 'Clear floor 15 or higher', k 'tang') // kl = kỷ lục wave tối thiểu để vào bể (tien-trinh §3.4)
     { id: 'trieu50', ten: 'Summon 50 turrets', can: 50, k: 'trieu', r: { vang: 300 } },
     { id: 'coop1', ten: 'Play CO-OP or ONLINE', can: 1, k: 'coop', r: { ngoc: 15 } },
     { id: 'pvp1', ten: 'Play 1 PVP battle', can: 1, k: 'pvp', r: { ngoc: 15 } },
@@ -58,9 +58,9 @@ const KTC = {
     { id: 'trum', ten: 'First boss kill', k: 'trum', can: 1, r: { ngoc: 30 } },
     { id: 'sao7', ten: 'First 7★ turret', k: 'sao7', can: 1, r: { ngoc: 50 } },
     // 10/11 bỏ Solo: mốc wave → tầng Leo Tháp (k2/can2 = tầng; kỷ lục wave cũ ≥ can vẫn tính là đạt — không ai mất thành tựu)
-    { id: 'w30', ten: 'Clear Tower floor 40', k: 'wave', can: 30, k2: 'tang', can2: 40, r: { ngoc: 50 } },
-    { id: 'w50', ten: 'Clear Tower floor 70', k: 'wave', can: 50, k2: 'tang', can2: 70, r: { ngoc: 100 } },
-    { id: 'w70', ten: 'Clear Tower floor 100', k: 'wave', can: 70, k2: 'tang', can2: 100, r: { ngoc: 200 } },
+    { id: 'w30', ten: 'Reach wave 30', k: 'wave', can: 30, k2: 'tang', can2: 40, r: { ngoc: 50 } },
+    { id: 'w50', ten: 'Reach wave 50', k: 'wave', can: 50, k2: 'tang', can2: 70, r: { ngoc: 100 } },
+    { id: 'w70', ten: 'Reach wave 70', k: 'wave', can: 70, k2: 'tang', can2: 100, r: { ngoc: 200 } },
     { id: 'nang', ten: 'Level up a card', k: 'nang', can: 1, r: { ngoc: 20 } },
     { id: 'ruong', ten: 'Open a chest', k: 'ruong', can: 1, r: { ngoc: 20 } },
   ],
