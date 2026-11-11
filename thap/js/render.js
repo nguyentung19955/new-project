@@ -712,81 +712,96 @@ const REN = {
     try { this.ve0(); } finally { this.traLai(); }
     if (this._nong.length) this.chayNong();
   },
+  // 1 khung vẽ. veSau (nếu có: skilldemo.js) vẽ thêm lên trên cùng bằng đúng ngữ cảnh của khung (2D hoặc GLR.x) trước khi lớp GL phát lệnh.
   ve0() {
-    let ctx = this.ctx; const k = this.s * this.dpr;
+    const c = this.ve0a();
+    try { if (c && this.veSau) this.veSau(c); } finally { if (c && c.laGL) GLR.xong(); }
+  },
+  ve0a() {
+    const ctx = this.ctx, k = this.s * this.dpr;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     if (this._choNen && G.ban.length && !(performance.now() - this._tNen < 1500)) this.lamNen(); // nền tạm → thử dựng lại
     if (G.debug && G.debug.log && !(performance.now() - (this._tLog || 0) < 10000)) { this._tLog = performance.now(); console.log('[bo-nho]', JSON.stringify(this.boNho())); }
+    // WEBGL (js/gl/glr.js, ?gl=0 tắt; đợt 1 quái/đạn/thanh máu, đợt 2+3 ụ + hiệu ứng + chữ): gl = true → MỌI thứ của khung vẽ qua GLR.x (ngữ cảnh thay thế cùng tập lệnh
+    //   canvas 2D) vào canvas #cv-gl nằm trên canvas này, ĐÚNG thứ tự bản 2D; canvas này (#cv) để trống (chỉ làm canvas nháp cho lệnh vector hiếm).
+    //   gl = false (tắt / không có WebGL / mất ngữ cảnh) → c = ctx: vẽ 2D y như cũ.
+    const gl = typeof GLR !== 'undefined' && GLR.khung(this, k, FX.rungX * k, FX.rungY * k), c = gl ? GLR.x : ctx;
+    if (gl !== !!this._glTruoc) { if (gl) GLR.chep(ctx, c); else if (GLR.x) GLR.chep(GLR.x, ctx); } // đổi chế độ vẽ: trạng thái "dính" (phông, canh chữ…) nối tiếp như 1 ngữ cảnh
     // nền nằm ở canvas DOM #cv-nen bên dưới → chỉ xoá; nền chưa dựng được: lót 1 màu đặc như cũ
     const coNen = this.nen.width > 2 && G.ban.length > 0;
     if (this._nenHien !== coNen) { this._nenHien = coNen; this.nen.style.visibility = coNen ? '' : 'hidden'; }
-    if (coNen) ctx.clearRect(0, 0, this.cv.width, this.cv.height);
+    if (gl) { // #cv trống sẵn từ khung GL trước (lệnh vector tự xoá vùng mình vẽ) → chỉ xoá ở khung đầu sau khi vẽ 2D
+      if (!this._glTruoc) ctx.clearRect(0, 0, this.cv.width, this.cv.height);
+      if (!coNen) { const d = this._nenDac || (this._nenDac = this.toMauDac('#1d1f23')); c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.drawImage(d, 0, 0, this.cv.width, this.cv.height); c.restore(); }
+    } else if (coNen) ctx.clearRect(0, 0, this.cv.width, this.cv.height);
     else { ctx.fillStyle = '#1d1f23'; ctx.fillRect(0, 0, this.cv.width, this.cv.height); } // vetay-ok: nen
     ctx.setTransform(k, 0, 0, k, FX.rungX * k, FX.rungY * k);
-    // WEBGL đợt 1 (js/gl/glr.js, ?gl=0 tắt): quái + tia laser + đạn + thanh máu vẽ bằng GPU ở canvas #cv-gl nằm TRÊN canvas này; mọi thứ vẽ sau đạn
-    //   (lớp hiệu ứng, chữ, kéo ghép…) sang canvas 2D #cv-tren nằm trên nữa. gl = false (tắt / không có WebGL / mất ngữ cảnh) → cq = ct = ctx: y như cũ.
-    const gl = typeof GLR !== 'undefined' && GLR.khung(this, k, FX.rungX * k, FX.rungY * k), cq = gl ? GLR.x : ctx, ct = gl ? GLR.xTren : ctx;
-    if (this._glTruoc) GLR.chep(GLR.xTren, ctx); // trạng thái "dính" (phông, canh chữ…) nối tiếp từ cuối khung trước như khi chỉ có 1 ngữ cảnh
     this._glTruoc = gl;
-    if (!G.ban.length) return;
+    if (!G.ban.length) return c;
     if (typeof AN !== 'undefined') AN.khung(); // animation hybrid: cài đặt FX / giảm chuyển động / LOD bàn đông (anim.js)
-    this.veDongChay(ctx);
-    this.veCongLoi(ctx);
-    this.veNhanBan(ctx);
+    if (gl) GLR.nhom = 'nen';
+    this.veDongChay(c);
+    this.veCongLoi(c);
+    this.veNhanBan(c);
     // vật trên đường (mây độc, vũng độc, mìn, cầu vồng…) vẽ dưới quái
     // dịu VFX (claude/diu-vfx): vùng phủ nền vẽ vào lớp riêng rồi đổ xuống với alpha DIU.duoi → đường/quái không bị phủ đặc
-    const diu = DIU.bat && G.hu.some(o => o.k === 'hoden' || (HU[o.k] && HU[o.k].duoi)), cDuoi = diu ? this.lopFx() : ctx;
+    if (gl) GLR.nhom = 'duoi';
+    const diu = DIU.bat && G.hu.some(o => o.k === 'hoden' || (HU[o.k] && HU[o.k].duoi)), cDuoi = diu ? this.lopFx(gl) : c;
     for (const o of G.hu) if (HU[o.k] && HU[o.k].duoi) { this._T = o.T || o._T || null; HU[o.k].ve(cDuoi, o, this); }
     { const da = []; // hố đen DƯỚI quái (chống rối claude/chong-roi: trước đè lên quái/đường); nhiều hố trùng tâm (nhiều ụ cùng nhịp) chỉ vẽ 1 → không chồng đặc
       for (const o of G.hu) if (o.k === 'hoden') { if (da.some(q => Math.abs(q.x - o.x) < o.r * 0.3 && Math.abs(q.y - o.y) < o.r * 0.3)) continue; da.push(o); this._T = o.T || o._T || null; HU.hoden.ve(cDuoi, o, this); } }
     this._T = null;
-    if (diu) this.gopLop(ctx, DIU.duoi, false);
+    if (diu) this.gopLop(c, DIU.duoi, false);
     this._thanh = DIU.bat ? [] : null; // thanh máu quái gom lại, vẽ SAU lớp hiệu ứng (luôn đọc được)
     if (gl) GLR.nhom = 'quai';
-    this.veQuai(cq);
+    this.veQuai(c);
     this._hang = [];
-    this.veO(ctx);
+    if (gl) GLR.nhom = 'u';
+    this.veO(c);
     if (gl) GLR.nhom = 'laser';
-    this.veLaser(cq);
+    this.veLaser(c);
     if (gl) GLR.nhom = 'dan';
-    this.veDan(cq);
-    if (gl) { GLR.nhom = 'thanh'; GLR.chep(ctx, ct); }
+    this.veDan(c);
+    if (gl) GLR.nhom = 'hieuung';
     // hiệu ứng trên quái (tường, nổ, tia chiêu, hạt…) vẽ vào lớp riêng → khoét mềm quanh từng quái → đổ lên với alpha DIU.tren
-    const cTren = DIU.bat ? this.lopFx() : ct;
+    const cTren = DIU.bat ? this.lopFx(gl) : c;
     for (const o of G.hu) if (o.k === 'tuong') { this._T = o.T || o._T || null; HU.tuong.ve(cTren, o, this); }
     this._T = null;
     for (const o of G.hu) if (o.k !== 'hoden' && o.k !== 'tuong' && HU[o.k] && HU[o.k].ve && !HU[o.k].duoi) { this._T = o.T || o._T || null; HU[o.k].ve(cTren, o, this); }
     this._T = null;
     this.veFx(cTren);
-    // GL: thanh máu nằm ở lớp GL (dưới #cv-tren) → vẽ thanh máu TRƯỚC, ghi khung bao từng thanh rồi khoét lớp hiệu ứng đúng các ô đó → thanh máu vẫn đè lên hiệu ứng như cũ
-    let lo = null;
-    if (gl && DIU.bat) { GLR.ghiVung(true); const th = this._thanh; this._thanh = null; if (th) for (const f of th) f(); lo = GLR.ghiVung(false); }
-    if (DIU.bat) this.gopLop(ct, DIU.tren, true, lo);
+    if (DIU.bat) this.gopLop(c, DIU.tren, true);
+    if (gl) GLR.nhom = 'thanh';
     { const th = this._thanh; this._thanh = null; if (th) for (const f of th) f(); }
-    // GL: hết phần GL của khung. Hình SỰ KIỆN TRÊN Ụ (sao lên mốc, kỹ năng ghép, dây liên kết, vùng hỗ trợ, khoanh/viền kéo ghép) vẽ ngay trên canvas có ụ (#cv):
-    //   quầng 'lighter' của chúng phải CỘNG SÁNG lên thân ụ — vẽ ở #cv-tren (canvas trong suốt) thì quầng bị đục. Đổi lại chúng nằm dưới quái/đạn/lớp hiệu ứng
-    //   (trước: trên) — hết khi ụ + hiệu ứng sang GL (đợt 2–3). Huy hiệu sao, ụ đang kéo, chữ số: ở #cv-tren, vẫn trên cùng như cũ.
-    if (gl) { GLR.xong(); GLR.chep(ct, ctx); }
-    VX.veDs(ctx, this); // hiệu ứng sự kiện: sao lên mốc, kỹ năng ghép, dây liên kết, bingo, tiếng hú
-    if (this.veHoTro) this.veHoTro(ctx); // chạm/giữ ụ hỗ trợ: hiển thị vùng & loại buff
-    ND.veSoi(ctx); // chạm thẻ bộ bài: khoanh các ụ cùng loại
-    ND.veKeo(ctx); // kéo ghép: viền ô hợp lệ / cung nối / gạch chéo
-    if (gl) { GLR.chep(ctx, ct); ctx = ct; }
-    { const hg = this._hang; this._hang = null; if (hg) for (const h of hg) ND.veHuyHieu(ctx, h); } // lớp huy hiệu (loại + sao)
-    this.veKeo(ctx);
-    ND.veKeoTren(ctx);
-    this.veChu(ctx);
-    if (typeof CORE !== 'undefined') CORE.veHud(ctx, this); // số tim trên lõi nhà chính
-    if (FX.chop > 0) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = Math.min(DIU.bat ? 0.14 : 0.3, FX.chop); ctx.drawImage(this.cham1(FX.chopMau), -W * 0.6, -H * 0.4, W * 2.2, H * 1.8); ctx.restore(); ctx.globalAlpha = 1; } // chớp màn = fx_cham_trang PNG phóng to
+    if (gl) GLR.nhom = 'sukien';
+    VX.veDs(c, this); // hiệu ứng sự kiện: sao lên mốc, kỹ năng ghép, dây liên kết, bingo, tiếng hú
+    if (this.veHoTro) this.veHoTro(c); // chạm/giữ ụ hỗ trợ: hiển thị vùng & loại buff
+    ND.veSoi(c); // chạm thẻ bộ bài: khoanh các ụ cùng loại
+    ND.veKeo(c); // kéo ghép: viền ô hợp lệ / cung nối / gạch chéo
+    if (gl) GLR.nhom = 'huyhieu';
+    { const hg = this._hang; this._hang = null; if (hg) for (const h of hg) ND.veHuyHieu(c, h); } // lớp huy hiệu (loại + sao)
+    if (gl) GLR.nhom = 'keo';
+    this.veKeo(c);
+    ND.veKeoTren(c);
+    if (gl) GLR.nhom = 'chu';
+    this.veChu(c);
+    if (gl) GLR.nhom = 'hud';
+    if (typeof CORE !== 'undefined') CORE.veHud(c, this); // số tim trên lõi nhà chính
+    if (FX.chop > 0) { c.save(); c.globalCompositeOperation = 'lighter'; c.globalAlpha = Math.min(DIU.bat ? 0.14 : 0.3, FX.chop); c.drawImage(this.cham1(FX.chopMau), -W * 0.6, -H * 0.4, W * 2.2, H * 1.8); c.restore(); c.globalAlpha = 1; } // chớp màn = fx_cham_trang PNG phóng to
+    if (gl) GLR.nhom = 'sau';
+    return c;
   },
+  // canvas 2×2 tô 1 màu đặc (GL: lót nền khi #cv-nen chưa dựng được — thay fillRect cả màn)
+  toMauDac(mau) { const d = document.createElement('canvas'); d.width = d.height = 2; const x = d.getContext('2d'); x.fillStyle = mau; x.fillRect(0, 0, 2, 2); return d; }, // vetay-ok: nen
 
   // ---- dịu VFX (claude/diu-vfx): lớp hiệu ứng riêng cùng cỡ canvas chính ----
-  lopFx() {
+  lopFx(gl) {
+    if (gl) return GLR.lopMo(Math.min(this.cv.height, Math.ceil((this.lopCao() + 10) * this.s * this.dpr))); // GL: lớp = bộ đệm khung của GLR (cùng ngữ cảnh GLR.x), không cần canvas 2D
     const cv = this.cv; let L = this._lop;
     if (!L) { L = this._lop = document.createElement('canvas'); this._lopX = L.getContext('2d'); this.theoVung(this._lopX); }
     const x = this._lopX, V = x._vung;
     // chỉ dùng dải trên của canvas tới hết đường + lề (hiệu ứng nằm trên đường/bàn; dải thẻ bài phía dưới không cần) → bớt điểm ảnh xoá/đổ mỗi khung
-    if (this._lopD !== G.duong) { this._lopD = G.duong; let my = 0; for (const p of G.duong) for (const q of p.pts) my = Math.max(my, q.y !== undefined ? q.y : q[1]); this._lopY = my > 0 ? my + 90 : H; }
+    this.lopCao();
     // sửa gấp 09/11 (bộ nhớ canvas iPhone): lớp chỉ CAO bằng dải được đổ lên (trước: cả màn, phần dưới không bao giờ dùng) → hình y hệt, bớt điểm ảnh
     const lh = Math.min(cv.height, Math.ceil((this._lopY + 10) * this.s * this.dpr));
     if (L.width !== cv.width || L.height !== lh) { L.width = cv.width; L.height = lh; this.minVe(x); x.lineCap = 'round'; x.lineJoin = 'round'; V.rong(); V.goc(); }
@@ -798,6 +813,7 @@ const REN = {
     x.setTransform(this.ctx.getTransform());
     return x;
   },
+  lopCao() { if (this._lopD !== G.duong) { this._lopD = G.duong; let my = 0; for (const p of G.duong) for (const q of p.pts) my = Math.max(my, q.y !== undefined ? q.y : q[1]); this._lopY = my > 0 ? my + 90 : H; } return this._lopY; },
   // theo dõi khung bao (điểm ảnh thiết bị) mọi thứ vẽ lên ctx lớp hiệu ứng: drawImage tính đúng 4 góc theo phép biến đổi;
   //   lệnh khác (fill/stroke/chữ/rect/putImageData) hoặc có bóng/filter → coi như cả lớp (an toàn, hình y hệt)
   theoVung(x) {
@@ -889,6 +905,15 @@ const REN = {
   },
   // đổ lớp lên canvas chính; khoet: xoá mềm (destination-out, chấm mờ fx_cham_trang = mặt nạ) quanh từng quái sống → quái luôn lộ ra
   gopLop(ctx, al, khoet, lo) {
+    if (ctx.laGL) { // GL: lớp đang mở ở GLR (ctx = GLR.x đang vẽ vào bộ đệm khung của lớp) — khoét bằng 'destination-out' rồi đổ vùng có hình xuống canvas GL
+      const lh = Math.min(this.cv.height, Math.ceil((this.lopCao() + 10) * this.s * this.dpr)), r = GLR.lopBao(lh);
+      if (r && khoet && G.quai.length) {
+        const lo = this.cham1('#ffffff'), kx = ctx.a, ky = ctx.d, e = ctx.e, f = ctx.f; ctx.globalCompositeOperation = 'destination-out';
+        for (const E of G.quai) if (!E.chet) { const c = E.d.co * (E.trum ? 0.9 : 1.15), X = kx * (E.x - c / 2) + e, Y = ky * (E.y - c * 0.6) + f; if (X > r[2] || Y > r[3] || X + kx * c < r[0] || Y + ky * c < r[1]) continue; ctx.globalAlpha = E.trum ? DIU.loTrum : DIU.lo; ctx.drawImage(lo, E.x - c / 2, E.y - c * 0.6, c, c); }
+        ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+      }
+      GLR.lopGop(al, lh); ctx.globalAlpha = 1; return;
+    }
     const x = this._lopX, L = this._lop, V = x._vung, h = this._lopH || L.height;
     const r = V.khung(L.width, h); if (!r) return; // lớp rỗng: không khoét, không đổ (đợt 2 nóng máy 09/11)
     x.globalAlpha = 1; x.globalCompositeOperation = 'source-over';
