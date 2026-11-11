@@ -16,11 +16,11 @@ const OT = {
   // gắn viền + ngọc vào 1 phần tử (idempotent; đổi bậc khi ô đổi tướng)
   gan(el, bac, ngoc) {
     if (!el) return;
-    el.classList.add('ot');
+    if (!el.classList.contains('ot')) el.classList.add('ot'); // chỉ GHI khi đổi (11/11): classList.add / dataset luôn sinh mutation + tính lại style dù giá trị y cũ
     let v = el.querySelector(':scope > img.ov');
     if (!v) { v = document.createElement('img'); v.className = 'ov'; v.alt = ''; v.draggable = false; el.appendChild(v); }
     const src = this.vien(bac); if (v.getAttribute('src') !== src) v.setAttribute('src', src);
-    el.dataset.otb = bac;
+    if (el.dataset.otb !== bac) el.dataset.otb = bac;
     let p = el.querySelector(':scope > .ot-p');
     if (ngoc) {
       const n = this.BAC.indexOf(bac) + 1;
@@ -40,12 +40,19 @@ const OT = {
   },
   quet(goc) {
     const r = goc || document;
-    r.querySelectorAll('#chon-luoi .c[data-id]').forEach(c => this.gan(c, this.bac(c.dataset.id), true));
-    r.querySelectorAll('#chon-bo .o-bo').forEach(o => {
-      if (o.dataset.id) this.gan(o, this.bac(o.dataset.id), true);
-      else { o.classList.remove('ot'); o.querySelectorAll(':scope > img.ov, :scope > .ot-p').forEach(x => x.remove()); }
-    });
-    r.querySelectorAll('#chon-bo .o-mv').forEach(o => { this.gan(o, this.bacMV(o.dataset.mv || UI.mv), false); this.mien(o); });
+    // màn bộ bài (#chon) đang ẨN (đang trong trận): KHÔNG quét ~100 thẻ lưới + ô bộ bài mỗi lần chạm ụ / nâng thẻ (11/11 — khung chậm "dom234 chon-luoi" trên iPhone);
+    //   đánh dấu chờ, quét lại ngay khi #chon hiện (observer thuộc tính hidden ở cuối tệp).
+    const ch = !goc && document.getElementById('chon');
+    if (ch && ch.hidden) this._choChon = true;
+    else {
+      this._choChon = false;
+      r.querySelectorAll('#chon-luoi .c[data-id]').forEach(c => this.gan(c, this.bac(c.dataset.id), true));
+      r.querySelectorAll('#chon-bo .o-bo').forEach(o => {
+        if (o.dataset.id) this.gan(o, this.bac(o.dataset.id), true);
+        else { if (o.classList.contains('ot')) o.classList.remove('ot'); o.querySelectorAll(':scope > img.ov, :scope > .ot-p').forEach(x => x.remove()); }
+      });
+      r.querySelectorAll('#chon-bo .o-mv').forEach(o => { this.gan(o, this.bacMV(o.dataset.mv || UI.mv), false); this.mien(o); });
+    }
     r.querySelectorAll('#bo-the .the[data-id]').forEach(t => this.gan(t, this.bac(t.dataset.id), false));
     const mv = document.getElementById('the-mv'); if (mv && mv.querySelector('.mv-anh')) { const B = G.ban && G.ban[0]; this.gan(mv, this.bacMV(B && B.mv ? B.mv.id : UI.mv), false); this.mien(mv); }
     r.querySelectorAll('.vt-mini').forEach(m => { const po = m.querySelector('img.po'), id = po && MAT.id(po); const b = /^af_/.test(id || '') ? this.bacMV(this.mvAnh(id)) : this.bac(id); this.gan(m, b, false); if (/^af_/.test(id || '')) this.mien(m); });
@@ -78,6 +85,8 @@ const OT = {
       }
       if (ms.some(m => m.type === 'attributes' && m.target.classList && m.target.classList.contains('tt-anh')) && !hen) hen = requestAnimationFrame(lam);
     }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['src'] });
+    const ch = document.getElementById('chon'); // màn bộ bài hiện lại → quét phần lưới đã hoãn lúc ẩn
+    if (ch) new MutationObserver(() => { if (!ch.hidden && OT._choChon && !hen) hen = requestAnimationFrame(lam); }).observe(ch, { attributes: true, attributeFilter: ['hidden'] });
   };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bat); else bat();
   addEventListener('resize', () => OT.co());
