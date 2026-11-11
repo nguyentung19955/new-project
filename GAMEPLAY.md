@@ -1497,3 +1497,9 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - Chế độ mới `thap/js/chedo-rd.js` (GAME MODE → RAID, mở cấp phi công 6): co-op với đồng đội máy hạ 1 trùm đứng yên ở cổng, trùm gọi quái mỗi 12 s, 6 phút, 3 tim chung, 10 bậc máu trùm (5 000 → 1 800 000), trùm xoay theo bậc. Vé: token Raid (thắng PVP +5, CO-OP wave ≥ 30 +10, trần 100, vào tốn 20). Thưởng lần đầu mỗi bậc + thưởng lặp nhỏ. Lưu `turret_kt.cd.rd`. Bảng số: TAI-LIEU-GOC mục 4; bot + các điểm tự quyết: THIET-KE §7.
 - Đụng code ụ (không đổi số ngoài Raid): 3 chỗ sát thương theo % máu (`skills.js`, `skills4.js` Nemesis, `skills5.js`) dùng `E.maxPct || E.max` — chỉ trùm Raid có `maxPct`.
 - Bot `tools/thap-bot-tran.js --che rd --bac N`; test `tools/thap-kt-raid.js` đạt. Icon RAID đang mượn `ua_ic_trum` (cần gen).
+
+## claude/che-do-dcdw — ĐẨY TRÙM (PUSH) theo DCDW (12/11)
+
+- Chế độ mới `thap/js/chedo-pu.js` (GAME MODE → PUSH, mở cấp phi công 4): PVP đấu máy theo cúp, mỗi bên 1 trùm không chết đi về lõi, sát thương đẩy lùi (K tăng theo chặng 12 s), không quái thường (mana theo giây), 3 phút, xa lõi hơn thắng, chạm lõi thua ngay. Cúp / túi thắng / XP / nhiệm vụ đi đường PVP. Bảng số: TAI-LIEU-GOC mục 4; bot + điểm tự quyết: THIET-KE §8.
+- Sửa kèm: thắng / thua PVP mà túi thắng không rơi thì không còn nút OPEN của rương rỗng (`chedo-dd.js`).
+- Bot `tools/thap-bot-tran.js --che pu --cup N` (pvp / pu không `--deck2`: game tự chọn đối thủ theo cúp); test `tools/thap-kt-push.js` đạt. Icon PUSH đang mượn `ua_ic_trum` (cần gen).

@@ -25,7 +25,8 @@ function trongTrang(c) {
   if (c.js) (0, eval)(c.js);                                   // biến thể: vá bảng wave / hệ số trong trang
   if (c.max) LUAT.waveMax = c.max;
   G.debug.auto = true; G.debug.seed = 1000 + c.hat; G.tocDo = 1;
-  if (c.cap) { G.debug.cap0 = {}; G.debug.cap2 = {}; for (const id of c.deck) G.debug.cap0[id] = c.cap; for (const id of (c.deck2 || [])) G.debug.cap2[id] = c.cap; }
+  if (c.cap) { G.debug.cap0 = {}; if (c.deck2 || (c.che !== 'pu' && c.che !== 'pvp')) G.debug.cap2 = {}; // pvp / pu không deck2: để game tự chọn đối thủ + cấp thẻ theo cúp
+    for (const id of c.deck) G.debug.cap0[id] = c.cap; for (const id of (c.deck2 || [])) G.debug.cap2[id] = c.cap; }
   if (c.deck2) G.debug.deck2 = c.deck2;
   if (c.che !== 'thap') { if (c.wave) G.debug.wave = c.wave; if (c.mana) G.debug.mana = c.mana; }
   REN.ve = () => { }; UI.capNhat = () => { }; try { for (const k in SND) if (typeof SND[k] === 'function') SND[k] = () => { }; } catch (e) { }
@@ -59,6 +60,8 @@ function trongTrang(c) {
       if (c.mana) cd.M = c.mana;
       CD.cho = cd; UI.che = 'solo'; batDau('solo', UI.chon, UI.mv);
       S.cd = { w0: G.cd.w0, w1: G.cd.w1, M: G.cd.M, trum: G.cd.trum || null }; G.cho = 1;
+    } else if (c.che === 'pu') { // ĐẨY TRÙM (chedo-pu.js): --cup N (cúp → độ khó đối thủ máy)
+      CD.st().cup.c = c.cup | 0; PU.cho = PU.cauHinh(); UI.che = 'pvp'; batDau('pvp', UI.chon, UI.mv); G.cho = 1;
     } else if (c.che === 'rd') { // ĐỘT KÍCH (chedo-rd.js): --bac N
       RD.cho = RD.cauHinh(c.bac || 1); UI.che = 'coop'; batDau('coop', UI.chon, UI.mv); G.cho = 1;
     } else if (c.che === 'dd') { // ĐƯỜNG ĐUA (chedo-dd.js): hạt h = hạt tuần + h·7919 (h = 0: đúng hạt game tuần này)
@@ -84,7 +87,7 @@ function trongTrang(c) {
   window.__kq1 = () => {
     if (!G.ban.length) return { thang: !!(S.kq && S.kq.thang), ly: S.kq ? S.kq.ly : '', wave: S.kq ? S.kq.wave : 0, w0: S.w0, cd: S.cd, tim: 0, t: 0, buoc: S.buoc, dinh: S.dinh, dinhW: S.dinhW, mana: [], gia: [], pu: [], ban: [], w: S.w, loi: 'G.ban rỗng · ' + S.loi };
     const B = G.ban[0], k = S.kq || { thang: false, ly: 'chưa xong', wave: G.wave };
-    return { rd: G.rd && G.rd.E ? { bac: G.rd.bac, st: Math.round(G.rd.E.max - Math.max(0, G.rd.E.hp)), pct: Math.ceil(Math.max(0, G.rd.E.hp) / G.rd.E.max * 100), t: Math.round(G.t - (G.rd.t0 || 0)) } : undefined, dd: G.dd ? { diem: G.dd.diem, giet: G.dd.giet, t: Math.round(G.t - (G.dd.t0 || 0)) } : undefined, thang: k.thang, ly: k.ly, wave: k.wave, w0: S.w0, cd: S.cd, tim: B.tim, t: Math.round(G.t), buoc: S.buoc, dinh: S.dinh, dinhW: S.dinhW,
+    return { day: G.pu ? { a: PU.con(0), b: PU.con(1), t: Math.round(G.t - (G.pu.t0 || 0)), moc: G.pu.moc.map(x => x[0]).join('/'), doi: G.ban[1] ? G.ban[1].deck.join(',') : '' } : undefined, rd: G.rd && G.rd.E ? { bac: G.rd.bac, st: Math.round(G.rd.E.max - Math.max(0, G.rd.E.hp)), pct: Math.ceil(Math.max(0, G.rd.E.hp) / G.rd.E.max * 100), t: Math.round(G.t - (G.rd.t0 || 0)) } : undefined, dd: G.dd ? { diem: G.dd.diem, giet: G.dd.giet, t: Math.round(G.t - (G.dd.t0 || 0)) } : undefined, thang: k.thang, ly: k.ly, wave: k.wave, w0: S.w0, cd: S.cd, tim: B.tim, t: Math.round(G.t), buoc: S.buoc, dinh: S.dinh, dinhW: S.dinhW,
       mana: G.ban.map(b => Math.round(b.mana)), gia: G.ban.map(b => b.gia), pu: G.ban.map(b => b.deck.map(id => b.lv[id] - 1).join('')),
       ket: S.ket | 0, ban: G.ban.map(b => b.t.filter(Boolean).map(T => T.id + T.sao).sort().join(' ')), deck: S.deck, w: S.w, loi: S.loi };
   };
@@ -112,14 +115,14 @@ async function chayMot1(ctx, c) {
 const tenCa = (c) => c.ten || (c.che === 'thap' ? 'tầng ' + c.tang : c.che + (c.wave ? ' w' + c.wave : '')) + ' ' + c.deck.join(',');
 function dong(c, bt, r) {
   const ws = Object.keys(r.w).map(Number).filter(w => !r.w[w].trum && r.w[w].sinh > 4), tb = ws.length ? Math.round(ws.reduce((s, w) => s + r.w[w].sinh, 0) / ws.length) : 0;
-  return [bt.padEnd(5), tenCa(c).padEnd(46), 'hạt ' + c.hat, r.rd ? 'RAID bậc ' + r.rd.bac + ' · ST lên trùm ' + r.rd.st + ' · máu còn ' + r.rd.pct + '% · ' + r.rd.t + 's' : '', r.dd ? 'ĐƯỜNG ĐUA điểm ' + r.dd.diem + ' · diệt ' + r.dd.giet + ' · ' + r.dd.t + 's' : '', (r.thang ? 'THẮNG' : 'thua ') + ' w' + r.wave + (r.cd ? ' (' + r.cd.w0 + '–' + r.cd.w1 + ', M' + r.cd.M + ')' : ''), '♥' + r.tim,
+  return [bt.padEnd(5), tenCa(c).padEnd(46), 'hạt ' + c.hat, r.day ? 'PUSH bạn ' + r.day.a + '% · địch ' + r.day.b + '% · ' + r.day.t + 's · ST30s ' + r.day.moc + ' · địch: ' + r.day.doi : '', r.rd ? 'RAID bậc ' + r.rd.bac + ' · ST lên trùm ' + r.rd.st + ' · máu còn ' + r.rd.pct + '% · ' + r.rd.t + 's' : '', r.dd ? 'ĐƯỜNG ĐUA điểm ' + r.dd.diem + ' · diệt ' + r.dd.giet + ' · ' + r.dd.t + 's' : '', (r.thang ? 'THẮNG' : 'thua ') + ' w' + r.wave + (r.cd ? ' (' + r.cd.w0 + '–' + r.cd.w1 + ', M' + r.cd.M + ')' : ''), '♥' + r.tim,
     'đỉnh ' + r.dinh + '@w' + r.dinhW, 'quái/wave ~' + tb, 'mana ' + r.mana.join('/'), 'manaGiết≤30 ' + Object.keys(r.w).filter(w => +w <= 30).reduce((t, w) => t + (r.w[w].mn || 0), 0), 'pu ' + (r.pu || []).join('/'), r.ket ? 'kẹt×' + r.ket : '', r.t + 's', '[' + r.giay + 's]', r.loi ? 'LỖI ' + r.loi.slice(0, 120) : '', (r.errs || []).join(' | ').slice(0, 120)].join(' · ');
 }
 
 (async () => {
   let lo;
   if (A.lo) lo = JSON.parse(fs.readFileSync(A.lo, 'utf8'));
-  else lo = [{ che: A.che || 'solo', tang: +(A.tang || 1), deck: (A.deck || 'tia,lien,sungluc,bang,set').split(','), deck2: A.deck2 ? A.deck2.split(',') : undefined, bac: +(A.bac || 1), wave: +(A.wave || 0), mana: +(A.mana || 0), cap: +(A.cap || 0), mv: A.mv, max: +(A.max || 0), botgoc: +(A.botgoc || 0) }];
+  else lo = [{ che: A.che || 'solo', tang: +(A.tang || 1), deck: (A.deck || 'tia,lien,sungluc,bang,set').split(','), deck2: A.deck2 ? A.deck2.split(',') : undefined, bac: +(A.bac || 1), cup: +(A.cup || 0), wave: +(A.wave || 0), mana: +(A.mana || 0), cap: +(A.cap || 0), mv: A.mv, max: +(A.max || 0), botgoc: +(A.botgoc || 0) }];
   if (A.lieu) for (const c of lo) c.lieu = +A.lieu;
   if (A.botgoc) for (const c of lo) c.botgoc = 1;
   const hat = (A.hat || '1,2').split(',').map(Number), bts = (A.bt || 'goc').split(',');

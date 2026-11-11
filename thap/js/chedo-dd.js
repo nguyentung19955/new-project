@@ -447,6 +447,7 @@ function boDongDoiMoi() { const d = MOIC.bo.filter(id => SKILLS[id] && G.rosterM
       if (G.dd || tut || thu || !G.ban.length) return kq3.apply(this, arguments);
       const x = kq3.apply(this, arguments);
       try { if (G.che === 'pvp') CUP.kq(k); } catch (e) { console.error('CUP', e); }
+      try { const m = typeof KQ !== 'undefined' && KQ.m; if (G.che === 'pvp' && m && m._thuong && !m._thuong.the.length) { const b = document.querySelector('#ketqua .tb-kq [data-act="sh-kq-mo"]'); if (b) b.remove(); } } catch (e) { } // túi thắng không rơi: không hiện nút OPEN của rương rỗng
       return x;
     };
     if (typeof HM !== 'undefined') {

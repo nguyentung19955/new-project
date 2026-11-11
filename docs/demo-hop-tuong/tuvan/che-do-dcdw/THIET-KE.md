@@ -70,3 +70,9 @@ Máy phiên cũ còn ~640 MB ổ đĩa (không dựng được bản làm việc
 - **Đã tự quyết:** (1) không dựng đường tách nhánh mới (đụng bố cục + render — rủi ro lớn); (2) bậc = máu trùm tuyệt đối, và sát thương theo % máu tính trên máu trùm chuẩn của chặng (không thì Nemesis một mình hạ bậc 10 trong ~1 phút — đã đo); (3) chiêu trùm thưa hơn trùm wave (40 s đầu không niệm, nghỉ thêm 12 s) vì trùm đứng suốt trận; (4) thắng lại vẫn có thưởng nhỏ; thua mất vé.
 - Bot (cấp thẻ như bảng cân bằng, 2 hạt mỗi bậc): Trắng/Xanh +1: bậc 1–3 đều thua (còn 3–68% máu — bộ này ít khi dọn kịp quái để bắn trùm; bậc 1–2 đã hạ máu sau đợt đo) · Tím +4: bậc 3 thắng 1/2, bậc 4 thắng 1/2 (271 s), bậc 5 thua (còn 55–77%) · Vàng +6: bậc 6 thắng 2/2 (302 s), bậc 7 thắng 2/2 (~285 s), bậc 8 thua (còn 5–12%) · Đỏ +8: bậc 8 thắng 2/2, bậc 9 thắng 2/2 (~340 s), bậc 10 thắng 2/2 (~356 s, sát giờ).
 - Cần ảnh: icon RAID cho GAME MODE (đang mượn `ua_ic_trum`).
+
+## 8. ĐẨY TRÙM (PUSH) — đã làm 12/11 (`thap/js/chedo-pu.js`, kiểm `tools/thap-kt-push.js`, đo `tools/thap-bot-tran.js --che pu --cup N`)
+- Luật + số: `TAI-LIEU-GOC.md` mục 4.
+- **Đã tự quyết:** (1) mở ở cấp phi công 4 (sau PVP cấp 2); (2) không có quái thường nên mana cấp theo giây; (3) hoà quãng đường thì so tổng sát thương (2 bộ mạnh đều ghìm trùm ở cổng); (4) không khoá lưu riêng — dùng chung cúp PVP; (5) Rương Trận / XP tính như trận tới wave 10 cố định; (6) trùm có dùng chiêu (cùng trùm cho 2 bên).
+- Bot tỉ lệ thắng (4 hạt): Trắng/Xanh +1: 0 cúp 4/4 · 500 cúp 1/4 · 1 000 cúp 0/4 | Tím +4: 4/4 · 3/4 · 0/4 | Vàng +6: 4/4 · 4/4 · 2/4 | Đỏ +8: 4/4 · 4/4 · 3/4.
+- Điểm yếu đã biết: 2 bộ mạnh thường cùng ghìm trùm ở ~97% → thắng thua do chênh 0,1% hoặc tổng sát thương; nhãn PUSH trong trận nằm đè dải thẻ đối thủ ở mép trên. Cần ảnh: icon PUSH cho GAME MODE (đang mượn `ua_ic_trum`).
