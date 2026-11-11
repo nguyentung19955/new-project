@@ -142,7 +142,7 @@ const TEXT = {
     nhieusong:    { name: 'Signal Jammer',  skill: 'Merge 2 Signal Jammers. PvP: rival turrets shoot 40% slower for a few seconds. Co-op: your ally\'s next Summon is free. Single-player: all enemies slow 20%' },
     santhuong:    { name: 'Bounty Beacon',  skill: 'Marks an enemy (big ones first). When a marked enemy dies, you get bonus mana' },
     nhatthuc:     { name: 'Eclipse',        skill: 'Day: a beam that burns. Night: a wave that slows. Changes every 8s' },
-    loren:        { name: 'Twin Anvil',     skill: 'Special: each Anvil is a Damage or a Speed type. Drag onto an Anvil of the SAME type to add stacks (max 14, risky: it can fail and lose the dragged one). Drag onto any other turret: it gets +3% damage or +2% fire rate per stack for good (lost if that turret merges)' },
+    loren:        { name: 'Twin Anvil',     skill: 'Special: each Anvil is a Damage or a Speed type. Drag onto an Anvil of the SAME type to add stacks (max 14, risky: it can fail and lose the dragged one). Drag onto a turret NEXT TO it (not diagonal): it gets +3% damage or +2% fire rate per stack for good (lost if that turret merges). A turret with both forges at EQUAL stacks is TWIN-FORGED: both stay, each ×1.25; unequal: the bigger one stays. Each ★ the Anvil gains in place adds 1 stack' },
     guongcong:    { name: 'Mirror Gate',    skill: 'Support (original): Neighbours (4 sides) resist control. Every 20s: Single-player: blocks 1 Boss skill. PvP: sends 1 rival attack back. Co-op: copies 1 ally Merge effect' },
     marionette:   { name: 'Marionette',     skill: 'Grabs an enemy and makes it walk back. It hits other enemies on the way, then explodes' },
     // đợt 3 — 4 ụ Đỏ (skills5.js)

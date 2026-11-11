@@ -36,7 +36,9 @@ const DEMKN = {
   icVuc() { return this.IC_VUC || 'fx_leviathan_hieu'; },
 
   // ĐỘT PHÁ (vangmoi1.js DOTPHA): bậc 1–4 → icon PNG lọc màu (vàng / lam / tím / trắng, ảnh dựng 1 lần) + chữ cùng màu
-  lay(T, B) { const f = this.DS[T.id]; if (!f || !B || T.st.da) return null; try { const v = f(T, B); if (v && typeof DOTPHA !== 'undefined') { const b = DOTPHA.bacU(T); if (b) { v.bac = b; v.v4 = b === 4 ? DOTPHA.buoc4() : -1; v.mau = b === 4 ? ['#ffb0b0', '#fff0a0', '#b0ffb8', '#a8f4ff', '#b8c4ff', '#ffb8f4'][v.v4] : DOTPHA.MAU[b]; v.sang = false; if (T.id === 'lualien') v.giuMau = 1; } } return v; } catch (e) { return null; } }, // Ember (lualien): icon lửa lua_t1–4 đã tô màu theo mốc → giuMau, không phủ lọc màu bậc (sửa lỗi tester 08/11)
+  // ụ đã được Twin Anvil rèn (mọi loại): số cộng dồn; SONG SINH = 2 cặp, chữ vàng
+  anv(T) { const a = T.anv; return a && a.lo ? { m: a.x ? [{ ic: 'ic_dmg', s: a.lo + '' }, { ic: 'ic_toc', s: a.lo + '' }] : [{ ic: a.k === 'toc' ? 'ic_toc' : 'ic_dmg', s: a.lo + '' }], sang: !!a.x } : null; },
+  lay(T, B) { const f = this.DS[T.id] || (T.anv ? this.anv : null); if (!f || !B || T.st.da) return null; try { const v = f(T, B); if (v && typeof DOTPHA !== 'undefined') { const b = DOTPHA.bacU(T); if (b) { v.bac = b; v.v4 = b === 4 ? DOTPHA.buoc4() : -1; v.mau = b === 4 ? ['#ffb0b0', '#fff0a0', '#b0ffb8', '#a8f4ff', '#b8c4ff', '#ffb8f4'][v.v4] : DOTPHA.MAU[b]; v.sang = false; if (T.id === 'lualien') v.giuMau = 1; } } return v; } catch (e) { return null; } }, // Ember (lualien): icon lửa lua_t1–4 đã tô màu theo mốc → giuMau, không phủ lọc màu bậc (sửa lỗi tester 08/11)
 
   // khung h2_tag (74×30, mép 14 px) cắt 3 mảnh: 2 đầu giữ tỉ lệ, phần giữa kéo dài
   khung(ctx, x, y, w, h) {

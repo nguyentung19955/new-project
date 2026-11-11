@@ -224,7 +224,7 @@ const ONS = {
     if (T.id === 'canon') f += 'h' + (((T.hb | 0) & 15) || 1) + ';n' + (T.cmC | 0) + ';'; // Pháo La Bàn: tổ hợp hướng (mặt nạ bit) + stack
     if (T.lc) f += 'r' + T.lc + ';'; if (T.kho) f += 'k' + T.kho + ';'; // Ember Relay: lửa · Fusion Archive: điểm lưu (vangmoi1.js)
     if (T.id === 'loren') f += 'a' + (T.dang === 'toc' ? 1 : 0) + ';'; // Twin Anvil: dạng (0 ST · 1 tốc)
-    if (T.anv) f += 'b' + (T.anv.k === 'toc' ? 1 : 0) + 'x' + Math.round(T.anv.v * 10000) + ';'; // buff Anvil trên ụ
+    if (T.anv) f += 'b' + (T.anv.k === 'toc' ? 1 : 0) + 'x' + Math.round(T.anv.v * 10000) + ';' + (T.anv.lo ? 'R' + (T.anv.lo | 0) + ';' : '') + (T.anv.x ? 'T' + Math.round(T.anv.x.v * 10000) + ';' : ''); // buff Anvil trên ụ · 12/11: R = số cộng dồn, T = buff thứ 2 (song sinh — loại còn lại, cùng cộng dồn); máy bản cũ chỉ đọc b…
     if (T.id === 'bienmau') f += 'q' + ((T.pm | 0) & 3) + ';' + (T.pms ? 'u' + T.pms + ';' : '') + (T.pf > 0 ? 'F' + T.pf + ';K' + (T.pmk || [0, 0, 0, 0]).map(x => x | 0).join('.') + ';' : ''); // Prism Thief: màu + cộng dồn · hợp thể: F số hợp thể, K cộng dồn 4 màu
     if (T.id === 'mauhut') { if (T.mau) f += 'B' + T.mau + ';P' + SKILLS.mauhut.dang(T) + ';'; if (T.mhN) f += 'Q' + T.mhN + ';'; if (T.mh) f += 'M' + T.mh.o + ';C' + Math.max(0, Math.round(T.mh.con * 10)) + ';'; } // Mạch Máu: máu / dạng / đếm phát (nova) / dấu
     if (T.id === 'tienhoa' && T.chay) f += 'X'; // trứng cháy
@@ -258,7 +258,8 @@ const ONS = {
     if (T.id === 'lualien') { const cu = T.lc || 0; T.lc = so('r'); if (typeof LUA_VET !== 'undefined') LUA_VET.conRoi(T, cu); } if (T.id === 'luutru') T.kho = so('k'); // Ember: lửa tăng → "+N" (chỉ hình)
     if (T.id === 'canon' && /h\d+;/.test(c)) { T.hb = (so('h') & 15) || 1; T.cmC = so('n'); }
     if (T.id === 'loren') T.dang = so('a') ? 'toc' : 'dmg';
-    { const m = c.match(/b(\d)x(\d+);/); T.anv = m ? { k: m[1] === '1' ? 'toc' : 'dmg', v: +m[2] / 10000 } : null; }
+    { const m = c.match(/b(\d)x(\d+);/); T.anv = m ? { k: m[1] === '1' ? 'toc' : 'dmg', v: +m[2] / 10000 } : null;
+      if (T.anv) { T.anv.lo = so('R') || Math.max(1, Math.min(14, Math.round(T.anv.v / (T.anv.k === 'toc' ? 0.02 : 0.03)))); const x = so('T'); if (x) T.anv.x = { k: T.anv.k === 'toc' ? 'dmg' : 'toc', v: x / 10000 }; } } // gói cũ không có R: suy cộng dồn từ %
     if (T.id === 'bienmau') { T.pm = so('q') & 3; T.pms = so('u'); T.pf = so('F'); const m = c.match(/K([\d.]+);/); T.pmk = T.pf > 0 ? (m ? m[1].split('.').map(x => x | 0).concat([0, 0, 0, 0]).slice(0, 4) : [0, 0, 0, 0]) : undefined; }
     if (T.id === 'mauhut') {
       T.mau = so('B'); T.mhD = so('P'); T.mhN = so('Q');

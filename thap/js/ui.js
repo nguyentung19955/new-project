@@ -524,7 +524,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       const [hx, hy] = this.diemKeo(k), D = this.uTai(hx, hy);
       if (D && D !== k.T) {
         if (hopLeGhep(k.T, D)) ghep(B, k.T, D);
-        else { const c = B.o[D.o]; FX.chu1(c.x, c.y - 22, k.T.sao !== D.sao ? TEXT.fx.diffStar : TEXT.fx.diffType, '#ff9a9a', 12); }
+        else { const c = B.o[D.o]; FX.chu1(c.x, c.y - 22, k.T.id === 'loren' && D.id !== 'loren' && D.ban === k.T.ban && !SKILLS.loren.ke(k.T, D) ? 'NOT ADJACENT' : k.T.sao !== D.sao ? TEXT.fx.diffStar : TEXT.fx.diffType, '#ff9a9a', 12); } // Twin Anvil: chỉ rèn ụ sát cạnh
       }
     };
     cv.addEventListener('pointerup', het);
