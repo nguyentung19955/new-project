@@ -9,6 +9,7 @@ Ra (ghi đè ảnh cũ kiểu người):
 và mốc mặt PO_NEO + HERO_NEO (thap/js/chandung.js), FACE_BOX (thap/js/khung.js) theo MAT[id] = (đỉnh đầu y, mắt y, tâm mặt x, cằm y) px ảnh nguồn.
 Lô 2 (10/11): thêm 15 id (bang, set, nangluong, laser, khuech, lienket, thaukinh, docton, lophanung, cobac, chimang, baotuyet, xaotron, cuongno, nhanban) — cùng cách cắt.
 Lô 3 (11/11): thêm 4 id (vungdoc, drone, khien, overlord) — cùng cách cắt; ảnh nguồn không nhất thiết 1254² (overlord 1058²), tool tính theo cỡ ảnh thật.
+Lô 4 (11/11): thêm 10 id (nhieusong, nangsao, luoicheo, railgun, no5, nguyenrua, epxung, orbital, santhuong, sinhdoi) — cùng cách cắt.
 LƯU Ý: các id trong CAT KHÔNG còn cắt bằng thap-cat-chandung.py / thap-cat-chandung2.py / thap-cat-thacmana-congap.py / thap-hero.py (ảnh nguồn cũ) — chạy lại các tool đó cho các id này sẽ ghi đè ảnh mới.
 Chạy (gốc repo): python3 tools/thap-cat-phicong-moi.py [id ...]     (KHONG_JS=1: chỉ ghi ảnh)
 """
@@ -26,7 +27,10 @@ CAT = {'chuato': (150, 0, 1100), 'pandora': (225, 0, 830), 'hydra': (190, 0, 100
        'lienket': (180, 0, 1080), 'thaukinh': (200, 60, 880), 'docton': (140, 0, 1000), 'lophanung': (0, 0, 1254), 'cobac': (100, 0, 1050),
        'chimang': (70, 40, 1110), 'baotuyet': (150, 0, 1050), 'xaotron': (180, 0, 950), 'cuongno': (200, 0, 1050), 'nhanban': (60, 0, 1100),
        # lô 3 (11/11): 4 ảnh người dùng vẽ lại — xem chú thích MAT (overlord nguồn 1058², 3 ảnh kia 1254²); vungdoc + drone cắt CẢ ảnh: mõm/mỏ dài, ô thẻ dọc mới đủ rộng thấy mắt + cả mõm/mỏ
-       'vungdoc': (0, 0, 1254), 'drone': (0, 0, 1254), 'khien': (120, 0, 900), 'overlord': (60, 0, 940)}
+       'vungdoc': (0, 0, 1254), 'drone': (0, 0, 1254), 'khien': (120, 0, 900), 'overlord': (60, 0, 940),
+       # lô 4 (11/11): 10 phi công sinh vật — xem chú thích MAT
+       'nhieusong': (150, 0, 950), 'nangsao': (130, 0, 1000), 'luoicheo': (140, 0, 950), 'railgun': (130, 0, 1000), 'no5': (130, 0, 1000),
+       'nguyenrua': (170, 0, 1000), 'epxung': (50, 0, 1150), 'orbital': (130, 0, 1050), 'santhuong': (150, 0, 1000), 'sinhdoi': (130, 0, 1000)}
 # bocap ↑: bocap (10/11): Crimson Sting — sát thủ bọ cạp giáp tím-đen, ô thấy cả đầu + ngòi đuôi hồng ngọc
 # (đỉnh đầu y, đường mắt y, tâm mặt x, cằm y) — px ảnh nguồn; hydra = ĐẦU GIỮA; pandora = cụm mắt sao + miệng cười (không lấy rương)
 MAT = {'chuato': (5, 445, 700, 690), 'pandora': (20, 340, 640, 470), 'hydra': (0, 212, 690, 385), 'congap': (20, 410, 690, 690), 'thanhdia': (10, 325, 660, 545),
@@ -41,7 +45,12 @@ MAT = {'chuato': (5, 445, 700, 690), 'pandora': (20, 340, 640, 470), 'hydra': (0
        # lô 3 (11/11): vungdoc cá sấu nhà hoá học nhìn nghiêng (đầu = gai gáy → cằm, tính cả mõm; tâm ngang giữa mắt và mõm để ô thẻ thấy cả mõm + kính một mắt)
        # · drone bồ nông mũ phi công (đầu = mũ → đáy túi mỏ chứa 3 drone; tâm ngang lệch từ mắt về phía mỏ) · khien tatu hiệp sĩ (đầu tính cả 2 tai + mũ giáp)
        # · overlord mặt nạ đá đen mắt trắng rực + sừng pha lê đỏ (đầu = sừng → miệng răng cưa)
-       'vungdoc': (65, 270, 780, 720), 'drone': (65, 325, 770, 830), 'khien': (45, 400, 660, 600), 'overlord': (50, 550, 529, 830)}
+       'vungdoc': (65, 270, 780, 720), 'drone': (65, 325, 770, 830), 'khien': (45, 400, 660, 600), 'overlord': (50, 550, 529, 830),
+       # lô 4 (11/11): nhieusong sứa tím đội vương miện (đầu = vương miện → mép chuông) · nangsao ngôi sao sống (đầu = cả ngôi sao) · luoicheo dế âm thoa (mũ lá → cằm)
+       # · railgun hải mã nhạc trưởng (mũ → dưới miệng, ngà dài hơn) · no5 hoa thép (mũ nụ → cằm) · nguyenrua búp bê bùa (2 mắt cúc; đầu vải bố) · epxung robot nồi hơi (vòm → đáy đồng hồ áp)
+       # · orbital cú máy (chảo → dưới mỏ) · santhuong sói đồng cỏ (mặt hơi lệch phải: tâm giữa mắt vàng và miếng tâm ngắm) · sinhdoi đôi cá koi áp má (mốc = điểm giữa hai đầu)
+       'nhieusong': (150, 480, 620, 630), 'nangsao': (40, 430, 600, 700), 'luoicheo': (270, 470, 610, 640), 'railgun': (60, 335, 630, 640), 'no5': (20, 500, 630, 650),
+       'nguyenrua': (150, 480, 670, 720), 'epxung': (60, 500, 620, 830), 'orbital': (60, 490, 680, 730), 'santhuong': (0, 470, 660, 700), 'sinhdoi': (120, 450, 650, 610)}
 # bocap ↑: bocap: đầu giáp 4 mắt đỏ + hồng ngọc trán
 
 

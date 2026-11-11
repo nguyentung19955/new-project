@@ -1366,3 +1366,11 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - Bảng trước / sau + số cụ thể + rà phần thưởng: `docs/demo-hop-tuong/tocban/CAN-BANG-WAVE-DE-XUAT.md`; dữ liệu thô `tocban/bot-wave-{goc,A,B}.json`.
 - Công cụ: `tools/thap-bot-tran.js` (trận bot thật, thêm đo mana nhận khi giết), `tools/thap-bot-bienthe.js` (biến thể A / B bơm lúc đo), `tools/thap-bot-lo.json` (28 ca), `tools/thap-bot-bang.js` (gộp bảng).
 - Kết quả chính: bộ Vàng tấn công 46 → A 69 / B 65; bộ khởi đầu Leo Tháp tầng 1–6 từ 0/4 → 3–4/4; co-op wave 25–34 quái sinh/wave 101 → 28, đỉnh quái sống 31 → 8. Chờ người dùng duyệt A hoặc B.
+
+## claude/demo-hop-tuong — 10 ảnh phi công mới lô 4 (11/11)
+
+- **Việc:** thay ảnh đại diện phi công của 10 ụ bằng ảnh người dùng tạo và duyệt (mỗi phi công một sinh vật). Chỉ hình ảnh — không đổi gameplay, số liệu, tên, chữ kỹ năng.
+- **10 id:** `nhieusong` Signal Jammer — sứa tím đội vương miện · `nangsao` Star Lift — ngôi sao sống · `luoicheo` Resonance Grid — dế âm thoa · `railgun` Salvo Battery — hải mã nhạc trưởng đàn ống · `no5` Fifth Shot — hoa thép · `nguyenrua` Hex Saboteur — búp bê bùa · `epxung` Overclock — robot nồi hơi · `orbital` Orbital — cú máy · `santhuong` Bounty Beacon — sói đồng cỏ · `sinhdoi` Twin Maker — đôi cá koi áp má.
+- **Cách làm (như lô 1–3):** nguồn 1254² chuyển từ `thap-art/cho-ghep/pilot_<id>.jpg` sang `docs/demo-hop-tuong/tuvan/phi-cong-moi/<id>.jpg`; `tools/thap-cat-phicong-moi.py` (thêm 10 id vào `CAT` + `MAT`) sinh `thap/assets/pilot_<id>.png` 427², `thap/assets/pn/pilot_<id>.png` 300², `thap/assets/hero/hero_<id>.jpg` 1170×1020 và ghi mốc `PO_NEO` / `HERO_NEO` (`thap/js/chandung.js`), `FACE_BOX` (`thap/js/khung.js`).
+- **Mốc mặt đáng chú ý:** `santhuong` tâm ngang = giữa mắt vàng và miếng tâm ngắm (mặt hơi lệch phải); `sinhdoi` tâm = điểm hai má chạm nhau (thấy cả hai đầu); `nhieusong` đầu = vương miện → mép chuông sứa; `nangsao` đầu = cả ngôi sao.
+- **Kiểm:** `node --check` chandung.js, khung.js; ảnh đã xem 390×844 (0 lỗi trang): thẻ Collection, khay bài trong trận, trang ụ — `/home/claude/xem/ghep/phicong_the.png`, `phicong_khay_tran.png`, `phicong_trang_u.png`. `tools/thap-kt-chandung.js` hiện hỏng sẵn (chụp vùng rỗng ở ô bộ bài — không do thay đổi này) nên không dùng được. Không tăng phiên bản (session con).
