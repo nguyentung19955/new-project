@@ -1342,3 +1342,7 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 ## claude/demo-hop-tuong — bỏ rung cả màn (11/11, người dùng yêu cầu)
 - `FX.lac` (`thap/js/fx.js`) không còn làm rung canvas trận (mọi nguồn: triệu hồi Vàng/Đỏ, nổ, trùm chết, kỹ năng, cả 2 đội co-op). Rung tay (haptics), chớp màn, rung cục bộ ở ụ giữ nguyên. Chỉ hình, không đổi luật.
 - Ghi nhận CHƯA sửa: sau mỗi lần triệu hồi có khung vẽ chậm ở CẢ 2D lẫn GL (lần đầu dùng ảnh); bản GL tải tới ~34 texture trong 1 khung ngay sau triệu hồi → cần làm nóng texture của bộ bài lúc vào trận / rải tải qua nhiều khung (việc của phần hoàn tất WebGL đợt 2+3). Người dùng đo trên iPhone: co-op wave 39 tốc độ 3× `GL 10 · min 7`, wave 40 trùm 1× `GL 38 · min 17`.
+
+## claude/demo-hop-tuong — WebGL TẮT mặc định lại + nhãn admin thêm số chẩn đoán (11/11 14:45)
+- Người dùng (iPhone, co-op wave 7, 3×): để yên thì mượt, chạm/thao tác bất kỳ là nhãn tụt `GL 6 · min 6` / `GL 4 · min 4`. Chưa tái hiện được trên máy đo (lượng tải texture/khung nhỏ) → `MAC_DINH = false` (thử GL bằng `?gl=1`).
+- Nhãn admin: `2D 60 · min 48 · ve 8/31` (+ ` · t12` khi GL) — `ve a/b` = ms của `REN.ve` trung bình / lớn nhất 10 s; `t` = số texture GL tải nhiều nhất trong 1 khung. FPS thấp mà `ve` nhỏ → nghẽn ngoài phần vẽ trận.
