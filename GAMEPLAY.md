@@ -1469,3 +1469,7 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 
 - Kiểm thêm: mất ngữ cảnh (`MAT=200,320`) → 2D dự phòng đủ hình → GL lại; ảnh so cùng trạng thái GL ↔ 2D (kéo ghép co-op, Freezer đóng băng, Janus hoá đá) khác ≤ 633 điểm ảnh như bản live; `?gl=0` không tạo canvas GL, không lỗi trang. Hive vẫn tải ~4 texture nhỏ / khung (bẻ hình cầu trên CPU, y như bản live) — chưa sửa.
 - Công cụ: `tools/thap-kt-bonho-gl.js` (`dai` / `trieu`, `WAVE`, `VT=240`, `GC=1`, `TAO=1`). Máy đo = Chromium + GPU phần mềm: ms không đại diện, số đếm mới so được.
+
+## claude/demo-hop-tuong — lưới bộ bài ẩn không còn bị ghi lại mỗi lần chạm trong trận (11/11, nhánh song song A)
+- Nguyên nhân khung chậm `dom234 chon-luoi` trên iPhone: `OT.quet()` (`thap/js/otoigian.js`, gọi qua MutationObserver mỗi khi bảng chạm ụ `#tt` / khay thẻ có phần tử mới) chạy `OT.gan()` cho cả ~97 thẻ `#chon-luoi .c` đang ẨN; `classList.add('ot')` + `dataset.otb = …` luôn sinh mutation + tính lại style dù giá trị y cũ (194 mutation / lần chạm ụ hoặc nâng thẻ, cả tài khoản thường lẫn admin).
+- Sửa: `OT.gan` chỉ ghi khi giá trị đổi; `OT.quet` bỏ qua lưới + ô bộ bài khi `#chon` đang ẩn (đánh dấu `_choChon`), observer thuộc tính `hidden` của `#chon` quét lại ngay khi màn bộ bài hiện. Đo: 194 → 0 mutation trong `#chon-luoi` mỗi lần chạm ụ / nâng thẻ / triệu hồi; sau trận 97/97 thẻ đủ viền + ngọc đúng bậc. Chỉ hiển thị, không đổi luật.
