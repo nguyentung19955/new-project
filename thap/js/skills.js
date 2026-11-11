@@ -691,7 +691,7 @@ HU.hoden = { // hố đen: GIỮ CHÂN quái trong bán kính (không kéo lùi)
       for (const E of dsMucTieu(o.B)) {
         if (E.chet || Math.hypot(E.x - o.x, E.y - o.y) > o.r + E.d.co * 0.25) continue;
         trung(E, o.dmg * (E.trum ? 0.5 : 1), { B: o.B, mau: '#ff6ad5', phu: true });
-        if (o.A && E.trum && !E.chet) trung(E, E.max * 0.005, { B: o.B, crit: false, phu: true, im: true });
+        if (o.A && E.trum && !E.chet) trung(E, (E.maxPct || E.max) * 0.005, { B: o.B, crit: false, phu: true, im: true });
       }
       FX.no('laser_trung', o.x, o.y, o.r * 3, 0.5); FX.lac(6); FX.sang(0.08, '#9a4bff'); FX.vong1(o.x, o.y, o.r, 4, '#c070ff', 0.3, 5);
     }

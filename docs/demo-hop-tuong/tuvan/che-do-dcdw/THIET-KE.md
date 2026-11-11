@@ -64,3 +64,9 @@ Máy phiên cũ còn ~640 MB ổ đĩa (không dựng được bản làm việc
 - **KHÔNG làm (người dùng bác 19:08):** giới hạn 3 lượt co-op có thưởng / ngày → CO-OP không giới hạn; PLAY mặc định vẫn CO-OP, PVP vẫn mở ở cấp phi công 2.
 - **Chưa làm (đề xuất):** khe rương hẹn giờ + trần 4 rương chưa mở (game chưa có cơ chế hẹn giờ mở rương — rương mở ngay); mùa cúp + Crystal Crown; cúp theo chênh lệch; token Raid; Pass mùa; nhiệm vụ nhóm.
 - Bot người mới (cấp 0): CO-OP với đồng đội cố định: bộ A `tia,lien,sungluc,bang,set` wave 17 / 17 / 17 · bộ B `lien,set,mana,doc,phagiap` 13 / 10 / 13 (trước: 2–49 tuỳ bộ ngẫu nhiên). PVP 0 cúp (6 hạt): A thắng 4/6 · B thắng 2/6 (B tự thua ở wave 2 trong 3/6 trận — do bộ, không do đối thủ).
+
+## 7. ĐỘT KÍCH (RAID) — đã làm 12/11 (`thap/js/chedo-rd.js`, kiểm `tools/thap-kt-raid.js`, đo `tools/thap-bot-tran.js --che rd --bac N`)
+- Luật + số: `TAI-LIEU-GOC.md` mục 4. Khác DCDW: dùng lại bàn + đường CO-OP (chưa dựng đường "vùng chung rồi tách 2 nhánh"); trùm đứng ở cổng làn của người chơi.
+- **Đã tự quyết:** (1) không dựng đường tách nhánh mới (đụng bố cục + render — rủi ro lớn); (2) bậc = máu trùm tuyệt đối, và sát thương theo % máu tính trên máu trùm chuẩn của chặng (không thì Nemesis một mình hạ bậc 10 trong ~1 phút — đã đo); (3) chiêu trùm thưa hơn trùm wave (40 s đầu không niệm, nghỉ thêm 12 s) vì trùm đứng suốt trận; (4) thắng lại vẫn có thưởng nhỏ; thua mất vé.
+- Bot (cấp thẻ như bảng cân bằng, 2 hạt mỗi bậc): Trắng/Xanh +1: bậc 1–3 đều thua (còn 3–68% máu — bộ này ít khi dọn kịp quái để bắn trùm; bậc 1–2 đã hạ máu sau đợt đo) · Tím +4: bậc 3 thắng 1/2, bậc 4 thắng 1/2 (271 s), bậc 5 thua (còn 55–77%) · Vàng +6: bậc 6 thắng 2/2 (302 s), bậc 7 thắng 2/2 (~285 s), bậc 8 thua (còn 5–12%) · Đỏ +8: bậc 8 thắng 2/2, bậc 9 thắng 2/2 (~340 s), bậc 10 thắng 2/2 (~356 s, sát giờ).
+- Cần ảnh: icon RAID cho GAME MODE (đang mượn `ua_ic_trum`).

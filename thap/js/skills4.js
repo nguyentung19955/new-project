@@ -27,7 +27,8 @@ SKILLS.nemesis = {
     this.danh(G, B, T, E);
   },
   danh(G, B, T, E) {
-    const phan = Math.min(E.trum ? this.TRAN_TRUM : 1, this.p(T)) * E.max, tinh = !!(E.trum || E.d.to); // phân loại LÚC TRÚNG
+    const phan = Math.min(E.trum ? this.TRAN_TRUM : 1, this.p(T)) * (E.maxPct || E.max), // maxPct: trùm ĐỘT KÍCH (chedo-rd.js) — % máu tính trên máu trùm chuẩn của chặng, không trên máu bậc
+      tinh = !!(E.trum || E.d.to); // phân loại LÚC TRÚNG
     trung(E, dmgU(T) + phan, { B, mau: '#c8d4e6' });
     this.ghi(T, tinh);
   },

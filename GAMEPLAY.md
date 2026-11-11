@@ -1491,3 +1491,9 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 ## claude/che-do-dcdw — huy hiệu TWIN-FORGED to hơn, hiệu ứng đứt xích, dây nối trên bàn đồng đội online (12/11)
 
 - Huy hiệu `loren_songsinh` trên ụ song sinh 0,34 → 0,46 ô; trang chi tiết Twin Anvil có dòng TWIN-FORGED kèm huy hiệu. Xích Static Jammer đứt: thêm nổ nhỏ + tia (hiệu ứng sẵn có) ở từng ụ. Online: cờ ô `Z<ô+1>;` mang ô của ụ cùng cặp → bàn con rối cũng vẽ dây nối (gói cũ `Z` vẫn đọc được). Chỉ là hình.
+
+## claude/che-do-dcdw — ĐỘT KÍCH (RAID) theo DCDW (12/11)
+
+- Chế độ mới `thap/js/chedo-rd.js` (GAME MODE → RAID, mở cấp phi công 6): co-op với đồng đội máy hạ 1 trùm đứng yên ở cổng, trùm gọi quái mỗi 12 s, 6 phút, 3 tim chung, 10 bậc máu trùm (5 000 → 1 800 000), trùm xoay theo bậc. Vé: token Raid (thắng PVP +5, CO-OP wave ≥ 30 +10, trần 100, vào tốn 20). Thưởng lần đầu mỗi bậc + thưởng lặp nhỏ. Lưu `turret_kt.cd.rd`. Bảng số: TAI-LIEU-GOC mục 4; bot + các điểm tự quyết: THIET-KE §7.
+- Đụng code ụ (không đổi số ngoài Raid): 3 chỗ sát thương theo % máu (`skills.js`, `skills4.js` Nemesis, `skills5.js`) dùng `E.maxPct || E.max` — chỉ trùm Raid có `maxPct`.
+- Bot `tools/thap-bot-tran.js --che rd --bac N`; test `tools/thap-kt-raid.js` đạt. Icon RAID đang mượn `ua_ic_trum` (cần gen).
