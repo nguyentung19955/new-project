@@ -201,7 +201,11 @@ const CHMU = {
         const c = B.o[h.o], u = (h.max - h.con) / 0.7, im = this.im('sup_link', MAVUONG.hawk.mau), dd = Math.min(B.cw, B.ch) * 0.5;
         this.daiNoi(ctx, im, B.o[this.hangDau(h.o)].x - B.cw * 0.5, c.y, B.o[this.hangDau(h.o) + 4].x + B.cw * 0.5, c.y, dd, 1 - u);
         this.daiNoi(ctx, im, c.x, B.o[h.o % 5].y - B.ch * 0.5, c.x, B.o[h.o % 5 + 10].y + B.ch * 0.5, dd, 1 - u);
-      } else if (h.k === 'luoi') this.veLuoi(ctx, B, h, al);
+      } else if (h.k === 'luoi') {
+        // WebGL đợt 1: quái nằm ở lớp GL (trên canvas ụ) → lưới DRAG NET (nằm TRÊN quái, trên đường) vẽ vào lớp GL ngay sau quái; không có GL: như cũ
+        const g = typeof GLR !== 'undefined' && GLR.dangVe && !ctx.laGL ? GLR.x : null;
+        if (g) { GLR.nhom = 'luoi'; g.globalAlpha = ctx.globalAlpha; this.veLuoi(g, B, h, al); ctx.globalAlpha = g.globalAlpha; g.globalAlpha = 1; } else this.veLuoi(ctx, B, h, al);
+      }
     }
   },
   hangDau(o) { return o - (o % 5); },
