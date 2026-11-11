@@ -1,0 +1,105 @@
+# Chuyển phần vẽ màn trận sang WebGL — kế hoạch + trạng thái
+
+Hướng đã chốt (người dùng 11/11): giữ tranh 2D, vẽ bằng GPU theo 4 đợt — (1) quái + thanh máu + đạn · (2) ụ / bệ / sao / tấm đếm · (3) hiệu ứng · (4) ánh sáng + vật lý cho hiệu ứng.
+Lý do: ~95% thời gian khung là tô canvas 2D (~1 100 `drawImage` / khung ở cảnh co-op cuối trận), mô phỏng chỉ ~1,3% (xem `../hieu-nang/BAO-CAO.md` Đợt 4).
+
+**Đợt 1 đã làm (11/11)** — số đo ở cuối tệp và `GAMEPLAY.md`.
+
+## 1. Cách tắt / bật
+
+| | |
+|---|---|
+| `?gl=0` | tắt hẳn (vẽ 2D như trước, không tạo canvas mới) |
+| `?gl=1` | ép bật kể cả GPU phần mềm (máy đo, máy ảo) |
+| không tham số | BẬT nếu tạo được ngữ cảnh WebGL **có GPU thật** (`failIfMajorPerformanceCaveat`) và tự kiểm (vẽ 3 ô, đọc lại điểm ảnh) đạt; không thì vẽ 2D như cũ |
+| `?glv=1` | ép WebGL1 (mặc định thử WebGL2 trước; shader chung GLSL ES 1.0) |
+
+Tắt mặc định cho mọi người: đổi `MAC_DINH = false` trong `thap/js/gl/glr.js`. Không dùng localStorage. `GLR.thongTin()` (console) cho biết đang bật hay không + lý do; `<html data-gl="0|1|2">`.
+Mất ngữ cảnh (`webglcontextlost`): ngay khung sau REN vẽ 2D như cũ (2 canvas GL ẩn đi); `webglcontextrestored`: dựng lại shader / bộ đệm / texture rồi vẽ GL tiếp.
+
+## 2. Cấu trúc lớp (DOM, dưới → trên)
+
+```
+#cv-nen   2D  nền tĩnh (khay + đường) — như cũ
+#cv       2D  dòng chảy, cổng/lõi, nhãn bàn, vùng phủ dưới quái, Ụ (veO + lớp bọc), hình sự kiện trên ụ (VX.veDs, vùng hỗ trợ, khoanh/viền kéo ghép)
+#cv-gl    GL  QUÁI (+ bóng, quầng trạng thái, vòng/dấu trùm) → lưới DRAG NET → TIA LASER → ĐẠN (+ vệt) → THANH MÁU          ← mới
+#cv-tren  2D  lớp hiệu ứng (đổ alpha 0,88, khoét quanh quái + khoét ô thanh máu), huy hiệu sao, ụ đang kéo, chữ số, HUD lõi, chớp màn   ← mới
+HUD DOM
+```
+
+`#cv-gl`, `#cv-tren` chỉ được tạo khi GL bật; cùng cỡ + cùng phép biến đổi gốc (tỉ lệ, rung màn) với `#cv`. `REN.ve0` hỏi `GLR.khung()` mỗi khung:
+`true` → `cq = GLR.x` (quái/laser/đạn/thanh máu), `ct = GLR.xTren` (phần sau đạn); `false` → `cq = ct = ctx` (y như trước).
+Trạng thái "dính" của ngữ cảnh 2D (phông, canh chữ, màu…) được chép qua lại giữa `#cv` và `#cv-tren` ở các điểm chuyển (`GLR.chep`) để 2 canvas nối nhau như 1 ngữ cảnh.
+
+### Chỗ thứ tự lớp KHÁC bản 2D (đợt 1, có chủ ý — hết khi ụ + hiệu ứng sang GL)
+
+Bản 2D vẽ 1 canvas theo thứ tự: dưới → quái → ụ → laser → đạn → lớp hiệu ứng → thanh máu → sự kiện ụ → huy hiệu → chữ. Lớp GL là 1 tấm nên không thể xen giữa từng bước:
+
+1. **Quái nằm TRÊN ụ** (trước: dưới). Đường và bàn ụ tách nhau nên chỉ khác khi thân trùm to lấn mép ô ụ.
+2. **Hình sự kiện trên ụ** (`VX.veDs`: sao lên mốc, kỹ năng ghép, dây liên kết; vùng hỗ trợ; khoanh/viền kéo ghép) vẽ ở `#cv` → nằm **dưới** quái/đạn/lớp hiệu ứng (trước: trên). Lý do: quầng `lighter` của chúng phải cộng sáng lên thân ụ; vẽ ở canvas trong suốt phía trên thì quầng bị đục (đã thử, thấy rõ). Khác thấy được khi một vụ nổ/hiệu ứng trùng đúng ô ụ đang loé (quầng nằm dưới hiệu ứng).
+3. **Ảnh cộng sáng của lớp GL đè lên thân ụ** (chớp đầu nòng của đạn/laser ngay trên ụ) hoà kiểu alpha với ụ chứ không cộng thật (ụ ở canvas khác). Trên đường/nền thì y hệt.
+4. **Thanh máu**: vẫn đè lên hiệu ứng như cũ nhờ khoét lớp hiệu ứng đúng ô thanh máu (trước: vẽ sau lớp hiệu ứng). Khác: trong ô thanh máu không còn 25% bóng hiệu ứng sau nền thanh.
+5. `?diu=0` (chế độ so cũ): thanh máu nằm dưới hiệu ứng.
+6. Lệnh vector trong nhóm quái (chỉ khiên lăng kính của trùm Prism: `moveTo/lineTo/fill/stroke`) được chuyển tiếp sang `#cv-tren` → nằm trên đạn/thanh máu (trước: giữa thân trùm và ụ).
+7. Mép ô ảnh thẳng trục: bám tâm điểm ảnh (giống Chrome; Safari khử răng cưa mép → lệch < 1 điểm ảnh thiết bị ở mép thanh máu).
+
+## 3. Module `thap/js/gl/glr.js` (API)
+
+- `GLR.x` — **ngữ cảnh thay thế** cùng tập lệnh canvas 2D mà phần vẽ ảnh của trận dùng: `drawImage` (3/5/9 tham số; nguồn `Image` / `Canvas` / `ImageBitmap`),
+  `save/restore`, `translate/rotate/scale/transform/setTransform/resetTransform/getTransform`, `globalAlpha`, `globalCompositeOperation` (`source-over`, `lighter`),
+  `beginPath + rect + clip` (cắt hình chữ nhật, cắt đa giác + nội suy UV), `imageSmoothing*` (bỏ qua). Tự giữ ngăn xếp ma trận, đẩy ô ảnh vào lô theo ma trận hiện hành
+  → **hàm vẽ cũ chỉ cần nhận `GLR.x` thay cho `ctx`** (`REN.veQuai(cq)`, `REN.veDan(cq)`, `PX.ve`, `REN.anhGiua`, `REN.tia`…), toạ độ trận giữ nguyên.
+- **Lệnh không phải ảnh** (`fill/stroke/arc/moveTo/lineTo/fillRect/fillText/…`): chuyển tiếp sang `#cv-tren` với đúng ma trận + kiểu vẽ hiện hành (hình đúng chỗ, nhưng nằm trên mọi ảnh GL)
+  và **đếm theo nhóm** ở `GLR.thieu[nhóm][lệnh]` (`GLR.nhom` do REN đặt: `quai / luoi / laser / dan / thanh`). `gradient/measureText/setLineDash` mượn ngữ cảnh 2D. `clearRect/putImageData/getImageData`, `clip` theo đường không phải chữ nhật, kiểu hoà màu khác: bỏ qua + đếm.
+- `GLR.sprite(img, x, y, w, h, goc, alpha)` — vẽ ảnh tâm (x, y) cho code mới.
+- Canvas đệm: nội dung tĩnh sau khi dựng → tự vào atlas ở lần vẽ đầu. **Vẽ lại mỗi khung** → đặt `c._glD = 1` lúc tạo (texture riêng, tải lại ở mỗi lần vẽ; canvas nháp `REN.nhap` tự nhận). **Thỉnh thoảng vẽ lại** → gọi `GLR.ban(c)` sau khi vẽ (đánh dấu bẩn, lần vẽ kế tải lại đúng chỗ cũ).
+- Gom lô: ảnh ≤ 512² điểm vào atlas 2048² (≤ 3 trang, xếp kệ, lề 1 điểm; đầy → dọn ở đầu khung sau, ≤ 1 lần / 600 khung); ảnh lớn = texture riêng (không dùng > 600 khung thì trả bộ nhớ GPU).
+  1 lệnh vẽ GL = dãy ảnh liền nhau cùng texture + cùng kiểu hoà màu. Shader: lấy mẫu kẹp trong ô nguồn (không lem khung bên cạnh, như canvas), khử răng cưa mép ô xoay, alpha nhân sẵn, `highp` ở fragment.
+- `GLR.khung(REN, k, rx, ry)` / `GLR.xong()` — đầu / cuối phần GL của khung; `GLR.ghiVung()` — ghi khung bao ảnh vừa vẽ (khoét dưới thanh máu); `GLR.chep(a, b)`; `GLR.dem` = `{ lenh, o, tai, px }` của khung; `GLR.thongTin()`.
+- Nạp: thẻ `<script src="js/gl/glr.js">` trong `<template id="tm-nap">` của `index.html`, trước `render.js`. Service worker không có danh sách tệp (lưu theo yêu cầu) → không phải sửa `sw.js`; `tools/dieu-phoi/thap-ver.py` quét cả thư mục con `js/`.
+
+## 4. Đã chuyển / để lại
+
+**Đợt 1 — đã sang GL:** bóng quái, thân quái (dải khung, hoà 2 khung, lật, nén/giãn, quái "code" lăn/nảy), chớp trắng trúng đòn, xác nổ, quầng trạng thái + dấu trạng thái v2 (chậm/độc/cháy/choáng/đóng băng/suy yếu…),
+12 trùm (code-anim nhiều phần rời, rig nhiều lớp, canvas tạm quay 3D, cắt vành/hoa lửa), vòng chân + dấu trên trùm (`TVF.veVongTrum/veTrenTrum`), dây báo chiêu trùm, lưới DRAG NET, tia laser + điểm cháy, đạn mọi loại (ảnh xoay, vệt, đạn v2, bóng đạn cong), thanh máu quái + trùm.
+
+**Để lại 2D:**
+- đợt 2: ụ (`REN.veO/veU`, bệ, viền bậc, sao, tấm đếm, vòng hồi chiêu, dấu trên ô), nhãn bàn, cổng/lõi, dòng chảy, huy hiệu, kéo ghép;
+- đợt 3: vùng phủ dưới quái (`HU[*].duoi`, hố đen), lớp hiệu ứng trên (`HU[*].ve`, `REN.veFx`, chữ ký Đỏ/Vàng, P2/P3…) + khoét mềm quanh quái + đổ lớp, `VX.veDs`, chữ số sát thương (`veChu`), chớp màn, khiên lăng kính Prism (vector);
+- đợt 4: ánh sáng / vật lý hạt (mới).
+
+## 5. Bao nhiêu lệnh vẽ của ụ / hiệu ứng đi thẳng qua được ngữ cảnh thay thế?
+
+Đo bằng `DEM=1 tools/thap-kt-hieunang-coop.js` (đếm mọi lệnh vẽ của 1 khung theo nhóm, bản 2D, 4 cảnh nặng): xem bảng "Lệnh vẽ theo nhóm" ở mục 7.
+Kết luận ngắn: ở 4 cảnh đo, **100% lệnh vẽ của ụ và của hiệu ứng là `drawImage`** với kiểu hoà màu `source-over` / `lighter` (không có `fill/stroke/chữ/clip/filter/bóng` mỗi khung — game đã chuyển hết sang ảnh PNG tô màu từ trước) → về **loại lệnh** thì truyền `GLR.x` là chạy. Việc phải làm tay ở đợt 2–3 không nằm ở lệnh vẽ mà ở:
+
+1. **Canvas đệm đổi nội dung** phải đánh dấu: tấm đếm trên ụ (vẽ lại tại chỗ), ảnh chữ số (`chuSo/chuAnh`), các canvas nháp của hiệu ứng → `GLR.ban(c)` hoặc `_glD`. Sót = hình cũ.
+2. **Lớp hiệu ứng + khoét**: `gopLop` dùng `destination-out` (72 lệnh/khung ở cảnh A) + đổ lớp alpha 0,88 → sang GL phải vẽ hiệu ứng vào framebuffer riêng rồi đổ (hoặc bỏ lớp, hạ alpha từng ảnh — đổi hình). Đây là phần việc chính của đợt 3.
+3. **Thứ tự xen kẽ** ụ ↔ quái ↔ hiệu ứng: chừng nào còn 1 nhóm ở 2D thì còn các lệch ở mục 2 → **nên gộp đợt 2 + 3 thành một** (cùng vào GL thì thứ tự đúng tuyệt đối, bỏ được `#cv-tren` trừ chữ vector hiếm).
+4. Lệnh vector hiếm (không gặp ở 4 cảnh đo nhưng có trong code): khiên Prism, vài hình `?debug`, hiệu ứng ít gặp — chạy rà `GLR.thieu` qua bộ ảnh 93 ụ + 12 trùm trước khi chuyển.
+5. Bộ nhớ: atlas hiện ≤ 3 × 16 MB GPU; ụ + hiệu ứng thêm nhiều ảnh lớn (dải 16 khung) → cần tính lại ngân sách texture cho iPhone.
+
+## 6. Tách luật trận khỏi phần vẽ (ghi nhận, CHƯA sửa)
+
+Chỗ luật còn phụ thuộc nhịp vẽ / đồng hồ khung vẽ (cần xử lý trước khi nghĩ tới vẽ ở luồng khác hoặc bỏ khung vẽ):
+- `growfx.js` `VX.bien` (dòng ~194): `VX.hen(0.2 | 0.52 s, () => { if (… T.cd > 0.02) T.cd = 0.01; })` — hẹn theo đồng hồ hiệu ứng `VX.t` (cộng `dt` khung vẽ ở `REN.ve` → `VX.cap`) rồi **ghi vào hồi chiêu ụ** → luật offline phụ thuộc nhịp vẽ.
+- `trumvfx.js`: ghi `T.st.ngamK` (tên dấu ngắm) từ phần hình — chỉ để render biết ô do TVF vẽ, không vào luật, nhưng nằm trong `T.st`.
+- `REN.noiSuy/traLai`: mỗi khung vẽ tạm ghi đè `E.x/y/gv/tChet`, `d.x/y/z`, `T.goc/rx`, `o.t`… rồi trả lại — đúng khi vẽ và luật cùng luồng, không ai đọc giữa chừng.
+- `quaianim.js` / `render.js`: trong lúc vẽ gọi `Math.random()` (pha khung `E._ph`, hạt độc) và `FX.no/FX.hat1/FX.vong1` — chỉ hình, nhưng dùng chung `Math.random` với mọi thứ khác ngoài luật (luật online có bộ sinh số riêng — phải giữ vậy).
+- Trạng thái hình ghi lên đối tượng luật (`E._ph, E._lechX, E._cdA, E._pop, d._g, d._ra, T._la…`): vô hại cho luật nhưng làm đối tượng luật không thuần — khi tách nên dời sang bảng riêng theo `uid`.
+
+## 7. Số đo đợt 1
+
+Xem mục "WebGL đợt 1" cuối `GAMEPLAY.md` (bảng 4 cảnh trước → sau, lệnh vẽ theo nhóm, sai khác hình, giới hạn đo).
+Công cụ: `tools/thap-kt-hieunang-coop.js` (`Q=gl=1|gl=0`, `HASH`, `DEM=1`, `THUC=20`, `BENCH=15`, `SHOT=1`, `KHONGGL=1`) · `tools/thap-kt-webgl.js` (1 cảnh bất kỳ: trùm, PVP, mất ngữ cảnh `MAT=200,320`, không WebGL).
+Ảnh so trước/sau: `/home/claude/xem/webgl1/` (máy làm việc, không commit).
+
+## 8. Cần thử trên iPhone thật (máy đo là Chromium + GPU phần mềm, không đại diện)
+
+- Có bật không: mở trận, console `GLR.thongTin()` hoặc so `?gl=0` / mặc định; quái, đạn, thanh máu phải hiện ngay khung đầu (không trắng/đen ô vuông).
+- Quái/đạn có **mờ hơn hoặc lệch nửa điểm ảnh** so với `?gl=0` không (lọc song tuyến tính của GPU, canvas 2× trên máy 3×).
+- Thanh máu: mép có nhấp nháy khi quái đi chậm không.
+- Chớp đầu nòng / tia laser trên thân ụ: có tối hơn bản cũ không (mục 2.3).
+- Về trang sau khi khoá máy / chuyển app lâu (iOS hay thu hồi ngữ cảnh WebGL): quái phải còn (rơi về 2D rồi có lại GL), không trắng màn.
+- Nhiệt + pin 10 phút co-op wave 35+ so với `?gl=0`; khung hình có đều hơn không.
+- Bộ nhớ: Safari không tải lại trang giữa trận dài (thêm 2 canvas cỡ màn + ≤ 48 MB texture).

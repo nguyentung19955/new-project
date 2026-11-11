@@ -14,7 +14,7 @@
 'use strict';
 const GLR = (() => {
   const TS = (() => { try { return new URLSearchParams(location.search); } catch (e) { return { get: () => null }; } })();
-  const MAC_DINH = false; // (commit trung gian: mặc định TẮT, ?gl=1 để thử)
+  const MAC_DINH = true; // mặc định bật (khi có GPU thật + tự kiểm đạt)
   const ATLAS = 2048, TRANG_MAX = 3, LE = 1, DINH_MAX = 16384, W9 = 13; // 13 từ 4 byte / đỉnh: x y · u v · u0 v0 u1 v1 (giới hạn lấy mẫu) · lx ly lw lh (toạ độ trong ô, điểm ảnh thiết bị → khử răng cưa mép) · màu
   const VS = 'attribute vec2 a_p;attribute vec2 a_uv;attribute vec4 a_gh;attribute vec4 a_c;attribute vec4 a_m;uniform vec2 u_kt;varying vec2 v_uv;varying vec4 v_gh;varying vec4 v_c;varying vec4 v_m;' +
     'void main(){v_uv=a_uv;v_gh=a_gh;v_c=a_c;v_m=a_m;gl_Position=vec4(a_p.x*u_kt.x-1.0,1.0-a_p.y*u_kt.y,0.0,1.0);}';
