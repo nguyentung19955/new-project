@@ -28,7 +28,7 @@
   1. `F=$(git diff --name-only --diff-filter=AM <commit đã xuất bản lần trước> <commit mới> -- thap/)`; với mỗi file: `git show <mới>:$f > /home/claude/wt-live/$f` (xoá file bị xoá); `node --check` file JS.
   2. `timeout 520 /home/claude/pubtools/pub.sh "<mô tả>"; cat /home/claude/pubtools/pubq.st` → phải `PUSHED` (SMOKEFAIL/VERFAIL/PUSHFAIL = hỏng). Lệnh chạy 2–4 phút: đặt timeout lệnh ≥ 540 s.
   3. Chờ ~80 s rồi `gh run list --repo nguyentung19955/new-project --workflow thap-firebase-hosting.yml --limit 1` → phải `completed success`.
-- Commit nguồn đã xuất bản gần nhất: **`fce99d503`** (26 ụ hình mới + Crimson Sting Đỏ). `5d54e41a6` trở đi (WebGL dở dang) CHƯA xuất bản.
+- Commit nguồn đã xuất bản gần nhất: **`e05be10a6`** (WebGL đợt 1, mặc định TẮT). Lần xuất bản sau: diff từ commit này.
 - Dòng cuối mọi commit:
   ```
   Co-Authored-By: Claude Fable 5.2 <noreply@anthropic.com>
@@ -53,8 +53,11 @@
 - Tối ưu giật co-op (lọc ảnh `'low'` khi vẽ khung…): −26–40% thời gian khung trên máy đo; CHƯA xác nhận trên iPhone.
 
 ## 6. Việc đang làm và hàng đợi (theo thứ tự)
-1. **WebGL đợt 1 (ĐANG CHẠY, phiên con)**: quái + thanh máu + đạn; module `thap/js/gl/glr.js`; công tắc `?gl=0|1`, tự rơi về 2D; kèm "ngữ cảnh thay thế" kiểu Canvas2D để các đợt sau cắm nhanh (điều phối tự quyết dùng tới đâu theo số đo). Kế hoạch: `docs/demo-hop-tuong/tuvan/webgl/KE-HOACH.md`. Đo/băm trạng thái: `tools/thap-kt-hieunang-coop.js`. Commit dở: `5d54e41a6` (mặc định tắt).
-2. WebGL đợt 2 (ụ, bệ, sao, tấm đếm) → đợt 3 (hiệu ứng, chữ sát thương, lưới DRAG NET — hiện lưới vẽ rời từng ô, người dùng chê) → đợt 4 (chớp sáng hắt lên ụ/quái, mảnh vỡ + xu văng nảy, rung khi trùm ra chiêu; chỉ hình ảnh, tự giảm khi tải nặng). Người dùng bảo làm liền 4 đợt, không chờ thử giữa chừng.
+1. **WebGL đợt 1 — XONG, đã lên bản thật nhưng mặc định TẮT** (`MAC_DINH = false` trong `thap/js/gl/glr.js`; thử bằng `?gl=1`). Đã sang GL: quái, bóng, quầng trạng thái, 12 trùm, lưới DRAG NET, tia laser, đạn + vệt, thanh máu. `GLR.x` = ngữ cảnh thay thế kiểu canvas 2D (hàm vẽ cũ chỉ cần nhận `GLR.x` thay `ctx`). Băm trạng thái trước = gl0 = gl1. Chi tiết + số đo: `docs/demo-hop-tuong/tuvan/webgl/KE-HOACH.md`, công cụ `tools/thap-kt-webgl.js`.
+   - VÌ SAO TẮT: (a) trên máy đo (GPU giả lập bằng CPU) bản lai GL + 2D CHẬM hơn (trung vị 32 → 51 ms cảnh A) — lợi ích trên iPhone chưa chứng minh; (b) khi ụ + hiệu ứng còn ở 2D thì thứ tự lớp lệch: quái nằm trên ụ, chớp đầu nòng tối hơn, hình sự kiện trên ụ nằm dưới quái; (c) trùm Hive/Patcher/Octopus tải lại 6 texture canvas tạm mỗi khung (33,5 → 44,9 ms).
+   - Người dùng đã bảo "có công tắc thì cứ làm luôn WebGL" → cứ làm tiếp, nhưng CHỈ bật mặc định khi cả màn trận ở GL, hết lệch lớp, và người dùng thử `?gl=1` trên iPhone thấy mát/mượt hơn.
+2. **VIỆC TIẾP THEO NGAY: WebGL đợt 2 + 3 GỘP** (phiên con khuyên gộp; ụ 100% và hiệu ứng 97,7–100% lệnh vẽ là drawImage thuần nên truyền `GLR.x` là chạy): ụ, bệ, sao, tấm đếm, nhãn bàn, cổng/lõi, lớp hiệu ứng + khoét `destination-out` (cần framebuffer riêng), `VX.veDs`, chữ số, khiên vector trùm Prism; đánh dấu canvas đệm đổi nội dung bằng `GLR.ban(c)`; sửa tải lại texture mỗi khung của Hive/Patcher/Octopus; tính lại ngân sách texture; mục tiêu: 0 lệch thứ tự lớp so với bản 2D và bỏ được 2 canvas phủ thừa. Sau đó đợt 4 (chớp sáng hắt lên ụ/quái, mảnh vỡ + xu văng nảy, rung khi trùm ra chiêu; chỉ hình ảnh, tự giảm khi tải nặng; lưới DRAG NET liền mạch).
+   - Nhờ người dùng thử trên iPhone (so `?gl=0` với `?gl=1`): quái/đạn có mờ/lệch, mép thanh máu nhấp nháy, khoá máy rồi quay lại quái còn không, trùm Hive có khựng, nhiệt/pin 10 phút co-op wave 35+.
 3. **Cân bằng bằng trận bot thật** với bộ người dùng chơi: (a) `cobac,vughep,sinhdoi,saochep,tudo` co-op — kẹt wave ~35, bàn đầy, mana thừa 32k không có chỗ tiêu; (b) bộ Hex Saboteur `nguyenrua` + Twin Maker `sinhdoi` + Genesis Core `khoisinh` — kẹt wave ~32. Sửa: ụ ĐẶC BIỆT Vàng phải đóng góp thật (ST nền hoặc thưởng ghép), có chỗ tiêu mana khi bàn đầy. Mốc đích tạm: người chơi trung bình co-op tới ~wave 50 (người dùng chưa xác nhận con số). Gửi bảng "bộ nào tới wave mấy, trước/sau" rồi mới áp.
 4. Giai đoạn E (hạn 23/11): sự kiện xoay vòng 4 tuần, cửa hàng sự kiện, rương nổi bật. Giai đoạn F (hạn 30/11): tài khoản + lưu đám mây, kiểm phía máy chủ, chống gian lận, thống kê, đóng gói ứng dụng.
 
