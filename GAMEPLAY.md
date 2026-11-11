@@ -1555,3 +1555,8 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - Gộp `claude/gl-full-w1` (chữ trong trận = tấm ký tự trên GPU, `chugl.js`; Hive lăn cầu bằng shader) và `claude/gl-full-w2` (ẢNH ẢO: ảnh gốc lên GPU 1 lần, thu nhỏ / tô màu / xám / trắng bằng shader; chỉ WebGL2; `?gla=0` tắt). Xung đột 1 dòng ở `GLR.ve` (màu đỉnh): gộp cả `E.al` (ảnh ảo) lẫn `X.nhuom` (chữ).
 - Thêm `GLR.aoKiem()`: lúc khởi tạo chạy thử chuỗi lệnh GL của ảnh ảo (tải canvas không luỹ thừa 2 → generateMipmap → bộ đệm khung → copyTexSubImage2D → đọc lại điểm ảnh); trượt → tự về đường GL cũ. Nhãn admin ghi `GLa` khi ảnh ảo đang chạy, `GL` khi không.
 - Kiểm sau gộp: băm co-op A gl0 = gl1 (`8b4f420b` / `2f83154d`); cùng trạng thái GL vs 2D lệch 1 902 / 2,96 triệu điểm ảnh (> 60 mức; mép khử răng cưa), đã xem ảnh cạnh nhau. CHƯA kiểm: Safari / iPhone thật, PVP, hồi quy đầy đủ.
+
+## claude/demo-hop-tuong — sửa nhanh từ phiên điều phối cũ (12/11 04:10)
+- CO-OP (không online): quái chết thì CẢ HAI bàn nhận mana (`game.js chet`) — người dùng: bàn mình trống, hết mana, đồng đội giết mà mình không có mana để triệu hồi. Online chưa áp (bàn bạn là bàn con rối).
+- Thẻ ở hàng dưới chỉ nâng cấp khi cú bấm BẮT ĐẦU trên chính thẻ đó trong 1,5 s (`ui.js` `_theDown`) — chặn "bấm ma" lúc vừa vào trận (bấm PLAY/CONTINUE ở màn trước, click rơi xuống hàng thẻ → tự nâng cấp, mất mana).
+- Chạm ụ: nhấc tay < 350 ms và đi < 0,35 ô thì vẫn là CHẠM dù ngón rung quá ngưỡng kéo (`ui.js het`) — iPhone hay "ấn ụ mà không hiện gợi ý ghép". Đã thử giả lập chạm rung 14 px: chọn được + sáng ô đích.
