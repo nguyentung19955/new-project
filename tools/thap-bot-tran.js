@@ -38,8 +38,15 @@ function trongTrang(c) {
   if (!c.botgoc) {
     const cam = new Map(); let trongAI = 0; S.ket = 0;
     const kh = (a, b) => a.uid + ':' + b.uid, dau = (B) => B.t.map(T => T ? T.uid + '.' + T.sao + '.' + (T.mh ? 1 : 0) : '-').join(',') + '|' + Math.round(B.mana);
-    const ai0 = aiBan; aiBan = function (B, dt) { trongAI++; try { return ai0.apply(this, arguments); } finally { trongAI--; } };
-    const hl0 = hopLeGhep; hopLeGhep = function (a, b) { if (trongAI && a && b && cam.get(kh(a, b)) > G.t) return false; return hl0.apply(this, arguments); };
+    // BOT+ (2) chống KẸT BÀN: aiBan triệu hồi tới khi bàn đầy; 15 ô khác (loại, sao) nhau = không còn cặp ghép → không triệu hồi được nữa, mana thừa vô ích.
+    //   Ở đây: còn đúng 1 ô trống mà bàn chưa có cặp ghép nào → chỉ triệu hồi khi ụ 1★ mới CHẮC CHẮN có cặp (đủ 1★ của cả 5 loại, không bị khoá); không thì giữ ô trống (bot vẫn power-up).
+    const coCap = (B) => { const ts = B.t.filter(Boolean); for (let i = 0; i < ts.length; i++) for (let j = i + 1; j < ts.length; j++) if (hopLeGhep(ts[i], ts[j]) || hopLeGhep(ts[j], ts[i])) return true; return false; };
+    const chacCap = (B) => B.deck.filter(id => B.t.some(T => T && T.id === id && T.sao === 1 && !biKhoa(T) && !T.st.da && !(T.st.bang > 0))).length >= (c.lieu || 5); // --lieu 4: liều triệu hồi khi 4/5 loại có 1★ (80% ra cặp)
+    const ai0 = aiBan; aiBan = function (B, dt) {
+      let o = -1; // giữ ô trống: lượt bot này coi ô đó như đã có ụ (ụ giả không ghép được) → bot bỏ qua triệu hồi, vẫn ghép / power-up bình thường
+      if (B.aiT - dt <= 0 && oTrong(B).length === 1 && !coCap(B) && !chacCap(B)) { o = B.t.indexOf(null); B.t[o] = { _gia: 1, id: B.deck[0], sao: 0, uid: -1, o, ban: B.i, nap: 0, st: { bang: 0, da: false, lua: 0, ngam: 0, kep: 0 }, buf: {} }; S.giuO = (S.giuO | 0) + 1; }
+      trongAI++; try { return ai0.apply(this, arguments); } finally { trongAI--; if (o >= 0 && B.t[o] && B.t[o]._gia) B.t[o] = null; } };
+    const hl0 = hopLeGhep; hopLeGhep = function (a, b) { if (a && b && (a._gia || b._gia)) return false; if (trongAI && a && b && cam.get(kh(a, b)) > G.t) return false; return hl0.apply(this, arguments); };
     const g0 = ghep; ghep = function (B, a, b) { if (!trongAI) return g0.apply(this, arguments); const k = kh(a, b), d0 = dau(G.ban[b.ban]); const r = g0.apply(this, arguments); if (dau(G.ban[b.ban]) === d0) { cam.set(k, G.t + 8); S.ket++; } return r; };
   }
   S.gr = mb(777 + c.hat * 104729); const r0 = Math.random; Math.random = S.gr;
@@ -69,6 +76,7 @@ function trongTrang(c) {
   };
   window.__kq = () => S.ra || window.__kq1();
   window.__kq1 = () => {
+    if (!G.ban.length) return { thang: !!(S.kq && S.kq.thang), ly: S.kq ? S.kq.ly : '', wave: S.kq ? S.kq.wave : 0, w0: S.w0, cd: S.cd, tim: 0, t: 0, buoc: S.buoc, dinh: S.dinh, dinhW: S.dinhW, mana: [], gia: [], pu: [], ban: [], w: S.w, loi: 'G.ban rỗng · ' + S.loi };
     const B = G.ban[0], k = S.kq || { thang: false, ly: 'chưa xong', wave: G.wave };
     return { thang: k.thang, ly: k.ly, wave: k.wave, w0: S.w0, cd: S.cd, tim: B.tim, t: Math.round(G.t), buoc: S.buoc, dinh: S.dinh, dinhW: S.dinhW,
       mana: G.ban.map(b => Math.round(b.mana)), gia: G.ban.map(b => b.gia), pu: G.ban.map(b => b.deck.map(id => b.lv[id] - 1).join('')),
@@ -76,12 +84,16 @@ function trongTrang(c) {
   };
 }
 
-async function chayMot(ctx, c) {
+async function chayMot(ctx, c) { // khởi động trang đôi khi dọn G.ban sau khi trận đã bắt đầu (đua lúc nạp) → chạy lại
+  for (let lan = 0; ; lan++) { const r = await chayMot1(ctx, c); if (lan >= 3 || !/^G\.ban rỗng/.test(r.loi || '')) return r; }
+}
+async function chayMot1(ctx, c) {
   const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message.slice(0, 200)));
   const t0 = Date.now();
   try {
     await p.goto(BASE + 'index.html?notut=1&net=0', { waitUntil: 'load' });
     await p.waitForFunction(() => typeof G !== 'undefined' && G.roster && G.roster.length && G.rosterMap && typeof CD !== 'undefined' && typeof UI !== 'undefined', null, { timeout: 30000 });
+    await p.waitForTimeout(300);
     await p.evaluate(trongTrang, c);
     let xong = false, n = 0;
     while (!xong && n < 400) { xong = await p.evaluate(() => window.__tiep(3000)); n++; }
@@ -102,6 +114,8 @@ function dong(c, bt, r) {
   let lo;
   if (A.lo) lo = JSON.parse(fs.readFileSync(A.lo, 'utf8'));
   else lo = [{ che: A.che || 'solo', tang: +(A.tang || 1), deck: (A.deck || 'tia,lien,sungluc,bang,set').split(','), deck2: A.deck2 ? A.deck2.split(',') : undefined, wave: +(A.wave || 0), mana: +(A.mana || 0), cap: +(A.cap || 0), mv: A.mv, max: +(A.max || 0), botgoc: +(A.botgoc || 0) }];
+  if (A.lieu) for (const c of lo) c.lieu = +A.lieu;
+  if (A.botgoc) for (const c of lo) c.botgoc = 1;
   const hat = (A.hat || '1,2').split(',').map(Number), bts = (A.bt || 'goc').split(',');
   const viec = [];
   for (const bt of bts) { if (bt !== 'goc' && !BT[bt] && !A.js) { console.error('không có biến thể ' + bt); process.exit(1); }

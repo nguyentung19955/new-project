@@ -6,10 +6,12 @@
  {"ten":"KĐ tầng 5","che":"thap","tang":5,"deck":["tia","lien","sungluc","bang","set"]},
  {"ten":"KĐ tầng 6","che":"thap","tang":6,"deck":["tia","lien","sungluc","bang","set"]},
  {"ten":"KĐ-hỗ trợ tầng 1","che":"thap","tang":1,"deck":["tia","lien","mana","khuech","doc"]},
+ {"ten":"KĐ-hỗ trợ tầng 3","che":"thap","tang":3,"deck":["tia","lien","mana","khuech","doc"]},
  {"ten":"KĐ solo","che":"solo","deck":["tia","lien","sungluc","bang","set"]},
- {"ten":"Co-op người dùng","che":"coop","deck":["cobac","vughep","sinhdoi","saochep","tudo"],"deck2":["lualien","mauhut","lien","lanhgia","phagiap"]},
+ {"ten":"Co-op cobac-ghép","che":"coop","deck":["cobac","vughep","sinhdoi","saochep","tudo"],"deck2":["lualien","mauhut","lien","lanhgia","phagiap"]},
  {"ten":"Solo cobac-ghép","che":"solo","deck":["cobac","vughep","sinhdoi","saochep","tudo"]},
  {"ten":"Solo nguyenrua-khoisinh","che":"solo","deck":["nguyenrua","sinhdoi","khoisinh","lualien","mauhut"]},
- {"ten":"Solo Vàng tấn công","che":"solo","deck":["lualien","mauhut","nhatthuc","luutru","hopca"]},
+ {"ten":"Solo Vàng tấn công","che":"solo","deck":["lualien","hopca","luutru","nhatthuc","railgun"]},
+ {"ten":"Solo Vàng + 1 Đỏ","che":"solo","deck":["lualien","hopca","luutru","nhatthuc","cobac"]},
  {"ten":"Solo Đỏ nặng","che":"solo","deck":["bocap","leviathan","ronglua","overlord","cobac"]}
 ]
