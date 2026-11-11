@@ -71,7 +71,14 @@ Bản 2D vẽ 1 canvas theo thứ tự: dưới → quái → ụ → laser → 
 ## 5. Bao nhiêu lệnh vẽ của ụ / hiệu ứng đi thẳng qua được ngữ cảnh thay thế?
 
 Đo bằng `DEM=1 tools/thap-kt-hieunang-coop.js` (đếm mọi lệnh vẽ của 1 khung theo nhóm, bản 2D, 4 cảnh nặng): xem bảng "Lệnh vẽ theo nhóm" ở mục 7.
-Kết luận ngắn: ở 4 cảnh đo, **100% lệnh vẽ của ụ và của hiệu ứng là `drawImage`** với kiểu hoà màu `source-over` / `lighter` (không có `fill/stroke/chữ/clip/filter/bóng` mỗi khung — game đã chuyển hết sang ảnh PNG tô màu từ trước) → về **loại lệnh** thì truyền `GLR.x` là chạy. Việc phải làm tay ở đợt 2–3 không nằm ở lệnh vẽ mà ở:
+| 1 khung, bản 2D | A | B | C | D |
+|---|---|---|---|---|
+| ụ: `drawImage` / lệnh không-ảnh | 181 / 0 | 243 / 0 | 227 / 0 | 86 / 0 |
+| hiệu ứng (`HU[*].ve` + `veFx`): `drawImage` / không-ảnh | 265 / 0 | 343 / 8 | 152 / 0 | 132 / 3 |
+| khoét + đổ lớp hiệu ứng (`destination-out`) | 74 | 69 | 13 | 112 |
+| quái + thanh máu + lưới + đạn (đã sang GL) | 389 / 0 | 379 / 0 | 415 / 0 | 554 / 0 |
+
+Kết luận ngắn: **ụ 100%**, **hiệu ứng 97,7–100%** lệnh vẽ là `drawImage` với kiểu hoà màu `source-over` / `lighter` (gần như không có `fill/stroke/chữ/clip/filter/bóng` mỗi khung — game đã chuyển sang ảnh PNG tô màu từ trước) → về **loại lệnh** thì truyền `GLR.x` là chạy, phần lệnh không-ảnh lẻ được chuyển tiếp 2D. Việc phải làm tay ở đợt 2–3 không nằm ở lệnh vẽ mà ở:
 
 1. **Canvas đệm đổi nội dung** phải đánh dấu: tấm đếm trên ụ (vẽ lại tại chỗ), ảnh chữ số (`chuSo/chuAnh`), các canvas nháp của hiệu ứng → `GLR.ban(c)` hoặc `_glD`. Sót = hình cũ.
 2. **Lớp hiệu ứng + khoét**: `gopLop` dùng `destination-out` (72 lệnh/khung ở cảnh A) + đổ lớp alpha 0,88 → sang GL phải vẽ hiệu ứng vào framebuffer riêng rồi đổ (hoặc bỏ lớp, hạ alpha từng ảnh — đổi hình). Đây là phần việc chính của đợt 3.
