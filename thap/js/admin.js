@@ -65,6 +65,48 @@ ADMIN.fps = {
   },
 };
 requestAnimationFrame(ADMIN.fps.khung);
+// NHẬT KÝ KHUNG CHẬM trên màn (chỉ admin; chạm nhãn FPS để ẩn/hiện): mỗi khung cách khung trước > 80 ms ghi 1 dòng
+//   "+giây  khoảng-cách | raf = tổng ms mọi hàm requestAnimationFrame | ve = REN.ve | gl = GLR.xong (phát lệnh GPU) | up n/ms WxH = số lần tải texture / ms / canvas lớn nhất
+//    | ev n/ms = số sự kiện chạm / ms xử lý". raf nhỏ mà khoảng cách lớn → nghẽn ở trình duyệt (ghép lớp, dọn rác, DOM), không phải code vẽ.
+ADMIN.nk = {
+  el: null, ds: [], an: false, k: null, t0: 0,
+  moi() { return { raf: 0, ve: 0, gl: 0, un: 0, um: 0, uw: 0, uh: 0, en: 0, em: 0 }; },
+  bat() {
+    if (this._bat || !ADMIN.la()) return; this._bat = 1; const N = this; N.k = N.moi();
+    const now = () => performance.now();
+    const R = window.requestAnimationFrame; let cu = 0;
+    window.requestAnimationFrame = function (f) { return R.call(window, function (t) { const a = now(); try { return f(t); } finally { N.k.raf += now() - a; } }); };
+    const vong = (t) => { R.call(window, vong); if (cu && t - cu > 80 && ADMIN.fps.hien()) N.ghi(t, t - cu); cu = t; N.k = N.moi(); N.boc(); };
+    R.call(window, vong);
+    let e0 = 0;
+    for (const ev of ['pointerdown', 'pointermove', 'pointerup', 'touchstart', 'touchmove', 'touchend', 'click']) {
+      window.addEventListener(ev, () => { e0 = now(); N.k.en++; }, { capture: true, passive: true });
+      window.addEventListener(ev, () => { if (e0) { N.k.em += now() - e0; e0 = 0; } }, { passive: true });
+    }
+  },
+  // bọc REN.ve, GLR.xong và 2 hàm tải texture của ngữ cảnh GL (bọc lại khi ngữ cảnh đổi)
+  boc() {
+    const N = this, now = () => performance.now();
+    if (!N._ve && typeof REN !== 'undefined' && REN.ve) { N._ve = 1; const g = REN.ve; REN.ve = function () { const a = now(); try { return g.apply(this, arguments); } finally { N.k.ve += now() - a; } }; }
+    if (typeof GLR === 'undefined') return;
+    if (!N._xong && GLR.xong) { N._xong = 1; const g = GLR.xong; GLR.xong = function () { const a = now(); try { return g.apply(this, arguments); } finally { N.k.gl += now() - a; } }; }
+    const gl = GLR.gl; if (!gl || gl._nk) return; gl._nk = 1;
+    for (const f of ['texImage2D', 'texSubImage2D']) { const g = gl[f]; gl[f] = function () { const im = arguments[arguments.length - 1], a = now(); try { return g.apply(this, arguments); } finally { if (im && im.width) { const d = now() - a; N.k.un++; N.k.um += d; if (im.width * im.height > N.k.uw * N.k.uh) { N.k.uw = im.width; N.k.uh = im.height; } } } }; }
+  },
+  ghi(t, kc) {
+    const k = this.k, r = Math.round; if (!this.t0) this.t0 = t;
+    this.ds.push('+' + ((t - this.t0) / 1000).toFixed(1) + 's ' + r(kc) + 'ms | raf' + r(k.raf) + ' ve' + r(k.ve) + (k.gl || k.un ? ' gl' + r(k.gl) + ' up' + k.un + '/' + r(k.um) + (k.un ? ' ' + k.uw + 'x' + k.uh : '') : '') + ' | ev' + k.en + '/' + r(k.em));
+    if (this.ds.length > 9) this.ds.shift(); this.ve();
+  },
+  ve() {
+    if (!this.el) {
+      this.el = document.createElement('div'); this.el.id = 'adm-nk'; document.body.appendChild(this.el);
+      const f = document.getElementById('adm-fps'); if (f) { f.style.pointerEvents = 'auto'; f.addEventListener('pointerdown', (e) => { e.stopPropagation(); this.an = !this.an; this.ve(); }, true); }
+    }
+    this.el.style.display = this.an || !ADMIN.fps.hien() ? 'none' : ''; this.el.textContent = this.ds.join('\n');
+  },
+};
+ADMIN.nk.bat();
 document.addEventListener('DOMContentLoaded', () => {
   if (ADMIN._noi || typeof NET === 'undefined') return; ADMIN._noi = 1; // DOMContentLoaded có thể phát 2 lần (thật + bộ nạp phát lại sau script cuối)
   if (typeof NET !== 'undefined' && NET.khiDoiTK) NET.khiDoiTK((u) => ADMIN.xet(u));
