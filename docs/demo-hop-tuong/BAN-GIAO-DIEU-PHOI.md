@@ -138,3 +138,9 @@ HUD (thanh trên/dưới, dải thông tin) GIỮ dạng DOM. Giữ `?gl=0` cho 
 - Ba kiểu khung chậm trong nhật ký: (a) khung 86–200 ms mà `raf16–27 ve7–12 gl0–1 gpu0` — đứng NGOÀI phần vẽ; cùng dòng có `dom7–16 mana:2–5 nut-trieu:2–8 bo-the adm-nk` → HUD DOM (số mana, nút SUMMON, hàng thẻ) đổi nhiều lần mỗi khung; (b) `up1/55 818x1636`, `up1/34 818x1636` — tải lên GPU một texture cỡ gần cả màn (818×1636) mất 34–55 ms; (c) `ve127`, `ve175` (raf138, raf196) — chính phần vẽ chậm.
 - Ảnh 03:51 lúc máy chưa nóng (wave 3): `GL 58 · min 46 · m63+99`.
 - Phiên cũ cũng đã đẩy lên nguồn `b8cac71e4` (co-op 2 bàn nhận mana — chưa áp online; chặn bấm ma nâng cấp thẻ; chạm rung vẫn là chạm).
+
+## 15. Nhánh `claude/che-do-dcdw` có thêm việc SAU lần gộp trước — gộp lại được (12/11 05:00, đầu nhánh `41d5f77d1`, đã merge nguồn tới `b8cac71e4` + WebGL đợt 1)
+- Hình ụ dạng đặc biệt khi KÉO / BAY / tấm kết quả ghép (người dùng 12/11 04:00): bản nhấc, ụ bay, bản chụp ghép trước đây luôn vẽ đầu thường → Merge King vàng, Anvil Tốc, trứng Evolver, Blood dạng 2–4, Rồng, Sói, 20 ụ grow, Prism mặt nạ, Hydra bị sai hình. Sửa một chỗ `render.js REN.hinhCua` + nhánh ghost của `veU`; `G.bay` thêm `ng` (7 chỗ); `ghepfx.js` `_hinh`. Test mới `tools/thap-kt-hinh-keo.js` (32 ụ/dạng × 2D/WebGL).
+- PUSH: từ giây 110 lực cần để đẩy nhân đôi mỗi 12 s (hết cảnh 2 bộ mạnh hoà ở 97%); nhãn PUSH hết đè dải bộ bài. RAID bậc 2: 14 000 → 22 000 máu. Icon `ic_raid`, `ic_push`.
+- LỖI THẬT đã sửa: thưởng "rương ×2" (mốc cúp 300/1 000, CO-OP wave 20/40, Raid bậc 3) trước chỉ phát 1 rương. Dòng PVP "next prize" hiện mốc CHƯA ĐẠT kế tiếp + phát bù mốc đã vượt khi vào HOME.
+- Chưa kiểm: khung hình ụ đang bay (mới kiểm bằng test tên ảnh), bàn đồng đội/con rối online, iPhone, hồi quy đầy đủ. `thap-kt-keo` trượt "cuon-doc" từ trước.
