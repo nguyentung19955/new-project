@@ -132,3 +132,9 @@ Vấn đề gốc: game mới "vẽ ra màn hình bằng GL", khâu chuẩn bị
 3. **Chữ số trong trận bằng bộ chữ dạng hình** (số sát thương, sao, bộ đếm) — bỏ vẽ chữ 2D rồi tải lên.
 4. **Hiệu ứng vẽ theo lô trên GPU**; Hive / Patcher / Octopus và lớp hiệu ứng bỏ bộ đệm riêng nếu được.
 HUD (thanh trên/dưới, dải thông tin) GIỮ dạng DOM. Giữ `?gl=0` cho tới khi 4 bước xong và người dùng chơi tới wave 70+ mà `m` không leo vài trăm MB; sau đó mới xoá đường vẽ 2D. Làm theo nhóm ụ, commit nhỏ. Mốc đạt: co-op wave 70, 3×, iPhone người dùng: không văng, `m` ổn định, FPS ≥ 30.
+
+## 14. Số đọc từ video người dùng 12/11 03:54 (co-op wave 27, 3×, máy đã nóng, phút ~11,5 của phiên) — "máy nóng lên là vẫn giật"
+- Nhãn: `GL 13–29 · min 5–6 · ve 10–17 / 43–175 · t1–4 · m76+122 → m88+132` (bộ nhớ đã xuống ~200–220 MB, không còn 450).
+- Ba kiểu khung chậm trong nhật ký: (a) khung 86–200 ms mà `raf16–27 ve7–12 gl0–1 gpu0` — đứng NGOÀI phần vẽ; cùng dòng có `dom7–16 mana:2–5 nut-trieu:2–8 bo-the adm-nk` → HUD DOM (số mana, nút SUMMON, hàng thẻ) đổi nhiều lần mỗi khung; (b) `up1/55 818x1636`, `up1/34 818x1636` — tải lên GPU một texture cỡ gần cả màn (818×1636) mất 34–55 ms; (c) `ve127`, `ve175` (raf138, raf196) — chính phần vẽ chậm.
+- Ảnh 03:51 lúc máy chưa nóng (wave 3): `GL 58 · min 46 · m63+99`.
+- Phiên cũ cũng đã đẩy lên nguồn `b8cac71e4` (co-op 2 bàn nhận mana — chưa áp online; chặn bấm ma nâng cấp thẻ; chạm rung vẫn là chạm).
