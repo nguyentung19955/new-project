@@ -28,7 +28,7 @@
   1. `F=$(git diff --name-only --diff-filter=AM <commit đã xuất bản lần trước> <commit mới> -- thap/)`; với mỗi file: `git show <mới>:$f > /home/claude/wt-live/$f` (xoá file bị xoá); `node --check` file JS.
   2. `timeout 520 /home/claude/pubtools/pub.sh "<mô tả>"; cat /home/claude/pubtools/pubq.st` → phải `PUSHED` (SMOKEFAIL/VERFAIL/PUSHFAIL = hỏng). Lệnh chạy 2–4 phút: đặt timeout lệnh ≥ 540 s.
   3. Chờ ~80 s rồi `gh run list --repo nguyentung19955/new-project --workflow thap-firebase-hosting.yml --limit 1` → phải `completed success`.
-- Commit nguồn đã xuất bản gần nhất: **`c4c12bd55`** (WebGL đợt 2+3 dở dang 5, mặc định BẬT — 11/11 chiều). Lần xuất bản sau: diff từ commit này.
+- Commit nguồn đã xuất bản gần nhất: **xem `git log -1 -- thap/js/admin.js`** (nhãn FPS admin, sau WebGL đợt 2+3 dở dang 5 mặc định BẬT — 11/11 chiều). Lần xuất bản sau: diff từ commit này.
 - Dòng cuối mọi commit:
   ```
   Co-Authored-By: Claude Fable 5.2 <noreply@anthropic.com>

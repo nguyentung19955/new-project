@@ -1334,3 +1334,7 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - `MAC_DINH = true` trong `thap/js/gl/glr.js`: không tham số = vẽ GL (khi tạo được ngữ cảnh + tự kiểm đạt); **lùi bằng `?gl=0`**.
 - Xuất bản ở trạng thái WebGL đợt 2+3 "dở dang 5" theo yêu cầu người dùng (hiện chỉ admin chơi), BỎ QUA so hình chi tiết gl0/gl1; lỗi hình người dùng chơi thấy sẽ báo sau.
 - Đã kiểm: `node --check`, mở trận co-op wave 20 ở 3 chế độ (`gl=1`, mặc định, `gl=0`) không lỗi trang, xem 2 ảnh chụp. CHƯA kiểm: băm trạng thái gl0 = gl1 ở bản này, trùm/PVP/mất ngữ cảnh, iPhone thật.
+
+## claude/demo-hop-tuong — nhãn đo khung hình cho admin (11/11)
+- `ADMIN.fps` (`thap/js/admin.js`) + `#adm-fps` (`css/online.css`): góc trên trái màn trận, CHỈ admin thấy: `GL 60 · min 48` = kiểu vẽ (GL / 2D) + FPS hiện tại + FPS thấp nhất 10 giây gần nhất (cửa sổ 0,5 s, đếm requestAnimationFrame). Chỉ hiển thị, không đụng luật trận.
+- Đã kiểm: admin ảo GL / `?gl=0` hiện đúng, người thường và màn HOME không hiện, không lỗi trang. CHƯA kiểm trên iPhone thật.
