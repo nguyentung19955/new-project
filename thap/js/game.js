@@ -463,7 +463,7 @@ function chet(E, B) {
   if (E.trum) huyBaoTrum(E); // trùm chết giữa lúc báo chiêu: dấu báo đi theo trùm
   SND.chet(!!E.trum);
   const pB = B || G.ban[G.duong[E.p].ban] || G.ban[0];
-  const m = Math.round(manaGiet(G.wave) * (E.trum ? 12 : E.d.mana));
+  const m = Math.round(E.trum ? manaGietGoc(G.wave) * 12 : manaGiet(G.wave) * E.d.mana); // 11/11: quái thường dùng manaGiet (đã nhân bù ít quái), trùm giữ công thức cũ × 12
   // ụ của bàn nào giết thì bàn đó nhận mana
   pB.mana += m; pB.manaNay += m; pB.dem.giet++;
   FX.tiaLua(E.x, E.y, E.trum ? 30 : 8, '#ffb060', 160, 10);
@@ -619,9 +619,9 @@ function capNhatTran(dt) {
     else if (G.tWave >= LUAT.thoiGianWave || (G.tWave > 6 && !G.hang.length && !G.quai.some(e => !e.chet))) {
       G.cho = 1.2;
       // âm HẾT WAVE (v4): chỉ khi dọn sạch sân (wave cuối → âm thắng lo)
-      if (!G.hang.length && !G.quai.some(e => !e.chet) && (G.che === 'pvp' || G.wave < LUAT.waveMax) && SND.xongDot) try { SND.xongDot(); } catch (e) { }
+      if (!G.hang.length && !G.quai.some(e => !e.chet) && (G.che === 'pvp' || !LUAT.waveMax || G.wave < LUAT.waveMax) && SND.xongDot) try { SND.xongDot(); } catch (e) { }
     }
-    if (G.cho > 0 && G.che !== 'pvp' && G.wave >= LUAT.waveMax && !G.quai.some(e => !e.chet)) ketThuc(true); // PVP: không giới hạn wave — đột tử tới khi 1 bên hết tim
+    if (G.cho > 0 && G.che !== 'pvp' && LUAT.waveMax > 0 && G.wave >= LUAT.waveMax && !G.quai.some(e => !e.chet)) ketThuc(true); // 11/11: LUAT.waveMax = 0 → KHÔNG trần wave (solo / co-op đánh tới khi hết tim); > 0 chỉ do công cụ đo đặt. PVP: đột tử tới khi 1 bên hết tim
   }
   // hàng sinh quái
   for (let i = G.hang.length - 1; i >= 0; i--) {

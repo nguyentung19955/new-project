@@ -223,10 +223,10 @@ def main():
             bb = im.getbbox(); print(tam, i, 'dạng %d' % (n + 1) if tam in DANG else '', 'tỉ lệ', round(s, 3), 'khung', bb, 'ngang/bệ', round((bb[3] - bb[1]) / PX / BE, 2), 'cao/ô', round((bb[2] - bb[0]) / PX, 2))
             if tam in DANG: im.save(os.path.join(OUT, '%s_nong_s%d.png' % (i, n + 1)), optimize=True)
             if n == 0:
-                im.save(os.path.join(OUT, i + '_nong.png'), optimize=True)
+                if i != 'loren': im.save(os.path.join(OUT, i + '_nong.png'), optimize=True)   # Twin Anvil: loren_nong / lorentoc_nong nay do tools/thap-cat-bienthe.py ghi (2 dạng nguyên khối)
                 icon(i, im, DE); phu(T[(r, 3)], i)
                 if GLYPH: glyph(c, i)
-                if i == 'loren': dau(loren_toc(c), s, '#6ad0ff', False).save(os.path.join(OUT, 'lorentoc_nong.png'), optimize=True); HK['lorentoc'] = 1.0
+                if i == 'loren': HK['lorentoc'] = 1.0
                 DV[i] = {'K': 1.0, 'S': [1.0, 1.0, 1.0]} if tam in DANG else {'K': 1.0}
                 if i in XOAY and i in TIP: TIP[i] = round(min(1.0, mui(im) / HK[i]), 3)   # mũi luật = coDau/2 × tip, coDau = ô × HEAD_K
             if kt:

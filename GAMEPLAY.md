@@ -1394,3 +1394,22 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - **Bảng xếp hạng**: đường mới `lb/dd/{tuần}/{uid}` — rules Firebase hiện tại CHƯA cho ghi → bảng hiện "NOT CONNECTED · personal best only" tới khi người dùng Publish rules (mẫu: `docs/demo-hop-tuong/tuvan/che-do-dcdw/THIET-KE.md` §4). Không đổi cấu hình production.
 - **Test**: mới `tools/thap-kt-duong-dua.js` (27 mục đạt); `thap-kt-thap-leo`, `thap-kt-an-do`, `thap-kt-tien-trinh`, `thap-kt-admin` đạt (2 bài sau sửa danh sách mong đợi); `thap-kt-san-trum / thu-thach / thu-thach-tuan / vo-tan / bxh` in SKIP (chế độ đã bỏ). Chưa chạy hồi quy đầy đủ, chưa thử iPhone thật, chưa thử ghi bảng xếp hạng lên Firebase thật.
 - **Ảnh đã xem** (390×844): `docs/demo-hop-tuong/tuvan/che-do-dcdw/anh/`. Tiếng Việt: chuỗi mới nằm trong `VI_MAU` ở `chedo-dd.js` (như chedo-c/d) — `ngonngu-vi.js` là tệp sinh tự động nên không sửa tay.
+## claude/demo-hop-tuong — hình riêng cho biến thể: Merge King VÀNG, Twin Anvil 2 dạng (11/11)
+
+- **Việc:** 3 hình từ tấm người dùng gen `docs/demo-hop-tuong/thap-art/raw_bienthe2_vughep_loren.png` (1 hàng × 3). Chỉ hình — không đổi số liệu / luật (tỉ lệ ra vàng, +2★, buff đe giữ nguyên).
+- **Merge King VÀNG (`T.vang`):** đầu riêng `vughepvang_nong.png` (vương miện vàng kim cương trắng, 2 sao) qua `SKILLS.vughep.dauAnh` (render.js `datDauEp`, như Twin Anvil dạng tốc); cùng khung 294 px + cùng hệ số cỡ với vương miện thường (thân ~93 % bề ngang vì 2 ngôi sao cao hơn). Quầng vàng mờ cũ (`veThem`) chỉ còn là dự phòng khi ảnh chưa tải. Nạp sẵn ảnh khi bộ bài có Merge King. Merge King thường giữ vương miện đỏ.
+- **Twin Anvil:** `loren_nong.png` = dạng SÁT THƯƠNG (2 búa lửa, đe đỏ cam), `lorentoc_nong.png` = dạng TỐC (2 búa băng, đe xanh) — thay hình 1 búa lửa + 1 búa băng và bản lật gương. Hai hình vẽ nguyên khối kèm tấm nền xám góc vàng = bệ riêng của Twin Anvil: tấm nền 0,735 ô phủ kín bệ `loren_de` cũ (cùng dáng), viền bậc `loren_vien` vẫn lộ quanh; đầu không lắc (`skills7.js`) để tấm nền nằm yên. Icon thẻ `nho/loren` + glyph giữ hình cũ (1 búa lửa + 1 búa băng = nhận diện chung của cả 2 dạng).
+- **Công cụ:** `tools/thap-cat-bienthe.py` (khoá magenta của `thap-cat-umod.py`, không nướng viền màu nhấn); `tools/thap-cat-u-tudo.py` không còn ghi `loren_nong` / `lorentoc_nong`.
+- **Không làm:** Eclipse Ngày/Đêm (không có ảnh mới), tấm `bienthe_vughep_loren_nhatthuc.png` cũ không dùng.
+- **Kiểm:** `node --check` skills2.js, skills4.js, skills7.js; ảnh đã xem 390×844 SOLO + CO-OP (0 lỗi trang): `/home/claude/xem/ghep/bienthe_vuavang_loren_tren_ban.png` (cột: Merge King thường · đe Sát thương · Merge King vàng · đe Tốc, hàng 1★ / 4★ / 7★). Không tăng phiên bản (session con).
+
+## claude/demo-hop-tuong — ÁP cân bằng wave biến thể B vào game + BỎ trần wave 70 (11/11, người dùng duyệt)
+
+- **Nguồn số:** `docs/demo-hop-tuong/tocban/CAN-BANG-WAVE-DE-XUAT.md` (biến thể B của `tools/thap-bot-bienthe.js`). Tài liệu gốc đã cập nhật cùng commit (mục 2, 3, 4).
+- **Leo Tháp:** wave đầu tầng t = `min(t, 5 + ⌊0,62(t−1)⌋)` → tầng 1–11 bắt đầu ở wave 1–11; mana đầu giữ công thức theo wave đầu (`chedo-c.js CDC.thap.w`).
+- **Quái:** số quái/wave `min(20, 8 + ⌊w/4⌋)`; Splitter tách 3 (cũ 5), Big Splitter tách 2 (cũ 3); slime chỉ ở wave Phân bào; 3 loại thuần số liệu Swarmling / Runner / Elite (mượn hình sẵn có). **Wave có chủ đề** theo `w % 10` (`data.js CHU_DE, dsQuaiChuDe` — dùng chung cho `taoWave` và `CD.dsQuai`); tên chủ đề hiện ở bảng "WAVE n" đầu wave (`ui.js bangWave`, `TEXT.chuDe`).
+- **Mana:** quái thường × `(1 + 1,7·min(w,30)/30)` (`manaGiet`), hệ số loại Giant 4 / Big Splitter 3; trùm giữ công thức gốc ×12 (`manaGietGoc`). Không đổi khoản mana nào khác.
+- **Riêng B:** gánh hậu kỳ Vàng / Đỏ +2%/wave (wave 20–40), sau 40 không tăng (`HAU_KY`); máu quái × `mauHeSo` (×0,95 ở wave 30, ×1,069/wave 41–60, ×1,091/wave từ 61).
+- **Bỏ trần wave 70:** `LUAT.waveMax = 0` — solo / co-op (cả online) đánh tới khi hết tim, kết quả là DEFEAT "Reached WAVE n"; bảng trùm sắp tới (`vaotran.js`) không dừng ở 70. Chế độ có điều kiện kết thúc riêng không đổi.
+- **Thưởng:** mốc Thử thách tuần 15/25/35/45 → 20/30/40/50; mốc Vô tận 80–120 → 75–115 (thưởng giữ nguyên).
+- **Chữ:** mẹo "Splitters burst into 3" + mẹo 3 quái mới (`ketqua.js`), từ điển VI (`vi.json` → `ngonngu-vi.js`).

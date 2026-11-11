@@ -6069,5 +6069,18 @@
 "STING #–# / #–# / #+": "STING #–# / #–# / #+",
 "Sting #–# / #–# / #+": "STING #–# / #–# / #+",
 "Sting #–# / #–# / #+.": "STING #–# / #–# / #+.",
-"STING #–# / #–# / #+.": "STING #–# / #–# / #+."
+"STING #–# / #–# / #+.": "STING #–# / #–# / #+.",
+"Swarmling": "Quái bầy",
+"Runner": "Quái tốc hành",
+"Elite": "Tinh anh",
+"MIXED": "HỖN HỢP",
+"AIR RAID": "KHÔNG KÍCH",
+"ARMORED": "THIẾT GIÁP",
+"ELITE": "TINH ANH",
+"EXPRESS": "TỐC HÀNH",
+"MITOSIS": "PHÂN BÀO",
+"CHAOS": "HỖN LOẠN",
+"Swarmlings come in packs: splash or chain damage clears swarms.": "Quái bầy đi theo đàn: ST nổ lan hoặc đánh dây chuyền dọn sạch.",
+"Runners ignore slows: bring raw damage or Tesla chains.": "Quái tốc hành miễn làm chậm: mang sát thương thuần hoặc sét Tesla.",
+"Elites: heavy single-target turrets (Sniper, Revolver) and Armor Breaker.": "Tinh anh: ụ đơn mục tiêu mạnh (Sniper, Revolver) và Armor Breaker."
 }

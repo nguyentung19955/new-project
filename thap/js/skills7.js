@@ -722,5 +722,5 @@ if (typeof SKILLS !== 'undefined' && !window.UCU) {
   const DUNG = ['nhanban', 'xaotron', 'thaukinh', 'docton', 'tuthan', 'nangsao', 'epxung', 'nhieusong', 'santhuong', 'sungluc', 'tia', 'set', 'railgun', 'saochep', 'loren', 'nguyenrua', 'thanhdia', 'lienket', 'dongbo', 'orbital', 'luoicheo', 'guongcong', 'overlord', 'lophanung',
     // lô 2 (11/11, tấm t15–t21): 18 ụ đặc biệt / hỗ trợ — đầu là con vật / vật có mặt
     'cuongno', 'vungdoc', 'khuech', 'doc', 'mana', 'phagiap', 'bua', 'bomhen', 'nhanmana', 'dichchuyen', 'chimang', 'loa', 'kepha', 'khoathoigian', 'pandora', 'marionette', 'xuonganh', 'ngaithoigian'];
-  for (const id of DUNG) if (SKILLS[id] && window.DAU_VE && DAU_VE[id] && DAU_VE[id].K === 1) SKILLS[id].gocDau = id === 'luoicheo' ? () => -Math.PI / 2 : (T, t) => -Math.PI / 2 + Math.sin(t * 1.1 + (T.pha || 0) * 6) * 0.06;
+  for (const id of DUNG) if (SKILLS[id] && window.DAU_VE && DAU_VE[id] && DAU_VE[id].K === 1) SKILLS[id].gocDau = id === 'luoicheo' || id === 'loren' /* Twin Anvil: hình kèm tấm nền = bệ → nằm yên */ ? () => -Math.PI / 2 : (T, t) => -Math.PI / 2 + Math.sin(t * 1.1 + (T.pha || 0) * 6) * 0.06;
 }

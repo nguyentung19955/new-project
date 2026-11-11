@@ -200,6 +200,8 @@ const DDUI = {
     if (d && !da && E.chet && E.ddW) { d.giet++; d.diem += E.ddW; }
     return r;
   };
+  // mana mỗi mạng: công thức GỐC 10 + 2·(chặng − 1) — không nhân hệ số "bù ít quái" của wave thường (11/11 cân bằng wave), vì Đường Đua vốn đông quái
+  if (typeof manaGietGoc === 'function') { const mg = manaGiet; manaGiet = function (w) { return G.dd ? manaGietGoc(w) : mg.apply(this, arguments); }; }
   const cn = capNhat;
   capNhat = function () { if (G.dd) { try { DD.buoc(); } catch (e) { console.error('DD', e); } } return cn.apply(this, arguments); };
   const ct = coTrum; coTrum = function (w) { return G.dd ? false : ct.apply(this, arguments); };

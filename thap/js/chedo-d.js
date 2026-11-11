@@ -18,13 +18,13 @@ const CDDC = {
     w0: 70, tang: 100,                                          // Vô tận bắt đầu sau wave cuối của tầng 100 Leo Tháp (wave 66–70)
     coTrum: (w) => (w <= 90 ? w % 5 === 0 : w <= 100 ? w % 2 === 0 : true),
     dotTu: 101, dotMoi: 10,                                     // từ wave 101: +1 đột biến mỗi 10 wave
-    moc: { 80: [{ vang: 2000 }], 90: [{ ngoc: 30 }], 100: [{ tt: 1 }], 110: [{ ngoc: 50 }], 120: [{ ruong: 'hh', n: 1 }] },
+    moc: { 75: [{ vang: 2000 }], 85: [{ ngoc: 30 }], 95: [{ tt: 1 }], 105: [{ ngoc: 50 }], 115: [{ ruong: 'hh', n: 1 }] }, // 11/11 cân bằng wave: mốc 80–120 → 75–115 (thưởng giữ nguyên)
   },
   tw: {
     bat: false,                                                 // 11/11 người dùng chốt BỎ Thử thách tuần (trước: bật 10/11); bản lưu cd.tw giữ nguyên
     cap: 8, wMax: 50, soDot: 2, capThe: 5, mana: 100, tim: 3,
     bo: ['vang', 'tim', 'tim', 'xanh', 'trang'],               // 1 Vàng + 2 Tím + 1 Xanh + 1 Trắng (không Đỏ)
-    moc: { 15: [{ vang: 1000 }], 25: [{ ngoc: 30 }], 35: 'vang', 45: [{ tt: 1 }] },
+    moc: { 20: [{ vang: 1000 }], 30: [{ ngoc: 30 }], 40: 'vang', 50: [{ tt: 1 }] }, // 11/11 cân bằng wave: mốc 15/25/35/45 → 20/30/40/50 (thưởng giữ nguyên)
   },
   lb: { top: 50, wMax: { tw: 51, vt: 999, vtAll: 999, dd: 999999 }, choMs: 8000 }, // w tối đa theo rules (§3.2) · đọc quá choMs → ngoại tuyến
 };

@@ -196,7 +196,7 @@ chet = function (E, B) {
     for (let i = 0; i < E.kho; i++) {
       const ds = BB.t.filter(nhanSaoTuDong); // +★ tự động: bỏ đá + băng (AUDIT F10)
       if (ds.length) { const T = chonTrum(ds, r); T.sao++; T.sang = 1; const c = BB.o[T.o]; TRM.fx('leech', 'starup', c.x, c.y, 80, 0.5); TRM.chu(c.x, c.y - 22, '+1★ RETURNED', '#ffd84a', 13); }
-      else BB.mana += manaGiet(G.wave) * 3;
+      else BB.mana += manaGietGoc(G.wave) * 3; // công thức gốc (11/11: không nhân hệ số bù ít quái — mana liên quan trùm giữ nguyên)
     }
     E.kho = 0;
   }

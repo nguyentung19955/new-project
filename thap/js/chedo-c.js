@@ -25,7 +25,7 @@ const CDC = {
   },
   thap: {
     so: 100, xp: (t) => 5 + Math.floor(t / 5),
-    w: (t) => 5 + Math.floor(0.62 * (t - 1)),                 // wave đầu của tầng t (tầng 100: 66–70)
+    w: (t) => Math.min(t, 5 + Math.floor(0.62 * (t - 1))),    // wave đầu của tầng t — 11/11: tầng 1–11 bắt đầu ở wave 1–11 (trước 5–11), từ tầng 12 như cũ (tầng 100: 66–70); mana đầu vẫn theo CDC.mana(wave đầu)
     luat: [[], ['DONG'], ['NHANH'], ['KHONGLO'], ['DAY'], ['BAY'], ['MONG'], ['NHANH', 'KHONGLO'], ['DONG', 'DAY'], []],
     hs: (t) => (t > 90 ? 1.2 + (t - 91) * 0.2 : 1),             // chương 10: máu ×1,2 → ×3,0
     thuong(t) {
@@ -162,23 +162,8 @@ const CD = {
     if (c.tieuVe) { const sa = this.sanSt(); if (this.ve() > 0) sa.dung++; else G.cd.luyen = true; KT.luu(); }
     this.cuoi = c;
   },
-  // danh sách quái 1 wave thường (giống taoWave ở data.js, RNG có hạt) + luật sinh
-  dsQuai(w, r, c) {
-    let n = Math.min(32, 9 + Math.floor(w * 0.75)); n = Math.round(n * (c.n || 1));
-    const ds = [];
-    for (let i = 0; i < n; i++) {
-      let id = 'bo'; const x = r();
-      if (w >= 2 && x < 0.2) id = 'bay';
-      else if (w >= 8 && x < 0.33) id = 'bay_bang';
-      else if (w >= 6 && x < 0.46) id = 'tach';
-      if (w >= 4 && i % 7 === 6) id = 'khong_lo';
-      if (w >= 30 && i % 9 === 4) id = 'que_tach';
-      if (c.kl && i % c.kl === c.kl - 1) id = 'khong_lo';
-      if (c.bay && id === 'bo' && r() < c.bay) id = w >= 8 && r() < 0.4 ? 'bay_bang' : 'bay';
-      ds.push(id);
-    }
-    return ds;
-  },
+  // danh sách quái 1 wave thường (CÙNG bảng chủ đề với taoWave ở data.js, RNG có hạt) + luật sinh
+  dsQuai(w, r, c) { return dsQuaiChuDe(w, r, c); }, // 11/11: wave có chủ đề + luật sinh (c.n / c.kl / c.bay) — data.js
   wave() {
     const c = G.cd;
     if (G.wave >= c.w1) { c.het = true; G.cho = 0.25; return; } // hết wave: chờ dọn sân (CD.kiem)

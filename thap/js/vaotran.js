@@ -20,7 +20,7 @@ const VT = {
   // các wave trùm sắp tới (tính từ wave hiện tại)
   dsTrum(n) {
     const ck = LUAT.songTrum, ds = [];
-    for (let w = (Math.floor(G.wave / ck) + 1) * ck; ds.length < n && w <= LUAT.waveMax; w += ck) ds.push(w);
+    for (let w = (Math.floor(G.wave / ck) + 1) * ck; ds.length < n && (!LUAT.waveMax || w <= LUAT.waveMax); w += ck) ds.push(w);
     return ds;
   },
   sprite(id) { return 'url(assets/trum_' + id + (typeof TRUM8 !== 'undefined' && TRUM8.has(id) ? '_8' : '') + '.png)'; },
