@@ -711,7 +711,7 @@ Object.assign(REN, {
       this.khung0(ctx, d, this.khungDanh(u, d.nf), N.co * (1 + 0.08 * u)); ctx.restore();
     }
     ctx.globalAlpha = 1;
-    const bong = this.bong1(), dong = G.quai.length > 30, M = ctx.getTransform();
+    const bong = this.bong1(), dong = G.quai.length > 30, dong2 = G.quai.length > 60, M = ctx.getTransform(); // dong2 (11/11): đường đặc quái → bỏ hoà 2 khung (mỗi quái bớt 1 lần vẽ thân; chỉ hình)
     for (const E of G.quai) {
       const co = E.d.co, bay = E.d.bay, ten = this.tenQuai(E);
       const kc = ten.endsWith('_8') ? K8[E.d.anh || E.id] || 1 : 1; // bản 8 khung: chỉnh cỡ cho bằng bản cũ
@@ -816,6 +816,7 @@ Object.assign(REN, {
       fr = fr <= nguong ? 0 : (fr - nguong) / (1 - nguong); fr = fr * fr * (3 - 2 * fr);
       if (E.trum) fr = 0; // 08/11: trùm KHÔNG hoà khung — dải trùm đổi hình lớn giữa 2 khung (nảy dẹt mad_crown, xoay janus/twin_core) → hoà ra 2 vương miện/2 thân chồng nhau
       E._f = fr > 0.5 && f1 >= 0 ? f1 : f0; E._gv = gv; E._oy = hover; E._sc = sc;
+      if (dong2 && fr > 0) { f0 = E._f; fr = 0; } // đường đặc quái: vẽ thẳng khung gần nhất
       if (rg) { const Cr = co * (K8[E.d.anh || E.trum] || 1) * sc; E._rgC = Cr; this.rigVe(ctx, rg, this.rigTinh(E, rg, Cr, t, dt, x, y), M, x, y, Cr, 1); E._tHv = null; E._kHv = 1; E._gv = 0; }
       else if (cd) { this.cdVe(ctx, E, cf, cd, M, x, y); E._tHv = null; E._kHv = 1; E._gv = cd.rot; }
       else if (!dai) { /* ảnh quái chưa nạp: không vẽ chấm thay thế */ }

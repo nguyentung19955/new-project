@@ -55,18 +55,23 @@ const DEMKN = {
     const h = Math.max(9, c * 0.2), m = ctx.getTransform(), k = m.a;
     if (!(k > 0) || Math.abs(m.b) > 1e-6 || Math.abs(m.c) > 1e-6 || Math.abs(m.d - k) > 1e-6 || typeof REN === 'undefined' || !REN.cGet) return this.ve0(ctx, v, x, yDay, h, al);
     const hp = Math.round(h * k * 4) / 4, key = 'dk|' + hp + '|' + (v.sang ? 1 : 0) + '|' + (v.mau || '') + '|' + (v.bac || 0) + (v.giuMau ? 'g' : '') + (v.v4 >= 0 ? 'h' + v.v4 : '') + '|' + v.m.map(p => p.ic + ':' + (p.xoay || 0) + ':' + p.s).join(',');
-    let a = REN.cGet(key);
-    if (!a) {
+    // tối ưu giật co-op (11/11): mỗi ụ giữ 1 canvas RIÊNG, số đổi thì vẽ lại vào chính canvas đó (chỉ lớn thêm, không tạo mới).
+    //   Trước: mỗi giá trị mới = 1 canvas mới giữ trong bộ đệm REN (cuối trận số nhảy liên tục → ~1 canvas / khung, đẩy bộ đệm xoay vòng + dọn rác).
+    const RG = this._rieng || (this._rieng = new WeakMap());
+    let a = RG.get(T);
+    if (!a || a.key !== key) {
       if (!REN.img('h2_tag')) return;
       if (v.m.some(q => !REN.img(q.ic))) return this.ve0(ctx, v, x, yDay, h, al); // icon chưa nạp: vẽ thẳng, chưa dựng ảnh đệm (tránh đệm thiếu icon mãi)
-      const hl = hp / k, x0 = this.rong(v, hl);
-      a = document.createElement('canvas'); a.width = Math.ceil(x0 * k) + 2; a.height = Math.ceil(hl * k) + 3;
-      const q = REN.c2d(a); q.setTransform(k, 0, 0, k, 1, 1);
+      const hl = hp / k, x0 = this.rong(v, hl), w = Math.ceil(x0 * k) + 2, hh = Math.ceil(hl * k) + 3;
+      if (!a) { a = { cv: document.createElement('canvas'), key: '', w: 0, h: 0, _w: 0 }; a.cv.width = w + 12; a.cv.height = hh; a.q = REN.c2d(a.cv); RG.set(T, a); }
+      else if (a.cv.width < w || a.cv.height < hh) { a.cv.width = Math.max(a.cv.width, w + 12); a.cv.height = Math.max(a.cv.height, hh); a.q = REN.c2d(a.cv); }
+      const q = a.q; q.setTransform(1, 0, 0, 1, 0, 0); q.globalAlpha = 1; q.globalCompositeOperation = 'source-over'; q.clearRect(0, 0, a.cv.width, a.cv.height);
+      q.setTransform(k, 0, 0, k, 1, 1); a.key = '';
       if (!this.ve0(q, v, x0 / 2, hl + 1, hl, 1)) return;
-      a._w = x0; REN.cSet(key, a);
+      a.key = key; a.w = w; a.h = hh; a._w = x0;
     }
     const dx = Math.round(m.a * (x - a._w / 2) + m.e) - 1, dy = Math.round(m.d * (yDay - hp / k - 1) + m.f) - 1;
-    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = al; ctx.drawImage(a, dx, dy); ctx.restore();
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = al; ctx.drawImage(a.cv, 0, 0, a.w, a.h, dx, dy, a.w, a.h); ctx.restore();
   },
   rong(v, h) {
     const x = REN.ctxNong ? REN.ctxNong() : document.createElement('canvas').getContext('2d'), f = h * 0.7, ic = h * 0.92, gap = h * 0.12, pad = h * 0.42;

@@ -207,6 +207,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     ds.push('khung_chon', 'h2_vong_do', 'nhan_kn', 'h2_vfx_ghep'); // kéo ghép (keoghep.js)
     ds.push('fx_summon', 'fx_merge', 'fx_starup', 'fx_evolve', 'fx_link', 'fx_bingo', 'fx_awaken');
     for (const b of bans) if (b.mv && MAVUONG[b.mv.id]) ds.push(MAVUONG[b.mv.id].anh); // chân dung chỉ huy (cut-in) — chỉ chỉ huy đang ra trận
+    for (const b of bans) { const d = b.mv && MAVUONG[b.mv.id]; if (d && d.icon && d.khoa && !ds.includes(d.icon)) ds.push(d.icon); if (d && d.khoa === 'luoi' && !ds.includes('cmd_fx_luoi')) ds.push('cmd_fx_luoi'); } // 11/11: icon + lưới DRAG NET của chỉ huy mới — trước tải lười đúng lúc bấm chiêu lần đầu
     for (const b of bans) for (const id of b.deck) { ds.push(id + '_nong', 'nho/' + id); if (REN.DE_RIENG && REN.DE_RIENG[id]) { ds.push(id + '_de', id + '_vien'); if (window.PHU_GIUA && PHU_GIUA[id]) ds.push(id + '_phu'); } /* ụ module: bệ riêng (+ phần phụ tại trục) */ if (laGrow(id) && STAGE_K[id]) ds.push(id + '_nong_s1', id + '_nong_s2', id + '_nong_s3'); if (id === 'tienhoa' && typeof EVO !== 'undefined') for (const k in EVO.co) if (EVO.co[k]) ds.push(k); } // Evolver: bom hẹn giờ / nổ hụt / xác bom (growfx.js EVO)
     // (bỏ nạp fx_sinhdoi_hieu: biểu tượng sinh đôi nổi trên ô đã bỏ 08/11, hieuung.js không vẽ nữa)
     for (const b of bans) for (const id of b.deck) ds.push('glyph/' + id); // biểu tượng nhận diện (ảnh ChatGPT, bóng trắng)

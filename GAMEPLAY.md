@@ -1258,3 +1258,25 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - **Mốc mặt đáng chú ý:** `vungdoc` + `drone` (mõm/mỏ dài nằm ngang) cắt CẢ ảnh nguồn và khai "đầu" = gai gáy → dưới hàm / mũ → đáy túi mỏ (> 52 % ô) để ô nhỏ không phóng vào mặt; tâm ngang dời từ mắt về phía mõm/mỏ (62 %) → ô thẻ dọc thấy mắt + kính + gần hết mõm / mắt + 3 drone, nhãn LV và nút "i" không che mắt. `khien` đầu tính cả 2 tai + mũ giáp; `overlord` đầu = sừng → miệng răng cưa.
 - **Còn hạn chế ở cỡ nhỏ:** ô vuông rất nhỏ (ô 40 px trong bảng chạm ụ) hiện cả ảnh nên cá sấu / bồ nông nhỏ và cá sấu hơi tối trên nền tím; ô thẻ dọc cắt mất đầu chóp mõm cá sấu và chóp mỏ bồ nông (ảnh ngang, ô dọc).
 - **Kiểm:** `node --check` chandung.js, khung.js · `thap-kt-hinh-ui` 390×844 ✓ (0 lỗi trang). Ảnh đã xem (390×844): `/home/claude/xem/pilotmoi/sau3/` (the_all, up_all, tran_vungdoc, tran_thanh_zoom, tran_vungdoc_tt). Không tăng phiên bản (session con).
+
+## claude/demo-hop-tuong — tối ưu giật co-op cuối trận (11/11)
+
+- **Nguyên nhân đo được:** luật / tìm mục tiêu / va chạm chỉ ≈ 1–1,5% thời gian kể cả 100 quái; ~95% là tô canvas (~1 100 lệnh vẽ, ~6 triệu điểm ảnh co/xoay mỗi khung) và mọi lệnh đều lọc `imageSmoothingQuality = 'high'` (đắt nhất) dù ảnh đã thu sẵn gần đúng cỡ.
+- **Sửa (chỉ hiển thị, luật / số / thứ tự xử lý không đổi):**
+  1. Canvas trận + lớp hiệu ứng lọc `'low'` khi vẽ mỗi khung (`REN.LOC_VE`, `REN.minVe`); dựng ảnh đệm vẫn `'high'` → hình không đổi thấy được (đã so ảnh cùng trạng thái).
+  2. Lớp hiệu ứng tự giữ ma trận biến đổi, bỏ `getTransform()` mỗi lệnh vẽ (~450 đối tượng rác / khung).
+  3. Tấm đếm trên ụ dùng lại 1 canvas / ụ; số gọn `199.9K` / `14.3M` ghép từ ảnh chữ số có sẵn → canvas tạo mới 3,5 → ~1,2 / khung.
+  4. Đường > 60 quái: bỏ hoà 2 khung hoạt ảnh thân quái (bớt 1 lần vẽ / quái).
+  5. Khay Lucky Slot không đọc bề rộng thẻ 30 lần/giây; icon + lưới DRAG NET của chỉ huy mới nạp cùng ảnh trận (trước tải lười lúc bấm chiêu lần đầu).
+- **Số đo** (Chromium tô bằng CPU, 390×844 ×3, `?ios=1`, 25 s / cảnh; khoảng khung ms, trước → sau):
+
+| Cảnh | trung vị | p95 | p99 | max | khung > 50 ms | khung > 100 ms |
+|---|---|---|---|---|---|---|
+| A — video người dùng, wave 38 + DRAG NET | 66,7 → 50 | 83,4 → 66,7 | 100,1 → 66,7 | 116,7 → 83,3 | 305 → 103 | 7 → 0 |
+| B — nhiều đạn / hiệu ứng, wave 55 | 83,3 → 66,6 | 100 → 83,3 | 116,7 → 99,9 | 116,7 → 116,6 | 304 → 249 | 15 → 1 |
+| C — bocap + cuuvi + hydra, wave 45 | 50 → 33,3 | 66,7 → 50 | 83,3 → 66,6 | 100 → 83,4 | 133 → 24 | 0 → 0 |
+| D — đường đặc ~100 quái, wave 35 | 50 → 33,3 | 83,3 → 50 | 99,9 → 50,1 | 100,1 → 66,7 | 218 → 18 | 1 → 0 |
+
+  Vẽ + tô 1 khung ở cùng trạng thái trận: A 54,5 → 35,7 ms · B 74,1 → 47,9 · C 33,9 → 22,6 · D 39,2 → 27,5 (−30…35%). Máy đo chậm hơn iPhone nhiều nên khung nào cũng > 33 ms; đọc mức giảm tương đối.
+- **Luật không đổi:** `tools/thap-kt-hieunang-coop.js` (mới — đồng hồ ảo, hạt giống cố định): băm trạng thái trận bản trước = bản sau ở 30 / 60 / 90 s mô phỏng thuần và 7,5 / 15 s có vẽ, cả 4 cảnh. `thap-kt-nguyen-tac` 57/57, `thap-kt-tu-kich` 29/29; `co-bac`, `chi-huy-moi`, `giat`, `vfx-p0` chỉ còn lỗi có sẵn (bản trước lỗi y hệt).
+- **Chưa tái hiện được cú đứng 0,35 s** trên máy đo (khung dài nhất 117 → 83 ms) — cần kiểm trên iPhone thật. Chi tiết: `docs/demo-hop-tuong/tuvan/hieu-nang/BAO-CAO.md` Đợt 4. Ảnh trước/sau cùng trạng thái: `/home/claude/xem/hieunang/ss_{A,B,C,D}_truoc_sau.png` (chỉ trên máy làm).

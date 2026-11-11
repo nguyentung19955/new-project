@@ -291,7 +291,10 @@ CB.khay = function () {
       if (!s) { s = document.createElement('span'); s.className = 'cb-qua'; s.innerHTML = CB.IC.map((ic, i) => '<i class="cb-q cb-q' + i + '"><img src="' + (typeof anhUrl === 'function' ? anhUrl(ic) : 'assets/' + ic + '.png') + '" alt="" draggable="false"><b>0</b></i>').join(''); d.appendChild(s); }
       d._cb = s; s._v = [-1, -1, -1];
     }
-    const v = CB.hienSo(B), q = s.children, rong = s.clientWidth;
+    // 11/11: bề rộng thẻ chỉ đo lại khi cửa sổ / tỉ lệ khung đổi (trước: đọc clientWidth 30 lần/giây cho mỗi thẻ → ép dựng bố cục giữa lúc HUD đang ghi)
+    const moc = innerWidth + 'x' + innerHeight + 'x' + (typeof REN !== 'undefined' ? REN.s : 1);
+    if (s._moc !== moc || !s._rg) { s._moc = moc; s._rg = s.clientWidth; }
+    const v = CB.hienSo(B), q = s.children, rong = s._rg;
     for (let i = 0; i < 3; i++) if (s._v[i] !== v[i] || s._r !== rong) {
       const b = q[i].lastChild, tang = s._v[i] >= 0 && v[i] > s._v[i];
       b.textContent = CB.soNgan(v[i]); b.style.color = CB.mauSo(v[i]); q[i].classList.toggle('so3', v[i] >= 100); // 3 chữ số: chữ nhỏ hơn

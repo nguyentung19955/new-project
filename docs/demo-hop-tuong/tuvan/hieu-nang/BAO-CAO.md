@@ -80,3 +80,33 @@ Canvas 780×1560 (iOS 2×). Máy đo bận → đo xen kẽ trước/sau 5 lần
    — "+1" / "JACKPOT!" của Lucky Slot trước làm lớp hiệu ứng xoá + đổ cả màn (~0,7 màn) ở ~40% số khung. Kiểm: chữ thường / xoay / bóng / rect âm: 0 điểm ảnh ngoài khung bao.
 
 Ảnh 393×852 trước/sau: `/home/claude/xem/giat-lucky.jpg` (chỉ trên máy làm). Kiểm: hud2, hudtop, nut-trieu, tu-kich (29/0), vetay-ui, keoghep, trum-don, anim (RNG 30/60 FPS) xanh; matran 3 lỗi có sẵn.
+
+## Đợt 4 (11/11) — giật co-op cuối trận (video wave 38: ~10% khung 30 fps, 1 lần đứng 0,35 s)
+
+**Cách đo.** Chromium không màn hình (canvas tô bằng CPU — gần cách Safari iOS tô canvas 2D hơn là máy có GPU), 390×844 ×3, `?ios=1` (canvas 2×), không giảm tốc CPU thêm (máy đo vốn đã chậm: giảm 4× thì mọi khung > 200 ms, không còn phân biệt được). 4 cảnh co-op, đường luôn đầy quái (công cụ giữ máu quái tới 85% đường), DRAG NET bật liên tục:
+A = video người dùng (wave 38; bàn dưới Hex Saboteur / Twin Maker / Genesis Core, bàn trên Leviathan / Lucky Slot / White Wyrm / Hive Queen / Overlord) · B = wave 55, 2 bàn `cobac,leviathan,ronglua,chuato,overlord` · C = wave 45 có `bocap` + `cuuvi` + `hydra` · D = ảnh "nóng máy" thứ 2 (wave 35, ~100 quái tách/đá/bay, 6 Lucky Slot).
+
+**Tìm ra.** Mô phỏng (luật, tìm mục tiêu, va chạm) chỉ ≈ 1–1,5% thời gian kể cả 100 quái → KHÔNG đụng. 95% là tô canvas: ~1 100 lệnh `drawImage` / khung, ~6 triệu điểm ảnh co/xoay. Mọi ngữ cảnh vẽ đặt `imageSmoothingQuality = 'high'` → mỗi lệnh co/xoay đi đường lọc đắt nhất (mipmap / bicubic; Safari: nội suy CG "high"). Ảnh đã được thu sẵn gần đúng cỡ nên lọc 'high' lúc vẽ không thêm được gì.
+
+**Sửa (chỉ hiển thị).**
+1. Canvas trận + lớp hiệu ứng lọc `'low'` lúc vẽ mỗi khung (dựng ảnh đệm vẫn `'high'`) — phần lớn mức giảm.
+2. Lớp hiệu ứng tự giữ ma trận biến đổi (bỏ `getTransform()` mỗi lệnh vẽ: ~450 DOMMatrix rác / khung). Kiểm: 1,2 triệu lệnh ở 4 cảnh, lệch tối đa 9e-7.
+3. Tấm đếm trên ụ: 1 canvas riêng / ụ vẽ lại tại chỗ (trước ~1 canvas mới / khung); số gọn `199.9K` ghép từ ảnh chữ số có sẵn → canvas tạo mới 3,5 → ~1,2 / khung.
+4. Đường > 60 quái: bỏ hoà 2 khung hoạt ảnh thân quái (LOD kín đáo).
+5. Thẻ Lucky Slot ở khay: không đọc `clientWidth` 30 lần/giây; icon + lưới DRAG NET nạp cùng ảnh trận (trước tải lười lúc bấm chiêu lần đầu).
+
+**Số đo** (thời gian thực 25 s / cảnh; khoảng khung ms):
+
+| Cảnh | trung bình | trung vị | p95 | p99 | max | khung > 50 ms | khung > 100 ms | JS + lệnh vẽ / khung |
+|---|---|---|---|---|---|---|---|---|
+| A | 68,4 → 47,6 | 66,7 → 50 | 83,4 → 66,7 | 100,1 → 66,7 | 116,7 → 83,3 | 305 → 103 | 7 → 0 | 32,6 → 24,1 |
+| B | 81,4 → 60,5 | 83,3 → 66,6 | 100 → 83,3 | 116,7 → 99,9 | 116,7 → 116,6 | 304 → 249 | 15 → 1 | 42,4 → 33,8 |
+| C | 51,2 → 34,4 | 50 → 33,3 | 66,7 → 50 | 83,3 → 66,6 | 100 → 83,4 | 133 → 24 | 0 → 0 | 18,3 → 13,4 |
+| D | 57,2 → 34,6 | 50 → 33,3 | 83,3 → 50 | 99,9 → 50,1 | 100,1 → 66,7 | 218 → 18 | 1 → 0 | 19,9 → 13,3 |
+
+Vẽ + tô 1 khung ở CÙNG trạng thái trận (bước 900, `tools/thap-kt-hieunang-coop.js BENCH=15`): A 54,5 → 35,7 ms · B 74,1 → 47,9 · C 33,9 → 22,6 · D 39,2 → 27,5 (−30…35%).
+
+**Luật không đổi.** `tools/thap-kt-hieunang-coop.js` (đồng hồ ảo, hạt giống cố định, Math.random tách dòng luật / hình): băm trạng thái (mana, ụ, sao, hồi chiêu, máu + vị trí quái, đạn) của bản trước và bản sau GIỐNG HỆT ở 30 / 60 / 90 s mô phỏng thuần và ở 7,5 / 15 s có vẽ, cả 4 cảnh. `thap-kt-nguyen-tac` 57/57, `thap-kt-tu-kich` 29/29; `co-bac`, `chi-huy-moi`, `giat`, `vfx-p0` chỉ còn các lỗi có sẵn (bản trước cũng lỗi y hệt).
+
+**Chưa tái hiện được cú đứng 0,35 s** trên Chromium (khung dài nhất 117 ms → 83 ms). Nghi phạm còn lại, cần máy thật: dọn rác của Safari (đã bớt nguồn rác ở mục 2–3), trùm Hive xuất hiện (khung JS 32–35 ms ở máy đo, có sẵn), ảnh tải lười giải mã.
+Ghi nhận thêm (có sẵn, chưa sửa): `VX.hen` (đồng hồ hiệu ứng theo khung vẽ) đặt `T.cd = 0.01` sau khi ụ biến hình (`growfx.js` VX.bien) → luật offline phụ thuộc nhịp vẽ.
