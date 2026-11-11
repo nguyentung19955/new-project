@@ -1356,3 +1356,8 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - Sửa: `thap/css/khong-filter-tran.css` (nạp cuối): `#duoi` và mọi phần tử con `filter: none`; trạng thái tắt (SUMMON thiếu mana / bàn đầy, thẻ chỉ huy thiếu / đầy / hồi, nút tốc độ chưa bật, thẻ kích hoạt tắt) đổi sang `opacity`. Mất bóng đổ mềm dưới nút/thẻ. Không đổi luật.
 - Nhãn admin: chạm để đổi nhật ký → NF (tắt filter toàn #wrap, để thử phần còn lại) → ẩn.
 - CHƯA kiểm trên iPhone bản sửa chính thức (mới có kết quả của chế độ NF); thanh trên (#top) và bảng nổi còn filter.
+
+## claude/demo-hop-tuong — sửa hiển thị thanh dưới (11/11 17:00)
+- Số mana ≥ 6 chữ số không còn tràn khung: `ui.js` đặt `#mana[data-n=6|7|8]`, `hud-anime.css` thu chữ 18 / 16 / 14 px. KHÔNG đổi kinh tế mana.
+- Chân thẻ Lucky Slot: 3 số quả ("33 33 42") không còn chồng nhau (dùng gần hết bề ngang thẻ, icon 7 px, chữ 9,5 px; 3 chữ số: 6 px / 8 px).
+- Rà "dòng gem 2/3" (`motvong.js` `MV.dong/dongGon`: "Gems: form 2/3 …"): CHƯA bỏ — hạt ngọc nhỏ ở góc huy hiệu sao vẫn được vẽ khi ụ lên dạng ≥ 2 và dòng chỉ hiện khi có hạt đó → chờ người dùng quyết.

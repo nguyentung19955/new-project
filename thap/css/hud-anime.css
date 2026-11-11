@@ -302,3 +302,14 @@ html.ha2 body #wrap #duoi #bo-the .the > .cb-qua .cb-q img { width: 8px !importa
 html.ha2 body #wrap #duoi #bo-the .the > .cb-qua .cb-q b { font-size: 10px !important; margin: 0 !important; letter-spacing: -.5px !important; text-shadow: 0 1px 0 #000, 0 0 2px #000 !important; transform: none !important; }
 /* 10/11 rà soát giao diện: ô số màn KẾT QUẢ — ô có thêm dòng "NEW RECORD/KỶ LỤC MỚI" (3 dòng) thì nhãn trên + dòng dưới chạm mép ảnh ua_o → đệm theo mép ảnh, dòng sát nhau hơn */
 html.ha2 body #wrap #ketqua.kq7 .kq-o { padding: 12px 8px 11px !important; gap: 0 !important; }
+/* 11/11 (người dùng, iPhone co-op wave 43): số mana ≥ 6 chữ số tràn khỏi khung → chữ nhỏ dần theo số chữ số (ui.js đặt data-n = 6 / 7 / 8) */
+html.ha2 body #wrap #duoi #mana[data-n="6"] { font-size: 18px !important; }
+html.ha2 body #wrap #duoi #mana[data-n="7"] { font-size: 16px !important; }
+html.ha2 body #wrap #duoi #mana[data-n="8"] { font-size: 14px !important; }
+/* 11/11: 3 số quả ở chân thẻ Lucky Slot ("33 33 42") chồng lên nhau → dùng gần hết bề ngang thẻ, icon + chữ nhỏ hơn 1 nấc; 3 chữ số nhỏ thêm */
+html.ha2 body #wrap #duoi #bo-the .the[data-id="cobac"] > .cb-qua { left: 3px !important; right: 3px !important; }
+html.ha2 body #wrap #duoi #bo-the .the[data-id="cobac"] > .cb-qua .cb-q { flex: 1 1 0 !important; min-width: 0 !important; }
+html.ha2 body #wrap #duoi #bo-the .the[data-id="cobac"] > .cb-qua .cb-q img { width: 7px !important; max-width: 7px !important; }
+html.ha2 body #wrap #duoi #bo-the .the[data-id="cobac"] > .cb-qua .cb-q b { font-size: 9.5px !important; letter-spacing: -.3px !important; }
+html.ha2 body #wrap #duoi #bo-the .the[data-id="cobac"] > .cb-qua .cb-q.so3 img { width: 6px !important; max-width: 6px !important; }
+html.ha2 body #wrap #duoi #bo-the .the[data-id="cobac"] > .cb-qua .cb-q.so3 b { font-size: 8px !important; letter-spacing: -.6px !important; }
