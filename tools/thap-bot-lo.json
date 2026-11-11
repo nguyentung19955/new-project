@@ -5,6 +5,16 @@
  {"ten":"KĐ tầng 4","che":"thap","tang":4,"deck":["tia","lien","sungluc","bang","set"]},
  {"ten":"KĐ tầng 5","che":"thap","tang":5,"deck":["tia","lien","sungluc","bang","set"]},
  {"ten":"KĐ tầng 6","che":"thap","tang":6,"deck":["tia","lien","sungluc","bang","set"]},
+ {"ten":"KĐ tầng 8","che":"thap","tang":8,"deck":["tia","lien","sungluc","bang","set"]},
+ {"ten":"KĐ tầng 10","che":"thap","tang":10,"deck":["tia","lien","sungluc","bang","set"]},
+ {"ten":"KĐ tầng 12","che":"thap","tang":12,"deck":["tia","lien","sungluc","bang","set"]},
+ {"ten":"Vàng TC tầng 20","che":"thap","tang":20,"deck":["lualien","hopca","luutru","nhatthuc","railgun"]},
+ {"ten":"Vàng TC tầng 40","che":"thap","tang":40,"deck":["lualien","hopca","luutru","nhatthuc","railgun"]},
+ {"ten":"Vàng TC tầng 60","che":"thap","tang":60,"deck":["lualien","hopca","luutru","nhatthuc","railgun"]},
+ {"ten":"Vàng TC tầng 70","che":"thap","tang":70,"deck":["lualien","hopca","luutru","nhatthuc","railgun"]},
+ {"ten":"Vàng TC tầng 80","che":"thap","tang":80,"deck":["lualien","hopca","luutru","nhatthuc","railgun"]},
+ {"ten":"Vàng TC tầng 90","che":"thap","tang":90,"deck":["lualien","hopca","luutru","nhatthuc","railgun"]},
+ {"ten":"Vàng TC tầng 100","che":"thap","tang":100,"deck":["lualien","hopca","luutru","nhatthuc","railgun"]},
  {"ten":"KĐ-hỗ trợ tầng 1","che":"thap","tang":1,"deck":["tia","lien","mana","khuech","doc"]},
  {"ten":"KĐ-hỗ trợ tầng 3","che":"thap","tang":3,"deck":["tia","lien","mana","khuech","doc"]},
  {"ten":"KĐ solo","che":"solo","deck":["tia","lien","sungluc","bang","set"]},
@@ -13,5 +23,8 @@
  {"ten":"Solo nguyenrua-khoisinh","che":"solo","deck":["nguyenrua","sinhdoi","khoisinh","lualien","mauhut"]},
  {"ten":"Solo Vàng tấn công","che":"solo","deck":["lualien","hopca","luutru","nhatthuc","railgun"]},
  {"ten":"Solo Vàng + 1 Đỏ","che":"solo","deck":["lualien","hopca","luutru","nhatthuc","cobac"]},
- {"ten":"Solo Đỏ nặng","che":"solo","deck":["bocap","leviathan","ronglua","overlord","cobac"]}
+ {"ten":"Solo Đỏ nặng","che":"solo","deck":["bocap","leviathan","ronglua","overlord","cobac"]},
+ {"ten":"Solo Tím tấn công","che":"solo","deck":["bao","combo","cuongno","docton","lienket"]},
+ {"ten":"Solo Xanh-Trắng","che":"solo","deck":["laser","mortar","kiembang","tia","lien"]},
+ {"ten":"Solo kiểu Tuần (1V 2T 1X 1Tr, +5 cấp)","che":"solo","cap":5,"deck":["lualien","bao","combo","laser","tia"]}
 ]

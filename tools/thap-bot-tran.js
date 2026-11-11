@@ -32,6 +32,8 @@ function trongTrang(c) {
   const sq = sinhQuai; sinhQuai = function (id, pi, s) { const E = sq.apply(this, arguments); const x = W(G.wave); x.sinh++; if (s > 0) x.tach++; return E; };
   const st = sinhTrum; sinhTrum = function () { const E = st.apply(this, arguments); W(G.wave).sinh++; W(G.wave).trum = 1; return E; };
   const lo = lot; lot = function (E) { W(G.wave).lot += E.tim || 1; return lo.apply(this, arguments); };
+  let sauCh = 0; const tongMana = () => { let t = 0; for (const b of G.ban) t += b.mana; return t; };
+  const ch0 = chet; chet = function (E, B) { if (!E || E.chet || sauCh) return ch0.apply(this, arguments); sauCh = 1; const m0 = tongMana(); try { return ch0.apply(this, arguments); } finally { sauCh = 0; const x = W(G.wave); x.mn = (x.mn || 0) + Math.round(tongMana() - m0); } }; // mana nhận khi giết quái mỗi wave (mọi bàn, kể cả thưởng kỹ năng lúc giết)
   const kt = ketThuc; ketThuc = function (thang, ly) { if (!S.kq) S.kq = { thang: !!thang, ly: String(ly || ''), wave: G.wave }; return kt.apply(this, arguments); };
   // BOT+ (mặc định; --botgoc 1 để tắt): aiBan của game chọn mãi 1 cặp ghép ĐẶC BIỆT không đổi gì trên bàn (vd Blood Vein đã đánh dấu + ụ khác)
   //   → bot đứng hình, bàn đầy, mana thừa hàng chục nghìn. Ở đây: cặp nào bot ghép mà bàn không đổi thì cấm cặp đó 8 s (chỉ trong lượt bot) → bot đi tiếp.
@@ -107,7 +109,7 @@ const tenCa = (c) => c.ten || (c.che === 'thap' ? 'tầng ' + c.tang : c.che + (
 function dong(c, bt, r) {
   const ws = Object.keys(r.w).map(Number).filter(w => !r.w[w].trum && r.w[w].sinh > 4), tb = ws.length ? Math.round(ws.reduce((s, w) => s + r.w[w].sinh, 0) / ws.length) : 0;
   return [bt.padEnd(5), tenCa(c).padEnd(46), 'hạt ' + c.hat, (r.thang ? 'THẮNG' : 'thua ') + ' w' + r.wave + (r.cd ? ' (' + r.cd.w0 + '–' + r.cd.w1 + ', M' + r.cd.M + ')' : ''), '♥' + r.tim,
-    'đỉnh ' + r.dinh + '@w' + r.dinhW, 'quái/wave ~' + tb, 'mana ' + r.mana.join('/'), 'pu ' + (r.pu || []).join('/'), r.ket ? 'kẹt×' + r.ket : '', r.t + 's', '[' + r.giay + 's]', r.loi ? 'LỖI ' + r.loi.slice(0, 120) : '', (r.errs || []).join(' | ').slice(0, 120)].join(' · ');
+    'đỉnh ' + r.dinh + '@w' + r.dinhW, 'quái/wave ~' + tb, 'mana ' + r.mana.join('/'), 'manaGiết≤30 ' + Object.keys(r.w).filter(w => +w <= 30).reduce((t, w) => t + (r.w[w].mn || 0), 0), 'pu ' + (r.pu || []).join('/'), r.ket ? 'kẹt×' + r.ket : '', r.t + 's', '[' + r.giay + 's]', r.loi ? 'LỖI ' + r.loi.slice(0, 120) : '', (r.errs || []).join(' | ').slice(0, 120)].join(' · ');
 }
 
 (async () => {

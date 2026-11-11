@@ -45,7 +45,9 @@ function vaTrang(P) {
   const mw0 = mauWave; mauWave = function (w) { return Math.round(mw0(w) * hsMau(w)); };
   const st0 = sinhTrum; sinhTrum = function (id, pi, hs) { return st0.call(this, id, pi, (hs || 1) * P.trumK); };
   // ---- mana khi giết: ít quái hơn → mỗi con cho nhiều hơn (giữ tổng mana/wave gần như cũ) ----
-  const mg0 = manaGiet; manaGiet = function (w) { return Math.round(mg0(w) * (1 + P.mK * Math.min(w, 30) / 30)); };
+  //   trùm KHÔNG nhân (số trùm không đổi): lúc trùm chết manaGiet trả giá trị cũ
+  let trumChet = 0; const ch0 = chet; chet = function (E, B) { const t0 = trumChet; trumChet = E && E.trum ? 1 : 0; try { return ch0.apply(this, arguments); } finally { trumChet = t0; } };
+  const mg0 = manaGiet; manaGiet = function (w) { return trumChet ? mg0(w) : Math.round(mg0(w) * (1 + P.mK * Math.min(w, 30) / 30)); };
   // ---- Leo Tháp ----
   if (P.thapW) CDC.thap.w = (t) => Math.min(t, 5 + Math.floor(0.62 * (t - 1)));
   if (P.thapM != null) { const m0 = CDC.mana; CDC.mana = (W) => (W <= 5 && P.thapM ? P.thapM : m0(W)); }
@@ -54,14 +56,17 @@ function vaTrang(P) {
   if (P.hauKy) Object.assign(HAU_KY, P.hauKy);
   if (P.doNen) Object.assign(DO_NEN, P.doNen);
 }
-const GOC = { n0: 8, nChia: 4, nMax: 20, kBayDan: 1.8, hpBayDan: 0.5, hpTocHanh: 0.9, hpTinhAnh: 12, tach: 3, que: 2, kE: 1, k0: 1, w1: 40, g1: 1, w2: 60, g2: 1, trumK: 1, mK: 2, thapW: 1, thapM: null };
+const GOC = { n0: 8, nChia: 4, nMax: 20, kBayDan: 1.8, hpBayDan: 0.5, hpTocHanh: 0.9, hpTinhAnh: 12, tach: 3, que: 2, kE: 1, k0: 1, w1: 40, g1: 1, w2: 60, g2: 1, trumK: 1, mK: 1.7, thapW: 1, thapM: null };
 const bt = (P) => '(' + vaTrang.toString() + ')(' + JSON.stringify(Object.assign({}, GOC, P)) + ')';
 module.exports = {
   // chỉ đổi wave đầu Leo Tháp (tầng t ≤ 11 bắt đầu ở wave t), giữ mọi thứ khác
   T: '(() => { CDC.thap.w = (t) => Math.min(t, 5 + Math.floor(0.62 * (t - 1))); })()',
   T100: '(() => { CDC.thap.w = (t) => Math.min(t, 5 + Math.floor(0.62 * (t - 1))); const m0 = CDC.mana; CDC.mana = (W) => (W <= 5 ? 100 : m0(W)); })()',
   A1: bt({}),                                                   // chỉ bớt quái + chủ đề + tách ít hơn, đường máu giữ nguyên
-  A: bt({ g1: 1.03, g2: 1.04 }),                                // + máu wave 41–60 ×1,112/wave (cũ 1,08), từ 61 ×1,123/wave
-  B: bt({ g1: 1, g2: 1.03, hauKy: { vang: 0.02, do: 0.02, mu: { vang: 1, do: 1 } } }), // giảm ST ụ: gánh hậu kỳ Vàng/Đỏ +2%/wave (20–40), hết tăng sau 40; máu từ 61 ×1,112/wave
+  // A — KHÔNG đổi ụ: bớt quái + chủ đề; máu wave 41–60 ×1,096/wave (cũ ×1,08), từ 61 ×1,112/wave
+  A: bt({ g1: 1.015, g2: 1.03 }),
+  // B — GIẢM ST ụ: gánh hậu kỳ Vàng/Đỏ còn +2%/wave (wave 20–40), sau 40 không tăng nữa; bù lại máu quái thấp hơn:
+  //     ×0,95 từ wave 30 (giảm dần đều từ wave 1), wave 41–60 ×1,069/wave (cũ ×1,08), từ 61 ×1,091/wave
+  B: bt({ k0: 0.95, g1: 0.99, g2: 1.01, hauKy: { vang: 0.02, do: 0.02, mu: { vang: 1, do: 1 } } }),
   _bt: bt, _GOC: GOC,
 };
