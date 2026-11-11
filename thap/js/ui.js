@@ -214,7 +214,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     // (bỏ nạp fx_sinhdoi_hieu: biểu tượng sinh đôi nổi trên ô đã bỏ 08/11, hieuung.js không vẽ nữa)
     for (const b of bans) for (const id of b.deck) ds.push('glyph/' + id); // biểu tượng nhận diện (ảnh ChatGPT, bóng trắng)
     // ảnh ChatGPT thay hình vẽ code trên canvas: huy hiệu sao, ngọc độ hiếm, icon buff, lõi hư, mũi tên đường, bảng tên bàn
-    ds.push('sao_hex', 'sao_hex7', 'ngoc_trang', 'ngoc_xanh', 'ngoc_tim', 'ngoc_vang', 'ngoc_do', 'loi_hu1', 'loi_hu2', 'duong_mui', 'hud_ten_ban', 'fx_vong_lv', 'vong_xich', 'fx_vong_trieu', 'hat_tuyet', 'pandora_dia', 'hu_hoden', 'hu_khoa', 'hu_luoicua', 'hu_manhguong', 'hu_trangkhuyet', 'hu_min', 'hu_cauvong',
+    ds.push('sao_hex', 'sao_hex7', 'ngoc_trang', 'ngoc_xanh', 'ngoc_tim', 'ngoc_vang', 'ngoc_do', 'loi_hu1', 'loi_hu2', 'duong_mui', 'hud_ten_ban', 'fx_vong_lv', 'vong_xich', 'trum_xich_vong', 'trum_xich_day', 'loren_songsinh', 'fx_vong_trieu', 'hat_tuyet', 'pandora_dia', 'hu_hoden', 'hu_khoa', 'hu_luoicua', 'hu_manhguong', 'hu_trangkhuyet', 'hu_min', 'hu_cauvong',
       'ic_toc', 'ic_dmg', 'ic_crit', 'ic_cham', 'ic_chet', 'ic_mana', 'ic_khien', 'ic_taylo', 'ic_sao', 'ic_bom', 'ic_truyna');
     if (typeof BVX !== 'undefined') ds.push(...BVX.ANH); // hào quang buff (buffvfx.js)
     for (const q of Object.keys(QUAI)) ds.push('quai_' + (QUAI[q].anh || q));

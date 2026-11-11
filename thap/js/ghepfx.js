@@ -214,6 +214,7 @@ const GF = {
     if (KG.soMeo() >= 3 && (s === KG.TXT.tip || s === KG.TXT.tapTip)) return; // mẹo kỹ năng kéo thả / ghép đặc biệt: luôn hiện
     if (!KG._tip || KG._tip.s !== s) KG._tip = { s, t0: performance.now() };
     const u = Math.min(1, (performance.now() - KG._tip.t0) / 140);
+    if (src.id === 'loren' && dang) { KG.tam(ctx, s, B.x + B.w / 2, B.y - 12, 13, '#eaf6ff', u, 0.9 + 0.1 * u); return; } // Twin Anvil (12/11): nhãn nằm TRÊN mép bàn — đặt dưới ô đích thì che ụ hàng dưới
     KG.tam(ctx, s, c.x, Math.min(y, B.y + B.h - 10), 13, '#eaf6ff', u, 0.9 + 0.1 * u);
   },
 

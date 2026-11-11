@@ -1480,3 +1480,10 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 
 - Kiểm thêm: mất ngữ cảnh (`MAT=200,320`) → 2D dự phòng đủ hình → GL lại; ảnh so cùng trạng thái GL ↔ 2D (kéo ghép co-op, Freezer đóng băng, Janus hoá đá) khác ≤ 633 điểm ảnh như bản live; `?gl=0` không tạo canvas GL, không lỗi trang. Hive vẫn tải ~4 texture nhỏ / khung (bẻ hình cầu trên CPU, y như bản live) — chưa sửa.
 - Công cụ: `tools/thap-kt-bonho-gl.js` (`dai` / `trieu`, `WAVE`, `VT=240`, `GC=1`, `TAO=1`). Máy đo = Chromium + GPU phần mềm: ms không đại diện, số đếm mới so được.
+
+## claude/che-do-dcdw — hình mới cho xích Static Jammer + huy hiệu TWIN-FORGED (12/11)
+
+- Chỉ là hình (không đổi gameplay, không Math.random), 3 ảnh ChatGPT trong `thap/assets/`: `trum_xich_vong` (vòng xích + ổ khoá ở đáy, đứng yên, ~1,05 ô) thay vòng xích xoay trên từng ụ bị Static Jammer xích (`render.js` veU; Kẹp / Nhiễu vẫn dùng `vong_xich` cũ) · `trum_xich_day` lặp dọc đoạn nối tâm 2 ô của cùng một cặp xích, cao 0,22 ô, vẽ TRÊN lớp ụ (`REN.veXichDay`; đứt xích thì mất cùng lúc) · `loren_songsinh` = huy hiệu 0,34 ô ở góc dưới-phải ụ đang TWIN-FORGED (`demkn.js`), thay 2 con số nhỏ; ụ 1 buff giữ tấm đếm cũ.
+- Nhãn "Skill, not a merge" khi kéo Twin Anvil: đưa lên trên mép bàn (`ghepfx.js` veMeo), không còn che ụ.
+- 3 ảnh thêm vào danh sách tải trước của trận (`ui.js`). Đường vẽ chung `REN.anhGiua` → chạy cả 2D lẫn WebGL (đã xem ảnh `?gl=1` và `?gl=0`).
+- Chưa làm: hiệu ứng riêng lúc xích đứt (chỉ có chữ FREED); bàn con rối online chưa vẽ dây nối (chỉ có vòng); huy hiệu song sinh chưa thêm vào trang chi tiết / khung demo.

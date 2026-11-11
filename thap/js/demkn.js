@@ -38,7 +38,7 @@ const DEMKN = {
   // ĐỘT PHÁ (vangmoi1.js DOTPHA): bậc 1–4 → icon PNG lọc màu (vàng / lam / tím / trắng, ảnh dựng 1 lần) + chữ cùng màu
   // ụ đã được Twin Anvil rèn (mọi loại): số cộng dồn; SONG SINH = 2 cặp, chữ vàng
   anv(T) { const a = T.anv; return a && a.lo ? { m: a.x ? [{ ic: 'ic_dmg', s: a.lo + '' }, { ic: 'ic_toc', s: a.lo + '' }] : [{ ic: a.k === 'toc' ? 'ic_toc' : 'ic_dmg', s: a.lo + '' }], sang: !!a.x } : null; },
-  lay(T, B) { const f = this.DS[T.id] || (T.anv ? this.anv : null); if (!f || !B || T.st.da) return null; try { const v = f(T, B); if (v && typeof DOTPHA !== 'undefined') { const b = DOTPHA.bacU(T); if (b) { v.bac = b; v.v4 = b === 4 ? DOTPHA.buoc4() : -1; v.mau = b === 4 ? ['#ffb0b0', '#fff0a0', '#b0ffb8', '#a8f4ff', '#b8c4ff', '#ffb8f4'][v.v4] : DOTPHA.MAU[b]; v.sang = false; if (T.id === 'lualien') v.giuMau = 1; } } return v; } catch (e) { return null; } }, // Ember (lualien): icon lửa lua_t1–4 đã tô màu theo mốc → giuMau, không phủ lọc màu bậc (sửa lỗi tester 08/11)
+  lay(T, B) { const f = this.DS[T.id] || (T.anv && !T.anv.x ? this.anv : null); if (!f || !B || T.st.da) return null; try { const v = f(T, B); if (v && typeof DOTPHA !== 'undefined') { const b = DOTPHA.bacU(T); if (b) { v.bac = b; v.v4 = b === 4 ? DOTPHA.buoc4() : -1; v.mau = b === 4 ? ['#ffb0b0', '#fff0a0', '#b0ffb8', '#a8f4ff', '#b8c4ff', '#ffb8f4'][v.v4] : DOTPHA.MAU[b]; v.sang = false; if (T.id === 'lualien') v.giuMau = 1; } } return v; } catch (e) { return null; } }, // Ember (lualien): icon lửa lua_t1–4 đã tô màu theo mốc → giuMau, không phủ lọc màu bậc (sửa lỗi tester 08/11)
 
   // khung h2_tag (74×30, mép 14 px) cắt 3 mảnh: 2 đầu giữ tỉ lệ, phần giữa kéo dài
   khung(ctx, x, y, w, h) {
@@ -53,6 +53,8 @@ const DEMKN = {
   // CHỐNG NÓNG MÁY: tấm đếm dựng sẵn thành ẢNH (đúng điểm ảnh thiết bị) theo nội dung — chỉ dựng lại khi số đổi
   // (trước: mỗi khung đo chữ + viền chữ + tô chữ cho từng ụ). Đặt ảnh đúng lưới điểm ảnh → chữ nét y hệt vẽ trực tiếp.
   ve(ctx, T, B, x, yDay, c, al) {
+    // TWIN-FORGED (Twin Anvil song sinh): huy hiệu ảnh loren_songsinh ở góc dưới-phải ô (thay 2 con số nhỏ khó đọc) — không đè số sao (trên) / tấm đếm (giữa đáy)
+    if (T.anv && T.anv.x && !T.st.da && typeof REN !== 'undefined' && REN.img('loren_songsinh')) { const g = ctx.globalAlpha; REN.anhGiua(ctx, 'loren_songsinh', x + c * 0.31, yDay - c * 0.13, c * 0.34, 0, al); ctx.globalAlpha = g; }
     const v = this.lay(T, B); if (!v) return;
     const h = Math.max(9, c * 0.2), m = ctx.getTransform(), k = m.a;
     if (!(k > 0) || Math.abs(m.b) > 1e-6 || Math.abs(m.c) > 1e-6 || Math.abs(m.d - k) > 1e-6 || typeof REN === 'undefined' || !REN.cGet) return this.ve0(ctx, v, x, yDay, h, al);

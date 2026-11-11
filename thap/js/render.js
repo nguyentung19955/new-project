@@ -1101,9 +1101,25 @@ const REN = {
         if (ng && ng.ban === B.i && ng !== T && !hopLeGhep(ng, T)) o.alpha = 0.62; // ô không ghép được: mờ nhẹ (spec TU-VAN-HIEU-UNG-CHUNG mục 1D)
         this.veU(ctx, T, B.o[i].x, B.o[i].y, o);
       }
+      this.veXichDay(ctx, B);
     }
     // ụ bay vào nhau khi ghép
     for (const b of G.bay) VX.veBay(ctx, b, this);
+  },
+
+  // Static Jammer (12/11): DÂY XÍCH nối 2 ụ của cùng một cặp xích — ảnh ChatGPT trum_xich_day (5 mắt, lặp nối tiếp) đặt dọc đoạn nối tâm 2 ô,
+  //  vẽ TRÊN lớp ụ (dưới thì ụ che gần hết khi 2 ô sát nhau). Chỉ là hình: đọc T.xich, không đổi trạng thái trận. Bàn con rối online chưa có T.xich → chỉ có vòng.
+  veXichDay(ctx, B) {
+    let im = null;
+    for (const T of B.t) {
+      if (!T || !T.xich || !T.xich.doi) continue;
+      const D = B.t.find(N => N && N.uid === T.xich.doi && N.xich); if (!D || D.uid < T.uid) continue; // mỗi cặp vẽ 1 lần
+      if (!im && !(im = this.img('trum_xich_day'))) return;
+      const a = B.o[T.o], b = B.o[D.o], L = Math.hypot(b.x - a.x, b.y - a.y), h = Math.min(B.cw, B.ch) * 0.22, tw0 = h * im.width / im.height;
+      const n = Math.max(1, Math.round(L / tw0)), tw = L / n, g = Math.atan2(b.y - a.y, b.x - a.x), al = ctx.globalAlpha;
+      for (let i = 0; i < n; i++) { const u = (i + 0.5) / n; this.anhGiua(ctx, im, a.x + (b.x - a.x) * u, a.y + (b.y - a.y) * u, tw, g || 1e-6, 0.95); }
+      ctx.globalAlpha = al;
+    }
   },
 
   // vẽ 1 ụ: bóng · bệ · đầu súng xoay (giật lùi) · lớp phủ trạng thái · xúc xắc sao
@@ -1211,7 +1227,9 @@ const REN = {
     if (skT.veThemTren) veThem();
     // bản sao của Copycat: quầng TÍM (màu ảo ảnh của đầu Copycat) rõ hơn + huy hiệu nho/saochep ở góc trên-trái (nhandien.js) → không nhầm với ụ thật
     if (T.banSao && !o.ghost) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * 0.22; this.anhGiua(ctx, this.cham1('#a35cff'), 0, 0, S * 1.05); /* VFX P3 */ ctx.restore(); ctx.globalAlpha = al; }
-    const xich = T.st.kep > 0 && !o.ghost ? this.co('vong_xich', S * 0.9) : null; // vòng xích ChatGPT (S4), xoay chậm
+    const xJam = T.st.cam > 0 && T.st.kep > 0 && !o.ghost; // bị Static Jammer XÍCH: vòng xích tím + ổ khoá ở đáy (ảnh ChatGPT trum_xich_vong, đứng yên — khoá không che số sao phía trên)
+    if (xJam && this.img('trum_xich_vong')) { this.anhGiua(ctx, 'trum_xich_vong', 0, 0, S * 1.05, 0, al * 0.96); ctx.globalAlpha = al; }
+    const xich = T.st.kep > 0 && !o.ghost && !(xJam && this.img('trum_xich_vong')) ? this.co('vong_xich', S * 0.9) : null; // vòng xích ChatGPT (S4), xoay chậm (Kẹp / Nhiễu; Jammer khi ảnh mới chưa tải)
     if (xich) { ctx.save(); ctx.globalAlpha = al * 0.9; ctx.rotate(this.t * 0.6); ctx.drawImage(xich, -S * 0.45, -S * 0.45, S * 0.9, S * 0.9); ctx.restore(); ctx.globalAlpha = al; }
     // lớp phủ trạng thái
     // băng (Freezer & mọi nguồn): khối băng bọc ô + vành + lấp lánh; hết băng → vỡ (js/bangfx.js)
