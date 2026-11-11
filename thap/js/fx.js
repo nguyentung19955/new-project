@@ -152,7 +152,7 @@ const FX = {
     this.anim.push(A);
   },
   vong1(x, y, r0, r1, mau, song, day) { r1 = Math.min(r1, 70); r0 = Math.min(r0, 70); song = Math.min(song || 0.45, 0.4); this.vong.push({ x, y, r0, r1, mau, t: 0, song: song || 0.45, day: day || 3 }); },
-  lac(m) { this.rung = Math.min(8, Math.max(this.rung, m * 0.7)); },
+  lac(m) { /* BỎ rung cả màn (người dùng 11/11: nhìn giật, nhất là co-op + lúc triệu hồi). Bật lại: this.rung = Math.min(8, Math.max(this.rung, m * 0.7)); — rung tay (haptics) không đổi */ },
   sang(m, mau) { this.chop = Math.max(this.chop, Math.min(0.2, m)); // dịu VFX: chớp màn ≤ 0.2 (trước 0.3)
     this.chopMau = mau || '#fff'; },
 

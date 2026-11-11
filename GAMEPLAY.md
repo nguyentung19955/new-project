@@ -1338,3 +1338,7 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 ## claude/demo-hop-tuong — nhãn đo khung hình cho admin (11/11)
 - `ADMIN.fps` (`thap/js/admin.js`) + `#adm-fps` (`css/online.css`): góc trên trái màn trận, CHỈ admin thấy: `GL 60 · min 48` = kiểu vẽ (GL / 2D) + FPS hiện tại + FPS thấp nhất 10 giây gần nhất (cửa sổ 0,5 s, đếm requestAnimationFrame). Chỉ hiển thị, không đụng luật trận.
 - Đã kiểm: admin ảo GL / `?gl=0` hiện đúng, người thường và màn HOME không hiện, không lỗi trang. CHƯA kiểm trên iPhone thật.
+
+## claude/demo-hop-tuong — bỏ rung cả màn (11/11, người dùng yêu cầu)
+- `FX.lac` (`thap/js/fx.js`) không còn làm rung canvas trận (mọi nguồn: triệu hồi Vàng/Đỏ, nổ, trùm chết, kỹ năng, cả 2 đội co-op). Rung tay (haptics), chớp màn, rung cục bộ ở ụ giữ nguyên. Chỉ hình, không đổi luật.
+- Ghi nhận CHƯA sửa: sau mỗi lần triệu hồi có khung vẽ chậm ở CẢ 2D lẫn GL (lần đầu dùng ảnh); bản GL tải tới ~34 texture trong 1 khung ngay sau triệu hồi → cần làm nóng texture của bộ bài lúc vào trận / rải tải qua nhiều khung (việc của phần hoàn tất WebGL đợt 2+3). Người dùng đo trên iPhone: co-op wave 39 tốc độ 3× `GL 10 · min 7`, wave 40 trùm 1× `GL 38 · min 17`.
