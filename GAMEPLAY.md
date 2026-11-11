@@ -1566,3 +1566,9 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - CO-OP (không online): quái chết thì CẢ HAI bàn nhận mana (`game.js chet`) — người dùng: bàn mình trống, hết mana, đồng đội giết mà mình không có mana để triệu hồi. Online chưa áp (bàn bạn là bàn con rối).
 - Thẻ ở hàng dưới chỉ nâng cấp khi cú bấm BẮT ĐẦU trên chính thẻ đó trong 1,5 s (`ui.js` `_theDown`) — chặn "bấm ma" lúc vừa vào trận (bấm PLAY/CONTINUE ở màn trước, click rơi xuống hàng thẻ → tự nâng cấp, mất mana).
 - Chạm ụ: nhấc tay < 350 ms và đi < 0,35 ô thì vẫn là CHẠM dù ngón rung quá ngưỡng kéo (`ui.js het`) — iPhone hay "ấn ụ mà không hiện gợi ý ghép". Đã thử giả lập chạm rung 14 px: chọn được + sáng ô đích.
+
+## claude/che-do-dcdw — hình ụ đúng dạng khi kéo / bay / ghép (12/11)
+
+- Lỗi: bản nhấc khi kéo, ụ bay vào đích và bản chụp lúc ghép luôn vẽ **đầu thường** → Merge King vàng thành vương miện thường, Twin Anvil Tốc thành Anvil ST, trứng Evolver thành hộp, Blood Reaver dạng 2–4 thành dạng 1, 20 ụ grow về hình gốc, Rồng / Sói tự vẽ đầu mất dạng (cả 2D và WebGL). Riêng mặt nạ Prism Thief đã đúng khi kéo, sai khi bay.
+- Sửa một chỗ (`render.js`): `REN.hinhCua(T)` chụp hình thật (đầu ép, dạng grow, bệ riêng, hướng La Bàn); `veU` ghost của ụ thật trên bàn đọc thẳng trạng thái, bản chụp mang `_hinh`. `G.bay` thêm `ng` (ụ nguồn) ở 7 chỗ đẩy; `ghepfx.js` bản chụp thêm `_hinh`. Chỉ là hình, không đổi gameplay.
+- Kiểm: `tools/thap-kt-hinh-keo.js` (32 ụ / dạng × kéo, bóng ô gốc, bay; `?gl=0` và `?gl=1`). Ảnh: `docs/demo-hop-tuong/tuvan/che-do-dcdw/anh/b5-*.jpg`.

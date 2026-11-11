@@ -108,7 +108,7 @@ SKILLS.canon = {
     lam(G, B, a, b) {
       const S = SKILLS.canon, kq = S.hopNhat(a, b);
       B.t[a.o] = null;
-      G.bay.push({ id: a.id, sao: a.sao, x0: B.o[a.o].x, y0: B.o[a.o].y, x1: B.o[b.o].x, y1: B.o[b.o].y, t: 0, bac: a.bac });
+      G.bay.push({ id: a.id, sao: a.sao, ng: a, x0: B.o[a.o].x, y0: B.o[a.o].y, x1: B.o[b.o].x, y1: B.o[b.o].y, t: 0, bac: a.bac });
       const saoCu = b.sao;
       b.hb = kq.hb; b.cmC = kq.chong; b.sao = kq.sao; giuBanSao(b, b); /* bản sao theo ô ĐÍCH (cũ: luôn tẩy thành thật) */ b.sang = 1; b.anim = { k: 'no', t: 0.25 };
       if (b.sao > saoCu) mocMoi(b, saoCu, 0.1);

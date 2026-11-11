@@ -104,3 +104,19 @@ Máy phiên cũ còn ~640 MB ổ đĩa (không dựng được bản làm việc
 - **Rương ×N (lỗi thật, đã sửa):** thưởng `{ ruong: 'thuong' | 'vang', n: 2 }` trước chỉ phát 1 rương dù bảng ghi ×2 (mốc cúp 300 / 1 000, CO-OP wave 20 / 40, Raid bậc 3). Nay phát đủ N rương; kết quả hiện `OPEN ×N`.
 - **RAID bậc 1–3, bộ Trắng/Xanh +1 (4 hạt):** bậc 1 (5 000) thắng 4/4 trong 35–58 s · bậc 2 nâng 14 000 → **22 000**: thắng 3/4 (124–164 s; 1 trận thua còn 3%) · bậc 3 (45 000) thua 4/4 (còn 9–44%).
 - **Icon:** `ic_raid` / `ic_push` hiện đúng ở GAME MODE và bảng RAID (PUSH không có bảng riêng, EVENT không dùng; game không có danh sách tải trước cho icon chế độ — `ic_cup`, `ic_tutorial` cũng tải khi mở). Huy hiệu song sinh thêm quầng = chính ảnh huy hiệu vẽ to 0,66 ô, cộng sáng.
+
+## 11. RÀ HÌNH Ụ KHI KÉO / BAY / GHÉP (12/11) — `tools/thap-kt-hinh-keo.js`
+
+| Ụ / dạng | (1) đứng yên | (2) bản nhấc khi kéo | (3) bóng ô gốc | (4) ụ bay vào đích | (5) bản chụp lúc ghép |
+|---|---|---|---|---|---|
+| Merge King vàng (`vughepvang_nong`) | đúng | SAI → đã sửa | đúng | SAI → đã sửa | SAI → đã sửa |
+| Twin Anvil Tốc (`lorentoc_nong`) | đúng | SAI → đã sửa | đúng | SAI → đã sửa | SAI → đã sửa |
+| Twin Anvil ST | đúng | đúng | đúng | đúng | đúng |
+| Evolver (trứng theo sao / cháy) | đúng | SAI → đã sửa | đúng | SAI → đã sửa | SAI → đã sửa |
+| Blood Reaver dạng 2–4 (đầu + bệ) | đúng | SAI → đã sửa | đúng | SAI → đã sửa | SAI → đã sửa |
+| Prism Thief (mặt nạ màu / hợp thể) | đúng | đúng | đúng | SAI → đã sửa | SAI → đã sửa |
+| Rồng Máy theo dạng, Werewolf, Hydra (tự vẽ đầu) | đúng | SAI → đã sửa (Hydra vốn đúng) | đúng | SAI → đã sửa | SAI → đã sửa |
+| 20 ụ grow 3 dạng (`_nong_s1..3`) | đúng | SAI (về hình gốc) → đã sửa | đúng | SAI → đã sửa | SAI → đã sửa |
+| Pháo La Bàn, Eclipse, Lucky Slot, Copycat | đúng | đầu + bệ đúng; lớp vẽ thêm (mũi tên, vòng nạp, quầng) vốn KHÔNG vẽ ở bản nhấc — giữ nguyên | đúng | như (2) | như (2) |
+
+Cả 2D (`?gl=0`) và WebGL (`?gl=1`) cho cùng kết quả. (6) Dải thông tin / thẻ khi chạm dùng ảnh thẻ theo id (không theo dạng) — không đổi; bàn đồng đội / con rối vẽ bằng `veU` thường nên theo trạng thái đồng bộ sẵn có. Ụ đá / băng / xích: lớp phủ không vẽ ở bản nhấc (ụ đang đá / băng không kéo được).
