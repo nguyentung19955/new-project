@@ -292,3 +292,46 @@ Phần tải canvas còn lại giữa trận (120 s): ~330 chữ số + tấm đ
 **Việc kế:** (1) bệ `than|…` vẽ 3 ô ảnh mỗi khung (bóng + viền nhân màu kiểu 3 + bệ) thay canvas ghép; (2) kiểu shader 4 'color' cho `REN.toMau` / `HU.toMau`; (3) `PX.cung` = quạt tam giác (thêm `GLR.quat`);
 (4) dải dựng bằng code (`vfxmoi`, `camgiac`) → ô của dải gốc; (5) sau khi phiên W1 xong chữ: đo lại, mục tiêu tải canvas giữa trận ≈ 0; (6) bỏ đường canvas cũ khi `?gl=0` không còn cần.
 
+
+## 13. Full WebGL — Ô Ụ không nướng canvas: bệ, huy hiệu sao, kéo / ghép (12/11 — nhánh `claude/gl-full-w3`)
+
+Sau mục 12, canvas → texture giữa trận do Ô Ụ còn: huy hiệu sao `hh…` (81 lần / 120 s — 1 canvas / số sao / bậc cỡ), bệ ghép `than|…` (10), cộng ~180 lần ở màn mở đầu (bệ mọi ụ của 2 bộ bài + huy hiệu các bậc cỡ).
+
+**Đã làm (chỉ hình; chỉ khi lớp GL đang vẽ + ảnh ảo — `?gl=0`, `?gla=0`, WebGL1, 2D dự phòng lúc mất ngữ cảnh đi đường canvas cũ nguyên vẹn):**
+1. **Bệ** — `REN.veThanGL` (render.js): mỗi khung vẽ 3–4 ô ảnh thẳng từ texture ảnh gốc thay canvas `than|…`: bóng (`fx_cham_trang` phủ đen, alpha 0,7) → viền bậc `<id>_vien` NHÂN màu bậc bằng shader kiểu 3
+   (`REN.vienAo`; lần đầu kiểu 3 được dùng) → Vàng / Đỏ thêm 1 **ô cộng** 0,22 của chính ảnh viền (ánh kim) → bệ (hoá đá = shader kiểu 2). Toạ độ = đúng toạ độ trong canvas nướng cũ (kể cả gốc làm tròn điểm ảnh lúc đứng yên).
+   Ô cộng: `X.cong = 1` → alpha đỉnh = 0 trên nền nhân sẵn = cộng sáng mà KHÔNG đổi kiểu hoà màu → không ngắt lô (1 dòng ở `GLR.ve`, shader + bố cục đỉnh không đổi). `REN.thanChon` = phần chọn ảnh bệ tách ra dùng chung với `REN.than`.
+   Vẽ làm nóng (`REN.ctxNong`) cũng đi đường này → màn mở đầu chỉ nạp texture ảnh gốc.
+2. **Huy hiệu sao 1–6★** — `REN.huyHieu` (hud2.js) trả **canvas ảo vừa khít hàng sao** trỏ thẳng `hh_sao<n>` + vị trí của nó trong ô vẽ cũ (`_N, _X0, _Y0`); mọi nơi vẽ (bàn, con dấu ghép, sao "+1" xem trước, nhãn kéo) qua `REN.veHH`
+   → đổi số sao / đổi cỡ = 0 canvas, 0 lần tải. **7★** (sao vàng viền đỏ + quầng: cần ngưỡng alpha + blur — không dựng được bằng 3 kiểu shader hiện có) vẫn nướng, nhưng chỉ **2 cỡ / trận** (`REN.qdH`: cỡ trên bàn + 2,5 lần cho con dấu / nhãn; GPU thu).
+3. **Kéo / ghép / biến hình** — đầu ụ đang phóng theo hoạt ảnh (`veDauLop` có `sc`) xin ảnh ảo ở CỠ GỐC rồi GPU co giãn (trước: mỗi khung 1 canvas ảo + 1 mục kho đệm mới); ụ nhấc, bóng nhấc, bóng mờ ở ô gốc, khung ô đích đã là ô ảnh;
+   bỏ 2 chỗ dựng canvas chữ thừa khi GL vẽ (`ghepfx.js` làm nóng tên ụ, `KG.khungTam` đo bề rộng → bố cục `CHU.anh`).
+
+**Số đo** (`tools/thap-kt-tai-gl.js` `TAO=1`, co-op 3×, `ios=1`, wave 25 → 49, 120 s, bộ `bocap,sinhdoi,tudo,cobac,saochep` + `leviathan,ronglua,nemesis,khoisinh,vughep`; Chromium + GPU phần mềm → chỉ SỐ ĐẾM có nghĩa; "sau" = commit `b135edc`, chưa gồm 7★ 2 cỡ):
+| | trước (`74582a0`) | sau |
+|---|---|---|
+| tải canvas → texture trong 120 s trận (/ giây) | 157 (1,31) | 78 (0,65) |
+| … sau 10 s đầu (/ giây) | 65 (0,59) | 34 (0,31) |
+| theo nguồn: `hh` · `than` · đầu ụ · khác | 81 · 10 · 0 · 66 | 11 (toàn 7★) · 0 · 0 · 67 |
+| "khác" lúc sau gồm | — | 31 tờ ký tự `chugl` (cỡ chữ gặp lần đầu), 11 `camgiac.dai`, 8 `vfxmoi.dung`, 5 `HU.toMau`, 5 tầng mip + 2 `HU.matNa`, 2 `bonglan`, 3 lẻ — đều ngoài ô ụ (phiên W4 / W1) |
+| tải Image → texture trong 120 s | 142 | 163 (+ ảnh viền / hh_sao tải thẳng 1 lần) |
+| màn mở đầu: tải canvas · tải Image · canvas còn điểm ảnh (MB) | 182 · 88 · 284 (50) | **11** · 108 · 56 (31) |
+| canvas đệm còn điểm ảnh giữa trận: số (MB) | 173–225 (33–42) | 83–114 (30–39) |
+| MB GPU | 96–130 | 96–131 |
+| lệnh vẽ GL / khung (trung bình cả trận) | 191,8 | 185,1 |
+| dựng lại bản CPU của ảnh đã thả (`hoi`) | 104 (118 ms) | 47 (41 ms) |
+
+Kéo – ghép 1 lần (`tools/thap-kt-gl-u.js`, ô 10 → ô 11): canvas có điểm ảnh tạo ra trong lúc KÉO: 2D 18 · GL đường cũ (`gla=0`) 24 (18 lần tải) · **GL mới 0 của ô ụ** (chỉ 6 tờ ký tự của nhãn "Random type, +1★" lần đầu);
+lúc GHÉP: 2D 18 · `gla=0` 15–17 (22 lần tải) · GL mới 0 của ô ụ (còn `HU.matNa` + 1 tầng mip của `camgiac.veSao`, tờ ký tự). Ghép ra 7★: 1 canvas 7★ (cỡ lớn) — 1 lần tải.
+
+**Kiểm:** băm trạng thái có vẽ co-op A gl=1 = gl=0 (`8b4f420b` / `2f83154d`); `MAT=200,320`: 2D dự phòng đủ bệ + sao → GL lại, 0 lỗi trang; trận co-op tải không lỗi trang ở `?gl=1`, `?gl=1&gla=0`, `?gl=0`.
+Ảnh CÙNG trạng thái `?gl=1` ↔ `?gl=0` (390×844, `ios=1` → 2×; `/home/claude/xem/gl-full-w3/`, `ss_*.png` = GL trên · 2D giữa · độ lệch ×3 dưới): bệ + viền 5 bậc (giấu đầu ụ: `ss_be_hang1/2`), sao 1–7★, hoá đá, đóng băng,
+Leviathan + tấm đếm, đang kéo (`ss_keo`), ghép (`ss_ghep1/2`, 7★ `ss_s7_ghep2`): vị trí / cỡ / màu khớp, chỉ lệch mép khử răng cưa (bệ: 121–231 điểm > 40 mức / hàng, 0–7 điểm > 100).
+
+**Giới hạn / chưa làm:**
+- Ụ đang mờ (alpha < 1: bóng ở ô gốc lúc kéo, tan lúc ghép): bóng / viền / bệ mờ RIÊNG từng lớp (trước: mờ cả ảnh ghép) → viền hơi lộ qua bệ trong lúc mờ; ảnh `ss_keo` không thấy khác bằng mắt.
+- Bệ thu bằng lọc song tuyến tính GPU từ tầng ảnh gốc thay vì thu sẵn chất lượng cao rồi vẽ 1:1 → mép có thể mềm hơn chút trên máy thật. Shader kiểu 3 + ô cộng chưa thử trên Safari / iPhone thật.
+- 7★ còn ≤ 2 canvas / trận; muốn 0: cần ảnh `hh_sao7` viền đỏ sẵn (ChatGPT) hoặc kiểu shader "ngưỡng alpha".
+- Huy hiệu dự phòng có chữ số (`hh2` / `hh4`, chỉ khi `hh_sao*` chưa tải) và hàng 3 ngọc `MV.hangNgoc` (đang tắt: `MV.GON`) vẫn là canvas.
+- Chưa chạy: hồi quy đầy đủ, PVP / solo, số đo 120 s sau thay đổi 7★ 2 cỡ (chỉ đo kéo–ghép ra 7★: 1 lần tải).
+- Gộp với phiên W4: `glr.js` chỉ sửa 1 dòng (`mau = … & (X.cong ? 0xffffff : -1)`) trong `GLR.ve`.

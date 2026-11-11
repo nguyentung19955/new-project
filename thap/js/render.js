@@ -1484,7 +1484,12 @@ const REN = {
   qd(d) { const k = this.s * this.dpr, n = Math.max(2, d * k), L = Math.log(_GLB() && GLR.hien ? 1.26 : 1.08); // (WebGL đang vẽ: bậc 26 % — GPU thu nhỏ không tốn gì, bớt 3 lần số canvas huy hiệu phải dựng + tải)
     if (_GLB() && GLR.hien) return Math.pow(1.26, Math.ceil(Math.log(n) / L - 1e-6)) / k; return Math.pow(1.08, Math.ceil(Math.log(n) / L - 1e-6)) / k; },
   // huy hiệu cỡ động: canvas ở bậc qd(d), vẽ đúng cỡ d (tỉ lệ ô vẽ / d đọc từ chính canvas → hợp cả bản hud2 1.7d lẫn bản gốc 1.5d)
-  huyHieuDong(n, d) { const dq = this.qd(d), c = this.huyHieu(n, dq); if (c) c._E = (c._N || c.width) / (dq * this.s * this.dpr); return c; },
+  // bậc cỡ của huy hiệu n sao ở cỡ d: thường = qd(d). WebGL + ảnh ảo, 7★ (huy hiệu duy nhất còn nướng canvas): chỉ 2 cỡ / trận — cỡ trên bàn (mọi cỡ ≤ thế, GPU thu) và 2,5 lần (con dấu ghép, nhãn kéo) → ≤ 2 lần tải
+  qdH(n, d) {
+    if (n >= 7 && _GLA() && GLR.hien && typeof G !== 'undefined' && G.ban && G.ban[0]) { const dB = Math.min(G.ban[0].cw, G.ban[0].ch) * 0.34; if (d <= dB * 1.06) return dB; if (d <= dB * 2.65) return dB * 2.5; }
+    return this.qd(d);
+  },
+  huyHieuDong(n, d) { const dq = this.qdH(n, d), c = this.huyHieu(n, dq); if (c) c._E = (c._N || c.width) / (dq * this.s * this.dpr); return c; },
   veHuyHieuDong(ctx, x, y, n, d) { const c = this.huyHieuDong(n, d); if (!c) return; const P = d * c._E; this.veHH(ctx, c, x - P / 2, y - P / 2, P); },
   // việc dựng sẵn rải theo khung: mỗi khung chạy 1 việc nhỏ (không dồn vào 1 khung)
   _nong: [], _nongCo: new Set(),
@@ -1492,7 +1497,7 @@ const REN = {
   chayNong() { for (let i = 0; i < 1 && this._nong.length; i++) { const f = this._nong.shift(); try { f(); } catch (e) { } } },
   ctxNong() { if (!this._cn) { const c = document.createElement('canvas'); c.width = c.height = 2; this._cn = c.getContext('2d'); } this._cn.setTransform(1, 0, 0, 1, 0, 0); this._cn.globalAlpha = 1; return this._cn; },
   // dựng sẵn huy hiệu sao n ở nhiều cỡ: MỖI cỡ 1 việc (1 khung) — không dồn
-  nongHuy(n, ds) { for (const d of ds) this.nong('hd|' + n + '|' + Math.round(this.qd(d) * this.s * this.dpr), () => this.huyHieuDong(n, d)); },
+  nongHuy(n, ds) { for (const d of ds) this.nong('hd|' + n + '|' + Math.round(this.qdH(n, d) * this.s * this.dpr), () => this.huyHieuDong(n, d)); },
   // ấn giữ 1 ụ (trước khi kéo đủ 7 px): dựng sẵn bóng nhấc + huy hiệu sao các bậc sẽ dùng khi rê/thả (rải theo khung)
   nongKeo(T) {
     if (!T || !G.ban.length) return;

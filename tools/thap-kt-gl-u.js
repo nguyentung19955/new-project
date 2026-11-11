@@ -1,7 +1,7 @@
 // TURRET MERGE — Ô Ụ của bản WebGL: ảnh CÙNG trạng thái (bệ mọi bậc, huy hiệu 1★–7★, hoá đá, đóng băng, tấm đếm, đang KÉO, đang GHÉP) + đếm canvas tạo / texture tải trong lúc kéo–ghép.
 // Dùng để so `?gl=1` ↔ `?gl=0` ↔ `?gl=1&gla=0` (KE-HOACH.md mục 13). Lái tất định như thap-kt-tai-gl.js (đồng hồ ảo + rAF do công cụ bơm) → 2 lần chạy ra cùng trạng thái.
 // Chạy (gốc repo): python3 -m http.server 8765 &   NODE_PATH=/opt/npm-tools/node_modules node tools/thap-kt-gl-u.js <nhãn> "<query thêm, vd gl=1>"
-//   BASE=http://localhost:8765/thap/ (hoặc PORT=8765) · OUT=thư-mục ảnh (mặc định .) · DPR=3 · JS="…" chạy trong trang sau khi dựng cảnh (vd giấu đầu ụ: JS="REN.veDauLop = () => { }")
+//   BASE=http://localhost:8765/thap/ (hoặc PORT=8765) · OUT=thư-mục ảnh (mặc định .) · DPR=3 · SAO=2 (số sao của 2 ụ đem ghép; SAO=6 → ra 7★) · JS="…" chạy trong trang sau khi dựng cảnh (vd giấu đầu ụ: JS="REN.veDauLop = () => { }")
 // Cảnh (bàn mình, 15 ô): hàng 1 = Trắng 1★ · Xanh 2★ · Tím 3★ · Vàng 4★ · Đỏ 5★ — hàng 2 = Đỏ 6★ · Vàng 7★ · Trắng hoá đá · Xanh đóng băng · Leviathan (tấm đếm) —
 //   hàng 3 = 2 ụ Đỏ 2★ giống nhau (kéo ô 10 → ô 11 rồi thả = ghép) · Khởi Sinh 3★ · Tím 7★ · trống. Không quái, không wave, bot đứng yên.
 // Ảnh: <nhãn>_tinh.png (đứng yên) · _keo.png (đang kéo, bằng chính đường pointerdown / pointermove của game trên #cv) · _ghep1 / _ghep2 / _ghep3.png (hoạt ảnh ghép ~200 / 430 / 1100 ms).
@@ -35,7 +35,7 @@ const BASE = process.env.BASE || 'http://localhost:' + (process.env.PORT || 8765
   for (let i = 0; i < 400; i++) { const ok = await p.evaluate(() => { window.__buoc(2); if (typeof GLR !== 'undefined' && GLR.gl) window.__moc(); return typeof G !== 'undefined' && G.ban && G.ban.length > 0 && !(typeof TAI !== 'undefined' && (TAI.cho || TAI.doi)); }); if (ok && i > 20) break; await p.waitForTimeout(40); }
   const chay = async (n) => { for (let f = 0; f < n;) { const k = Math.min(15, n - f); await p.evaluate((k) => window.__buoc(k), k); f += k; await p.waitForTimeout(25); } };
   const kq = { nhan, them };
-  kq.ids = await p.evaluate(() => {
+  kq.ids = await p.evaluate((SAO) => {
     ketThuc = () => { }; try { clearTimeout(VT._h); VT.dong(); } catch (e) { } G.dung = false;
     try { Object.defineProperty(TAI, 'doi', { get: () => false, set() { }, configurable: true }); } catch (e) { }
     const ids = {}; for (const id in G.rosterMap) { const r = G.rosterMap[id]; if (r && r.bac && !ids[r.bac] && REN.DE_RIENG[id] && !(typeof laGrow === 'function' && laGrow(id)) && !(SKILLS[id] && (SKILLS[id].veDau || SKILLS[id].deAnh)) && id !== 'canon') ids[r.bac] = id; }
@@ -44,12 +44,12 @@ const BASE = process.env.BASE || 'http://localhost:' + (process.env.PORT || 8765
     for (let o = 0; o < 15; o++) B.t[o] = null;
     dat(0, ids.trang, 1); dat(1, ids.xanh, 2); dat(2, ids.tim, 3); dat(3, ids.vang, 4); dat(4, ids.do, 5);
     dat(5, ids.do, 6); dat(6, ids.vang, 7); const da = dat(7, ids.trang, 3), bang = dat(8, ids.xanh, 2), lv = dat(9, 'leviathan', 4); lv.vuc = 120;
-    dat(10, ids.do, 2); dat(11, ids.do, 2); dat(12, 'khoisinh', 3); dat(13, ids.tim, 7);
+    dat(10, ids.do, SAO); dat(11, ids.do, SAO); dat(12, 'khoisinh', 3); dat(13, ids.tim, 7);
     G.quai.length = 0; G.dan.length = 0; G.hu.length = 0; G.hang.length = 0;
     window.__moiKhung = () => { G.cho = 99; for (const X of G.ban) { X.tim = 1e9; X.mana = 99999; X.aiT = 1e9; } da.st.da = 99; bang.st.bang = 99; };
     Math.random = window.__mb(555); window.__vt = 500000; window.__f = 0; G.t = 0; REN.t = 100; if (typeof VX !== 'undefined') VX.t = 100; // đồng hồ ảo về mốc cố định: hoạt ảnh theo thời gian cùng pha ở mọi lần chạy
     return ids;
-  });
+  }, +(process.env.SAO || 2));
   if (process.env.JS) await p.evaluate(process.env.JS); // JS="REN.veDauLop = () => { }": giấu đầu ụ để nhìn rõ bệ + viền bậc
   for (let i = 0; i < 12; i++) { await chay(30); await p.waitForTimeout(120); } // cho ảnh của ụ ngoài bộ bài tải xong
   let f0 = await p.evaluate(() => window.__f); await chay(60);

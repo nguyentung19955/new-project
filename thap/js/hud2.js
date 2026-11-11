@@ -232,8 +232,8 @@ const HUD2 = {
     REN.saoDay = (n) => (n >= 7 ? 0.44 : n >= 5 ? 0.42 : 0.28);
     REN.saoTamY = function (n, d) { const c = this.huyHieu(n, d); return c && c._hh ? (this.saoDay(n) - c._hh / 2) * d : null; }; // tâm huy hiệu so với mép trên ô
     REN.veHuyHieuTren = function (ctx, x, yTren, n, d, dong) {
-      const dy = this.saoTamY(n, dong ? this.qd(d) : d); if (dy == null) return dong ? this.veHuyHieuDong(ctx, x, yTren, n, d) : this.veHuyHieu(ctx, x, yTren, n, d);
-      if (dong) this.veHuyHieuDong(ctx, x, yTren + dy * d / this.qd(d), n, d); else this.veHuyHieu(ctx, x, yTren + dy, n, d);
+      const dq = dong ? (this.qdH ? this.qdH(n, d) : this.qd(d)) : d, dy = this.saoTamY(n, dq); if (dy == null) return dong ? this.veHuyHieuDong(ctx, x, yTren, n, d) : this.veHuyHieu(ctx, x, yTren, n, d);
+      if (dong) this.veHuyHieuDong(ctx, x, yTren + dy * d / dq, n, d); else this.veHuyHieu(ctx, x, yTren + dy, n, d);
     };
   }
 
