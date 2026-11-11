@@ -142,7 +142,7 @@ const GLR = (() => {
     _kt: null, _dich: null, _bb: null, _vCo: false, _vOp: 0, _vb: [Infinity, Infinity, -Infinity, -Infinity], _svVe: -1, _chuMoi: 0, _ngan: [], _lopTT: null,
     _xi: { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0, al: 1, op: 0, cat: null, trang: 0 }, // "ngữ cảnh" đơn vị: vẽ ô theo điểm ảnh thiết bị (đổ lớp, ô vector, ô chữ)
     khoChu: new Map(),
-    _nguon: [], _cho: [], _thaDs: [], _napDs: [], o: [], bn: { tha: 0, hoi: 0, hoiVe: 0, hoiGPU: 0, hoiLoi: 0, thayThe: 0, boQua: 0, hoan: 0, hoiMax: 0, chet: 0, veChet: 0, huy: 0, gom: 0, gomMax: 0, donMax: 0, nap: 0, taiMax: 0, hoiMs: 0 }, // bộ nhớ: sổ canvas được thả + bộ đếm chẩn đoán (GLR.thongTin().bn)
+    _nguon: [], _cho: [], _thaDs: [], _napDs: [], o: [], bn: { tha: 0, hoi: 0, hoiVe: 0, hoiGPU: 0, hoiLoi: 0, thayThe: 0, boQua: 0, hoan: 0, hoiMax: 0, chet: 0, veChet: 0, huy: 0, gom: 0, gomMax: 0, donMax: 0, docDon: 0, nap: 0, taiMax: 0, hoiMs: 0 }, // bộ nhớ: sổ canvas được thả + bộ đếm chẩn đoán (GLR.thongTin().bn)
     nhom: 'khac', // REN đặt trước mỗi nhóm vẽ (quai / u / hieuung…) → GLR.thieu[nhóm][lệnh] = số lần lệnh không-ảnh được gọi ('bo:…' = lệnh bị bỏ qua)
     ghiThieu(k) { const t = this.thieu[this.nhom] || (this.thieu[this.nhom] = {}); t[k] = (t[k] || 0) + 1; },
     xDo() { return this._xDo || (this._xDo = document.createElement('canvas').getContext('2d')); }, // ngữ cảnh 2D 1×1 chỉ để đo chữ / tạo gradient
@@ -323,14 +323,19 @@ const GLR = (() => {
       // NGÂN SÁCH texture riêng (ảnh > 512², dải khung ụ / hiệu ứng): quá RIENG_MAX → bỏ dần ảnh lâu không dùng nhất (không bỏ ảnh vừa vẽ trong 2 khung gần đây; cần lại thì tải lại)
       let tong = 0; for (const E of ds) tong += E.W * E.H * 4;
       if (tong > RIENG_MAX) {
-        ds.sort((a, b) => a.dung - b.dung); let i = 0;
-        for (; i < ds.length && tong > RIENG_MAX && this.f - ds[i].dung > 2; i++) {
-          const E = ds[i], c = E.cv ? E.cv.deref() : null; tong -= E.W * E.H * 4;
-          if (c && c._tha === 2 && this.map.get(c) === E) this.docLai(c, E); // bản duy nhất: lấy lại bản CPU trước khi bỏ texture
-          if (E.tex) gl.deleteTexture(E.tex); E.tex = null;
+        ds.sort((a, b) => a.dung - b.dung); let doc = 0; const giu = [];
+        for (let i = 0; i < ds.length; i++) {
+          const E = ds[i];
+          if (!(tong > RIENG_MAX && this.f - E.dung > 2)) { giu.push(E); continue; }
+          const c = E.cv ? E.cv.deref() : null;
+          if (c && c._tha === 2 && this.map.get(c) === E) { // bản duy nhất: lấy lại bản CPU trước khi bỏ texture — đọc ngược GPU chặn cả đường ống vẽ → tối đa 1 lần / lượt dọn (phần còn lại để lượt sau, ~1 giây)
+            if (doc) { giu.push(E); continue; }
+            doc = 1; this.bn.docDon++; this.docLai(c, E);
+          }
+          tong -= E.W * E.H * 4; if (E.tex) gl.deleteTexture(E.tex); E.tex = null;
         }
         this.quenGan();
-        ds.splice(0, i);
+        ds.length = 0; for (const E of giu) ds.push(E);
       }
       this._riengB = tong;
       for (const k in this._tam) { const D = this._tam[k]; if (this.f - D.dung > 600) { this.huyDich(D); delete this._tam[k]; } }
@@ -425,9 +430,13 @@ const GLR = (() => {
     //   lớp GL vẽ tiếp bằng texture. Ai đọc điểm ảnh của nó bằng 2D (ctx.drawImage(canvas…) — đã vá, hoặc canvas.getContext) → dựng lại ĐỒNG BỘ rồi mới đọc:
     //   · loại 1 — ẢNH GỐC (REN.img: REN.anh[*]._cv, giữ đối tượng Image ở c._goc): dựng lại = vẽ Image vào canvas (trình duyệt giải mã lại), không cần GPU
     //     → thả được cả khi chưa có texture, sống qua mất ngữ cảnh. Thả khi không ai đọc điểm ảnh THA_CHO khung, hoặc tổng ảnh gốc sống > NGUON_MAX.
-    //   · loại 2 — ẢNH DỰNG tĩnh (GLR.tinh: kho đệm REN.cSet, tầng mip, ảnh tô màu): chỉ thả sau khi đã có texture + THA_CHO khung; dựng lại = đọc ngược texture
+    //     Cùng loại 1: canvas đăng ký KÈM HÀM DỰNG LẠI (GLR.tinh(c, kho, khoá, dung)) — tầng mip của ảnh gốc / ảnh tô màu (dựng từ tầng trên), ảnh tô màu (từ ảnh gốc):
+    //     dựng lại trên CPU, không đọc ngược GPU (readPixels trên GPU phần mềm từng tốn 2,5–4,4 s / lần; iPhone cũng chậm).
+    //   · loại 2 — ẢNH DỰNG tĩnh không có hàm dựng lại (GLR.tinh: kho đệm REN.cSet, tầng mip của ảnh kho): chỉ thả sau khi đã có texture + THA_CHO khung; dựng lại = đọc ngược texture
     //     (readPixels, không mất chất lượng). Texture mất (mất ngữ cảnh) → canvas "hết" (_tha = 3): gỡ khỏi kho theo khoá → lần gọi kế kho dựng lại từ ảnh gốc.
-    //   Canvas vẽ lại tại chỗ (GLR.ban / _glD) không bao giờ thả. ?gl=0: không có gì ở đây chạy. Chẩn đoán: GLR.bn (tha / hoi / chet / veChet…).
+    //   · HUỶ HẲN (huyKho / quetHuy): canvas rơi khỏi cả 2 thế hệ kho đệm REN.cSet, 90 khung không ai dùng → 0×0 thật (không đợi GC của Safari).
+    //   Canvas vẽ lại tại chỗ (GLR.ban / _glD) không bao giờ thả. ?gl=0: không có gì ở đây chạy. Chẩn đoán: GLR.bn (tha / hoi / hoiGPU / chet / veChet / huy / gom / gomMax…).
+    //   Đo: tools/thap-kt-bonho-gl.js · số liệu + giới hạn: docs/demo-hop-tuong/tuvan/webgl/KE-HOACH.md mục 9.
     nguon(c, a) { if (!THA_BAT || !c || c._tha !== undefined) return; c._goc = a; c._tha = 0; c._docF = c._taoF = this.f; c._hoiN = 0; this._nguon.push(new WR(c)); },
     // dung (tuỳ chọn) = hàm (canvas) → vẽ lại nội dung từ nguồn của nó (tầng mip từ tầng trên, ảnh tô màu từ ảnh gốc), trả false nếu chưa dựng được:
     //   có dung → canvas thuộc loại 1 (dựng lại trên CPU, không cần GPU): thả khi yên THA_CHO khung dù chưa từng lên GPU.

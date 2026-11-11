@@ -110,3 +110,44 @@ Công cụ: `tools/thap-kt-hieunang-coop.js` (`Q=gl=1|gl=0`, `HASH`, `DEM=1`, `T
 - Về trang sau khi khoá máy / chuyển app lâu (iOS hay thu hồi ngữ cảnh WebGL): quái phải còn (rơi về 2D rồi có lại GL), không trắng màn.
 - Nhiệt + pin 10 phút co-op wave 35+ so với `?gl=0`; khung hình có đều hơn không.
 - Bộ nhớ: Safari không tải lại trang giữa trận dài (thêm 2 canvas cỡ màn + ≤ 48 MB texture).
+
+## 9. Bộ nhớ + khựng của bản GL (11/11 tối — hoàn tất việc bị ngắt giữa chừng)
+
+Số trên iPhone người dùng (bản live `b34f385`, co-op wave 31): `GL 23 · min 3 · ve 21/310 · t7 · m317+88`. Đo lại bằng `tools/thap-kt-bonho-gl.js`
+(Chromium + GPU phần mềm, `ios=1`, co-op 3×, wave 25 → 45–56, bộ `bocap,sinhdoi,tudo,cobac,saochep` + `leviathan,ronglua,nemesis,khoisinh,overlord`):
+
+**Giả thuyết "kho đệm 2 thế hệ xoay liên tục → dựng lại dồn dập + canvas rác không được thu" — KHÔNG đúng (trên máy đo):**
+- Kho `REN.cSet` chỉ xoay 3–6 lần / 100 s (300 s trận); ảnh dựng ≤ 10 / khung sau 10 s đầu (ngân sách `REN.hetNgan` đã chặn); tổng điểm ảnh dựng lại nhỏ.
+- Ép thu gom rác (`GC=1`) KHÔNG làm giảm MB canvas của bản 2D (238 MB có ép = 224–258 MB không ép) → gần hết canvas còn THAM CHIẾU thật (ảnh gốc chép sang canvas, ảnh tô màu, tầng mip), không phải rác chờ thu.
+- Cái đo được ở bản live GL: (1) mọi ảnh nằm 2 nơi (canvas CPU 165 → 275 MB + GPU 81–104 MB = **245 → 376 MB, tăng dần**); (2) atlas đầy → xoá sạch rồi tải lại
+  **185–200 texture trong 1 khung**, lặp lại ~40 s / lần; (3) khung đầu trận 0,45–0,9 s; (4) triệu hồi lần đầu tải 17–20 texture / khung.
+- Khung 310 ms với `t7` trên iPhone: chưa tái hiện được (máy đo không có khung nào như vậy ngoài (2) và (3)). Ứng viên còn lại: giải mã đồng bộ tờ ảnh lớn, GC / thu hồi của Safari khi
+  tổng > 400 MB. Nhãn admin nay thêm `d<ảnh dựng ở khung chậm nhất>x<lần xoay kho>h<ms dựng lại lớn nhất>` để lần đo máy thật kế phân biệt được.
+
+**Đã làm (chỉ phần vẽ; băm trạng thái gl0 = gl1):**
+1. Thả bản CPU của canvas đã có bản khác (glr.js mục BỘ NHỚ): ảnh gốc (giữ `Image`), tầng mip + ảnh tô màu (có hàm dựng lại trên CPU), ảnh kho đệm đã lên GPU (đọc ngược ≤ 1 lần / canvas, ≤ 1 lần / lượt dọn).
+2. Atlas đầy → gom ngay trên GPU (`copyTexSubImage2D`), không tải lại. Ngân sách tải texture mỗi khung (`TAI_MAX`), phần dư vẽ tạm bằng tầng mip khác / hoãn 1–3 khung, hàng nạp nền (`GLR.nap`).
+3. Canvas rơi khỏi 2 thế hệ kho đệm → 0×0 thật sau 90 khung không ai dùng (`huyKho`; chỉ bản GL — bản 2D vẽ canvas 0×0 sẽ ném lỗi, và đo cho thấy 2D không có rác để thu).
+4. Làm nóng trong MÀN MỞ ĐẦU TRẬN (~4 s, trận đứng): còn việc thì vẽ 60 khung / giây, hàng nóng 10 ms / khung, tờ ảnh lớn của trận chép ngay, texture tải không giới hạn; thêm hiệu ứng triệu hồi theo bậc.
+5. Sửa 2 lỗi của bước dở dang: kiểm "ảnh rỗng" áp nhầm cho tầng mip mảnh (4 700 lần vẽ hụt / 100 s), hàm dựng lại tầng mip bắt biến vòng lặp (dựng từ sai tầng → 2D dự phòng mất lớp sáng).
+
+| co-op 3×, wave 25→45 (MB canvas + MB GPU = tổng) | 10 s | 30 s | 60 s | 100 s | khung chậm nhất sau 10 s đầu | tải texture nhiều nhất / khung |
+|---|---|---|---|---|---|---|
+| 2D live (`gl=0`) | 163 | 227 | 224 | 258 | 167 ms (trung vị 15–20 ms: 2D trên máy đo chậm) | — |
+| GL live `b34f385` | 165+81 = 245 | 217+104 = 321 | 222+97 = 319 | 275+81 = 355 | 68 ms | 200 |
+| GL sau | 59+102 = 161 | 70+116 = 186 | 57+107 = 164 | 63+115 = 178 (150 s: 58+111 = 168) | 60 ms (1 khung 119 ms ở giây 130 = lượt dọn texture riêng đọc ngược GPU; đã giới hạn 1 lần / lượt) | 8 |
+
+| 12 lần triệu hồi đầu trận (có màn mở đầu) | texture tải lúc vẽ nhiều nhất / khung | tổng 8 khung sau lần triệu hồi đầu | ms khung chậm nhất sau triệu hồi |
+|---|---|---|---|
+| GL live | 17 | 25 | 38,5 |
+| GL sau | 4 | 2 | 16,4 |
+
+Kiểm: băm trạng thái gl0 = gl1 có vẽ — co-op A (`8b4f420b` / `2f83154d`), Hive (`f6b57405`), PVP (`49b2c42a`); mất ngữ cảnh `MAT=200,320` → 2D dự phòng đủ hình dù bản CPU đã thả → GL lại, không lỗi trang;
+ảnh so CÙNG trạng thái GL ↔ 2D (`SOSANH=1`): co-op đang kéo ghép, Freezer (ụ đóng băng), Janus (ụ hoá đá) — khác ≤ 633 điểm ảnh (như bản live), 2D dự phòng = bản live từng điểm ảnh. Ảnh: `/home/claude/xem/webgl-xong/`.
+Tải texture / khung ở cảnh trùm (240 khung cuối): Octopus 0,66 · Patcher 0,16 · **Hive 4,15 (= bản live 4,19)** — Hive lăn kiểu cầu được bẻ hình trên CPU mỗi khung (2 canvas 155² × 2 con), muốn hết phải chuyển sang shader (chưa làm).
+
+Giới hạn / cần xem trên iPhone thật:
+- Ảnh gốc đã thả mà hiệu ứng cần lại: 1–3 khung đầu vẽ bằng tầng mip nhỏ hơn (hơi mờ) hoặc bỏ vẽ trong lúc `Image.decode()` chạy nền (máy đo: 213 lượt vẽ bị hoãn / 150 s). iPhone giải mã chậm hơn → có thể thấy hiệu ứng lớn hiện trễ vài khung.
+- `Image` giữ làm nguồn dựng lại: Safari có thể vẫn giữ bản giải mã của `Image` một lúc (không đo được ở đây) → MB thật có thể cao hơn nhãn `m`.
+- Đọc ngược GPU (`readPixels`) còn ở 2 chỗ hiếm (ảnh kho đệm bị đọc 2D sau khi thả; dọn texture riêng quá 40 MB): máy đo 5–10 ms (114 ms khi dồn), iPhone chưa đo — xem `GLR.bn.hoiGPU / docDon / donMax`.
+- Thời gian khung trên máy đo (GPU phần mềm, 2 nhân) không đại diện; chỉ số đếm (MB, số texture tải, số ảnh dựng) mới so được.

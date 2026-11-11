@@ -1462,3 +1462,21 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - **Bot CO-OP, mọi trùm từ wave 20 là Jammer** (trước → sau): Tím +4: wave 30 / 30 → 30 / 30 / 37 · Vàng +6: 60 / 60 → 60 / 60 / 60 (trần đo 60) · bộ Hỗ trợ +3 chết ở wave 6–7 cả trước lẫn sau (chưa gặp Jammer).
 - **Test**: mới `tools/thap-kt-b3.js` đạt; `thap-kt-vang-g2` sửa 1 mục Anvil (8 mục khác trượt từ trước lượt này), `thap-kt-cong-huong-luat` 34 cặp lệch + `thap-kt-freezer` 1 mục trượt từ trước (không đổi); `thap-kt-kynang-vd`, `thap-kt-trum-don` vỡ từ trước.
 - **Chưa có hình**: dây xích nối 2 ụ bị xích (đang dùng vòng xích sẵn có trên từng ụ); dấu TWIN-FORGED cố định trên ụ (đang chỉ có chữ nổi lúc rèn + 2 số nhỏ dưới ụ).
+## claude/demo-hop-tuong — WebGL: cắt bộ nhớ + khựng (thả bản CPU, gom atlas trên GPU, làm nóng ở màn mở đầu trận) (11/11 đêm)
+- Chỉ phần vẽ, KHÔNG đổi luật / số liệu (băm trạng thái `?gl=0` = `?gl=1` có vẽ: co-op A `8b4f420b`/`2f83154d`, Hive `f6b57405`, PVP `49b2c42a`). Chưa xuất bản. Chi tiết + giới hạn: `docs/demo-hop-tuong/tuvan/webgl/KE-HOACH.md` mục 9.
+- Nguyên nhân đo được ở bản live GL (`b34f385`; iPhone báo `ve 21/310 · m317+88`): mọi ảnh nằm 2 nơi (canvas + GPU) và tăng dần; atlas đầy → tải lại 185–200 texture trong 1 khung; khung đầu trận 0,45–0,9 s. Giả thuyết "kho đệm xoay → dựng lại dồn dập, canvas rác không thu" KHÔNG đúng trên máy đo (kho xoay 3–6 lần / 300 s trận, ≤ 10 ảnh dựng / khung; ép GC không giảm MB). Khung 310 ms với `t7` chưa tái hiện được → nhãn admin thêm `d…x…h…` để đo tiếp trên máy thật.
+- Làm: thả bản CPU của canvas đã có bản GPU / dựng lại được (ảnh gốc, tầng mip, ảnh tô màu, ảnh kho đệm) · gom atlas ngay trên GPU · ngân sách tải texture mỗi khung + hàng nạp nền · canvas rơi khỏi kho đệm → 0×0 thật (bản GL) · màn mở đầu trận làm nóng 60 khung/giây (ụ của bộ bài, hiệu ứng triệu hồi + ghép, quái 2 wave tới, tờ ảnh lớn) · sửa 2 lỗi của bước dở dang (kiểm rỗng nhầm tầng mip mảnh; tầng mip dựng lại từ sai tầng).
+
+| co-op 3× wave 25→45, `ios=1` (MB canvas + GPU) | 10 s | 30 s | 60 s | 100 s | khung chậm nhất sau 10 s đầu | texture tải nhiều nhất / khung |
+|---|---|---|---|---|---|---|
+| 2D live | 163 | 227 | 224 | 258 | 167 ms | — |
+| GL live | 245 | 321 | 319 | 355 | 68 ms | 200 |
+| GL sau | 161 | 186 | 164 | 178 (150 s: 168) | 60 ms (+1 khung 119 ms lúc dọn texture riêng, đã giới hạn) | 8 |
+
+| 12 lần triệu hồi (có màn mở đầu) | texture tải lúc vẽ / khung (max) | 8 khung sau lần đầu (tổng) | ms khung chậm nhất |
+|---|---|---|---|
+| GL live | 17 | 25 | 38,5 |
+| GL sau | 4 | 2 | 16,4 |
+
+- Kiểm thêm: mất ngữ cảnh (`MAT=200,320`) → 2D dự phòng đủ hình → GL lại; ảnh so cùng trạng thái GL ↔ 2D (kéo ghép co-op, Freezer đóng băng, Janus hoá đá) khác ≤ 633 điểm ảnh như bản live; `?gl=0` không tạo canvas GL, không lỗi trang. Hive vẫn tải ~4 texture nhỏ / khung (bẻ hình cầu trên CPU, y như bản live) — chưa sửa.
+- Công cụ: `tools/thap-kt-bonho-gl.js` (`dai` / `trieu`, `WAVE`, `VT=240`, `GC=1`, `TAO=1`). Máy đo = Chromium + GPU phần mềm: ms không đại diện, số đếm mới so được.
