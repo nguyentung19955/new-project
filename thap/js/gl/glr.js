@@ -306,13 +306,16 @@ const GLR = (() => {
       const A = Math.round(al * 255), mau = (A | (A << 8) | (A << 16) | (A << 24)) >>> 0; // màu nhân sẵn alpha (tô màu: để dành đợt sau)
       const F = this._f, U = this._u, I = this._i;
       // 4 góc ô đích (điểm ảnh thiết bị) nới 0,5 điểm ảnh mỗi phía dọc 2 cạnh; UV + toạ độ trong ô (lx, ly) nới theo
-      const wx = a * dw, wy = b * dw, hx = c * dh, hy = d * dh, lw = Math.hypot(wx, wy), lh = Math.hypot(hx, hy); if (!(lw > 0 && lh > 0)) return;
-      const ox = wx / lw * 0.5, oy = wy / lw * 0.5, px = hx / lh * 0.5, py = hy / lh * 0.5, du = (u1 - u0) / lw * 0.5, dv = (v1 - v0) / lh * 0.5;
+      const wx = a * dw, wy = b * dw, hx = c * dh, hy = d * dh; let lw = Math.hypot(wx, wy), lh = Math.hypot(hx, hy); if (!(lw > 0 && lh > 0)) return;
+      // như Chrome: ô thẳng trục (không xoay/xiên) và ≥ 1 điểm ảnh KHÔNG khử răng cưa mép (mép bám tâm điểm ảnh); ô xoay/xiên hoặc rất nhỏ thì có
+      const kk = (b || c || lw < 1 || lh < 1) ? 0.5 : 0;
+      const ox = wx / lw * kk, oy = wy / lw * kk, px = hx / lh * kk, py = hy / lh * kk, du = (u1 - u0) / lw * kk, dv = (v1 - v0) / lh * kk;
+      if (this.demPx) this.dem.px += lw * lh;
       const bx = a * dx + c * dy + e, by = b * dx + d * dy + f;
       const X0 = bx - ox - px, Y0 = by - oy - py, X1 = bx + wx + ox - px, Y1 = by + wy + oy - py, X2 = bx + wx + hx + ox + px, Y2 = by + wy + hy + oy + py, X3 = bx + hx - ox + px, Y3 = by + hy - oy + py;
-      const ua = u0 - du, ub = u1 + du, va = v0 - dv, vb = v1 + dv, la = -0.5, lb = lw + 0.5, ma = -0.5, mb = lh + 0.5;
+      const ua = u0 - du, ub = u1 + du, va = v0 - dv, vb = v1 + dv; let la = -0.5, lb = lw + 0.5, ma = -0.5, mb = lh + 0.5;
+      if (!kk) { la = lb = ma = mb = 1e4; lw = lh = 2e4; } // độ phủ = 1 mọi điểm
       if (this._vung) this._vung.push(Math.min(X0, X1, X2, X3), Math.min(Y0, Y1, Y2, Y3), Math.max(X0, X1, X2, X3), Math.max(Y0, Y1, Y2, Y3));
-      if (this.demPx) this.dem.px += lw * lh;
       if (X.cat) { this.veCat(X.cat, [X0, Y0, ua, va, la, ma, X1, Y1, ub, va, lb, ma, X2, Y2, ub, vb, lb, mb, X3, Y3, ua, vb, la, mb], g0, g1, g2, g3, lw, lh, mau); return; }
       let o = this.nv * W9; const v = this.nv;
       F[o] = X0; F[o + 1] = Y0; F[o + 2] = ua; F[o + 3] = va; F[o + 4] = g0; F[o + 5] = g1; F[o + 6] = g2; F[o + 7] = g3; F[o + 8] = la; F[o + 9] = ma; F[o + 10] = lw; F[o + 11] = lh; U[o + 12] = mau; o += W9;
