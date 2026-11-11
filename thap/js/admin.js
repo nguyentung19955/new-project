@@ -67,10 +67,10 @@ ADMIN.fps = {
 requestAnimationFrame(ADMIN.fps.khung);
 // NHẬT KÝ KHUNG CHẬM trên màn (chỉ admin; chạm nhãn FPS để ẩn/hiện): mỗi khung cách khung trước > 80 ms ghi 1 dòng
 //   "+giây  khoảng-cách | raf = tổng ms mọi hàm requestAnimationFrame | ve = REN.ve | gl = GLR.xong (phát lệnh GPU) | up n/ms WxH = số lần tải texture / ms / canvas lớn nhất
-//    | ev n/ms = số sự kiện chạm / ms xử lý". raf nhỏ mà khoảng cách lớn → nghẽn ở trình duyệt (ghép lớp, dọn rác, DOM), không phải code vẽ.
+//    | ev n/ms = số sự kiện chạm / ms xử lý | dom n id:n = số lần đổi DOM trong khung + phần tử đổi nhiều nhất". gpu = ms chờ GPU vẽ xong (gl.finish, chỉ khi bảng đang hiện); L = lệnh vẽ GL; v = cụm vector. raf nhỏ mà khoảng cách lớn → nghẽn ở trình duyệt (ghép lớp, dọn rác, DOM), không phải code vẽ.
 ADMIN.nk = {
   el: null, ds: [], an: false, k: null, t0: 0,
-  moi() { return { raf: 0, ve: 0, gl: 0, un: 0, um: 0, uw: 0, uh: 0, en: 0, em: 0 }; },
+  moi() { return { raf: 0, ve: 0, gl: 0, gpu: 0, lenh: 0, vec: 0, un: 0, um: 0, uw: 0, uh: 0, en: 0, em: 0, dom: 0, noi: null }; },
   bat() {
     if (this._bat || !ADMIN.la()) return; this._bat = 1; const N = this; N.k = N.moi();
     const now = () => performance.now();
@@ -78,6 +78,8 @@ ADMIN.nk = {
     window.requestAnimationFrame = function (f) { return R.call(window, function (t) { const a = now(); try { return f(t); } finally { N.k.raf += now() - a; } }); };
     const vong = (t) => { R.call(window, vong); if (cu && t - cu > 80 && ADMIN.fps.hien()) N.ghi(t, t - cu); cu = t; N.k = N.moi(); N.boc(); };
     R.call(window, vong);
+    // đổi DOM trong khung (HUD vẽ lại → Safari phải bố cục + tô lại ngoài code vẽ trận): đếm + phần tử đổi nhiều nhất
+    try { new MutationObserver((ds) => { const k = N.k, m = k.noi || (k.noi = {}); k.dom += ds.length; for (const d of ds) { let e = d.target; if (e && e.nodeType !== 1) e = e.parentNode; let id = ''; for (let i = 0; e && i < 4 && !id; i++, e = e.parentNode) id = e.id || ''; id = id || '?'; m[id] = (m[id] || 0) + 1; } }).observe(document.documentElement, { subtree: true, childList: true, attributes: true, characterData: true }); } catch (e) { }
     let e0 = 0;
     for (const ev of ['pointerdown', 'pointermove', 'pointerup', 'touchstart', 'touchmove', 'touchend', 'click']) {
       window.addEventListener(ev, () => { e0 = now(); N.k.en++; }, { capture: true, passive: true });
@@ -89,13 +91,13 @@ ADMIN.nk = {
     const N = this, now = () => performance.now();
     if (!N._ve && typeof REN !== 'undefined' && REN.ve) { N._ve = 1; const g = REN.ve; REN.ve = function () { const a = now(); try { return g.apply(this, arguments); } finally { N.k.ve += now() - a; } }; }
     if (typeof GLR === 'undefined') return;
-    if (!N._xong && GLR.xong) { N._xong = 1; const g = GLR.xong; GLR.xong = function () { const a = now(); try { return g.apply(this, arguments); } finally { N.k.gl += now() - a; } }; }
+    if (!N._xong && GLR.xong) { N._xong = 1; const g = GLR.xong; GLR.xong = function () { const a = now(), ve = this.dangVe; try { return g.apply(this, arguments); } finally { const b = now(); N.k.gl += b - a; if (ve && this.gl && !N.an) { try { this.gl.finish(); } catch (e) { } N.k.gpu += now() - b; if (this.dem) { N.k.lenh = this.dem.lenh; N.k.vec = this.dem.vec; } } } }; }
     const gl = GLR.gl; if (!gl || gl._nk) return; gl._nk = 1;
     for (const f of ['texImage2D', 'texSubImage2D']) { const g = gl[f]; gl[f] = function () { const im = arguments[arguments.length - 1], a = now(); try { return g.apply(this, arguments); } finally { if (im && im.width) { const d = now() - a; N.k.un++; N.k.um += d; if (im.width * im.height > N.k.uw * N.k.uh) { N.k.uw = im.width; N.k.uh = im.height; } } } }; }
   },
   ghi(t, kc) {
     const k = this.k, r = Math.round; if (!this.t0) this.t0 = t;
-    this.ds.push('+' + ((t - this.t0) / 1000).toFixed(1) + 's ' + r(kc) + 'ms | raf' + r(k.raf) + ' ve' + r(k.ve) + (k.gl || k.un ? ' gl' + r(k.gl) + ' up' + k.un + '/' + r(k.um) + (k.un ? ' ' + k.uw + 'x' + k.uh : '') : '') + ' | ev' + k.en + '/' + r(k.em));
+    this.ds.push('+' + ((t - this.t0) / 1000).toFixed(1) + 's ' + r(kc) + 'ms | raf' + r(k.raf) + ' ve' + r(k.ve) + (k.lenh || k.un ? ' gl' + r(k.gl) + ' gpu' + r(k.gpu) + ' L' + k.lenh + ' v' + k.vec + ' up' + k.un + '/' + r(k.um) + (k.un ? ' ' + k.uw + 'x' + k.uh : '') : '') + ' | ev' + k.en + '/' + r(k.em) + ' | dom' + k.dom + (k.noi ? ' ' + Object.entries(k.noi).sort((a, b) => b[1] - a[1]).slice(0, 2).map(x => x[0] + ':' + x[1]).join(' ') : ''));
     if (this.ds.length > 9) this.ds.shift(); this.ve();
   },
   ve() {
