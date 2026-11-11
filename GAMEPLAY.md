@@ -1555,3 +1555,13 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - Gộp `claude/gl-full-w1` (chữ trong trận = tấm ký tự trên GPU, `chugl.js`; Hive lăn cầu bằng shader) và `claude/gl-full-w2` (ẢNH ẢO: ảnh gốc lên GPU 1 lần, thu nhỏ / tô màu / xám / trắng bằng shader; chỉ WebGL2; `?gla=0` tắt). Xung đột 1 dòng ở `GLR.ve` (màu đỉnh): gộp cả `E.al` (ảnh ảo) lẫn `X.nhuom` (chữ).
 - Thêm `GLR.aoKiem()`: lúc khởi tạo chạy thử chuỗi lệnh GL của ảnh ảo (tải canvas không luỹ thừa 2 → generateMipmap → bộ đệm khung → copyTexSubImage2D → đọc lại điểm ảnh); trượt → tự về đường GL cũ. Nhãn admin ghi `GLa` khi ảnh ảo đang chạy, `GL` khi không.
 - Kiểm sau gộp: băm co-op A gl0 = gl1 (`8b4f420b` / `2f83154d`); cùng trạng thái GL vs 2D lệch 1 902 / 2,96 triệu điểm ảnh (> 60 mức; mép khử răng cưa), đã xem ảnh cạnh nhau. CHƯA kiểm: Safari / iPhone thật, PVP, hồi quy đầy đủ.
+
+
+## claude/demo-hop-tuong — Full WebGL: hiệu ứng không còn dựng canvas (nhánh làm `claude/gl-full-w4`, 12/11)
+- Chỉ hình, chỉ khi ảnh ảo bật (WebGL2); `?gl=0` / `?gla=0` / WebGL1 / 2D dự phòng đi hàm dựng canvas cũ. Luật, số liệu, cơ chế KHÔNG đổi → `TAI-LIEU-GOC.md` không đổi.
+- Shader (`glr.js`): kiểu tô 4 / 5 = hoà `'color'` của canvas (SetLum + ClipColor; `a × mix(màu, B, a)`), kiểu 6 = phủ màu + alpha^2,2, mặt nạ alpha tuyến tính đi kèm `a_k`. Mới: `GLR.aoTu` (ảnh ảo phái sinh), `GLR.dungG` (ảnh dựng 1 lần trên GPU), `GLR.quat` (hình quạt).
+- Đã chuyển: `REN.toMau` / `HU.toMau`, `HU.matNa`, 8 dải vệt lửa Rồng Máy (`vfxmoi.js dung`), dải nổ / chớp nòng `camgiac.js dai`, cung `PX.cung`, ảnh vòng hồi chiêu `PX.anhHoi`.
+- Làm nóng (`nongskill.js NS.dsHieuUng / napGL`): ảnh gốc của hình phát bắn đầu từng ụ, tờ P2 / P3, ảnh skill riêng, ảnh đã vẽ ở trận trước của phiên → GPU ở màn mở đầu. Nạp cả `UI.dsTran` làm đầy atlas (đo) → không làm.
+- Đo (`tools/thap-kt-tai-gl.js`, co-op 3× 120 s, 2 bộ A / B): tải canvas → texture do HIỆU ỨNG 26 / 32 → 0 / ~0; tổng tải canvas 154 → ~130 (A), 123 → ~110 (B) — phần còn lại là huy hiệu sao + bệ (W3) và tờ chữ lần đầu; canvas đệm 40–43 → 22–23 MB; tải Image giữa trận gần như không đổi (~1,1 / giây: ảnh riêng từng ụ không liệt kê trước được — cần bảng `NONG_META`).
+- Kiểm: băm có vẽ gl1 = gl0 (A `8b4f420b` / `2f83154d`, B `dc4831e1` / `318d8f3d`); `MAT=200,320` → 2D đủ hình → GL lại; 4 chế độ tải không lỗi; `tools/thap-kt-gl-hieuung.js` 109 ca GPU ↔ CPU ✓; GL mới ↔ GL cũ cùng trạng thái lệch 3 / 0 điểm ảnh. CHƯA kiểm: Safari / iPhone thật, PVP, hồi quy đầy đủ.
+- File: `thap/js/gl/glr.js`, `support.js`, `hieuung.js`, `fxu.js`, `camgiac.js`, `vfxmoi.js`, `nongskill.js`, `tools/thap-kt-gl-hieuung.js` (mới), `tools/thap-kt-tai-gl.js`. Chi tiết: `docs/demo-hop-tuong/tuvan/webgl/KE-HOACH.md` mục 13.
