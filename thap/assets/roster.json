@@ -970,11 +970,11 @@
  {
   "id": "bocap",
   "ten": "Crimson Sting",
-  "bac": "vang",
+  "bac": "do",
   "dcdw": "(new)",
-  "kyNang": "Each crit from THIS turret gives it +1 STING, no cap. Each STING: +16% damage and +1% crit damage; fire rate also rises (toward +100%). Hits one enemy only. A new one (merges too) starts at 0; losing a star loses all STING. Stone or frozen: it keeps them. Put crit supports next to it to stack faster",
+  "kyNang": "Each crit from THIS turret gives it +1 STING, no cap. Each STING: +13% damage and +1% crit damage; fire rate also rises (toward +100%). Hits one enemy only. A new one (merges too) starts at 0; losing a star loses all STING. Stone or frozen: it keeps them. Put crit supports next to it to stack faster",
   "ten_vi": "Bọ Cạp Hồng Ngọc",
-  "kyNang_vi": "Mỗi lần CHÍNH ụ này bắn chí mạng: +1 STING, không trần. Mỗi STING: +16% sát thương và +1% ST chí mạng; tốc bắn cũng tăng dần (tiến tới +100%). Chỉ đánh 1 quái. Ụ mới (kể cả ghép ra) bắt đầu từ 0; bị hạ sao thì mất hết STING. Hoá đá / đóng băng: giữ nguyên. Đặt cạnh ụ hỗ trợ chí mạng để tích nhanh hơn",
+  "kyNang_vi": "Mỗi lần CHÍNH ụ này bắn chí mạng: +1 STING, không trần. Mỗi STING: +13% sát thương và +1% ST chí mạng; tốc bắn cũng tăng dần (tiến tới +100%). Chỉ đánh 1 quái. Ụ mới (kể cả ghép ra) bắt đầu từ 0; bị hạ sao thì mất hết STING. Hoá đá / đóng băng: giữ nguyên. Đặt cạnh ụ hỗ trợ chí mạng để tích nhanh hơn",
   "vai": "tc",
   "ho": "crit",
   "moi": "BO-CAP"
