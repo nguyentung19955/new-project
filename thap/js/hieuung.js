@@ -28,6 +28,10 @@ const VX = {
   matNa(ten, y0, y1) {
     const key = ten + y0 + '|' + y1; if (this._mn[key]) return this._mn[key];
     const a = REN.img(ten); if (!a) return null;
+    if (a._goc && _GLA()) { // ẢNH ẢO (glr.js): mặt nạ mờ dần = hệ số alpha theo chiều dọc ảnh tính ở shader — không dựng canvas, không tải; đọc 2D / 2D dự phòng → dựng thật bằng đúng phép cũ
+      const r = GLR.aoTu(a, { mn: [y0, y1], kho: this._mn, khoa: key, dung: (cv) => { const s = REN.img(ten); if (!s || !s.width) return false; const q = cv.getContext('2d'); q.drawImage(s, 0, 0); const gr = q.createLinearGradient(0, cv.height * y0, 0, cv.height * y1); gr.addColorStop(0, 'rgba(0,0,0,1)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); q.globalCompositeOperation = 'destination-in'; q.fillStyle = gr; q.fillRect(0, 0, cv.width, cv.height); return true; } }); // vetay-ok: mask — mặt nạ cắt/mờ dần ảnh PNG
+      if (r) return (this._mn[key] = r);
+    }
     const c = document.createElement('canvas'); c.width = a.width; c.height = a.height;
     const x = c.getContext('2d'); x.drawImage(a, 0, 0);
     const g = x.createLinearGradient(0, a.height * y0, 0, a.height * y1); // vetay-ok: mask — mặt nạ cắt/mờ dần ảnh PNG
@@ -38,6 +42,10 @@ const VX = {
   // tô màu 1 canvas (giữ độ sáng + alpha) — cột sáng theo màu bậc ụ
   toMau(c, mau) {
     if (!c) return null; const key = '_tm' + mau; if (c[key]) return c[key];
+    if (_GLA()) { // ẢNH ẢO (glr.js kiểu tô 4 / 5): hoà 'color' bằng shader, nguồn = ảnh gốc / ảnh ảo (dải có mặt nạ matNa, bản trắng của đầu ụ) — không dựng canvas, không tải
+      const r = GLR.aoTu(c, { k: 4, t: GLR.mauSo(mau, 1), kho: c, khoa: key, dung: (cv) => { if (!c.width || c._tha === 3) return false; const q = cv.getContext('2d'); q.drawImage(c, 0, 0); q.globalCompositeOperation = 'color'; q.fillStyle = mau; q.fillRect(0, 0, cv.width, cv.height); q.globalCompositeOperation = 'destination-in'; q.drawImage(c, 0, 0); return true; } }); // vetay-ok: png — tô màu trong alpha của ảnh PNG
+      if (r) return (c[key] = r);
+    }
     const t = document.createElement('canvas'); t.width = c.width; t.height = c.height;
     const x = t.getContext('2d'); x.drawImage(c, 0, 0); x.globalCompositeOperation = 'color'; x.fillStyle = mau; x.fillRect(0, 0, t.width, t.height); // vetay-ok: png — tô màu trong alpha của ảnh PNG
     x.globalCompositeOperation = 'destination-in'; x.drawImage(c, 0, 0);

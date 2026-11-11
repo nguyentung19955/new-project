@@ -272,7 +272,7 @@ CG.K3 = {
     const a = REN.img(ten); if (!a) return null;
     let m = '#ffffff';
     try {
-      const c = document.createElement('canvas'); c.width = c.height = 20; const x = c.getContext('2d'); x.drawImage(a, 0, 0, 20, 20);
+      const c = document.createElement('canvas'); c.width = c.height = 20; const x = c.getContext('2d'); x.drawImage(a._goc && a._goc.complete && a._goc.naturalWidth ? a._goc : a, 0, 0, 20, 20); // (WebGL: đọc thẳng Image — không dựng lại bản canvas cỡ gốc của ảnh đã thả)
       const d = x.getImageData(0, 0, 20, 20).data; let r = 0, g = 0, b = 0, w = 0;
       for (let i = 0; i < d.length; i += 4) { const mx = Math.max(d[i], d[i + 1], d[i + 2]), mn = Math.min(d[i], d[i + 1], d[i + 2]), s = mx ? (mx - mn) / mx : 0, k = (d[i + 3] / 255) * s * s; r += d[i] * k; g += d[i + 1] * k; b += d[i + 2] * k; w += k; }
       if (w > 0.5) { const mx = Math.max(r, g, b) / w || 1, f = 255 / mx; m = '#' + [r, g, b].map(v => Math.min(255, Math.round(v / w * f)).toString(16).padStart(2, '0')).join(''); }
@@ -285,37 +285,50 @@ CG.K3 = {
     const key = ten + '|' + kieu; let s = this._dai.get(key); if (s !== undefined) return s;
     const a = REN.img(ten), mk = REN.img('fx_cham_trang'); if (!a || !mk || !this._cho()) return null;
     this._ngan++;
-    if (this._dai.size > 48) { for (const [k, c] of this._dai) { if (c) c.width = c.height = 0; this._dai.delete(k); if (this._dai.size <= 36) break; } }
+    if (this._dai.size > 48) { for (const [k, c] of this._dai) { if (c) { if (c._veG && typeof GLR !== 'undefined') GLR.bo(c); c.width = c.height = 0; } this._dai.delete(k); if (this._dai.size <= 36) break; } }
     try {
-      const n = kieu === 'no' ? 4 : 6, M = typeof FXU_META !== 'undefined' && FXU_META[ten];
-      const S = Math.min(160, Math.max(a.width, a.height)), c = document.createElement('canvas'); c.width = S * n; c.height = S;
+      const n = kieu === 'no' ? 4 : 6, S = Math.min(160, Math.max(a.width, a.height));
+      const mE = typeof P3 !== 'undefined' && P3.mauTen(ten), mA = this.mau(ten), to = mE && mA && this.lechSac(mE, mA) > 50 ? mE : null; // ảnh lệch sắc nguyên tố (vd. Tesla: nổ cam) → phủ màu nguyên tố trong alpha
+      if (a._goc && mk._goc && typeof _GLA === 'function' && _GLA()) {
+        // WebGL (ảnh ảo): dải DỰNG TRÊN GPU 1 lần (GLR.dungG — vẽ ảnh + khoét 'destination-out' vào bộ đệm khung rồi chép vào atlas): không canvas CPU, không tải canvas → texture.
+        //   Phủ màu nguyên tố = ảnh nguồn ở kiểu tô 1 của shader (REN.toMauA 0,62 — cùng kết quả với phủ 'source-atop' cả dải vì khoét / alpha nhân đều màu lẫn alpha). Đọc 2D / 2D dự phòng → hàm dựng CPU cũ.
+        s = GLR.dungG(S * n, S, { nap: true,
+          ve: (X) => { const g = REN.img(ten), m = REN.img('fx_cham_trang'); if (!g || !m) return false; this.veDai(X, to ? REN.toMauA(ten, to, 0.62) : g, m, ten, kieu, S, n, true); },
+          dung: (cv) => { const g = REN.img(ten), m = REN.img('fx_cham_trang'); if (!g || !m || !g.width) return false; const q = cv.getContext('2d'); this.veDai(q, g, m, ten, kieu, S, n, false); if (to) { q.globalCompositeOperation = 'source-atop'; q.globalAlpha = 0.62; q.fillStyle = to; q.fillRect(0, 0, cv.width, cv.height); } return true; }, // vetay-ok: png — tô màu trong alpha ảnh
+        });
+        this._dai.set(key, s); return s;
+      }
+      const c = document.createElement('canvas'); c.width = S * n; c.height = S;
       const x = c.getContext('2d');
+      this.veDai(x, a, mk, ten, kieu, S, n, false);
+      if (to) { x.globalCompositeOperation = 'source-atop'; x.globalAlpha = 0.62; x.fillStyle = to; x.fillRect(0, 0, c.width, c.height); } // vetay-ok: png — tô màu trong alpha ảnh
+      s = c;
+    } catch (e) { s = null; }
+    this._dai.set(key, s); return s;
+  },
+  // vẽ n khung của dải vào x (ngữ cảnh 2D của canvas dải, hoặc GLR.x đang vẽ vào bộ đệm khung — gl = true: ảnh lấy theo tầng mip vừa cỡ vì GPU không lọc chất lượng cao khi thu)
+  veDai(x, a, mk, ten, kieu, S, n, gl) {
+      const M = typeof FXU_META !== 'undefined' && FXU_META[ten], lay = (im, px) => gl ? REN.mip(im, px) : im;
       for (let k = 0; k < n; k++) {
         x.save(); x.beginPath(); x.rect(k * S, 0, S, S); x.clip(); // vetay-ok: mask — ô khung
         if (kieu === 'no') { // neo mép trái (đầu nòng) ở 0.12 S giữa cao; ảnh dài dần + mỏng dần
           const sx = [0.62, 1, 1.12, 1.18][k], sy = [0.78, 1, 0.86, 0.6][k], al = [1, 1, 0.7, 0.32][k];
           const ax = M ? M[2] : 0, ay = M ? M[3] : 0.5, w = S * 0.86 * sx, h = w * a.height / a.width * sy / sx;
-          x.globalAlpha = al; x.drawImage(a, k * S + S * 0.06 - ax * w, S / 2 - ay * h, w, h);
-          if (k >= 2) { x.globalCompositeOperation = 'destination-out'; const r = S * [0, 0, 0.3, 0.5][k]; x.globalAlpha = 0.9; x.drawImage(mk, k * S + S * 0.06 - r, S / 2 - r, r * 2, r * 2); } // vetay-ok: mask — tắt dần từ đầu nòng ra
+          x.globalAlpha = al; x.drawImage(lay(a, Math.max(w, h)), k * S + S * 0.06 - ax * w, S / 2 - ay * h, w, h);
+          if (k >= 2) { x.globalCompositeOperation = 'destination-out'; const r = S * [0, 0, 0.3, 0.5][k]; x.globalAlpha = 0.9; x.drawImage(lay(mk, r * 2), k * S + S * 0.06 - r, S / 2 - r, r * 2, r * 2); } // vetay-ok: mask — tắt dần từ đầu nòng ra
         } else {
           const sc = [0.74, 0.95, 1, 1.05, 1.09, 1.12][k], al = [1, 1, 0.96, 0.82, 0.58, 0.3][k], w = S * 0.88 * sc, h = w * a.height / a.width;
-          x.globalAlpha = al; x.drawImage(a, k * S + S / 2 - w / 2, S / 2 - h / 2, w, h);
+          x.globalAlpha = al; x.drawImage(lay(a, Math.max(w, h)), k * S + S / 2 - w / 2, S / 2 - h / 2, w, h);
           x.globalCompositeOperation = 'destination-out';
           const hr = S * [0, 0, 0.12, 0.24, 0.33, 0.4][k]; // khoét tâm: vụ nổ rỗng dần từ giữa ra (mặt nạ PNG mềm)
-          if (hr > 0) { x.globalAlpha = 1; x.drawImage(mk, k * S + S / 2 - hr, S / 2 - hr, hr * 2, hr * 2); }
+          if (hr > 0) { x.globalAlpha = 1; x.drawImage(lay(mk, hr * 2), k * S + S / 2 - hr, S / 2 - hr, hr * 2, hr * 2); }
           if (k >= 3) for (let j = 0; j < 7; j++) { // bẻ mép: 7 lỗ mềm quanh viền → vỡ thành mảnh, không còn là 1 ảnh phóng
             const g = j / 7 * 6.283 + this.bam(j, k) * 0.7, d = S * (0.3 + 0.08 * k), r = S * (0.05 + 0.035 * (k - 2)) * (0.7 + this.bam(j + 9, k) * 0.6);
-            x.globalAlpha = 0.95; x.drawImage(mk, k * S + S / 2 + Math.cos(g) * d - r, S / 2 + Math.sin(g) * d - r, r * 2, r * 2);
+            x.globalAlpha = 0.95; x.drawImage(lay(mk, r * 2), k * S + S / 2 + Math.cos(g) * d - r, S / 2 + Math.sin(g) * d - r, r * 2, r * 2);
           }
         }
         x.restore();
       }
-      // ảnh lệch sắc nguyên tố (vd. Tesla: nổ cam) → phủ màu nguyên tố trong alpha của chính dải (tô màu PNG — QUY-TAC mục 3)
-      const mE = typeof P3 !== 'undefined' && P3.mauTen(ten), mA = this.mau(ten);
-      if (mE && mA && this.lechSac(mE, mA) > 50) { x.globalCompositeOperation = 'source-atop'; x.globalAlpha = 0.62; x.fillStyle = mE; x.fillRect(0, 0, c.width, c.height); } // vetay-ok: png — tô màu trong alpha ảnh
-      s = c;
-    } catch (e) { s = null; }
-    this._dai.set(key, s); return s;
   },
   sac(h) { const r = parseInt(h.slice(1, 3), 16), g = parseInt(h.slice(3, 5), 16), b = parseInt(h.slice(5, 7), 16), mx = Math.max(r, g, b), mn = Math.min(r, g, b); if (mx === mn) return 0; let q = mx === r ? ((g - b) / (mx - mn)) % 6 : mx === g ? (b - r) / (mx - mn) + 2 : (r - g) / (mx - mn) + 4; return (q * 60 + 360) % 360; },
   lechSac(a, b) { const d = Math.abs(this.sac(a) - this.sac(b)); return Math.min(d, 360 - d); },

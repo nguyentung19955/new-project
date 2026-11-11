@@ -197,6 +197,12 @@ const PX = {
     if (!(r > 0.5) || !(Math.abs(a1 - a0) >= 0.003) || (al != null && !(al > 0.01))) return; // góc NaN (tiến độ dạng chưa có) → bỏ, không tạo canvas 0 px làm vỡ cả lượt vẽ ụ
     const vm = im || this.mau('fx_vong_mong', mau); if (!vm) return; // im: ảnh vòng riêng (vd. vòng hồi chiêu gọn) — mau vẫn là khoá bộ đệm
     const q = Math.PI / 64, b0 = Math.round(a0 / q), b1 = Math.round(a1 / q), S = r * this.K_VONG, n = Math.max(8, Math.round(S * REN.s * REN.dpr));
+    if (ctx.laGL && typeof _GLA === 'function' && _GLA()) { // WebGL (ảnh ảo): hình quạt = hình học cắt thẳng từ ảnh vòng trên GPU (GLR.quat) — không nướng canvas theo góc, không tải texture
+      const A0 = b0 * q, A1 = b1 * q, d = nguoc ? (A1 > A0 ? A1 - A0 - 2 * Math.PI : A1 - A0) : (A1 < A0 ? A1 - A0 + 2 * Math.PI : A1 - A0);
+      if (al != null) ctx.globalAlpha = Math.min(1, al * Math.min(1, 0.55 + (w || 2) * 0.18));
+      if (d) GLR.quat(ctx, REN.mip(vm, n), x - S / 2, y - S / 2, S, S, A0, d);
+      return;
+    }
     const key = mau + '|' + n + '|' + b0 + '|' + b1 + '|' + (nguoc ? 1 : 0);
     let c = this._cung.get(key);
     if (!c) {

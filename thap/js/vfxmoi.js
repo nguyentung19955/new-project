@@ -305,14 +305,18 @@ const VXD = {
   // dải lặp liền: dai[n] (n = 0–5) khung lửa xoay vòng lệch n · dai[6], dai[7] = tàn than
   function dung() {
     const im = REN.img(TEN); if (!im) return null;
-    const out = [];
+    const out = [], gl = im._goc && typeof _GLA === 'function' && _GLA();
+    const lat = (x, n, g) => { for (let j = -2; j < 8; j++) { const f = n < 6 ? (((j + n) % 6) + 6) % 6 : n; x.drawImage(g, f * FWN, 0, FWN, FHN, j * BUOC - (FWN - BUOC) / 2, 0, FWN, FHN); } };
     for (let n = 0; n < 8; n++) {
+      // WebGL (ảnh ảo): dải lát DỰNG TRÊN GPU 1 lần từ tờ gốc đã ở trên GPU (GLR.dungG) — không dựng 8 canvas 1016×159 rồi tải lên; đọc 2D / 2D dự phòng → dựng thật bằng đúng phép lát cũ
+      if (gl) { out.push(GLR.dungG(CHU + THEM, FHN, { ve: (X) => { const g = REN.img(TEN); if (!g) return false; lat(X, n, g); }, dung: (cv) => { const g = REN.img(TEN); if (!g || !g.width) return false; lat(cv.getContext('2d'), n, g); return true; } })); continue; }
       const c = document.createElement('canvas'); c.width = CHU + THEM; c.height = FHN; const x = c.getContext('2d');
-      for (let j = -2; j < 8; j++) { const f = n < 6 ? (((j + n) % 6) + 6) % 6 : n; x.drawImage(im, f * FWN, 0, FWN, FHN, j * BUOC - (FWN - BUOC) / 2, 0, FWN, FHN); }
+      lat(x, n, im);
       out.push(c);
     }
     return out;
   }
+  VXM.rongDai = () => { if (!dai) dai = VXM.co(TEN) ? dung() : null; return dai; }; // (nongskill.js: bộ bài có Rồng Máy → dựng 8 dải vệt lửa ngay ở màn mở đầu trận; tools/thap-kt-gl-hieuung.js)
   // tim đường làm tròn ở cua: [x, y, góc]
   function diem(P, c) {
     let sx = 0, sy = 0;

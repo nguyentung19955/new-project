@@ -388,7 +388,7 @@
     if ((!a._cv && !(a.complete && a.naturalWidth)) || a._chuaGiai) { if (++it.lan < 40) this.ds.push(it); return true; } // chưa tải xong: để sau
     if (!it.b && a._cv && a._cv._am && !it.co) return true; // đã làm nóng
     const W0 = a._cv ? a._cv.width : a.naturalWidth, H0 = a._cv ? a._cv.height : a.naturalHeight;
-    if (!it.b && !it.co && W0 * H0 < 65536 && W0 < 1024) return true; // ảnh nhỏ: lần đầu rẻ (< 1 ms) — không chép trước (giữ bộ nhớ như cũ)
+    if (!it.b && !it.co && W0 * H0 < 65536 && W0 < 1024) { if (NS.napGL && !a._chuaGiai) NS.napGL(t); return true; } // ảnh nhỏ: lần đầu rẻ (< 1 ms) — không chép trước (giữ bộ nhớ như cũ)
     // chia 1 tờ thành nhiều việc nhỏ ở các khung khác nhau (mỗi việc 1 phần chi phí lần đầu): 0 chép sang canvas · 1 vẽ thử
     // (lên GPU + mipmap) · 2–3 tầng mip ½ và ¼ (tờ hiệu ứng) · 4 dải thu nhỏ của quái (hàng nóng tự rải tiếp)
     const t0 = now(); it.b = it.b || 0;
@@ -397,7 +397,7 @@
       else {
         const c = a._cv || NS._imgGoc.call(REN, t);
         const laMip = c && /^(p2_|p3_|fx_|sig_)/.test(t) && c.height >= 96 && c.width / c.height >= 3;
-        if (it.b === 1) { if (c && c.width && !c._am) veThu(c); if (c) c._am = 1; it.b = laMip ? 2 : 4; }
+        if (it.b === 1) { if (c && c.width && !c._am) veThu(c); if (c) c._am = 1; if (NS.napGL) NS.napGL(t); it.b = laMip ? 2 : 4; }
         // tờ hiệu ứng vẽ qua chuỗi mip (REN.khungMuot / hieuung.khung: P2, fx_*, sig_*): 2 tầng đầu dựng từ TỜ LỚN là phần đắt
         // nhất (20–60 ms ×4 CPU, đo p2_copycat / p2_halo) → dựng sẵn; tầng nhỏ hơn dựng từ tầng ¼ (rẻ) khi cần
         else if (it.b === 2) { NS._mipGoc.call(REN, c, Math.ceil(c.height / 2)); it.b = 3; }
@@ -408,6 +408,18 @@
     } catch (e) { }
     const ms = now() - t0; this.thongKe.lam++; this.thongKe.ms += ms; if (ms > this.thongKe.max) this.thongKe.max = ms; if (ms > 20 && this.thongKe.nang.length < 30) this.thongKe.nang.push(t + ' ' + Math.round(ms));
     return true;
+  };
+  // WebGL ẢNH ẢO (KE-HOACH mục 13): mọi biến thể (cỡ, màu tô, hoà 'color', mặt nạ, dải dựng trên GPU) lấy mẫu từ texture ẢNH GỐC → làm nóng = đưa chính ảnh gốc lên GPU.
+  //   Trước: bản GL bỏ bước "vẽ thử" → ảnh hiệu ứng của bộ bài chỉ lên GPU ở LẦN DÙNG ĐẦU giữa trận (tải Image → texture: giải mã + tải, 3–50 ms trên iPhone).
+  //   Nay: mỗi ảnh của danh sách làm nóng (UI.dsTran theo 2 bộ bài + chỉ huy, tờ P2 / P3, ảnh tình huống, ảnh tải lười) vào hàng nạp nền của GLR ở tầng sẽ dùng:
+  //   tầng nét nhất từng được vẽ trong phiên (g._lvThay — glr.js ghi), chưa biết → tầng 0 nếu ảnh ≤ 512² điểm (vào atlas), tầng ½ nếu là tờ lớn (cần nét hơn thì GLR tải lần 2 ở tầng 0).
+  //   Màn mở đầu trận tải không giới hạn; giữa trận ≤ 1 texture / khung nhẹ (GLR.napChay). Bộ bài có Rồng Máy: 8 dải vệt lửa dựng trên GPU luôn (VXM.rongDai).
+  NS.napGL = function (t) {
+    if (typeof _GLA !== 'function' || !_GLA()) return;
+    const c = REN.img(t); if (!c || !c._goc || c._napGL === GLR.the) return; c._napGL = GLR.the;
+    let L = c._lvThay; if (L == null) L = c.width * c.height > 262144 ? 1 : 0;
+    GLR.nap(L > 0 ? NS._mipGoc.call(REN, c, Math.min(c.width, c.height) / (2 << L) + 1) : c);
+    if (t === 'fx_ronglua_vet' && typeof VXM !== 'undefined' && VXM.rongDai && G.ban.some(B => (B.deck || []).indexOf('ronglua') >= 0)) { const d = VXM.rongDai(); if (d) for (const s of d) if (s && s._veG) GLR.nap(s); }
   };
   AM.chay = function (han) {
     if (!this.BAT || !NS._trongTran() || G.ketThuc || (G.dung && !NS.moDau())) return;
