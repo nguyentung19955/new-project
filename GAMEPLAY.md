@@ -1361,3 +1361,8 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - Số mana ≥ 6 chữ số không còn tràn khung: `ui.js` đặt `#mana[data-n=6|7|8]`, `hud-anime.css` thu chữ 18 / 16 / 14 px. KHÔNG đổi kinh tế mana.
 - Chân thẻ Lucky Slot: 3 số quả ("33 33 42") không còn chồng nhau (dùng gần hết bề ngang thẻ, icon 7 px, chữ 9,5 px; 3 chữ số: 6 px / 8 px).
 - Rà "dòng gem 2/3" (`motvong.js` `MV.dong/dongGon`: "Gems: form 2/3 …"): CHƯA bỏ — hạt ngọc nhỏ ở góc huy hiệu sao vẫn được vẽ khi ụ lên dạng ≥ 2 và dòng chỉ hiện khi có hạt đó → chờ người dùng quyết.
+
+## claude/demo-hop-tuong — Cân bằng wave: ĐỀ XUẤT đo bằng trận bot (11/11) — CHƯA đổi số nào trong game
+- Bảng trước / sau + số cụ thể + rà phần thưởng: `docs/demo-hop-tuong/tocban/CAN-BANG-WAVE-DE-XUAT.md`; dữ liệu thô `tocban/bot-wave-{goc,A,B}.json`.
+- Công cụ: `tools/thap-bot-tran.js` (trận bot thật, thêm đo mana nhận khi giết), `tools/thap-bot-bienthe.js` (biến thể A / B bơm lúc đo), `tools/thap-bot-lo.json` (28 ca), `tools/thap-bot-bang.js` (gộp bảng).
+- Kết quả chính: bộ Vàng tấn công 46 → A 69 / B 65; bộ khởi đầu Leo Tháp tầng 1–6 từ 0/4 → 3–4/4; co-op wave 25–34 quái sinh/wave 101 → 28, đỉnh quái sống 31 → 8. Chờ người dùng duyệt A hoặc B.
