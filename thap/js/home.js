@@ -15,7 +15,7 @@ const HM = {
     solo: { ten: 'SOLO', ic: 'ic_solo', phu: () => TEXT.ui.soloSub, mo: 'Just you · 1 board · 3 lives', an: 1 }, // an: ẩn khỏi GAME MODE (chỉ ?mode=solo)
     coop: { ten: 'CO-OP', ic: 'ic_coop', phu: () => TEXT.ui.coopSub, mo: 'Team up with an AI ally · 3 shared lives' },
     pvp: { ten: 'PVP', ic: 'ic_pvp', phu: () => TEXT.ui.pvpSub, mo: 'Outlast an AI rival on the same waves' },
-    online: { ten: 'ONLINE', ic: 'ic_coop', phu: () => 'Co-op with a friend', mo: 'Friend room · join with a 4-letter code' },
+    online: { ten: 'ONLINE', ic: 'ic_online', phu: () => 'Co-op with a friend', mo: 'Friend room · join with a 4-letter code' },
   },
   ICHE: {}, // ảnh biểu tượng chế độ riêng (E32, khi có) — trống = dùng ic_solo/ic_coop/ic_pvp
   che: 'coop', bac: 'all', armed: -1, noi: null, bst: false, sheet: null,

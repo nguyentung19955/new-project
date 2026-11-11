@@ -1439,3 +1439,5 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 ## claude/demo-hop-tuong — cân bằng B: rút phần Leo Tháp / Tuần / Vô tận (11/11 19:00)
 - Người dùng chốt 18:41: BỎ Leo Tháp + 4 chế độ (làm trên nhánh `claude/che-do-dcdw`), không sửa tầng 1 Leo Tháp nữa, tránh sửa `chedo-c.js` / `chedo-d.js` / `home.js` → trả 2 tệp `chedo-c.js`, `chedo-d.js` và 3 bài kiểm (`thap-kt-thap-leo`, `thap-kt-vo-tan`, `thap-kt-thu-thach-tuan`) về trạng thái trước cân bằng B.
 - Còn hiệu lực (CO-OP / PVP / solo thử): số quái/wave `min(20, 8+⌊w/4⌋)`, slime tách 3 / 2 và chỉ ở wave Phân bào, wave có chủ đề theo `w % 10` (tên chủ đề ở băng WAVE), mana quái thường ×(1+1,7·min(w,30)/30), đà ST Vàng/Đỏ +2%/wave từ wave 20–40 rồi phẳng, máu quái theo B, KHÔNG trần wave 70.
+
+- Biểu tượng chế độ mới (ảnh ChatGPT 11/11, cắt từ 1 tấm 3×2, 192 px): `ic_coop`, `ic_pvp` (thay hình ụ cơ khí cũ), `ic_online`, `ic_race`, `ic_tutorial`, `ic_cup` (ô cúp ở kết quả PVP). Đã xem ảnh GAME MODE 390×844.

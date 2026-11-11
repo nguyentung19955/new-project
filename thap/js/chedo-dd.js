@@ -23,7 +23,7 @@ const DDC = {
     100: [{ vang: 1000 }, { ngoc: 50 }], 250: [{ ngoc: 50 }], 400: [{ vang: 2000 }, { tt: 1 }],
     550: [{ ngoc: 60 }, { ruong: 'hh', n: 1 }], 700: [{ vang: 2000 }, { tt: 1 }], 850: [{ ruong: 'hh', n: 2 }, { tt: 1 }],
   },
-  ICON: 'ua_ic_sk',
+  ICON: 'ic_race', // biểu tượng Đường Đua (ảnh ChatGPT 11/11)
 };
 
 const DD = {
@@ -253,7 +253,7 @@ const CUP = {
   kq(k) {
     const chi = document.getElementById('kq-chi'); if (!chi || !k) return;
     const r = this.ket(!!k.thang), ke = this.ke();
-    let h = '<div class="tb-kq cd-kq dd-xd"><small>CUPS ' + CDUI.so(r.c) + ' (' + (r.d >= 0 ? '+' : '−') + Math.abs(r.d) + ')' + (ke ? ' · NEXT PRIZE ' + CDUI.so(ke) : '') + '</small>';
+    let h = '<div class="tb-kq cd-kq dd-xd"><small><img src="' + CDUI.a('ic_cup') + '" alt="" style="width:18px;height:18px;vertical-align:-4px;margin-right:4px">CUPS ' + CDUI.so(r.c) + ' (' + (r.d >= 0 ? '+' : '−') + Math.abs(r.d) + ')' + (ke ? ' · NEXT PRIZE ' + CDUI.so(ke) : '') + '</small>';
     if (r.moc.length) h += '<small>CUP MILESTONE · ' + CDUI.so(Math.max.apply(null, r.moc)) + '</small>' + DDUI.thuongGon(r.ra);
     chi.insertAdjacentHTML('beforeend', h + '</div>');
     try { OT.quet(chi); } catch (e) { }
@@ -393,7 +393,7 @@ function boDongDoiMoi() { const d = MOIC.bo.filter(id => SKILLS[id] && G.rosterM
   if (typeof HM !== 'undefined' && HM.CHE.coop) {
     // ---- HƯỚNG DẪN là một bản riêng: mục TUTORIAL trong GAME MODE = chơi lại trận hướng dẫn (huongdan.js HD.batDau, bộ + luật cố định của nó) ----
     if (typeof HD !== 'undefined') {
-      HM.CHE.hd = { ten: 'TUTORIAL', ic: 'ic_solo', phu: () => '', mo: 'One guided battle: summon, merge, commander, boss · replay any time' };
+      HM.CHE.hd = { ten: 'TUTORIAL', ic: 'ic_tutorial', phu: () => '', mo: 'One guided battle: summon, merge, commander, boss · replay any time' };
       const cc2 = HM.chonChe;
       HM.chonChe = function (k) { if (k !== 'hd') return cc2.apply(this, arguments); try { SND.nut(); } catch (e) { } this.dong(true); HD.batDau(); };
     }
