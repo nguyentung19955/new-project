@@ -207,7 +207,7 @@ const MV = {
       else P.push(vi ? 'Lõi sáng: tích tụ ' + (ten ? tr(ten) : 'chiêu') + ' — đầy thì tự kích' : 'Core glow: ' + (ten || 'skill') + ' building up — fires by itself when full');
     }
     const d = this.coNgoc(T) && this.dang(T); // rà phần đã bỏ: hàng 3 viên ngọc đã bỏ (bàn gọn 07/11) — chỉ nhắc khi có hạt ngọc ở huy hiệu sao
-    if (d) P.push(vi ? 'Ngọc: dạng ' + d.s + '/' + d.n + ' ' + tr(d.ten) : 'Gems: form ' + d.s + '/' + d.n + ' ' + d.ten);
+    // 11/11 (người dùng): bỏ dòng "Gems: form 2/3 …" ở dải thông tin trong trận — dạng đã thấy ở hình ụ; chú giải hạt ngọc vẫn còn ở trang ụ (chuGiai)
     if (typeof DEMKN !== 'undefined' && DEMKN.lay(T, B)) { const g = this.TAG[T.id] || ['skill counter', 'bộ đếm kỹ năng']; P.push(vi ? 'Số dưới ô: ' + g[1] : 'Bottom tag: ' + g[0]); }
     if (T.id === 'nhatthuc') P.push(vi ? 'Chế độ: ' + (T.dem ? 'ĐÊM' : 'NGÀY') : 'Mode: ' + (T.dem ? 'NIGHT' : 'DAY'));
     return P.join(' · ');
@@ -223,7 +223,6 @@ const MV = {
       else P.push(vi ? 'Lõi sáng = tích tụ chiêu (đầy tự kích)' : 'Core glow = skill build-up (fires itself)');
     }
     const d = this.coNgoc(T) && this.dang(T);
-    if (d) P.push(vi ? 'Ngọc = dạng ' + d.s + '/' + d.n + ' ' + tr(d.ten) : 'Gems = form ' + d.s + '/' + d.n + ' ' + d.ten);
     if (typeof DEMKN !== 'undefined' && DEMKN.lay(T, B)) { const g = this.TAG[T.id] || ['skill counter', 'bộ đếm kỹ năng']; const ng = (x) => x.replace(/\s*\(.*\)$/, ''); P.push(vi ? 'Số dưới ô = ' + ng(g[1]) : 'Bottom number = ' + ng(g[0])); }
     return P.join(' · ');
   },
