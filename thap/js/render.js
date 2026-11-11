@@ -108,7 +108,7 @@ const REN = {
     const r = thuc / this.dpr;
     this.cv.style.width = (this.cv.width * r / (this.s * thuc)) + 'px'; this.cv.style.height = (this.cv.height * r / (this.s * thuc)) + 'px';
     this.nen.style.width = this.cv.style.width; this.nen.style.height = this.cv.style.height;
-    this.min(this.ctx); this.ctx.lineCap = 'round'; this.ctx.lineJoin = 'round'; // nét vẽ (vòng, tia, sét) đầu tròn, khử răng cưa
+    this.minVe(this.ctx); this.ctx.lineCap = 'round'; this.ctx.lineJoin = 'round'; // nét vẽ (vòng, tia, sét) đầu tròn, khử răng cưa
     this.donCache(); this._chu = null; this._glyph = null;
     if (G.ban.length) this.lamNen();
   },
@@ -116,6 +116,10 @@ const REN = {
   px(v) { const k = this.s * this.dpr; return Math.round(v * k) / k; },
   // bật lọc ảnh chất lượng cao cho mọi ngữ cảnh vẽ 2D
   min(x) { x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high'; return x; },
+  // tối ưu giật co-op (11/11): 2 ngữ cảnh VẼ MỖI KHUNG (canvas trận + lớp hiệu ứng) lọc 'low' (song tuyến tính). Ảnh đã được thu sẵn gần đúng cỡ
+  //   (thuNho/mip, vẫn lọc 'high' lúc dựng 1 lần) nên hình không đổi thấy được, mà mỗi lệnh vẽ co/xoay rẻ hơn hẳn (đo: −25…30% thời gian khung cảnh nặng).
+  LOC_VE: 'low',
+  minVe(x) { x.imageSmoothingEnabled = true; x.imageSmoothingQuality = this.LOC_VE; return x; },
   c2d(c) { return this.min(c.getContext('2d')); },
   // ĐỘ PHÂN GIẢI THÍCH ỨNG (chống nóng máy — tuvan/nong): bắt đầu đúng mật độ thật (3× nét); máy GỒNG kéo dài → lùi 2× (rồi 1,5× chỉ
   // khi bật Tiết kiệm pin hoặc máy 2×). "Gồng" = khoảng khung > 1,3 × mục tiêu (16,7 ms; 33 ms khi tiết kiệm pin) suốt 4 s, HOẶC JS > 11 ms.
@@ -420,7 +424,7 @@ const REN = {
     let c = M.get(key); if (c) return c;
     // SỐ SÁT THƯƠNG (chỉ chữ số): ghép từ ảnh từng chữ số dựng sẵn (viền / ruột riêng) — không dựng canvas + vẽ chữ mới cho MỖI con số.
     // Đợt nhiều skill cùng lúc sinh hàng chục số khác nhau trong 1 khung → trước đây 50–150 ms vẽ chữ (giật). Xem giat_skill/BAO-CAO.md.
-    if (/^[0-9]{1,12}$/.test(s)) return this.chuSo(s, mau, px);
+    if (/^[0-9.KM+]{1,12}$/.test(s)) return this.chuSo(s, mau, px); // 11/11: cả số gọn '199.9K' / '14.3M' / '+12' (trước: mỗi giá trị K/M mới = 1 canvas mới + vẽ chữ → ~0,7 canvas / khung cảnh nặng)
     if (M.size > 200) M.clear();
     const f = '900 ' + px + 'px ' + FONT.display;
     const m = this._mx || (this._mx = document.createElement('canvas').getContext('2d'));
@@ -768,7 +772,7 @@ const REN = {
     if (this._lopD !== G.duong) { this._lopD = G.duong; let my = 0; for (const p of G.duong) for (const q of p.pts) my = Math.max(my, q.y !== undefined ? q.y : q[1]); this._lopY = my > 0 ? my + 90 : H; }
     // sửa gấp 09/11 (bộ nhớ canvas iPhone): lớp chỉ CAO bằng dải được đổ lên (trước: cả màn, phần dưới không bao giờ dùng) → hình y hệt, bớt điểm ảnh
     const lh = Math.min(cv.height, Math.ceil((this._lopY + 10) * this.s * this.dpr));
-    if (L.width !== cv.width || L.height !== lh) { L.width = cv.width; L.height = lh; this.min(x); x.lineCap = 'round'; x.lineJoin = 'round'; V.rong(); }
+    if (L.width !== cv.width || L.height !== lh) { L.width = cv.width; L.height = lh; this.minVe(x); x.lineCap = 'round'; x.lineJoin = 'round'; V.rong(); V.goc(); }
     this._lopH = lh;
     x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; x.globalCompositeOperation = 'source-over';
     // đợt 2 nóng máy (09/11): chỉ xoá VÙNG đã vẽ từ lần xoá trước (trước: xoá cả lớp 2 lần/khung dù hiệu ứng chỉ chiếm một góc)
@@ -789,6 +793,34 @@ const REN = {
       } };
     V.rong();
     const P = CanvasRenderingContext2D.prototype, dI = P.drawImage;
+    // tối ưu giật co-op (11/11): KHÔNG gọi getTransform() cho từng lệnh vẽ nữa (mỗi lần tạo 1 DOMMatrix — ~450 đối tượng rác / khung ở cảnh nặng
+    //   → trình duyệt dọn rác dồn). Lớp tự giữ ma trận hiện hành V.m [a,b,c,d,e,f] + ngăn xếp save/restore, cập nhật đúng theo từng lệnh biến đổi
+    //   (tham số không hữu hạn: canvas bỏ qua lệnh → ở đây cũng bỏ qua). Đổi cỡ canvas = trạng thái về gốc → lopFx gọi V.goc().
+    const M = V.m = [1, 0, 0, 1, 0, 0], ST = V.st = [], hh = Number.isFinite;
+    V.goc = function () { M[0] = 1; M[1] = 0; M[2] = 0; M[3] = 1; M[4] = 0; M[5] = 0; ST.length = 0; };
+    { const sT = P.setTransform, rT = P.resetTransform, tr = P.translate, sc = P.scale, ro = P.rotate, tf = P.transform, sv = P.save, rs = P.restore;
+      x.setTransform = function (a, b, c, d, e, f) {
+        const n = arguments.length;
+        if (n >= 6) { if (hh(a) && hh(b) && hh(c) && hh(d) && hh(e) && hh(f)) { M[0] = a; M[1] = b; M[2] = c; M[3] = d; M[4] = e; M[5] = f; } return sT.call(this, a, b, c, d, e, f); }
+        if (n >= 1 && a && typeof a === 'object') {
+          const q = [a.a !== undefined ? a.a : a.m11 !== undefined ? a.m11 : 1, a.b !== undefined ? a.b : a.m12 !== undefined ? a.m12 : 0, a.c !== undefined ? a.c : a.m21 !== undefined ? a.m21 : 0,
+            a.d !== undefined ? a.d : a.m22 !== undefined ? a.m22 : 1, a.e !== undefined ? a.e : a.m41 !== undefined ? a.m41 : 0, a.f !== undefined ? a.f : a.m42 !== undefined ? a.m42 : 0];
+          if (q.every(hh)) for (let i = 0; i < 6; i++) M[i] = q[i];
+          return sT.call(this, a);
+        }
+        M[0] = 1; M[1] = 0; M[2] = 0; M[3] = 1; M[4] = 0; M[5] = 0; return sT.apply(this, arguments);
+      };
+      if (rT) x.resetTransform = function () { M[0] = 1; M[1] = 0; M[2] = 0; M[3] = 1; M[4] = 0; M[5] = 0; return rT.call(this); };
+      x.translate = function (u, v) { if (hh(u) && hh(v)) { M[4] += M[0] * u + M[2] * v; M[5] += M[1] * u + M[3] * v; } return tr.call(this, u, v); };
+      x.scale = function (u, v) { if (hh(u) && hh(v)) { M[0] *= u; M[1] *= u; M[2] *= v; M[3] *= v; } return sc.call(this, u, v); };
+      x.rotate = function (g) { if (hh(g)) { const c = Math.cos(g), s2 = Math.sin(g), a = M[0], b = M[1], c0 = M[2], d = M[3]; M[0] = a * c + c0 * s2; M[1] = b * c + d * s2; M[2] = c0 * c - a * s2; M[3] = d * c - b * s2; } return ro.call(this, g); };
+      x.transform = function (a, b, c, d, e, f) {
+        if (hh(a) && hh(b) && hh(c) && hh(d) && hh(e) && hh(f)) { const A = M[0], B = M[1], C = M[2], D = M[3]; M[0] = A * a + C * b; M[1] = B * a + D * b; M[2] = A * c + C * d; M[3] = B * c + D * d; M[4] += A * e + C * f; M[5] += B * e + D * f; }
+        return tf.call(this, a, b, c, d, e, f);
+      };
+      x.save = function () { ST.push(M[0], M[1], M[2], M[3], M[4], M[5]); return sv.call(this); };
+      x.restore = function () { const n = ST.length; if (n >= 6) { M[5] = ST[n - 1]; M[4] = ST[n - 2]; M[3] = ST[n - 3]; M[2] = ST[n - 4]; M[1] = ST[n - 5]; M[0] = ST[n - 6]; ST.length = n - 6; } return rs.call(this); };
+    }
     x.drawImage = function (im, a1, a2, a3, a4, a5, a6, a7, a8) {
       V.co = true;
       if (!V.ca) {
@@ -796,9 +828,9 @@ const REN = {
         else {
           let dx, dy, dw, dh; const n = arguments.length;
           if (n >= 9) { dx = a5; dy = a6; dw = a7; dh = a8; } else if (n >= 5) { dx = a1; dy = a2; dw = a3; dh = a4; } else { dx = a1; dy = a2; dw = im.width || 0; dh = im.height || 0; }
-          const m = this.getTransform(), p = this.shadowBlur > 0 ? this.shadowBlur * 2 + Math.abs(this.shadowOffsetX) + Math.abs(this.shadowOffsetY) : 0;
+          const p = this.shadowBlur > 0 ? this.shadowBlur * 2 + Math.abs(this.shadowOffsetX) + Math.abs(this.shadowOffsetY) : 0;
           for (let i = 0; i < 4; i++) {
-            const u = dx + (i & 1 ? dw : 0), v = dy + (i & 2 ? dh : 0), X = m.a * u + m.c * v + m.e, Y = m.b * u + m.d * v + m.f;
+            const u = dx + (i & 1 ? dw : 0), v = dy + (i & 2 ? dh : 0), X = M[0] * u + M[2] * v + M[4], Y = M[1] * u + M[3] * v + M[5];
             if (X - p < V.x0) V.x0 = X - p; if (X + p > V.x1) V.x1 = X + p; if (Y - p < V.y0) V.y0 = Y - p; if (Y + p > V.y1) V.y1 = Y + p;
           }
           if (!(V.x0 > -1e7 && V.x1 < 1e7 && V.y0 > -1e7 && V.y1 < 1e7)) V.ca = true; // NaN / vô cực → cả lớp
@@ -809,10 +841,10 @@ const REN = {
     // đợt 3 giật (10/11): chữ (fillText/strokeText, không maxWidth) + fillRect/strokeRect tính khung bao thật (measureText actualBoundingBox,
     //   cộng nét + bóng + lề 3) thay vì "cả lớp" — "+1" / "JACKPOT!" của Lucky Slot trước làm lớp đổ cả màn ~40% số khung
     const P2 = P, them = (c, u0, v0, u1, v1) => {
-      const m = c.getTransform(), p = (c.lineWidth || 1) + 3 + (c.shadowBlur > 0 ? c.shadowBlur * 2 + Math.abs(c.shadowOffsetX) + Math.abs(c.shadowOffsetY) : 0);
+      const p = (c.lineWidth || 1) + 3 + (c.shadowBlur > 0 ? c.shadowBlur * 2 + Math.abs(c.shadowOffsetX) + Math.abs(c.shadowOffsetY) : 0);
       u0 -= p; v0 -= p; u1 += p; v1 += p;
       for (let i = 0; i < 4; i++) {
-        const u = i & 1 ? u1 : u0, v = i & 2 ? v1 : v0, X = m.a * u + m.c * v + m.e, Y = m.b * u + m.d * v + m.f;
+        const u = i & 1 ? u1 : u0, v = i & 2 ? v1 : v0, X = M[0] * u + M[2] * v + M[4], Y = M[1] * u + M[3] * v + M[5];
         if (X < V.x0) V.x0 = X; if (X > V.x1) V.x1 = X; if (Y < V.y0) V.y0 = Y; if (Y > V.y1) V.y1 = Y;
       }
       if (!(V.x0 > -1e7 && V.x1 < 1e7 && V.y0 > -1e7 && V.y1 < 1e7)) V.ca = true;
@@ -845,7 +877,7 @@ const REN = {
     x.globalAlpha = 1; x.globalCompositeOperation = 'source-over';
     if (khoet && G.quai.length) {
       const lo = this.cham1('#ffffff'), dI = CanvasRenderingContext2D.prototype.drawImage; x.globalCompositeOperation = 'destination-out'; // khoét chỉ XOÁ → không nới khung bao
-      const m = x.getTransform(), kx = m.a, ky = m.d, x0 = r[0], y0 = r[1], x1 = r[0] + r[2], y1 = r[1] + r[3]; // đợt 3 giật: chỉ khoét quái chạm KHUNG BAO hình thật của lớp
+      const mm = V.m, m = { a: mm[0], d: mm[3], e: mm[4], f: mm[5] }, kx = m.a, ky = m.d, x0 = r[0], y0 = r[1], x1 = r[0] + r[2], y1 = r[1] + r[3]; // đợt 3 giật: chỉ khoét quái chạm KHUNG BAO hình thật của lớp
       for (const E of G.quai) if (!E.chet) { const c = E.d.co * (E.trum ? 0.9 : 1.15), X = kx * (E.x - c / 2) + m.e, Y = ky * (E.y - c * 0.6) + m.f; if (X > x1 || Y > y1 || X + kx * c < x0 || Y + ky * c < y0) continue; x.globalAlpha = E.trum ? DIU.loTrum : DIU.lo; dI.call(x, lo, E.x - c / 2, E.y - c * 0.6, c, c); }
       x.globalAlpha = 1; x.globalCompositeOperation = 'source-over';
     }
