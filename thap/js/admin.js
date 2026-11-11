@@ -71,7 +71,7 @@ requestAnimationFrame(ADMIN.fps.khung);
 //   "+giây  khoảng-cách | raf = tổng ms mọi hàm requestAnimationFrame | ve = REN.ve | gl = GLR.xong (phát lệnh GPU) | up n/ms WxH = số lần tải texture / ms / canvas lớn nhất
 //    | ev n/ms = số sự kiện chạm / ms xử lý | dom n id:n = số lần đổi DOM trong khung + phần tử đổi nhiều nhất". gpu = ms chờ GPU vẽ xong (gl.finish, chỉ khi bảng đang hiện); L = lệnh vẽ GL; v = cụm vector. raf nhỏ mà khoảng cách lớn → nghẽn ở trình duyệt (ghép lớp, dọn rác, DOM), không phải code vẽ.
 ADMIN.nk = {
-  el: null, ds: [], an: false, k: null, t0: 0,
+  el: null, ds: [], an: true, che: 2, k: null, t0: 0, // 11/11 tối: nhật ký mặc định ẨN (đã tìm ra lỗi giật) — chạm nhãn FPS: hiện nhật ký → NF → ẩn
   moi() { return { raf: 0, ve: 0, gl: 0, gpu: 0, lenh: 0, vec: 0, un: 0, um: 0, uw: 0, uh: 0, en: 0, em: 0, dom: 0, noi: null }; },
   bat() {
     if (this._bat || !ADMIN.la()) return; this._bat = 1; const N = this; N.k = N.moi();
