@@ -23,6 +23,7 @@ const MAU_VET = { dan_lien: '#ffb347', dan_bang: '#8fe3ff', dan_doc: '#8dff4a', 
 //  duoi = alpha đổ lớp vùng phủ nền (độc/cầu vồng/vệt lửa/mìn/hố đen/băng) · tren = alpha đổ lớp nổ/tia/tường/hạt
 //  lo / loTrum = độ khoét mềm lớp trên quanh mỗi quái / trùm (1 = xoá hẳn)
 const DIU = { bat: !(typeof location !== 'undefined' && /[?&]diu=0\b/.test(location.search)), duoi: 0.55, tren: 0.88, lo: 0.6, loTrum: 0.4 };
+const _GLB = () => typeof GLR !== 'undefined' && GLR.bat; // lớp WebGL đang bật (?gl=0 / không có WebGL: false → không gì thêm chạy)
 const REN = {
   dbg: /[?&]debug(=|&|$)/.test(location.search), // ?debug: cho phép hình vẽ code dự phòng khi thiếu ảnh (chỉ để gỡ lỗi)
   cv: null, ctx: null, s: 1, dpr: 1, anh: {}, nen: null, xam: {}, trang: {}, cham: {}, cache: {}, t: 0, thieu: new Set(), dt: 0, a: 1, _vet: {}, _glow: {},
@@ -54,10 +55,11 @@ const REN = {
   cSet(key, c) {
     if (!c) return c;
     this._cachePx += c.width * c.height;
-    if (this._cachePx > this.nganSach() || Object.keys(this.cache).length > 900) { this._cacheCu = this.cache; this.cache = {}; this._cachePx = c.width * c.height; }
+    if (this._cachePx > this.nganSach() || Object.keys(this.cache).length > 900) { if (_GLB()) GLR.boKho(this._cacheCu); this._cacheCu = this.cache; this.cache = {}; this._cachePx = c.width * c.height; }
+    if (_GLB()) GLR.tinh(c, 'cache', key); // WebGL: canvas đệm tĩnh — có bản GPU rồi thì thả bản CPU (glr.js mục BỘ NHỚ)
     return (this.cache[key] = c);
   },
-  donCache() { this.cache = {}; this._cacheCu = {}; this._cachePx = 0; if (this._nongCo) this._nongCo.clear(); if (this._rongDs) this._rongDs.clear(); },
+  donCache() { if (_GLB()) { GLR.boKho(this.cache); GLR.boKho(this._cacheCu); } this.cache = {}; this._cacheCu = {}; this._cachePx = 0; if (this._nongCo) this._nongCo.clear(); if (this._rongDs) this._rongDs.clear(); },
   // ---------- ẢNH DỰNG RA RỖNG (sửa gấp 09/11 — iPhone: Ember / Cổng Ấp Nở mất thân + đầu, chỉ còn vòng/nhãn) ----------
   // Safari iOS: vượt trần tổng bộ nhớ canvas → canvas mới vẫn có ngữ cảnh nhưng lệnh vẽ KHÔNG có tác dụng; chép ảnh chưa giải mã → trong suốt.
   // Ảnh rỗng đó từng được giữ VĨNH VIỄN (REN.cache / REN.anh._cv) → ụ mất hình tới khi mở lại app.
@@ -186,7 +188,7 @@ const REN = {
       if (d / 2 < can || d < 8) return c;
       if (!ch[i + 1]) {
         const t = document.createElement('canvas'); t.width = Math.max(1, Math.round(c.width / 2)); t.height = Math.max(1, Math.round(c.height / 2));
-        this.c2d(t).drawImage(c, 0, 0, t.width, t.height); ch[i + 1] = t;
+        this.c2d(t).drawImage(c, 0, 0, t.width, t.height); ch[i + 1] = t; if (_GLB()) GLR.tinh(t, ch, i + 1);
       }
       i++;
     }
@@ -198,6 +200,7 @@ const REN = {
     for (let i = _DS_CV.length - 1; i >= 0; i--) {
       const c = _DS_CV[i].deref();
       if (!c || !c.width) { _DS_CV.splice(i, 1); continue; }
+      if (c._tha) continue; // WebGL: canvas đã thả bản CPU (0×0 thật, width/height chỉ báo cỡ cũ)
       const p = c.width * c.height; px += p; n++; if (p > lon) lon = p;
     }
     let anh = 0; for (const k in this.anh) { const a = this.anh[k]; if (a instanceof Image && a.naturalWidth) anh += a.naturalWidth * a.naturalHeight; }
@@ -244,6 +247,7 @@ const REN = {
     if (this.laRong(c)) { c.width = c.height = 0; return this.boRong(kr) ? null : a; } // chép ra rỗng (chưa giải mã / hết bộ nhớ canvas): KHÔNG giữ; thử quá nhiều → vẽ thẳng từ ảnh
     // bỏ đối tượng Image (bản giải mã của trình duyệt) → chỉ còn 1 bản điểm ảnh trong bộ nhớ thay vì 2
     a.onload = a.onerror = null;
+    if (_GLB()) GLR.nguon(c, a); // WebGL: giữ Image làm nguồn dựng lại → bản canvas được thả khi không ai đọc điểm ảnh (glr.js mục BỘ NHỚ)
     this.anh[ten] = { _cv: c, complete: true, naturalWidth: c.width, naturalHeight: c.height };
     return c;
   },
@@ -251,7 +255,7 @@ const REN = {
   // trận mới: bỏ mọi ảnh/bộ đệm của ụ, chỉ huy, hiệu ứng KHÔNG thuộc danh sách cần dùng (bộ bài khác của trận trước)
   chiGiu(ds) {
     const giu = new Set(ds);
-    for (const k in this.anh) if (!giu.has(k) && !this.CO_DINH.has(k) && this.anh[k]._cv) delete this.anh[k];
+    for (const k in this.anh) if (!giu.has(k) && !this.CO_DINH.has(k) && this.anh[k]._cv) { if (_GLB()) GLR.bo(this.anh[k]._cv); delete this.anh[k]; }
     for (const k in this.trang) if (!giu.has(k)) delete this.trang[k];
     for (const k in this.xam) if (!k.startsWith('diu|') && !giu.has(k)) delete this.xam[k];
     this.donCache(); this._chu = null; this._glyph = null;
@@ -337,6 +341,7 @@ const REN = {
     const c = document.createElement('canvas'); c.width = im.width; c.height = im.height;
     const x = c.getContext('2d'); x.drawImage(im, 0, 0);
     x.globalCompositeOperation = 'source-atop'; x.globalAlpha = a || 0.78; x.fillStyle = mau; x.fillRect(0, 0, c.width, c.height); // vetay-ok: png (tô màu ảnh trắng fx_*)
+    if (_GLB()) GLR.tinh(c, M, key);
     return (M[key] = c);
   },
   // thanh máu = h2_thanh.png: nền tô đen + phần đầy CẮT theo tỉ lệ, tô màu (QUY-TAC-HINH mục 3)

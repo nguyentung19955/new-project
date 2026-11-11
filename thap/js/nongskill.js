@@ -283,6 +283,7 @@
   const AM = NS.am = { ds: [], quai: new Set(), _co: new Set(), _trum: new Set(), thongKe: { lam: 0, ms: 0, max: 0, nang: [] }, _t: 0, _cho: false, _khung: 0, BAT: true };
   let mini = null;
   const veThu = (c) => {
+    if (typeof GLR !== 'undefined' && GLR.bat && !GLR.mat) return; // WebGL: không vẽ thử 2D (texture tải khi cần / hàng nạp nền của GLR); đọc điểm ảnh ở đây chỉ giữ bản CPU sống lâu hơn
     if (!mini) { const m = document.createElement('canvas'); m.width = m.height = 2; mini = m.getContext('2d'); }
     // thu nhỏ CHẤT LƯỢNG CAO như lúc vẽ thật (REN.min) → trình duyệt dựng luôn chuỗi mipmap của tờ (chi phí lần đầu lớn nhất)
     mini.imageSmoothingEnabled = true; mini.imageSmoothingQuality = 'high'; mini.globalAlpha = 0.01; mini.drawImage(c, 0, 0, 2, 2);
