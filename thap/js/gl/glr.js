@@ -8,7 +8,7 @@
 // CÁCH DÙNG: GLR.x là "ngữ cảnh giả" cùng tập lệnh canvas 2D → hàm vẽ cũ nhận GLR.x thay cho ctx là chạy, toán học giữ nguyên:
 //   · ẢNH (drawImage 3-5-9 tham số, save/restore, biến đổi, globalAlpha, cắt chữ nhật) → ô ảnh gom lô. Hoà màu: source-over, lighter, destination-out,
 //     source-atop, source-in, screen (đúng nghĩa canvas trên nền alpha nhân sẵn).
-//   · CHỮ (fillText/strokeText không xoay) → dựng 1 lần thành ảnh nhỏ (kho chữ), các khung sau là 1 ô ảnh.
+//   · CHỮ (fillText/strokeText không xoay) → Ô ẢNH KÝ TỰ tô màu bằng màu đỉnh (js/chugl.js: 1 tờ ký tự trắng / cỡ, không tải texture theo chuỗi); chữ ngoài bảng / gradient → kho chữ cũ (ảnh nhỏ dựng 1 lần).
 //   · VECTOR (fill/stroke/fillRect/… + chữ xoay): vẽ vào canvas 2D nháp (#cv — bản GL không vẽ gì khác lên đó) rồi chép đúng vùng vừa vẽ thành 1 ô ảnh
 //     chèn ĐÚNG THỨ TỰ vào lô → không còn canvas phủ #cv-tren, thứ tự lớp y bản 2D. Hiếm (khiên Prism, ?debug): 1 lần tải texture nhỏ / cụm lệnh.
 //   · GLR.thieu[nhóm][lệnh] đếm mọi lệnh không-ảnh; tiền tố 'bo:' = lệnh BỎ QUA (clip theo đường cong, filter/bóng, kiểu hoà màu lạ, clearRect…).
@@ -737,6 +737,7 @@ const GLR = (() => {
     // fillText / strokeText không xoay, màu đặc: ảnh chữ dựng 1 lần (kho ≤ 400 mục, khoá = chữ + phông + màu + canh + tỉ lệ) → mỗi khung 1 ô ảnh bám điểm ảnh thiết bị.
     //   Chữ xoay / gradient / bóng / quá 12 chữ MỚI trong 1 khung (số nhảy liên tục) → đường vector (không giữ texture).
     veChu(X, f, args) {
+      if (typeof CHU !== 'undefined' && args.length <= 3 && !X.b && !X.c && X.a > 0 && Math.abs(X.d - X.a) <= 1e-6 * X.a && X._s.shadowBlur <= 0 && X._s.filter === 'none' && X.op <= 1 && CHU.veLenh(X, f, args)) { this.dem.kt = (this.dem.kt | 0) + 1; return; } // Ô ẢNH KÝ TỰ (js/chugl.js): không dựng canvas / tải texture theo chuỗi; không đếm ở GLR.thieu (đã là lệnh ảnh)
       const s = X._s, k = X.a, st = f === 'fillText' ? s.fillStyle : s.strokeStyle;
       if (args.length > 3 || X.b || X.c || !(k > 0) || Math.abs(X.d - k) > 1e-6 * k || typeof st !== 'string' || s.shadowBlur > 0 || s.filter !== 'none' || X.op > 1) return this.veVec(X, f, args);
       const chu = String(args[0]), net = f === 'strokeText';
@@ -819,7 +820,7 @@ const GLR = (() => {
       // giới hạn lấy mẫu = trong ô nguồn (như canvas: không lem điểm ảnh khung/ảnh bên cạnh)
       let g0 = u0 + 0.5 * iw, g2 = u1 - 0.5 * iw, g1 = v0 + 0.5 * ih, g3 = v1 - 0.5 * ih;
       if (g0 > g2) g0 = g2 = (u0 + u1) / 2; if (g1 > g3) g1 = g3 = (v0 + v1) / 2;
-      const A = Math.round(al * 255), mau = (A | (A << 8) | (A << 16) | (A << 24)) >>> 0, tr = (X.trang || 0) + 2 * ti; // màu nhân sẵn alpha
+      const A = Math.round(al * 255), nh = X.nhuom, mau = (nh ? (Math.round(nh[0] * al) | (Math.round(nh[1] * al) << 8) | (Math.round(nh[2] * al) << 16) | (A << 24)) : (A | (A << 8) | (A << 16) | (A << 24))) >>> 0, tr = (X.trang || 0) + 2 * ti; // màu nhân sẵn alpha · X.nhuom = [r, g, b] (0–255): nhân màu ô ảnh (ký tự trắng của CHU → chữ màu, js/chugl.js)
       const F = this._f, U = this._u, I = this._i;
       // 4 góc ô đích (điểm ảnh thiết bị) nới 0,5 điểm ảnh mỗi phía dọc 2 cạnh; UV + toạ độ trong ô (lx, ly) nới theo
       const wx = a * dw, wy = b * dw, hx = c * dh, hy = d * dh; let lw = Math.hypot(wx, wy), lh = Math.hypot(hx, hy); if (!(lw > 0 && lh > 0)) return;
