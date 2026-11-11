@@ -213,7 +213,12 @@ HU.cbQuay = {
       } else { // dừng: quả nảy "cạch" (quá đà xuống rồi về)
         const dy = d < 0.28 ? ih * 0.2 * Math.exp(-d * 14) * Math.cos(d * 26) : 0, qi = l[j];
         if (!R.anhGiua(ctx, CB.IC[qi], cx, cy + dy, co)) { ctx.fillStyle = CB.MAU[qi]; ctx.beginPath(); ctx.arc(cx, cy + dy, co * 0.36, 0, 6.283); ctx.fill(); } // vetay-ok: png (dự phòng)
-        if (xong && r.f < 0) { ctx.fillStyle = 'rgba(120,0,0,' + Math.min(0.55, sau * 2) + ')'; ctx.fillRect(ix, iy, iw, ih); } // vetay-ok: mask (ô tối đỏ: khác hết)
+        if (xong && r.f < 0) {
+          if (ctx.laGL) { // WebGL: ô tối đỏ = 1 ô ảnh màu đặc dựng 1 lần (nằm trong atlas) × độ mờ — fillRect ở lớp GL = 1 lần tải canvas→texture / ô / khung (11/11)
+            const o = CB._oDo || (CB._oDo = (() => { const c = document.createElement('canvas'); c.width = c.height = 4; const q = c.getContext('2d'); q.fillStyle = 'rgb(120,0,0)'; q.fillRect(0, 0, 4, 4); return c; })());
+            const g = ctx.globalAlpha; ctx.globalAlpha = g * Math.min(0.55, sau * 2); ctx.drawImage(o, ix, iy, iw, ih); ctx.globalAlpha = g;
+          } else { ctx.fillStyle = 'rgba(120,0,0,' + Math.min(0.55, sau * 2) + ')'; ctx.fillRect(ix, iy, iw, ih); }
+        } // vetay-ok: mask (ô tối đỏ: khác hết)
       }
       ctx.restore(); ctx.globalAlpha = hien;
       // "cạch": khung vàng chớp 0,22 s
