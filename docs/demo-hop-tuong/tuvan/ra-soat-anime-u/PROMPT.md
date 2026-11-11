@@ -53,3 +53,9 @@ Quy tắc cắt GIU_CHINH: dạng 2/3 không nhỏ hơn dạng 1 (K ≥ K1 × 1,
 ## Tấm HIỆU ỨNG `raw_anime_u_fx1.png` (2 hàng × 3 cột, kèm `ref_fx1` = icon Sói/Hydra + đầu Hydra)
 "EFFECT sprite sheet … Row 1: three parallel curved CLAW SLASH marks, pure WHITE glowing energy (tintable) · circular SHOCKWAVE thin white ring with speed streaks · small white star hit spark. Row 2: HYDRA BODY top-down: round emerald scaled coil, gold rim, jade gem centre · same body AWAKENED · empty."
 Cắt: `tools/thap-cat-anime-fx.py` (ảnh tô màu fx_* ép RGB trắng để bỏ ám hồng).
+
+## Tấm HÌNH TỰ DO 11/11 (26 ụ, người dùng tự gen): `raw_anime_u_tudo_t01..t14.png`
+Cùng bố cục 4 cột (lắp ráp · bệ · ĐẦU · huy hiệu); t01–t06 mỗi hàng 1 ụ, t07 1 hàng (Sanctum), t08–t14 mỗi tấm 3 dạng của 1 ụ. Cắt: `python3 tools/thap-cat-u-tudo.py [id …]`
+(bảng `TAM` / `DANG` trong tool = id từng hàng). KHÁC các tấm trước: **giữ bệ đang có trong game** (không ghi `_de` / `_vien`), đầu không đổi vàng → màu nhấn, khung đầu = 1 ô,
+đầu đứng (`skills7.js` `DUNG`). Nền hồng lẫn vào quầng trong mờ: `TACH_HONG` (overlord, luoicheo, lophanung, orbital); vệt tím-hồng hào quang Sanctum: `DOI_HUE` (đổi hue, không làm thủng).
+

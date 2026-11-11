@@ -146,7 +146,10 @@ def js_obj(t, ten):
 
 
 def main():
-    ids = sys.argv[1:] or list(MAU)
+    # 11/11: các ụ đã vẽ lại kiểu tự do (tools/thap-cat-u-tudo.py — đầu mới không đổi vàng → màu nhấn, bệ giữ): KHÔNG nướng lại từ ảnh cũ
+    TU_DO = set('nhanban xaotron thaukinh docton tuthan nangsao epxung no5 nhieusong santhuong sungluc tia set sinhdoi saochep lienket dongbo orbital'.split())
+    ids = sys.argv[1:] or [i for i in MAU if i not in TU_DO]
+    if TU_DO & set(ids): raise SystemExit('ụ hình tự do — cắt bằng tools/thap-cat-u-tudo.py: ' + ' '.join(sorted(TU_DO & set(ids))))
     t0 = subprocess.run(['git', '-C', GOC, 'show', REF + ':thap/js/artscale.js'], capture_output=True, check=True, text=True).stdout
     HK, SA = js_obj(t0, 'HEAD_K'), js_obj(t0, 'STAGE_ANIME') or {}
     p = JS; t = open(p, encoding='utf-8').read(); DV = js_obj(t, 'DAU_VE') or {}

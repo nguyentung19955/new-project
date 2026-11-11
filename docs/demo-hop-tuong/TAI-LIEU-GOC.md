@@ -220,26 +220,26 @@ Sinh tự động từ game (EN-mode cho số, VI-mode cho mô tả). Cột "1�
 
 | id | Dạng | Ảnh trang ụ |
 |---|---|---|
-| `overlord` | DORMANT → CHARGING → OVERCHARGED | riêng `_nong_s1..3` |
+| `overlord` | DORMANT → CHARGING → OVERCHARGED | riêng `_nong_s1..3` — HÌNH MỚI tự do 11/11 (mặt nạ quỷ đá đen sừng pha lê đỏ; tấm `raw_anime_u_tudo_t08..t14`, `tools/thap-cat-u-tudo.py`; ĐẦU ĐỨNG, lắc ±3.5°; khung 1 ô, `DAU_VE.S`) |
 | `hopbi` | SEALED → UNSEALING → ABOUT TO OPEN | riêng `_nong_s1..3` |
 | `tienhoa` | EGG → EGG → EGG | **dùng chung 1 ảnh** (`tienhoa_nong`) |
-| `lophanung` | IDLE CORE → HEATING → CRYO STORM READY | riêng `_nong_s1..3` |
+| `lophanung` | IDLE CORE → HEATING → CRYO STORM READY | riêng `_nong_s1..3` — HÌNH MỚI tự do 11/11 (voi ma mút băng (vòi chĩa lên); tấm `raw_anime_u_tudo_t08..t14`, `tools/thap-cat-u-tudo.py`; ĐẦU ĐỨNG, lắc ±3.5°; khung 1 ô, `DAU_VE.S`) |
 | `soi` | NORMAL / AWAKENED | riêng: soi_dau_thuong, soi_dau_thuctinh |
-| `orbital` | STANDBY → UPLINK → AWAKENED | riêng `_nong_s1..3` |
+| `orbital` | STANDBY → UPLINK → AWAKENED | riêng `_nong_s1..3` — HÌNH MỚI tự do 11/11 (cú vệ tinh; tấm `raw_anime_u_tudo_t08..t14`, `tools/thap-cat-u-tudo.py`; ĐẦU ĐỨNG, lắc ±3.5°; khung 1 ô, `DAU_VE.S`) |
 | `cuongno` | CALM → RAGE → FRENZY | riêng `_nong_s1..3` |
 | `ngoisao` | SPARK → NOVA → SUPERNOVA | riêng `_nong_s1..3` |
-| `lienket` | SINGLE → LINKED → CHAIN MASTER | riêng `_nong_s1..3` |
-| `dongbo` | OFFLINE → SYNCED → FULL SYNC | riêng `_nong_s1..3` |
+| `lienket` | SINGLE → LINKED → CHAIN MASTER | riêng `_nong_s1..3` — HÌNH MỚI tự do 11/11 (mũ giáp xích; tấm `raw_anime_u_tudo_t08..t14`, `tools/thap-cat-u-tudo.py`; ĐẦU ĐỨNG, lắc ±3.5°; khung 1 ô, `DAU_VE.S`) |
+| `dongbo` | OFFLINE → SYNCED → FULL SYNC | riêng `_nong_s1..3` — HÌNH MỚI tự do 11/11 (đồng hồ quả quýt; tấm `raw_anime_u_tudo_t08..t14`, `tools/thap-cat-u-tudo.py`; ĐẦU ĐỨNG, lắc ±3.5°; khung 1 ô, `DAU_VE.S`) |
 | `hydra` | HATCHLING → MANY HEADS → SEVEN HEADS | riêng `_nong_s1..3` trên trang ụ (10/11, `STAGE_VE_TRANG`); trong trận Hydra vẫn tự vẽ vương miện n đầu = số sao |
 | `cuuvi` | KIT → BLAZING TAILS → NINE-TAIL | riêng `_nong_s1..3` |
-| `luoicheo` | IDLE → HUMMING → RESONANCE | riêng `_nong_s1..3` |
+| `luoicheo` | IDLE → HUMMING → RESONANCE | riêng `_nong_s1..3` — HÌNH MỚI tự do 11/11 (chữ X vàng lõi teal, phóng lớn nhất trong ô; tấm `raw_anime_u_tudo_t08..t14`, `tools/thap-cat-u-tudo.py`; ĐẦU ĐỨNG, đứng yên; khung 1 ô, `DAU_VE.S`) |
 | `ngaithoigian` | DIAL → TWELVE HOURS → THRONE OF TIME | riêng `_nong_s1..3` |
 | `combo` | WARM-UP → ON A ROLL → OVERDRIVE | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |
 | `pandora` | LOCKED → AJAR → OPEN VAULT | riêng `_nong_s1..3` (10/11, `STAGE_VE`; viền nhấn tím-hồng `#c77dff` cho nổi khỏi thân/bệ vàng) |
 | `nemesis` | SCALES → SCYTHE → VERDICT | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |
 | `nhatthuc` | DUSK → CORONA → TOTAL ECLIPSE | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |
 | `marionette` | STRINGS → GOLDEN HAND → TWIN PUPPETS | riêng `_nong_s1..3` (10/11, `STAGE_VE`; ĐẦU ĐỨNG như ảnh gốc: trận không quay tròn, chỉ lắc ±3.5°; viền `#ff3d7f`) |
-| `guongcong` | MIRROR → TWIN PANES → SHARD HALO | riêng `_nong_s1..3` (10/11, `STAGE_VE`; ĐẦU ĐỨNG: thanh ngang trên/dưới, trận không quay tròn, chỉ lắc ±3.5°) |
+| `guongcong` | MIRROR → TWIN PANES → SHARD HALO | riêng `_nong_s1..3` — HÌNH MỚI tự do 11/11 (gương thần đèn; tấm `raw_anime_u_tudo_t08..t14`, `tools/thap-cat-u-tudo.py`; ĐẦU ĐỨNG, lắc ±3.5°; khung 1 ô, `DAU_VE.S`) |
 | `chuato` | NEST → HIVE → ROYAL HIVE | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |
 | `leviathan` | HATCHLING → DEEP ONE → ABYSS LORD | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |
 | `khoisinh` | SEED → BLOSSOM → LOTUS OF LIFE | riêng `_nong_s1..3` (10/11, `STAGE_VE`) |
@@ -444,6 +444,7 @@ Nguồn: `admin.js: ADMIN`. `ADMIN.la()` = tài khoản Google đã đăng nhậ
 - Hình **chỉ từ ChatGPT** (PNG nền magenta, cắt khoá), **không vẽ bằng code** (`thap/QUY-TAC-HINH.md`). Prompt tiếng Anh ngắn.
 - Giao diện ngoài trận **"Royal Twilight"** (`css/ui-anime.css`, `js/ui-anime.js`): nền #10162F · tấm #212B50 · viền champagne #E9CCA0 · nhấn cyan #71E4EE · nút chính cam đào #FFB866 (chữ #172040) · chữ #F7F8FF / phụ #B8C3E6 · cảnh báo #FF5E80. HUD trận đồng bộ (`hud-anime.*`).
 - **Màu theo bậc:** Trắng #e9eef4 · Xanh #4fb8ff · Tím #c77dff · Vàng #ffd23f · Đỏ #ff4b3e (`TIERS.mau`); chỉ huy dùng cùng bộ màu.
+- **26 ụ hình mới kiểu tự do (11/11, `tools/thap-cat-u-tudo.py`, 14 tấm `thap-art/raw_anime_u_tudo_t01..t14.png`):** nhanban (bình nhân bản 2 mực con) · xaotron (quạt bài + mũ ảo thuật) · thaukinh (bọ ngựa kính tròn) · docton (quạ mũ lông) · tuthan (thần chết + lưỡi hái) · nangsao (sao trên lò xo) · epxung (đồng hồ áp suất) · no5 (hoa 5 viên đạn) · nhieusong (sứa phát sóng) · santhuong (bảng truy nã) · sungluc (ổ đạn đội mũ cao bồi) · tia (tắc kè ôm ống ngắm) · set (rắn hổ mang điện) · railgun (đàn ống tên lửa) · sinhdoi (đôi cá chép âm dương) · saochep (gương mèo) · loren (đe + búa lửa / búa băng) · nguyenrua (búp bê voodoo) · thanhdia (tượng thiên thần) + 7 ụ 3 dạng (bảng dạng mục 6). **Bệ giữ nguyên bệ theo bậc đang có**; chỉ thay đầu `<id>_nong` (+ `_s1..s3`), icon `nho/<id>`, huy hiệu `<id>_phu`, `glyph/<id>`. Bề ngang đầu = 85–100% bề ngang bệ (dạng 2/3 lớn dần, chặn trong ô). **Đầu ĐỨNG** (không xoay theo mục tiêu, lắc ±3.5°, đòn phát từ tâm ụ — `skills7.js` cuối file `DUNG`): 24 ụ; riêng `no5` vẫn chĩa viên đạn vàng vào mục tiêu, `sinhdoi` quay chậm. Twin Anvil dạng TỐC (`lorentoc_nong`) = cùng hình lật gương + quầng đe xanh băng. Tesla bỏ vòng cuộn rời (`PHU_GIUA`).
 - Quái/trùm là vật thể **không tay chân**; đi theo hướng làn, chỉ quay về bàn khi dùng chiêu. Lửa phải màu lửa.
 
 ## 17. Cách cập nhật

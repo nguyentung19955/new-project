@@ -711,3 +711,12 @@ window.addEventListener('DOMContentLoaded', () => {
   if (typeof DEMKN !== 'undefined') { DEMKN.DS.bocap = (T) => { const n = SKILLS.bocap.n(T); return n > 0 ? { m: [{ ic: 'bocap_phu', s: '' + n }], mau: n >= SKILLS.bocap.NGUONG[1] ? '#ffd0d6' : '#ff8a96', sang: T.stChop != null && G.t - T.stChop < 0.3 } : null; }; if (DEMKN.ANH && !DEMKN.ANH.includes('bocap_phu')) DEMKN.ANH.push('bocap_phu'); }
   if (typeof MV !== 'undefined' && MV.TAG) MV.TAG.bocap = ['STING stacks (+damage, +fire rate, +crit damage each)', 'cộng dồn STING (mỗi điểm +sát thương, +tốc bắn, +ST chí mạng)'];
 });
+
+// =====================================================================================================
+// 11/11 — 26 ụ HÌNH MỚI kiểu tự do (tools/thap-cat-u-tudo.py): đầu là sinh vật / vật có MẶT (mặt nạ, cú, thiên thần, búp bê, mèo gương, đồng hồ,
+// voi…) → xoay theo mục tiêu sẽ lộn ngược: giữ đứng như ảnh gốc, lắc nhẹ ±3.5° (như Rối Máy / Cổng Gương — render.js). Chỉ góc VẼ + đòn phát từ lõi (dauNong: ụ có gocDau); T.goc/ngắm không đổi. Ghi đè gocDau cũ (quay tròn / chĩa nòng) của các ụ này.
+// Resonance Grid: đứng yên (chữ X luôn chỉ 4 ô chéo). Fifth Shot vẫn chĩa viên vàng vào mục tiêu; Twin Maker (đôi cá âm dương) vẫn quay chậm (TB).
+if (typeof SKILLS !== 'undefined' && !window.UCU) {
+  const DUNG = ['nhanban', 'xaotron', 'thaukinh', 'docton', 'tuthan', 'nangsao', 'epxung', 'nhieusong', 'santhuong', 'sungluc', 'tia', 'set', 'railgun', 'saochep', 'loren', 'nguyenrua', 'thanhdia', 'lienket', 'dongbo', 'orbital', 'luoicheo', 'guongcong', 'overlord', 'lophanung'];
+  for (const id of DUNG) if (SKILLS[id] && window.DAU_VE && DAU_VE[id] && DAU_VE[id].K === 1) SKILLS[id].gocDau = id === 'luoicheo' ? () => -Math.PI / 2 : (T, t) => -Math.PI / 2 + Math.sin(t * 1.1 + (T.pha || 0) * 6) * 0.06;
+}
