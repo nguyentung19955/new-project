@@ -507,8 +507,9 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
         const sk = SKILLS[k.T.id];
         if (chamSan(k.T)) { sk.chuDong(G, B, k.T); return; } // ụ có ▶ (chiêu chủ động đầy / trứng cháy): chạm = dùng chiêu, không mở dải thông tin
         if (!$('#tt').hidden && this.xemU && this.xemU.T === k.T) { $('#tt').hidden = true; this.ttHet = 0; this.xemU = null; return; } // chạm lại ụ đang xem = đóng dải
-        this.moTT(k.T.id, k.T);
+        // chọn TRƯỚC khi mở dải thông tin: dải lỗi (máy thật) cũng không làm mất lựa chọn chạm–chạm (người dùng 11/11: iPhone chạm Merge King không sáng ô đích)
         if (!k.T.st.bang && B.t.some(N => N && N !== k.T && hopLeGhep(k.T, N))) this.chonGhep = { T: k.T, t0: performance.now() };
+        try { this.moTT(k.T.id, k.T); } catch (er) { console.error('moTT', er); }
         return;
       }
       // Prism Thief: vuốt qua 4 ô liền → HỢP THỂ thành 1 mặt nạ 4 màu (skills7.js) thay cho ghép; đi qua ≥ 3 ô Prism mà sai luật → báo lý do, không ghép
@@ -527,7 +528,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       }
     };
     cv.addEventListener('pointerup', het);
-    cv.addEventListener('pointercancel', (e) => { if (!this.keo || e.pointerId === this.keo.id) this.huyKeo(); });
+    cv.addEventListener('pointercancel', (e) => { if (this.keo && e.pointerId === this.keo.id) this.huyKeo(); }); // không có thao tác đang dở thì KHÔNG xoá lựa chọn chạm–chạm (Safari iOS có thể bắn pointercancel sau khi nhấc ngón)
     cv.addEventListener('lostpointercapture', (e) => { if (this.keo && e.pointerId === this.keo.id) setTimeout(() => { if (this.keo && this.keo.id === e.pointerId) this.huyKeo(); }, 0); });
     cv.addEventListener('touchcancel', () => this.huyKeo());
     document.addEventListener('visibilitychange', () => { if (document.hidden) this.huyKeo(); });
