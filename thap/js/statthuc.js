@@ -55,7 +55,7 @@ function statThuc(T) {
   if (sk.crit) ds.push({ k: 'crit', ic: 'crit', txt: pc(sk.crit) + ' crit · ' + tuTen });
   if (luon) ds.push({ k: 'crit', ic: 'crit', txt: 'always crits now' });
   // bất lợi
-  if (T.st.kep > 0) ds.push({ k: 'toc', ic: 'toc', xau: true, txt: '×0.6 rate · clamped ' + Math.ceil(T.st.kep) + 's' });
+  if (T.st.kep > 0) ds.push({ k: 'toc', ic: 'toc', xau: true, txt: T.xich ? 'chained · merge a turret onto it' : '×0.6 rate · clamped ' + Math.ceil(T.st.kep) + 's' });
   if (T.st.bang > 0) ds.push({ k: 'toc', ic: 'cham', xau: true, txt: 'frozen ' + Math.ceil(T.st.bang) + 's · not firing' });
   if (T.st.da) ds.push({ k: 'toc', ic: 'khien', xau: true, txt: 'stoned · not firing' });
   if (T.st.lua > 0) ds.push({ k: 'dmg', ic: 'dmg', xau: true, txt: 'burning ' + Math.ceil(T.st.lua) + 's · loses a star' });

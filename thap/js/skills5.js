@@ -617,7 +617,7 @@ HU.rongBo = { // DRAGON DIVE: bóng rồng bay dọc đường (lõi → cổng)
     const [x, y, g] = viTri(o.p, s); o.x = x; o.y = y; o.g = g + Math.PI;
     G.dangBan = o.T;
     for (const E of dsMucTieu(o.B)) if (!E.chet && !o.da.has(E) && Math.hypot(E.x - x, E.y - y) < 44 + E.d.co * 0.3) {
-      o.da.add(E); trung(E, o.dmg + (E.trum ? E.max * 0.05 : 0), { B: o.B, mau: '#ffb070' });
+      o.da.add(E); trung(E, o.dmg + (E.trum ? (E.maxPct || E.max) * 0.05 : 0), { B: o.B, mau: '#ffb070' });
       FX.no('no_phao', E.x, E.y, 60, 0.3); FX.tiaLua(E.x, E.y, 4, '#ffc070', 160, 8);
     }
     o.vetT -= dt; if (o.vetT <= 0) { o.vetT = 0.08; G.hu.push({ k: 'vetChay', t: 0, song: 3, x, y, B: o.B, T: o.T, dmg: dmgU(o.T) * 0.3 * (o.hv || 1), tick: 0, gd: mauRong(o.T) }); }

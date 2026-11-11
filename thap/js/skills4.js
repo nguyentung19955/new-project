@@ -27,7 +27,8 @@ SKILLS.nemesis = {
     this.danh(G, B, T, E);
   },
   danh(G, B, T, E) {
-    const phan = Math.min(E.trum ? this.TRAN_TRUM : 1, this.p(T)) * E.max, tinh = !!(E.trum || E.d.to); // phân loại LÚC TRÚNG
+    const phan = Math.min(E.trum ? this.TRAN_TRUM : 1, this.p(T)) * (E.maxPct || E.max), // maxPct: trùm ĐỘT KÍCH (chedo-rd.js) — % máu tính trên máu trùm chuẩn của chặng, không trên máu bậc
+      tinh = !!(E.trum || E.d.to); // phân loại LÚC TRÚNG
     trung(E, dmgU(T) + phan, { B, mau: '#c8d4e6' });
     this.ghi(T, tinh);
   },
@@ -263,10 +264,29 @@ HU.non = { // sóng trăng hình nón (cung tròn đồng tâm, không méo)
 //        (× 1 + 3%/cấp thẻ). MỖI ụ chỉ mang 1 loại buff: cùng loại giữ số lớn hơn, khác loại thì buff mới thay. Ghép thường 2 ụ có buff → ụ ra lấy
 //        buff mạnh hơn (không cộng). Giữ qua băng / hạ sao, tắt khi hoá đá. Không phải ghép (Archive không tính). Anvil không bắn.
 //      Online: dạng + cộng dồn + buff đi theo cờ ô (dongbo.js 'a…' / 'l…' / 'b…'); ghép đặc biệt chốt 2 ô theo máy bạn (gói 'gh' db).
+//      SỬA 12/11 (người dùng duyệt 11/11 23:56 — "tăng sao vô dụng, cơ chế quá dễ"):
+//      (a) SAO CÓ TÁC DỤNG: Anvil được +★ TẠI CHỖ (Merge King, Star Lift… — mọi nguồn) → +1 cộng dồn mỗi ★ nhận (trần 14); hạ sao không trừ.
+//          Bắt bằng so sao mỗi nhịp capNhat (T._lrS) — chỉ đọc / ghi trạng thái trận; bàn con rối online (B.net) lấy cộng dồn từ cờ ô.
+//      (b) VỊ TRÍ: chỉ rèn được ụ nằm SÁT CẠNH Anvil (trên / dưới / trái / phải, không chéo). Anvil + Anvil cùng dạng: không cần sát cạnh.
+//      (c) SONG SINH (TWIN-FORGED): 1 ụ mang được CẢ rèn ST và rèn tốc. T.anv = { k, v, lo [, x: { k, v }] } — lo = số cộng dồn. Rèn thêm:
+//          cùng loại → giữ cộng dồn lớn hơn; có 2 loại: cộng dồn BẰNG NHAU → giữ cả hai (x) và mỗi buff × S.SONG (1,25); lệch → chỉ giữ loại lớn hơn.
+//          Ghép thường: ụ ra là ụ MỚI → mất buff (như trước nay — chữ mô tả "lost if that turret merges").
 // =====================================================================================================
 SKILLS.loren = {
   vai: 'db', dmg: 0, toc: 0,
-  MAX: 14, PCT: { dmg: 0.03, toc: 0.02 },
+  MAX: 14, PCT: { dmg: 0.03, toc: 0.02 }, SONG: 1.25,
+  ke: (a, b) => a.ban === b.ban && Math.abs((a.o % 5) - (b.o % 5)) + Math.abs(((a.o / 5) | 0) - ((b.o / 5) | 0)) === 1, // 2 ô sát cạnh (không chéo)
+  // rèn buff nb = { k, v, lo } lên ụ b → trả 'song' (TWIN-FORGED) / 'giu' (buff cũ lớn hơn, không đổi) / 'moi'
+  ren(b, nb) {
+    const cu = b.anv, co = {};
+    if (cu) { co[cu.k] = { k: cu.k, v: cu.v, lo: cu.lo | 0 }; if (cu.x) co[cu.x.k] = { k: cu.x.k, v: cu.x.v, lo: cu.lo | 0 }; }
+    const c = co[nb.k], doi = !c || nb.lo > c.lo || (nb.lo === c.lo && nb.v > c.v);
+    if (doi) co[nb.k] = { k: nb.k, v: nb.v, lo: nb.lo | 0 };
+    const d = co.dmg, t = co.toc;
+    if (d && t && d.lo === t.lo) { b.anv = { k: 'dmg', v: d.v, lo: d.lo, x: { k: 'toc', v: t.v } }; return 'song'; }
+    const g = !t || (d && d.lo > t.lo) ? d : t; b.anv = { k: g.k, v: g.v, lo: g.lo };
+    return g.k === nb.k && doi ? 'moi' : 'giu';
+  },
   dang: (T) => (T.dang === 'toc' ? 'toc' : 'dmg'),
   so: (T) => Math.min(14, T.lo != null ? T.lo : T.sao | 0), // cộng dồn (ụ mẫu trang chi tiết chưa sinh: = số sao)
   n: (B) => ((B && B.capThe && B.capThe.loren) | 0), // số cấp thẻ trên LV9
@@ -277,18 +297,23 @@ SKILLS.loren = {
   buff(T, B) { const lo = this.so(T), d = this.dang(T), m = this.moi(T, B) * (d === 'toc' ? this.PCT.toc / this.PCT.dmg : 1); return { k: d, v: Math.round(m * lo * 10000) / 10000 }; },
   mo(T) {
     const B = G.ban[T.ban], d = this.dang(T), lo = this.so(T), b = this.buff(T, B), n = this.n(B);
-    return (d === 'dmg' ? 'DAMAGE ANVIL' : 'SPEED ANVIL') + ' · stacks ' + lo + '/14 · drag onto another turret: it gets +' + +(b.v * 100).toFixed(1) + '% ' + (d === 'dmg' ? 'damage' : 'fire rate') + ' for good (' + (d === 'dmg' ? '3' : '2') + '% per stack; one buff type per turret; lost if it merges) · drag onto an Anvil of the SAME type: stacks add up (max 14), two ' + lo + '-stack Anvils: ' + Math.min(14, lo * 2) + ' stacks, ' + this.tiLe(Math.min(14, lo * 2), n) + '% success — more stacks = more risk · fail: the dragged Anvil is lost, the target keeps the bigger stacks' + (n ? ' · +' + 4 * n + '% success when the total is 8+' : '');
+    return (d === 'dmg' ? 'DAMAGE ANVIL' : 'SPEED ANVIL') + ' · stacks ' + lo + '/14 · drag onto another turret: it gets +' + +(b.v * 100).toFixed(1) + '% ' + (d === 'dmg' ? 'damage' : 'fire rate') + ' for good (' + (d === 'dmg' ? '3' : '2') + '% per stack; lost if it merges) · only turrets NEXT TO the Anvil (not diagonal) · a turret with a Damage and a Speed forge of EQUAL stacks is TWIN-FORGED: it keeps both, each ×' + this.SONG + '; unequal stacks: only the bigger one stays · every ★ the Anvil gains in place adds 1 stack · drag onto an Anvil of the SAME type (anywhere on the board): stacks add up (max 14), two ' + lo + '-stack Anvils: ' + Math.min(14, lo * 2) + ' stacks, ' + this.tiLe(Math.min(14, lo * 2), n) + '% success — more stacks = more risk · fail: the dragged Anvil is lost, the target keeps the bigger stacks' + (n ? ' · +' + 4 * n + '% success when the total is 8+' : '');
   },
   gocDau: (T, t) => -Math.PI / 2,
   dauAnh: (T) => (T.dang === 'toc' ? 'lorentoc_nong' : null), // dạng tốc: đầu riêng (render.js REN.dauEp) — 11/11: loren_nong = dạng SÁT THƯƠNG (2 búa lửa), lorentoc_nong = dạng TỐC (2 búa băng), cả hai nguyên khối kèm tấm nền = bệ riêng (tools/thap-cat-bienthe.py)
   sinh(G, T) {
     if (!T.dang) { const B = G.ban[T.ban]; const hat = (typeof ONS !== 'undefined' && ONS.on ? ONS.seed : G.hat) || 1; B._anN = ((B && B._anN) | 0) + 1; if (B) B._anN = B._anN; const r = rngHat((hat * 6007 + ((B && B.i) | 0) * 911 + (T.o | 0) * 131 + ((B && B._anN) | 0) * 7919) | 0); T.dang = r() < 0.5 ? 'dmg' : 'toc'; }
     if (T.lo == null) T.lo = Math.min(this.MAX, T.sao | 0);
+    T._lrS = T.sao | 0;
   },
-  capNhat(G, B, T) { return true; },
+  capNhat(G, B, T) { // (a) +★ tại chỗ → +1 cộng dồn / ★ (hạ sao: chỉ ghi lại mốc)
+    if (!B.net) { const s0 = T._lrS == null ? T.sao : T._lrS; if (T.sao > s0 && T.lo != null) { T.lo = Math.min(this.MAX, (T.lo | 0) + (T.sao - s0)); T.sang = 1; } }
+    T._lrS = T.sao | 0;
+    return true;
+  },
   ghepDB: {
     haiChieu: false, cungLoai: true,
-    hopLe: (a, b) => b.ban === a.ban && !b.st.da && (b.id === 'loren' ? SKILLS.loren.dang(a) === SKILLS.loren.dang(b) : b.id !== 'mimic' && b.id !== 'tudo'), // Mimic / Wild Link nhận Anvil = ghép thường (không buff)
+    hopLe: (a, b) => b.ban === a.ban && !b.st.da && (b.id === 'loren' ? SKILLS.loren.dang(a) === SKILLS.loren.dang(b) : b.id !== 'mimic' && b.id !== 'tudo' && SKILLS.loren.ke(a, b)), // rèn ụ khác: chỉ ô SÁT CẠNH (12/11) · // Mimic / Wild Link nhận Anvil = ghép thường (không buff)
     laGhep: (a, b) => b.id === 'loren', // Anvil + Anvil = ghép thật (Archive +1) · buff lên ụ khác: không
     lam(G, B, a, b) { // a = Anvil kéo, b = đích
       const S = SKILLS.loren, ca = B.o[a.o], cb = B.o[b.o];
@@ -300,13 +325,14 @@ SKILLS.loren = {
         const ok = rngHat((hat * 3301 + B.i * 613 + b.o * 97 + B._anR * 7919) | 0)() * 100 < p;
         if (ok) { b.lo = tong; b.sao = Math.min(LUAT.saoMax, Math.max(a.sao, b.sao)); FX.chu1(cb.x, cb.y - 30, 'FORGED ' + tong, '#ffd23f', 15, 'to'); FX.no('no_phao', cb.x, cb.y, 60, 0.35); SND.nang(3); }
         else { b.lo = Math.max(a.lo || 0, b.lo || 0); FX.chu1(cb.x, cb.y - 30, 'CRACKED', '#ff8a6a', 14, 'to'); SND.no(0.3); }
-        b.sang = 1; b.anim = { k: 'no', t: 0.25 }; B._anOk = ok;
+        b.sang = 1; b.anim = { k: 'no', t: 0.25 }; B._anOk = ok; b._lrS = b.sao; // sao lấy từ Anvil kéo: không tính là "+★ tại chỗ"
         return b;
       }
-      const nb = S.buff(a, B);
-      if (!b.anv || b.anv.k !== nb.k || nb.v > b.anv.v) b.anv = nb; // 1 loại buff / ụ: khác loại → thay; cùng loại → giữ số lớn hơn
+      const nb = S.buff(a, B); nb.lo = S.so(a);
+      const kq = S.ren(b, nb); // cùng loại giữ cộng dồn lớn hơn · 2 loại bằng cộng dồn = SONG SINH · lệch = loại lớn hơn thắng
       b.sang = 1; tiaPhep(ca.x, ca.y, cb.x, cb.y, nb.k === 'dmg' ? '#ff6a1a' : '#4fd8ff');
-      FX.chu1(cb.x, cb.y - 30, '+' + +(b.anv.v * 100).toFixed(0) + '% ' + (b.anv.k === 'dmg' ? 'DMG' : 'SPEED'), b.anv.k === 'dmg' ? '#ff9a5a' : '#8fe6ff', 14, 'to');
+      if (kq === 'song') FX.chu1(cb.x, cb.y - 30, 'TWIN-FORGED', '#ffd23f', 15, 'to');
+      else FX.chu1(cb.x, cb.y - 30, '+' + +(b.anv.v * 100).toFixed(0) + '% ' + (b.anv.k === 'dmg' ? 'DMG' : 'SPEED'), b.anv.k === 'dmg' ? '#ff9a5a' : '#8fe6ff', 14, 'to');
       SND.dat();
       return b;
     },
@@ -319,7 +345,7 @@ SKILLS.loren = {
   const _mocBufAn = mocBuf;
   mocBuf = function (B) {
     const r = _mocBufAn.apply(this, arguments);
-    if (B && B.t) for (const T of B.t) if (T && T.anv && !T.st.da) { if (T.anv.k === 'dmg') T.buf.dmg += T.anv.v; else T.buf.toc += T.anv.v; }
+    if (B && B.t) for (const T of B.t) if (T && T.anv && !T.st.da) { const a = T.anv, k = a.x ? SKILLS.loren.SONG : 1; if (a.k === 'dmg') T.buf.dmg += a.v * k; else T.buf.toc += a.v * k; if (a.x) { if (a.x.k === 'dmg') T.buf.dmg += a.x.v * k; else T.buf.toc += a.x.v * k; } } // song sinh: cả 2 buff × SONG
     return r;
   };
 }
