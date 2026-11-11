@@ -426,9 +426,15 @@ const REN = {
     return this.cSet(key, c);
   },
   // chữ nổi dựng sẵn thành ảnh (viền + chữ) — vẽ chữ mỗi khung rất tốn; mỗi con số chỉ dựng 1 lần rồi dùng lại suốt đời nó
-  chuAnh(s, mau, px) {
+  chuAnh(s, mau, px, cu) { // cu = true: ép bản canvas (đường 2D)
     const k = this.s * this.dpr, key = s + '|' + mau + '|' + px;
     const M = this._chu || (this._chu = new Map());
+    // WEBGL (js/chugl.js): lớp GL đang vẽ → không dựng canvas chữ nào: trả bố cục (cùng các trường tw / lw / lh / by), veChuAnh vẽ bằng ô ký tự trắng tô màu → số / màu / chuỗi mới KHÔNG tải texture
+    if (!cu && typeof CHU !== 'undefined' && CHU.chay()) {
+      const MG = this._chuG || (this._chuG = new Map()), kg = key + '|' + k; let g = MG.get(kg);
+      if (g === undefined || (g && CHU.mat.get(g.M.key) !== g.M)) { g = CHU.anh(s, mau, px); if (MG.size > 600) MG.clear(); MG.set(kg, g); }
+      if (g) return g;
+    }
     let c = M.get(key); if (c) return c;
     // SỐ SÁT THƯƠNG (chỉ chữ số): ghép từ ảnh từng chữ số dựng sẵn (viền / ruột riêng) — không dựng canvas + vẽ chữ mới cho MỖI con số.
     // Đợt nhiều skill cùng lúc sinh hàng chục số khác nhau trong 1 khung → trước đây 50–150 ms vẽ chữ (giật). Xem giat_skill/BAO-CAO.md.
@@ -469,6 +475,7 @@ const REN = {
   },
   // vẽ ảnh chữ (canvas hoặc số ghép) tại (x,y) cỡ w×h logic
   veChuAnh(ctx, im, x, y, w, h) {
+    if (im.gl) { if (CHU.veAnh(ctx, im, x, y, w, h)) return; im = this.chuAnh(im.s, im.mau, im.px, true); } // ngữ cảnh 2D / xoay: bản canvas như cũ
     if (!im.so) { ctx.drawImage(im, x, y, w, h); return; }
     const q = w / im.lw;
     for (const [g, ox] of im.so) ctx.drawImage(g.v, x + ox * q, y, g.gw * q, h);
