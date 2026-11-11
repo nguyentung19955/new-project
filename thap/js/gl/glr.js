@@ -22,21 +22,22 @@
 const GLR = (() => {
   const TS = (() => { try { return new URLSearchParams(location.search); } catch (e) { return { get: () => null }; } })();
   const MAC_DINH = false; // mặc định bật (khi có GPU thật + tự kiểm đạt)
-  const ATLAS = 2048, TRANG_MAX = 4, RIENG_MAX = 64 << 20, NT = 8, LE = 1, DINH_MAX = 32768, W9 = 14; // 14 từ 4 byte / đỉnh: x y · u v · u0 v0 u1 v1 (giới hạn lấy mẫu) · lx ly lw lh (toạ độ trong ô, điểm ảnh thiết bị → khử răng cưa mép) · màu · trắng
+  const ATLAS = 2048, TRANG_MAX = 4, RIENG_MAX = 64 << 20, NT_MAX = 8, LE = 1, DINH_MAX = 32768, W9 = 14; // 14 từ 4 byte / đỉnh: x y · u v · u0 v0 u1 v1 (giới hạn lấy mẫu) · lx ly lw lh (toạ độ trong ô, điểm ảnh thiết bị → khử răng cưa mép) · màu · trắng
   const VS = 'attribute vec2 a_p;attribute vec2 a_uv;attribute vec4 a_gh;attribute vec4 a_c;attribute vec4 a_m;attribute float a_w;uniform vec3 u_kt;varying vec2 v_uv;varying vec4 v_gh;varying vec4 v_c;varying vec4 v_m;varying float v_w;' +
     // u_kt.z = 1: vẽ ra canvas (y lật) · −1: vẽ vào bộ đệm khung (hàng 0 của texture = mép trên ảnh → dùng lại làm nguồn như ảnh thường)
     'void main(){v_uv=a_uv;v_gh=a_gh;v_c=a_c;v_m=a_m;v_w=a_w;gl_Position=vec4(a_p.x*u_kt.x-1.0,(1.0-a_p.y*u_kt.y)*u_kt.z,0.0,1.0);}';
-  // highp: UV trên atlas 2048 cần > 10 bit (mediump của GPU iPhone = float 16 bit → lệch điểm ảnh)
-  const FS = '#ifdef GL_FRAGMENT_PRECISION_HIGH\nprecision highp float;\n#else\nprecision mediump float;\n#endif\n' +
-    // mép ô: độ phủ điểm ảnh như canvas 2D (ô nới 0,5 điểm ảnh mỗi phía, ngoài ô nguồn lấy màu mép) → thanh máu / ảnh sát khung không nhảy từng điểm ảnh
-    // NT = 8 texture / 1 lệnh vẽ (WebGL bảo đảm ≥ 8 đơn vị texture ở fragment): v_w = 2 × (số thứ tự texture) + độ "trắng" → ô ảnh khác texture (các trang atlas,
-    //   dải khung ụ, bộ đệm khung…) vẫn chung 1 lệnh vẽ; chỉ ngắt lô khi đổi kiểu hoà màu hoặc quá 8 texture
-    'uniform sampler2D u_t0;uniform sampler2D u_t1;uniform sampler2D u_t2;uniform sampler2D u_t3;uniform sampler2D u_t4;uniform sampler2D u_t5;uniform sampler2D u_t6;uniform sampler2D u_t7;' +
-    'varying vec2 v_uv;varying vec4 v_gh;varying vec4 v_c;varying vec4 v_m;varying float v_w;void main(){' +
-    'vec2 p=clamp(min(v_c.xy+0.5,v_c.zw)-max(v_c.xy-0.5,vec2(0.0)),0.0,1.0);vec2 uv=clamp(v_uv,v_gh.xy,v_gh.zw);float i=floor(v_w*0.5+0.01);float w=clamp(v_w-2.0*i,0.0,1.0);vec4 t;' +
-    'if(i<0.5)t=texture2D(u_t0,uv);else if(i<1.5)t=texture2D(u_t1,uv);else if(i<2.5)t=texture2D(u_t2,uv);else if(i<3.5)t=texture2D(u_t3,uv);' +
-    'else if(i<4.5)t=texture2D(u_t4,uv);else if(i<5.5)t=texture2D(u_t5,uv);else if(i<6.5)t=texture2D(u_t6,uv);else t=texture2D(u_t7,uv);' +
-    'gl_FragColor=mix(t,vec4(t.a),w)*(v_m*(p.x*p.y));}';
+  // n texture / 1 lệnh vẽ (1..8; WebGL bảo đảm ≥ 8 đơn vị texture ở fragment): v_w = 2 × (số thứ tự texture trong dãy) + độ "trắng" → ô ảnh khác texture (các trang atlas,
+  //   dải khung ụ, bộ đệm khung…) vẫn chung 1 lệnh vẽ; chỉ ngắt lô khi đổi kiểu hoà màu hoặc quá n texture. n = 1: shader không rẽ nhánh (GPU phần mềm tô theo kiểu
+  //   "chạy mọi nhánh" → n lớn chậm hẳn; GPU thật rẽ nhánh rẻ, đổi lại bớt 2–4 lần số lệnh vẽ). Chọn n: GLR.dung().
+  const FS = (n) => {
+    let u = '', lay = '';
+    for (let i = 0; i < n; i++) { u += 'uniform sampler2D u_t' + i + ';'; lay += i === n - 1 ? 't=texture2D(u_t' + i + ',uv);' : 'if(i<' + i + '.5)t=texture2D(u_t' + i + ',uv);else '; }
+    return '#ifdef GL_FRAGMENT_PRECISION_HIGH\nprecision highp float;\n#else\nprecision mediump float;\n#endif\n' + u + // highp: UV trên atlas 2048 cần > 10 bit (mediump của GPU iPhone = float 16 bit → lệch điểm ảnh)
+      // mép ô: độ phủ điểm ảnh như canvas 2D (ô nới 0,5 điểm ảnh mỗi phía, ngoài ô nguồn lấy màu mép) → thanh máu / ảnh sát khung không nhảy từng điểm ảnh
+      'varying vec2 v_uv;varying vec4 v_gh;varying vec4 v_c;varying vec4 v_m;varying float v_w;void main(){' +
+      'vec2 p=clamp(min(v_c.xy+0.5,v_c.zw)-max(v_c.xy-0.5,vec2(0.0)),0.0,1.0);vec2 uv=clamp(v_uv,v_gh.xy,v_gh.zw);float i=floor(v_w*0.5+0.01);float w=clamp(v_w-2.0*i,0.0,1.0);vec4 t;' + lay +
+      'gl_FragColor=mix(t,vec4(t.a),w)*(v_m*(p.x*p.y));}';
+  };
   const huu = Number.isFinite;
 
   // ---------- ngữ cảnh giả kiểu canvas 2D ----------
@@ -177,11 +178,15 @@ const GLR = (() => {
     // dựng (lại) chương trình + bộ đệm + kho texture — gọi lúc khởi tạo và khi ngữ cảnh có lại
     dung() {
       const gl = this.gl, mk = (t, s) => { const o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); return gl.getShaderParameter(o, gl.COMPILE_STATUS) ? o : null; };
-      const v = mk(gl.VERTEX_SHADER, VS), f = mk(gl.FRAGMENT_SHADER, FS); if (!v || !f) return false;
+      // số texture / lệnh vẽ: ?glt=1..8 ép; không thì 8 với GPU thật, 1 với GPU phần mềm (SwiftShader / llvmpipe — máy đo, máy ảo)
+      let nt = +TS.get('glt') | 0;
+      if (!(nt >= 1)) { let ten = ''; try { const e = gl.getExtension('WEBGL_debug_renderer_info'); if (e) ten = String(gl.getParameter(e.UNMASKED_RENDERER_WEBGL)); } catch (e) { } this.gpu = ten; nt = /swiftshader|llvmpipe|software|basic render/i.test(ten) ? 1 : NT_MAX; }
+      this.nt = nt = Math.max(1, Math.min(NT_MAX, nt, gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS) || 1));
+      const v = mk(gl.VERTEX_SHADER, VS), f = mk(gl.FRAGMENT_SHADER, FS(nt)); if (!v || !f) return false;
       const p = gl.createProgram(); gl.attachShader(p, v); gl.attachShader(p, f);
       gl.bindAttribLocation(p, 0, 'a_p'); gl.bindAttribLocation(p, 1, 'a_uv'); gl.bindAttribLocation(p, 2, 'a_gh'); gl.bindAttribLocation(p, 3, 'a_c'); gl.bindAttribLocation(p, 4, 'a_m'); gl.bindAttribLocation(p, 5, 'a_w');
       gl.linkProgram(p); if (!gl.getProgramParameter(p, gl.LINK_STATUS)) return false;
-      gl.useProgram(p); this._kt = gl.getUniformLocation(p, 'u_kt'); for (let i = 0; i < NT; i++) gl.uniform1i(gl.getUniformLocation(p, 'u_t' + i), i);
+      gl.useProgram(p); this._kt = gl.getUniformLocation(p, 'u_kt'); for (let i = 0; i < nt; i++) gl.uniform1i(gl.getUniformLocation(p, 'u_t' + i), i);
       if (!this._buf) { this._buf = new ArrayBuffer(DINH_MAX * W9 * 4); this._f = new Float32Array(this._buf); this._u = new Uint32Array(this._buf); this._i = new Uint16Array(DINH_MAX * 3); }
       this._vb0 = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, this._vb0); gl.bufferData(gl.ARRAY_BUFFER, this._buf.byteLength, gl.DYNAMIC_DRAW);
       this._ib = gl.createBuffer(); gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._ib); gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this._i.byteLength, gl.DYNAMIC_DRAW);
@@ -194,7 +199,7 @@ const GLR = (() => {
       const mx = gl.getParameter(gl.MAX_TEXTURE_SIZE) || 1024; this.atlasCo = Math.min(ATLAS, mx); this.texMax = mx;
       this.the = (this.the || 0) + 1; // thế hệ ngữ cảnh: mọi texture / bộ đệm khung cũ vô hiệu
       this.map = new WeakMap(); this.trang = []; this.rieng = []; this._riengB = 0; this._tDon = 0; this.atlasThe = 0; this._day = false; this._tDat = -1e9;
-      this.nv = 0; this.ni = 0; this.bI0 = 0; this.bT = []; this.bOp = 0; this._g = new Array(NT).fill(null); this._loT = []; this._loO = []; this._loI = []; this._loN = [];
+      this.nv = 0; this.ni = 0; this.bI0 = 0; this.bT = []; this.bOp = 0; this._g = new Array(NT_MAX).fill(null); this._loT = []; this._loO = []; this._loI = []; this._loN = [];
       this._dich = null; this._lop = null; this._tam = {}; this._ngan.length = 0; this._bb = null; this._vCo = false;
       return true;
     },
@@ -256,7 +261,7 @@ const GLR = (() => {
       return t;
     },
     gan(t) { if (this._g[0] !== t) { this.gl.bindTexture(this.gl.TEXTURE_2D, t); this._g[0] = t; } }, // đơn vị texture 0 (luôn là đơn vị đang chọn ngoài lúc phát lô): tải ảnh
-    quenGan() { const gl = this.gl, g = this._g; for (let j = NT - 1; j >= 0; j--) if (g[j]) { gl.activeTexture(gl.TEXTURE0 + j); gl.bindTexture(gl.TEXTURE_2D, null); g[j] = null; } gl.activeTexture(gl.TEXTURE0); this.bT = []; }, // sau khi xoá texture: gỡ mọi đơn vị texture (sổ ghi "đang gắn" luôn đúng thật) + bỏ danh sách texture của dãy đang gom (gọi sau xa())
+    quenGan() { const gl = this.gl, g = this._g; for (let j = NT_MAX - 1; j >= 0; j--) if (g[j]) { gl.activeTexture(gl.TEXTURE0 + j); gl.bindTexture(gl.TEXTURE_2D, null); g[j] = null; } gl.activeTexture(gl.TEXTURE0); this.bT = []; }, // sau khi xoá texture: gỡ mọi đơn vị texture (sổ ghi "đang gắn" luôn đúng thật) + bỏ danh sách texture của dãy đang gom (gọi sau xa())
     datLaiAtlas() {
       const gl = this.gl; this.xa(); for (const p of this.trang) gl.deleteTexture(p.tex);
       this.trang = []; this.atlasThe++; this._day = false; this._tDat = this.f; this.quenGan();
@@ -348,7 +353,7 @@ const GLR = (() => {
       this.xa(); const gl = this.gl; this._dich = D; gl.bindFramebuffer(gl.FRAMEBUFFER, D ? D.fb : null);
       // đổi đích vẽ: dãy mới bắt đầu danh sách texture mới; texture của chính đích mới không được còn gắn ở đơn vị nào (WebGL cấm vừa vẽ vào vừa lấy mẫu)
       this.bT = [];
-      if (D) { const g = this._g; for (let j = 0; j < NT; j++) if (g[j] === D.tex) { gl.activeTexture(gl.TEXTURE0 + j); gl.bindTexture(gl.TEXTURE_2D, null); g[j] = null; } gl.activeTexture(gl.TEXTURE0); }
+      if (D) { const g = this._g; for (let j = 0; j < NT_MAX; j++) if (g[j] === D.tex) { gl.activeTexture(gl.TEXTURE0 + j); gl.bindTexture(gl.TEXTURE_2D, null); g[j] = null; } gl.activeTexture(gl.TEXTURE0); }
       const w = D ? D.width : this.cv.width, h = D ? D.height : this.cv.height; gl.viewport(0, 0, w, h); gl.uniform3f(this._kt, 2 / w, 2 / h, D ? -1 : 1);
     },
     // LỚP HIỆU ỨNG: lopMo() → mọi lệnh GLR.x vẽ vào bộ đệm khung cỡ canvas (ma trận giữ nguyên; alpha 1, source-over, kiểu vẽ riêng của lớp như ngữ cảnh 2D riêng)
@@ -528,7 +533,7 @@ const GLR = (() => {
       const op = X.op;
       if (op !== this.bOp) { this.ngat(); this.bOp = op; }
       let bT = this.bT, ti = bT.indexOf(E.tex);
-      if (ti < 0) { if (bT.length >= NT) { this.ngat(); bT = this.bT = []; } ti = bT.length; bT.push(E.tex); } // danh sách chỉ nối thêm (dãy đã khép giữ tham chiếu), đầy thì mở danh sách mới
+      if (ti < 0) { if (bT.length >= this.nt) { this.ngat(); bT = this.bT = []; } ti = bT.length; bT.push(E.tex); } // danh sách chỉ nối thêm (dãy đã khép giữ tham chiếu), đầy thì mở danh sách mới
       if (this.nv + 16 > DINH_MAX) this.xa();
       const a = X.a, b = X.b, c = X.c, d = X.d, e = X.e, f = X.f;
       const iw = 1 / E.W, ih = 1 / E.H, u0 = (E.x + sx) * iw, v0 = (E.y + sy) * ih, u1 = (E.x + sx + sw) * iw, v1 = (E.y + sy + sh) * ih;
@@ -591,7 +596,7 @@ const GLR = (() => {
       if (goc) { X.save(); X.translate(x, y); X.rotate(goc); X.drawImage(im, -w / 2, -h / 2, w, h); X.restore(); } else X.drawImage(im, x - w / 2, y - h / 2, w, h);
       X.al = al0;
     },
-    thongTin() { return { bat: this.bat, phien: this.phien, mat: this.mat, lyDo: this.lyDo, kiem: this.kiem, trang: this.trang ? this.trang.length : 0, rieng: this.rieng ? this.rieng.length : 0, thieu: this.thieu, dem: this.dem, boNho: this.boNho() }; },
+    thongTin() { return { bat: this.bat, phien: this.phien, nt: this.nt, gpu: this.gpu, mat: this.mat, lyDo: this.lyDo, kiem: this.kiem, trang: this.trang ? this.trang.length : 0, rieng: this.rieng ? this.rieng.length : 0, thieu: this.thieu, dem: this.dem, boNho: this.boNho() }; },
   };
   R.bat = R.quyetDinh();
   return R;
