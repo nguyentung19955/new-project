@@ -1508,3 +1508,10 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 
 - Thắng PVP / PUSH trúng túi thắng: Rương Trận **vào 1 trong 4 khe ở HOME** (trên ô chọn chế độ), không mở ngay; vàng trận vẫn phát. Đầy khe → `CHEST SLOTS FULL`. Mỗi lúc 1 rương đếm **15 phút** (giờ máy), xong chạm `OPEN`; mở ngay bằng ngọc ⌈phút còn lại / 3⌉. Rương mốc / nhiệm vụ / SHOP / RAID / CO-OP: mở ngay như cũ.
 - File: `thap/js/khe.js` (mới), `chedo-dd.js` (bọc `THEBAI.thuong`, dòng kết quả), `css/chedo-d.css`. Lưu `turret_kt.khe`. Kiểm: `tools/thap-kt-khe.js`; `thap-kt-cup.js` sửa 1 kỳ vọng (thắng trúng túi: không phát thẻ ngay).
+
+## claude/che-do-dcdw — sửa lượt 2: Push ép cuối trận, mốc cúp kế, Raid bậc 2, rương ×N (12/11)
+
+- PUSH: từ giây 110 sát thương cần để đẩy 1 px nhân đôi mỗi 12 giây (tất định) → cuối trận trùm ép mọi bộ về lõi, chênh lệch lộ rõ; nhãn đồng hồ đưa lên trên dải bộ bài đối thủ.
+- PVP: "next prize" = mốc cúp CHƯA ĐẠT kế tiếp; mốc đã vượt mà chưa nhận được phát bù khi vào HOME.
+- Thưởng "rương ×2" (mốc cúp 300 / 1 000, CO-OP wave 20 / 40, Raid bậc 3) trước chỉ phát 1 rương → nay phát đủ; kết quả hiện OPEN ×N.
+- RAID bậc 2: máu 14 000 → 22 000. Huy hiệu TWIN-FORGED có quầng sáng. Kiểm: `thap-kt-cup` (thêm 2 mục), `-push`, `-raid`, `-khe`.

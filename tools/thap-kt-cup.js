@@ -24,6 +24,9 @@ let loi = 0; const ok = (c, t) => { console.log((c ? '  ✓ ' : '  ✗ ') + t); 
     const v0 = KT.vang; let x; for (let i = 0; i < 4; i++) x = CUP.ket(true); o.c4 = x.c; o.moc4 = x.moc.join(); o.vang4 = KT.vang - v0;
     CUP.ket(false); CUP.ket(false); const v1 = KT.vang; x = CUP.ket(true); x = CUP.ket(true); o.lai = x.moc.length; o.vangLai = KT.vang - v1; o.c = x.c; o.max = CUP.st().max;
     o.luu = JSON.stringify(JSON.parse(localStorage.getItem('turret_kt')).cd.cup); o.ke = CUP.ke(); o.luot = 'luot' in CD.st();
+    // 12/11 lượt 2: cúp bị bơm (không qua trận) → mốc kế = mốc CHƯA ĐẠT; mốc đã vượt chưa nhận được phát bù đúng 1 lần
+    { const s2 = CUP.st(), giu = JSON.stringify(s2); s2.c = 520; CUP.st(); o.keBom = CUP.ke(); const v = KT.vang, x1 = CUP.bu(), x2 = CUP.bu(); o.bu = x1 && x1.moc.join(); o.buVang = KT.vang - v; o.bu2 = x2; o.keSau = CUP.ke(); Object.assign(s2, JSON.parse(giu)); s2.nhan = JSON.parse(giu).nhan; }
+    o.ru2 = (CD.phat([{ ruong: 'thuong', n: 2 }], 'kt-ru2', 'cup').ru || []).length; o.hh1 = (CD.phat([{ ruong: 'hh', n: 1 }], 'kt-hh1', 'cup').ru || []).length;
     // đối thủ theo cúp
     const bac = (d) => [...new Set(d.map(id => G.rosterMap[id].bac))].sort().join(), dmg = (d) => d.filter(id => SKILLS[id].dmg && SKILLS[id].vai !== 'ht').length;
     const a = CUP.doiThu(0), c = CUP.doiThu(600);
@@ -41,6 +44,8 @@ let loi = 0; const ok = (c, t) => { console.log((c ? '  ✓ ' : '  ✗ ') + t); 
     o.dai = dai; o.pvMax = pvMax; o.pity = pity;
     return o;
   });
+  ok(r.keBom === 700 && r.bu === '200,300,500' && r.buVang === 3000 && r.bu2 === null && r.keSau === 700, 'cúp bơm 520: mốc kế 700 (mốc chưa đạt), phát bù 200/300/500 đúng 1 lần ' + JSON.stringify([r.keBom, r.bu, r.buVang, r.keSau]));
+  ok(r.ru2 === 2 && r.hh1 === 1, 'thưởng { ruong, n: 2 } phát đủ 2 rương (trước chỉ 1); rương có ô cố định (hh) vẫn 1 rương ' + JSON.stringify([r.ru2, r.hh1]));
   ok(r.c0 === 0 && r.thua0 === 0, 'bắt đầu 0 cúp; thua ở 0 cúp vẫn 0 (không âm)');
   ok(r.c4 === 120 && r.moc4 === '100' && r.vang4 === 500, '4 trận thắng = 120 cúp, mốc 100 phát 1 lần (500 vàng + rương) ' + JSON.stringify([r.c4, r.moc4, r.vang4]));
   ok(r.c === 140 && r.max === 140 && r.lai === 0 && r.vangLai === 0 && r.ke === 200, 'thua 2 (−40) rồi thắng 2: 140 cúp, không phát lại mốc 100, mốc kế 200');

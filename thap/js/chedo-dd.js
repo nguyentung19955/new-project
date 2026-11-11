@@ -228,7 +228,19 @@ const CUP = {
     return s;
   },
   ds: () => Object.keys(CUPC.moc).map(Number).sort((a, b) => a - b),
-  ke() { const s = this.st(); return this.ds().find(m => !s.nhan[m]) || 0; },
+  ke() { const s = this.st(); return this.ds().find(m => m > s.max && !s.nhan[m]) || 0; }, // 12/11 lượt 2: mốc CHƯA ĐẠT kế tiếp (trước: mốc chưa nhận thấp nhất → tài khoản được bơm cúp hiện "next prize: 100" dù đang 520 cúp)
+  // phát mọi mốc đã đạt (cúp cao nhất ≥ mốc) mà chưa nhận — ghi cờ trước khi phát
+  phatMoc() {
+    const s = this.st(), ra = { vang: 0, ngoc: 0, the: [], tt: 0 }, moc = [];
+    for (const m of this.ds()) { if (s.max < m || s.nhan[m]) continue; s.nhan[m] = 1; moc.push(m); CD.gop(ra, CD.phat(CUPC.moc[m], 'cdcup' + m, 'cup')); }
+    return { ra, moc };
+  },
+  // phát bù ở HOME: mốc đã vượt mà chưa nhận (cúp tăng không qua trận: bơm thử / gộp hồ sơ máy khác) — trận thường đã phát ở ket()
+  bu() {
+    const s = this.st(); if (!this.ds().some(m => s.max >= m && !s.nhan[m])) return null;
+    const r = this.phatMoc(); KT.luu();
+    return r;
+  },
   muc(c) { let m = CUPC.doKho[0]; for (const x of CUPC.doKho) if (c >= x[0]) m = x; return m; },
   // bộ + cấp thẻ của đối thủ máy theo cúp (bốc bằng deckNgauNhien của game — như deckDoiThu: ≥ 3 ụ gây sát thương, ≤ 1 hỗ trợ)
   doiThu(c) {
@@ -245,8 +257,7 @@ const CUP = {
   ket(thang) {
     const s = this.st(), c0 = s.c;
     s.c = Math.max(0, s.c + (thang ? CUPC.thang : -CUPC.thua)); s.max = Math.max(s.max, s.c);
-    const ra = { vang: 0, ngoc: 0, the: [], tt: 0 }, moc = [];
-    for (const m of this.ds()) { if (s.max < m || s.nhan[m]) continue; s.nhan[m] = 1; moc.push(m); CD.gop(ra, CD.phat(CUPC.moc[m], 'cdcup' + m, 'cup')); }
+    const { ra, moc } = this.phatMoc();
     KT.luu();
     return { d: s.c - c0, c: s.c, ra, moc };
   },
@@ -434,6 +445,15 @@ function boDongDoiMoi() { const d = MOIC.bo.filter(id => SKILLS[id] && G.rosterM
       return r;
     };
     // Rương Trận (thebai.js): PVP = túi thắng (thắng + trúng xác suất tất định mới có thẻ; không thì chỉ vàng) · CO-OP giữ như cũ
+    // 12/11 lượt 2: { ruong: 'thuong' | 'vang', n: 2 } trước chỉ phát 1 rương (KT.moRuong chỉ dùng n cho rương có ô cố định) dù bảng thưởng ghi ×2
+    //  → tách thành n rương riêng cho các bảng thưởng chế độ (mốc cúp 300 / 1 000, Đột Kích bậc 3…); màn kết quả tự hiện OPEN ×N
+    if (typeof CD !== 'undefined' && CD.phat) {
+      const ph = CD.phat;
+      CD.phat = function (ds, khoa, nguon) {
+        const d2 = []; for (const r of ds || []) { const n = r && r.ruong && KTC.ruong[r.ruong] && !KTC.ruong[r.ruong].co ? (r.n | 0) : 0; if (n > 1) for (let i = 0; i < n; i++) d2.push({ ruong: r.ruong }); else d2.push(r); }
+        return ph.call(this, d2, khoa, nguon);
+      };
+    }
     const th = THEBAI.thuong;
     THEBAI.thuong = function (k, m) {
       if (!m || m.tut || m._thuong || G.dd) return th.apply(this, arguments);
@@ -466,6 +486,22 @@ function boDongDoiMoi() { const d = MOIC.bo.filter(id => SKILLS[id] && G.rosterM
       HM.veHome = function () {
         const r = vh.apply(this, arguments);
         try { const b = this.el('hm-best'), nh = b && b.previousElementSibling; if (b) b.textContent = CDUI.so(CUP.st().c); if (nh && nh.dataset.cup !== '1') { nh.dataset.cup = '1'; nh.textContent = 'CUPS'; } } catch (e) { }
+        // phát bù mốc cúp đã vượt mà chưa nhận (chỉ khi đang ở HOME, không có bảng nào mở)
+        try {
+          const s = CUP.st();
+          if (!CUP._buCho && !(G.ban && G.ban.length) && !(G.debug && (G.debug.auto || G.debug.wave || G.debug.mana)) && CUP.ds().some(m => s.max >= m && !s.nhan[m])) {
+            CUP._buCho = setTimeout(() => {
+              CUP._buCho = 0;
+              try {
+                const c = document.getElementById('chon'), p = document.getElementById('tt-phu');
+                if (!c || c.hidden || (G.ban && G.ban.length) || (p && !p.hidden) || (typeof KTUI !== 'undefined' && KTUI._ruong)) return;
+                const x = CUP.bu(); if (!x || !x.moc.length) return;
+                KTUI.nhan(x.ra, 'CUP MILESTONE · ' + CDUI.so(Math.max.apply(null, x.moc)), { phu: (h, k) => SHUI.phuKq(h, k), dong: 'sh-dong' });
+                HM.veHome();
+              } catch (e) { console.error('CUP', e); }
+            }, 900);
+          }
+        } catch (e) { }
         return r;
       };
     }

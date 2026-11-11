@@ -13,7 +13,7 @@ const RDC = {
   gio: 360, tim: 3, prep: 5, chang: 20, bac: 10, cap: 6,
   ve: 20, tran: 100, vePvp: 5, veCoop: 10, waveCoop: 30,
   // máu trùm theo bậc (số tuyệt đối — chỉnh bằng bot: tools/thap-bot-tran.js --che rd --bac N)
-  hp: [0, 5000, 14000, 45000, 80000, 180000, 400000, 800000, 1250000, 1550000, 1800000],
+  hp: [0, 5000, 22000, 45000, 80000, 180000, 400000, 800000, 1250000, 1550000, 1800000],
   // đợt quái: mỗi RDC.dot giây 1 đợt ở MỖI làn; số con = n0 + ⌊đợt / 2⌋ (trần nMax)
   dot: 12, n0: 4, nMax: 12, cach: 0.9,
   knDau: 40, knNghi: 12,                                       // chiêu trùm: lần đầu sau 40 s, mỗi lần sau nghỉ thêm 12 s (trùm đứng đó cả trận — niệm dày như trùm wave thì bàn đầu trận bị phá sạch)
