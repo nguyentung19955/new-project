@@ -1441,3 +1441,5 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - Còn hiệu lực (CO-OP / PVP / solo thử): số quái/wave `min(20, 8+⌊w/4⌋)`, slime tách 3 / 2 và chỉ ở wave Phân bào, wave có chủ đề theo `w % 10` (tên chủ đề ở băng WAVE), mana quái thường ×(1+1,7·min(w,30)/30), đà ST Vàng/Đỏ +2%/wave từ wave 20–40 rồi phẳng, máu quái theo B, KHÔNG trần wave 70.
 
 - Biểu tượng chế độ mới (ảnh ChatGPT 11/11, cắt từ 1 tấm 3×2, 192 px): `ic_coop`, `ic_pvp` (thay hình ụ cơ khí cũ), `ic_online`, `ic_race`, `ic_tutorial`, `ic_cup` (ô cúp ở kết quả PVP). Đã xem ảnh GAME MODE 390×844.
+
+- Merge King VÀNG: bỏ 2 ngôi sao ở mũi vương miện trong ảnh `vughepvang_nong.png` (người dùng 11/11: lẫn với sao cấp ★ vẽ trên đầu ụ); vẫn phân biệt bằng màu vàng + kim cương trắng.
