@@ -274,3 +274,9 @@ Không chỉnh (đo lại để đối chiếu, cùng thước): Cryo Reactor 2.
 - Black Hole: bài A và B lệch ×3.9 (8.5 · 2.2 ở w20) — điểm tổng 4.83 chỉ là trung bình nhân, độ tin thấp.
 - Bài đo không tính quái bị Leviathan NUỐT (chết không qua sát thương) → Leviathan thật nhỉnh hơn số đo.
 
+## Bổ sung 11/11 — Crimson Sting (`bocap`) lên bậc ĐỎ
+- Đổi bậc trong bảng đo (roster `bac: do`): hs 2,6 → 3,3, tốc ×1,15 (TOC_DO), cấp đầu LV11. ST gốc 22 / tốc gốc 2,0 giữ.
+- Giả định STING tính lại theo tốc ×1,15 (cùng công thức kỳ vọng): 3 ụ giữ lâu 69 / 235 / 451, 9 ụ còn lại 19 / 41 / 153 (lúc Vàng: 59 / 201 / 386 và 17 / 36 / 131).
+- Điểm (A·B, trung bình nhân): giữ 16%/STING → 4.09 / 5.83 / 9.08, tổng **6.00** (vượt dải Đỏ khó 5.1–5.5) · 15% → 5.64 · 14% → 5.53 · 13,5% → 5.42 · **13% → 3.72 / 5.10 / 8.06, tổng 5.35 (chọn)**. So Leviathan cùng lần đo: 3.35 / 6.33 / 6.95, tổng 5.28.
+- `KY_NANG_CAP.bocap`: LV11 13% → LV17 16% (+0,5%/cấp). Mô phỏng 1 ụ 7★ 10 phút: `tools/thap-do-bocap.js` (số ở TAI-LIEU-GOC mục 6). Chưa hãm trường hợp có hỗ trợ chí mạng kề.
+

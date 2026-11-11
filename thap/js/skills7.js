@@ -638,9 +638,11 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 // =====================================================================================================
-// Ụ VÀNG 97 · CRIMSON STING / BỌ CẠP HỒNG NGỌC (bocap) — Vàng TC, người dùng duyệt 10/11. Con bọ cạp máy (không phải nòng pháo trên bệ).
+// Ụ 97 · CRIMSON STING / BỌ CẠP HỒNG NGỌC (bocap) — ĐỎ Tấn công (ra mắt 10/11 ở bậc Vàng; người dùng chuyển lên ĐỎ 11/11 — bệ Đỏ, thân đỏ thẫm). Con bọ cạp máy (không phải nòng pháo trên bệ).
+//   Lên Đỏ: ST gốc 22 / tốc gốc 2,0 GIỮ (Đỏ mạnh nhờ kỹ năng); bậc tự cho hs 3,3 (Vàng 2,6), tốc ×1,15 (TOC_DO), thẻ +7% ST +3% tốc mỗi cấp. % ST mỗi STING chỉnh 16% → 13% ở cấp đầu
+//   (LV11; +0,5%/cấp → LV17 16%) để điểm tổng tools/thap-can-bang-so.js vào dải Đỏ khó 5,1–5,5 (đo 5,35; giữ 16% = 6,00). Thẻ cũ bậc Vàng: thebai.js THEBAI.doiBac.
 //   Đơn mục tiêu (quái đầu), KHÔNG lan. Tỉ lệ chí mạng thường (10%), ST chí mạng thường (200%).
-//   Mỗi lần CHÍNH ụ này bắn chí mạng: +1 STING của riêng ụ đó — KHÔNG TRẦN. Mỗi STING: +16% ST (LV9; +0,5%/cấp thẻ, KY_NANG_CAP.bocap) · +1% ST chí mạng · tốc bắn +100% × n/(n+250) (tiệm cận, không tự bùng nổ).
+//   Mỗi lần CHÍNH ụ này bắn chí mạng: +1 STING của riêng ụ đó — KHÔNG TRẦN. Mỗi STING: +13% ST (LV11; +0,5%/cấp thẻ, KY_NANG_CAP.bocap) · +1% ST chí mạng · tốc bắn +100% × n/(n+250) (tiệm cận, không tự bùng nổ).
 //   Ụ mới (triệu hồi, ghép ra, biến hình ra) = 0. Bị HẠ SAO = mất hết (so sao mỗi nhịp: mọi đường hạ sao — cháy, trùm, Hex, Star Breaker đối thủ).
 //   Hoá đá / đóng băng: không bắn nên không tích, không mất. +★ tại chỗ (Merge King, Star Lift…): giữ.
 //   Hỗ trợ chí mạng kề (Crit Antenna, Hammer, Focus Lens) → chí mạng nhiều hơn → tích nhanh hơn (chủ ý).
@@ -649,7 +651,7 @@ window.addEventListener('DOMContentLoaded', () => {
 //   Tất định: chí mạng do trung() quyết bằng rngLuat (game.js); móc khiCrit chỉ đếm. Online: cờ ô 'G<sting>;J<đếm chí mạng>;' (dongbo.js oTT/datO).
 // =====================================================================================================
 Object.assign(KY_NANG_CAP, {
-  bocap: { ten: 'Per STING', base: 16, buoc: 0.5, max: 20, dv: '%', tien: '+', dmg: true }, // +% ST mỗi STING: LV9 16% → LV17 20% (+0,5%/cấp thẻ)
+  bocap: { ten: 'Per STING', base: 13, buoc: 0.5, max: 16, dv: '%', tien: '+', dmg: true }, // +% ST mỗi STING: LV11 13% → LV17 16% (+0,5%/cấp thẻ) — lúc còn Vàng (10/11): LV9 16% → LV17 20%
 });
 SKILLS.bocap = {
   vai: 'tc', dmg: 22, toc: 2.0, nham: 'dau', MAU: '#FF3B4E',
@@ -697,7 +699,7 @@ SKILLS.bocap = {
   },
   sangDau: (T) => (typeof G !== 'undefined' && T.stChop != null && G.t - T.stChop < 0.25 ? 0.35 : 0),
 };
-themHo('crit', 3, 'bocap', 'its own crits stack STING forever: +damage, +fire rate, +crit damage — merging starts over');
+themHo('crit', 4, 'bocap', 'its own crits stack STING forever: +damage, +fire rate, +crit damage — merging starts over');
 Object.assign(MOC_RIENG, {
   bocap: { 3: ['KEEN STINGER', '+5% crit chance'], 5: ['DOUBLE DOSE', 'Every 3rd crit gives +2 STING'], 7: ['VENOM MARK', 'A crit marks the enemy 3s: it takes +10% damage from this turret'] },
 });

@@ -27,6 +27,7 @@ const UI = {
     document.querySelectorAll('[data-t]').forEach(e => { const v = TEXT.ui[e.dataset.t]; if (typeof v === 'string') e.innerHTML = v; });
     G.rosterMap = {}; for (const x of G.roster) G.rosterMap[x.id] = x;
     try { if (typeof THEBAI !== 'undefined' && THEBAI.boThe) THEBAI.boThe(); } catch (e) { } // bù thẻ đã bỏ + thay trong bộ bài đã lưu (trước khi đọc turret_bo)
+    try { if (typeof THEBAI !== 'undefined' && THEBAI.doiBac) THEBAI.doiBac(); } catch (e) { } // thẻ đổi bậc (Crimson Sting Vàng → Đỏ): quy đổi cấp thẻ 1 lần + gỡ khỏi bộ đã lưu có 2 Đỏ (trước khi đọc turret_bo)
     try { const l = JSON.parse(localStorage.getItem('turret_bo') || 'null'); if (l && l.chon) { this.chon = l.chon.filter(id => SKILLS[id] && G.rosterMap[id]); this.mv = MAVUONG[l.mv] && (typeof mvCo !== 'function' || mvCo(l.mv)) ? l.mv : 'hero'; /* chỉ huy chưa mở → REINFORCE (08/11) */ this.che = ['solo', 'coop', 'pvp'].includes(l.che) ? l.che : 'solo'; } } catch (e) { }
     this.veChon();
     document.addEventListener('click', (e) => this.bam(e));

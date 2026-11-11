@@ -359,6 +359,7 @@ const KT = {
   },
   gop(o) {
     const s = this.doc(), d = THEBAI.doc(), xa = o.kt, xd = o.the;
+    try { if (THEBAI.doiBac) THEBAI.doiBac(xd); } catch (e) { } // bản trên mạng còn cấp thẻ bậc cũ (Crimson Sting lúc Vàng) → quy đổi trước khi so cấp
     const goc = (xa.n | 0) > (s.n | 0) ? { a: xa, d: xd, b: s, e: d } : { a: s, d: d, b: xa, e: xd };
     const a = JSON.parse(JSON.stringify(goc.a)), dd = JSON.parse(JSON.stringify(goc.d)), b = goc.b;
     a.ngayMax = Math.max(a.ngayMax | 0, b.ngayMax | 0);

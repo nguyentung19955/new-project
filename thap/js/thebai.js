@@ -168,6 +168,34 @@ Object.assign(THEBAI, {
     }
     return doi;
   },
+  // ---------- THẺ ĐỔI BẬC (11/11: Crimson Sting 'bocap' Vàng → ĐỎ, 1 ngày sau khi ra mắt) ----------
+  // Người đã có thẻ lúc còn Vàng: GIỮ quyền sở hữu + bản sao; cấp thẻ quy đổi GIỮ SỐ BƯỚC đã lên: Vàng LV9 + k → Đỏ LV11 + k (k ≤ 6 = LV17; bản sao cần cho
+  // 6 bước đầu của Vàng và Đỏ y như nhau 1/2/3/5/8/12 → không ai thiệt, vàng đã tiêu không đòi thêm). Bước thứ 7–8 của Vàng (Đỏ không có): hoàn bản sao.
+  // Cờ d.bd[id] = bậc mới (trong turret_the, đi theo hồ sơ Firebase) → chỉ đổi 1 lần / bản dữ liệu; KT.gop gọi cho bản trên mạng TRƯỚC khi so cấp.
+  // Bộ bài đã lưu (turret_bo / turret_pre) có Crimson Sting + 1 ụ Đỏ khác (luật tối đa 1 Đỏ): bỏ Crimson Sting khỏi bộ đó (ô trống — người chơi chọn lại).
+  DOI_BAC: { bocap: { tu: 'vang', sang: 'do' } },
+  doiBac(d) {
+    const minh = !d; d = d || this.doc(); let doi = false;
+    if (!d || typeof d !== 'object') return false;
+    for (const id in this.DOI_BAC) {
+      const b = this.DOI_BAC[id];
+      if (d.bd && d.bd[id] === b.sang) continue;
+      (d.bd = d.bd || {})[id] = b.sang; doi = true;
+      const o = d.c && d.c[id], dau0 = THE.lvDau[b.tu], dau1 = THE.lvDau[b.sang];
+      if (o && (o.lv | 0) >= dau0) {
+        const k = (o.lv | 0) - dau0, kM = Math.min(THE.maxLv(b.sang) - dau1, THE.saoCan[b.sang].length); let n = o.n | 0;
+        for (let x = kM; x < k; x++) n += THE.saoCan[b.tu][x] || 0; // bước vượt trần bậc mới: hoàn bản sao
+        d.c[id] = { lv: dau1 + Math.min(k, kM), n };
+      }
+      if (minh && typeof G !== 'undefined' && G.rosterMap) {
+        const la = (x) => x && x !== id && G.rosterMap[x] && G.rosterMap[x].bac === b.sang, bo = (ds, rong) => ds.some(la) && ds.includes(id) ? (rong ? ds.map(x => x === id ? null : x) : ds.filter(x => x !== id)) : null;
+        try { const l = JSON.parse(localStorage.getItem('turret_bo') || 'null'), m = l && Array.isArray(l.chon) && bo(l.chon); if (m) { l.chon = m; localStorage.setItem('turret_bo', JSON.stringify(l)); } } catch (e) { }
+        try { const l = JSON.parse(localStorage.getItem('turret_pre') || 'null'); let c = false; if (l && Array.isArray(l.ds)) l.ds.forEach(p => { const m = p && Array.isArray(p.o) && bo(p.o, true); if (m) { p.o = m; c = true; } }); if (c) localStorage.setItem('turret_pre', JSON.stringify(l)); } catch (e) { }
+      }
+    }
+    if (minh && doi) this.luu();
+    return doi;
+  },
   // bộ bài của NGƯỜI KHÁC (online, bản cũ còn gửi thẻ bỏ): thay bằng thẻ Đỏ đầu tiên chưa có trong bộ đó (tất định, 2 máy như nhau)
   doiBo(deck) {
     if (!Array.isArray(deck)) return deck;

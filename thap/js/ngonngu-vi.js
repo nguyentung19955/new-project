@@ -451,6 +451,7 @@ const VI_MAU = {
 " — Heat reactor: piercing fire beam builds heat (row/column merges too), dragon dive burns it all (active).": " — Lò phản ứng: tia lửa xuyên quái tích nhiệt (ghép cùng hàng/cột cũng vậy), rồng bổ nhào đốt hết (chủ động).",
 " — Holds a crowd in place and crushes it + singularity (tap, mana).": " — Giữ chân đám quái rồi nghiền + kỳ dị (chạm, mana).",
 " — Instant hits that arc to a #nd enemy.": " — Đòn tức thì nảy sang quái thứ #.",
+" — Its own crits stack sting forever: +damage, +fire rate, +crit damage — merging starts over.": " — Chí mạng của chính nó cộng dồn STING mãi mãi: +sát thương, +tốc bắn, +ST chí mạng — ghép là tích lại từ đầu.",
 " — Leech bolts: damage + capped mana.": " — Tia hút: sát thương + mana (có giới hạn).",
 " — Lends fire rate to neighbours.": " — Cho ô kề mượn tốc bắn.",
 " — Merge scrambles turrets.": " — Ghép xáo trộn các ụ.",
