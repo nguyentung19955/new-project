@@ -55,7 +55,8 @@ const REN = {
   cSet(key, c) {
     if (!c) return c;
     this._cachePx += c.width * c.height;
-    if (this._cachePx > this.nganSach() || Object.keys(this.cache).length > 900) { if (_GLB()) { GLR.boKho(this._cacheCu); GLR.huyKho(this._cacheCu); } this._cacheCu = this.cache; this.cache = {}; this._cachePx = c.width * c.height; this.xoayN++; }
+    const glGiu = _GLB() && GLR.hien ? 1.6 : 1; // WebGL đang vẽ: ảnh kho đã thả bản CPU (chỉ còn texture) → thế hệ kho dài hơn 1,6 lần, đỡ dựng lại + tải lại texture của ảnh vừa rơi khỏi kho (giới hạn thật = atlas GPU, glr.js datLaiAtlas)
+    if (this._cachePx > this.nganSach() * glGiu || Object.keys(this.cache).length > 900 * glGiu) { if (_GLB()) { GLR.boKho(this._cacheCu); GLR.huyKho(this._cacheCu); } this._cacheCu = this.cache; this.cache = {}; this._cachePx = c.width * c.height; this.xoayN++; }
     this.dungN++; // chẩn đoán (nhãn admin): số ảnh dựng vào kho / số lần kho xoay thế hệ
     if (_GLB()) GLR.tinh(c, 'cache', key); // WebGL: canvas đệm tĩnh — có bản GPU rồi thì thả bản CPU (glr.js mục BỘ NHỚ)
     return (this.cache[key] = c);

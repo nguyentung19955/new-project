@@ -1480,3 +1480,20 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - Cờ Bạc (`thap/js/jackpot.js`): ô tối đỏ lúc "khác hết" ở lớp GL là `fillRect` (lệnh vector = 1 lần tải canvas nhỏ / ô / khung) → GL vẽ 1 ô ảnh màu đặc 4×4 dựng 1 lần × độ mờ.
 - Đo (Chromium + GPU phần mềm, co-op 3× wave 20→28, 2 bàn có Ember / Twin Anvil / Leviathan / Rồng Máy / Ngôi Sao / Cờ Bạc, bọc `texImage2D` / `texSubImage2D` 20 s): đầu trận 30,1 → ≤ 18,9 lần tải / s (tấm đếm 11,6 → 0 / s); sau 30 s khởi động 6,0 → 3–5 / s, trong đó TẢI LẠI (cùng canvas) 3,0 tấm đếm + 0,6 ô Cờ Bạc → 0; phần còn lại toàn ảnh tải LẦN ĐẦU (chữ số sát thương `chuSo` 19×27 / 25×36 — 60 ảnh là đủ bộ; đầu súng phóng to dần lúc ghép / biến hình `REN.co` mỗi cỡ 1 canvas; hạt hiệu ứng mới) — chưa sửa.
 - Kiểm: băm luật cảnh A `HASH=450,900` gl=1 = gl=0 (`8b4f420b` / `2f83154d`), không lỗi trang; ảnh cùng trạng thái gl=1 ↔ gl=0: tấm đếm khớp (lệch viền khử răng cưa ≤ ~10 % điểm ảnh của tấm, mắt thường không thấy). Lúc ụ đang mờ dần (alpha < 1) chữ trên tấm đậm hơn bản canvas một chút (các ô ảnh chồng nhau thay vì 1 ảnh gộp). Chỉ hiển thị, không đổi luật.
+## claude/demo-hop-tuong — WebGL: bớt tải texture giữa trận (11/11 đêm, nhánh song song `claude/gl-song-song-b`)
+- iPhone người dùng: khung chậm nào cũng có 2–6 lần tải canvas → texture. Đo (`tools/thap-kt-tai-gl.js`, co-op 3× 180 s wave 25 → 62): 2 441 lần tải ảnh tĩnh = 59 % tải lần đầu + 41 % tải LẠI (675 ảnh tải > 1 lần: atlas bỏ ô không vẽ 10 s, kho đệm xoay, texture riêng bỏ sau 10 s).
+- `thap/js/gl/glr.js`: gom atlas giữ theo ngân sách (mới dùng nhất trước, 5 trang) thay vì tuổi; texture riêng chỉ bỏ theo tuổi khi vượt mức; hàng nạp 2 mức (nạp trước ≤ 1 / khung ở khung nhẹ + ghim 60 s · đang cần); không đọc ngược GPU khi loại ảnh cũ. `render.js`: thế hệ kho đệm dài 1,6× khi GL vẽ.
+- `thap/js/nongskill.js`: trùm làm nóng từ "BOSS IN 3" (GL); mọi dạng ụ của 2 bộ bài vẽ thử ở màn mở đầu; `REN.co` cỡ động dùng lại bản gần cỡ (GL). `quaianim.js`: chớp trắng dải khung = chế độ trắng của shader (GL). `vaotran.js`: nán ≤ 2,5 s nếu còn việc làm nóng (GL; đo: không cần).
+- Chỉ hình — không đổi luật / số: băm gl0 = gl1 (co-op A `8b4f420b` / `2f83154d`, trùm wave 30 `e568d6c0`); mất ngữ cảnh `MAT=200,320` → 2D → GL lại, 0 lỗi.
+
+| 180 s | trước | sau |
+|---|---|---|
+| tải ảnh tĩnh / giây (cả trận · nửa sau) | 13,6 · 8,7 | 8,0 · 1,5 |
+| nguồn ≥ 256 điểm / giây | 1,23 | 0,84 |
+| ảnh tải > 1 lần (lần tải lại) | 675 (999) | 58 (58) |
+| tải trong 2 s sau trùm, wave 30/40/50/60 | 100/100/53/40 | 58/20/50/41 |
+| nhiều nhất 1 khung (tĩnh) | 4 | 4 |
+| MB canvas + GPU | 138–181 | 148–198 |
+| màn mở đầu | 4,0 s · 73 texture | 4,0 s · 136 texture |
+
+- Còn lại (chưa sửa, ngoài phạm vi phiên này): tấm đếm `ND.veHuyHieu` (demkn.js) vẽ lại + tải lại 27–44 lần / giây; tải lần đầu của ảnh tô màu / khung chiêu / chữ số theo cỡ. Chi tiết: `docs/demo-hop-tuong/tuvan/webgl/KE-HOACH.md` mục 10.
