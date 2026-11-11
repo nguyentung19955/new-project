@@ -38,10 +38,11 @@ const UI = {
     // CHỐNG NÓNG MÁY (tuvan/nong): 1 vòng rAF duy nhất · trần 60 khung/giây (màn 120 Hz bỏ khung thừa) · Tiết kiệm pin = 30 ·
     // tạm dừng = vẽ lại 10 lần/giây · ngoài trận (HOME/menu) KHÔNG vẽ canvas (vẽ 1 lần rồi nghỉ) · tab ẩn: trình duyệt tự dừng rAF.
     let tr = -1, tichLuy = 0, alpha = 1, tVe = -1e9, nghi = false;
+    // trận đứng (G.dung): vẽ ~10 lần / giây. Riêng màn mở đầu trận còn việc làm nóng (NS.conNong — nongskill.js): vẽ đủ 60 lần / giây để hàng nóng + hàng nạp texture chạy hết trước khi vào trận
     const vong = (n) => {
       requestAnimationFrame(vong);
       const tran = G.ban.length > 0;
-      const khoang = !tran ? 1e9 : (G.dung && !this.keo) ? 99 : (typeof TKP !== 'undefined' && TKP.on()) ? 1000 / 30 : 1000 / 60;
+      const khoang = !tran ? 1e9 : (G.dung && !this.keo && !(typeof NS !== 'undefined' && NS.conNong && NS.conNong())) ? 99 : (typeof TKP !== 'undefined' && TKP.on()) ? 1000 / 30 : 1000 / 60;
       if (!tran && !nghi) { nghi = true; tVe = -1e9; } else if (tran) nghi = false;
       const veNay = this.veLai > 0 || n - tVe >= khoang - 3.5;
       if (this.veLai > 0) this.veLai--;
@@ -506,8 +507,9 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
         const sk = SKILLS[k.T.id];
         if (chamSan(k.T)) { sk.chuDong(G, B, k.T); return; } // ụ có ▶ (chiêu chủ động đầy / trứng cháy): chạm = dùng chiêu, không mở dải thông tin
         if (!$('#tt').hidden && this.xemU && this.xemU.T === k.T) { $('#tt').hidden = true; this.ttHet = 0; this.xemU = null; return; } // chạm lại ụ đang xem = đóng dải
-        this.moTT(k.T.id, k.T);
+        // chọn TRƯỚC khi mở dải thông tin: dải lỗi (máy thật) cũng không làm mất lựa chọn chạm–chạm (người dùng 11/11: iPhone chạm Merge King không sáng ô đích)
         if (!k.T.st.bang && B.t.some(N => N && N !== k.T && hopLeGhep(k.T, N))) this.chonGhep = { T: k.T, t0: performance.now() };
+        try { this.moTT(k.T.id, k.T); } catch (er) { console.error('moTT', er); }
         return;
       }
       // Prism Thief: vuốt qua 4 ô liền → HỢP THỂ thành 1 mặt nạ 4 màu (skills7.js) thay cho ghép; đi qua ≥ 3 ô Prism mà sai luật → báo lý do, không ghép
@@ -526,7 +528,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       }
     };
     cv.addEventListener('pointerup', het);
-    cv.addEventListener('pointercancel', (e) => { if (!this.keo || e.pointerId === this.keo.id) this.huyKeo(); });
+    cv.addEventListener('pointercancel', (e) => { if (this.keo && e.pointerId === this.keo.id) this.huyKeo(); }); // không có thao tác đang dở thì KHÔNG xoá lựa chọn chạm–chạm (Safari iOS có thể bắn pointercancel sau khi nhấc ngón)
     cv.addEventListener('lostpointercapture', (e) => { if (this.keo && e.pointerId === this.keo.id) setTimeout(() => { if (this.keo && this.keo.id === e.pointerId) this.huyKeo(); }, 0); });
     cv.addEventListener('touchcancel', () => this.huyKeo());
     document.addEventListener('visibilitychange', () => { if (document.hidden) this.huyKeo(); });

@@ -57,12 +57,13 @@ ADMIN.fps = {
     const gl = typeof GLR !== 'undefined' && GLR.bat && !GLR.mat;
     // chẩn đoán: "ve a/b" = ms của REN.ve (trung bình / lớn nhất 10 s) — FPS thấp mà ve nhỏ → nghẽn NGOÀI phần vẽ trận (sự kiện chạm, DOM, ghép lớp);
     //   "t" = số texture GL tải lớn nhất trong 1 khung (10 s)
-    if (!F.boc && typeof REN !== 'undefined' && REN.ve) { F.boc = 1; const g = REN.ve; REN.ve = function () { const t0 = performance.now(); try { return g.apply(this, arguments); } finally { const d = performance.now() - t0; F.vs += d; F.vn++; if (d > F.vm) F.vm = d; if (gl0() && GLR.dem && GLR.dem.tai > F.tm) F.tm = GLR.dem.tai; } }; }
-    F.dv.push([F.vn ? F.vs / F.vn : 0, F.vm, F.tm]); if (F.dv.length > 20) F.dv.shift(); F.vs = F.vn = F.vm = F.tm = 0;
-    const tb = F.dv.reduce((a, x) => a + x[0], 0) / F.dv.length, mx = Math.max.apply(null, F.dv.map(x => x[1])), tx = Math.max.apply(null, F.dv.map(x => x[2]));
+    //   "d a x b h c" = số ảnh dựng vào kho đệm (REN.cSet) trong đúng khung vẽ chậm nhất 10 s · số lần kho xoay thế hệ từ đầu · ms lớn nhất 1 lần dựng lại ảnh đã thả (GL)
+    if (!F.boc && typeof REN !== 'undefined' && REN.ve) { F.boc = 1; const g = REN.ve; REN.ve = function () { const t0 = performance.now(), d0 = this.dungN | 0; try { return g.apply(this, arguments); } finally { const d = performance.now() - t0; F.vs += d; F.vn++; if (d > F.vm) { F.vm = d; F.dm = (this.dungN | 0) - d0; } if (gl0() && GLR.dem && GLR.dem.tai > F.tm) F.tm = GLR.dem.tai; } }; }
+    F.dv.push([F.vn ? F.vs / F.vn : 0, F.vm, F.tm, F.dm | 0]); if (F.dv.length > 20) F.dv.shift(); F.vs = F.vn = F.vm = F.tm = F.dm = 0;
+    const tb = F.dv.reduce((a, x) => a + x[0], 0) / F.dv.length, mx = Math.max.apply(null, F.dv.map(x => x[1])), tx = Math.max.apply(null, F.dv.map(x => x[2])), dx = F.dv.reduce((a, x) => (x[1] > a[1] ? x : a), F.dv[0])[3];
     // bộ nhớ (5 s đo 1 lần): "m a+b" = MB canvas đệm đang sống (REN.boNho) + MB texture GL — iPhone hay thu hồi trang giữa trận khi tổng quá lớn
     F.mn = (F.mn | 0) + 1; if (F.mn % 10 === 1) { try { const r = REN.boNho(), g = gl && GLR.thongTin().boNho; F.mt = ' · m' + Math.round(r.canvasMB) + (g ? '+' + Math.round(g.tong / 1048576) : ''); } catch (e) { F.mt = ''; } }
-    F.el.textContent = (ADMIN.nk.che === 1 ? 'NF ' : '') + (gl ? 'GL ' : '2D ') + Math.round(fps) + ' · min ' + Math.round(Math.min.apply(null, F.ds)) + ' · ve ' + Math.round(tb) + '/' + Math.round(mx) + (gl ? ' · t' + tx : '') + (F.mt || '');
+    F.el.textContent = (ADMIN.nk.che === 1 ? 'NF ' : '') + (gl ? 'GL ' : '2D ') + Math.round(fps) + ' · min ' + Math.round(Math.min.apply(null, F.ds)) + ' · ve ' + Math.round(tb) + '/' + Math.round(mx) + (gl ? ' · t' + tx : '') + ' · d' + dx + 'x' + (REN.xoayN | 0) + (gl && GLR.bn ? 'h' + Math.round(GLR.bn.hoiMax) : '') + (F.mt || '');
     F.el.style.display = '';
   },
 };
