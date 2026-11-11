@@ -14,6 +14,9 @@ Cỡ đầu (người dùng 11/11): bề ngang đầu ≈ 85–100% bề ngang b
   Đầu XOAY theo mục tiêu / quay tròn ('xoay'): bán kính xa nhất ≤ R_MAX ô.
 Ghi thap/js/artscale.js: DAU_VE[id] = {K: 1.0[, S: [1, 1, 1]]} (cỡ VẼ = 1 ô — cỡ LUẬT HEAD_K/STAGE_K giữ nguyên), PHU_GIUA bỏ 'set'
   (vòng cuộn cũ không còn), UMOD_TIP của ụ còn xoay (no5) theo mũi hình mới.
+LÔ 2 (11/11): 18 ụ ĐẶC BIỆT / HỖ TRỢ, tấm t15–t21 (3 hàng × 4 cột như t01–t06). Hàng None = CHƯA ghép (người dùng chưa chốt): t16 hàng 1 Frost `bang`,
+  t20 hàng 1 Merge King `vughep` (giữ vương miện), t21 hàng 2 Wild Link `tudo`. MOT_DAU: ụ 3 dạng mà tấm chỉ có 1 đầu → cả 3 dạng dùng CHUNG đầu mới
+  (artscale.js STAGE_DAU_MOI ×1 / 1,04 / 1,08 + quầng màu dạng 2/3 — growfx.js mục 7; ảnh _nong_s1..s3 cũ không còn dùng); đầu chặn ở CAO_1DAU để dạng 3 không tràn ô.
 Chạy: python3 tools/thap-cat-u-tudo.py [id …]     (KHONG_JS=1 không sửa artscale.js · OUT=thư_mục · KT=thư_mục ảnh kiểm)
 """
 import os, sys, json, re, importlib.util
@@ -39,7 +42,12 @@ VIEN = 0.016      # viền màu nhấn / cạnh ô
 TAM = {
     't01': ['nhanban', 'xaotron', 'thaukinh'], 't02': ['docton', 'tuthan', 'nangsao'], 't03': ['epxung', 'no5', 'nhieusong'],
     't04': ['santhuong', 'sungluc', 'tia'], 't05': ['set', 'railgun', 'sinhdoi'], 't06': ['saochep', 'loren', 'nguyenrua'], 't07': ['thanhdia'],
+    # lô 2 (11/11)
+    't15': ['cuongno', 'vungdoc', 'khuech'], 't16': [None, 'doc', 'mana'], 't17': ['phagiap', 'bua', 'bomhen'], 't18': ['nhanmana', 'dichchuyen', 'chimang'],
+    't19': ['loa', 'kepha', 'khoathoigian'], 't20': [None, 'pandora', 'marionette'], 't21': ['xuonganh', None, 'ngaithoigian'],
 }
+MOT_DAU = ['cuongno', 'ngaithoigian', 'pandora', 'marionette']   # 3 dạng, 1 đầu chung
+CAO_1DAU = 0.88   # cạnh lớn nhất của đầu MOT_DAU / cạnh ô (dạng 3 vẽ ×1,08 → 0,95 ô)
 DANG = {'t08': 'lienket', 't09': 'dongbo', 't10': 'orbital', 't11': 'luoicheo', 't12': 'guongcong', 't13': 'overlord', 't14': 'lophanung'}
 # màu nhấn (viền ôm hình bóng) theo tông hình mới
 MAU = {
@@ -48,6 +56,10 @@ MAU = {
     'set': '#5fd8ff', 'railgun': '#ff8a2a', 'sinhdoi': '#ff7a4a', 'saochep': '#6ad0ff', 'loren': '#ff8a2a', 'nguyenrua': '#ff4b5e',
     'thanhdia': '#7fd8ff', 'lienket': '#c77dff', 'dongbo': '#3fe0e0', 'orbital': '#4f8bff', 'luoicheo': '#45e0c8', 'guongcong': '#7fe8ff',
     'overlord': '#ff4a3a', 'lophanung': '#9fe6ff',
+    # lô 2 — giữ màu nhấn nhận diện cũ (tools/thap-nhan-dien-u.py) khi còn hợp hình mới
+    'cuongno': '#ff3030', 'vungdoc': '#b05cff', 'khuech': '#4fc3ff', 'doc': '#8ee53f', 'mana': '#2ee6c8', 'phagiap': '#ff5a1f', 'bua': '#ffc23a',
+    'bomhen': '#ffd24a', 'nhanmana': '#23e0a0', 'dichchuyen': '#6a9bff', 'chimang': '#ff3d5a', 'loa': '#ffc23a', 'kepha': '#ff5a5a',
+    'khoathoigian': '#b06bff', 'pandora': '#c77dff', 'marionette': '#ffc23a', 'xuonganh': '#ff9a1a', 'ngaithoigian': '#ff4a3a',
 }
 XOAY = {'no5', 'sinhdoi'}      # đầu còn xoay (Fifth Shot chĩa viên vàng vào mục tiêu · Twin Maker đôi cá quay chậm) → vừa vòng tròn
 DAY = {'luoicheo'}             # phóng lớn nhất trong ô
@@ -148,7 +160,7 @@ def ti_le(c, wb, i, n, s1=None):
     if i in XOAY:
         ys, xs = np.nonzero(c[..., 3] > 0.02); r = np.sqrt((xs + 0.5 - (x0 + x1) / 2) ** 2 + (ys + 0.5 - (y0 + y1) / 2) ** 2).max()
         return min(1.0 / o * min(1.0, RONG[1] * wb / w), (R_MAX - pv) / r) * PX
-    tran = (CAO_MAX - 2 * pv) / max(w, h)         # chặn ô (ô / px gốc)
+    tran = ((CAO_1DAU if i in MOT_DAU else CAO_MAX) - 2 * pv) / max(w, h)         # chặn ô (ô / px gốc)
     if i in DAY: return tran * (0.93, 0.96, 1.0)[n] * PX
     if n == 0 or s1 is None:
         k = min(max(w / wb, RONG[0]), RONG[1]) * wb / w / o   # bề ngang đầu = 85–100% bệ
@@ -198,10 +210,11 @@ def main():
     for tam in sorted(list(TAM) + list(DANG)):
         ids = TAM.get(tam) or [DANG[tam]] * 3
         if chon and not (chon & set(ids)): continue
+        if not chon and None in ids: continue      # lô 2: chỉ chạy khi nêu id
         T = tach_tam(np.asarray(Image.open(os.path.join(RAW, 'raw_anime_u_tudo_%s.png' % tam)).convert('RGB')), len(ids))
         s1 = None
         for r, i in enumerate(ids):
-            if chon and i not in chon: continue
+            if i is None or (chon and i not in chon): continue
             c, be = khu_hong(T[(r, 2)], i), T[(r, 1)]; bx0, _, bx1, _ = khung(be)
             n = r if tam in DANG else 0
             s = ti_le(c, bx1 - bx0, i, n, s1)
@@ -221,6 +234,10 @@ def main():
                 up = im.rotate(90); nen.alpha_composite(up, (0, 0)); nen.alpha_composite(up, (PX, 0)); nen.convert('RGB').save(os.path.join(kt, '%s_%d.png' % (i, n + 1)))
     if os.environ.get('KHONG_JS'): return
     PG.pop('set', None)
+    SA, SV = U.js_obj(t, 'STAGE_ANIME'), U.js_obj(t, 'STAGE_VE')
+    for i in MOT_DAU:
+        if DV.get(i, {}).get('K') == 1.0 and 'S' not in DV[i]: SA.pop(i, None); SV.pop(i, None)
+    t = U.js_set(t, 'STAGE_ANIME', SA); t = U.js_set(t, 'STAGE_VE', SV)
     t = U.js_set(t, 'HEAD_K', HK); t = U.js_set(t, 'DAU_VE', DV); t = U.js_set(t, 'UMOD_TIP', TIP); t = U.js_set(t, 'PHU_GIUA', PG)
     open(JS, 'w', encoding='utf-8').write(t)
 

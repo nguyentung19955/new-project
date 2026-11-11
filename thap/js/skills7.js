@@ -719,6 +719,8 @@ window.addEventListener('DOMContentLoaded', () => {
 // voi…) → xoay theo mục tiêu sẽ lộn ngược: giữ đứng như ảnh gốc, lắc nhẹ ±3.5° (như Rối Máy / Cổng Gương — render.js). Chỉ góc VẼ + đòn phát từ lõi (dauNong: ụ có gocDau); T.goc/ngắm không đổi. Ghi đè gocDau cũ (quay tròn / chĩa nòng) của các ụ này.
 // Resonance Grid: đứng yên (chữ X luôn chỉ 4 ô chéo). Fifth Shot vẫn chĩa viên vàng vào mục tiêu; Twin Maker (đôi cá âm dương) vẫn quay chậm (TB).
 if (typeof SKILLS !== 'undefined' && !window.UCU) {
-  const DUNG = ['nhanban', 'xaotron', 'thaukinh', 'docton', 'tuthan', 'nangsao', 'epxung', 'nhieusong', 'santhuong', 'sungluc', 'tia', 'set', 'railgun', 'saochep', 'loren', 'nguyenrua', 'thanhdia', 'lienket', 'dongbo', 'orbital', 'luoicheo', 'guongcong', 'overlord', 'lophanung'];
+  const DUNG = ['nhanban', 'xaotron', 'thaukinh', 'docton', 'tuthan', 'nangsao', 'epxung', 'nhieusong', 'santhuong', 'sungluc', 'tia', 'set', 'railgun', 'saochep', 'loren', 'nguyenrua', 'thanhdia', 'lienket', 'dongbo', 'orbital', 'luoicheo', 'guongcong', 'overlord', 'lophanung',
+    // lô 2 (11/11, tấm t15–t21): 18 ụ đặc biệt / hỗ trợ — đầu là con vật / vật có mặt
+    'cuongno', 'vungdoc', 'khuech', 'doc', 'mana', 'phagiap', 'bua', 'bomhen', 'nhanmana', 'dichchuyen', 'chimang', 'loa', 'kepha', 'khoathoigian', 'pandora', 'marionette', 'xuonganh', 'ngaithoigian'];
   for (const id of DUNG) if (SKILLS[id] && window.DAU_VE && DAU_VE[id] && DAU_VE[id].K === 1) SKILLS[id].gocDau = id === 'luoicheo' ? () => -Math.PI / 2 : (T, t) => -Math.PI / 2 + Math.sin(t * 1.1 + (T.pha || 0) * 6) * 0.06;
 }
