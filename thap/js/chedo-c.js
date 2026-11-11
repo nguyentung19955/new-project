@@ -52,6 +52,7 @@ const CDC = {
     { ten: 'Sky Storm', w0: 15, w1: 20, trum: 1, dot: ['BAY', 'NHANH'], r: [{ ruong: 'vang' }] },
   ],
   thuXp: 20,
+  bo: { san: 1, thu: 1 },                                      // 11/11 người dùng chốt BỎ Săn Trùm + Thử thách ngắn (chế độ như DCDW): ẩn khỏi GAME MODE, không vào được; bản lưu cd.san / cd.thu giữ nguyên
   // Tinh thể Đỏ → ẤN ĐỎ (Lò rèn): 15 tinh thể + 50 000 vàng → 1 bản Đỏ tự chọn trong các Đỏ đã mở / đã có
   anDo: { tt: 15, vang: 50000 },
   ICON: { thap: 'ua_ts_xp', san: 'ua_ic_trum', thu: 'ua_ic_nv', tt: 'ua_ts_do' },
@@ -138,6 +139,7 @@ const CD = {
   // luyen = Săn Trùm hết vé: đánh luyện tập (không thưởng, không mở bậc)
   vao(loai, id, b) {
     if (typeof UI === 'undefined' || UI.chon.length !== 5) { try { UI.nhac('Pick 5 turrets'); } catch (e) { } return false; }
+    if (CDC.bo[loai]) return false;
     const c = this.cauHinh(loai, id, b); if (!c) return false;
     if (loai === 'thap' && !this.thapMo(id)) return false;
     if (loai === 'thu' && !this.thuMo(id)) return false;
@@ -296,7 +298,7 @@ const CDUI = {
     return '<div class="cd-so"><span><small>WAVES</small><b>' + c.w0 + '–' + c.w1 + '</b></span><span><small>START MANA</small><b>' + this.so(c.M) + '</b></span><span><small>LIVES</small><b>' + c.tim + '</b></span></div>';
   },
 
-  mo(loai) { SND.nut(); if (loai === 'thap') this.thap(); else if (loai === 'san') this.san(); else this.thu(); },
+  mo(loai) { if (CDC.bo[loai]) return; SND.nut(); if (loai === 'thap') this.thap(); else if (loai === 'san') this.san(); else this.thu(); },
 
   // ---------- LEO THÁP ----------
   thap() {
@@ -477,7 +479,7 @@ const CDUI = {
   try { CD.st(); } catch (e) { console.error('CD', e); }
 
   // ---- khoá tính năng (tientrinh.js TTC.tn) ----
-  Object.assign(TTC.tn, { thu: { hd: 1, ten: 'QUICK TRIALS' }, thap: { hd: 1, ten: 'TOWER CLIMB' }, san: { cap: 0, trum: 3, ten: 'BOSS HUNT' } }); // 10/11: Leo Tháp mở ngay sau hướng dẫn (trước: cấp 5)
+  Object.assign(TTC.tn, { thu: { hd: 1, ten: 'QUICK TRIALS' }, thap: { hd: 1, ten: 'TOWER CLIMB' }, san: { cap: 0, trum: 3, ten: 'BOSS HUNT' } }); for (const k in CDC.bo) delete TTC.tn[k]; // chế độ đã bỏ: không báo "mở tính năng" // 10/11: Leo Tháp mở ngay sau hướng dẫn (trước: cấp 5)
   { const g = TT.tnMo; TT.tnMo = function (k) { if (k === 'san') { try { return ADMIN.la() || !!this.st().giuTn.san || CD.trumHa().length >= TTC.tn.san.trum; } catch (e) { return false; } } return g.apply(this, arguments); }; }
   { const g = TT.tnChu; TT.tnChu = function (k) { return k === 'san' ? 'Unlocks after defeating ' + TTC.tn.san.trum + ' different bosses' : g.apply(this, arguments); }; }
   { const g = TTUI.tnNhan; TTUI.tnNhan = function (k) { return k === 'san' ? '<b>' + TTC.tn.san.trum + ' BOSSES</b>' : g.apply(this, arguments); }; }
@@ -587,7 +589,8 @@ const CDUI = {
       thap: { ten: 'TOWER CLIMB', ic: CDC.ICON.thap, phu: () => 'Floor ' + CD.thapKe() + ' / ' + CDC.thap.so, mo: '100 floors · survive 5 waves' },
       san: { ten: 'BOSS HUNT', ic: CDC.ICON.san, phu: () => 'Tickets ' + ve(), mo: 'Beat a boss you know in 90 s · 3 tickets a day' },
     });
-    const laC = (k) => k === 'thap' || k === 'san' || k === 'thu';
+    for (const k in CDC.bo) HM.CHE[k].an = 1; // ẩn khỏi GAME MODE (như SOLO)
+    const laC = (k) => (k === 'thap' || k === 'san' || k === 'thu') && !CDC.bo[k];
     const khoa = (k) => TTC.tn[k] && !TT.tnMo(k);
     const cc = HM.chonChe;
     HM.chonChe = function (k) {

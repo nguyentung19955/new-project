@@ -7,7 +7,7 @@
 //   NODE_PATH=/opt/npm-tools/node_modules node tools/thap-bot-tran.js --che thap --tang 1 --deck tia,lien,sungluc,bang,set --hat 1,2
 //   … --che solo --deck cobac,vughep,sinhdoi,saochep,tudo --max 100 --bt A      … --che coop --deck … --deck2 …
 //   … --lo tools/thap-bot-lo.json --bt goc,A,B --song 2 --ra docs/demo-hop-tuong/tocban/bot-wave.json     (chạy cả lô, 2 trang song song)
-// Tham số: --che solo|coop|thap · --tang N (Leo Tháp) · --wave W0 --mana M (solo/coop: wave đầu / mana đầu) · --cap K (số cấp thẻ trên cấp đầu, mặc định 0)
+// Tham số: --che solo|coop|thap|dd (dd = Đường Đua) · --tang N (Leo Tháp) · --wave W0 --mana M (solo/coop: wave đầu / mana đầu) · --cap K (số cấp thẻ trên cấp đầu, mặc định 0)
 //   --mv hero (chỉ huy) · --max 100 (trần wave solo/coop; game thật 70) · --hat 1,2 (hạt giống) · --chitiet 1 (in từng wave) · BASE=http://localhost:8765/thap/
 // Ghi chú: Leo Tháp game thật dùng hạt cố định theo tầng (CD.hat) → hạt h ở đây = hạt tầng + h·7919 (h = 0: đúng hạt game).
 'use strict';
@@ -59,6 +59,8 @@ function trongTrang(c) {
       if (c.mana) cd.M = c.mana;
       CD.cho = cd; UI.che = 'solo'; batDau('solo', UI.chon, UI.mv);
       S.cd = { w0: G.cd.w0, w1: G.cd.w1, M: G.cd.M, trum: G.cd.trum || null }; G.cho = 1;
+    } else if (c.che === 'dd') { // ĐƯỜNG ĐUA (chedo-dd.js): hạt h = hạt tuần + h·7919 (h = 0: đúng hạt game tuần này)
+      const dd = DD.cauHinh(); dd.hat = (dd.hat + c.hat * 7919) | 0; DD.cho = dd; UI.che = 'coop'; batDau('coop', UI.chon, UI.mv); G.cho = 1;
     } else { UI.che = c.che; batDau(c.che, UI.chon, UI.mv); }
   } finally { Math.random = r0; }
   S.w0 = G.wave + 1; S.deck = G.ban.map(B => B.deck.join(','));
@@ -80,7 +82,7 @@ function trongTrang(c) {
   window.__kq1 = () => {
     if (!G.ban.length) return { thang: !!(S.kq && S.kq.thang), ly: S.kq ? S.kq.ly : '', wave: S.kq ? S.kq.wave : 0, w0: S.w0, cd: S.cd, tim: 0, t: 0, buoc: S.buoc, dinh: S.dinh, dinhW: S.dinhW, mana: [], gia: [], pu: [], ban: [], w: S.w, loi: 'G.ban rỗng · ' + S.loi };
     const B = G.ban[0], k = S.kq || { thang: false, ly: 'chưa xong', wave: G.wave };
-    return { thang: k.thang, ly: k.ly, wave: k.wave, w0: S.w0, cd: S.cd, tim: B.tim, t: Math.round(G.t), buoc: S.buoc, dinh: S.dinh, dinhW: S.dinhW,
+    return { dd: G.dd ? { diem: G.dd.diem, giet: G.dd.giet, t: Math.round(G.t - (G.dd.t0 || 0)) } : undefined, thang: k.thang, ly: k.ly, wave: k.wave, w0: S.w0, cd: S.cd, tim: B.tim, t: Math.round(G.t), buoc: S.buoc, dinh: S.dinh, dinhW: S.dinhW,
       mana: G.ban.map(b => Math.round(b.mana)), gia: G.ban.map(b => b.gia), pu: G.ban.map(b => b.deck.map(id => b.lv[id] - 1).join('')),
       ket: S.ket | 0, ban: G.ban.map(b => b.t.filter(Boolean).map(T => T.id + T.sao).sort().join(' ')), deck: S.deck, w: S.w, loi: S.loi };
   };
@@ -108,7 +110,7 @@ async function chayMot1(ctx, c) {
 const tenCa = (c) => c.ten || (c.che === 'thap' ? 'tầng ' + c.tang : c.che + (c.wave ? ' w' + c.wave : '')) + ' ' + c.deck.join(',');
 function dong(c, bt, r) {
   const ws = Object.keys(r.w).map(Number).filter(w => !r.w[w].trum && r.w[w].sinh > 4), tb = ws.length ? Math.round(ws.reduce((s, w) => s + r.w[w].sinh, 0) / ws.length) : 0;
-  return [bt.padEnd(5), tenCa(c).padEnd(46), 'hạt ' + c.hat, (r.thang ? 'THẮNG' : 'thua ') + ' w' + r.wave + (r.cd ? ' (' + r.cd.w0 + '–' + r.cd.w1 + ', M' + r.cd.M + ')' : ''), '♥' + r.tim,
+  return [bt.padEnd(5), tenCa(c).padEnd(46), 'hạt ' + c.hat, r.dd ? 'ĐƯỜNG ĐUA điểm ' + r.dd.diem + ' · diệt ' + r.dd.giet + ' · ' + r.dd.t + 's' : '', (r.thang ? 'THẮNG' : 'thua ') + ' w' + r.wave + (r.cd ? ' (' + r.cd.w0 + '–' + r.cd.w1 + ', M' + r.cd.M + ')' : ''), '♥' + r.tim,
     'đỉnh ' + r.dinh + '@w' + r.dinhW, 'quái/wave ~' + tb, 'mana ' + r.mana.join('/'), 'manaGiết≤30 ' + Object.keys(r.w).filter(w => +w <= 30).reduce((t, w) => t + (r.w[w].mn || 0), 0), 'pu ' + (r.pu || []).join('/'), r.ket ? 'kẹt×' + r.ket : '', r.t + 's', '[' + r.giay + 's]', r.loi ? 'LỖI ' + r.loi.slice(0, 120) : '', (r.errs || []).join(' | ').slice(0, 120)].join(' · ');
 }
 

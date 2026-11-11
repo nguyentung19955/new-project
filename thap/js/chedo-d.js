@@ -14,18 +14,19 @@ const CDDC = {
   ICON: { tw: 'ua_ic_sk', vt: 'ua_ts_mana', tt: 'ua_ts_do' },
   beDot: ['NHANH', 'DAY', 'DONG', 'KHONGLO', 'BAY'], // đột biến lúc sinh quái (bảng CDC.dot) — không Glass Core
   vt: {
+    bat: false,                                                 // 11/11 người dùng chốt BỎ Vô tận (làm chế độ như DCDW): tầng 100 thắng = kết thúc bình thường, không hỏi ENDLESS; bản lưu cd.vt giữ nguyên
     w0: 70, tang: 100,                                          // Vô tận bắt đầu sau wave cuối của tầng 100 Leo Tháp (wave 66–70)
     coTrum: (w) => (w <= 90 ? w % 5 === 0 : w <= 100 ? w % 2 === 0 : true),
     dotTu: 101, dotMoi: 10,                                     // từ wave 101: +1 đột biến mỗi 10 wave
     moc: { 80: [{ vang: 2000 }], 90: [{ ngoc: 30 }], 100: [{ tt: 1 }], 110: [{ ngoc: 50 }], 120: [{ ruong: 'hh', n: 1 }] },
   },
   tw: {
-    bat: true,                                                  // 10/11: bật (GAME MODE + HOME → EVENT), kiểm tools/thap-kt-thu-thach-tuan.js
+    bat: false,                                                 // 11/11 người dùng chốt BỎ Thử thách tuần (trước: bật 10/11); bản lưu cd.tw giữ nguyên
     cap: 8, wMax: 50, soDot: 2, capThe: 5, mana: 100, tim: 3,
     bo: ['vang', 'tim', 'tim', 'xanh', 'trang'],               // 1 Vàng + 2 Tím + 1 Xanh + 1 Trắng (không Đỏ)
     moc: { 15: [{ vang: 1000 }], 25: [{ ngoc: 30 }], 35: 'vang', 45: [{ tt: 1 }] },
   },
-  lb: { top: 50, wMax: { tw: 51, vt: 999, vtAll: 999 }, choMs: 8000 }, // w tối đa theo rules (§3.2) · đọc quá choMs → ngoại tuyến
+  lb: { top: 50, wMax: { tw: 51, vt: 999, vtAll: 999, dd: 999999 }, choMs: 8000 }, // w tối đa theo rules (§3.2) · đọc quá choMs → ngoại tuyến
 };
 
 // ===================================================== LƯU =====================================================
@@ -187,6 +188,7 @@ const BXH = {
   _c: {}, _dang: {}, // bộ đệm đọc: duong → { at, ds } · bảng đang gửi
   duong(b, tu) { return b === 'vtAll' ? 'lb/vtAll' : 'lb/' + b + '/' + (tu || KT.tuan()); },
   k: (w, t) => w * 100000 + 99999 - Math.min(99999, Math.max(0, t | 0)),
+  tMin: (b, w) => (b === 'dd' ? 1 : w * 6), // Đường Đua (dd): w = ĐIỂM, t = giây đã đua — không có ràng buộc t ≥ 6·w
   san() { return !!(typeof NET !== 'undefined' && NET.ok && NET.kieu === 'firebase' && NET.user && NET.user.uid && NET._db); },
   // chờ NET khởi động (taikhoan.js gọi NET.san() sau 1,5 s) — không chờ quá choMs
   sanSang() {
@@ -203,7 +205,7 @@ const BXH = {
   },
   // bản ghi đúng rules §3.2: n 1–16 ký tự, av ≤ 24, w 1…51 (tuần) / 1…999, t ≥ 6·w và < 100000, k = w·100000 + 99999 − t, at = giờ máy chủ, v số
   banGhi(b, w, t) {
-    const ten = this.ten(), W = Math.max(1, Math.min(CDDC.lb.wMax[b] || 999, w | 0)), T = Math.min(99999, Math.max(W * 6, t | 0));
+    const ten = this.ten(), W = Math.max(1, Math.min(CDDC.lb.wMax[b] || 999, w | 0)), T = Math.min(99999, Math.max(this.tMin(b, W), t | 0));
     return { n: ten.n, av: ten.av, w: W, t: T, k: this.k(W, T), at: this.ts(), v: 1 };
   },
   // ghi điểm (kỷ lục mới). Lưu hàng chờ trong máy → gửi lại khi mở bảng (mạng ngắt trong trận / rules chưa có)
@@ -215,7 +217,7 @@ const BXH = {
   gui() {
     if (!this.san()) return Promise.resolve(false);
     const lb = CDD.st().lb, ds = [];
-    for (const b of ['tw', 'vt', 'vtAll']) {
+    for (const b of ['dd']) { // 11/11: chỉ còn bảng Đường Đua tuần (điểm chờ gửi cũ của tw / vt / vtAll giữ nguyên trong máy, không gửi nữa)
       const x = lb[b]; if (!x || !x.w) continue;
       if (b !== 'vtAll' && x.tuan !== KT.tuan()) { delete lb[b]; continue; }
       if (this._dang[b] === x) continue; // đang gửi (chỉ trong bộ nhớ, không lưu)
@@ -242,7 +244,7 @@ const BXH = {
         s.forEach((x) => { const v = x.val() || {}; ds.push({ uid: x.key, n: String(v.n || '?').slice(0, 16), av: typeof v.av === 'string' ? v.av : '', w: v.w | 0, t: v.t | 0, k: +v.k || 0 }); });
         ds.sort((a, b2) => b2.k - a.k); this._c[p] = { at: Date.now(), ds };
         // điểm chờ gửi đã thấp hơn điểm của mình trên máy chủ (cài lại máy…) → bỏ, khỏi bị rules (k chỉ tăng) từ chối mãi
-        try { const lb = CDD.st().lb, x = lb[b], toi = ds.find(y => y.uid === NET.user.uid); if (x && toi && toi.k >= this.k(x.w, Math.max(x.w * 6, x.t | 0)) && (b === 'vtAll' || x.tuan === KT.tuan())) { delete lb[b]; KT.luu(); } } catch (e) { }
+        try { const lb = CDD.st().lb, x = lb[b], toi = ds.find(y => y.uid === NET.user.uid); if (x && toi && toi.k >= this.k(x.w, Math.max(this.tMin(b, x.w), x.t | 0)) && (b === 'vtAll' || x.tuan === KT.tuan())) { delete lb[b]; KT.luu(); } } catch (e) { }
         return { ds };
       }, (e) => { this.loi = (e && (e.code || e.message)) || 'err'; return { off: true, loi: this.loi }; });
     });
@@ -250,23 +252,24 @@ const BXH = {
   // hạng của mình trong ds (1-based) hoặc 0
   hang(ds) { const uid = typeof NET !== 'undefined' && NET.user && NET.user.uid; if (!uid) return 0; const i = (ds || []).findIndex(x => x.uid === uid); return i < 0 ? 0 : i + 1; },
   // kỷ lục của mình cho bảng b
-  cuaToi(b) { const s = CDD.st(); return b === 'tw' ? { w: s.tw.best, t: s.tw.bestT } : b === 'vt' ? { w: s.vt.tBest, t: s.vt.tBestT } : { w: s.vt.best, t: s.vt.bestT }; },
+  cuaToi(b) { if (b === 'dd') { const d = DD.st(); return { w: d.best, t: d.bestT }; } const s = CDD.st(); return b === 'tw' ? { w: s.tw.best, t: s.tw.bestT } : b === 'vt' ? { w: s.vt.tBest, t: s.vt.tBestT } : { w: s.vt.best, t: s.vt.bestT }; },
 };
 
 // ===================================================== GIAO DIỆN =====================================================
 const CDDUI = {
   bxh: { tw: 'tw', vt: 'vt' }, // bảng đang xem trong từng màn
+  diemTen(b, w) { return b === 'dd' ? CDUI.so(w) + ' PTS' : 'WAVE ' + this.wTen(b, w); },
   esc: (v) => CDUI.esc(v), a: (n) => CDUI.a(n), so: (v) => CDUI.so(v),
   wTen(b, w) { return b === 'tw' && w > CDDC.tw.wMax ? 'CLEAR' : String(w); },
   // dải mốc tuần: mỗi mốc = WAVE m + phần thưởng, đã nhận → tick
-  dsMoc(bang, nhan, doi) {
+  dsMoc(bang, nhan, doi, ten) { // ten(m): nhãn mốc (Đường Đua: điểm) — mặc định WAVE m
     return '<div class="cdd-moc">' + Object.keys(bang).map(Number).map(m => {
       const r = doi ? doi(m, bang[m]) : bang[m];
-      return '<span class="cdd-m' + (nhan[m] ? ' da' : '') + '"><small>WAVE ' + m + '</small><i>' + r.map(x => CDUI.rIc(x)).join('') + '</i>' + (nhan[m] ? '<img class="cdd-tick" src="' + this.a(KTA.xong) + '" alt="Claimed">' : '') + '</span>';
+      return '<span class="cdd-m' + (nhan[m] ? ' da' : '') + '"><small>' + (ten ? ten(m) : 'WAVE ' + m) + '</small><i>' + r.map(x => CDUI.rIc(x)).join('') + '</i>' + (nhan[m] ? '<img class="cdd-tick" src="' + this.a(KTA.xong) + '" alt="Claimed">' : '') + '</span>';
     }).join('') + '</div>';
   },
   // bảng xếp hạng: 3 bảng (tab) Thử thách tuần · Vô tận tuần này · Vô tận mọi thời đại + dòng HẠNG CỦA BẠN; danh sách điền sau khi đọc xong
-  TAB: [['tw', 'WEEKLY'], ['vt', 'ENDLESS · WEEK'], ['vtAll', 'ENDLESS · ALL']],
+  TAB: [['dd', 'RACE TRACK · THIS WEEK']], // 11/11: thay 3 bảng cũ (WEEKLY / ENDLESS · WEEK / ENDLESS · ALL) bằng 1 bảng Đường Đua tuần
   bxhKhung(b) {
     return '<div class="cdd-bxh"><div class="cdd-tab">' + this.TAB.map(([k, ten]) => '<button class="cdd-tb' + (k === b ? ' on' : '') + '" data-act="cdd-tab" data-id="' + k + '">' + ten + '</button>').join('') + '</div>' +
       '<div class="cdd-toi" id="cdd-toi"></div><div class="cdd-ds" id="cdd-ds" data-b="' + b + '"><p class="cdd-cho">LOADING…</p></div></div>';
@@ -275,8 +278,8 @@ const CDDUI = {
     const el = document.getElementById('cdd-ds'); if (!el) return;
     el.dataset.b = b; el.innerHTML = '<p class="cdd-cho">LOADING…</p>';
     const toi = BXH.cuaToi(b), ten = BXH.ten(), uid = (typeof NET !== 'undefined' && NET.user && NET.user.uid) || null;
-    const hang = (i, n, av, w, la) => '<div class="cdd-h' + (la ? ' toi' : '') + '"><i>' + i + '</i><img src="' + (typeof TK !== 'undefined' ? TK.avURL(av) : '') + '" alt=""><b>' + this.esc(n) + '</b><em>' + (w ? 'WAVE ' + this.wTen(b, w) : '—') + '</em></div>';
-    const dongToi = (hg, wm) => { const w = Math.max(toi.w | 0, wm | 0), t = document.getElementById('cdd-toi'); if (t) t.innerHTML = '<small>YOUR RANK</small><b>' + hg + '</b><small>YOUR BEST</small><b>' + (w ? 'WAVE ' + this.wTen(b, w) : '—') + '</b>'; };
+    const hang = (i, n, av, w, la) => '<div class="cdd-h' + (la ? ' toi' : '') + '"><i>' + i + '</i><img src="' + (typeof TK !== 'undefined' ? TK.avURL(av) : '') + '" alt=""><b>' + this.esc(n) + '</b><em>' + (w ? this.diemTen(b, w) : '—') + '</em></div>';
+    const dongToi = (hg, wm) => { const w = Math.max(toi.w | 0, wm | 0), t = document.getElementById('cdd-toi'); if (t) t.innerHTML = '<small>YOUR RANK</small><b>' + hg + '</b><small>YOUR BEST</small><b>' + (w ? this.diemTen(b, w) : '—') + '</b>'; };
     dongToi('…');
     BXH.doc(b).then((r) => {
       if (!document.getElementById('cdd-ds') || el.dataset.b !== b) return;
@@ -292,7 +295,7 @@ const CDDUI = {
   },
   // bảng xếp hạng riêng (HOME → EVENT → RANKS)
   bxhMo(b) {
-    b = b || 'tw'; this.bxh.rieng = b;
+    b = 'dd'; this.bxh.rieng = b;
     CDUI.phu(CDUI.dau('ua_ic_trum', 'LEADERBOARD', 'TOP ' + CDDC.lb.top + ' · VIEW ONLY') + this.bxhKhung(b) + CDUI.nut(''), 'cdd-p cdd-lb');
     this.bxhVe(b);
   },
@@ -406,7 +409,7 @@ const CDDUI = {
   try { CDD.st(); } catch (e) { console.error('CDD', e); }
 
   // ---- khoá tính năng ----
-  Object.assign(TTC.tn, { vt: { cap: 0, ten: 'ENDLESS' } }); if (CDDC.tw.bat) TTC.tn.tw = { cap: CDDC.tw.cap, ten: 'WEEKLY CHALLENGE' };
+  if (CDDC.vt.bat) Object.assign(TTC.tn, { vt: { cap: 0, ten: 'ENDLESS' } }); if (CDDC.tw.bat) TTC.tn.tw = { cap: CDDC.tw.cap, ten: 'WEEKLY CHALLENGE' };
   { const g = TT.tnMo; TT.tnMo = function (k) { if (k === 'vt') { try { return ADMIN.la() || !!this.st().giuTn.vt || VOTAN.moKhoa(); } catch (e) { return false; } } return g.apply(this, arguments); }; }
   { const g = TT.tnChu; TT.tnChu = function (k) { return k === 'vt' ? 'Unlocks after clearing Tower Climb floor ' + CDDC.vt.tang : g.apply(this, arguments); }; }
   { const g = TTUI.tnNhan; TTUI.tnNhan = function (k) { return k === 'vt' ? '<b>FLOOR ' + CDDC.vt.tang + '</b>' : g.apply(this, arguments); }; }
@@ -461,7 +464,7 @@ const CDDUI = {
       setTimeout(() => { try { document.documentElement.classList.remove('cg-thua'); } catch (e) { } }, 0); // camgiac.js (bọc sau) tô màn thua theo đối số gốc
       return x;
     }
-    if (thang && VOTAN.laTang100() && !G.vtQua) {
+    if (thang && CDDC.vt.bat && VOTAN.laTang100() && !G.vtQua) {
       if (G.vtTu) { VOTAN.bat(true); return; }
       if (!G.vtHoi) { G.vtHoi = true; G.dung = true; try { UI.huyKeo(); } catch (e) { } CDDUI.hoi(); }
       return;
@@ -524,8 +527,8 @@ const CDDUI = {
       tw: { ten: 'WEEKLY CHALLENGE', ic: CDDC.ICON.tw, phu: () => 'Week ' + KT.tuan() + ' · best ' + (CDD.st().tw.best ? CDDUI.wTen('tw', CDD.st().tw.best) : '—'), mo: 'Same 5 turrets for everyone · new every Monday' },
       vt: { ten: 'ENDLESS', ic: CDDC.ICON.vt, phu: () => 'Best wave ' + (CDD.st().vt.best || '—'), mo: 'After Tower floor 100 · bosses keep coming' },
     });
-    if (!CDDC.tw.bat) delete HM.CHE.tw;
-    const laD = (k) => k === 'tw' || k === 'vt';
+    if (!CDDC.tw.bat) delete HM.CHE.tw; if (!CDDC.vt.bat) delete HM.CHE.vt;
+    const laD = (k) => (k === 'tw' || k === 'vt') && !!HM.CHE[k];
     const khoa = (k) => TTC.tn[k] && !TT.tnMo(k);
     const cc = HM.chonChe;
     HM.chonChe = function (k) {
@@ -551,7 +554,7 @@ const CDDUI = {
   }
 
   // ---- HOME → EVENT: thẻ Thử thách tuần + bảng xếp hạng ở đầu tab sự kiện ----
-  if (typeof KTUI !== 'undefined' && KTUI.ve_sk) { const g = KTUI.ve_sk; KTUI.ve_sk = function () { let t = ''; try { t = CDDUI.theSk(); } catch (e) { console.error('CDD', e); } return t + g.apply(this, arguments); }; }
+  if (typeof KTUI !== 'undefined' && KTUI.ve_sk) { const g = KTUI.ve_sk; KTUI.ve_sk = function () { let t = ''; try { t = CDDC.tw.bat ? CDDUI.theSk() : ''; } catch (e) { console.error('CDD', e); } return t + g.apply(this, arguments); }; }
 
   // ---- gộp hồ sơ Firebase: kỷ lục lấy lớn nhất, cờ mốc OR (cùng tuần) ----
   const gp = KT.gop;
@@ -583,7 +586,7 @@ const CDDUI = {
     else if (a === 'cdd-tw-vao') { nut(); TTUAN.vao(); }
     else if (a === 'cdd-lb' || a === 'cdd-sk-tw') { // HOME → EVENT: đóng màn cửa hàng/sự kiện rồi mở bảng ở HOME (#tt-phu)
       nut(); try { if (typeof KTUI !== 'undefined' && KTUI.mo) KTUI.dong(); } catch (er) { }
-      if (a === 'cdd-lb') CDDUI.bxhMo(CDDUI.bxh.rieng || 'tw');
+      if (a === 'cdd-lb') CDDUI.bxhMo();
       else if (!TT.tnMo('tw')) TTUI.toast(TT.tnChu('tw')); else CDDUI.tuan();
     }
     else if (a === 'cdd-kq-mo') { nut(); CDDUI.moKq(); }
@@ -619,6 +622,6 @@ const CDDUI = {
     // 10/11 bật Thử thách tuần + bảng xếp hạng 3 tab
     'WEEKLY': 'TUẦN', 'ENDLESS · WEEK': 'VÔ TẬN · TUẦN', 'ENDLESS · ALL': 'VÔ TẬN · MỌI LÚC', 'YOUR RANK': 'HẠNG CỦA BẠN', 'YOUR BEST': 'KỶ LỤC',
     'LEADERBOARD': 'BẢNG XẾP HẠNG', 'TOP # · VIEW ONLY': 'TOP # · CHỈ ĐỂ XEM', 'No scores yet': 'Chưa có điểm', 'RANKS': 'HẠNG', 'LV #': 'CẤP #', 'WEEK #': 'TUẦN #', 'RESETS IN #d #h': 'LÀM MỚI SAU #n #g', 'RESETS IN #:#:#': 'LÀM MỚI SAU #:#:#',
-    'WAVE CLEAR': 'WAVE QUA', '#+': '#+',
+    'WAVE CLEAR': 'WAVE QUA', '#+': '#+', 'RACE TRACK · THIS WEEK': 'ĐƯỜNG ĐUA · TUẦN NÀY',
   });
 })();
