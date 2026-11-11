@@ -23,3 +23,23 @@ Game mình có thêm mà DCDW không có: Leo Tháp, Săn Trùm, Thử thách ng
 
 ## 3. Chưa làm vì
 Máy phiên cũ còn ~640 MB ổ đĩa (không dựng được bản làm việc + Playwright), và phiên điều phối mới đang sửa cân bằng trên cùng các file (data.js, chedo-c.js). Làm khi: người dùng cho xoá thư mục test cũ trong /tmp của máy này (làm trên nhánh `claude/che-do-dcdw`, phiên mới gộp), HOẶC phiên mới nhận mục 2.1 sau khi xong bảng cân bằng. Trước khi áp số (nhịp ra quái, k, mốc điểm, thưởng) phải gửi bảng cho người dùng.
+
+## 4. ĐÃ LÀM 11/11 (nhánh `claude/che-do-dcdw`) — người dùng chốt 18:05: "bỏ bớt chế độ", "làm y như DCDW"
+- **Bỏ khỏi game** (ẩn mọi lối vào; code + bản lưu giữ nguyên): Săn Trùm, Thử thách ngắn (`chedo-c.js: CDC.bo`), Vô tận, Thử thách tuần (`chedo-d.js: CDDC.vt.bat / tw.bat = false`). Thắng tầng 100 = kết thúc bình thường.
+- **Đường Đua** (`thap/js/chedo-dd.js`, số ở `DDC` — TẠM): luật + số ghi ở `TAI-LIEU-GOC.md` mục 4. Kiểm: `tools/thap-kt-duong-dua.js`; đo bot: `tools/thap-bot-tran.js --che dd`.
+- Khác mục 2.1: quái lọt chỉ mất tim (không trừ điểm); đồng đội máy dùng CÙNG bộ bài của người chơi (điểm không phụ thuộc bộ ngẫu nhiên của máy); máu có thêm thừa số `(1 + (g/270)^4)` để bộ mạnh không dọn hết mọi con; hạt TRẬN vẫn ngẫu nhiên mỗi lượt (chỉ chuỗi quái theo hạt tuần).
+- Bot (bộ → điểm · diệt · thời gian, 3 hạt): khởi đầu Trắng cấp 0: 142–344 · 110–226 · 168–287 s | Xanh +2: 440–486 · 273–295 · 327–342 s | Tím +4: 597–622 · 364–374 · 404–410 s | Vàng +6: 622–778 · 375–450 · 399–448 s | Đỏ +8: 889–943 · 503–540 · 480 s (hết giờ, còn 3 tim). Bộ yếu CHƯA trụ đủ 8 phút (hết tim ở phút 3–6).
+- **Bảng xếp hạng**: đường mới `turretmerge/lb/dd/{tuần}/{uid}`. Rules hiện tại (`che-do-d/THIET-KE.md` §3.2) có `"$other": { ".validate": false }` dưới `lb` → CHƯA ghi được; tới khi publish thì bảng hiện "NOT CONNECTED · personal best only". ĐỀ XUẤT thêm vào `"lb"` (cạnh `tw`, `vt`, `vtAll`; người dùng tự Publish, phiên này không đổi cấu hình):
+
+```json
+"dd": { "$tuan": { ".indexOn": ["k"], "$uid": { ".write": "auth != null && auth.uid === $uid",
+    ".validate": "newData.hasChildren(['n','w','t','k','at']) && (!data.exists() || newData.child('k').val() > data.child('k').val())",
+    "n":  { ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 16" },
+    "av": { ".validate": "newData.isString() && newData.val().length <= 24" },
+    "w":  { ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 999999" },
+    "t":  { ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 480" },
+    "k":  { ".validate": "newData.isNumber() && newData.val() === newData.parent().child('w').val() * 100000 + 99999 - newData.parent().child('t').val()" },
+    "at": { ".validate": "newData.val() === now" },
+    "v":  { ".validate": "newData.isNumber()" },
+    "$other": { ".validate": false } } } }
+```

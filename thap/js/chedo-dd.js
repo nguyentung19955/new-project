@@ -129,7 +129,8 @@ const DDUI = {
     if (nh && nh.dataset.dd !== '1') { nh.dataset.dd = '1'; nh.textContent = 'KO'; }
     if (so && so.textContent !== String(d.giet)) so.textContent = d.giet;
     const top = document.getElementById('top'), trum = G.quai.some(x => x.trum && !x.chet);
-    if (trum && top && top.classList.contains('trum')) { // .trum = HUD đã đổi thanh trên sang băng trùm
+    if (trum && top && (this._dem = (this._dem | 0) + 1) % 12 === 1) this._an = getComputedStyle(top).visibility === 'hidden'; // đo thưa (12 khung/lần) — chỉ khi có trùm
+    if (trum && this._an) { // thanh trên đang bị băng chiêu trùm thay chỗ
       const wr = document.getElementById('wrap');
       if (!e && wr) { e = document.createElement('div'); e.id = 'dd-chip'; e.className = 'cd-chip'; wr.appendChild(e); }
       if (e) { if (e._t !== t) { e._t = t; e.textContent = t; } e.classList.toggle('gap', con <= 30); if (e.hidden) e.hidden = false; }
@@ -137,6 +138,7 @@ const DDUI = {
     }
     if (e && !e.hidden) e.hidden = true;
     if (trum) return;
+    this._an = false; this._dem = 0;
     const f = document.querySelector('#ha-thanh .f'); if (f) { const w = (con / DDC.gio * 100).toFixed(1) + '%'; if (f.style.width !== w) f.style.width = w; }
   },
   kq(k, c) {
