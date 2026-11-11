@@ -34,6 +34,7 @@ const D1 = process.env.D1 || 'ronglua,lualien,leviathan,overlord,nhatthuc', D2 =
     const mauU = {}; for (const id of ['radar', 'chimang', 'lanhgia', 'tuthan', 'khien', 'taylo', 'hasao', 'cauvong', 'lophanung', 'mana']) if (SUP[id]) mauU[id] = SUP[id];
     for (const id in mauU) { const S = mauU[id]; anh('toMau sup_khung ' + id + ' ' + S.mau, REN.toMau('sup_khung', S.mau)); anh('toMau sup_ring ' + id, REN.toMau('sup_ring', S.mau)); anh('toMau ' + S.link + ' ' + id, REN.toMau(S.link, S.mau)); }
     for (const m of ['#ff4b3e', '#6fe0ff', '#c77dff', '#4bffb0', '#ffd23f', '#ffffff', '#202020']) { anh('fx_link ' + m, REN.toMau('fx_link', m)); anh('fx_evolve ' + m, VX.toMau(REN.img('fx_evolve'), m)); anh('fx_awaken ' + m, VX.toMau(REN.img('fx_awaken'), m), 0); }
+    if (typeof BVX !== 'undefined' && BVX.tenVong) for (const k of ['max', 'dmg', 'toc', 'crit']) { const t = BVX.tenVong(k), c = t && REN.img(t); if (c && c._ao) anh('vong buff ' + k, c); } // vòng buff (buffvfx.js) = phủ màu kiểu 1
     // 2) mặt nạ matNa (+ hoà 'color' trên dải đã che)
     const mn1 = VX.matNa('fx_summon', 0.52, 0.66), mn2 = VX.matNa('fx_starup', 0.6, 0.76);
     anh('matNa fx_summon', mn1); anh('matNa fx_starup', mn2);

@@ -27,6 +27,10 @@ const BVX = {
     const mau = this.MAU_VONG[k], key = 'fx_vong_mong~b' + k; if (!mau || typeof REN === 'undefined' || !REN.anh) return null;
     if (REN.anh[key]) return key;
     const a = REN.img('fx_vong_mong'); if (!a || !a.width || typeof document === 'undefined') return null;
+    if (a._goc && typeof _GLA === 'function' && _GLA()) { // WebGL (ảnh ảo): phủ màu bằng shader (kiểu tô 1) từ texture fx_vong_mong — không dựng canvas + chuỗi mip thật rồi tải lên
+      const c = GLR.ao(a, a.width, a.height, { k: 1, t: GLR.mauSo(mau, 0.82), dung: (cv) => { const g = REN.img('fx_vong_mong'); if (!g || !g.width) return false; const q = cv.getContext('2d'); q.drawImage(g, 0, 0); q.globalCompositeOperation = 'source-atop'; q.globalAlpha = 0.82; q.fillStyle = mau; q.fillRect(0, 0, cv.width, cv.height); return true; } }); // vetay-ok: png (vòng mảnh lọc màu)
+      REN.anh[key] = { _cv: c, complete: true, naturalWidth: c.width, naturalHeight: c.height }; if (REN.CO_DINH) REN.CO_DINH.add(key); return key;
+    }
     const c = document.createElement('canvas'); c.width = a.width; c.height = a.height; const x = c.getContext('2d'); if (!x) return null;
     x.drawImage(a, 0, 0); x.globalCompositeOperation = 'source-atop'; x.globalAlpha = 0.82; x.fillStyle = mau; x.fillRect(0, 0, c.width, c.height); // vetay-ok: png (vòng mảnh lọc màu buff)
     REN.anh[key] = { _cv: c, complete: true, naturalWidth: c.width, naturalHeight: c.height }; if (REN.CO_DINH) REN.CO_DINH.add(key); return key;
