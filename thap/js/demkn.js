@@ -69,6 +69,7 @@ const DEMKN = {
       q.setTransform(k, 0, 0, k, 1, 1); a.key = '';
       if (!this.ve0(q, v, x0 / 2, hl + 1, hl, 1)) return;
       a.key = key; a.w = w; a.h = hh; a._w = x0;
+      if (typeof GLR !== 'undefined') GLR.ban(a.cv); // WebGL: tấm đếm vẽ lại tại chỗ → báo lớp GL tải lại texture
     }
     const dx = Math.round(m.a * (x - a._w / 2) + m.e) - 1, dy = Math.round(m.d * (yDay - hp / k - 1) + m.f) - 1;
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = al; ctx.drawImage(a.cv, 0, 0, a.w, a.h, dx, dy, a.w, a.h); ctx.restore();

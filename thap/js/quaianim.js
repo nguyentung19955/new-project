@@ -233,15 +233,18 @@ Object.assign(REN, {
     } else if (cf.phan === 'lua') {
       ve(than, tw, 0, 0); // chậu đứng yên
       const yc = (cf.cat - 0.5) * C, N = 24, PX = 0.25, PY = 0.3;
-      const o = this._cdU || (this._cdU = [0, 1, 2].map(() => Object.assign(document.createElement('canvas'), { _glD: 1 }))); // _glD: canvas vẽ lại mỗi khung (GLR tải lại texture mỗi lần vẽ)
+      const o = ctx.laGL ? null : this._cdU || (this._cdU = [0, 1, 2].map(() => document.createElement('canvas'))); // bản 2D: 3 canvas tạm vẽ lại mỗi khung
       const uon = (k, a) => { // vào canvas tạm (1 lần ghép → không vạch nối khi chớp): dải ngang lệch x ∝ (độ cao trên mép chậu)², vươn dọc neo ở mép chậu
-        const n = a.width, c = o[k], w = Math.round(n * (1 + 2 * PX)), h = Math.round(n * (1 + PY));
-        if (c.width !== w || c.height !== h) { c.width = w; c.height = h; }
-        const x2 = c.getContext('2d'); x2.setTransform(1, 0, 0, 1, 0, 0); x2.globalAlpha = 1; x2.clearRect(0, 0, w, h);
+        const n = a.width, w = Math.round(n * (1 + 2 * PX)), h = Math.round(n * (1 + PY));
+        // WebGL: "canvas tạm" là bộ đệm khung trên GPU (GLR.tam) — cùng các lệnh vẽ dải, không tải texture mỗi khung
+        const gx = ctx.laGL ? GLR.tam('cdU' + k, w, h) : null, c = gx || o[k];
+        if (!gx && (c.width !== w || c.height !== h)) { c.width = w; c.height = h; }
+        const x2 = gx ? GLR.vao(gx) : c.getContext('2d'); if (!gx) { x2.setTransform(1, 0, 0, 1, 0, 0); x2.globalAlpha = 1; x2.clearRect(0, 0, w, h); }
         for (let j = 0; j < N; j++) {
           const s0 = cf.cat * j / N, s1 = cf.cat * (j + 1) / N, hm = 1 - (s0 + s1) / 2 / cf.cat;
           x2.drawImage(a, 0, s0 * n, n, (s1 - s0) * n, (PX + R.un * hm * hm) * n, (PY + cf.cat - (cf.cat - s0) * R.vu) * n, n, (s1 - s0) * n * R.vu + (j < N - 1 ? 1 : 0));
         }
+        if (gx) GLR.ra();
         return c;
       };
       const veU = (c) => ctx.drawImage(c, -C / 2 - PX * C, -C / 2 - PY * C, C * (1 + 2 * PX), C * (1 + PY));
@@ -388,18 +391,19 @@ Object.assign(REN, {
     const dat = (rot2, sx, sy) => { ctx.setTransform(M); ctx.translate(x + R.ox, y + R.oy + b); ctx.rotate(R.rot + (rot2 || 0)); ctx.scale(sx, sy); ctx.translate(0, -b); };
     let anh = than, sangV = sang, trang = null, xoayV = null, bongLan = null, lanQ = 0;
     if (cf.cau || cf.tamQ) { // 08/11 đợt 2: lăn 3D (cau) / quay quanh tâm lệch (tam) — thân + lớp sáng vẽ sẵn vào canvas tạm cùng phép quay
-      const L = this.cdLanAnh(E, cf, than, sang); anh = L.anh; sangV = L.sang; trang = L; xoayV = 0;
+      const L = this.cdLanAnh(E, cf, than, sang, ctx.laGL ? ctx : null); anh = L.anh; sangV = L.sang; trang = L; xoayV = 0;
     } else if (cf.kieu === 'lan' && !E.trum) { // quái lăn (đông quái late game): KHÔNG vẽ qua canvas tạm mỗi khung — thân quay thẳng trên ctx,
       lanQ = 1; bongLan = this.cdBongLan(g, Cb, than);   // bóng sáng/tối cố định = canvas dựng 1 lần / cỡ (cắt theo hình thân), phủ không xoay
     } else if (cf.kieu === 'lan') { // thân quay theo quãng đường trong canvas tạm, phủ bóng sáng/tối CỐ ĐỊNH (cắt theo thân)
-      const n = than.width, o = this._cdO || (this._cdO = Object.assign(document.createElement('canvas'), { _glD: 1 }));
-      if (o.width !== n) { o.width = n; o.height = n; }
-      const x2 = o.getContext('2d'); x2.setTransform(1, 0, 0, 1, 0, 0); x2.globalCompositeOperation = 'source-over'; x2.globalAlpha = 1; x2.clearRect(0, 0, n, n);
+      const n = than.width, gx = ctx.laGL ? GLR.tam('cdO', n, n) : null, o = gx || this._cdO || (this._cdO = document.createElement('canvas')); // WebGL: canvas tạm = bộ đệm khung GPU
+      if (!gx && o.width !== n) { o.width = n; o.height = n; }
+      const x2 = gx ? GLR.vao(gx) : o.getContext('2d'); if (!gx) { x2.setTransform(1, 0, 0, 1, 0, 0); x2.globalCompositeOperation = 'source-over'; x2.globalAlpha = 1; x2.clearRect(0, 0, n, n); }
       x2.translate(n / 2, n / 2); x2.rotate(E._cdA); x2.drawImage(than, -n / 2, -n / 2); x2.setTransform(1, 0, 0, 1, 0, 0);
       x2.globalCompositeOperation = 'source-atop';
       x2.globalAlpha = 0.55; x2.drawImage(this.bong1(), n * 0.12, n * 0.18, n * 1.15, n * 1.15);          // tối dưới-phải
       x2.globalAlpha = 0.3; x2.drawImage(this.cham1('#fff3cf'), n * 0.06, n * 0.02, n * 0.55, n * 0.55);   // bóng sáng trên-trái
       x2.globalCompositeOperation = 'source-over'; x2.globalAlpha = 1;
+      if (gx) GLR.ra();
       anh = o;
     }
     if (cf.loang && R.loang < 0.5) { // vệt thạch loang dưới thân lúc chạm đất: vũng hồng mềm ở ĐẤT, toả rộng rồi mờ (tâm trên đường)
@@ -423,7 +427,7 @@ Object.assign(REN, {
       if (R.sang > 1) { ctx.globalAlpha = R.sang - 1; ctx.drawImage(sang2, -C * 0.55, -C * 0.55, C * 1.1, C * 1.1); }
       ctx.restore();
     }
-    if (R.fl > 0.02) { const w = trang ? this.cdTrang(anh) : this.co(g, Cb, 'trang'); if (w) { ctx.globalAlpha = R.fl; ctx.globalCompositeOperation = 'lighter'; if (xoay) ctx.rotate(xoay); ctx.drawImage(w, -C / 2, -C / 2, C, C); ctx.globalCompositeOperation = 'source-over'; } }
+    if (R.fl > 0.02) { const w = trang ? (ctx.laGL ? anh : this.cdTrang(anh)) : this.co(g, Cb, 'trang'); if (w) { ctx.globalAlpha = R.fl; ctx.globalCompositeOperation = 'lighter'; if (xoay) ctx.rotate(xoay); if (w === anh) ctx.trang = 1; ctx.drawImage(w, -C / 2, -C / 2, C, C); if (w === anh) ctx.trang = 0; ctx.globalCompositeOperation = 'source-over'; } } // WebGL: bản trắng = chính ảnh tạm vẽ ở chế độ trắng (GLR.x.trang), không cần canvas + tải texture
     if (cf.vanh) { dat(0, R.sx, R.sy); this.cdVanh(ctx, cf, R, C, Cb, g, 1); } // nửa trước vành gai (che đáy thân)
     if (cf.khoi && R.khoi < 0.55) { // sương chạm đất: 2 cụm toả ra 2 bên, neo ở ĐẤT (không theo độ nảy), tâm = tâm thân trên đường
       const k = this.co(g + '_khoi', Cb);
@@ -542,8 +546,19 @@ Object.assign(REN, {
     return (M[k] = { n, X, Y, Z, V, src, vien: vn ? [vr / vn, vg / vn, vb / vn] : [20, 12, 14], w, cx, cy, rx, ry, rong: [] });
   },
   // vẽ thân (và lớp sáng) đã lăn vào canvas tạm; quay tâm lệch (tam): drawImage quay; trả { anh, sang }
-  cdLanAnh(E, cf, than, sang) {
-    const n = than.width, mk = (k) => { const c = this[k] || (this[k] = Object.assign(document.createElement('canvas'), { _glD: 1 })); if (c.width !== n) { c.width = n; c.height = n; } return c; };
+  cdLanAnh(E, cf, than, sang, gx) {
+    const n = than.width;
+    if (gx && cf.tamQ) { // WebGL (gx = GLR.x): quay phẳng + phủ bóng vẽ thẳng vào 2 bộ đệm khung GPU — không canvas tạm, không tải texture
+      const o = GLR.tam('cdO', n, n), o2 = sang ? GLR.tam('cdO2', n, n) : null, px = cf.tamQ[0] * n, py = cf.tamQ[1] * n;
+      for (const [D, im] of [[o, than], [o2, sang]]) {
+        if (!D) continue;
+        const x2 = GLR.vao(D); x2.translate(px, py); x2.rotate(E._cdA || 0); x2.translate(-px, -py); x2.drawImage(im, 0, 0, n, n); x2.setTransform(1, 0, 0, 1, 0, 0);
+        if (D === o) { x2.globalCompositeOperation = 'source-atop'; x2.globalAlpha = 0.5; x2.drawImage(this.bong1(), n * 0.12, n * 0.18, n * 1.15, n * 1.15); x2.globalAlpha = 0.25; x2.drawImage(this.cham1('#fff3cf'), n * 0.06, n * 0.02, n * 0.55, n * 0.55); }
+        GLR.ra();
+      }
+      return { anh: o, sang: o2 };
+    }
+    const mk = (k) => { const c = this[k] || (this[k] = document.createElement('canvas')); if (c.width !== n) { c.width = n; c.height = n; } return c; };
     const o = mk('_cdO'), o2 = sang ? mk('_cdO2') : null;
     if (cf.tamQ) {
       const px = cf.tamQ[0] * n, py = cf.tamQ[1] * n;
@@ -607,11 +622,12 @@ Object.assign(REN, {
     x2.globalAlpha = 0.5; x2.drawImage(this.bong1(), n * 0.12, n * 0.18, n * 1.15, n * 1.15);
     x2.globalAlpha = 0.25; x2.drawImage(this.cham1('#fff3cf'), n * 0.06, n * 0.02, n * 0.55, n * 0.55);
     x2.globalCompositeOperation = 'source-over'; x2.globalAlpha = 1;
+    if (typeof GLR !== 'undefined') { GLR.ban(o); if (o2) GLR.ban(o2); } // WebGL: 2 canvas vừa vẽ lại (lăn 3D tính từng điểm ảnh trên CPU) → tải lại 1 lần / lần dựng (không phải mỗi lần vẽ)
     return { anh: o, sang: o2 };
   },
   // bản trắng (chớp trúng đòn) của canvas tạm — canvas riêng, dựng lại mỗi lần cần
   cdTrang(c) {
-    const w = this._cdW3 || (this._cdW3 = Object.assign(document.createElement('canvas'), { _glD: 1 })); if (w.width !== c.width) { w.width = c.width; w.height = c.height; }
+    const w = this._cdW3 || (this._cdW3 = document.createElement('canvas')); if (w.width !== c.width) { w.width = c.width; w.height = c.height; } // chỉ bản 2D (WebGL: GLR.x.trang)
     const x = w.getContext('2d'); x.globalCompositeOperation = 'source-over'; x.clearRect(0, 0, w.width, w.height); x.drawImage(c, 0, 0);
     x.globalCompositeOperation = 'source-in'; x.fillStyle = '#fff'; x.fillRect(0, 0, w.width, w.height); x.globalCompositeOperation = 'source-over'; // vetay-ok: png (bản trắng thân trùm)
     return w;
