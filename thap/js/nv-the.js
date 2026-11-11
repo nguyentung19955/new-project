@@ -1,13 +1,13 @@
 // ASTRAL ARSENAL — màn QUESTS tách 3 THẺ CON (người dùng duyệt 11/11 23:56): REWARDS · DAILY · ACHIEVEMENTS.
 //  Chỉ đổi cách BÀY (không đổi số thưởng, không đổi luật): bọc KTUI.ve_nv SAU CÙNG (sau tientrinh.js / manh.js), cắt chuỗi HTML theo từng mục
-//  (<div class="kt-muc">) rồi xếp vào thẻ: REWARDS = Daily Login + 7-Day Journey · DAILY = Daily Quests + Weekly Quests ·
+//  (<div class="kt-muc">) rồi xếp vào thẻ: REWARDS = Pilot Level (thanh cấp phi công) + 7-Day Journey + Daily Login · DAILY = Daily Quests + Weekly Quests ·
 //  ACHIEVEMENTS = Legendary & Mythic + Achievements (+ mục lạ nếu có). Thẻ không chọn vẫn nằm trong DOM (hidden) → bấm / bộ đếm giờ / kiểm thử cũ không đổi.
 //  Chấm đỏ: thẻ còn nút nhận được (kt-slot vang chưa disabled, nút CLAIM DAY, chấm kt-cham của Hành trình). Mở QUESTS → thẻ đầu tiên có chấm đỏ (không có: REWARDS).
 'use strict';
 const NVT = {
   the: null, // thẻ đang xem; null = chọn lại khi mở màn
   DS: [['rw', 'REWARDS'], ['dn', 'DAILY'], ['tt', 'ACHIEVEMENTS']],
-  nhom(t) { return /^(DAILY LOGIN|7-DAY JOURNEY)/.test(t) ? 'rw' : /^(DAILY QUESTS|WEEKLY QUESTS)/.test(t) ? 'dn' : 'tt'; },
+  nhom(t) { return /^(DAILY LOGIN|7-DAY JOURNEY|PILOT LEVEL)/.test(t) ? 'rw' : /^(DAILY QUESTS|WEEKLY QUESTS)/.test(t) ? 'dn' : 'tt'; },
   coNhan(h) { return /class="kt-slot vang"(?![^>]*disabled)/.test(h) || /kt-dn-nut" data-act="kt-dn">/.test(h) || /class="kt-cham"/.test(h); },
   ve(h) {
     const mk = '<div class="kt-muc">', ds = h.split(mk), g = { rw: ds[0], dn: '', tt: '' };

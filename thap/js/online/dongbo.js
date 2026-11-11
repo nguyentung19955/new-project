@@ -240,7 +240,7 @@ const ONS = {
     if (T.id === 'khoisinh') { if (T.luot != null) f += 'L' + ((T.luot | 0) + 1) + ';'; if (T.sinhT) f += 'I' + Math.round(T.sinhT * 10) + ';'; } // Genesis: lượt còn + đồng hồ
     if (T.id === 'chuato' && T.thaN) f += 'j' + T.thaN + ';'; // Hive: số drone lần thả trước (nhịp nở)
     if (T.khien > 0) f += 'i' + T.khien + ';'; if (T.aurora > 0) f += 'o' + Math.round(T.aurora * 10) + ';'; // khiên 1 lần · Aurora (Mimic)
-    if (T.st && T.st.lua > 0) f += 'p' + Math.round(T.st.lua * 10) + ';'; if (T.st && T.st.kep > 0) f += 'y' + Math.round(T.st.kep * 10) + ';'; // cháy · kẹp
+    if (T.st && T.st.lua > 0) f += 'p' + Math.round(T.st.lua * 10) + ';'; if (T.st && T.st.kep > 0) f += 'y' + Math.round(T.st.kep * 10) + ';'; if (T.st && T.st.cam > 0) f += 'Z'; // cháy · kẹp · Z = bị Static Jammer XÍCH (12/11)
     return [T.id, T.sao, f];
   },
   datO(B, o, s) {
@@ -277,7 +277,7 @@ const ONS = {
     if (T.id === 'congap') { const l = so('A'); if (l) { T.cgL = l - 1; T.cgS = so('Y') || T.sao; } T.cgT = so('W') / 10; }
     if (T.id === 'khoisinh') { const l = so('L'); T.luot = l ? l - 1 : T.luot; T.sinhT = so('I') / 10; }
     if (T.id === 'chuato') T.thaN = so('j');
-    T.khien = so('i'); T.aurora = so('o') / 10; T.st.lua = so('p') / 10; T.st.kep = so('y') / 10;
+    T.khien = so('i'); T.aurora = so('o') / 10; T.st.lua = so('p') / 10; T.st.kep = so('y') / 10; T.st.cam = c.includes('Z') ? 1 : 0;
   },
   // Lucky Slot: máy bạn đã quay → bàn con rối phát lại máy xèng 3 ô đúng chuỗi + nhận ngăn quả của máy bạn (không tự rút)
   apCB(B1, d) {
