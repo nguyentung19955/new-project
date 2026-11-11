@@ -25,7 +25,7 @@ Wave = trung vị (thấp nhất–cao nhất) của 4 trận, trần wave 100; 
 | Khởi đầu · tầng 12 | 0/4 | 4/4 | 4/4 | 41/44 | 25/26 | 23/26 |
 | Co-op `cobac,vughep,sinhdoi,saochep,tudo` | 29 (9–34) | 75 (29–90) | 80 (42–90) | 68/87 | 30/32 | 28/66 |
 | Solo cùng bộ trên | 65 (26–100) ✓2 | 86 (34–90) | 80 (80–98) | 43/53 | 11/20 | 30/34 |
-| `nguyenrua,sinhdoi,khoisinh` + Ember, Blood Vein | 58 (24–100) ✓1 | 100 (60–100) ✓3 | 73 (53–100) ✓1 | 45/55 | 8/18 | 22/41 |
+| `nguyenrua,sinhdoi,khoisinh` + Ember Relay, Blood Circuit | 58 (24–100) ✓1 | 100 (60–100) ✓3 | 73 (53–100) ✓1 | 45/55 | 8/18 | 22/41 |
 | **Vàng tấn công** `lualien,hopca,luutru,nhatthuc,railgun` | **46** (33–46) | **69** (67–73) | **65** (60–68) | 54/62 | 31/38 | 31/41 |
 | 4 Vàng + Lucky Slot (Đỏ) | 48 (47–48) | 79 (74–80) | 72 (60–80) | 59/64 | 24/36 | 17/33 |
 | Đỏ nặng `bocap,leviathan,ronglua,overlord,cobac` | 98 (90–100) ✓2 | 85 (80–90) | 90 (80–90) | 38/56 | 11/19 | 17/30 |
