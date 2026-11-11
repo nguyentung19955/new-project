@@ -57,22 +57,22 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     const src = String(CD.wave) + String(CD.dsQuai) + String(CD.kiem);
     return { w: [1, 50, 100].map(t => CDC.thap.w(t)).join(), m: CDC.mana(5), giong: a.join('|') === bb.join('|'), rand: /Math\.random/.test(src), tr10: CD.cauHinh('thap', 10).trum, tr9: CD.cauHinh('thap', 9).trum, dot: CD.cauHinh('thap', 15).dot.join() };
   });
-  ok(r.w === '5,35,66' && r.m === 400 && r.giong && !r.rand && r.tr10 && !r.tr9 && r.dot === 'DONG', 'tầng: wave đầu 5/35/66, mana tầng 1 = 400, cùng tầng → cùng quái, không Math.random, tầng 10 có trùm, chương 2 = Horde', JSON.stringify(r));
+  ok(r.w === '1,35,66' && r.m === 400 && r.giong && !r.rand && r.tr10 && !r.tr9 && r.dot === 'DONG', 'tầng: wave đầu 1/35/66 (11/11: tầng 1–11 từ wave 1–11), mana tầng 1 = 400, cùng tầng → cùng quái, không Math.random, tầng 10 có trùm, chương 2 = Horde', JSON.stringify(r));
   // ---- 4. vào tầng 1 + chơi hết ----
   const truoc = await p.evaluate(() => ({ vang: KT.vang, xp: TT.st().xp, best: localStorage.getItem('turret_best'), sw: MH.st().sw, tk: KT.doc().tk.wave, sk: KT.sk().diem }));
   await p.evaluate(() => document.querySelector('#tt-phu [data-act="cd-vao"]').click());
   await p.waitForFunction(() => G.ban.length && G.cd && !document.getElementById('top').hidden, null, { timeout: 30000 });
   await sleep(1500);
   r = await p.evaluate(() => ({ cd: G.cd && G.cd.loai + G.cd.id, wave: G.wave, mana: G.ban[0].mana, cho: G.cho, che: G.che }));
-  ok(r.cd === 'thap1' && r.wave === 4 && r.mana === 400 && r.che === 'solo', 'vào tầng 1: trận SOLO, wave 4 → wave đầu 5, mana 400', JSON.stringify(r));
+  ok(r.cd === 'thap1' && r.wave === 0 && r.mana === 100 && r.che === 'solo', 'vào tầng 1: trận SOLO, wave 0 → wave đầu 1, mana 100', JSON.stringify(r));
   await chup(p, '390-en-mo-dau'); await p.evaluate(() => { try { VT.dong(); } catch (e) { } });
   await p.evaluate(() => { for (let i = 0; i < 5; i++) trieu(G.ban[0]); });
-  await p.evaluate(() => { let n = 0; while (G.wave < 6 && n < 3000) { capNhat(1 / 30); n++; } }); await sleep(700);
+  await p.evaluate(() => { let n = 0; while (G.wave < 2 && n < 3000) { capNhat(1 / 30); n++; } }); await sleep(700);
   r = await p.evaluate(() => { const e = document.getElementById('tb-trum-chu'); return (e ? e.textContent : '') + '|' + document.getElementById('top').classList.contains('cd-ko-trum'); });
   ok(/FLOOR 1 · 2\/5\|true/.test(r), 'thanh trên trong trận: FLOOR 1 · 2/5 (thay BOSS IN N), không chân dung trùm (tầng thường)', r);
   await chup(p, '390-en-tran');
   r = await chayHet(p);
-  ok(r.ket === true && r.wave === 9, 'thắng sau đúng 5 wave (5–9) khi dọn sạch sân', JSON.stringify(r));
+  ok(r.ket === true && r.wave === 5, 'thắng sau đúng 5 wave (1–5) khi dọn sạch sân', JSON.stringify(r));
   await p.waitForFunction(() => !document.getElementById('ketqua').hidden, null, { timeout: 5000 }); await sleep(900);
   r = await p.evaluate((truoc) => ({ vang: KT.vang - truoc.vang, xp: TT.st().xp - truoc.xp, max: CD.st().thap.max, best: localStorage.getItem('turret_best') === truoc.best, sw: MH.st().sw === truoc.sw, tk: KT.doc().tk.wave === truoc.tk, sk: KT.sk().diem === truoc.sk,
     tran: !!document.querySelector('#ketqua .sh-kq-ru[data-act="cd-kq-mo"]'), nut: document.querySelector('#ketqua [data-act="choilai"]').textContent, phu: document.getElementById('kq-phu').textContent, kq: document.querySelector('#ketqua .cd-kq').textContent }), truoc);
@@ -83,7 +83,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   // ---- 5. NEXT → tầng 2, thua → RETRY ----
   await p.evaluate(() => document.querySelector('#ketqua [data-act="choilai"]').click()); await sleep(1500);
   r = await p.evaluate(() => ({ cd: G.cd && G.cd.id, wave: G.wave }));
-  ok(r.cd === 2 && r.wave === 4, 'NEXT FLOOR vào tầng 2 (wave đầu 5)', JSON.stringify(r));
+  ok(r.cd === 2 && r.wave === 1, 'NEXT FLOOR vào tầng 2 (wave đầu 2)', JSON.stringify(r));
   await p.evaluate(() => { G.ban[0].tim = 1; capNhat(1 / 30); G.ketThuc = null; ketThuc(false, TEXT.end.coreDown); }); await sleep(1300);
   r = await p.evaluate(() => ({ nut: document.querySelector('#ketqua [data-act="choilai"]').textContent, max: CD.st().thap.max, kq: document.querySelector('#ketqua .cd-kq').textContent }));
   ok(/RETRY · FLOOR 2/.test(r.nut) && /TOWER CLIMB · FLOOR 2 · /.test(r.phu || 'TOWER CLIMB · FLOOR 2 · ') && r.max === 1 && /NO REWARD/.test(r.kq), 'thua tầng 2: không thưởng, nút RETRY · FLOOR 2', JSON.stringify(r));
