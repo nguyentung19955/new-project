@@ -163,10 +163,17 @@ def bo_nhieu(a):
 
 
 # ---------------------------------------------------------------- canh theo ảnh web
+KHUNG_WEB = None
+
+
 def bbox_web(duong_dan, canvas):
-    """bbox phần gần đặc của ảnh web sau khi xoay phải→lên và phóng ×(canvas/300) quanh tâm khung."""
+    """bbox phần gần đặc của ảnh web sau khi xoay phải→lên và phóng cho KHUNG ảnh web = canvas.
+    Quy ước cỡ (12/11 23:10): canvas của file giao = khung ảnh web của chính ụ/dạng đó (khung web 105–300 px tuỳ ụ);
+    Unity đặt cỡ sprite = khung web × hệ số vẽ của bản web (dauK trong render.js). KHÔNG dùng hệ số cố định /300."""
     im = Image.open(duong_dan).convert('RGBA').rotate(90, expand=True)   # 90° ngược chiều kim đồng hồ
-    s = canvas / 300.0
+    global KHUNG_WEB
+    KHUNG_WEB = max(im.size)
+    s = canvas / float(KHUNG_WEB)
     w, h = max(1, round(im.width * s)), max(1, round(im.height * s))
     im = im.resize((w, h), Image.LANCZOS)
     b = bbox_mat_na(np.asarray(im)[..., 3] > 200)
@@ -276,6 +283,7 @@ def main():
                 cb.append('thiếu ảnh web %s → đặt giữa canvas, lề 8%%' % os.path.basename(f))
         else:
             cb.append('không có --assets → đặt giữa canvas, lề 8%')
+        wb_that = wb is not None
         if wb is None:
             wb = (N * 0.08, N * 0.08, N * 0.92, N * 0.92)
         s = max(wb[2] - wb[0], wb[3] - wb[1]) / float(max(bw, bh))
@@ -310,7 +318,9 @@ def main():
         # 6. điểm
         muc = {'nong': [[N // 2, fb[1]]], 'co_lop_sang': bool(co_sang),
                'ti_le_so_voi_o_gen': round(s, 3), 'cach_tach_nen': cach,
-               'bbox': list(fb), 'canh_bao': cb}
+               'bbox': list(fb), 'canh_bao': cb,
+               'khung_web': KHUNG_WEB if wb_that else None, 'he_so_web': (round(N / float(KHUNG_WEB), 4) if wb_that else None),
+               'quy_uoc': 'canvas = khung anh web'}
         fd = os.path.join(a.ra, '%s_diem.json' % ma)
         if dang:
             d = diem_chung.get(ma)
