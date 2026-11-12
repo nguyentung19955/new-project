@@ -25,6 +25,7 @@ const MAU_VET = { dan_lien: '#ffb347', dan_bang: '#8fe3ff', dan_doc: '#8dff4a', 
 const DIU = { bat: !(typeof location !== 'undefined' && /[?&]diu=0\b/.test(location.search)), duoi: 0.55, tren: 0.88, lo: 0.6, loTrum: 0.4 };
 const _GLB = () => typeof GLR !== 'undefined' && GLR.bat; // lớp WebGL đang bật (?gl=0 / không có WebGL: false → không gì thêm chạy)
 const _GLA = () => typeof GLR !== 'undefined' && GLR.bat && GLR.aoBat(); // ẢNH ẢO (glr.js mục "ẢNH ẢO"): ảnh thu nhỏ / tô màu / trắng / xám = canvas 0×0 trỏ về texture ảnh gốc, không dựng trên CPU
+const REN_TUHA = typeof location !== 'undefined' && /[?&]tuha=1\b/.test(location.search); // tự hạ độ nét dưới 2× khi máy chậm: TẮT mặc định (người dùng không muốn giảm chất lượng)
 const REN = {
   dbg: /[?&]debug(=|&|$)/.test(location.search), // ?debug: cho phép hình vẽ code dự phòng khi thiếu ảnh (chỉ để gỡ lỗi)
   cv: null, ctx: null, s: 1, dpr: 1, anh: {}, nen: null, xam: {}, trang: {}, cham: {}, cache: {}, t: 0, thieu: new Set(), dt: 0, a: 1, _vet: {}, _glow: {},
@@ -144,7 +145,8 @@ const REN = {
     // 12/11 (video iPhone: ở 2× nóng máy còn 4–29 khung/giây, ép 1× lên 40–55): RẤT NẶNG kéo dài = khung trung bình < ~38/giây suốt 5 s → hạ tiếp 2 → 1,5 → 1,25 → 1
     //   (trước: iPhone bắt đầu ở 2× = đúng sàn nên không bao giờ hạ). Máy khoẻ lại (khung sát mục tiêu 25 s liền) → nâng 1 nấc; nâng xong lại nặng trong 20 s → hạ và
     //   đếm 1 lần hụt, hụt 2 lần thì thôi không nâng nữa (tránh dựng lại canvas qua lại). Chỉ hình, không đụng luật.
-    const ratNang = this._ft > 1 / 38 && !khoa30;
+    // NGƯỜI DÙNG 12/11 12:20: KHÔNG giảm chất lượng hình ("chất lượng là thứ người dùng tìm đến game") → tự hạ dưới 2× TẮT mặc định; chỉ chạy khi ?tuha=1 (để đo).
+    const ratNang = REN_TUHA && this._ft > 1 / 38 && !khoa30;
     if (this.dpr <= san) {
       if (ratNang && this.dpr > 1) {
         if ((this._cham2 = (this._cham2 || 0) + dt) > 5) { const moi = this.dpr > 1.5 ? 1.5 : this.dpr > 1.25 ? 1.25 : 1; if (this._nangLuc != null && this.t - this._nangLuc < 20) this._hut = (this._hut || 0) + 1; this._dprTu = this._dprTu || this.dpr; this.dprMax = moi; this._ft = this._fv = this._fj = null; this._cham2 = 0; this._tot = 0; this.coLai(); }
