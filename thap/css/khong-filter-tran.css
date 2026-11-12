@@ -13,3 +13,5 @@ html body #wrap#wrap#wrap#wrap #duoi #the-mv.cht-thieu .mv-ic, html body #wrap#w
 html body #wrap#wrap#wrap#wrap #duoi .nut-cot #nut-tocdo:not(.bat)::before { opacity: .6 !important; }
 /* thẻ kích hoạt (Hydra…) chưa dùng được */
 html body #wrap#wrap#wrap#wrap #duoi #bo-the .the.hy-kich.hy-tat > *:not(.gia) { opacity: .5 !important; }
+/* 12/11: giới hạn phạm vi tính bố cục / kiểu khi HUD đổi (không cắt hình: KHÔNG dùng contain: paint vì nút SUMMON nhô khỏi #duoi) */
+html body #wrap #duoi, html body #wrap #top, html body #wrap #tt { contain: layout style; }

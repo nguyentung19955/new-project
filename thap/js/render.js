@@ -132,7 +132,7 @@ const REN = {
   // (khung ~33 ms, rất đều) KHÔNG tính là gồng → không mờ oan. Đang kéo/ghép: không dựng lại canvas giữa chừng.
   doKhung(dt) {
     if (!G.ban.length || G.dung || !(dt > 0) || dt > 0.1 || (G.debug && G.debug.dpr)) return;
-    if ((typeof UI !== 'undefined' && UI.keo) || (typeof GF !== 'undefined' && (GF.cam || GF.mg.length || GF.ve.length))) return;
+    if ((typeof UI !== 'undefined' && UI.keo) || (typeof GF !== 'undefined' && GF.cam)) return; // 12/11: chỉ hoãn khi NGƯỜI CHƠI đang kéo / cầm ụ (trước: mọi hoạt ảnh ghép, kể cả của đồng đội máy → co-op gần như không bao giờ xét)
     const tk = typeof TKP !== 'undefined' && TKP.on(), muc = tk ? 1 / 30 : 1 / 60, v = (this._viec || 0) / 1000;
     this._ft = this._ft == null ? dt : this._ft * 0.96 + dt * 0.04;
     this._fj = this._fj == null ? 0 : this._fj * 0.96 + Math.abs(dt - this._ft) * 0.04;
@@ -141,7 +141,21 @@ const REN = {
     const nang = (this._ft > muc * 1.3 && !khoa30) || this._fv > 0.011;
     if (typeof TKP !== 'undefined') TKP.baoNang(dt, nang);
     const san = tk || (devicePixelRatio || 1) <= 2 ? 1.5 : 2;
-    if (this.dpr <= san) return;
+    // 12/11 (video iPhone: ở 2× nóng máy còn 4–29 khung/giây, ép 1× lên 40–55): RẤT NẶNG kéo dài = khung trung bình < ~38/giây suốt 5 s → hạ tiếp 2 → 1,5 → 1,25 → 1
+    //   (trước: iPhone bắt đầu ở 2× = đúng sàn nên không bao giờ hạ). Máy khoẻ lại (khung sát mục tiêu 25 s liền) → nâng 1 nấc; nâng xong lại nặng trong 20 s → hạ và
+    //   đếm 1 lần hụt, hụt 2 lần thì thôi không nâng nữa (tránh dựng lại canvas qua lại). Chỉ hình, không đụng luật.
+    const ratNang = this._ft > 1 / 38 && !khoa30;
+    if (this.dpr <= san) {
+      if (ratNang && this.dpr > 1) {
+        if ((this._cham2 = (this._cham2 || 0) + dt) > 5) { const moi = this.dpr > 1.5 ? 1.5 : this.dpr > 1.25 ? 1.25 : 1; if (this._nangLuc != null && this.t - this._nangLuc < 20) this._hut = (this._hut || 0) + 1; this._dprTu = this._dprTu || this.dpr; this.dprMax = moi; this._ft = this._fv = this._fj = null; this._cham2 = 0; this._tot = 0; this.coLai(); }
+      } else {
+        this._cham2 = Math.max(0, (this._cham2 || 0) - dt * 2);
+        if (this._dprTu && this.dpr < this._dprTu && (this._hut || 0) < 2 && this._ft < muc * 1.15 && !khoa30) {
+          if ((this._tot = (this._tot || 0) + dt) > 25) { this.dprMax = this.dpr < 1.25 ? 1.25 : this.dpr < 1.5 ? 1.5 : this._dprTu; this._nangLuc = this.t; this._ft = this._fv = this._fj = null; this._tot = 0; this.coLai(); }
+        } else this._tot = 0;
+      }
+      return;
+    }
     if (nang) {
       if ((this._cham = (this._cham || 0) + dt) > 4) { this.dprMax = this.dpr > 2 ? 2 : 1.5; this._ft = this._fv = this._fj = null; this._cham = 0; this.coLai(); }
     } else this._cham = Math.max(0, (this._cham || 0) - dt * 2);
