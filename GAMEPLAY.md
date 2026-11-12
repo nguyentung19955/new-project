@@ -1625,3 +1625,6 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - `REN.doKhung`: khung trung bình < ~38/giây suốt 5 s → hạ 2 → 1,5 → 1,25 → 1 (trước: iPhone bắt đầu ở 2× = sàn nên không bao giờ hạ; và mọi hoạt ảnh ghép, kể cả của đồng đội máy, đều hoãn việc xét — nay chỉ hoãn khi người chơi đang kéo). Khung sát mục tiêu 25 s liền → nâng 1 nấc; nâng rồi lại nặng trong 20 s tính 1 lần hụt, hụt 2 lần thì thôi nâng. Chỉ hình.
 - HUD: `contain: layout style` cho `#duoi`, `#top`, `#tt`. Nhãn admin: thêm `x<độ nét>` ở đầu; chạm nhãn xoay: ẩn → nhật ký → `LO` → `HX` (đứng HUD: không cập nhật DOM thanh trên/dưới, ẩn dải thông tin) → ẩn (bỏ `NF`).
 - Kiểm: máy đo tự hạ 2 → 1,5 → 1,25 → 1 trong ~25 s; 3 chế độ vào trận không lỗi; băm gl0 = gl1 (`1bff1f7b` / `4b3b16c1`). CHƯA kiểm iPhone; nguyên nhân khựng khi chạm CHƯA xác định (Chromium không tái hiện).
+
+## claude/demo-hop-tuong — KHÔNG tự hạ độ nét (người dùng 12/11 12:20)
+- Người dùng: "không muốn giảm chất lượng, vì chất lượng là thứ người dùng tìm đến game" → tự hạ độ nét dưới 2× (thêm sáng nay) TẮT mặc định, chỉ còn khi `?tuha=1` để đo. Chế độ thử `LO` của admin giữ (chỉ để chẩn đoán). Hướng thay thế: giảm lượng điểm ảnh phải tô mà KHÔNG giảm độ nét (bớt lớp vẽ chồng, vùng trong suốt lớn, lớp hiệu ứng toàn màn).
