@@ -64,7 +64,7 @@ const UI = {
         FX.capNhat(thuc * (k > 1 ? Math.sqrt(k) : 1)); // hiệu ứng theo thời gian thực (nhanh lên êm khi tăng tốc)
       } else if (FX.chop > 0) FX.chop = Math.max(0, FX.chop - thuc * 2.6); // rà VFX 07/11: bàn đứng (tạm dừng / TAI.doi giải mã ảnh sau chiêu lớn) → chớp màn vẫn tắt, không đọng lớp phủ màu cả màn
       if (!TAI.cho) REN.ve(G.dung || TAI.doi ? 0 : thuc, alpha); // đang tải: không vẽ (không bao giờ lộ hình thiếu ảnh); TAI.doi: vẽ bàn đứng yên
-      if (G.ban.length && (this._hud = !this._hud || khoang > 20)) this.capNhat(); // HUD (DOM) 30 lần/giây là đủ, đỡ dựng lại bố cục
+      { const tn = performance.now(); if (G.ban.length && tn - (this._hudT || 0) >= 48) { this._hudT = tn; this.capNhat(); } } // HUD (DOM) ≤ ~20 lần/giây THEO THỜI GIAN (12/11; trước: mỗi 2 khung, và MỖI khung khi máy chậm — đúng lúc Safari đang nghẽn tô lại HUD: video iPhone 03:54 khung 86–200 ms có 7–16 lần đổi DOM ở #mana / #nut-trieu / #bo-the)
       REN._viec = performance.now() - t0v; // thời gian JS thật của khung (REN.doKhung: phân biệt máy bận với trần 30/60 Hz)
     };
     requestAnimationFrame(vong);
@@ -235,7 +235,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     const cao = (el, k, v) => { if (el['_' + k] !== v) { el['_' + k] = v; el.style[k] = v; } };
     const m = Math.floor(B.mana);
     const mEl = $('#mana');
-    if (m !== this.manaCu) { chu(mEl, m); const nc = m >= 100000 ? String(Math.min(8, ('' + m).length)) : ''; if (mEl._nc !== nc) { mEl._nc = nc; if (nc) mEl.dataset.n = nc; else delete mEl.dataset.n; } /* ≥ 6 chữ số: chữ nhỏ lại cho vừa khung (css/hud-anime.css) */ if (m > this.manaCu && !this._nay) { this._nay = true; mEl.classList.add('nay'); setTimeout(() => { mEl.classList.remove('nay'); this._nay = false; }, 120); } this.manaCu = m; }
+    if (m !== this.manaCu) { chu(mEl, m); const nc = m >= 100000 ? String(Math.min(8, ('' + m).length)) : ''; if (mEl._nc !== nc) { mEl._nc = nc; if (nc) mEl.dataset.n = nc; else delete mEl.dataset.n; } /* ≥ 6 chữ số: chữ nhỏ lại cho vừa khung (css/hud-anime.css) */ if (m > this.manaCu && !this._nay && !(performance.now() - (this._nayT || 0) < 600)) { this._nay = true; this._nayT = performance.now(); mEl.classList.add('nay'); setTimeout(() => { mEl.classList.remove('nay'); this._nay = false; }, 120); } /* nảy số mana: tối đa ~1,5 lần/giây (trước: mỗi lần mana tăng → 2 lần đổi lớp + chuyển động mỗi 1/8 giây ở 3×) */ this.manaCu = m; }
     chu($('#gia-trieu'), B.gia);
     const nt = $('#nut-trieu'), du = B.mana >= B.gia && oTrong(B).length > 0;
     nt.classList.toggle('du', du); nt.classList.toggle('thieu', !du);
