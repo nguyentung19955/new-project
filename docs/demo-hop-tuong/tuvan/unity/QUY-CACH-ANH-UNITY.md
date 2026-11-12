@@ -1,5 +1,7 @@
 # Quy cách ảnh cho bản Unity
 
+> Bản gốc (người dùng sửa ở đó): https://claude.ai/artifact/LQVWjiU5bWKrbhEPby7FAt — file này là bản chép vào kho, đồng bộ lần cuối 12/11/2026 21:45 (bản sửa 11). Khi hai bản khác nhau thì theo bản gốc và chép lại vào đây.
+
 Nov 12, 2026 · @Tung
 
 Bước 1 (hình giống web) **không cần ảnh mới**: Unity dùng nguyên 1 900 ảnh hiện có. Quy cách này dành cho ảnh MỚI hoặc vẽ lại, để Unity tự làm animation (gắn xương, xoay, co giãn) thay cho dải khung vẽ sẵn.
@@ -43,6 +45,20 @@ Mỗi ụ gồm bệ đứng yên và đầu xoay; Unity tự làm xoay, giật 
 **Lưu ý luật:** vị trí đạn xuất phát trong trận đã được chốt thành số luật lấy từ ảnh web cũ. Điểm `nong` của ảnh mới chỉ dùng để VẼ chớp nòng và đạn đúng chỗ; muốn đổi vị trí đạn thật là đổi luật, phải kiểm lại với web.
 
 **Sao, số cấp, vòng nạp chiêu** là giao diện do Unity vẽ, KHÔNG vẽ vào ảnh ụ.
+
+### Ụ có chùm nòng quay (Liên Thanh và các ụ nhiều nòng xoay)
+
+Bài học từ bộ mẫu ngày 12/11: Liên Thanh vẽ nghiêng (chùm nòng dựng đứng như cột) không dùng được. Khi đầu xoay theo quái, ảnh trông như miếng dán bị vặn, còn nòng thì không thể quay thật vì chỉ có 1 ảnh. Từ nay các ụ này làm theo **cách A: vẽ 4 khung chùm nòng, Unity lật khung để tạo cảm giác quay**.
+
+- **Góc nhìn:** thẳng từ trên xuống, giống bệ. Chùm nòng nằm dọc, chĩa THẲNG LÊN mép trên canvas, nhìn thấy 4–6 ống nòng song song cạnh nhau. Không vẽ nghiêng, không vẽ miệng nòng tròn hướng về người xem.
+- **Tách lớp** (cùng canvas 512×512, cùng vị trí, không tự căn giữa lại từng file):
+  - `lien_nong_than.png`: khối thân và vòng kẹp giữ nòng, KHÔNG có nòng. Vẽ đủ phần thân nằm dưới chùm nòng.
+  - `lien_nong_cumnong_1.png` … `lien_nong_cumnong_4.png`: chỉ chùm nòng, 4 khung quay.
+  - `lien_nong_sang.png`: chỉ đèn và đá quý trên thân.
+- **Cách vẽ 4 khung quay:** viền ngoài của chùm nòng giữ y hệt nhau ở cả 4 khung, chỉ chi tiết bên trong dịch đi. Mỗi khung, các ống nòng cùng gờ sáng và vết bóng trên nòng dịch ngang ¼ khoảng cách giữa 2 nòng, luôn theo cùng một chiều. Khung 4 nối tiếp sang khung 1 phải liền mạch để lặp vòng không bị giật.
+- **Unity tự làm:** khi bắn thì lật khung nhanh (khoảng 20–30 khung/giây); khi ngừng bắn thì chậm dần rồi dừng. Unity cũng thêm giật lùi, chớp nòng và hơi nóng ở đầu nòng, người vẽ không cần vẽ những thứ này.
+- **Ghi trong `lien_diem.json`:** `nong` ghi đầu từng nòng nhìn thấy ở khung 1, theo thứ tự từ trái sang phải; không cần `xoay.cumnong` nữa.
+- **Kiểm trước khi gửi:** ghép 4 khung thành ảnh động và xem lặp vài vòng. Chùm nòng phải trông như đang quay, viền ngoài không được rung hay nhảy.
 
 ## Quái thường (14 loại)
 
@@ -158,7 +174,8 @@ Quy cách ở trên là chuẩn của FILE GIAO. Phần này là cách ra đư�
 - **Mỗi đối tượng 1 lần gen riêng**: gửi 1 ảnh tham chiếu (ảnh web cũ, nền xám) + 1 khối prompt tiếng Anh hoàn chỉnh. Không gộp nhiều đối tượng vào 1 ảnh (ChatGPT chỉ xuất ~1254 px; ô 2×2 còn ~480 px mỗi hình).
 - **Nền hồng đặc #FF00FF**, không xin nền trong suốt. Claude tách nền: nền ChatGPT không thuần (lệch tới ~55 đơn vị màu ở mép) → ngưỡng `alpha = clip((d-65)/60)` với d = khoảng cách tới (255,0,255), rồi khử ám hồng ở mép.
 - **Ảnh nhiều lớp**: xin 1 tờ lưới 2×2 (hoặc 2×1): ô 1 = hình ráp đủ, các ô còn lại = từng lớp "cùng cỡ, cùng vị trí trong ô", có vẽ phần bị che. Lớp nào ChatGPT vẽ lệch dạng thì gen lại riêng lớp đó, đính chính tờ lưới làm tham chiếu.
-- **Đầu súng**: KHÔNG ra lệnh "top-down view" (ChatGPT vẽ thành nhìn thẳng vào miệng nòng). Ra lệnh: "giữ nguyên hình nhìn ngang của ảnh tham chiếu, chỉ XOAY 90° cho nòng chĩa thẳng lên; miệng nòng không hướng về người xem". Bệ ụ hiện có đã là nhìn từ trên → giữ nguyên, không gen lại.
+- **Đầu súng**: mục tiêu là hình nhìn THẲNG TỪ TRÊN, nòng nằm dọc chĩa lên. Lệnh "top-down view" trần trụi làm ChatGPT vẽ thành nhìn thẳng vào miệng nòng; lệnh "xoay hình nhìn ngang 90°" thì ra hình nghiêng 3/4, nòng dựng như cột (mẫu Liên Thanh 12/11 — đã bị loại). Prompt phải nói rõ cả hai: "flat orthographic view from directly above, like a blueprint; the barrels lie flat as long parallel tubes pointing to the top edge; no perspective, no visible muzzle holes, no 3/4 angle". Bệ ụ hiện có đã là nhìn từ trên → giữ nguyên, không gen lại.
+- **Ụ chùm nòng quay**: chỉ nhờ ChatGPT vẽ thân + 1 chùm nòng; 4 khung quay do Claude dựng bằng máy (giữ viền ngoài, dịch hoạ tiết bên trong ¼ khoảng cách nòng mỗi khung) rồi tự xem ảnh động trước khi giao.
 - **Lớp phát sáng xanh lơ của ụ**: lớp ChatGPT vẽ riêng bị lệch chỗ → Claude lọc từ chính hình ráp (khớp tuyệt đối nhưng thô). Muốn đẹp: gen riêng 1 ảnh chỉ lớp sáng, đính hình ráp.
 - **Lớp sáng tím/hồng trên nền hồng** (vết nứt Giant…): tách bằng kênh G và (255−R), không dùng khoảng cách tới màu hồng.
 - **Quái / trùm không tay chân** (đúng hướng thiết kế của game): tách theo bộ phận thật của nó (thân, rêu/mũ/nắp, lõi sáng), không theo "thân, đầu, tay, chân". Trùm không vẽ mắt/mặt trừ khi người dùng yêu cầu.
