@@ -509,9 +509,13 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
         this.chonGhep = null;
         const sk = SKILLS[k.T.id];
         if (chamSan(k.T)) { sk.chuDong(G, B, k.T); return; } // ụ có ▶ (chiêu chủ động đầy / trứng cháy): chạm = dùng chiêu, không mở dải thông tin
-        if (!$('#tt').hidden && this.xemU && this.xemU.T === k.T) { $('#tt').hidden = true; this.ttHet = 0; this.xemU = null; return; } // chạm lại ụ đang xem = đóng dải
+        // 12/11 (video người dùng: chạm Merge King 6★ đang mở dải thông tin → không có gợi ý): dải của ụ này đang mở mà KHÔNG còn lựa chọn (hết 4 s / dải tự mở)
+        //   → nếu ụ còn ô ghép được thì CHỌN lại + giữ dải (hiện gợi ý) thay vì chỉ đóng dải; không còn ô nào ghép được mới đóng dải như cũ.
+        const _coDich = !k.T.st.bang && B.t.some(N => N && N !== k.T && hopLeGhep(k.T, N));
+        if (!_coDich && !$('#tt').hidden && this.xemU && this.xemU.T === k.T) { $('#tt').hidden = true; this.ttHet = 0; this.xemU = null; return; } // chạm lại ụ đang xem (không ghép được với ai) = đóng dải
         // chọn TRƯỚC khi mở dải thông tin: dải lỗi (máy thật) cũng không làm mất lựa chọn chạm–chạm (người dùng 11/11: iPhone chạm Merge King không sáng ô đích)
-        if (!k.T.st.bang && B.t.some(N => N && N !== k.T && hopLeGhep(k.T, N))) this.chonGhep = { T: k.T, t0: performance.now() };
+        if (_coDich) this.chonGhep = { T: k.T, t0: performance.now() };
+        if (typeof ADMIN !== 'undefined' && ADMIN._v) { const c0 = B.o[k.T.o]; FX.chu1(c0.x, c0.y + 26, 'TAP ' + (_coDich ? 'sel' : 'no-target'), '#9fe', 10); } // admin: chẩn đoán chạm trên máy thật
         try { this.moTT(k.T.id, k.T); } catch (er) { console.error('moTT', er); }
         return;
       }
@@ -524,6 +528,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
           if (chu) FX.chu1(c.x, c.y - 22, chu, '#ff9a9a', 12); return; }
       }
       // kéo: chỉ ghép khi thả đúng lên ô HỢP LỆ; mọi chỗ khác = huỷ (không ghép)
+      if (typeof ADMIN !== 'undefined' && ADMIN._v) { const c0 = B.o[k.T.o]; FX.chu1(c0.x, c0.y + 26, 'DRAG ' + Math.round(performance.now() - (k.t0 || 0)) + 'ms ' + Math.round(Math.hypot(k.x - k.x0, k.y - k.y0)), '#fc9', 10); }
       const [hx, hy] = this.diemKeo(k), D = this.uTai(hx, hy);
       if (D && D !== k.T) {
         if (hopLeGhep(k.T, D)) ghep(B, k.T, D);

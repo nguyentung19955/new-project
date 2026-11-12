@@ -1602,3 +1602,8 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - Hình: `tools/thap-cat-quai-moi.py` cắt `thap-art/raw_quai_moi.png` (chuyển khỏi `cho-ghep/`) → `assets/quai_bo_khien|nam_hoi|ca_no|ma_troi.png` (4 khung 768×192; Ma trơi chỉ từ khung 1, độ mờ do code). Dấu hiệu dùng ảnh sẵn có: `fx_st_khienvang` (vòng khiên + lúc vỡ), `PX.thanh` (thanh khiên), `fx_vong_mong` tô xanh (nhịp hồi), `fx_no_phao` (nổ), `fx_st_choang` (sao choáng trên ụ) — `quaianim.js`, `render.js`. Làm nóng theo wave: `nongskill.js MOC_QUAI`.
 - Chữ: tên quái + gợi ý màn thua (`text.js`, `ketqua.js`), bản dịch `tuvan/ngonngu/vi.json` → `ngonngu-vi.js`.
 
+
+## claude/demo-hop-tuong — sửa nhanh từ phiên điều phối cũ (12/11 08:50)
+- Chạm–chạm (`ui.js het`): chạm ụ mà dải thông tin của nó ĐANG MỞ nhưng không còn lựa chọn (hết 4 s / dải tự mở) → nếu còn ô ghép được thì CHỌN lại + giữ dải (hiện gợi ý) thay vì chỉ đóng dải. `keoghep.js KG.nguon`: lựa chọn còn hiệu lực chừng nào dải của ụ đó còn mở. (Video người dùng 08:14: chạm Merge King 6★ khi dải đang mở → không có gợi ý dù có Lucky Slot 6★; luật ghép đúng, máy thử tái hiện được đúng ca "dải mở sẵn".)
+- Admin: chữ nhỏ dưới ụ khi chạm (`TAP sel` / `TAP no-target`) và khi thả kéo hụt (`DRAG <ms> <quãng>`) để chẩn đoán trên máy thật.
+- Ảnh mới `hh_sao7.png` (ChatGPT 12/11, 192 px): sao vàng viền đỏ + quầng có sẵn → dùng cho huy hiệu 7★ thay cho bản nướng canvas (CHƯA nối vào code — phiên WebGL nối).

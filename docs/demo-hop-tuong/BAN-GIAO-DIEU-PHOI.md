@@ -153,3 +153,7 @@ HUD (thanh trên/dưới, dải thông tin) GIỮ dạng DOM. Giữ `?gl=0` cho 
 - Gợi ý dùng: vào trận nạp `u[id]` cho mọi id trong bộ bài của CẢ HAI bàn; trùm sắp ra nạp `trum[id]`; `dung_chung` nạp nền sau khi trận chạy (ưu tiên `fx_st_*`, `fx_merge`, `cf_*`).
 - Sinh lại: `python3 tools/thap-thong-ke-hieu-ung.py . docs/demo-hop-tuong/tuvan/webgl`.
 - GIỚI HẠN: quét TĨNH (tên ảnh + vị trí chuỗi trong mã), chưa đối chiếu trận thật. Id ngắn có thể ôm nhầm (vd `bang` ôm `bang_wave_nen`). Nên chạy 1 lượt bot ghi mọi tên `REN.img()` thực gọi theo từng bộ để bắt phần sót (tên dựng lúc chạy).
+
+## 17. Phiên cũ (12/11 08:50): ảnh sao 7★ đã có + sửa chạm–chạm
+- **`thap/assets/hh_sao7.png`** (192×192, sao vàng viền đỏ + quầng đỏ có sẵn, nền trong) — người dùng gen theo yêu cầu "7★ còn là ảnh dựng sẵn". CHƯA nối: thay nhánh `n >= 7` trong `hud2.js` (đang lấy `hh_sao1` rồi nướng viền đỏ + blur) bằng ảnh này như 1–6★; thêm vào danh sách nạp trước.
+- `ui.js` / `keoghep.js`: chạm ụ khi dải của nó đang mở → chọn lại + hiện gợi ý; lựa chọn sống theo dải. Admin có chữ `TAP …` / `DRAG …` dưới ụ để chẩn đoán. Xuất bản giúp ở lần kế.
