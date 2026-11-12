@@ -91,3 +91,5 @@
 #adm-nk:empty { display: none; }
 /* thử nghiệm của ADMIN (chạm nhãn FPS → "NF"): tắt mọi CSS filter / backdrop-filter trong #wrap để đo xem Safari iOS có nghẽn vì tô lại lớp có filter khi giao diện đổi không */
 html.adm-nf body #wrap#wrap#wrap#wrap, html.adm-nf body #wrap#wrap#wrap#wrap *, html.adm-nf body #wrap#wrap#wrap#wrap *::before, html.adm-nf body #wrap#wrap#wrap#wrap *::after { filter: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+/* thử nghiệm ADMIN "HX" (chạm nhãn): ẩn dải thông tin ụ + dải nhận diện; HUD thôi cập nhật (ui.js) */
+html.adm-hx body #wrap #tt, html.adm-hx body #wrap #nd-dai { display: none !important; }
