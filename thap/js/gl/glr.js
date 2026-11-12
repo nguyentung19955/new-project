@@ -551,7 +551,9 @@ const GLR = (() => {
         }
         this._taiDv += 1 + w * h / 131072;
         // lần tải THỨ HAI của cùng ảnh (đã tải tầng thô, nay cần tầng nét hơn — tia / hạt vẽ nhiều cỡ): tải luôn tầng 0, các tầng sau thu trên GPU → mỗi ảnh gốc tối đa 2 lần tải / ngữ cảnh
-        const L0 = g._nhapThe === this.the ? 0 : L; g._nhapThe = this.the;
+        // 12/11: ảnh gốc NHỎ (≤ 16 384 điểm — huy hiệu, icon, hạt) luôn tải tầng 0 (Image → ô atlas: đường đã chạy đúng trên iPhone), tầng sau thu trên GPU từ ô đó — không qua texture tạm + generateMipmap
+        //   (nghi ra ô ĐEN ĐẶC trên Safari iOS khi ảnh chưa giải mã lúc tải giữa khung: texture tạm thiếu tầng → lấy mẫu ra (0, 0, 0, 1) → chép vào ô tầng; đường tầng 0 hỏng thì chỉ trong suốt).
+        const L0 = g._nhapThe === this.the || w * h <= 16384 ? 0 : L; g._nhapThe = this.the;
         E = lv[L0] = this.nhapAnh(g, a, L0); if (!E || L0 === L) return E;
         j = L0;
       }
