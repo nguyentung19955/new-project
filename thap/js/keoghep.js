@@ -120,7 +120,10 @@ const KG = {
   // tấm chữ (ảnh nhan_kn) + chữ canvas
   // khung bao của tấm chữ (cùng công thức với tam) — dùng để tấm mới THAY tấm cũ chồng lên nó (không bao giờ 2 tấm đè nhau)
   khungTam(s, x, y, px, sc, sao) {
-    const im = REN.chuAnh(s, '#ffffff', px), hh = px * 2.1 * sc, bw = sao ? hh * 0.95 : 0, w = Math.min(W - 8, (im.tw + px * 1.6) * sc + bw), cx = clamp(x, w / 2 + 4, W - w / 2 - 4);
+    let im = null; // WebGL đang vẽ: chỉ cần bề rộng chữ → bố cục ô ký tự của CHU (gọi ngoài khung vẽ: REN.chuAnh sẽ dựng 2 canvas chữ không ai dùng)
+    if (typeof CHU !== 'undefined' && typeof GLR !== 'undefined' && GLR.bat && GLR.hien && !CHU._cho() && !/[?&]chugl=0\b/.test(location.search)) { try { im = CHU.anh(s, '#ffffff', px); } catch (e) { im = null; } }
+    if (!im) im = REN.chuAnh(s, '#ffffff', px);
+    const hh = px * 2.1 * sc, bw = sao ? hh * 0.95 : 0, w = Math.min(W - 8, (im.tw + px * 1.6) * sc + bw), cx = clamp(x, w / 2 + 4, W - w / 2 - 4);
     return [cx - w / 2 - (sao ? hh * 0.2 : 0), y - hh * 0.72, Math.max(cx + w / 2, cx - w / 2 + hh * 1.15), y + hh * 0.63];
   },
   tam(ctx, s, x, y, px, mau, al, sc, sao) {
@@ -130,7 +133,7 @@ const KG = {
     if (a) this.tam3(ctx, a, cx - w / 2, y - hh / 2, w, hh);
     const q = Math.min(sc, (w - bw - px * 1.2 * sc) / Math.max(1, im.tw)), tx = cx + bw / 2;
     REN.veChuAnh(ctx, im, tx - im.lw * q / 2, y - im.by * q + px * 0.36 * q, im.lw * q, im.lh * q);
-    if (sao) { const hb = REN.huyHieuDong(sao, hh * 0.9); if (hb) ctx.drawImage(hb, cx - w / 2 - hh * 0.2, y - hh * 0.72, hh * 1.35, hh * 1.35); }
+    if (sao) { const hb = REN.huyHieuDong(sao, hh * 0.9); if (hb) REN.veHH(ctx, hb, cx - w / 2 - hh * 0.2, y - hh * 0.72, hh * 1.35); }
   },
 
   // ---------- kết quả ghép: tấm tên + số sao to trên ô, ~1 s ----------

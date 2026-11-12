@@ -434,7 +434,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       case 'ngaunhien': this.chon = deckNgauNhien(); SND.nut(); this.veBoChon(); break;
       case 'vao': this.vao(); break;
       case 'trieu': if (B && !G.ketThuc) { if (trieu(B)) SND.trieu(); } break;
-      case 'nang': if (this._boQuaBam) { this._boQuaBam = false; break; } if (B) { if (SKILLS[el.dataset.id] && SKILLS[el.dataset.id].theKich ? hydraKich(B) : nangCap(B, el.dataset.id)) { el.classList.remove('sang'); void el.offsetWidth; el.classList.add('sang'); } } break;
+      case 'nang': if (this._boQuaBam) { this._boQuaBam = false; break; } if (e.isTrusted && (this._theDown !== el.dataset.id || performance.now() - (this._theDownT || 0) > 1500)) break; this._theDown = null; /* 12/11: vào trận tự bị nâng cấp — cú bấm phải bắt đầu trên chính thẻ này */ if (B) { if (SKILLS[el.dataset.id] && SKILLS[el.dataset.id].theKich ? hydraKich(B) : nangCap(B, el.dataset.id)) { el.classList.remove('sang'); void el.offsetWidth; el.classList.add('sang'); } } break;
       case 'mv': if (this._boQuaMV) { this._boQuaMV = false; break; } if (B && !(typeof CHMU !== 'undefined' && CHMU.bat(B))) dungMV(B); break; // chỉ huy chạm-ô: vào chế độ ngắm (chihuy-moi.js)
       case 'tocdo': G.tocDo = G.tocDo >= 3 ? 1 : G.tocDo + 1; el.textContent = G.tocDo + '×'; break;
       case 'dung': this.huyKeo(); G.dung = true; $('#dung').hidden = false; $('#tt').hidden = true; break;
@@ -477,7 +477,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       try { cv.setPointerCapture(e.pointerId); } catch (er) { }
       const B = G.ban[0], C = Math.min(B.cw, B.ch);
       // khung canvas đo 1 lần lúc chạm (pointermove KHÔNG đọc bố cục → không ép trình duyệt tính lại layout mỗi lần rê)
-      this.keo = { T, x, y, x0: x, y0: y, dang: false, id: e.pointerId, lech: e.pointerType === 'mouse' ? 0 : Math.round(C * 0.6), r: cv.getBoundingClientRect() };
+      this.keo = { T, x, y, x0: x, y0: y, dang: false, t0: performance.now(), id: e.pointerId, lech: e.pointerType === 'mouse' ? 0 : Math.round(C * 0.6), r: cv.getBoundingClientRect() };
       if (e.pointerType !== 'mouse') this.keo.nguong = Math.max(7, 10 * W / Math.max(1, this.keo.r.width)); // ngón tay: rung ≤ 10 px màn hình vẫn là CHẠM (7 đơn vị logic chỉ ≈ 3 px khi màn ngang → chạm trứng cháy / chiêu bị coi là kéo)
       if (T.id === 'bienmau') this.keo.duong = [T.o];
       if (typeof REN !== 'undefined' && REN.nongKeo && !laHoTro(T)) REN.nongKeo(T); // dựng sẵn bản nhấc + huy hiệu, rải theo khung
@@ -498,6 +498,9 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       if (this.xemHT && this.xemHT.giu) { this.xemHT.giu = false; this.xemHT.het = performance.now() + 2400; }
       const B = G.ban[0];
       if (!B || G.ketThuc || G.dung || B.t[k.T.o] !== k.T) { this.chonGhep = null; return; }
+      // 12/11 (người dùng: iPhone hay "ấn 1 ụ mà không hiện gợi ý ghép"): ngón tay rung quá ngưỡng trong lúc CHẠM bị coi là kéo → không chọn, không gợi ý.
+      // Nhấc tay nhanh (< 350 ms) và đi rất ngắn (< 0,35 ô) = CHẠM. (Prism Thief đã vuốt qua ô khác thì vẫn là vuốt.)
+      if (k.dang && !(k.duong && k.duong.length > 1) && performance.now() - (k.t0 || 0) < 350 && Math.hypot(k.x - k.x0, k.y - k.y0) < Math.min(B.cw, B.ch) * 0.35) k.dang = false;
       if (!k.dang) {
         // chạm–chạm: đã chọn 1 ụ → chạm ô đang sáng = ghép; chạm lại chính nó = bỏ chọn
         const c = this.chonGhep && typeof KG !== 'undefined' ? KG.nguon() : null;
@@ -535,7 +538,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     addEventListener('blur', () => { if (this.keo) this.huyKeo(); });
     // giữ thẻ ở hàng dưới → bảng thông tin (không nâng cấp)
     const bo = $('#bo-the');
-    bo.addEventListener('pointerdown', (e) => { const d = e.target.closest('.the'); if (!d) return; clearTimeout(this.giu); this.giu = setTimeout(() => { this._boQuaBam = true; this.moTT(d.dataset.id, null, true); }, 480); });
+    bo.addEventListener('pointerdown', (e) => { const d = e.target.closest('.the'); if (!d) return; this._theDown = d.dataset.id; this._theDownT = performance.now(); clearTimeout(this.giu); this.giu = setTimeout(() => { this._boQuaBam = true; this.moTT(d.dataset.id, null, true); }, 480); });
     // giữ nút Ma vương → bảng thông tin chỉ huy (chạm nhanh = dùng kỹ năng)
     const nm = $('#the-mv');
     nm.addEventListener('pointerdown', () => { clearTimeout(this.giu); this._boQuaMV = false; this.giu = setTimeout(() => { this._boQuaMV = true; this.moTTMV(G.ban[0] && G.ban[0].mv.id); }, 480); });

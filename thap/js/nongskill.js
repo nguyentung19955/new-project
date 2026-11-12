@@ -352,6 +352,7 @@
     if (typeof P2 !== 'undefined' && P2.TO) for (const B of G.ban) for (const id of B.deck || []) if (P2.TO[id]) ds.push(P2.TO[id]);
     if (typeof P3 !== 'undefined' && P3.M) for (const B of G.ban) for (const id of B.deck || []) if (P3.M['p3_' + id]) ds.push('p3_' + id); // tờ P3 (vfxp3.js) khi đã có
     for (const t of ds) if (!laTrum(t) && !laQuai(t)) themTen(t);
+    NS._napDs = null; if (typeof _GLA === 'function' && _GLA()) { NS._napDs = NS.dsHieuUng(); for (const t of NS._napDs.keys()) if (!laTrum(t) && !laQuai(t)) { if (!REN.anh[t]) REN.img(t); /* ảnh skill tải lười (VXM.U, tờ P2): gọi tải ngay đầu trận thay vì ở lần dùng đầu */ themTen(t); } } // WebGL ảnh ảo: ảnh gốc của hiệu ứng chắc dùng → GPU (NS.napGL)
   };
   // trùm của wave này / wave sau (cùng cách mục 3b): mọi tờ trum_<id>* / fx_trum_<id> đã tải
   AM.themTrum = function () {
@@ -388,7 +389,7 @@
     if ((!a._cv && !(a.complete && a.naturalWidth)) || a._chuaGiai) { if (++it.lan < 40) this.ds.push(it); return true; } // chưa tải xong: để sau
     if (!it.b && a._cv && a._cv._am && !it.co) return true; // đã làm nóng
     const W0 = a._cv ? a._cv.width : a.naturalWidth, H0 = a._cv ? a._cv.height : a.naturalHeight;
-    if (!it.b && !it.co && W0 * H0 < 65536 && W0 < 1024) return true; // ảnh nhỏ: lần đầu rẻ (< 1 ms) — không chép trước (giữ bộ nhớ như cũ)
+    if (!it.b && !it.co && W0 * H0 < 65536 && W0 < 1024) { if (NS.napGL && !a._chuaGiai) NS.napGL(t); return true; } // ảnh nhỏ: lần đầu rẻ (< 1 ms) — không chép trước (giữ bộ nhớ như cũ)
     // chia 1 tờ thành nhiều việc nhỏ ở các khung khác nhau (mỗi việc 1 phần chi phí lần đầu): 0 chép sang canvas · 1 vẽ thử
     // (lên GPU + mipmap) · 2–3 tầng mip ½ và ¼ (tờ hiệu ứng) · 4 dải thu nhỏ của quái (hàng nóng tự rải tiếp)
     const t0 = now(); it.b = it.b || 0;
@@ -397,7 +398,7 @@
       else {
         const c = a._cv || NS._imgGoc.call(REN, t);
         const laMip = c && /^(p2_|p3_|fx_|sig_)/.test(t) && c.height >= 96 && c.width / c.height >= 3;
-        if (it.b === 1) { if (c && c.width && !c._am) veThu(c); if (c) c._am = 1; it.b = laMip ? 2 : 4; }
+        if (it.b === 1) { if (c && c.width && !c._am) veThu(c); if (c) c._am = 1; if (NS.napGL) NS.napGL(t); it.b = laMip ? 2 : 4; }
         // tờ hiệu ứng vẽ qua chuỗi mip (REN.khungMuot / hieuung.khung: P2, fx_*, sig_*): 2 tầng đầu dựng từ TỜ LỚN là phần đắt
         // nhất (20–60 ms ×4 CPU, đo p2_copycat / p2_halo) → dựng sẵn; tầng nhỏ hơn dựng từ tầng ¼ (rẻ) khi cần
         else if (it.b === 2) { NS._mipGoc.call(REN, c, Math.ceil(c.height / 2)); it.b = 3; }
@@ -408,6 +409,38 @@
     } catch (e) { }
     const ms = now() - t0; this.thongKe.lam++; this.thongKe.ms += ms; if (ms > this.thongKe.max) this.thongKe.max = ms; if (ms > 20 && this.thongKe.nang.length < 30) this.thongKe.nang.push(t + ' ' + Math.round(ms));
     return true;
+  };
+  // WebGL ẢNH ẢO (KE-HOACH mục 13): mọi biến thể (cỡ, màu tô, hoà 'color', mặt nạ, dải dựng trên GPU) lấy mẫu từ texture ẢNH GỐC → làm nóng hiệu ứng = đưa chính ảnh gốc lên GPU.
+  //   Trước: bản GL bỏ bước "vẽ thử" → ảnh hiệu ứng của bộ bài chỉ lên GPU ở LẦN DÙNG ĐẦU giữa trận (tải Image → texture: giải mã + tải, 3–50 ms trên iPhone).
+  //   Atlas GPU có hạn (5 trang; giữa trận đã đầy ~0,8) → KHÔNG nạp theo danh sách rộng. Đã đo (KE-HOACH mục 13): cả UI.dsTran = 290 ảnh, 5 trang đầy ngay màn mở đầu, gom atlas liên tục;
+  //     chỉ hình phát bắn đầu (FXU.dsAnh _dan / _trung / _no / _tia) + tờ P2 / P3 = +47–58 ảnh ở màn mở đầu, +23–41 MB GPU lúc vào trận, bớt 15–21 lần tải Image giữa trận nhưng atlas gom sớm hơn
+  //     (bộ B: +25 lần tải lại canvas ở 60 s cuối) → cũng bỏ. Không biết TẦNG sẽ vẽ thì nạp trước chỉ là đoán. Nay chỉ nạp ảnh CHẮC DÙNG + biết tầng (NS.dsHieuUng):
+  //     · ảnh skill riêng của ụ trong bộ bài (VXM.U — ít, gọi tải luôn nếu là ảnh tải lười) + 8 dải vệt lửa Rồng Máy dựng trên GPU (VXM.rongDai);
+  //     · HỌC TRONG PHIÊN: mọi ảnh đã từng được vẽ ở trận trước của phiên này (g._lvThay — glr.js ghi tầng nét nhất từng vẽ) mà trận này còn nạp;
+  //     · bảng NONG_META[id ụ | _chung | mv_<chỉ huy>] = { tên ảnh: tầng } nếu có (js/nong-meta.js — sinh bằng tools/thap-kt-tai-gl.js kq.nong theo từng ụ; CHƯA có).
+  //   Tầng nạp: tầng từng vẽ / tầng ghi trong bảng; chưa biết → tầng thô nhất mà cạnh ngắn còn ≥ NS.NAP_PX điểm (cần nét hơn thì GLR tải lần 2 ở tầng 0).
+  //   Màn mở đầu trận tải không giới hạn; giữa trận ≤ 1 texture / khung nhẹ (GLR.napChay).
+  NS.NAP_PX = 192;
+  NS.dsHieuUng = function () {
+    const m = new Map(), M = typeof NONG_META !== 'undefined' ? NONG_META : null, them = (t, L) => { if (t && (L != null || !m.has(t))) m.set(t, L); }, bang = (o) => { if (o) for (const t in o) them(t, o[t]); };
+    try {
+      for (const B of G.ban) for (const id of B.deck || []) {
+        if (typeof VXM !== 'undefined' && VXM.U && VXM.U[id]) for (const t of VXM.U[id]) them(t);
+        if (M) bang(M[id]);
+      }
+      if (M) { bang(M._chung); for (const B of G.ban) if (B.mv) bang(M['mv_' + B.mv.id]); }
+      for (const t in REN.anh) { const a = REN.anh[t], c = a && a._cv; if (c && c._lvThay != null && !laTrum(t) && !laQuai(t)) them(t, c._lvThay); } // học trong phiên
+    } catch (e) { }
+    return m;
+  };
+  NS.napGL = function (t) {
+    const ds = NS._napDs; if (!ds || !ds.has(t) || typeof _GLA !== 'function' || !_GLA()) return;
+    const c = REN.img(t); if (!c || !c._goc || c._napGL === GLR.the) return; c._napGL = GLR.the;
+    if (!(c._lv && c._lv.some(E => GLR.hopLe(E)))) { // (đã có 1 tầng trên GPU = ảnh đang được vẽ: không thêm tầng khác)
+      let L = c._lvThay; if (L == null) L = ds.get(t); if (L == null) L = Math.max(0, Math.floor(Math.log2(Math.min(c.width, c.height) / NS.NAP_PX)));
+      GLR.nap(L > 0 ? NS._mipGoc.call(REN, c, Math.min(c.width, c.height) / (2 << L) + 1) : c);
+    }
+    if (t === 'fx_ronglua_vet' && typeof VXM !== 'undefined' && VXM.rongDai && G.ban.some(B => (B.deck || []).indexOf('ronglua') >= 0)) { const d = VXM.rongDai(); if (d) for (const s of d) if (s && s._veG) GLR.nap(s); }
   };
   AM.chay = function (han) {
     if (!this.BAT || !NS._trongTran() || G.ketThuc || (G.dung && !NS.moDau())) return;
