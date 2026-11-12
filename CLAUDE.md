@@ -39,3 +39,4 @@ Nhánh `claude/demo-hop-tuong` chỉ chứa game **TURRET MERGE** (merge tower-d
 - **Thay đổi lớn**: chỉ chạy các bộ test liên quan; hồi quy đầy đủ (`node tools/thap-kt-hoiquy.js`) chỉ khi người dùng yêu cầu hoặc trước khi xuất bản theo `thap/QUY-TAC-HINH.md`.
 - Không dán log dài: lọc qua `tail` / `grep ✗`. Không làm GIF / ảnh ghép trừ khi người dùng yêu cầu.
 - Báo cáo giữa các phiên ≤ 8 dòng.
+- **Gen ảnh cho bản Unity thì theo `docs/demo-hop-tuong/tuvan/unity/QUY-CACH-ANH-UNITY.md`** (người dùng chốt 12/11): mọi ảnh MỚI hoặc vẽ lại dành cho Unity (ụ, quái, trùm, hiệu ứng) phải đọc file đó trước khi viết prompt, giao file đúng tên/canvas/lớp/`_diem.json` trong đó, và làm theo mục "Bổ sung — cách gen bằng ChatGPT" ở cuối file (nền hồng #FF00FF, mỗi đối tượng 1 lần gen, đầu súng xoay nòng chĩa lên chứ không "top-down", Claude tự tách nền/cắt lớp/đo điểm và tự xem ảnh xem trước). Ảnh cho bản web vẫn theo quy tắc cũ.
