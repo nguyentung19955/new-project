@@ -1591,3 +1591,7 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - Lỗi: bản nhấc khi kéo, ụ bay vào đích và bản chụp lúc ghép luôn vẽ **đầu thường** → Merge King vàng thành vương miện thường, Twin Anvil Tốc thành Anvil ST, trứng Evolver thành hộp, Blood Reaver dạng 2–4 thành dạng 1, 20 ụ grow về hình gốc, Rồng / Sói tự vẽ đầu mất dạng (cả 2D và WebGL). Riêng mặt nạ Prism Thief đã đúng khi kéo, sai khi bay.
 - Sửa một chỗ (`render.js`): `REN.hinhCua(T)` chụp hình thật (đầu ép, dạng grow, bệ riêng, hướng La Bàn); `veU` ghost của ụ thật trên bàn đọc thẳng trạng thái, bản chụp mang `_hinh`. `G.bay` thêm `ng` (ụ nguồn) ở 7 chỗ đẩy; `ghepfx.js` bản chụp thêm `_hinh`. Chỉ là hình, không đổi gameplay.
 - Kiểm: `tools/thap-kt-hinh-keo.js` (32 ụ / dạng × kéo, bóng ô gốc, bay; `?gl=0` và `?gl=1`). Ảnh: `docs/demo-hop-tuong/tuvan/che-do-dcdw/anh/b5-*.jpg`.
+
+## claude/demo-hop-tuong — HUD trận cập nhật theo thời gian (12/11)
+- `ui.js`: `UI.capNhat` (thanh dưới / trên dạng DOM) chạy tối đa ~20 lần/giây theo đồng hồ (trước: mỗi 2 khung, và MỖI khung khi khung cách nhau > 20 ms — tức đúng lúc máy đang chậm). Số mana "nảy" tối đa ~1,5 lần/giây. Chỉ hiển thị, không đổi luật. Lý do: video iPhone 12/11 03:54 (máy nóng) có khung 86–200 ms mà code chỉ 16–27 ms, cùng lúc 7–16 lần đổi DOM ở `#mana` / `#nut-trieu` / `#bo-the`.
+- Kiểm: `thap-kt-nut-trieu`, `-b3`, `-duong-dua` đạt. CHƯA kiểm trên iPhone.
