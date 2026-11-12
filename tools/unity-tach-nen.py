@@ -88,7 +88,9 @@ def nen_kin_that(rgb, d, vat_dac):
     kin = vat_dac & (d < 70)
     # lõi: mảng ≥ 7 px khớp màu nền, hoặc khe hẹp ≥ 3 px khớp gần như tuyệt đối (lửa/đá quý tím chỉ khớp lốm đốm)
     loi = co(kin & (db < 12), 3) | co(kin & (db < 6), 1)
-    return no(loi, 4) & kin & (db < 30)
+    # lan tối đa 8 px qua vùng còn giống nền (quầng lệch màu sát vật), rồi thêm 2 px mép
+    lan = lan_trong(loi, kin & (db < 25), buoc=2, toi_da=4)
+    return no(lan, 2) & kin & (db < 30)
 
 
 def key_mau(rgb, d):
@@ -96,7 +98,7 @@ def key_mau(rgb, d):
     al = np.clip((d - 65) / 60, 0, 1)
     dac = lap_lo(al >= 0.5)
     nen_kin = nen_kin_that(rgb, d, dac)
-    trong = co(dac, 3) & ~nen_kin                 # phần ruột vật (bỏ dải mép 3 px)
+    trong = co(dac, 3) & ~no(nen_kin, 4)          # phần ruột vật (bỏ dải mép 3 px và dải quanh khe nền thật)
     lo = trong & (al < 0.5)                       # ruột mà bị coi là nền = thủng
     ti_le_thung = float(lo.sum()) / max(1, int(dac.sum()))
     r, g, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
@@ -117,9 +119,12 @@ def key_mau(rgb, d):
 def key_loang(rgb, d, nguong=70):
     """Đổ loang nền từ mép ô vào; co 1 px + làm mềm mép. Dùng khi vật tím/hồng gần màu nền."""
     nen = loang_tu_mep(d < nguong)
-    nen = nen | nen_kin_that(rgb, d, ~nen)        # khe nền thật nằm kín giữa vật cũng bỏ
+    kin = nen_kin_that(rgb, d, ~nen)              # khe nền thật nằm kín giữa vật cũng bỏ
+    nen = nen | kin
     a = _L(~nen).filter(ImageFilter.MinFilter(3)).filter(ImageFilter.GaussianBlur(0.8))
     al = np.asarray(a).astype(np.float32) / 255
+    # quanh khe nền kín: viền hồng còn sót thì tách theo màu như cách `mau`
+    al = np.where(no(kin, 4), np.minimum(al, np.clip((d - 65) / 60, 0, 1)), al)
     r, g, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
     # khử ám hồng chỉ ở dải mép bán trong suốt
     m = al < 1
@@ -195,7 +200,7 @@ def lop_sang(im):
 def doc_id(s):
     """'soi:s2' → ('soi', 2, None); 'bang' → ('bang', None, None); 'laser@loang' → ép cách key riêng ô đó; '-' → None"""
     s = s.strip()
-    if s in ('', '-'):
+    if s in ('', '-', '_'):
         return None
     key = None
     if '@' in s:
@@ -218,7 +223,7 @@ def main():
     ap = argparse.ArgumentParser(description='Tách nền tờ lưới đầu ụ (nền hồng #FF00FF) cho bản Unity')
     ap.add_argument('--anh', required=True, help='tờ lưới .png')
     ap.add_argument('--luoi', required=True, help='cột x hàng, ví dụ 3x2')
-    ap.add_argument('--id', required=True, help='danh sách id theo thứ tự ô (trái→phải, trên→dưới); - = ô trống; ụ lớn dần: soi:s1,soi:s2,soi:s3; ép cách key riêng 1 ô: laser@loang')
+    ap.add_argument('--id', required=True, help='danh sách id theo thứ tự ô (trái→phải, trên→dưới); - hoặc _ = ô trống (ô đầu trống thì viết --id=-,… hoặc dùng _); ụ lớn dần: soi:s1,soi:s2,soi:s3; ép cách key riêng 1 ô: laser@loang')
     ap.add_argument('--assets', default=None, help='thư mục thap/assets (ảnh web để canh tâm xoay)')
     ap.add_argument('--ra', required=True, help='thư mục xuất')
     ap.add_argument('--canvas', type=int, default=512)
@@ -275,6 +280,11 @@ def main():
             wb = (N * 0.08, N * 0.08, N * 0.92, N * 0.92)
         s = max(wb[2] - wb[0], wb[3] - wb[1]) / float(max(bw, bh))
         cx, cy = (wb[0] + wb[2]) / 2.0, (wb[1] + wb[3]) / 2.0
+        # hình gen khác dáng ảnh web (ngang ↔ dọc) thì cạnh ngắn có thể tràn canvas → thu nhỏ cho vừa, giữ tâm
+        s_vua = min(2 * min(cx, N - cx) / (bw + 2.0), 2 * min(cy, N - cy) / (bh + 2.0))
+        if s > s_vua:
+            cb.append('dáng hình gen khác ảnh web → thu từ %.2f còn %.2f để không tràn canvas (nên soát lại hướng/dáng)' % (s, s_vua))
+            s = s_vua
         vat = phong(vat, s)
         # tâm bbox của vật (trong ảnh đã phóng) → trùng tâm bbox web
         tx = cx - ((bb[0] + bb[2]) / 2.0 - c0[0]) * s
@@ -283,7 +293,7 @@ def main():
         C.alpha_composite(vat, (max(0, round(tx)), max(0, round(ty))),
                           (max(0, -round(tx)), max(0, -round(ty))))
         fb = bbox_mat_na(np.asarray(C)[..., 3] > 128)
-        if round(tx) < 0 or round(ty) < 0 or round(tx) + vat.width > N or round(ty) + vat.height > N:
+        if cx - bw * s / 2 < -1 or cy - bh * s / 2 < -1 or cx + bw * s / 2 > N + 1 or cy + bh * s / 2 > N + 1:
             cb.append('vật tràn khỏi canvas sau khi canh')
         if s > 1.15:
             cb.append('tỉ lệ phóng %.2f > 1,15: ảnh gen nhỏ hơn cần thiết (sẽ hơi mờ)' % s)
