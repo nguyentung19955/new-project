@@ -52,3 +52,8 @@ Tổng: khoảng 12–16 tuần nếu vòng thử trên máy thật đều đặ
 2. Tài khoản Apple Developer (để cài lên iPhone qua TestFlight).
 3. Đồng ý tạo repo mới + đóng băng luật web khi vào GĐ 1.
 4. Đồng ý cổng quyết định ở GĐ 0 (không đạt mốc thì dừng).
+
+## 9. CẬP NHẬT 12/11 13:00 — người dùng chốt: LÀM TRÊN WINDOWS TRƯỚC (chưa lo build iPhone)
+- Unity Editor chạy trên Windows của người dùng; chơi thử bằng nút Play. Build iPhone (cần macOS/Xcode) để SAU.
+- Hệ quả phải nhớ: cổng hiệu năng XS Max ở Giai đoạn 0 bị LÙI lại → rủi ro làm nhiều tuần rồi mới biết máy thật có mượt không. Giảm rủi ro: (a) cảnh thử hiệu năng vẫn làm đầu tiên và đo trong Editor + bản build Windows để có số nền; (b) có điện thoại Android thì build thử ngay (không cần Mac); (c) chạy thử iPhone sớm nhất có thể khi có đường build (Mac mượn/thuê hoặc GitHub macOS).
+- Vì sao ước lượng 12–16 tuần: phần lớn KHÔNG phải thời gian gõ mã mà là số vòng "người dùng mở Unity → Play → gửi ảnh/video → sửa" (Claude không thấy được Unity), cộng khối lượng phải SOI BẰNG MẮT (512 ảnh hiệu ứng, ~25 màn giao diện, 97 ụ × dạng). Rút ngắn được nhiều nếu: script Editor tự chạy cảnh + tự chụp ảnh ra thư mục (1 lần bấm, gửi cả lô); hoặc nối phiên Claude với máy Windows qua app Claude desktop để Claude tự chạy Unity ở chế độ dòng lệnh và tự xem ảnh; và cắt phạm vi đợt đầu (chỉ CO-OP + toàn bộ ụ, chưa online / chưa cửa hàng).
