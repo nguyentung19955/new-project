@@ -8,6 +8,7 @@
 //   (tk.anh = nguồn là Image — tải THẲNG ảnh gốc, 1 lần / ảnh; tk.cvT = nguồn là canvas dựng trên CPU; cvN = số canvas còn điểm ảnh; tex = số texture; lenhTB = lệnh vẽ GL / khung; ao = số canvas ảo đã tạo)
 //   loại 'd' = canvas vẽ lại mỗi lần vẽ (_glD / canvas nháp: cụm vector, Hive lăn cầu) · 'b' = canvas vẽ lại tại chỗ (GLR.ban: tấm đếm…) · 't' = ảnh tĩnh (phải ~0 giữa trận).
 //   Khoá ảnh tĩnh: tên ảnh gốc (REN.anh) · 'c:<khoá kho đệm>' · '<gốc>#m<tầng mip>' · 'mau:<khoá tô màu>' · 'chu:<chữ>' (kho chữ của GLR) · '?<số>' (canvas khác, theo đối tượng).
+//   NONG=tệp.json: nạp bảng làm nóng window.NONG_META trước khi tải trang (xem nongskill.js NS.dsHieuUng) · kq.nong = { tên ảnh: tầng nét nhất đã vẽ } của lần chạy (nguyên liệu cho bảng đó)
 // In JSON: moDau (màn mở đầu: số khung, số lần tải) · mỗi 10 s: tải tĩnh / d / b, MB · tong: tải tĩnh / giây (mọi cỡ và nguồn ≥ 256 điểm), số khoá tải > 1 lần (+ danh sách),
 //   tải nhiều nhất 1 khung, tải tĩnh trong 2 s sau mỗi lần trùm ra (+ khoá), danh sách ảnh tĩnh tải giữa trận theo nhóm tên.
 const { chromium } = require('playwright');
@@ -75,6 +76,7 @@ const WAVE = +(process.env.WAVE || 25), D1 = process.env.D1 || 'bocap,sinhdoi,tu
     const goc = document.createElement.bind(document);
     document.createElement = function (ten, o) { const e = goc(ten, o); if (typeof ten === 'string' && ten.toLowerCase() === 'canvas') e.__tao = String(new Error().stack).split('\n').slice(2, 5).map(s => s.trim().replace(/^at /, '').replace(/https?:\/\/[^/]+\/thap\/js\//, '').replace(/\?[^:]*/, '').replace(/:\d+\)?$/, '')).join('<'); return e; };
   });
+  if (process.env.NONG) { const bang = fs.readFileSync(process.env.NONG, 'utf8'); await ctx.addInitScript('window.NONG_META = ' + bang + ';'); } // NONG=tệp.json: bảng làm nóng { id ụ | _chung | mv_<chỉ huy>: { tên ảnh: tầng } } (nongskill.js NS.dsHieuUng) — đo mức đạt được khi có bảng
   const p = await ctx.newPage(); const errs = [];
   p.on('pageerror', e => errs.push(e.message));
   await p.goto(`${BASE}index.html?notut=1&mode=coop&deck=${D1}&deck2=${D2}&wave=${WAVE}&speed=3&fill=1&auto=1&net=0&ios=1&seed=777&mana=99999&${them}`, { waitUntil: 'load' });
@@ -117,6 +119,7 @@ const WAVE = +(process.env.WAVE || 25), D1 = process.env.D1 || 'bocap,sinhdoi,tu
       nhom: Object.entries(nhom).sort((x, y) => y[1] - x[1]).slice(0, 40).map(e => e[1] + ' ' + e[0]).join(' · '), sauTrum, msTV: +s[s.length >> 1].toFixed(1), msMax: +s[s.length - 1].toFixed(1), bn: GLR.bn, wave: G.wave };
   }, GIAY);
   if (process.env.SAUJS) kq.sau = await p.evaluate(process.env.SAUJS);
+  kq.nong = await p.evaluate(() => { const o = {}; for (const t in REN.anh) { const c = REN.anh[t] && REN.anh[t]._cv; if (c && c._lvThay != null && !/^(fx_)?(trum|quai)_/.test(t)) o[t] = c._lvThay; } return o; }); // ảnh (không phải quái / trùm) đã được VẼ trong lần chạy + tầng nét nhất → nguyên liệu cho bảng NONG_META
   kq.loi = await p.evaluate(() => window.__loi || ''); kq.errs = errs.slice(0, 5);
   console.log(JSON.stringify(kq, null, 1));
   await b.close();

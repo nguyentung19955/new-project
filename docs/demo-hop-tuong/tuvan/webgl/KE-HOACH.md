@@ -335,3 +335,83 @@ Leviathan + tấm đếm, đang kéo (`ss_keo`), ghép (`ss_ghep1/2`, 7★ `ss_s
 - Huy hiệu dự phòng có chữ số (`hh2` / `hh4`, chỉ khi `hh_sao*` chưa tải) và hàng 3 ngọc `MV.hangNgoc` (đang tắt: `MV.GON`) vẫn là canvas.
 - Chưa chạy: hồi quy đầy đủ, PVP / solo, số đo 120 s sau thay đổi 7★ 2 cỡ (chỉ đo kéo–ghép ra 7★: 1 lần tải).
 - Gộp với phiên W4: `glr.js` chỉ sửa 1 dòng (`mau = … & (X.cong ? 0xffffff : -1)`) trong `GLR.ve`.
+
+## 14. Full WebGL — HIỆU ỨNG không còn dựng canvas: hoà 'color' + mặt nạ bằng shader, dải dựng trên GPU, cung = hình quạt, làm nóng ảnh gốc (12/11 — nhánh `claude/gl-full-w4`)
+
+Việc (2) (3) (4) của mục 12 + làm nóng lần dùng đầu. Chỉ hình; chỉ chạy khi ảnh ảo bật (WebGL2). `?gl=0`, `?gla=0`, WebGL1 (`?glv=1`) và đường 2D dự phòng đi các hàm dựng canvas cũ nguyên vẹn
+(mọi ảnh mới đều mang `c._dungLai` = đúng phép canvas cũ → ai đọc điểm ảnh 2D thì dựng thật).
+
+**Shader (`glr.js`, vẫn gom lô, 1 chương trình):**
+- `a_k` = kiểu tô (0–7) + 8 × q; q > 0 → **mặt nạ alpha tuyến tính** m = q / 64 − 4096 nội suy qua ô, fragment kẹp 0..1. Giải mã ở VERTEX shader (luôn có `highp`); 3 số lẻ
+  (trắng + chỉ số texture, kiểu, mặt nạ) đi chung 1 `varying vec3 v_w` → còn 6 varying (WebGL1 bảo đảm 8). Fragment vẫn sau cổng `GL_FRAGMENT_PRECISION_HIGH` cũ; mặt nạ chỉ được dùng khi ảnh ảo bật (WebGL2 = có highp).
+- **Kiểu 4 = hoà 'color' của canvas** (`fillRect` màu kiểu `'color'` rồi `'destination-in'` chính ảnh): `Cb = t.rgb / t.a`, `B = ClipColor(màu + (Lum(Cb) − Lum(màu)))`, `Lum = 0,3 R + 0,59 G + 0,11 B` (W3C Compositing),
+  kết quả nhân sẵn `= a × mix(màu, B, a)` — điểm bán trong suốt ngả về màu tô y như canvas, `a = 0 → 0` nên không viền. **Kiểu 5** = như 4 trên bản TRẮNG của ảnh (`Lum = 1 → B = trắng`).
+  **Kiểu 6** = phủ màu như kiểu 1 rồi alpha^2,2 (ảnh vòng gọn của vòng hồi chiêu: nhân sẵn nên cả 4 kênh × a^1,2).
+- `GLR.aoTu(c, { k, t, mn })`: ảnh ảo PHÁI SINH từ ảnh gốc / ảnh ảo khác (giữ ô nguồn, alpha, mặt nạ; bản trắng + kiểu 4 → kiểu 5). Tầng mip của nó (`REN.mip`) giữ mặt nạ của tầng gốc.
+- `GLR.dungG(w, h, { ve, dung })`: "canvas" mà nội dung do `ve(X)` VẼ BẰNG LỚP GL vào 1 bộ đệm khung rồi chép vào ô atlas (lớn: giữ làm texture riêng) — 1 lần; ô bị gom / mất ngữ cảnh → lần vẽ kế dựng lại trên GPU;
+  ảnh nguồn chưa lên GPU (`GLR._hut` đổi) → bỏ, khung sau thử lại.
+- `GLR.quat(X, ảnh, dx, dy, dw, dh, a0, d)`: phần hình quạt của 1 ảnh = các đa giác ≤ 90° (cắt theo ô ảnh) chung lô; 2 mép quạt khử răng cưa bằng mặt nạ tuyến tính theo khoảng cách tới mép.
+
+**Đã chuyển:**
+| nguồn canvas cũ | nay (bản GL ảnh ảo) |
+|---|---|
+| `REN.toMau` (support.js), `HU.toMau` (hieuung.js — cả `growfx` `duoiDau`, bóng trắng đầu ụ tô màu) | ảnh ảo kiểu 4 / 5 |
+| `HU.matNa` (cột sáng triệu hồi `fx_summon`, sao lên bậc `fx_starup`) + `toMau(matNa)` | ảnh ảo + mặt nạ (m tính theo toạ độ v của texture) |
+| `vfxmoi.js dung()` — 8 dải vệt lửa Rồng Máy 1016×159 | `GLR.dungG` (lát 10 ô của tờ gốc trên GPU); dựng sẵn ở màn mở đầu khi bộ bài có Rồng Máy |
+| `camgiac.js dai` — dải nổ trúng 6 khung / chớp nòng 4 khung (≤ 960×160) | `GLR.dungG`: vẽ ảnh theo tầng mip + khoét `'destination-out'` trong bộ đệm khung; phủ màu nguyên tố = ảnh nguồn kiểu tô 1 |
+| `PX.cung` — ảnh cung nướng theo góc (1/128 vòng × cỡ × màu) | `GLR.quat` trên ảnh vòng (tầng mip vừa cỡ) |
+| `PX.anhHoi` — ảnh vòng hồi chiêu gọn (alpha^2,2 bằng `getImageData`) + chuỗi mip thật | ảnh ảo kiểu 6 |
+| `camgiac` `mau()` đọc màu trội | đọc thẳng `Image` 20×20 (không dựng lại bản canvas cỡ gốc) |
+
+Chưa chuyển (ít trong vết đo): `bonglan|…` (2 / trận), `REN.glow`, `cdPhanChup` (1 / lần trùm chết), khung 4×4 của jackpot.
+
+**Làm nóng lần dùng đầu (`nongskill.js` `NS.dsHieuUng` / `NS.napGL`):** bản GL trước đây bỏ bước "vẽ thử" nên ảnh hiệu ứng chỉ lên GPU ở lần dùng đầu. Thử nạp CẢ danh sách `UI.dsTran` (290 ảnh) →
+atlas 5 trang đầy 0,87–0,99 ngay màn mở đầu, GPU +56 MB, gom atlas 6 lần / 120 s (bỏ 147 ô), đọc ngược GPU 2 lần (1 lượt dọn 154 ms) → **bỏ cách đó**. Nay chỉ nạp ảnh chắc dùng:
+hình phát bắn đầu của từng ụ (`FXU.dsAnh`: `_dan / _trung / _no / _tia`), tờ P2 / P3, `VXM.U` (gọi tải luôn nếu là ảnh tải lười), **ảnh đã vẽ ở trận trước của phiên** (`g._lvThay` — `glr.js` ghi tầng nét nhất từng vẽ),
+và bảng `NONG_META` nếu có (chưa có). Tầng nạp = tầng từng vẽ / tầng trong bảng / tầng thô nhất mà cạnh ngắn ≥ 192 điểm.
+**Không đoán trước được từ bộ bài (không có sổ đăng ký ụ → ảnh):** ảnh riêng của từng ụ nạp rải rác trong mô-đun của nó — Lucky Slot `cb_*`, Merge King `tv_ghep*`, Rồng Máy `ronglua_f2–f4_*` / `lua_t*` / `fx_wyrm_lua2*`,
+chiêu chữ ký `sig_*` / `dosig_*`, mốc sao `p1_sao3/5/7`, `lev_abyss`, `vfxp0_*`, thẻ trùm `tb_*`, ảnh chỉ huy `cmd_*` / `cf_*` — trận ĐẦU của phiên vẫn tải ở lần dùng đầu (mỗi ảnh 1–2 lần); từ trận thứ 2 cùng phiên thì đã học.
+Quái / trùm vẫn nạp trước 3 wave giữa trận (hàng nạp nền, khung nhẹ) như mục 10.
+
+**Số đo** (`tools/thap-kt-tai-gl.js`, co-op 3×, `ios=1`, wave 25 → 49, 120 s, Chromium + GPU phần mềm → chỉ SỐ ĐẾM có nghĩa; "trước" = `74582a0`):
+A = bộ `bocap,sinhdoi,tudo,cobac,saochep` + `leviathan,ronglua,nemesis,khoisinh,vughep` · B (nhiều hiệu ứng) = `ronglua,lualien,leviathan,overlord,nhatthuc` + `lophanung,orbital,wallgen,vungdoc,drone`.
+| | A trước | A sau | B trước | B sau |
+|---|---|---|---|---|
+| màn mở đầu: tải canvas / tải Image / MB canvas + GPU | 32 / 88 / 37 + 53 = 90 | 28 / 136 / 26 + 76 = 102 | 34 / 90 / 37 + 53 = 90 | 29 / 149 / 26 + 94 = 121 |
+| tải canvas → texture, cả 120 s (/ giây) | 154 (1,28) | 131 (1,09) | 123 (1,02) | 112 (0,93) |
+| … sau 10 s đầu (/ giây) | 61 (0,55) | 48 (0,44) | 59 (0,54) | 64 (0,58) |
+| … 60 s cuối (/ giây) | 4 (0,07) | 6 (0,10) | 3 (0,05) | 17 (0,28) |
+| tải Image → texture, cả 120 s (/ giây) | 139 (1,16) | 131 (1,09) | 161 (1,34) | 139 (1,16) |
+| … sau 10 s đầu (/ giây) | 54 (0,49) | 58 (0,53) | 78 (0,71) | 77 (0,70) |
+| … 60 s cuối (/ giây) | 18 (0,30) | 17 (0,28) | 29 (0,48) | 37 (0,62) |
+| tải tĩnh nhiều nhất 1 khung | 4 | 4 | 4 | 4 |
+| canvas đệm còn điểm ảnh: MB (số canvas) lúc 10 · 60 · 120 s | 43 (221) · 41 (198) · 40 (204) | 33 (186) · 23 (190) · 23 (181) | 42 (198) · 40 (185) · 42 (190) | 29 (153) · 22 (154) · 22 (189) |
+| MB GPU lúc 10 · 60 · 120 s | 80 · 123 · 122 | 98 · 118 · 125 | 95 · 132 · 125 | 117 · 131 · 123 |
+| tổng MB canvas + GPU | 123 · 164 · 162 | 132 · 141 · 149 | 137 · 173 · 166 | 145 · 153 · 145 |
+| số texture | 19 · 27 · 24 | 22 · 26 · 25 | 23 · 24 · 19 | 26 · 24 · 18 |
+| lệnh vẽ GL / khung (trung bình tới lúc đó) | 129,5 · 173,3 · 197 | 118 · 174,2 · 206,9 | 123,2 · 192,7 · 209,4 | 169 · 213,6 · 214,7 |
+| lần gom atlas · đọc ngược GPU | 0 · 0 | 0 · 0 | 0 · 0 | 1 · 0 |
+| ảnh dựng trên GPU (`dungG`) | 0 | 21 | 0 | 26 |
+
+Tải canvas → texture theo NƠI TẠO (cả 120 s sau màn mở đầu), phần HIỆU ỨNG: A trước 26 (10 + 1 `camgiac dai` 960×160, 8 `vfxmoi dung` 1016×159, 3 tầng mip của `matNa` 633×115, 3 `HU.toMau` 1116×186, 1 `matNa` 1266×211) → sau 0;
+B trước 32 (14 `camgiac dai`, 8 `vfxmoi dung`, 9 tầng mip, 1 `toMau`) → sau @@BHU@@. Còn lại sau (A / B): huy hiệu sao `hh…` 81 / 68 + bệ `than|…` 8 / 5 (phiên W3), tờ chữ `chugl.js` 512×249 lần đầu 31 / 21, `bonglan` 2 / 2, `glow` 1, `cdPhanChup` / `cdChup` 1 / 3, jackpot 4×4 1.
+Số tải Image giữa trận gần như không đổi (A 139 → ~130, B 161 → ~140): phần lớn là ảnh riêng của từng ụ không liệt kê trước được (xem trên) + quái / trùm nạp trước 3 wave; 2 lần chạy cùng mã lệch ±3 % (bộ hẹn giờ thật).
+`PX.cung` không xuất hiện trong 2 vết đo (vòng hồi chiêu không vẽ khi tự đánh) — đã chuyển + kiểm bằng công cụ so hình.
+
+**Kiểm:**
+- `tools/thap-kt-gl-hieuung.js` (mới): mỗi họ hiệu ứng vẽ 2 lần cạnh nhau TRONG CÙNG 1 khung GL — trái = đường GPU, phải = canvas dựng bằng hàm CPU cũ: 109 ca ✓ — tô 'color' theo màu 10 ụ hỗ trợ × 3 ảnh + 7 màu × `fx_link / fx_evolve / fx_awaken`
+  (0 điểm lệch > 24 mức, lệch sắc ≤ 0,3°), mặt nạ `fx_summon / fx_starup` (0 điểm > 24), `toMau(matNa)` (≤ 749 điểm > 24 trên 110 nghìn, 0 điểm > 60), bản trắng đầu ụ 6 ụ, 8 dải vệt lửa (khớp), dải camgiac 20 dải
+  (lệch trung bình ≤ 3,1 mức, sắc ≤ 2,1° — do GPU thu bằng tầng mip + song tuyến tính thay lọc 'high' của canvas), 9 cung (≤ 26 điểm > 24 ở mép). Ảnh: `/home/claude/xem/gl-full-w4/hu_0..7.png`, `xem_*.png`.
+- Ảnh CÙNG trạng thái trong trận (co-op bộ B, khung 500 và 900, 390×844 DPR 3, `SOSANH=1`): GL mới ↔ GL bản trước (`74582a0`, hiệu ứng còn dựng canvas) lệch > 40 mức ở **3 / 0 điểm ảnh** trên 2,96 triệu;
+  GL ↔ 2D: 3 941 / 3 525 điểm (bản trước: 3 953 / 3 536 — khác biệt sẵn có của lớp GL, không do đợt này). Ảnh: `coop_B_500_gl1.png / _gl0.png`, `coop_B_900_…`.
+- Băm trạng thái có vẽ (`HASH=450,900`) gl=1 = gl=0: cảnh A `8b4f420b` / `2f83154d`, cảnh B (nhiều hiệu ứng) `dc4831e1` / `318d8f3d`.
+- `MAT=200,320` (co-op bộ nhiều hiệu ứng): 2D dự phòng đủ hình (ảnh ảo + ảnh dựng GPU dựng thật qua hàm cũ) → GL lại, 0 lỗi trang, `veChet` 0. `?gl=1`, `?gla=0`, `?glv=1` (WebGL1: shader mới biên dịch được), `?gl=0`: tải trận không lỗi, cùng băm.
+
+**Giới hạn / cần xem trên iPhone thật:**
+- Kiểu 4 / 5 và mặt nạ chỉ mới chạy trên SwiftShader; công thức chia `t.rgb / t.a` + rẽ nhánh — GPU thật khác độ chính xác ở điểm alpha rất nhỏ (kỳ vọng không thấy bằng mắt).
+- Dải dựng trên GPU dùng bộ đệm khung tạm + `copyTexSubImage2D` (cùng chuỗi lệnh `aoKiem` đã thử lúc khởi tạo). Ảnh nguồn chưa lên GPU → hiệu ứng nổ trúng đầu tiên của 1 loại đạn có thể trễ 1–vài khung.
+- Mép quạt của vòng hồi chiêu khử răng cưa theo khoảng cách (không phải lấy mẫu phủ như canvas) — chỉ khác ở 1 điểm ảnh mép.
+- Làm nóng thêm ~44 ảnh ở màn mở đầu (GPU cuối màn mở đầu 53 → 76 MB (A) / 94 MB (B); giữa trận tổng không đổi vì trần atlas 5 trang).
+
+**Việc kế:** (1) sinh `thap/js/nong-meta.js` = bảng `NONG_META[id ụ] = { tên ảnh: tầng }`: chạy `tools/thap-kt-tai-gl.js` từng ụ (bàn chỉ 1 loại ụ), lấy `kq.nong` trừ đi phần chung → hết tải lần đầu ngay từ trận đầu của phiên;
+(2) `bonglan` = `GLR.dungG` + kiểu hoà `'destination-in'`; (3) số còn lại của canvas → texture là huy hiệu sao `hh…` + bệ `than|…` (phiên W3) và tờ chữ lần đầu của `chugl.js`.
