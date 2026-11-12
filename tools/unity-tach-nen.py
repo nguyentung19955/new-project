@@ -77,18 +77,25 @@ def khoang_cach_hong(rgb):
     return np.sqrt(((rgb - HONG) ** 2).sum(2))
 
 
-def nen_kin_that(d, vat_dac):
-    """Mảng nền hồng THẬT nằm kín giữa vật (khe giữa các bộ phận): có lõi rất gần màu nền."""
+def nen_kin_that(rgb, d, vat_dac):
+    """Mảng nền THẬT nằm kín giữa vật (khe giữa xích và thân…), phân biệt với bộ phận tím/hồng của vật:
+    nền ChatGPT rất phẳng (99% điểm lệch < 6 so với màu nền giữa ô) còn đá quý / thân hồng thì lệch > 25."""
+    ngoai = co(loang_tu_mep(d < 70), 4)
+    if int(ngoai.sum()) < 50:
+        return np.zeros(d.shape, bool)
+    mau_nen = np.median(rgb[ngoai], axis=0)
+    db = np.sqrt(((rgb - mau_nen) ** 2).sum(2))
     kin = vat_dac & (d < 70)
-    loi = co(kin & (d < 40), 1)
-    return lan_trong(loi, kin)
+    # lõi: mảng ≥ 7 px khớp màu nền, hoặc khe hẹp ≥ 3 px khớp gần như tuyệt đối (lửa/đá quý tím chỉ khớp lốm đốm)
+    loi = co(kin & (db < 12), 3) | co(kin & (db < 6), 1)
+    return no(loi, 4) & kin & (db < 30)
 
 
 def key_mau(rgb, d):
     """Tách theo khoảng cách màu tới hồng; khử ám hồng ở mép; vá lỗ thủng nằm sâu trong thân."""
     al = np.clip((d - 65) / 60, 0, 1)
     dac = lap_lo(al >= 0.5)
-    nen_kin = nen_kin_that(d, dac)
+    nen_kin = nen_kin_that(rgb, d, dac)
     trong = co(dac, 3) & ~nen_kin                 # phần ruột vật (bỏ dải mép 3 px)
     lo = trong & (al < 0.5)                       # ruột mà bị coi là nền = thủng
     ti_le_thung = float(lo.sum()) / max(1, int(dac.sum()))
@@ -104,14 +111,13 @@ def key_mau(rgb, d):
     b2 = np.where(va, b, b2)
     al = np.where(va, 1.0, al)
     out = np.dstack([r2, g, b2, al * 255]).clip(0, 255).astype(np.uint8)
-    return out, ti_le_thung, int(va.sum()), float(nen_kin.sum()) / max(1, int(dac.sum()))
+    return out, ti_le_thung, int(va.sum())
 
 
 def key_loang(rgb, d, nguong=70):
     """Đổ loang nền từ mép ô vào; co 1 px + làm mềm mép. Dùng khi vật tím/hồng gần màu nền."""
     nen = loang_tu_mep(d < nguong)
-    # mảng hồng kín giữa vật KHÔNG bỏ (không phân biệt được khe nền thật với thân hồng) → chỉ đo để cảnh báo
-    ti_le_kin = float(nen_kin_that(d, ~nen).sum()) / max(1, int((~nen).sum()))
+    nen = nen | nen_kin_that(rgb, d, ~nen)        # khe nền thật nằm kín giữa vật cũng bỏ
     a = _L(~nen).filter(ImageFilter.MinFilter(3)).filter(ImageFilter.GaussianBlur(0.8))
     al = np.asarray(a).astype(np.float32) / 255
     r, g, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
@@ -120,21 +126,19 @@ def key_loang(rgb, d, nguong=70):
     lim = np.maximum(g, np.minimum(r, b) * al)
     r2 = np.where(m, np.minimum(r, lim + (r - lim) * al), r)
     b2 = np.where(m, np.minimum(b, lim + (b - lim) * al), b)
-    return np.dstack([r2, g, b2, al * 255]).clip(0, 255).astype(np.uint8), ti_le_kin
+    return np.dstack([r2, g, b2, al * 255]).clip(0, 255).astype(np.uint8)
 
 
 def tach_nen(o, cach):
-    """Trả (ảnh RGBA numpy, cách đã dùng, tỉ lệ thủng của cách `mau`, số điểm đã vá, tỉ lệ mảng hồng kín)."""
+    """Trả (ảnh RGBA numpy, cách đã dùng, tỉ lệ thủng của cách `mau`, số điểm đã vá)."""
     rgb = np.asarray(o.convert('RGB')).astype(np.float32)
     d = khoang_cach_hong(rgb)
     if cach == 'loang':
-        out, kin = key_loang(rgb, d)
-        return out, 'loang', None, 0, kin
-    out, thung, va, kin = key_mau(rgb, d)
+        return key_loang(rgb, d), 'loang', None, 0
+    out, thung, va = key_mau(rgb, d)
     if cach == 'tu-dong' and thung > 0.02:
-        out, kin = key_loang(rgb, d)
-        return out, 'loang', thung, 0, kin
-    return out, 'mau', thung, va, kin
+        return key_loang(rgb, d), 'loang', thung, 0
+    return out, 'mau', thung, va
 
 
 def bo_nhieu(a):
@@ -142,6 +146,12 @@ def bo_nhieu(a):
     (bông tuyết, ngôi sao, sóng tín hiệu, khói…)."""
     m = a[..., 3] > 40
     giu = lan_trong(co(m, 2), m)
+    # mẩu nhỏ dính mép ô = phần của hình ô bên lấn sang → bỏ (vật to chạm mép thì giữ và cảnh báo sau)
+    mep = np.zeros(m.shape, bool)
+    mep[:2, :] = mep[-2:, :] = mep[:, :2] = mep[:, -2:] = True
+    lan = lan_trong(mep & m, m)
+    if 0 < int(lan.sum()) < 0.005 * m.size:
+        giu &= ~lan
     a = a.copy()
     a[..., 3] = np.where(giu, a[..., 3], 0)
     return a
@@ -236,7 +246,7 @@ def main():
         x0, y0 = (k % nx) * cw, (k // nx) * ch
         o = to.crop((x0, y0, x0 + cw, y0 + ch))
         # 1. tách nền
-        px, cach, thung, va, kin = tach_nen(o, key_rieng or a.key)
+        px, cach, thung, va = tach_nen(o, key_rieng or a.key)
         # 2. cắt theo bbox, bỏ nhiễu
         px = bo_nhieu(px)
         bb = bbox_mat_na(px[..., 3] > 128)
@@ -247,9 +257,6 @@ def main():
             cb.append('vật chạm mép ô (có thể bị cắt cụt hoặc lấn sang ô bên)')
         if cach == 'mau' and thung is not None and thung > 0.004:
             cb.append('cách mau thủng %.1f%% thân (đã vá %d điểm) — nhìn kỹ ảnh xem trước' % (thung * 100, va))
-        if kin > 0.01:
-            cb.append('có mảng hồng kín trong thân %.1f%% (%s) — khe nền thật hay thân hồng? nhìn ảnh xem trước, cần thì ép <id>@%s'
-                      % (kin * 100, 'đã bỏ' if cach == 'mau' else 'đang giữ', 'loang' if cach == 'mau' else 'mau'))
         le = 3
         c0 = (max(0, bb[0] - le), max(0, bb[1] - le), min(cw, bb[2] + le), min(ch, bb[3] + le))
         vat = Image.fromarray(px, 'RGBA').crop(c0)
