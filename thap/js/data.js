@@ -48,6 +48,17 @@ const QUAI = {
   bay_dan:  { ten: TEXT.mob.bay_dan,  hp: 0.5, v: 44, co: 28, tim: 1, anh: 'tach', mana: 0.5 },
   toc_hanh: { ten: TEXT.mob.toc_hanh, hp: 0.9, v: 60, co: 38, tim: 1, khangCham: true, anh: 'bo', mana: 1 },
   tinh_anh: { ten: TEXT.mob.tinh_anh, hp: 12, v: 20, co: 66, tim: 2, to: true, anh: 'khong_lo', mana: 10 },
+  // 12/11 BỐN QUÁI MỚI (người dùng duyệt 11/11; ảnh quai_<id>.png cắt từ thap-art/raw_quai_moi.png). Mạnh nhờ CƠ CHẾ, không nhờ chỉ số:
+  //   mỗi con THAY một con sẵn có cùng hệ số mana (Shield Beetle thay Giant · Healer thay Crawler · Exploder thay 2 Swarmling · Wisp thay Runner)
+  //   → số quái mỗi wave không tăng, tổng mana giết mỗi wave không đổi. Luật ở game.js (tìm "QUÁI MỚI"); không ảnh hưởng trùm.
+  //   khien: khiên = hs × máu thân, hứng đòn TRƯỚC thân; mỗi đòn gỡ tối đa 1/don khiên (ít nhất `don` đòn mới vỡ), còn khiên thì thân không mất máu.
+  //   hoi:   mỗi cd giây hồi pct × máu tối đa cho quái thường khác trong bán kính r (không hồi mình, không hồi trùm); đang bị choáng / đóng băng thì không hồi.
+  //   no:    chết → sau tre giây nổ: mỗi bàn, tối đa `so` ụ gần nhất trong bán kính r bị CHOÁNG giay giây (không bắn; vẫn kéo / ghép được). Lọt cổng thì không nổ.
+  //   an:    tàng hình (ụ không nhắm được, đạn đang bay vẫn trúng) trên các đoạn [từ, tới] tính theo phần đường đã đi; 42% đường cuối luôn hiện.
+  bo_khien: { ten: TEXT.mob.bo_khien, hp: 2.8, v: 24, co: 50, tim: 1, mana: 4, khien: { hs: 0.4, don: 2 } },
+  nam_hoi:  { ten: TEXT.mob.nam_hoi,  hp: 0.7, v: 28, co: 46, tim: 1, mana: 1, hoi: { cd: 3, pct: 0.05, r: 70 } },
+  ca_no:    { ten: TEXT.mob.ca_no,    hp: 1.0, v: 40, co: 46, tim: 1, mana: 1, no: { tre: 0.5, r: 110, so: 2, giay: 1.5 } },
+  ma_troi:  { ten: TEXT.mob.ma_troi,  hp: 0.7, v: 46, co: 44, tim: 1, mana: 1, an: [[0.15, 0.3], [0.45, 0.58]] },
 };
 
 // TRÙM (trum_<id>.png: khung 0–2 đi, khung 3 tung chiêu) — mỗi 10 wave, lọt mất 2 tim
@@ -192,13 +203,22 @@ function manaGiet(w) { return Math.round(manaGietGoc(w) * (1 + MANA_GIET_K * Mat
 function soQuaiWave(w) { return Math.min(20, 8 + Math.floor(w / 4)); }
 const CHU_DE = ['trum', 'hon', 'baydan', 'khongkich', 'thietgiap', 'tinhanh', 'hon', 'tochanh', 'phanbao', 'honloan'];
 function chuDeWave(w) { return CHU_DE[((w % 10) + 10) % 10]; }
+// 12/11 QUÁI MỚI — wave đầu tiên từng loại được ra (theo số wave; chủ đề quyết định wave nào thật sự có):
+//   Shield Beetle: Hỗn hợp từ wave 11 (ô Giant thứ 1, 3… → Beetle) · Thiết giáp từ wave 14 (Giant thứ 2, 4… → Beetle)
+//   Healer: Tinh anh từ wave 15 (1 hộ vệ đi ngay sau Elite; 2 từ wave 35) · Hỗn hợp từ wave 16 (con thứ 3 và thứ 9 nếu là Crawler)
+//   Exploder: Bầy đàn từ wave 22 (cứ 8 Swarmling thì 2 con gộp thành 1 Exploder) — Hỗn loạn có nửa Bầy đàn cũng vậy
+//   Wisp: Tốc hành từ wave 27 (cứ 4 Runner thì con thứ 4 là Wisp) — Hỗn loạn có nửa Tốc hành cũng vậy
+const QUAI_MOI_TU = { bo_khien: 11, nam_hoi: 15, ca_no: 22, ma_troi: 27 };
 const CHU_DE_LAM = {
-  hon(w, n, r) { const ds = []; for (let i = 0; i < n; i++) { const x = r(); let id = 'bo'; if (w >= 2 && x < 0.2) id = 'bay'; else if (w >= 8 && x < 0.3) id = 'bay_bang'; if (w >= 4 && i % 6 === 5) id = 'khong_lo'; ds.push(id); } return ds; },
-  baydan(w, n) { return Array(Math.round(n * 1.8)).fill('bay_dan'); },
+  hon(w, n, r) { const ds = []; for (let i = 0; i < n; i++) { const x = r(); let id = 'bo'; if (w >= 2 && x < 0.2) id = 'bay'; else if (w >= 8 && x < 0.3) id = 'bay_bang';
+    if (w > QUAI_MOI_TU.nam_hoi && id === 'bo' && i % 6 === 2) id = 'nam_hoi';
+    if (w >= 4 && i % 6 === 5) id = w >= QUAI_MOI_TU.bo_khien && ((i / 6) | 0) % 2 === 0 ? 'bo_khien' : 'khong_lo'; ds.push(id); } return ds; },
+  baydan(w, n) { const m = Math.round(n * 1.8); if (w < QUAI_MOI_TU.ca_no) return Array(m).fill('bay_dan');
+    const ds = []; for (let i = 0; i < m; i++) { if (i % 8 === 4 && i + 1 < m) { ds.push('ca_no'); i++; } else ds.push('bay_dan'); } return ds; },
   khongkich(w, n, r) { const ds = []; for (let i = 0; i < n; i++) ds.push(w >= 8 && r() < 0.4 ? 'bay_bang' : 'bay'); return ds; },
-  thietgiap(w, n) { return Array(Math.max(2, Math.round(n / 3.2))).fill('khong_lo'); },
-  tinhanh(w, n) { return ['tinh_anh'].concat(Array(Math.round(n * 0.5)).fill('bo')); },
-  tochanh(w, n) { return Array(Math.round(n * 0.9)).fill('toc_hanh'); },
+  thietgiap(w, n) { const ds = Array(Math.max(2, Math.round(n / 3.2))).fill('khong_lo'); return w >= QUAI_MOI_TU.bo_khien + 3 ? ds.map((id, i) => (i % 2 === 1 ? 'bo_khien' : id)) : ds; },
+  tinhanh(w, n) { const ds = ['tinh_anh'].concat(Array(Math.round(n * 0.5)).fill('bo')); if (w >= QUAI_MOI_TU.nam_hoi) { ds[1] = 'nam_hoi'; if (w >= 35) ds[2] = 'nam_hoi'; } return ds; },
+  tochanh(w, n) { const ds = Array(Math.round(n * 0.9)).fill('toc_hanh'); return w >= QUAI_MOI_TU.ma_troi ? ds.map((id, i) => (i % 4 === 3 ? 'ma_troi' : id)) : ds; },
   phanbao(w, n) { const m = Math.max(3, Math.round(n * 0.45)), ds = []; for (let i = 0; i < m; i++) ds.push(w >= 30 && i % 4 === 3 ? 'que_tach' : 'tach'); return ds; },
 };
 // danh sách quái 1 wave THƯỜNG. c (tuỳ chọn) = luật sinh của Leo Tháp / Thử thách: c.n (× số quái) · c.kl (cứ c.kl con có 1 Giant) · c.bay (tỉ lệ Crawler đổi thành quái bay)

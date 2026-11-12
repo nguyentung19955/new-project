@@ -714,7 +714,7 @@ Object.assign(REN, {
     if (lanh && !s.dong && c('cham')) s.cham = 1;
     if (E.docT > 0 && c('doc')) s.doc = 1;
     if (E.chayT > 0 && c('chay')) s.chay = 1;
-    if ((E.cvT > 0 || E.cvPT > 0) && c('cauvong')) s.yeu = 'cauvong'; else if (E.giapT > 0 && !E.khien && c('khienvang')) s.yeu = 'khienvang'; // Prism Warden (E.khien): vỏ lăng kính riêng ở trumvfx.js — không phủ khiên vàng che thân else if (E.yeu > 0 && c('yeu')) s.yeu = 'yeu';
+    if ((E.cvT > 0 || E.cvPT > 0) && c('cauvong')) s.yeu = 'cauvong'; else if ((E.kh > 0 || (E.giapT > 0 && !E.khien)) && c('khienvang')) s.yeu = 'khienvang'; // E.kh: khiên Shield Beetle (QUÁI MỚI) còn → vòng khiên vàng // Prism Warden (E.khien): vỏ lăng kính riêng ở trumvfx.js — không phủ khiên vàng che thân else if (E.yeu > 0 && c('yeu')) s.yeu = 'yeu';
     // VFX P0 (REVIEW-VFX-93 II.I): tối đa 2 dấu trạng thái mỗi quái — ưu tiên khống chế cứng > sát thương theo thời gian > dấu suy yếu > chậm
     //  (mỗi trạng thái 1 hình riêng: đóng băng = khối tinh thể · choáng = sao vàng quay · cháy = lửa · độc = bọt xanh · lộ/dấu = vòng tím nứt / cầu vồng / khiên vàng · chậm = vòng gió lạnh)
     let n = 0;
@@ -758,6 +758,15 @@ Object.assign(REN, {
       ctx.save(); ctx.translate(N.x, N.y); ctx.globalAlpha = u < 0.75 ? 1 : 1 - (u - 0.75) / 0.25;
       this.khung0(ctx, d, this.khungDanh(u, d.nf), N.co * (1 + 0.08 * u)); ctx.restore();
     }
+    // QUÁI MỚI — Exploder vừa chết: cá nóc phình (khung 3) to dần + chớp trắng nhanh dần trong lúc chờ nổ (G.boNo; chỉ hình, luật ở game.js noChoang)
+    if (G.boNo) for (const o of G.boNo) {
+      const d = this.coDai('quai_ca_no', o.co * 1.5); if (!d) continue;
+      const u = clamp(1 - o.t / o.t0, 0, 1), C = o.co * (1 + 0.5 * u), nh = 0.5 + 0.5 * Math.sin(u * u * 38);
+      ctx.save(); ctx.translate(o.x, o.y); ctx.globalAlpha = 1; this.khung0(ctx, d, 2, C);
+      if (ctx.laGL) { ctx.globalAlpha = 0.65 * nh * u; ctx.trang = 1; this.khung0(ctx, d, 2, C); ctx.trang = 0; }
+      else { const w = this.coDai('quai_ca_no', o.co * 1.5, 'trang'); if (w) { ctx.globalAlpha = 0.65 * nh * u; this.khung0(ctx, w, 2, C); } }
+      ctx.restore();
+    }
     ctx.globalAlpha = 1;
     const bong = this.bong1(), dong = G.quai.length > 30, dong2 = G.quai.length > 60, M = ctx.getTransform(); // dong2 (11/11): đường đặc quái → bỏ hoà 2 khung (mỗi quái bớt 1 lần vẽ thân; chỉ hình)
     for (const E of G.quai) {
@@ -767,6 +776,7 @@ Object.assign(REN, {
       // ---- chết: chuyển thành "xác nổ" chạy theo thời gian thực (lọt cổng thì biến mất luôn) ----
       if (E.chet) {
         if (E._rigOn && !E._pop && E.tChet < 0.25) { this.rigChetDat(E); continue; } // trùm rig: chết theo rig (bảng 10.5)
+        if (!E._pop && E.tChet < 0.25 && dai && E.d.no && E.tChet < 1) E._pop = 1; // Exploder: không "xác nổ" — thay bằng cá nóc phình chờ nổ (G.boNo)
         if (!E._pop && E.tChet < 0.25 && dai) {
           E._pop = 1;
           // nổ đúng hướng nhìn + đúng dải đang vẽ: chết giữa lúc tung chiêu → dải chiêu ở cỡ ×ATK_K (trước đây vẽ dải chiêu ở cỡ dải đi → trùm co lại 1/1.5 khi chết)
@@ -812,6 +822,9 @@ Object.assign(REN, {
       let x = E.x - (E.trum ? 0 : hx * kb), y = E.y + hover - (E.trum ? kb * 0.4 : hy * kb);
       let sc = 0.6 + 0.4 * (E.vao * E.vao * (3 - 2 * E.vao)); // xuất hiện êm
       sc *= 1 - 0.035 * he; // nén nhẹ khi trúng đòn
+      // QUÁI MỚI — Wisp tàng hình: mờ dần về 30% + lung linh nhẹ (chỉ hình, thời gian thực); luật nhắm = E.an (game.js)
+      let alQ = 1;
+      if (E.d.an) { const dich = E.an ? 0.3 : 1; E._anA = E._anA == null ? dich : E._anA + (dich - E._anA) * Math.min(1, dt * 7); alQ = E._anA * (E.an ? 0.85 + 0.15 * Math.sin(t * 9 + E.uid) : 1); }
       const rg = E.trum ? this.rigCua(E) : null; // trùm rig nhiều lớp (TRUM_RIG) — có thì bỏ qua TRUM_ANIM_CODE
       const cf = rg ? null : this.cdCf(E), kcd = E.trum ? kc : K8[E.d.anh || E.id] || 1; // quái code: ảnh gốc cùng cỡ ô dải 8 khung → luôn K8
       const cd = cf ? this.cdTinh(E, cf, co, kcd, sc, he, t, dt, x, y) : null;
@@ -825,7 +838,7 @@ Object.assign(REN, {
       E._rigOn = !!rg; E._cdOn = !!cd; if (cd) { E._cdOx = cd.ox + lech; E._cdOy = cd.oy; }
       // ---- bóng ----
       const bco = co * (bay ? 0.62 : 0.78) * sc * (bay ? 1 - (hover + 6) * 0.02 : 1) * (cd ? cd.bs : 1); // trùm code: bóng nhỏ lại khi nảy/bay lên
-      ctx.globalAlpha = (bay ? 0.32 : 0.5) * (cd ? 0.6 + 0.4 * cd.bs : 1);
+      ctx.globalAlpha = (bay ? 0.32 : 0.5) * (cd ? 0.6 + 0.4 * cd.bs : 1) * alQ;
       if (bong && !rg) ctx.drawImage(REN.mip(bong, bco * REN.s * REN.dpr), E.x + lech + 2 - bco / 2, E.y + 4 + (bay ? 8 : 0) - bco * 0.42, bco, bco * 0.84);
       ctx.globalAlpha = 1;
       // ---- quầng báo chiêu của trùm ----
@@ -892,8 +905,8 @@ Object.assign(REN, {
           E._tHv = tS || ten; E._lat = lat; E._kHv = 1;
         };
         const u = (t - E._hvT) / HUONG_HOA;
-        lop(E._hv, E._hl, 1);
-        if (u < 1 && E._hvCu && !dD && !HUONG_CHUNG.has(ten.replace(/_8$/, ''))) { const tN = E._tHv, lN = E._lat; lop(E._hvCu, E._hlCu, 1 - u * u * (3 - 2 * u)); E._tHv = tN; E._lat = lN; } // hướng cũ mờ dần 120 ms
+        lop(E._hv, E._hl, alQ);
+        if (u < 1 && E._hvCu && !dD && !HUONG_CHUNG.has(ten.replace(/_8$/, ''))) { const tN = E._tHv, lN = E._lat; lop(E._hvCu, E._hlCu, (1 - u * u * (3 - 2 * u)) * alQ); E._tHv = tN; E._lat = lN; } // hướng cũ mờ dần 120 ms
         E._gv = rot;
         ctx.setTransform(M); ctx.globalAlpha = 1;
       }
@@ -901,6 +914,18 @@ Object.assign(REN, {
       if (E.docT > 0 && !st.doc && Math.random() < 0.06) FX.hat1('lua', x + rnd(-8, 8), y, 0, -20, 0.5, 6, '#9dff5a');
       // ---- thanh máu (không lắc theo nhún để dễ đọc) ----
       const yb = E.y + hover;
+      if (E.khMax) { // QUÁI MỚI — Shield Beetle: thanh khiên vàng trên thanh máu; khiên vỡ → vòng khiên bung to rồi tan (0,35 s thời gian thực)
+        if (E.kh > 0) { const w = Math.max(18, co * 0.55), xx = E.x + lech - w / 2, yy = yb - co * 0.42 - 5, tl = E.kh / E.khMax; this.sauThanh(() => PX.thanh(ctx, xx, yy, w, 3, tl, '#ffd23f')); }
+        else { if (E._voT == null) E._voT = t; const u = (t - E._voT) / 0.35; if (u < 1) { this.anhGiua(ctx, 'fx_st_khienvang', x, y, co * (1.1 + 0.9 * u), 0, 0.8 * (1 - u) * (1 - u)); ctx.globalAlpha = 1; } }
+      }
+      if (E.d.hoi && E.hoiNhip != null) { // Healer: vòng hồi xanh toả từ nấm ra hết bán kính hồi (0,45 s thời gian thực; vòng = ảnh fx_vong_mong tô xanh)
+        if (E._hoiN !== E.hoiNhip) { E._hoiN = E.hoiNhip; E._hoiT = t; }
+        const u = (t - E._hoiT) / 0.45;
+        if (u >= 0 && u < 1) { const a = this.toMauA('fx_vong_mong', '#7dffa0', 0.9), R2 = E.d.hoi.r * 2 * (0.25 + 0.75 * (1 - (1 - u) * (1 - u))); ctx.save(); ctx.globalCompositeOperation = 'lighter'; this.anhGiua(ctx, a, x, y, R2, 0, 0.75 * (1 - u)); ctx.restore(); ctx.globalAlpha = 1; }
+      }
+      if (E.hoiFx != null && t - (E._hoiFxT == null || E._hoiFx !== E.hoiFx ? (E._hoiFx = E.hoiFx, E._hoiFxT = t) : E._hoiFxT) < 0.3) { // quái vừa được hồi: loé xanh ngắn
+        ctx.save(); ctx.globalCompositeOperation = 'lighter'; this.anhGiua(ctx, this.cham1('#7dffa0'), x, y, co * 1.1, 0, 0.45 * (1 - (t - E._hoiFxT) / 0.3)); ctx.restore(); ctx.globalAlpha = 1;
+      }
       if (E.hp < E.max && !E.trum) {
         const w = Math.max(18, co * 0.55), yy = yb - co * 0.42;
         const xx = E.x + lech - w / 2, tl = E.hp / E.max, mm = E.docT > 0 ? '#7cff4a' : (lanh ? '#6fd8ff' : '#ff4a4a');

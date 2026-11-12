@@ -29,7 +29,7 @@ const KG = {
     if (k && k.dang) return k.T;
     const c = UI.chonGhep; if (!c) return null;
     const B = G.ban[0];
-    if (!B || B.t[c.T.o] !== c.T || G.ketThuc || G.dung || performance.now() - c.t0 > this.CHON_S * 1000) { UI.chonGhep = null; return null; }
+    if (!B || B.t[c.T.o] !== c.T || G.ketThuc || G.dung || (performance.now() - c.t0 > this.CHON_S * 1000 && !(UI.xemU && UI.xemU.T === c.T && !document.getElementById('tt').hidden))) { UI.chonGhep = null; return null; } // 12/11: dải thông tin của ụ còn mở thì lựa chọn còn hiệu lực (trước: dải còn mà gợi ý đã tắt)
     return c.T;
   },
   // ô đích đang rê (chỉ khi kéo)
