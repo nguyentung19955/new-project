@@ -153,6 +153,7 @@ const GLR = (() => {
 
   const R = {
     bat: false, lyDo: '', phien: 0, gl: null, cv: null, x: null, cvVe: null, xVe: null, mat: false, dangVe: false, hien: false,
+    riengMax: RIENG_MAX, trangMax: TRANG_MAX, // (napsan.js đọc: nạp nền ngừng khi gần chạm ngân sách)
     thieu: {}, dem: { lenh: 0, o: 0, tai: 0, px: 0, vec: 0, chu: 0, nap: 0 }, demPx: false, f: 0, _fDung: 0, _taiDv: 0, _taiTha: true, _msK: 0, _tK: 0, _nhe: true, soat: null,
     _kt: null, _dich: null, _bb: null, _vCo: false, _vOp: 0, _vb: [Infinity, Infinity, -Infinity, -Infinity], _svVe: -1, _chuMoi: 0, _ngan: [], _hut: 0, _lopTT: null,
     _xi: { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0, al: 1, op: 0, cat: null, trang: 0 }, // "ngữ cảnh" đơn vị: vẽ ô theo điểm ảnh thiết bị (đổ lớp, ô vector, ô chữ)
