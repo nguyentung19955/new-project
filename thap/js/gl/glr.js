@@ -203,7 +203,7 @@ const GLR = (() => {
     dung() {
       const gl = this.gl, mk = (t, s) => { const o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); return gl.getShaderParameter(o, gl.COMPILE_STATUS) ? o : null; };
       // số texture / lệnh vẽ: ?glt=1..8 ép; không thì 8 với GPU thật, 1 với GPU phần mềm (SwiftShader / llvmpipe — máy đo, máy ảo)
-      let nt = +TS.get('glt') | 0;
+      let nt = (this._ntEp | 0) || (+TS.get('glt') | 0); // _ntEp: chế độ thử của admin (ADMIN.doiNT) — đổi số texture / lệnh vẽ giữa trận qua mất + có lại ngữ cảnh
       if (!(nt >= 1)) { let ten = ''; try { const e = gl.getExtension('WEBGL_debug_renderer_info'); if (e) ten = String(gl.getParameter(e.UNMASKED_RENDERER_WEBGL)); } catch (e) { } this.gpu = ten; nt = /swiftshader|llvmpipe|software|basic render/i.test(ten) ? 1 : NT_MAX; }
       this.nt = nt = Math.max(1, Math.min(NT_MAX, nt, gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS) || 1));
       const v = mk(gl.VERTEX_SHADER, VS), f = mk(gl.FRAGMENT_SHADER, FS(nt)); if (!v || !f) return false;

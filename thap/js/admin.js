@@ -53,7 +53,7 @@ ADMIN.fps = {
     const fps = F.n * 1000 / (t - F.t0); F.t0 = t; F.n = 0;
     if (!F.hien()) { if (F.el) F.el.style.display = 'none'; F.ds.length = 0; F.dv.length = 0; return; }
     F.ds.push(fps); if (F.ds.length > 20) F.ds.shift();
-    if (!F.el) { F.el = document.createElement('div'); F.el.id = 'adm-fps'; document.body.appendChild(F.el); F.el.style.pointerEvents = 'auto'; F.el.addEventListener('pointerdown', (e) => { e.stopPropagation(); e.preventDefault(); const N = ADMIN.nk; N.che = ({ 2: 0, 0: 3, 3: 4, 4: 2, 1: 2 })[N.che | 0]; N.an = N.che === 2; ADMIN.hx = N.che === 4; document.documentElement.classList.toggle('adm-hx', N.che === 4); /* 4 = 'HX': ĐỨNG HUD (không cập nhật DOM thanh trên/dưới, ẩn dải thông tin ụ) — chạm mà hết khựng = nghẽn do Safari tô lại HUD */ /* 3 = 'LO': thử vẽ NỬA ĐỘ NÉT (canvas trận 1×) — FPS tăng vọt = nghẽn ở GPU (tô điểm ảnh) */ try { if (N.che === 3) G.debug.dpr = 1; else if (G.debug) delete G.debug.dpr; REN.coLai(); } catch (er) { } N.ve(); }, true); }
+    if (!F.el) { F.el = document.createElement('div'); F.el.id = 'adm-fps'; document.body.appendChild(F.el); F.el.style.pointerEvents = 'auto'; F.el.addEventListener('pointerdown', (e) => { e.stopPropagation(); e.preventDefault(); const N = ADMIN.nk; N.che = ({ 2: 0, 0: 3, 3: 5, 5: 2, 4: 2, 1: 2 })[N.che | 0]; N.an = N.che === 2; ADMIN.hx = false; ADMIN.doiNT(N.che === 5 ? 1 : 0); /* 5 = 'T1': shader chỉ 1 texture / lệnh vẽ (bỏ chuỗi 8 lần lấy mẫu mỗi điểm ảnh) — FPS tăng rõ = shader 8 texture quá nặng cho GPU máy này */ /* 4 = 'HX': ĐỨNG HUD (không cập nhật DOM thanh trên/dưới, ẩn dải thông tin ụ) — chạm mà hết khựng = nghẽn do Safari tô lại HUD */ /* 3 = 'LO': thử vẽ NỬA ĐỘ NÉT (canvas trận 1×) — FPS tăng vọt = nghẽn ở GPU (tô điểm ảnh) */ try { if (N.che === 3) G.debug.dpr = 1; else if (G.debug) delete G.debug.dpr; REN.coLai(); } catch (er) { } N.ve(); }, true); }
     const gl = typeof GLR !== 'undefined' && GLR.bat && !GLR.mat;
     // chẩn đoán: "ve a/b" = ms của REN.ve (trung bình / lớn nhất 10 s) — FPS thấp mà ve nhỏ → nghẽn NGOÀI phần vẽ trận (sự kiện chạm, DOM, ghép lớp);
     //   "t" = số texture GL tải lớn nhất trong 1 khung (10 s)
@@ -65,7 +65,7 @@ ADMIN.fps = {
     F.mn = (F.mn | 0) + 1; if (F.mn % 10 === 1) { try { const r = REN.boNho(), g = gl && GLR.thongTin().boNho; F.mt = ' · m' + Math.round(r.canvasMB) + (g ? '+' + Math.round(g.tong / 1048576) : ''); } catch (e) { F.mt = ''; } }
     F.sv.push([REN._sim || 0, REN._simN || 0]); if (F.sv.length > 20) F.sv.shift(); // mẫu ms tính toán trận (khung gần nhất mỗi 0,5 s)
     const smx = Math.max.apply(null, F.sv.map(x => x[0])), stb = F.sv.reduce((a, x) => a + x[0], 0) / F.sv.length, sbn = Math.max.apply(null, F.sv.map(x => x[1]));
-    F.el.textContent = (ADMIN.nk.che === 4 ? 'HX ' : ADMIN.nk.che === 3 ? 'LO ' : '') + (typeof REN !== 'undefined' && REN.dpr ? 'x' + REN.dpr + ' ' : '') + (gl ? (GLR.aoOn ? 'GLa ' : 'GL ') : '2D ') + Math.round(fps) + ' · min ' + Math.round(Math.min.apply(null, F.ds)) + ' · ve ' + Math.round(tb) + '/' + Math.round(mx) + ' · sim ' + Math.round(stb) + '/' + Math.round(smx) + 'x' + sbn + (gl ? ' · t' + tx : '') + ' · d' + dx + 'x' + (REN.xoayN | 0) + (gl && GLR.bn ? 'h' + Math.round(GLR.bn.hoiMax) : '') + (F.mt || '');
+    F.el.textContent = (ADMIN.nk.che === 5 ? 'T1 ' : ADMIN.nk.che === 3 ? 'LO ' : '') + (typeof GLR !== 'undefined' && GLR.bat ? 'n' + (GLR.nt | 0) + ' ' : '') + (typeof REN !== 'undefined' && REN.dpr ? 'x' + REN.dpr + ' ' : '') + (gl ? (GLR.aoOn ? 'GLa ' : 'GL ') : '2D ') + Math.round(fps) + ' · min ' + Math.round(Math.min.apply(null, F.ds)) + ' · ve ' + Math.round(tb) + '/' + Math.round(mx) + ' · sim ' + Math.round(stb) + '/' + Math.round(smx) + 'x' + sbn + (gl ? ' · t' + tx : '') + ' · d' + dx + 'x' + (REN.xoayN | 0) + (gl && GLR.bn ? 'h' + Math.round(GLR.bn.hoiMax) : '') + (F.mt || '');
     F.el.style.display = '';
   },
 };
@@ -111,6 +111,14 @@ ADMIN.nk = {
     }
     this.el.style.display = this.an || !ADMIN.fps.hien() ? 'none' : ''; this.el.textContent = this.ds.join('\n');
   },
+};
+// đổi số texture / lệnh vẽ của shader giữa trận (0 = mặc định theo máy): làm mất rồi khôi phục ngữ cảnh GL → GLR.dung() dựng lại với _ntEp
+ADMIN.doiNT = function (n) {
+  try {
+    if (typeof GLR === 'undefined' || !GLR.gl || (GLR._ntEp | 0) === (n | 0)) return;
+    const e = GLR.gl.getExtension('WEBGL_lose_context'); if (!e) return;
+    GLR._ntEp = n | 0; e.loseContext(); setTimeout(() => { try { e.restoreContext(); } catch (er) { } }, 250);
+  } catch (er) { }
 };
 ADMIN.nk.bat();
 document.addEventListener('DOMContentLoaded', () => {
