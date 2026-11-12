@@ -1628,3 +1628,7 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 
 ## claude/demo-hop-tuong — KHÔNG tự hạ độ nét (người dùng 12/11 12:20)
 - Người dùng: "không muốn giảm chất lượng, vì chất lượng là thứ người dùng tìm đến game" → tự hạ độ nét dưới 2× (thêm sáng nay) TẮT mặc định, chỉ còn khi `?tuha=1` để đo. Chế độ thử `LO` của admin giữ (chỉ để chẩn đoán). Hướng thay thế: giảm lượng điểm ảnh phải tô mà KHÔNG giảm độ nét (bớt lớp vẽ chồng, vùng trong suốt lớn, lớp hiệu ứng toàn màn).
+
+## claude/demo-hop-tuong — kết quả thử HX + chế độ thử T1 (12/11 12:40)
+- Video iPhone 12:23 ở `HX` (HUD đứng, dải thông tin ẩn): vẫn `x2 GLa 12 · min 7 · ve 7/27 · sim 4/10`; khung chậm 83–232 ms với `raf 0–16`, `dom 0–1`, không tải texture → **HUD DOM KHÔNG phải nguyên nhân**. Mỗi khung ~70 ms nằm ngoài JavaScript dù không có gì đổi ngoài canvas GL → nghẽn ở GPU / ghép lớp.
+- Nghi mới: fragment shader chọn 1 trong 8 texture bằng chuỗi `if` (GPU thật: `nt = 8`) — nhiều trình biên dịch làm phẳng thành 8 lần lấy mẫu / điểm ảnh, cộng `highp` + các nhánh kiểu tô. Thêm chế độ thử admin `T1` (chạm nhãn: nhật ký → `LO` → `T1` → ẩn): `ADMIN.doiNT(1)` làm mất + khôi phục ngữ cảnh để `GLR.dung()` dựng shader 1 texture / lệnh vẽ. Nhãn ghi `n<số texture>`. Bỏ `HX` khỏi vòng chạm.
