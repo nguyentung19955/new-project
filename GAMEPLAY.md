@@ -1536,6 +1536,12 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - Thắng PVP / PUSH trúng túi thắng: Rương Trận **vào 1 trong 4 khe ở HOME** (trên ô chọn chế độ), không mở ngay; vàng trận vẫn phát. Đầy khe → `CHEST SLOTS FULL`. Mỗi lúc 1 rương đếm **15 phút** (giờ máy), xong chạm `OPEN`; mở ngay bằng ngọc ⌈phút còn lại / 3⌉. Rương mốc / nhiệm vụ / SHOP / RAID / CO-OP: mở ngay như cũ.
 - File: `thap/js/khe.js` (mới), `chedo-dd.js` (bọc `THEBAI.thuong`, dòng kết quả), `css/chedo-d.css`. Lưu `turret_kt.khe`. Kiểm: `tools/thap-kt-khe.js`; `thap-kt-cup.js` sửa 1 kỳ vọng (thắng trúng túi: không phát thẻ ngay).
 
+## claude/che-do-dcdw — sửa lượt 2: Push ép cuối trận, mốc cúp kế, Raid bậc 2, rương ×N (12/11)
+
+- PUSH: từ giây 110 sát thương cần để đẩy 1 px nhân đôi mỗi 12 giây (tất định) → cuối trận trùm ép mọi bộ về lõi, chênh lệch lộ rõ; nhãn đồng hồ đưa lên trên dải bộ bài đối thủ.
+- PVP: "next prize" = mốc cúp CHƯA ĐẠT kế tiếp; mốc đã vượt mà chưa nhận được phát bù khi vào HOME.
+- Thưởng "rương ×2" (mốc cúp 300 / 1 000, CO-OP wave 20 / 40, Raid bậc 3) trước chỉ phát 1 rương → nay phát đủ; kết quả hiện OPEN ×N.
+- RAID bậc 2: máu 14 000 → 22 000. Huy hiệu TWIN-FORGED có quầng sáng. Kiểm: `thap-kt-cup` (thêm 2 mục), `-push`, `-raid`, `-khe`.
 ## claude/demo-hop-tuong — Full WebGL bước 3 + 4 (Hive): chữ trong trận = ô ảnh ký tự, Hive lăn cầu bằng shader (nhánh làm `claude/gl-full-w1`)
 - CHỈ HÌNH, chỉ bản WebGL (`?gl=0` / 2D dự phòng như cũ). Luật / số liệu không đổi → `TAI-LIEU-GOC.md` không đổi. Chi tiết + giới hạn: `docs/demo-hop-tuong/tuvan/webgl/KE-HOACH.md` mục 11.
 - **Chữ** (`thap/js/chugl.js` mới): số sát thương, chí mạng, +mana, nhãn kỹ năng, JACKPOT, +N huy hiệu, tên ụ khi kéo, ký tự tấm đếm vẽ bằng TỜ KÝ TỰ TRẮNG (dựng từ phông game, 1 tờ / bộ ký tự / cỡ) tô màu bằng màu đỉnh (`X.nhuom` ở `GLR.ve`) — số / màu / chuỗi mới không tải texture.
@@ -1580,3 +1586,8 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 ## claude/demo-hop-tuong — gộp WebGL hoàn toàn đợt 2 (W3 + W4) (12/11)
 - Gộp `claude/gl-full-w3` (bệ ụ, sao 1–6★, kéo / ghép = sprite từ ảnh ảo) và `claude/gl-full-w4` (hiệu ứng không còn dựng canvas: hoà 'color' bằng shader, dải dựng bằng code, vòng buff; làm nóng theo ảnh biết chắc). Chi tiết + số đo: `tuvan/webgl/KE-HOACH.md` mục 13–14.
 - Kiểm sau gộp: băm gl0 = gl1 cảnh A (`2d6c63d6` / `4a3f79ad`) và cảnh B (`3d089ecf` / `c110c546`) — băm cảnh A đổi so với trước vì `b8cac71` (co-op 2 bàn nhận mana) của phiên cũ; GL vs 2D cùng trạng thái lệch 1 951 / 1 677 điểm ảnh trên 2,96 triệu (mép); `?gla=0`, `?glv=1`, `?gl=0` vào trận không lỗi trang. CHƯA kiểm: Safari / iPhone, mất ngữ cảnh sau gộp, hồi quy đầy đủ.
+## claude/che-do-dcdw — hình ụ đúng dạng khi kéo / bay / ghép (12/11)
+
+- Lỗi: bản nhấc khi kéo, ụ bay vào đích và bản chụp lúc ghép luôn vẽ **đầu thường** → Merge King vàng thành vương miện thường, Twin Anvil Tốc thành Anvil ST, trứng Evolver thành hộp, Blood Reaver dạng 2–4 thành dạng 1, 20 ụ grow về hình gốc, Rồng / Sói tự vẽ đầu mất dạng (cả 2D và WebGL). Riêng mặt nạ Prism Thief đã đúng khi kéo, sai khi bay.
+- Sửa một chỗ (`render.js`): `REN.hinhCua(T)` chụp hình thật (đầu ép, dạng grow, bệ riêng, hướng La Bàn); `veU` ghost của ụ thật trên bàn đọc thẳng trạng thái, bản chụp mang `_hinh`. `G.bay` thêm `ng` (ụ nguồn) ở 7 chỗ đẩy; `ghepfx.js` bản chụp thêm `_hinh`. Chỉ là hình, không đổi gameplay.
+- Kiểm: `tools/thap-kt-hinh-keo.js` (32 ụ / dạng × kéo, bóng ô gốc, bay; `?gl=0` và `?gl=1`). Ảnh: `docs/demo-hop-tuong/tuvan/che-do-dcdw/anh/b5-*.jpg`.

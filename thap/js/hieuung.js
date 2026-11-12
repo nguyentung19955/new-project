@@ -68,7 +68,7 @@ const VX = {
   ghep(B, a, b, ra) {
     const nhe = this.nhe();
     ra.vxA = { k: 'ghep', t0: this.t, nhe, bId: b.id, bSao: b.sao, bBac: b.bac, bGd: b.gd, goc: b.goc, deck: B.deck.slice(), lo: nhe ? 0.2 : this.TRE_LO };
-    G.bay.push({ id: a.id, sao: a.sao, bac: a.bac, gd: a.gd, goc: a.goc, x0: B.o[a.o].x, y0: B.o[a.o].y, x1: B.o[b.o].x, y1: B.o[b.o].y, t: 0, t0: this.t, dai: 0.12 });
+    G.bay.push({ id: a.id, sao: a.sao, ng: a, bac: a.bac, gd: a.gd, goc: a.goc, x0: B.o[a.o].x, y0: B.o[a.o].y, x1: B.o[b.o].x, y1: B.o[b.o].y, t: 0, t0: this.t, dai: 0.12 });
     this.dem();
     this.hen(ra.vxA.lo, () => SND.lo(TIERS[ra.bac] ? TIERS[ra.bac].thuTu : 0));
   },
@@ -324,7 +324,8 @@ const VX = {
     if (u >= 1) { b.xong = true; return; }
     const e = this.ei(u);
     const x = b.x0 + (b.x1 - b.x0) * e, y = b.y0 + (b.y1 - b.y0) * e - Math.sin(u * Math.PI) * 16;
-    R.veU(ctx, { id: b.id, sao: b.sao, bac: b.bac, gd: b.gd, goc: b.goc, rx: 0, st: {}, ban: 0, o: 0, aurora: 0, buf: {} }, x, y, { scale: 1 - 0.3 * e, ghost: true, noBadge: true, alpha: 1 - 0.3 * e });
+    if (b.hinh === undefined) b.hinh = b.ng && R.hinhCua ? R.hinhCua(b.ng) : null; // 12/11: ụ bay mang hình thật của ụ nguồn (đầu theo dạng / vàng / mặt nạ…), chụp 1 lần ở khung đầu
+    R.veU(ctx, { id: b.id, sao: b.sao, bac: b.bac, gd: b.gd, goc: b.goc, rx: 0, st: {}, ban: 0, o: 0, aurora: 0, buf: {}, _hinh: b.hinh }, x, y, { scale: 1 - 0.3 * e, ghost: true, noBadge: true, alpha: 1 - 0.3 * e });
   },
 
   // =================== SỰ KIỆN TRÊN BÀN ===================

@@ -90,3 +90,5 @@ html body #wrap #ketqua.dd-tt .kq-ic { content: url(../assets/ua_ic_sk.png) !imp
 .khe-o.dem { border-color: #6fd0ff; } .khe-o.dem b { color: #8fe0ff; }
 .khe-o.san { border-color: #ffd257; box-shadow: 0 0 10px rgba(255, 210, 87, .55); } .khe-o.san b { color: #ffe08a; }
 #ketqua .khe-kq { color: #8fe0ff; } #ketqua .khe-kq.day { color: #ff9a8a; }
+/* ĐẨY TRÙM (12/11 lượt 2): nhãn đồng hồ đưa lên trên dải bộ bài đối thủ của bàn PVP (trước nằm đè lên dải) */
+#pu-chip { top: 10px; }

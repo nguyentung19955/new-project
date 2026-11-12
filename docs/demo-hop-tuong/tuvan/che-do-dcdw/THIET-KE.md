@@ -86,3 +86,37 @@ Máy phiên cũ còn ~640 MB ổ đĩa (không dựng được bản làm việc
 - **Đã tự quyết:** (1) chỉ loại **Rương Trận** vào khe (đề bài nêu Thường 1 giờ / Vàng 3 giờ nhưng hiện không nguồn thắng trận nào rơi 2 loại đó) — thêm loại sau chỉ cần thêm trường; (2) **CO-OP wave 30 KHÔNG đưa vào khe**: CO-OP đang phát Rương Trận mỗi trận, người dùng đã chốt "CO-OP nhận thưởng không giới hạn như cũ" — đưa vào khe là giảm thưởng CO-OP, cần người dùng quyết; (3) rương đầu hàng **tự bắt đầu đếm** (không cần bấm "start"); rương đã xong chưa mở không chặn rương sau; (4) giá ngọc 1 ngọc / 3 phút.
 - **Chưa làm / cần quyết:** đồng bộ `khe` lên Firebase (hiện đi theo cách gộp chung của `turret_kt`, chưa kiểm 2 máy); chống chỉnh giờ máy (không có); ảnh khung khe riêng (đang dùng khung CSS + ảnh Rương Trận sẵn có).
 - Ảnh: `anh/b4-khe-home.jpg`, `anh/b4-khe-ngoc.jpg`, `anh/b4-khe-mo.jpg`.
+
+## 10. SỬA LƯỢT 2 (12/11) — Push ép cuối trận, mốc cúp, Raid bậc 2, rương ×N
+
+- **PUSH ép cuối trận:** `K(t)` nhân thêm `2^((t − 110) / 12)` khi t > 110 s (`PUC.tang0`, `PUC.tangDoi`; tới hết giờ ≈ ×57), tất định theo đồng hồ. Bot 4 hạt (bạn % còn lại · thắng · chênh % trung bình so với đối thủ):
+
+| Bộ | 0 cúp | 500 cúp | 1 000 cúp |
+|---|---|---|---|
+| Trắng/Xanh +1 | 4/4 · chênh 29,3 | 1/4 · 20,8 | 0/4 · 35,9 |
+| Tím +4 | 4/4 · 50,5 | 3/4 · 12,8 | 1/4 · 15,7 |
+| Vàng +6 | 4/4 · 78,1 | 4/4 · 39,7 | 3/4 · 20,1 |
+| Đỏ +8 | 4/4 · 85,6 | 4/4 · 51,5 | 4/4 · 32,4 |
+
+  Vị trí cuối trận của người chơi: Trắng/Xanh 10–53% · Tím 33–77% · Vàng 72–87% · Đỏ 86–93% (97% chỉ còn khi đối thủ chết trước giây 130). 6/48 trận chênh < 5 điểm. Còn lại: bộ khởi đầu ở 500–1 000 cúp chỉ còn ~10% (sát lõi).
+- **Nhãn PUSH:** đưa lên trên dải bộ bài đối thủ (`#pu-chip { top: 10px }`).
+- **"next prize" của PVP:** KHÔNG phải lỗi luật — tài khoản thử được bơm cúp (cúp tăng không qua trận nên mốc 100–500 chưa phát). Đổi: `CUP.ke()` = mốc CHƯA ĐẠT kế tiếp; mốc đã vượt chưa nhận được **phát bù** khi vào HOME (`CUP.bu()`, mở rương như thường) và ở kết quả trận như cũ.
+- **Rương ×N (lỗi thật, đã sửa):** thưởng `{ ruong: 'thuong' | 'vang', n: 2 }` trước chỉ phát 1 rương dù bảng ghi ×2 (mốc cúp 300 / 1 000, CO-OP wave 20 / 40, Raid bậc 3). Nay phát đủ N rương; kết quả hiện `OPEN ×N`.
+- **RAID bậc 1–3, bộ Trắng/Xanh +1 (4 hạt):** bậc 1 (5 000) thắng 4/4 trong 35–58 s · bậc 2 nâng 14 000 → **22 000**: thắng 3/4 (124–164 s; 1 trận thua còn 3%) · bậc 3 (45 000) thua 4/4 (còn 9–44%).
+- **Icon:** `ic_raid` / `ic_push` hiện đúng ở GAME MODE và bảng RAID (PUSH không có bảng riêng, EVENT không dùng; game không có danh sách tải trước cho icon chế độ — `ic_cup`, `ic_tutorial` cũng tải khi mở). Huy hiệu song sinh thêm quầng = chính ảnh huy hiệu vẽ to 0,66 ô, cộng sáng.
+
+## 11. RÀ HÌNH Ụ KHI KÉO / BAY / GHÉP (12/11) — `tools/thap-kt-hinh-keo.js`
+
+| Ụ / dạng | (1) đứng yên | (2) bản nhấc khi kéo | (3) bóng ô gốc | (4) ụ bay vào đích | (5) bản chụp lúc ghép |
+|---|---|---|---|---|---|
+| Merge King vàng (`vughepvang_nong`) | đúng | SAI → đã sửa | đúng | SAI → đã sửa | SAI → đã sửa |
+| Twin Anvil Tốc (`lorentoc_nong`) | đúng | SAI → đã sửa | đúng | SAI → đã sửa | SAI → đã sửa |
+| Twin Anvil ST | đúng | đúng | đúng | đúng | đúng |
+| Evolver (trứng theo sao / cháy) | đúng | SAI → đã sửa | đúng | SAI → đã sửa | SAI → đã sửa |
+| Blood Reaver dạng 2–4 (đầu + bệ) | đúng | SAI → đã sửa | đúng | SAI → đã sửa | SAI → đã sửa |
+| Prism Thief (mặt nạ màu / hợp thể) | đúng | đúng | đúng | SAI → đã sửa | SAI → đã sửa |
+| Rồng Máy theo dạng, Werewolf, Hydra (tự vẽ đầu) | đúng | SAI → đã sửa (Hydra vốn đúng) | đúng | SAI → đã sửa | SAI → đã sửa |
+| 20 ụ grow 3 dạng (`_nong_s1..3`) | đúng | SAI (về hình gốc) → đã sửa | đúng | SAI → đã sửa | SAI → đã sửa |
+| Pháo La Bàn, Eclipse, Lucky Slot, Copycat | đúng | đầu + bệ đúng; lớp vẽ thêm (mũi tên, vòng nạp, quầng) vốn KHÔNG vẽ ở bản nhấc — giữ nguyên | đúng | như (2) | như (2) |
+
+Cả 2D (`?gl=0`) và WebGL (`?gl=1`) cho cùng kết quả. (6) Dải thông tin / thẻ khi chạm dùng ảnh thẻ theo id (không theo dạng) — không đổi; bàn đồng đội / con rối vẽ bằng `veU` thường nên theo trạng thái đồng bộ sẵn có. Ụ đá / băng / xích: lớp phủ không vẽ ở bản nhấc (ụ đang đá / băng không kéo được).
