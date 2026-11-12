@@ -130,7 +130,11 @@
       const u = (G.t - T.tuPhatG) / 0.9; if (u < 0 || u >= 1) return;
       const im = REN.img(ANH_TU()); if (!im) return;
       const p = Math.min(1, u / 0.2), s = p < 0.6 ? 1.2 * p / 0.6 : 1.2 - 0.2 * (p - 0.6) / 0.4, al = h.al * (u > 0.67 ? (1 - u) / 0.33 : 1);
-      REN.anhGiua(ctx, im, h.gx, h.gy, h.d * 1.15 * s, 0, al);
+      // 12/11 (ô đen góc trên-trái ô Hive Queen trên iPhone, đường ảnh ảo GLa): huy hiệu nảy 0 → 1,2 → 1 nên REN.mip đi qua mọi tầng 6 → 96 px trong vài khung và lần tải ĐẦU của ảnh
+      //  rơi vào đường "tầng > 0" (texture tạm + generateMipmap + chép GPU) ngay giữa khung → trên Safari ra ô đen đặc. WebGL: vẽ thẳng ảnh gốc ở tầng 0 (Image → atlas, đường đã chạy đúng trên iPhone).
+      const co = h.d * 1.15 * s;
+      if (ctx.laGL && im._goc && typeof _GLA === 'function' && _GLA()) { if (co >= 0.5) { ctx.globalAlpha = al; ctx.drawImage(im, h.gx - co / 2, h.gy - co / 2, co, co * (im.height / im.width)); } }
+      else REN.anhGiua(ctx, im, h.gx, h.gy, co, 0, al);
       ctx.globalAlpha = 1;
     };
   }
