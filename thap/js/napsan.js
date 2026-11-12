@@ -4,7 +4,7 @@
 // Bảng NONG_META (js/nong-meta.js — SINH bằng tools/thap-nong-meta.py từ các trận bot ghi ảnh thực vẽ, KHÔNG sửa tay):
 //   k = REN.s × REN.dpr lúc đo (tầng trong bảng đúng cho k đó; máy khác đổi theo tỉ lệ) · u[id ụ] · mv[id chỉ huy] · trum[id trùm] · dau (dùng chung, nạp ở màn mở đầu) ·
 //   nen (dùng chung, nạp nền giữa trận theo thứ tự ưu tiên) · kq (màn kết quả) · chu (tờ ký tự theo cỡ chữ trận hay dùng).
-//   Mỗi danh sách = chuỗi 'tên:tầng,tên,…' (không ghi tầng = 0; '~' trong tên = id của mục).
+//   Mỗi danh sách = chuỗi 'tên:tầng,tên,…' (không ghi tầng = 0; ':x' = chưa biết tầng → tầng mặc định của NS.napGL; '~' trong tên = id của mục).
 // Khi nào nạp:
 //   · MÀN MỞ ĐẦU TRẬN (trận đứng, lớp GL tải không giới hạn): ụ của CẢ HAI bộ bài + chỉ huy + 'dau' + tờ ký tự. Ảnh chưa có trong bộ nhớ → gọi tải (mạng / bộ đệm) ngay, về lúc nào nạp lúc đó.
 //   · TRÙM: cùng lúc nongskill.js làm nóng trùm (từ "BOSS IN 3") → thêm trum[id] (ảnh chiêu / quái nó gọi), xếp ĐẦU hàng.
@@ -18,13 +18,13 @@
 (() => {
   if (typeof NS === 'undefined' || typeof REN === 'undefined' || !NS.am || typeof NONG_META === 'undefined' || !NONG_META) return;
   let TAT = false; try { TAT = new URLSearchParams(location.search).get('nap') === '0'; } catch (e) { }
-  const M = NONG_META, AM = NS.am, NEN_NHIP = 12, NEN_DAY = 0.9;
+  const M = NONG_META, AM = NS.am, NEN_NHIP = 12, NEN_DAY = 0.85, RIENG_DAY = 0.7;
   const chay = () => !TAT && typeof _GLA === 'function' && _GLA() && NS.glChay();
   const laTQ = (t) => /^(fx_)?trum_|^quai_/.test(t);
-  const NP = NS.np = { ten: new Map(), hang: [], the: -1, fDoi: -999, fBat: 0, iNen: 0, kq: false, wave: -1, lap: false, toLai: [], chuCho: null, chuGhi: [], _chuDa: new Set(), dem: { dua: 0, mang: 0, nen: 0, trum: 0, quai: 0, chu: 0, lai: 0 } };
+  const NP = NS.np = { ten: new Map(), tenTrum: new Set(), _ghim: [], hang: [], the: -1, fDoi: -999, fBat: 0, iNen: 0, kq: false, wave: -1, lap: false, toLai: [], chuCho: null, chuGhi: [], _chuDa: new Set(), dem: { dua: 0, mang: 0, nen: 0, trum: 0, quai: 0, chu: 0, lai: 0 } };
   // 'tên:tầng,tên' → [[tên, tầng ở k của máy này]]
   const doiL = (L) => { const k = REN.s * REN.dpr; if (!(M.k > 0) || !(k > 0)) return L; return Math.max(0, L - Math.ceil(Math.log2(k / M.k) - 0.01)); };
-  const doc = (s, id) => { const r = []; if (!s) return r; for (const p of s.split(',')) { if (!p) continue; const i = p.lastIndexOf(':'); let t = i > 0 ? p.slice(0, i) : p; if (id) t = t.split('~').join(id); r.push([t, doiL(i > 0 ? +p.slice(i + 1) : 0)]); } return r; };
+  const doc = (s, id) => { const r = []; if (!s) return r; for (const p of s.split(',')) { if (!p) continue; const i = p.lastIndexOf(':'); let t = i > 0 ? p.slice(0, i) : p; if (id) t = t.split('~').join(id); r.push([t, i > 0 && p.slice(i + 1) === 'x' ? null : doiL(i > 0 ? +p.slice(i + 1) : 0)]); } return r; };
   // danh sách của màn mở đầu: bảng theo bộ bài của mọi bàn + chỉ huy + phần chung đầu trận (thêm vào danh sách cũ của nongskill.js: VXM.U + ảnh đã học trong phiên)
   const dsGoc = NS.dsHieuUng;
   NS.dsHieuUng = function () {
@@ -47,7 +47,7 @@
   AM.lap = function () {
     const r = lapGoc.apply(this, arguments);
     try {
-      NP.lap = false; NP.ten = new Map(); NP.hang = []; NP.toLai = []; NP.iNen = 0; NP.kq = false; NP.wave = -1; NP.chuCho = null;
+      NP.lap = false; NP.ten = new Map(); NP.tenTrum = new Set(); NP._ghim = []; NP.hang = []; NP.toLai = []; NP.iNen = 0; NP.kq = false; NP.wave = -1; NP.chuCho = null;
       if (chay() && NS._napDs) { NP.lap = true; NP.the = GLR.the; NP.fDoi = -999; NP.fBat = -1; for (const [t, L] of NS._napDs) if (!laTQ(t)) { NP.ten.set(t, L); NP.hang.push(t); } NP.chuCho = (M.chu || []).concat(NP.chuGhi).slice(0, 80); }
     } catch (e) { }
     return r;
@@ -56,7 +56,7 @@
   const ntGoc = NS.nongTrum;
   NS.nongTrum = function (id) {
     const r = ntGoc.apply(this, arguments);
-    try { if (NP.lap && chay() && id && M.trum && M.trum[id]) NP.dem.trum += NP.them(doc(M.trum[id], id), true); } catch (e) { }
+    try { if (NP.lap && chay() && id && M.trum && M.trum[id]) { const ds = doc(M.trum[id], id); for (const q of ds) NP.tenTrum.add(q[0]); NP.dem.trum += NP.them(ds, true); } } catch (e) { }
     return r;
   };
   // quái của wave w theo chủ đề (hàm thuần của data.js; r cố định → không đụng bộ sinh số của trận)
@@ -80,7 +80,7 @@
   };
   // ---------- tờ ký tự (chugl.js): ghi cỡ chữ đã dùng trong phiên (theo đơn vị logic → máy / cỡ màn khác tính lại) + dựng lại ở màn mở đầu trận sau; bảng M.chu = phần ghi sẵn từ trận bot ----------
   const BO = typeof CHU !== 'undefined' ? [CHU.SO, 'ACDEFGHIJLNOPQRSTUVWXYZ?\'()', 'abcdefghijklmnopqrstuvwxyz'] : [];
-  const r4 = (v) => Math.round(v * 1e4) / 1e4;
+  const r4 = (v) => { const g = Math.round(v * 20) / 20; return Math.abs(v - g) < 0.004 ? g : Math.round(v * 1e4) / 1e4; }; // (cỡ logic thường là bội của 0,05: bỏ sai số do P đã làm tròn 0,01 điểm ảnh)
   let ctxChu = null;
   if (typeof CHU !== 'undefined' && CHU.kyTu && !CHU.tat) {
     const kt = CHU.kyTu, vl = CHU.veLenh, va = CHU.veAnh;
@@ -116,6 +116,21 @@
       for (const e of ds.filter(e => e[0] !== 'L').concat(ds.filter(e => e[0] === 'L'))) { if (CHU.mat.size >= 24) break; try { for (const c of dungChu(e)) { GLR.nap(c); NP.dem.chu++; } } catch (er) { } }
     } finally { NP._dangChu = false; }
   };
+  // còn chỗ trên GPU cho ảnh nạp NỀN? atlas chưa tới trang cuối / trang cuối chưa đầy NEN_DAY, và texture riêng (ảnh > 512²) dưới RIENG_DAY ngân sách
+  //   (quá ngân sách thì GLR bỏ texture lâu không dùng nhất → nạp thêm chỉ đẩy ảnh đang dùng ra rồi phải tải lại)
+  const conCho = () => { const b = GLR.boNho && GLR.boNho(); if (!b) return true; return (b.atlasTrang < (GLR.trangMax || 5) || b.atlasDay < NEN_DAY) && b.rieng < (GLR.riengMax || (40 << 20)) * RIENG_DAY; };
+  // BỎ GHIM: GLR ghim texture "nạp trước" 3 600 khung (coi như vừa dùng ở tương lai) — hợp với trùm sắp ra, nhưng với cả danh sách bộ bài thì lúc quá ngân sách texture ĐANG dùng
+  //   (dùng 3 khung trước) lại bị bỏ trước texture ghim chưa dùng → tải lại liên tục (đo: tải lúc vẽ 2–10 → 16–33 lần / 10 s). Ảnh nạp theo bảng (trừ của trùm): sau khi lên GPU,
+  //   mốc dùng kéo về hiện tại → chưa dùng thật thì thành cũ nhất và bị bỏ trước khi cần chỗ.
+  NP.boGhim = function () {
+    const ds = NP._ghim; if (!ds || !ds.length) return; const f = GLR.f; let j = 0;
+    for (let i = 0; i < ds.length; i++) { const q = ds[i], c = q[0];
+      if (f - q[1] < 8) { ds[j++] = q; continue; }
+      let co = false; if (c._lv) for (const E of c._lv) if (E && GLR.hopLe(E)) { co = true; if (E.dung > f) E.dung = f; }
+      if (!co && f - q[1] < 900 && c._napGL === GLR.the) ds[j++] = q; // chưa lên GPU (còn trong hàng nạp): xem lại sau
+    }
+    ds.length = j;
+  };
   // ---------- mỗi khung (sau khi vẽ): đưa tên trong hàng sang hàng nạp của GLR ----------
   NP.chay = function () {
     if (!NP.lap || !chay() || !NS._napDs || !G.ban || !G.ban.length || G.ketThuc) return;
@@ -134,10 +149,11 @@
         if (!NP.kq && M.kq && G.ban.some(B => B.tim <= 1)) { NP.kq = true; NP.them(doc(M.kq)); }
         if (M.nen && f - NP.fBat > 180 && f % NEN_NHIP === 0 && NP.hang.length < 6) { // nạp nền: atlas gần đầy → ngừng (không đẩy ảnh đang dùng ra)
           if (!NP._nen) NP._nen = doc(M.nen);
-          if (NP.iNen < NP._nen.length) { const b = GLR.boNho && GLR.boNho(); if (!b || b.atlasTrang < 5 || b.atlasDay < NEN_DAY) { NP.dem.nen += NP.them([NP._nen[NP.iNen++]]); } }
+          if (NP.iNen < NP._nen.length && conCho()) NP.dem.nen += NP.them([NP._nen[NP.iNen++]]);
         }
       }
     }
+    NP.boGhim();
     let n = mo ? 48 : (GLR._napDs.length < 3 ? 1 : 0); if (!n) return;
     if (!mo && NP.toLai.length) { const c = NP.toLai.shift(); if (c && c.width) GLR.nap(c); return; }
     for (let i = 0, len = NP.hang.length; i < len && n > 0; i++) {
@@ -147,6 +163,7 @@
       if ((!a._cv && !(a.complete && a.naturalWidth)) || a._chuaGiai) { NP.hang.push(t); continue; } // đang tải / đang giải mã: để cuối hàng
       NS.napGL(t);
       const c = REN.anh[t] && REN.anh[t]._cv; if (!c) { NP.hang.push(t); continue; } // hết ngân sách chép của khung (REN.img hoãn): thử lại
+      if (c._goc && !NP.tenTrum.has(t)) NP._ghim.push([c, f]);
       NP.dem.dua++; n--;
     }
   };

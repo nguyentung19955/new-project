@@ -28,15 +28,21 @@ LA_TRUM = re.compile(r'^(fx_)?trum_')
 
 def gom(thu_muc):
     tran = {}
+    af = {}   # jobs.txt (nhãn|bộ 1|bộ 2|chỉ huy bàn mình|trùm ép|giây) nếu có: chỉ huy của trận ghi trước khi công cụ in 'mv'
+    jf = os.path.join(thu_muc, 'jobs.txt')
+    if os.path.exists(jf):
+        for ln in open(jf, encoding='utf8'):
+            q = ln.strip().split('|')
+            if len(q) >= 4: af[q[0]] = q[3]
     for f in sorted(glob.glob(os.path.join(thu_muc, '*.json'))):
         try:
             d = json.load(open(f, encoding='utf8'))
         except Exception as e:
             print('bỏ', f, e); continue
         if 'anh' not in d: continue
-        n = d.get('nhan') or os.path.basename(f)[:-5]
+        n = os.path.basename(f)[:-5]
         tran[n] = {
-            'd1': d['d1'].split(','), 'd2': d['d2'].split(','), 'mv': d.get('mv'), 'k': d.get('k'), 'wave': d.get('tong', {}).get('wave'), 'giay': d.get('tong', {}).get('giay'),
+            'd1': d['d1'].split(','), 'd2': d['d2'].split(','), 'mv': d.get('mv') or ([af[n], None] if af.get(n) else None), 'k': d.get('k'), 'wave': d.get('tong', {}).get('wave'), 'giay': d.get('tong', {}).get('giay'),
             'trum': d.get('trumRa') or [], 'anh': d['anh'], 'co': d.get('co') or {}, 'yeuCau': sorted(d.get('yeuCau') or []), 'taiGiua': sorted(d.get('taiGiua') or []),
             'chuGhi': d.get('chuGhi'), 'ketQua': {k: (d.get('ketQua') or {}).get(k) for k in ('cv', 'anh', 'yc')} if isinstance(d.get('ketQua'), dict) else None,
             'loi': d.get('loi') or '', 'errs': d.get('errs') or [],
@@ -45,7 +51,7 @@ def gom(thu_muc):
     for t in tran.values():
         co.update(t.pop('co'))
     json.dump({'ghi_chu': 'Dữ liệu thô các trận bot (tools/thap-kt-nap-truoc.js MODE=gt). anh = { tên ảnh: tầng nét nhất đã VẼ bằng lớp GL }; co = cỡ ảnh gốc.',
-               'sinh_luc': datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%MZ'), 'tran': tran, 'co': co}, open(F_TRAN, 'w', encoding='utf8'), ensure_ascii=False, separators=(',', ':'), sort_keys=True)
+               'sinh_luc': datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%MZ'), 'tran': tran, 'co': co}, open(F_TRAN, 'w', encoding='utf8'), ensure_ascii=False, separators=(',', ':'), sort_keys=True)
     print('gom', len(tran), 'trận →', F_TRAN, os.path.getsize(F_TRAN) // 1024, 'KB')
 
 
@@ -55,7 +61,7 @@ def chuoi(ds, id=None):
     for t in sorted(ds):
         L = ds[t]
         n = t.replace(id, '~') if id and '~' not in t else t
-        r.append(n + (':%d' % L if L else ''))
+        r.append(n + (':x' if L is None else ':%d' % L if L else ''))
     return ','.join(r)
 
 
@@ -99,18 +105,19 @@ def sinh():
         Mt = set(m); L = min(m.values()); f = len(Mt) / N
         if LA_QUAI.match(a): quai[a] = L; cach[a] = 'quai'; continue
         if LA_TRUM.match(a): cach[a] = 'trum'; continue
-        C = [id for id, ms in cua_u.items() if ms <= Mt]
+        la_mv = bool(re.match(r'^(cmd_|cf_)', a))   # ảnh chỉ huy: không gán cho ụ (chỉ huy xoay vòng theo trận → trùng nhịp với lưới)
+        C = [] if la_mv else [id for id, ms in cua_u.items() if ms <= Mt]
         phu = set().union(*[cua_u[id] for id in C]) if C else set()
         if C and Mt <= phu and len(C) <= 4:
             for id in C: u[id][a] = L
             cach[a] = 'u'; continue
-        if re.match(r'^(cmd_|cf_)', a):
+        if la_mv:
             Cm = [c for c, ms in cua_mv.items() if ms <= Mt]
-            if Cm and len(Cm) <= 3:
+            if Cm and len(Cm) <= 2 and Mt <= set().union(*[cua_mv[c] for c in Cm]):
                 for c in Cm: mv.setdefault(c, {})[a] = L
                 cach[a] = 'mv'; continue
         if f >= 0.75: dau[a] = L; cach[a] = 'dau'; continue
-        chu = [id for id in chu_tinh.get(a, ()) if cua_u.get(id, set()) & Mt]
+        chu = [] if la_mv else [id for id in chu_tinh.get(a, ()) if cua_u.get(id, set()) & Mt]
         if f >= 0.25:
             nen[a] = (L, len(Mt)); cach[a] = 'nen'
             for id in chu: u[id][a] = L   # ảnh dùng chung nhưng quét tĩnh ghi có chủ → cũng nạp ở màn mở đầu khi chủ có trong bộ bài
@@ -127,17 +134,47 @@ def sinh():
         for a in t['anh']: dem_t[a] = dem_t.get(a, 0) + 1
     for id, t in trumT.items():
         for a, L in t['anh'].items():
-            if LA_QUAI.match(a): continue
+            if LA_QUAI.match(a) or re.match(r'^(cmd_|cf_)', a): continue
             rieng = dem_t[a] <= 2 and len(ve.get(a, ())) / N < 0.3 and cach.get(a) not in ('u', 'u1', 'dau')
             if rieng or re.match(r'^(fx_)?trum_' + re.escape(id) + r'(_|$)', a) or a in tinh['trum'].get(id, ()):
                 if id in trum: trum[id][a] = min(L, trum[id].get(a, 99))
+    for id, t in trumT.items():   # tĩnh ∩ đã TẢI ở trận ép trùm (dải rig / pha chưa kịp ra trong 30 s): nạp ở tầng mặc định ('x' = chưa biết tầng) — trừ chân dung (DOM)
+        if id not in trum: continue
+        for a in tinh['trum'].get(id, ()):
+            if a in t['yeuCau'] and a not in trum[id] and not a.endswith('_portrait') and LA_TRUM.match(a): trum[id][a] = None
     for n, t in tran.items():   # trùm ra trong trận lưới: dải của nó (tầng nét nhất)
         for a, L in t['anh'].items():
             mm = re.match(r'^(?:fx_)?trum_(.+)$', a)
             if not mm: continue
             for id in trum:
                 if mm.group(1) == id or mm.group(1).startswith(id + '_'):
-                    trum[id][a] = min(L, trum[id].get(a, 99))
+                    trum[id][a] = min(L, trum[id].get(a) if trum[id].get(a) is not None else 99)
+
+    # TRẬN THÊM (nhãn x…: trận đo với bộ bài người dùng hay chơi, dài hơn — wave tới ~55): ảnh được vẽ mà chưa nằm ở danh sách nào của trận đó →
+    #   gán cho ụ trong bộ bài mà quét tĩnh ghi là chủ (tĩnh ∩ thực); ảnh đã có thì lấy tầng nét hơn. Tầng đổi về k của lưới (k gấp đôi → +1).
+    them_tran = {n: t for n, t in tran.items() if n.startswith('x')}
+    x_khong_gan = {}
+    for n, t in them_tran.items():
+        ids = t['d1'] + t['d2']
+        dk = int(round(__import__('math').log2((t.get('k') or k0) / k0))) if k0 else 0
+        for a, Lx in t['anh'].items():
+            L = Lx + dk
+            if LA_QUAI.match(a) or LA_TRUM.match(a): continue
+            if a in dau: dau[a] = min(dau[a], L); continue
+            co_o = [id for id in ids if a in u.get(id, {})]
+            if co_o:
+                for id in co_o: u[id][a] = min(u[id][a], L)
+                continue
+            if a in nen: nen[a] = (min(nen[a][0], L), nen[a][1]); continue
+            if re.match(r'^(cmd_|cf_)', a):
+                c = (t.get('mv') or [None])[0]
+                if c and a not in dau: mv.setdefault(c, {})[a] = min(L, mv.get(c, {}).get(a, 99))
+                continue
+            chu = [id for id in chu_tinh.get(a, ()) if id in ids]
+            if chu:
+                for id in chu: u[id][a] = L
+                hiem.pop(a, None); cach[a] = 'x'
+            else: x_khong_gan.setdefault(a, []).append(n)
 
     # ngoại lệ ghi tay (có lý do): them / bo theo ụ, trùm, dau, nen
     for khoa, bang in (('u', u), ('trum', trum), ('mv', mv)):
@@ -193,13 +230,13 @@ def sinh():
     dc_khong_ve = sorted(a for a in dc if a not in ve and not any(a in t['anh'] for t in trumT.values()))
     chung_sot = sorted(a for a in chung_thuc if a not in dc and a not in chu_tinh)
 
-    px = lambda a, L: ((co.get(a, [0, 0])[0] >> L) * (co.get(a, [0, 0])[1] >> L) * 4) / 1048576
+    px = lambda a, L: ((co.get(a, [0, 0])[0] >> (L or 0)) * (co.get(a, [0, 0])[1] >> (L or 0)) * 4) / 1048576
     mb = lambda ds: round(sum(px(a, (v[0] if isinstance(v, tuple) else v)) for a, v in ds.items()), 1)
     kq = {
         'ghi_chu': 'Ảnh THỰC được vẽ bằng lớp GL trong các trận bot (tools/thap-kt-nap-truoc.js MODE=gt → tools/thap-nong-meta.py). { tên: tầng nét nhất (0 = nguyên cỡ) ở k = REN.s × REN.dpr = k }. Không sửa tay — sinh lại bằng tools/thap-nong-meta.py sinh.',
-        'sinh_luc': datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%MZ'), 'k': k0, 'so_tran_luoi': N, 'so_tran_trum': len(trumT),
+        'sinh_luc': datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%MZ'), 'k': k0, 'so_tran_luoi': N, 'so_tran_trum': len(trumT),
         'u': u, 'trum': trum, 'chihuy': mv, 'dung_chung_dau': dau, 'dung_chung_nen': {a: nen[a][0] for a in nen_ds}, 'dung_chung_hiem': {a: {'tang': v[0], 'tran': v[1]} for a, v in sorted(hiem.items())},
-        'quai': quai, 'chu': chu,
+        'quai': quai, 'chu': chu, 'tran_them_khong_gan': x_khong_gan,
         'doi_chieu_tinh': {'om_nham_ve_o_tran_khac': om_khac, 'om_nham_chi_tai_khong_ve': om_yc, 'om_nham_khong_xin': om_khong, 'sot': sot, 'trum_om_nham': om_trum, 'trum_sot': sot_trum,
                            'dung_chung_tinh_khong_ve': dc_khong_ve, 'dung_chung_thuc_khong_co_trong_tinh': chung_sot},
     }
@@ -242,6 +279,7 @@ def sinh():
     L.append('- Vẽ thật, dùng chung, quét tĩnh không ghi (không ở `dung_chung` lẫn `u`): %d (%s)' % (len(chung_sot), ', '.join(chung_sot[:60])))
     L.append('- `dau` (màn mở đầu): %s' % ', '.join(sorted(dau)))
     L.append('- `nen` (nạp nền, theo thứ tự): %s' % ', '.join(nen_ds))
+    L.append('- thấy ở trận thêm (x…), không gán được cho ụ nào (không nạp trước): %s' % ', '.join('%s (%s)' % (a, '/'.join(v)) for a, v in sorted(x_khong_gan.items())))
     L.append('- hiếm, không nạp trước: %s' % ', '.join('%s (%s)' % (a, '/'.join(v[1])) for a, v in sorted(hiem.items())))
     L.append('\n## Ngoại lệ ghi tay (`tools/thap-nong-ngoai-le.json`)\n')
     L.append('```json\n' + json.dumps(nl, ensure_ascii=False, indent=1) + '\n```')

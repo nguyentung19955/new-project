@@ -62,7 +62,7 @@ const T0 = Date.now(), tg = () => ' [' + Math.round((Date.now() - T0) / 1000) + 
       }; }
       return true;
     };
-    window.__bn = () => { const r = REN.boNho(), g = GLR.bat && GLR.boNho ? GLR.boNho() : null, m = (v) => Math.round(v / 1048576); return { cv: Math.round(r.canvasMB), cvN: r.soCanvas, gpu: g ? m(g.tong) : 0, at: g ? g.atlasTrang + 'x' + g.atlasDay : '', rieng: g ? m(g.rieng) + '/' + g.riengN : '', tong: Math.round(r.canvasMB + (g ? g.tong / 1048576 : 0)) }; };
+    window.__bn = () => { const r = REN.boNho(), g = GLR.bat && GLR.boNho ? GLR.boNho() : null, m = (v) => Math.round(v / 1048576); return { cvMB: Math.round(r.canvasMB), cvN: r.soCanvas, gpu: g ? m(g.tong) : 0, at: g ? g.atlasTrang + 'x' + g.atlasDay : '', rieng: g ? m(g.rieng) + '/' + g.riengN : '', tong: Math.round(r.canvasMB + (g ? g.tong / 1048576 : 0)) }; };
     // tóm tắt tải ảnh TĨNH trong (f0, f1]: cv = canvas → texture · anh = Image → texture · ve = tải ngay lúc vẽ (không qua hàng nạp nền) · max1 = nhiều nhất 1 khung
     window.__tk = (f0, f1) => { const t = window.__up.filter(u => u[0] > f0 && u[0] <= f1 && u[4] === 't'); const pt = {}; for (const u of t) pt[u[0]] = (pt[u[0]] || 0) + 1;
       return { cv: t.filter(u => !u[10]).length, anh: t.filter(u => u[10]).length, ve: t.filter(u => !u[5]).length, truoc: t.filter(u => u[9]).length, max1: Math.max(0, ...Object.values(pt)), khungCo: Object.keys(pt).length }; };
@@ -110,7 +110,17 @@ const T0 = Date.now(), tg = () => ' [' + Math.round((Date.now() - T0) / 1000) + 
       }
     };
   }, [MODE, !!E.DAT]);
-  if (E.JS) await p.evaluate(E.JS);
+  if (E.JS) { kq.js = await p.evaluate(E.JS); console.error("js " + JSON.stringify(kq.js)); }
+  if (E.MAT) { // MAT=600,720: mất ngữ cảnh WebGL ở khung 600 của trận, trả lại ở khung 720 → kq.mat: số lần tải mỗi khung sau khi có lại (phải rải, không dồn 1 khung)
+    const [m0, m1] = E.MAT.split(',').map(Number);
+    await chay(m0); const a0 = await p.evaluate(() => { const e = GLR.gl && GLR.gl.getExtension('WEBGL_lose_context'); if (!e) return 'không có WEBGL_lose_context'; window.__ext = e; e.loseContext(); return 'mất'; });
+    await chay(m1 - m0); const a1 = await p.evaluate(() => { window.__ext.restoreContext(); window.__fLai = window.__f; return 'trả lại'; });
+    await p.waitForTimeout(300); await chay(10); await p.evaluate(() => window.__moc()); await chay(590);
+    kq.mat = await p.evaluate(([a0, a1]) => { const f = window.__fLai, t = window.__up.filter(u => u[0] > f && u[4] === 't'), pk = {}; for (const u of t) pk[u[0] - f] = (pk[u[0] - f] || 0) + 1;
+      const kh = Object.keys(pk).map(Number).sort((x, y) => x - y), sau = (a, b) => t.filter(u => u[0] - f > a && u[0] - f <= b).length;
+      return { a0, a1, glLai: !!GLR.bat && !GLR.mat && !!GLR.hien, the: GLR.the, np: NS.np ? Object.assign({ hang: NS.np.hang.length }, NS.np.dem) : null, tai_0_30: sau(0, 30), tai_30_120: sau(30, 120), tai_120_600: sau(120, 600), max1Khung_0_30: Math.max(0, ...kh.filter(k => k <= 30).map(k => pk[k])), max1Khung_sau30: Math.max(0, ...kh.filter(k => k > 30).map(k => pk[k])), truoc_sau30: t.filter(u => u[0] - f > 30 && u[9]).length, veChet: GLR.bn.veChet, loi: window.__loi || '' }; }, [a0, a1]);
+    console.error('mat ' + JSON.stringify(kq.mat));
+  }
   kq.moc = []; let daTrum = 0, daChieu = 0;
   for (let s = 10; s <= GIAY; s += 10) {
     for (let i = 0; i < 20; i++) { // 30 khung một lượt: kịp chụp khung trùm ra / chiêu đầu
@@ -149,15 +159,15 @@ const T0 = Date.now(), tg = () => ' [' + Math.round((Date.now() - T0) / 1000) + 
   }, GIAY);
   kq.mang = { truocTran: mang[0], moDau: mang[1], giuaTran: mang[2], tenMoDau: mangTen[1].slice(0, 400), tenGiua: mangTen[2].slice(0, 400) };
   for (const m of mang) m.kb = Math.round(m.kb);
-  if (MODE === 'gt') {
+  {
     Object.assign(kq, await p.evaluate(() => {
       const anh = {}, f0 = window.__f0; for (const t in REN.anh) { const c = REN.anh[t] && REN.anh[t]._cv; if (c && c._lvThay != null) anh[t] = c._lvThay; }
       const co = {}; for (const t in REN.anh) { const a = REN.anh[t]; co[t] = [a.naturalWidth | 0, a.naturalHeight | 0]; }
       return { mv: G.ban.map(B => B.mv && B.mv.id), chuGhi: typeof NS !== 'undefined' && NS.np ? NS.np.chuGhi : null, np: typeof NS !== 'undefined' && NS.np ? NS.np.dem : null, k: +(REN.s * REN.dpr).toFixed(5), chu: (window.__chu || []).map(e => [e[0] - f0].concat(e.slice(1))), anh, co, yeuCau: Object.keys(REN.anh), ycGiua: window.__yc.filter(e => e[0] > f0).map(e => e[1]), taiGiua: [...new Set(window.__up.filter(u => u[0] > f0 && u[10] && u[4] === 't').map(u => u[1]))], trumRa: [...new Set(window.__trum.map(e => e[1]))], chieuLoai: [...window.__loaiHu] };
     }));
-    delete kq.mang.tenMoDau; delete kq.tong.nhom10; delete kq.tong.chieu;
+    if (MODE === 'gt') { delete kq.mang.tenMoDau; delete kq.tong.nhom10; delete kq.tong.chieu; }
   }
-  if (MODE !== 'gt') Object.assign(kq, await p.evaluate(() => ({ k: +(REN.s * REN.dpr).toFixed(5), np: typeof NS !== 'undefined' && NS.np ? NS.np.dem : null, chuGhi: typeof NS !== 'undefined' && NS.np ? NS.np.chuGhi : null, chuTo: (window.__chu || []).length })));
+  kq.chuTo = await p.evaluate(() => (window.__chu || []).filter(e => e[0] > window.__f0).length); // tờ ký tự dựng SAU màn mở đầu
   if (E.SAUJS) kq.sau = await p.evaluate(E.SAUJS);
   kq.loi = await p.evaluate(() => window.__loi || ''); kq.errs = errs.slice(0, 5);
   console.log(JSON.stringify(kq, null, MODE === 'gt' ? 0 : 1));

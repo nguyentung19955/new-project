@@ -1,14 +1,359 @@
 {
-"chihuy": {},
-"chu": [],
+"chihuy": {
+"dahlia": {
+"cmd_rage": 2
+},
+"eve": {
+"cmd_khien": 2
+},
+"hawk": {
+"cmd_ic_hawk": 3
+},
+"tech": {
+"cmd_ic_tech": 3
+},
+"tide": {
+"cmd_fx_luoi": 2
+},
+"weaver": {
+"cmd_ic_weaver": 3
+}
+},
+"chu": [
+[
+"K",
+"900 ",
+" \"TM Display\",\"TM UI\",system-ui,sans-serif",
+10.0003,
+0,
+"",
+0
+],
+[
+"K",
+"900 ",
+" \"TM Display\",\"TM UI\",system-ui,sans-serif",
+10.0003,
+3.4951,
+"round",
+0
+],
+[
+"K",
+"900 ",
+" \"TM Display\",\"TM UI\",system-ui,sans-serif",
+17.0015,
+0,
+"",
+0
+],
+[
+"K",
+"900 ",
+" \"TM Display\",\"TM UI\",system-ui,sans-serif",
+17.0015,
+3.4951,
+"round",
+0
+],
+[
+"A",
+12,
+0,
+1
+],
+[
+"A",
+12,
+0,
+2
+],
+[
+"A",
+12,
+1,
+1
+],
+[
+"A",
+12,
+1,
+2
+],
+[
+"A",
+22,
+0,
+0
+],
+[
+"A",
+22,
+1,
+0
+],
+[
+"A",
+29,
+0,
+0
+],
+[
+"A",
+29,
+0,
+1
+],
+[
+"A",
+29,
+1,
+0
+],
+[
+"A",
+29,
+1,
+1
+],
+[
+"K",
+"900 ",
+" \"TM Display\",\"TM UI\",system-ui,sans-serif",
+7.3321,
+0,
+"",
+0
+],
+[
+"K",
+"900 ",
+" \"TM Display\",\"TM UI\",system-ui,sans-serif",
+7.3321,
+1.6097,
+"round",
+0
+],
+[
+"A",
+12,
+0,
+0
+],
+[
+"A",
+12,
+1,
+0
+],
+[
+"K",
+"900 ",
+" \"TM Display\",\"TM UI\",system-ui,sans-serif",
+10,
+0,
+"",
+0
+],
+[
+"K",
+"900 ",
+" \"TM Display\",\"TM UI\",system-ui,sans-serif",
+10,
+3.4951,
+"round",
+0
+],
+[
+"K",
+"900 ",
+" \"TM Display\",\"TM UI\",system-ui,sans-serif",
+17,
+0,
+"",
+0
+],
+[
+"K",
+"900 ",
+" \"TM Display\",\"TM UI\",system-ui,sans-serif",
+17,
+3.4951,
+"round",
+0
+],
+[
+"L",
+"900 ",
+" \"TM Display\",\"TM UI\",system-ui,sans-serif",
+11,
+0,
+"",
+0
+],
+[
+"L",
+"900 ",
+" \"TM Display\",\"TM UI\",system-ui,sans-serif",
+11,
+3,
+"round",
+0
+],
+[
+"L",
+"900 ",
+" \"TM Display\",\"TM UI\",system-ui,sans-serif",
+16,
+3.15,
+"round",
+0
+],
+[
+"K",
+"900 ",
+" \"TM Display\",\"TM UI\",system-ui,sans-serif",
+7.3321,
+0,
+"",
+2
+],
+[
+"K",
+"900 ",
+" \"TM Display\",\"TM UI\",system-ui,sans-serif",
+7.3321,
+1.6097,
+"round",
+2
+],
+[
+"L",
+"900 ",
+" \"TM Display\",\"TM UI\",system-ui,sans-serif",
+16,
+0,
+"",
+0
+],
+[
+"L",
+"900 ",
+" \"TM Display\",\"TM UI\",system-ui,sans-serif",
+19,
+4.2,
+"round",
+0
+],
+[
+"L",
+"900 ",
+" \"TM Display\",\"TM UI\",system-ui,sans-serif",
+19,
+4.2,
+"round",
+1
+],
+[
+"L",
+"900 ",
+" \"TM Display\",\"TM UI\",system-ui,sans-serif",
+21,
+0,
+"",
+0
+],
+[
+"L",
+"900 ",
+" \"TM Display\",\"TM UI\",system-ui,sans-serif",
+21,
+0,
+"",
+1
+],
+[
+"L",
+"900 ",
+" \"TM Display\",\"TM UI\",system-ui,sans-serif",
+21,
+4.2,
+"round",
+0
+],
+[
+"L",
+"900 ",
+" \"TM Display\",\"TM UI\",system-ui,sans-serif",
+21,
+4.2,
+"round",
+1
+],
+[
+"L",
+"900 ",
+" \"TM Display\",\"TM UI\",system-ui,sans-serif",
+22,
+0,
+"",
+1
+],
+[
+"L",
+"900 ",
+" \"TM Display\",\"TM UI\",system-ui,sans-serif",
+22,
+4.2,
+"round",
+0
+],
+[
+"L",
+"900 ",
+" \"TM Display\",\"TM UI\",system-ui,sans-serif",
+22,
+4.2,
+"round",
+1
+],
+[
+"L",
+"900 ",
+" \"TM Display\",\"TM UI\",system-ui,sans-serif",
+23,
+0,
+"",
+0
+],
+[
+"L",
+"900 ",
+" \"TM Display\",\"TM UI\",system-ui,sans-serif",
+23,
+0,
+"",
+1
+],
+[
+"L",
+"900 ",
+" \"TM Display\",\"TM UI\",system-ui,sans-serif",
+23,
+4.2,
+"round",
+0
+]
+],
 "doi_chieu_tinh": {
 "dung_chung_thuc_khong_co_trong_tinh": [
 "cmd_capsule",
-"cmd_khien",
-"cmd_rage",
+"cmd_ic_twin",
 "h2_glint",
 "h2_tag",
 "h2_vfx_cong",
+"ic_dmg",
+"ic_toc",
 "tb_bang",
 "tb_da",
 "tb_khien",
@@ -17,54 +362,26 @@
 "tb_trum"
 ],
 "dung_chung_tinh_khong_ve": [
-"cb_cam",
-"cb_cap",
-"cb_dua",
-"cb_dung",
-"cb_jp",
-"cb_khung3",
-"cb_lai",
-"cb_nho",
 "cf_o_nha",
 "cf_vong_hop",
-"cf_vong_ren",
 "cong",
-"dan_phao",
-"de_chung",
 "duong_goc",
 "duong_nga3",
 "duong_thang",
 "evo_bom",
 "evo_xacbom",
-"fx_bingo",
 "fx_buff",
-"fx_cb_no",
-"fx_chop_nong",
 "fx_evo_xit",
-"fx_evolve",
-"fx_giot_nuoc",
-"fx_hoa_giay",
 "fx_khoi_doc",
-"fx_la",
-"fx_link",
-"fx_merge",
-"fx_st_cauvong",
-"fx_st_chay",
 "fx_st_dau",
-"fx_st_doc",
 "fx_st_doclay",
 "fx_st_frostbite",
-"fx_st_giapvo",
 "fx_st_keo",
 "fx_st_kep",
 "fx_st_tua",
 "fx_st_xutu",
 "fx_st_yeu",
 "fx_vo_dan",
-"fx_wyrm_lua2",
-"fx_wyrm_lua2_2",
-"fx_wyrm_lua2_3",
-"fxb_cham",
 "ha_canh",
 "ha_duong",
 "ha_goc",
@@ -85,16 +402,13 @@
 "ha_o_vuong",
 "ha_top",
 "ha_trieu",
-"hat_tuyet",
 "hu_cauvong",
 "hu_hoden",
 "hu_khoa",
 "hu_min",
 "hu_vongbang",
 "khay",
-"khung_chon",
 "khung_tt",
-"lev_abyss",
 "loi",
 "loi_hu1",
 "loi_hu2",
@@ -116,20 +430,12 @@
 "nut_lon_xanh",
 "nut_nho",
 "p1_vach_lv",
-"p2_chronolock",
-"p2_copycat",
-"p2_cryo",
-"p2_ember",
 "p2_evolver",
 "p2_genesis",
 "p2_halo",
-"p2_herotile",
 "p2_rewind",
 "phu_bang",
 "phu_ngam",
-"quai_bay",
-"quai_bay_bang",
-"quai_bo",
 "quai_khong_lo",
 "quai_khong_lo_8",
 "quai_que_tach",
@@ -143,8 +449,6 @@
 "seg_sang",
 "seg_tat",
 "seg_trum",
-"sig_l06_courier",
-"sig_l06_gift",
 "sig_l06_shatter",
 "sig_l06_thief",
 "sig_l14_beam",
@@ -152,18 +456,14 @@
 "sig_l14_fusion",
 "sig_l14_heads",
 "sig_l14_hit",
-"sig_l16_o_atk",
 "sig_l16_o_def",
-"sig_l16_o_gold",
 "sig_l16_o_heal",
 "sig_l16_o_void",
 "sig_l16_o_zap",
 "sig_l22_hand",
 "sig_l22_immune",
-"sig_l22_shadow",
 "sig_l22_stage",
 "sig_l22_string",
-"sig_l22_toy",
 "sig_m05_echo",
 "sig_m05_hands",
 "sig_m05_hourglass",
@@ -179,16 +479,12 @@
 "sig_m09_wings",
 "sig_m09_wyrm",
 "sup_khung",
-"sup_link",
-"sup_link_vang",
 "sup_ring",
 "tier_ring_do",
 "tier_ring_tim",
 "tier_ring_trang",
 "tier_ring_xanh",
 "trum_xich_day",
-"trum_xich_vong",
-"trung_1",
 "tv_dich1",
 "tv_dich2",
 "tv_dich3",
@@ -206,14 +502,39 @@
 "vong_xich"
 ],
 "om_nham_chi_tai_khong_ve": {
+"anhsang": [
+"fx_anhsang_hieu",
+"fx_anhsang_tia"
+],
+"aten": [
+"fx_aten_hieu",
+"fx_aten_trung"
+],
 "bang": [
 "dan_bang",
 "fx_bang_hieu",
 "fx_bang_trung"
 ],
+"bao": [
+"fx_bao_hieu"
+],
+"baotuyet": [
+"fx_baotuyet_dan",
+"fx_baotuyet_hieu"
+],
+"bienmau": [
+"bienmau_hop_2",
+"bienmau_hop_3",
+"bienmau_hop_4",
+"bienmau_nong",
+"fx_bienmau_sk"
+],
 "blackhole": [
-"fx_blackhole_dan",
-"fx_blackhole_hieu"
+"fx_blackhole_dan"
+],
+"bocap": [
+"bocap_nong_s2",
+"bocap_nong_s3"
 ],
 "bomhen": [
 "fx_bomhen_hieu"
@@ -231,6 +552,31 @@
 "chimang": [
 "sup_chimang"
 ],
+"chuato": [
+"fx_chuato_dacbiet",
+"fx_chuato_dan2",
+"fx_chuato_dan3",
+"fx_chuato_hieu",
+"fx_chuato_trung3"
+],
+"combo": [
+"combo_nong_s3",
+"combo_phu",
+"fx_combo_hieu"
+],
+"cuongno": [
+"fx_cuongno_dacbiet",
+"fx_cuongno_hieu"
+],
+"cuuvi": [
+"cuuvi_nong_s2",
+"fx_cuuvi_dacbiet",
+"fx_cuuvi_dan2",
+"fx_cuuvi_hieu",
+"fx_cuuvi_hoho",
+"fx_cuuvi_trung3",
+"p3_cuuvi"
+],
 "dichchuyen": [
 "fx_dichchuyen_hieu"
 ],
@@ -238,11 +584,62 @@
 "dan_doc",
 "fx_doc_hieu"
 ],
+"docton": [
+"fx_docton_hieu"
+],
+"dongbo": [
+"fx_dongbo_dacbiet",
+"fx_dongbo_dan2",
+"fx_dongbo_dan3",
+"fx_dongbo_tia"
+],
 "drone": [
 "drone_nong"
 ],
+"epxung": [
+"fx_epxung_hieu"
+],
+"hopbi": [
+"fx_hopbi_dacbiet",
+"fx_hopbi_dan",
+"fx_hopbi_dan2",
+"fx_hopbi_dan3",
+"fx_hopbi_hieu"
+],
+"hopca": [
+"fx_hopca_sk"
+],
+"hutmana": [
+"fx_hutmana_hieu"
+],
+"hydra": [
+"fx_hydra_dacbiet",
+"fx_hydra_dan2",
+"fx_hydra_dan3",
+"fx_hydra_hieu",
+"fx_hydra_trung",
+"fx_hydra_trung3"
+],
+"kepha": [
+"fx_kepha_hieu"
+],
+"khien": [
+"sup_khien"
+],
+"khoathoigian": [
+"hu_khoa"
+],
+"khoisinh": [
+"fx_khoisinh_tia"
+],
+"khuech": [
+"sup_khuech"
+],
 "kiembang": [
 "fx_kiembang_hieu"
+],
+"lanhgia": [
+"sup_lanhgia"
 ],
 "laser": [
 "fx_laser_dan",
@@ -252,17 +649,55 @@
 "dan_lien",
 "fx_lien_hieu"
 ],
+"lienket": [
+"fx_lienket_dan2",
+"fx_lienket_dan3",
+"fx_lienket_hieu"
+],
+"loa": [
+"fx_loa_hieu"
+],
+"lophanung": [
+"fx_lophanung_dan",
+"fx_lophanung_dan3"
+],
+"loren": [
+"fx_loren_dan",
+"fx_loren_hieu"
+],
+"lualien": [
+"fx_lualien_sk"
+],
+"luoicheo": [
+"fx_luoicheo_dacbiet",
+"fx_luoicheo_dan2"
+],
+"luutru": [
+"fx_luutru_sk"
+],
 "mana": [
 "fx_mana_dan",
 "fx_mana_hieu",
-"fxb_cham",
 "sup_mana"
+],
+"marionette": [
+"fx_marionette_hieu"
+],
+"mauhut": [
+"fx_mauhut_b3",
+"mauhut_f4_de",
+"mauhut_f4_nong",
+"mauhut_f4_phu",
+"mauhut_f4_vien"
 ],
 "maychem": [
 "fx_maychem_trung"
 ],
 "mimic": [
 "fx_mimic_hieu"
+],
+"min": [
+"fx_min_hieu"
 ],
 "mortar": [
 "fx_mortar_hieu",
@@ -271,8 +706,39 @@
 "nam": [
 "fx_nam_hieu"
 ],
+"nangluong": [
+"fx_nangluong_hieu"
+],
+"nayda": [
+"fx_nayda_hieu"
+],
+"nemesis": [
+"fx_nemesis_hieu",
+"fx_nemesis_trung"
+],
+"ngaithoigian": [
+"fx_ngaithoigian_dan2",
+"fx_ngaithoigian_trung3",
+"hu_khoa"
+],
+"ngoisao": [
+"fx_ngoisao_dan2",
+"ngoisao_nong_s1"
+],
+"nhanban": [
+"fx_nhanban_hieu"
+],
 "nhanmana": [
 "fx_nhanmana_hieu"
+],
+"nhatthuc": [
+"hu_trangkhuyet"
+],
+"nhieusong": [
+"fx_nhieusong_hieu"
+],
+"no5": [
+"fx_no5_hieu"
 ],
 "orbital": [
 "fx_orbital_bomno",
@@ -294,6 +760,10 @@
 "fx_overlord_dan3",
 "fx_overlord_hieu"
 ],
+"pandora": [
+"fx_pandora_hieu",
+"pandora_dia"
+],
 "phun": [
 "fx_phun_hieu"
 ],
@@ -307,114 +777,114 @@
 "fx_railgun_trung",
 "p3_railgun"
 ],
+"ronglua": [
+"fx_ronglua_dacbiet",
+"fx_ronglua_dan2",
+"fx_ronglua_dan3",
+"fx_ronglua_dive",
+"fx_ronglua_hieu",
+"fx_ronglua_trung3"
+],
+"santhuong": [
+"fx_santhuong_hieu"
+],
+"saochep": [
+"fx_saochep_hieu"
+],
 "set": [
 "fx_set_dan",
 "fx_set_hieu",
 "fx_set_trung"
 ],
+"sinhdoi": [
+"fx_sinhdoi_hieu"
+],
+"soi": [
+"fx_soi_dacbiet",
+"fx_soi_dan2",
+"fx_soi_dan3",
+"fx_soi_hieu",
+"fx_soi_trung",
+"fx_soi_trung3"
+],
 "sungluc": [
 "fx_sungluc_hieu"
 ],
+"taylo": [
+"sup_taylo"
+],
+"thanhdia": [
+"fx_thanhdia_sk"
+],
 "tia": [
-"dan_tia",
 "fx_tia_hieu"
+],
+"tienhoa": [
+"fx_tienhoa_dacbiet",
+"fx_tienhoa_dan",
+"fx_tienhoa_dan2",
+"fx_tienhoa_dan3",
+"fx_tienhoa_hieu",
+"fx_tienhoa_tia",
+"fx_tienhoa_trung3",
+"trung_chay7"
+],
+"tuthan": [
+"fx_tuthan_trung",
+"sup_tuthan"
+],
+"vughep": [
+"fx_vughep_hieu"
+],
+"vungdoc": [
+"fx_vungdoc_hieu"
 ],
 "wallgen": [
 "fx_wallgen_dan",
 "fx_wallgen_hieu",
 "fx_wallgen_vang"
 ],
+"xaotron": [
+"fx_xaotron_hieu"
+],
 "xucxac": [
 "fx_xucxac_hieu"
+],
+"xuonganh": [
+"fx_xuonganh_sk",
+"tier_ring_vang"
 ]
 },
 "om_nham_khong_xin": {
 "anhsang": [
-"anhsang_de",
-"anhsang_nong",
 "anhsang_nong_v1",
-"anhsang_phu",
-"anhsang_vien",
-"fx_anhsang_dan",
-"fx_anhsang_hieu",
-"fx_anhsang_no",
-"fx_anhsang_tia",
-"fx_anhsang_trung"
+"anhsang_phu"
 ],
 "aten": [
-"aten_de",
-"aten_nong",
 "aten_nong_v1",
-"aten_phu",
-"aten_vien",
-"fx_aten_dan",
-"fx_aten_hieu",
-"fx_aten_no",
-"fx_aten_trung",
-"p3_aten"
+"aten_phu"
 ],
 "bang": [
 "bang_cutin_nen",
 "bang_nong_v1",
 "bang_phu",
 "bang_trum_nen",
-"bang_wave_nen",
-"dosig_hex",
-"dosig_sen",
-"dosig_tran",
-"fx_la"
+"bang_wave_nen"
 ],
 "bao": [
-"bao_de",
-"bao_nong",
 "bao_nong_v1",
-"bao_phu",
-"bao_vien",
-"fx_bao_dan",
-"fx_bao_hieu",
-"fx_bao_no",
-"fx_bao_tia",
-"fx_bao_trung"
+"bao_phu"
 ],
 "baotuyet": [
-"baotuyet_de",
-"baotuyet_nong",
 "baotuyet_nong_v1",
-"baotuyet_phu",
-"baotuyet_vien",
-"fx_baotuyet_dan",
-"fx_baotuyet_hieu",
-"fx_baotuyet_no",
-"p3_baotuyet"
+"baotuyet_phu"
 ],
 "bienmau": [
-"bienmau_de",
-"bienmau_hop_1",
-"bienmau_hop_2",
-"bienmau_hop_3",
-"bienmau_hop_4",
-"bienmau_m_do",
-"bienmau_m_lam",
-"bienmau_m_luc",
-"bienmau_m_vang",
-"bienmau_nong",
-"bienmau_phu",
-"bienmau_vien",
-"fx_bienmau_hop",
-"fx_bienmau_sk"
+"bienmau_phu"
 ],
 "blackhole": [
 "blackhole_nong_v1",
 "blackhole_phu"
-],
-"bocap": [
-"bocap_de",
-"bocap_nong",
-"bocap_nong_s1",
-"bocap_nong_s2",
-"bocap_nong_s3",
-"bocap_phu",
-"bocap_vien"
 ],
 "bomhen": [
 "bomhen_nong_v1",
@@ -428,72 +898,29 @@
 "canon_nong_v1"
 ],
 "cauvong": [
-"cauvong_de",
-"cauvong_nong",
 "cauvong_nong_v1",
-"cauvong_phu",
-"cauvong_vien",
-"fx_cauvong_dan",
-"fx_cauvong_hieu",
-"fx_cauvong_no",
-"fx_cauvong_trung"
+"cauvong_phu"
 ],
 "chimang": [
 "chimang_nong_v1",
 "chimang_phu"
 ],
 "chuato": [
-"chuato_de",
-"chuato_nong",
-"chuato_nong_s1",
-"chuato_nong_s2",
-"chuato_nong_s3",
 "chuato_nong_v1",
-"chuato_phu",
-"chuato_vien",
-"fx_chuato_dacbiet",
-"fx_chuato_dan",
-"fx_chuato_dan2",
-"fx_chuato_dan3",
-"fx_chuato_hieu",
-"fx_chuato_no",
-"fx_chuato_trung",
-"fx_chuato_trung3"
+"chuato_phu"
 ],
 "cobac": [
-"cb_xu",
 "cobac_de",
-"cobac_nong",
-"cobac_nong_s1",
-"cobac_nong_s2",
-"cobac_nong_s3",
 "cobac_phu",
 "cobac_vien"
 ],
 "combo": [
-"combo_de",
-"combo_nong",
-"combo_nong_s1",
-"combo_nong_s2",
-"combo_nong_s3",
-"combo_nong_v1",
-"combo_phu",
-"combo_vien",
-"fx_combo_dan",
-"fx_combo_hieu",
-"fx_combo_no",
-"fx_combo_trung"
+"combo_nong_v1"
 ],
 "congap": [
-"congap_de",
-"congap_nong",
-"congap_phu",
-"congap_vien",
-"trung_1"
+"congap_phu"
 ],
 "cuongno": [
-"cuongno_de",
-"cuongno_nong",
 "cuongno_nong_s1",
 "cuongno_nong_s1_v1",
 "cuongno_nong_s2",
@@ -501,39 +928,14 @@
 "cuongno_nong_s3",
 "cuongno_nong_s3_v1",
 "cuongno_nong_v1",
-"cuongno_phu",
-"cuongno_vien",
-"fx_cuongno_dacbiet",
-"fx_cuongno_dan",
-"fx_cuongno_dan2",
-"fx_cuongno_dan3",
-"fx_cuongno_hieu",
-"fx_cuongno_no",
-"fx_cuongno_trung",
-"fx_cuongno_trung3"
+"cuongno_phu"
 ],
 "cuuvi": [
-"cuuvi_de",
-"cuuvi_nong",
-"cuuvi_nong_s1",
 "cuuvi_nong_s1_v1",
-"cuuvi_nong_s2",
 "cuuvi_nong_s2_v1",
-"cuuvi_nong_s3",
 "cuuvi_nong_s3_v1",
 "cuuvi_nong_v1",
-"cuuvi_phu",
-"cuuvi_vien",
-"fx_cuuvi_dacbiet",
-"fx_cuuvi_dan",
-"fx_cuuvi_dan2",
-"fx_cuuvi_dan3",
-"fx_cuuvi_hieu",
-"fx_cuuvi_hoho",
-"fx_cuuvi_no",
-"fx_cuuvi_trung",
-"fx_cuuvi_trung3",
-"p3_cuuvi"
+"cuuvi_phu"
 ],
 "dichchuyen": [
 "dichchuyen_nong_v1",
@@ -544,69 +946,28 @@
 "doc_phu"
 ],
 "docton": [
-"docton_de",
-"docton_nong",
 "docton_nong_v1",
-"docton_phu",
-"docton_vien",
-"fx_docton_dan",
-"fx_docton_hieu",
-"fx_docton_no",
-"fx_docton_tia",
-"fx_docton_trung"
+"docton_phu"
 ],
 "dongbo": [
-"dongbo_de",
-"dongbo_nong",
-"dongbo_nong_s1",
 "dongbo_nong_s1_v1",
-"dongbo_nong_s2",
 "dongbo_nong_s2_v1",
-"dongbo_nong_s3",
 "dongbo_nong_s3_v1",
 "dongbo_nong_v1",
-"dongbo_phu",
-"dongbo_vien",
-"fx_dongbo_dacbiet",
-"fx_dongbo_dan",
-"fx_dongbo_dan2",
-"fx_dongbo_dan3",
-"fx_dongbo_hieu",
-"fx_dongbo_no",
-"fx_dongbo_tia",
-"fx_dongbo_trung",
-"fx_dongbo_trung3"
+"dongbo_phu"
 ],
 "drone": [
 "drone_nong_v1",
 "drone_phu"
 ],
 "epxung": [
-"epxung_de",
-"epxung_nong",
 "epxung_nong_v1",
-"epxung_phu",
-"epxung_vien",
-"fx_epxung_dan",
-"fx_epxung_hieu",
-"fx_epxung_no",
-"fx_epxung_trung"
+"epxung_phu"
 ],
 "guongcong": [
-"fx_guongcong_dan",
-"fx_guongcong_hieu",
-"fx_guongcong_no",
-"fx_guongcong_trung",
-"guongcong_de",
-"guongcong_nong",
-"guongcong_nong_s1",
-"guongcong_nong_s2",
-"guongcong_nong_s3",
 "guongcong_nong_v1",
 "guongcong_phu",
-"guongcong_vien",
-"hu_manhguong",
-"vfxp0_tudong"
+"hu_manhguong"
 ],
 "haoquang": [
 "fx_haoquang_dan",
@@ -621,71 +982,24 @@
 "haoquang_vien"
 ],
 "hasao": [
-"fx_hasao_dan",
-"fx_hasao_hieu",
-"fx_hasao_no",
-"fx_hasao_trung",
-"hasao_de",
-"hasao_nong",
 "hasao_nong_v1",
-"hasao_phu",
-"hasao_vien"
+"hasao_phu"
 ],
 "hopbi": [
-"fx_hopbi_dacbiet",
-"fx_hopbi_dan",
-"fx_hopbi_dan2",
-"fx_hopbi_dan3",
-"fx_hopbi_hieu",
-"fx_hopbi_no",
-"fx_hopbi_trung",
-"fx_hopbi_trung3",
-"hopbi_de",
-"hopbi_nong",
-"hopbi_nong_s1",
 "hopbi_nong_s1_v1",
-"hopbi_nong_s2",
 "hopbi_nong_s2_v1",
-"hopbi_nong_s3",
 "hopbi_nong_s3_v1",
 "hopbi_nong_v1",
-"hopbi_phu",
-"hopbi_vien",
-"p3_hopbi"
+"hopbi_phu"
 ],
 "hopca": [
-"fx_hopca_sk",
-"hopca_de",
-"hopca_nong",
-"hopca_phu",
-"hopca_vien"
+"hopca_phu"
 ],
 "hutmana": [
-"fx_hutmana_dan",
-"fx_hutmana_hieu",
-"fx_hutmana_no",
-"fx_hutmana_trung",
-"hutmana_de",
-"hutmana_nong",
 "hutmana_nong_v1",
-"hutmana_phu",
-"hutmana_vien"
+"hutmana_phu"
 ],
 "hydra": [
-"fx_hydra_dacbiet",
-"fx_hydra_dan",
-"fx_hydra_dan2",
-"fx_hydra_dan3",
-"fx_hydra_hieu",
-"fx_hydra_no",
-"fx_hydra_tia",
-"fx_hydra_trung",
-"fx_hydra_trung3",
-"fx_hydra_vien",
-"hydra_dau",
-"hydra_dau_ha",
-"hydra_de",
-"hydra_nong",
 "hydra_nong_s1",
 "hydra_nong_s1_v1",
 "hydra_nong_s2",
@@ -694,271 +1008,93 @@
 "hydra_nong_s3_v1",
 "hydra_nong_v1",
 "hydra_phu",
-"hydra_than",
-"hydra_than_tt",
-"hydra_vien",
-"p3_hydra"
+"hydra_than_tt"
 ],
 "kepha": [
-"fx_kepha_dan",
-"fx_kepha_hieu",
-"fx_kepha_no",
-"fx_kepha_trung",
-"kepha_de",
-"kepha_nong",
 "kepha_nong_v1",
-"kepha_phu",
-"kepha_vien"
+"kepha_phu"
 ],
 "khien": [
-"fx_khien_dan",
-"fx_khien_hieu",
-"fx_khien_no",
-"fx_khien_trung",
-"fxb_cham",
-"khien_de",
-"khien_nong",
 "khien_nong_v1",
-"khien_phu",
-"khien_vien",
-"sup_khien"
+"khien_phu"
 ],
 "khoathoigian": [
-"fx_khoathoigian_dan",
-"fx_khoathoigian_hieu",
-"fx_khoathoigian_no",
-"fx_khoathoigian_trung",
-"hu_khoa",
-"khoathoigian_de",
-"khoathoigian_nong",
 "khoathoigian_nong_v1",
-"khoathoigian_phu",
-"khoathoigian_vien"
+"khoathoigian_phu"
 ],
 "khoisinh": [
-"fx_khoisinh_dan",
-"fx_khoisinh_hieu",
-"fx_khoisinh_no",
-"fx_khoisinh_tia",
-"fx_khoisinh_trung",
-"khoisinh_de",
-"khoisinh_nong",
-"khoisinh_nong_s1",
-"khoisinh_nong_s2",
-"khoisinh_nong_s3",
 "khoisinh_nong_v1",
-"khoisinh_phu",
-"khoisinh_vien"
+"khoisinh_phu"
 ],
 "khuech": [
-"fx_khuech_dan",
-"fx_khuech_hieu",
-"fx_khuech_no",
-"fx_khuech_trung",
-"khuech_de",
-"khuech_nong",
 "khuech_nong_v1",
-"khuech_phu",
-"khuech_vien",
-"sup_khuech"
+"khuech_phu"
 ],
 "kiembang": [
 "kiembang_nong_v1",
 "kiembang_phu"
 ],
 "lanhgia": [
-"fx_lanhgia_dan",
-"fx_lanhgia_hieu",
-"fx_lanhgia_no",
-"fx_lanhgia_trung",
-"lanhgia_de",
-"lanhgia_nong",
 "lanhgia_nong_v1",
-"lanhgia_phu",
-"lanhgia_vien",
-"sup_lanhgia"
+"lanhgia_phu"
 ],
 "laser": [
 "laser_nong_v1",
 "laser_phu"
 ],
 "leviathan": [
-"fx_leviathan_dan",
-"fx_leviathan_hieu",
-"fx_leviathan_no",
-"fx_leviathan_tia",
-"fx_leviathan_trung",
-"leviathan_de",
-"leviathan_nong",
-"leviathan_nong_s1",
-"leviathan_nong_s2",
-"leviathan_nong_s3",
 "leviathan_nong_v1",
-"leviathan_phu",
-"leviathan_vien"
+"leviathan_phu"
 ],
 "lien": [
 "lien_nong_v1",
 "lien_phu"
 ],
 "lienket": [
-"fx_lienket_dacbiet",
-"fx_lienket_dan",
-"fx_lienket_dan2",
-"fx_lienket_dan3",
-"fx_lienket_hieu",
-"fx_lienket_no",
-"fx_lienket_trung",
-"fx_lienket_trung3",
-"lienket_de",
-"lienket_nong",
-"lienket_nong_s1",
 "lienket_nong_s1_v1",
-"lienket_nong_s2",
 "lienket_nong_s2_v1",
-"lienket_nong_s3",
 "lienket_nong_s3_v1",
 "lienket_nong_v1",
-"lienket_phu",
-"lienket_vien"
+"lienket_phu"
 ],
 "loa": [
-"fx_loa_dan",
-"fx_loa_hieu",
-"fx_loa_no",
-"fx_loa_trung",
-"loa_de",
-"loa_nong",
 "loa_nong_v1",
-"loa_phu",
-"loa_vien"
+"loa_phu"
 ],
 "lophanung": [
-"fx_lophanung_dacbiet",
-"fx_lophanung_dan",
-"fx_lophanung_dan2",
-"fx_lophanung_dan3",
-"fx_lophanung_hieu",
-"fx_lophanung_no",
-"fx_lophanung_trung",
-"fx_lophanung_trung3",
-"lophanung_de",
-"lophanung_nong",
-"lophanung_nong_s1",
 "lophanung_nong_s1_v1",
-"lophanung_nong_s2",
 "lophanung_nong_s2_v1",
-"lophanung_nong_s3",
 "lophanung_nong_s3_v1",
 "lophanung_nong_v1",
-"lophanung_phu",
-"lophanung_vien"
+"lophanung_phu"
 ],
 "loren": [
-"fx_loren_dan",
-"fx_loren_hieu",
-"fx_loren_no",
-"fx_loren_trung",
-"loren_de",
-"loren_nong",
 "loren_nong_v1",
-"loren_phu",
-"loren_songsinh",
-"loren_vien",
-"lorentoc_nong"
+"loren_phu"
 ],
 "lualien": [
-"fx_lualien_sk",
-"lua_t1",
-"lua_t2",
-"lua_t3",
-"lua_t4",
-"lualien_de",
-"lualien_nong",
-"lualien_nong_s1",
-"lualien_nong_s2",
-"lualien_nong_s3",
-"lualien_phu",
-"lualien_vien"
+"lualien_phu"
 ],
 "luoicheo": [
-"fx_luoicheo_dacbiet",
-"fx_luoicheo_dan",
-"fx_luoicheo_dan2",
-"fx_luoicheo_dan3",
-"fx_luoicheo_hieu",
-"fx_luoicheo_no",
-"fx_luoicheo_trung",
-"fx_luoicheo_trung3",
-"luoicheo_de",
-"luoicheo_nong",
-"luoicheo_nong_s1",
 "luoicheo_nong_s1_v1",
-"luoicheo_nong_s2",
 "luoicheo_nong_s2_v1",
-"luoicheo_nong_s3",
 "luoicheo_nong_s3_v1",
 "luoicheo_nong_v1",
-"luoicheo_phu",
-"luoicheo_vien"
+"luoicheo_phu"
 ],
 "luutru": [
-"fx_la",
-"fx_luutru_sk",
-"kho_bay",
-"kho_icon",
-"kho_no",
-"luutru_de",
-"luutru_nong",
-"luutru_nong_s1",
-"luutru_nong_s2",
-"luutru_nong_s3",
-"luutru_phu",
-"luutru_vien"
+"luutru_phu"
 ],
 "mana": [
 "mana_nong_v1",
 "mana_phu"
 ],
 "marionette": [
-"fx_marionette_dan",
-"fx_marionette_day",
-"fx_marionette_hieu",
-"fx_marionette_no",
-"fx_marionette_tay",
-"fx_marionette_thanh",
-"fx_marionette_trung",
-"marionette_de",
-"marionette_nong",
 "marionette_nong_s1",
 "marionette_nong_s2",
 "marionette_nong_s3",
 "marionette_nong_v1",
-"marionette_phu",
-"marionette_vien"
-],
-"mauhut": [
-"fx_mauhut_b1",
-"fx_mauhut_b2",
-"fx_mauhut_b3",
-"fx_mauhut_nova",
-"fx_mauhut_sk",
-"mauhut_de",
-"mauhut_f2_de",
-"mauhut_f2_nong",
-"mauhut_f2_phu",
-"mauhut_f2_vien",
-"mauhut_f3_de",
-"mauhut_f3_nong",
-"mauhut_f3_phu",
-"mauhut_f3_vien",
-"mauhut_f4_de",
-"mauhut_f4_nong",
-"mauhut_f4_phu",
-"mauhut_f4_vien",
-"mauhut_nong",
-"mauhut_phu",
-"mauhut_vien"
+"marionette_phu"
 ],
 "maychem": [
 "maychem_nong_v1",
@@ -969,17 +1105,8 @@
 "mimic_phu"
 ],
 "min": [
-"fx_min_dan",
-"fx_min_hieu",
-"fx_min_mo",
-"fx_min_no",
-"fx_min_trung",
-"min_de",
-"min_nong",
 "min_nong_v1",
-"min_phu",
-"min_vien",
-"p3_min"
+"min_phu"
 ],
 "mortar": [
 "mortar_nong_v1",
@@ -990,67 +1117,22 @@
 "nam_phu"
 ],
 "nangluong": [
-"fx_nangluong_dan",
-"fx_nangluong_hieu",
-"fx_nangluong_no",
-"fx_nangluong_trung",
-"nangluong_de",
-"nangluong_nong",
 "nangluong_nong_v1",
-"nangluong_phu",
-"nangluong_vien"
+"nangluong_phu"
 ],
 "nangsao": [
-"fx_nangsao_dan",
-"fx_nangsao_hieu",
-"fx_nangsao_no",
-"fx_nangsao_trung",
-"nangsao_de",
-"nangsao_nong",
 "nangsao_nong_v1",
-"nangsao_phu",
-"nangsao_vien"
+"nangsao_phu"
 ],
 "nayda": [
-"fx_nayda_dan",
-"fx_nayda_hieu",
-"fx_nayda_no",
-"fx_nayda_trung",
-"hu_luoicua",
-"nayda_de",
-"nayda_nong",
 "nayda_nong_v1",
-"nayda_phu",
-"nayda_vien"
+"nayda_phu"
 ],
 "nemesis": [
-"fx_nemesis_dan",
-"fx_nemesis_hieu",
-"fx_nemesis_no",
-"fx_nemesis_tia",
-"fx_nemesis_trung",
-"nemesis_de",
-"nemesis_nong",
-"nemesis_nong_s1",
-"nemesis_nong_s2",
-"nemesis_nong_s3",
 "nemesis_nong_v1",
-"nemesis_phu",
-"nemesis_vien",
-"p3_nemesis"
+"nemesis_phu"
 ],
 "ngaithoigian": [
-"fx_ngaithoigian_dacbiet",
-"fx_ngaithoigian_dan",
-"fx_ngaithoigian_dan2",
-"fx_ngaithoigian_dan3",
-"fx_ngaithoigian_hieu",
-"fx_ngaithoigian_no",
-"fx_ngaithoigian_trung",
-"fx_ngaithoigian_trung3",
-"hu_khoa",
-"ngaithoigian_de",
-"ngaithoigian_nong",
 "ngaithoigian_nong_s1",
 "ngaithoigian_nong_s1_v1",
 "ngaithoigian_nong_s2",
@@ -1058,91 +1140,37 @@
 "ngaithoigian_nong_s3",
 "ngaithoigian_nong_s3_v1",
 "ngaithoigian_nong_v1",
-"ngaithoigian_phu",
-"ngaithoigian_vien"
+"ngaithoigian_phu"
 ],
 "ngoisao": [
-"fx_ngoisao_dacbiet",
-"fx_ngoisao_dan",
-"fx_ngoisao_dan2",
-"fx_ngoisao_dan3",
-"fx_ngoisao_hieu",
-"fx_ngoisao_no",
-"fx_ngoisao_trung",
-"fx_ngoisao_trung3",
-"ngoisao_de",
-"ngoisao_nong",
-"ngoisao_nong_s1",
 "ngoisao_nong_s1_v1",
-"ngoisao_nong_s2",
 "ngoisao_nong_s2_v1",
-"ngoisao_nong_s3",
 "ngoisao_nong_s3_v1",
 "ngoisao_nong_v1",
-"ngoisao_phu",
-"ngoisao_vien",
-"p3_ngoisao"
+"ngoisao_phu"
 ],
 "nguyenrua": [
-"fx_nguyenrua_sk",
-"nguyenrua_de",
-"nguyenrua_nong",
-"nguyenrua_phu",
-"nguyenrua_vien"
+"nguyenrua_phu"
 ],
 "nhanban": [
-"fx_nhanban_dan",
-"fx_nhanban_hieu",
-"fx_nhanban_no",
-"fx_nhanban_trung",
-"nhanban_de",
-"nhanban_nong",
 "nhanban_nong_v1",
-"nhanban_phu",
-"nhanban_vien"
+"nhanban_phu"
 ],
 "nhanmana": [
 "nhanmana_nong_v1",
 "nhanmana_phu"
 ],
 "nhatthuc": [
-"fx_nhatthuc_dan",
-"fx_nhatthuc_hieu",
-"fx_nhatthuc_no",
-"fx_nhatthuc_tia",
-"fx_nhatthuc_trung",
-"hu_trangkhuyet",
-"nhatthuc_de",
-"nhatthuc_nong",
-"nhatthuc_nong_s1",
-"nhatthuc_nong_s2",
-"nhatthuc_nong_s3",
 "nhatthuc_nong_v1",
-"nhatthuc_phu",
-"nhatthuc_vien",
-"p3_nhatthuc"
+"nhatthuc_phu"
 ],
 "nhieusong": [
-"fx_nhieusong_dan",
-"fx_nhieusong_hieu",
-"fx_nhieusong_no",
-"fx_nhieusong_trung",
-"nhieusong_de",
-"nhieusong_nong",
 "nhieusong_nong_v1",
-"nhieusong_phu",
-"nhieusong_vien"
+"nhieusong_phu"
 ],
 "no5": [
-"fx_no5_dan",
-"fx_no5_hieu",
-"fx_no5_no",
-"fx_no5_trung",
-"no5_de",
-"no5_nong",
 "no5_nong_v1",
-"no5_phu",
-"no5_vien"
+"no5_phu"
 ],
 "orbital": [
 "orbital_nong_s1_v1",
@@ -1160,33 +1188,14 @@
 ],
 "pandora": [
 "fx_lev_bang",
-"fx_pandora_dan",
-"fx_pandora_hieu",
-"fx_pandora_no",
-"fx_pandora_trung",
 "fx_wyrm_lua",
 "lev_rong",
-"pandora_de",
-"pandora_dia",
-"pandora_nong",
 "pandora_nong_s1",
 "pandora_nong_s2",
 "pandora_nong_s3",
 "pandora_nong_v1",
 "pandora_phu",
-"pandora_vien",
-"sig_l04_crest",
-"sig_l04_hammer",
-"sig_l04_star",
 "sig_l06_seal",
-"sig_l16_icons",
-"sig_l16_vault",
-"sig_l16_wheel",
-"sig_m06_comb",
-"sig_m06_crest",
-"sig_m06_drone",
-"sig_m06_pulse",
-"sig_m06_queen",
 "wyrm_rong"
 ],
 "phagiap": [
@@ -1206,34 +1215,6 @@
 "railgun_phu"
 ],
 "ronglua": [
-"fx_ronglua_dacbiet",
-"fx_ronglua_dan",
-"fx_ronglua_dan2",
-"fx_ronglua_dan3",
-"fx_ronglua_dive",
-"fx_ronglua_hieu",
-"fx_ronglua_no",
-"fx_ronglua_trung",
-"fx_ronglua_trung3",
-"fx_ronglua_vet",
-"ronglua_de",
-"ronglua_f1_canh",
-"ronglua_f1_de",
-"ronglua_f1_nong",
-"ronglua_f1_vien",
-"ronglua_f2_canh",
-"ronglua_f2_de",
-"ronglua_f2_nong",
-"ronglua_f2_vien",
-"ronglua_f3_canh",
-"ronglua_f3_de",
-"ronglua_f3_nong",
-"ronglua_f3_vien",
-"ronglua_f4_canh",
-"ronglua_f4_de",
-"ronglua_f4_nong",
-"ronglua_f4_vien",
-"ronglua_nong",
 "ronglua_nong_s1",
 "ronglua_nong_s1_v1",
 "ronglua_nong_s2",
@@ -1241,30 +1222,15 @@
 "ronglua_nong_s3",
 "ronglua_nong_s3_v1",
 "ronglua_nong_v1",
-"ronglua_phu",
-"ronglua_vien"
+"ronglua_phu"
 ],
 "santhuong": [
-"fx_santhuong_dan",
-"fx_santhuong_hieu",
-"fx_santhuong_no",
-"fx_santhuong_trung",
-"santhuong_de",
-"santhuong_nong",
 "santhuong_nong_v1",
-"santhuong_phu",
-"santhuong_vien"
+"santhuong_phu"
 ],
 "saochep": [
-"fx_saochep_dan",
-"fx_saochep_hieu",
-"fx_saochep_no",
-"fx_saochep_trung",
-"saochep_de",
-"saochep_nong",
 "saochep_nong_v1",
-"saochep_phu",
-"saochep_vien"
+"saochep_phu"
 ],
 "set": [
 "fx_set_nho",
@@ -1272,32 +1238,11 @@
 "set_phu"
 ],
 "sinhdoi": [
-"fx_sinhdoi_dan",
-"fx_sinhdoi_hieu",
-"fx_sinhdoi_no",
-"fx_sinhdoi_trung",
-"sinhdoi_de",
-"sinhdoi_nong",
 "sinhdoi_nong_v1",
-"sinhdoi_phu",
-"sinhdoi_vien"
+"sinhdoi_phu"
 ],
 "soi": [
-"fx_soi_dacbiet",
-"fx_soi_dan",
-"fx_soi_dan2",
-"fx_soi_dan3",
-"fx_soi_hieu",
-"fx_soi_no",
 "fx_soi_song",
-"fx_soi_trung",
-"fx_soi_trung3",
-"fx_soi_vuot",
-"p3_soi",
-"soi_dau_thuctinh",
-"soi_dau_thuong",
-"soi_de",
-"soi_nong",
 "soi_nong_s1",
 "soi_nong_s1_v1",
 "soi_nong_s2",
@@ -1305,65 +1250,31 @@
 "soi_nong_s3",
 "soi_nong_s3_v1",
 "soi_nong_v1",
-"soi_phu",
-"soi_vien"
+"soi_phu"
 ],
 "sungluc": [
 "sungluc_nong_v1",
 "sungluc_phu"
 ],
 "taylo": [
-"fx_taylo_dan",
-"fx_taylo_hieu",
-"fx_taylo_no",
-"fx_taylo_trung",
-"sup_taylo",
-"taylo_de",
-"taylo_nong",
 "taylo_nong_v1",
-"taylo_phu",
-"taylo_vien"
+"taylo_phu"
 ],
 "thacmana": [
-"thacmana_de",
-"thacmana_nong",
-"thacmana_phu",
-"thacmana_vien"
+"thacmana_phu"
 ],
 "thanhdia": [
-"fx_thanhdia_sk",
-"thanhdia_de",
-"thanhdia_nong",
-"thanhdia_phu",
-"thanhdia_vien"
+"thanhdia_phu"
 ],
 "thaukinh": [
-"fx_thaukinh_dan",
-"fx_thaukinh_hieu",
-"fx_thaukinh_no",
-"fx_thaukinh_trung",
-"thaukinh_de",
-"thaukinh_nong",
 "thaukinh_nong_v1",
-"thaukinh_phu",
-"thaukinh_vien"
+"thaukinh_phu"
 ],
 "tia": [
 "tia_nong_v1",
 "tia_phu"
 ],
 "tienhoa": [
-"fx_tienhoa_dacbiet",
-"fx_tienhoa_dan",
-"fx_tienhoa_dan2",
-"fx_tienhoa_dan3",
-"fx_tienhoa_hieu",
-"fx_tienhoa_no",
-"fx_tienhoa_tia",
-"fx_tienhoa_trung",
-"fx_tienhoa_trung3",
-"tienhoa_de",
-"tienhoa_nong",
 "tienhoa_nong_s1",
 "tienhoa_nong_s1_v1",
 "tienhoa_nong_s2",
@@ -1371,124 +1282,348 @@
 "tienhoa_nong_s3",
 "tienhoa_nong_s3_v1",
 "tienhoa_nong_v1",
-"tienhoa_phu",
-"tienhoa_vien",
-"trung_1",
-"trung_2",
-"trung_3",
-"trung_chay7",
-"trung_no",
-"trung_vo"
+"tienhoa_phu"
 ],
 "tron": [
 "tron_nong_v1",
 "tron_phu"
 ],
 "tudo": [
-"tudo_de",
-"tudo_nong",
-"tudo_phu",
-"tudo_vien"
+"tudo_phu"
 ],
 "tuthan": [
-"fx_tuthan_dan",
-"fx_tuthan_hieu",
-"fx_tuthan_no",
-"fx_tuthan_trung",
-"p3_tuthan",
-"sup_tuthan",
-"tuthan_de",
-"tuthan_nong",
 "tuthan_nong_v1",
-"tuthan_phu",
-"tuthan_vien"
+"tuthan_phu"
 ],
 "vughep": [
-"fx_vughep_dan",
-"fx_vughep_hieu",
-"fx_vughep_no",
-"fx_vughep_trung",
-"vughep_de",
-"vughep_nong",
 "vughep_nong_v1",
-"vughep_phu",
-"vughep_vien",
-"vughepvang_nong"
+"vughep_phu"
 ],
 "vungdoc": [
-"fx_vungdoc_dan",
-"fx_vungdoc_hieu",
-"fx_vungdoc_no",
-"fx_vungdoc_trung",
-"p3_vungdoc",
-"vungdoc_de",
-"vungdoc_nong",
 "vungdoc_nong_v1",
-"vungdoc_phu",
-"vungdoc_vien"
+"vungdoc_phu"
 ],
 "wallgen": [
 "wallgen_nong_v1",
 "wallgen_phu"
 ],
 "xaotron": [
-"fx_xaotron_dan",
-"fx_xaotron_hieu",
-"fx_xaotron_no",
-"fx_xaotron_trung",
-"xaotron_de",
-"xaotron_nong",
 "xaotron_nong_v1",
-"xaotron_phu",
-"xaotron_vien"
+"xaotron_phu"
 ],
 "xucxac": [
 "xucxac_nong_v1",
 "xucxac_phu"
 ],
 "xuonganh": [
-"fx_xuonganh_sk",
-"tier_ring_vang",
-"xuonganh_de",
-"xuonganh_nong",
-"xuonganh_phu",
-"xuonganh_vien"
+"xuonganh_phu"
 ]
 },
 "om_nham_ve_o_tran_khac": {
 "bang": [
-"fx_bang_vo",
+"dosig_sen",
+"dosig_tran",
+"fx_la",
 "fx_song_xung"
-],
-"baotuyet": [
-"fx_baotuyet_trung"
 ],
 "canon": [
 "fx_canon_trung"
 ],
-"hopbi": [
-"fx_than"
-],
 "khien": [
-"fxb_chet",
-"fxb_khien"
+"fxb_cham"
 ],
 "mana": [
-"fxb_chet",
-"fxb_crit",
-"fxb_dmg",
-"fxb_khien",
-"fxb_max"
+"fxb_cham",
+"fxb_khien"
+],
+"pandora": [
+"sig_l04_crest",
+"sig_l04_hammer",
+"sig_l04_star",
+"sig_m06_comb",
+"sig_m06_crest",
+"sig_m06_drone",
+"sig_m06_pulse",
+"sig_m06_queen"
 ],
 "tia": [
-"fx_tia_sao",
+"dan_tia",
 "tia_set"
 ]
 },
-"sot": {},
+"sot": {
+"aten": [
+"fx_st_doc"
+],
+"bao": [
+"fx_link"
+],
+"bienmau": [
+"fx_lophanung_dacbiet",
+"fx_lophanung_hieu",
+"fx_lophanung_no",
+"fx_lophanung_trung",
+"fx_lophanung_trung3",
+"lophanung_de",
+"lophanung_nong",
+"lophanung_nong_s1",
+"lophanung_nong_s2",
+"lophanung_nong_s3",
+"lophanung_vien",
+"tia_set"
+],
+"blackhole": [
+"fx_song_xung",
+"sig_m01_crush",
+"sig_m01_lens",
+"sig_m01_release",
+"sig_m01_shards",
+"sig_m01_swirl"
+],
+"cauvong": [
+"fx_st_cauvong"
+],
+"chimang": [
+"fxb_mana"
+],
+"chuato": [
+"dosig_hex",
+"fx_hive_drone",
+"fx_hive_lao",
+"fx_hive_no",
+"fx_hive_vet",
+"sig_m06_comb",
+"sig_m06_crest",
+"sig_m06_drone",
+"sig_m06_pulse",
+"sig_m06_queen"
+],
+"cobac": [
+"de_chung",
+"cb_cam",
+"cb_cam_m",
+"cb_cap",
+"cb_dua",
+"cb_dua_m",
+"cb_dung",
+"cb_jp",
+"cb_khung3",
+"cb_lai",
+"cb_nho",
+"cb_nho_m",
+"fx_cb_no",
+"fx_hoa_giay",
+"fx_nhieusong_dan",
+"fx_nhieusong_no",
+"fx_nhieusong_trung",
+"nhieusong_de",
+"nhieusong_nong",
+"nhieusong_vien"
+],
+"combo": [
+"de_chung"
+],
+"congap": [
+"de_chung",
+"h2_ic_chong"
+],
+"cuongno": [
+"fxb_max"
+],
+"cuuvi": [
+"fx_lophanung_dacbiet",
+"fx_lophanung_hieu",
+"fx_lophanung_trung",
+"fx_lophanung_trung3",
+"lophanung_de",
+"lophanung_nong_s1",
+"lophanung_nong_s2",
+"lophanung_nong_s3",
+"lophanung_vien",
+"ic_chet"
+],
+"dongbo": [
+"fx_link",
+"fx_st_doc"
+],
+"guongcong": [
+"fx_giot_nuoc"
+],
+"haoquang": [
+"fx_evolve",
+"trung_1",
+"de_chung",
+"fx_merge",
+"h2_vfx_ghep",
+"sup_link"
+],
+"hasao": [
+"sig_l06_courier",
+"sig_l06_gift"
+],
+"hopbi": [
+"fx_evolve"
+],
+"hopca": [
+"fx_giot_nuoc"
+],
+"hydra": [
+"fx_la"
+],
+"kepha": [
+"fx_evolve"
+],
+"khien": [
+"fx_link"
+],
+"khoathoigian": [
+"p2_chronolock"
+],
+"khoisinh": [
+"dosig_sen",
+"ic_sao",
+"khung_chon"
+],
+"khuech": [
+"fx_st_doc"
+],
+"lanhgia": [
+"fxb_cham"
+],
+"lien": [
+"fx_canon_no",
+"fx_canon_ten",
+"p3_canon"
+],
+"lienket": [
+"fx_link"
+],
+"lualien": [
+"fx_ronglua_vet",
+"p2_ember"
+],
+"luutru": [
+"fx_st_chay"
+],
+"marionette": [
+"fx_la",
+"sig_l22_shadow",
+"sig_l22_toy"
+],
+"mauhut": [
+"fx_giot_nuoc"
+],
+"maychem": [
+"fx_song_xung",
+"fxb_chet"
+],
+"min": [
+"fxb_max"
+],
+"mortar": [
+"fx_canon_no",
+"fx_canon_ten",
+"p3_canon"
+],
+"nangluong": [
+"ic_mana"
+],
+"nguyenrua": [
+"trung_1"
+],
+"nhanmana": [
+"fxb_mana"
+],
+"nhatthuc": [
+"fx_st_chay"
+],
+"no5": [
+"fxb_chet"
+],
+"overlord": [
+"fx_song_xung",
+"dosig_nut"
+],
+"pandora": [
+"dan_phao",
+"sig_l16_o_atk"
+],
+"phun": [
+"tia_set",
+"fxb_max",
+"fx_dien"
+],
+"railgun": [
+"fx_canon_no",
+"fx_canon_ten",
+"p3_canon",
+"fx_canon_trung"
+],
+"ronglua": [
+"fx_st_chay",
+"fx_wyrm_lua2",
+"fx_wyrm_lua2_3",
+"lua_t1",
+"lua_t3"
+],
+"santhuong": [
+"ic_truyna"
+],
+"saochep": [
+"tudo_de",
+"tudo_nong",
+"tudo_vien",
+"nho/saochep",
+"p2_copycat"
+],
+"sinhdoi": [
+"fx_bingo"
+],
+"taylo": [
+"ic_taylo"
+],
+"thacmana": [
+"fx_giot_nuoc",
+"tia_set",
+"fx_dien"
+],
+"thaukinh": [
+"fx_st_chay",
+"sup_link_vang"
+],
+"tia": [
+"fxb_mana"
+],
+"tienhoa": [
+"fx_evolve",
+"fx_la"
+],
+"tuthan": [
+"fxb_chet"
+],
+"vughep": [
+"sig_l04_crest",
+"sig_l04_crown",
+"sig_l04_hammer",
+"sig_l04_star",
+"sup_link"
+],
+"vungdoc": [
+"fx_st_doc"
+],
+"wallgen": [
+"tia_set"
+],
+"xucxac": [
+"fxb_chet",
+"fxb_max"
+],
+"xuonganh": [
+"p2_herotile"
+]
+},
 "trum_om_nham": {
 "freezer": [
-"trum_freezer",
 "trum_freezer_portrait"
 ],
 "hive": [
@@ -1496,107 +1631,80 @@
 "fx_hive_lao",
 "fx_hive_no",
 "fx_hive_vet",
-"trum_hive_8",
-"trum_hive_atk_16",
-"trum_hive_m",
-"trum_hive_m_ong",
-"trum_hive_m_sang",
 "trum_hive_portrait"
 ],
 "jammer": [
-"fx_trum_jammer",
-"trum_jammer_8",
-"trum_jammer_atk_16",
-"trum_jammer_m",
-"trum_jammer_m_nap",
-"trum_jammer_m_sang",
 "trum_jammer_m_vanh",
 "trum_jammer_portrait"
 ],
 "janus": [
-"trum_janus",
 "trum_janus_portrait"
 ],
 "joker_king": [
-"trum_joker_king",
-"trum_joker_king_8",
-"trum_joker_king_atk_16",
-"trum_joker_king_m",
-"trum_joker_king_m_nap",
 "trum_joker_king_portrait",
 "trum_joker_king_r_body",
 "trum_joker_king_r_glow_body",
 "trum_joker_king_r_glow_lid",
-"trum_joker_king_r_inside",
 "trum_joker_king_r_lid",
-"trum_joker_king_r_shadow",
 "trum_joker_king_r_spring"
 ],
 "leech": [
-"fx_trum_leech",
-"trum_leech_8",
-"trum_leech_atk_16",
-"trum_leech_m",
-"trum_leech_m_sang",
 "trum_leech_portrait"
 ],
 "mad_crown": [
-"sig_l04_crown",
-"trum_mad_crown",
-"trum_mad_crown_8",
-"trum_mad_crown_atk_16",
-"trum_mad_crown_m",
-"trum_mad_crown_m_sang",
-"trum_mad_crown_m_vm",
 "trum_mad_crown_portrait"
 ],
 "nightmare": [
-"trum_nightmare",
 "trum_nightmare_portrait"
 ],
 "octopus": [
-"trum_octopus",
-"trum_octopus_m",
-"trum_octopus_m_p0",
-"trum_octopus_m_sang",
 "trum_octopus_portrait"
 ],
 "patcher": [
-"fx_trum_patcher",
-"trum_patcher_8",
-"trum_patcher_atk_16",
-"trum_patcher_m",
-"trum_patcher_m_nap",
-"trum_patcher_m_sang",
 "trum_patcher_portrait"
 ],
 "prism": [
-"fx_trum_prism",
 "prism_seg",
-"trum_prism_8",
-"trum_prism_atk_16",
-"trum_prism_m",
-"trum_prism_m_sang",
 "trum_prism_portrait"
 ],
 "twin_core": [
-"trum_twin_core_8",
-"trum_twin_core_atk_16",
-"trum_twin_core_m",
-"trum_twin_core_m_p0",
 "trum_twin_core_m_p1",
 "trum_twin_core_m_p2",
-"trum_twin_core_m_sang",
 "trum_twin_core_portrait"
 ]
 },
-"trum_sot": {}
+"trum_sot": {
+"hive": [
+"tb_to"
+],
+"jammer": [
+"tb_xich",
+"trum_xich_vong"
+],
+"joker_king": [
+"tb_mimic"
+],
+"leech": [
+"h2_sao",
+"tb_sao"
+],
+"mad_crown": [
+"tb_doiloai"
+],
+"patcher": [
+"tb_suachua"
+],
+"twin_core": [
+"fx_st_giapvo"
+]
+}
 },
 "dung_chung_dau": {
 "cf_dau_sao": 1,
 "cf_hut": 1,
 "cf_no": 1,
 "duong_mui": 0,
+"fx_awaken": 1,
 "fx_bui": 2,
 "fx_cham_trang": 0,
 "fx_laser_tia": 1,
@@ -1605,12 +1713,16 @@
 "fx_st_khienvang": 1,
 "fx_starup": 1,
 "fx_summon": 1,
-"fx_vet_trang": 2,
+"fx_than": 2,
+"fx_tia_sao": 3,
+"fx_vet_trang": 0,
 "fx_vong_lv": 2,
 "fx_vong_mong": 0,
 "fx_vong_trieu": 0,
+"fxb_dmg": 2,
 "fxb_toc": 2,
 "h2_glint": 1,
+"h2_tag": 0,
 "h2_vfx_cong": 1,
 "ha_cong": 1,
 "ha_loi": 1,
@@ -1625,6 +1737,8 @@
 "khoi_1": 1,
 "khoi_2": 1,
 "khoi_3": 0,
+"ngoc_vang": 1,
+"ngoc_xanh": 1,
 "nhan_kn": 0,
 "p1_sao3": 2,
 "p1_sao5": 2,
@@ -1642,258 +1756,88 @@
 "tv_ghep7": 0,
 "tv_ghep8": 0
 },
-"dung_chung_hiem": {},
+"dung_chung_hiem": {
+"cf_vong_ren": {
+"tang": 1,
+"tran": [
+"c4"
+]
+},
+"cmd_ic_twin": {
+"tang": 3,
+"tran": [
+"h5"
+]
+},
+"dosig_tran": {
+"tang": 1,
+"tran": [
+"c7"
+]
+},
+"fx_wyrm_lua2_2": {
+"tang": 0,
+"tran": [
+"h8"
+]
+},
+"lev_abyss": {
+"tang": 2,
+"tran": [
+"h8"
+]
+},
+"p2_cryo": {
+"tang": 0,
+"tran": [
+"c9",
+"h9"
+]
+},
+"sig_l16_o_gold": {
+"tang": 1,
+"tran": [
+"h7"
+]
+}
+},
 "dung_chung_nen": {
-"bang_de": 2,
-"bang_nong": 2,
-"bang_vien": 2,
-"blackhole_de": 2,
-"blackhole_nong": 2,
-"blackhole_vien": 2,
-"bomhen_de": 2,
-"bomhen_nong": 2,
-"bomhen_vien": 2,
-"bua_de": 2,
-"bua_nong": 2,
-"bua_vien": 2,
-"canon_de_1": 2,
-"canon_de_12": 2,
-"canon_de_13": 2,
-"canon_de_15": 2,
-"canon_de_2": 2,
-"canon_de_4": 2,
-"canon_de_5": 2,
-"canon_de_6": 2,
-"canon_de_7": 2,
-"canon_de_8": 2,
-"canon_nong": 2,
-"canon_phu": 3,
-"canon_vien": 2,
-"chimang_de": 2,
-"chimang_nong": 2,
-"chimang_vien": 2,
 "cmd_capsule": 2,
-"cmd_khien": 2,
-"cmd_rage": 2,
-"dichchuyen_de": 2,
-"dichchuyen_nong": 2,
-"dichchuyen_vien": 2,
-"doc_de": 2,
-"doc_nong": 2,
-"doc_vien": 2,
-"dosig_nut": 0,
-"drone_de": 2,
-"drone_vien": 2,
-"fx_awaken": 1,
-"fx_bang_dan": 1,
-"fx_bang_no": 0,
-"fx_bang_vo": 2,
-"fx_baotuyet_trung": 2,
-"fx_blackhole_no": 0,
-"fx_blackhole_trung": 0,
-"fx_bomhen_dan": 3,
-"fx_bomhen_no": 0,
-"fx_bomhen_trung": 0,
-"fx_bua_dan": 3,
-"fx_bua_hieu": 3,
-"fx_bua_no": 0,
-"fx_bua_trung": 0,
-"fx_canon_no": 0,
-"fx_canon_ten": 1,
-"fx_canon_trung": 0,
-"fx_chimang_dan": 2,
-"fx_chimang_hieu": 3,
-"fx_chimang_no": 0,
-"fx_chimang_trung": 0,
-"fx_dichchuyen_dan": 2,
-"fx_dichchuyen_no": 0,
-"fx_dichchuyen_trung": 0,
-"fx_dien": 1,
-"fx_doc_dan": 1,
-"fx_doc_no": 0,
-"fx_doc_trung": 0,
-"fx_drone_bom": 1,
-"fx_drone_dan": 2,
-"fx_drone_hieu": 2,
-"fx_drone_no": 0,
-"fx_drone_trung": 0,
-"fx_kiembang_dan": 1,
-"fx_kiembang_no": 0,
-"fx_kiembang_trung": 0,
-"fx_laser_no": 0,
+"dan_tia": 0,
+"fx_bang_vo": 0,
+"fx_baotuyet_trung": 0,
+"fx_chop_nong": 2,
+"fx_cuuvi_dan": 2,
 "fx_laser_trung": 0,
-"fx_lien_dan": 1,
-"fx_lien_no": 0,
-"fx_lien_trung": 0,
-"fx_mana_no": 0,
-"fx_mana_trung": 0,
-"fx_maychem_dan": 1,
-"fx_maychem_hieu": 3,
-"fx_maychem_no": 0,
-"fx_mimic_dan": 2,
-"fx_mimic_no": 0,
-"fx_mimic_trung": 0,
-"fx_mortar_chum": 1,
-"fx_mortar_dan": 1,
-"fx_mortar_no": 0,
-"fx_nam_dan": 2,
-"fx_nam_no": 0,
-"fx_nam_trung": 0,
-"fx_nhanmana_dan": 2,
-"fx_nhanmana_no": 0,
-"fx_nhanmana_trung": 0,
-"fx_orbital_no": 0,
-"fx_orbital_trung": 0,
-"fx_overlord_dan2": 2,
-"fx_overlord_no": 0,
-"fx_overlord_tia": 1,
-"fx_overlord_trung": 0,
-"fx_overlord_trung3": 2,
 "fx_p14_khoi": 2,
 "fx_p14_song": 1,
 "fx_p14_vong": 1,
-"fx_phagiap_dan": 3,
-"fx_phagiap_hieu": 3,
-"fx_phagiap_no": 0,
-"fx_phagiap_trung": 0,
-"fx_phun_dan": 2,
-"fx_phun_no": 0,
-"fx_phun_trung": 0,
-"fx_radar_dan": 2,
-"fx_radar_hieu": 3,
-"fx_radar_no": 0,
-"fx_radar_trung": 0,
-"fx_railgun_no": 0,
-"fx_set_no": 0,
-"fx_set_tia": 2,
-"fx_song_xung": 0,
 "fx_st_cham": 1,
 "fx_st_dong": 1,
-"fx_sungluc_dan": 1,
-"fx_sungluc_no": 0,
-"fx_sungluc_tia": 2,
-"fx_sungluc_trung": 0,
-"fx_than": 2,
-"fx_tia_dan": 0,
-"fx_tia_no": 0,
-"fx_tia_sao": 4,
-"fx_tia_tia": 2,
-"fx_tia_trung": 0,
-"fx_tron_dan": 3,
-"fx_tron_hieu": 3,
-"fx_tron_no": 0,
-"fx_tron_trung": 0,
-"fx_wallgen_no": 0,
-"fx_wallgen_trung": 0,
-"fx_xucxac_dan": 2,
-"fx_xucxac_no": 0,
-"fx_xucxac_trung": 0,
-"fxb_chet": 2,
 "fxb_crit": 2,
-"fxb_dmg": 2,
 "fxb_khien": 2,
-"fxb_mana": 2,
-"fxb_max": 2,
-"h2_tag": 0,
 "ha_mana": 2,
-"kiembang_de": 2,
-"kiembang_nong": 2,
-"kiembang_vien": 2,
-"laser_de": 2,
-"laser_nong": 2,
-"laser_vien": 2,
-"lien_de": 2,
-"lien_nong": 2,
-"lien_vien": 2,
-"mana_de": 2,
-"mana_nong": 2,
-"mana_vien": 2,
-"maychem_de": 2,
-"maychem_nong": 2,
-"maychem_vien": 2,
-"mimic_de": 2,
-"mimic_nong": 2,
-"mimic_vien": 2,
-"mortar_de": 2,
-"mortar_nong": 2,
-"mortar_vien": 2,
-"nam_de": 2,
-"nam_nong": 2,
-"nam_vien": 2,
-"ngoc_vang": 1,
-"ngoc_xanh": 1,
-"nhanmana_de": 2,
-"nhanmana_nong": 2,
-"nhanmana_vien": 2,
-"orbital_de": 2,
-"orbital_nong": 2,
-"orbital_nong_s2": 2,
-"orbital_vien": 2,
-"overlord_de": 2,
-"overlord_nong": 2,
-"overlord_nong_s1": 2,
-"overlord_nong_s2": 2,
-"overlord_nong_s3": 2,
-"overlord_vien": 2,
+"hat_tuyet": 0,
+"ic_dmg": 2,
+"ic_toc": 2,
 "p1_manh_sao": 2,
 "p1_sao7": 2,
-"p2_blackhole": 0,
-"p2_overlord": 0,
-"p3_bang": 0,
-"p3_bomhen": 0,
-"p3_canon": 1,
-"p3_maychem": 1,
-"p3_mortar": 1,
-"p3_set": 1,
-"p3_wallgen": 1,
-"phagiap_de": 2,
-"phagiap_nong": 2,
-"phagiap_vien": 2,
 "phu_da": 2,
 "phu_lua": 2,
-"phun_de": 2,
-"phun_nong": 2,
-"phun_vien": 2,
-"radar_de": 2,
-"radar_nong": 2,
-"radar_vien": 2,
-"railgun_de": 2,
-"railgun_nong": 2,
-"railgun_vien": 2,
-"set_de": 2,
-"set_nong": 2,
-"set_vien": 2,
-"sig_m01_crush": 0,
-"sig_m01_lens": 0,
-"sig_m01_release": 0,
-"sig_m01_shards": 0,
-"sig_m01_swirl": 0,
-"sungluc_de": 2,
-"sungluc_nong": 2,
-"sungluc_vien": 2,
 "tb_da": 2,
 "tb_khien": 2,
 "tb_lua": 2,
 "tb_snipe": 2,
-"tia_de": 2,
-"tia_nong": 2,
-"tia_set": 3,
-"tia_vien": 2,
-"tron_de": 2,
-"tron_nong": 2,
-"tron_vien": 2,
-"wallgen_de": 2,
-"wallgen_nong": 2,
-"wallgen_vien": 2,
-"xucxac_de": 2,
-"xucxac_nong": 2,
-"xucxac_vien": 2
+"vfxp0_tudong": 0
 },
 "ghi_chu": "Ảnh THỰC được vẽ bằng lớp GL trong các trận bot (tools/thap-kt-nap-truoc.js MODE=gt → tools/thap-nong-meta.py). { tên: tầng nét nhất (0 = nguyên cỡ) ở k = REN.s × REN.dpr = k }. Không sửa tay — sinh lại bằng tools/thap-nong-meta.py sinh.",
 "k": 0.90698,
 "quai": {
+"quai_bay": 2,
 "quai_bay_8": 2,
+"quai_bay_bang": 2,
 "quai_bay_bang_8": 2,
+"quai_bo": 2,
 "quai_bo_8": 2,
 "quai_bo_khien": 2,
 "quai_ca_no": 1,
@@ -1903,66 +1847,203 @@
 "quai_tach_8": 3,
 "quai_tach_m": 2
 },
-"sinh_luc": "2026-11-12T01:58Z",
-"so_tran_luoi": 3,
-"so_tran_trum": 0,
+"sinh_luc": "2026-11-12T03:13Z",
+"so_tran_luoi": 20,
+"so_tran_trum": 12,
+"tran_them_khong_gan": {},
 "trum": {
 "freezer": {
+"trum_freezer": null,
 "trum_freezer_8": 2,
 "trum_freezer_atk_16": 1,
 "trum_freezer_m": 2,
 "trum_freezer_m_khoi": 2,
 "trum_freezer_m_sang": 2
 },
-"hive": {},
-"jammer": {},
+"hive": {
+"tb_to": 2,
+"trum_hive_8": 2,
+"trum_hive_atk_16": 1,
+"trum_hive_m": null,
+"trum_hive_m_ong": null,
+"trum_hive_m_sang": null
+},
+"jammer": {
+"fx_trum_jammer": 2,
+"tb_xich": 2,
+"trum_jammer_8": 2,
+"trum_jammer_atk_16": 1,
+"trum_jammer_m": null,
+"trum_jammer_m_nap": null,
+"trum_jammer_m_sang": null,
+"trum_xich_vong": 2
+},
 "janus": {
+"trum_janus": null,
 "trum_janus_8": 2,
 "trum_janus_atk_16": 1,
 "trum_janus_m": 2,
 "trum_janus_m_p0": 2,
 "trum_janus_m_sang": 2
 },
-"joker_king": {},
-"leech": {},
-"mad_crown": {},
+"joker_king": {
+"tb_mimic": 2,
+"trum_joker_king": null,
+"trum_joker_king_8": 2,
+"trum_joker_king_atk_16": 1,
+"trum_joker_king_m": 2,
+"trum_joker_king_m_nap": 2,
+"trum_joker_king_r_inside": null,
+"trum_joker_king_r_shadow": null
+},
+"leech": {
+"fx_trum_leech": 2,
+"h2_sao": 4,
+"tb_sao": 1,
+"trum_leech_8": 2,
+"trum_leech_atk_16": 1,
+"trum_leech_m": 2,
+"trum_leech_m_sang": 2
+},
+"mad_crown": {
+"sig_l04_crown": 1,
+"tb_doiloai": 2,
+"trum_mad_crown": null,
+"trum_mad_crown_8": 2,
+"trum_mad_crown_atk_16": 1,
+"trum_mad_crown_m": null,
+"trum_mad_crown_m_sang": null,
+"trum_mad_crown_m_vm": null
+},
 "nightmare": {
+"trum_nightmare": null,
 "trum_nightmare_8": 2,
 "trum_nightmare_atk_16": 1,
 "trum_nightmare_m": 2,
 "trum_nightmare_m_sang": 2
 },
 "octopus": {
+"trum_octopus": null,
 "trum_octopus_8": 2,
-"trum_octopus_atk_16": 1
+"trum_octopus_atk_16": 1,
+"trum_octopus_m": 2,
+"trum_octopus_m_p0": 2,
+"trum_octopus_m_sang": 2
 },
-"patcher": {},
-"prism": {},
-"twin_core": {}
+"patcher": {
+"fx_trum_patcher": 2,
+"tb_suachua": 2,
+"trum_patcher_8": 2,
+"trum_patcher_atk_16": 1,
+"trum_patcher_m": null,
+"trum_patcher_m_nap": null,
+"trum_patcher_m_sang": null
+},
+"prism": {
+"fx_trum_prism": 2,
+"trum_prism_8": 2,
+"trum_prism_atk_16": null,
+"trum_prism_m": 2,
+"trum_prism_m_sang": 2
+},
+"twin_core": {
+"fx_st_giapvo": 2,
+"trum_twin_core_8": 2,
+"trum_twin_core_atk_16": 1,
+"trum_twin_core_m": null,
+"trum_twin_core_m_p0": null,
+"trum_twin_core_m_sang": null
+}
 },
 "u": {
-"anhsang": {},
-"aten": {},
+"anhsang": {
+"anhsang_de": 2,
+"anhsang_nong": 2,
+"anhsang_vien": 2,
+"fx_anhsang_dan": 2,
+"fx_anhsang_no": 0,
+"fx_anhsang_trung": 0
+},
+"aten": {
+"aten_de": 2,
+"aten_nong": 2,
+"aten_vien": 2,
+"fx_aten_dan": 1,
+"fx_aten_no": 0,
+"fx_st_doc": 1,
+"p3_aten": 0
+},
 "bang": {
 "bang_de": 2,
 "bang_nong": 2,
 "bang_vien": 2,
 "fx_bang_dan": 1,
 "fx_bang_no": 0,
+"fx_bang_vo": 0,
 "p3_bang": 0
 },
-"bao": {},
-"baotuyet": {},
-"bienmau": {},
+"bao": {
+"bao_de": 2,
+"bao_nong": 2,
+"bao_vien": 2,
+"fx_bao_dan": 2,
+"fx_bao_no": 0,
+"fx_bao_tia": 2,
+"fx_bao_trung": 0,
+"fx_link": 0
+},
+"baotuyet": {
+"baotuyet_de": 2,
+"baotuyet_nong": 2,
+"baotuyet_vien": 2,
+"fx_baotuyet_no": 0,
+"fx_baotuyet_trung": 0,
+"p3_baotuyet": 1
+},
+"bienmau": {
+"bienmau_de": 2,
+"bienmau_hop_1": 2,
+"bienmau_m_do": 0,
+"bienmau_m_lam": 0,
+"bienmau_m_luc": 2,
+"bienmau_m_vang": 0,
+"bienmau_vien": 2,
+"fx_bienmau_hop": 0,
+"fx_lophanung_dacbiet": 0,
+"fx_lophanung_hieu": 0,
+"fx_lophanung_no": 0,
+"fx_lophanung_trung": 0,
+"fx_lophanung_trung3": 2,
+"lophanung_de": 2,
+"lophanung_nong": 2,
+"lophanung_nong_s1": 2,
+"lophanung_nong_s2": 2,
+"lophanung_nong_s3": 2,
+"lophanung_vien": 2,
+"tia_set": 2
+},
 "blackhole": {
 "blackhole_de": 2,
 "blackhole_nong": 2,
 "blackhole_vien": 2,
+"fx_blackhole_hieu": 0,
 "fx_blackhole_no": 0,
 "fx_blackhole_trung": 0,
-"p2_blackhole": 0
+"fx_song_xung": 0,
+"p2_blackhole": 0,
+"sig_m01_crush": 0,
+"sig_m01_lens": 0,
+"sig_m01_release": 0,
+"sig_m01_shards": 0,
+"sig_m01_swirl": 0
 },
-"bocap": {},
+"bocap": {
+"bocap_de": 2,
+"bocap_nong": 2,
+"bocap_nong_s1": 2,
+"bocap_phu": 4,
+"bocap_vien": 2
+},
 "bomhen": {
 "bomhen_de": 2,
 "bomhen_nong": 2,
@@ -1997,9 +2078,18 @@
 "canon_vien": 2,
 "fx_canon_no": 0,
 "fx_canon_ten": 1,
-"p3_canon": 1
+"p3_canon": 0
 },
-"cauvong": {},
+"cauvong": {
+"cauvong_de": 2,
+"cauvong_nong": 2,
+"cauvong_vien": 2,
+"fx_cauvong_dan": 2,
+"fx_cauvong_hieu": 3,
+"fx_cauvong_no": 0,
+"fx_cauvong_trung": 0,
+"fx_st_cauvong": 1
+},
 "chimang": {
 "chimang_de": 2,
 "chimang_nong": 2,
@@ -2007,14 +2097,109 @@
 "fx_chimang_dan": 2,
 "fx_chimang_hieu": 3,
 "fx_chimang_no": 0,
-"fx_chimang_trung": 0
+"fx_chimang_trung": 0,
+"fxb_mana": 2
 },
-"chuato": {},
-"cobac": {},
-"combo": {},
-"congap": {},
-"cuongno": {},
-"cuuvi": {},
+"chuato": {
+"chuato_de": 2,
+"chuato_nong": 2,
+"chuato_nong_s1": 2,
+"chuato_nong_s2": 2,
+"chuato_nong_s3": 2,
+"chuato_vien": 2,
+"dosig_hex": 1,
+"fx_chuato_dan": 3,
+"fx_chuato_no": 0,
+"fx_chuato_trung": 0,
+"fx_hive_drone": 2,
+"fx_hive_lao": 0,
+"fx_hive_no": 1,
+"fx_hive_vet": 0,
+"sig_m06_comb": 2,
+"sig_m06_crest": 1,
+"sig_m06_drone": 1,
+"sig_m06_pulse": 1,
+"sig_m06_queen": 2
+},
+"cobac": {
+"cb_cam": 2,
+"cb_cam_m": 3,
+"cb_cap": 3,
+"cb_dua": 2,
+"cb_dua_m": 3,
+"cb_dung": 3,
+"cb_jp": 1,
+"cb_khung3": 0,
+"cb_lai": 2,
+"cb_nho": 2,
+"cb_nho_m": 3,
+"cb_xu": 0,
+"cobac_nong": 2,
+"cobac_nong_s1": 2,
+"cobac_nong_s2": 2,
+"cobac_nong_s3": 2,
+"de_chung": 3,
+"fx_cb_no": 0,
+"fx_hoa_giay": 3,
+"fx_nhieusong_dan": 2,
+"fx_nhieusong_no": 0,
+"fx_nhieusong_trung": 0,
+"nhieusong_de": 2,
+"nhieusong_nong": 2,
+"nhieusong_vien": 2
+},
+"combo": {
+"combo_de": 2,
+"combo_nong": 1,
+"combo_nong_s1": 2,
+"combo_nong_s2": 2,
+"combo_vien": 2,
+"de_chung": 3,
+"fx_combo_dan": 2,
+"fx_combo_no": 0,
+"fx_combo_trung": 0
+},
+"congap": {
+"congap_de": 2,
+"congap_nong": 2,
+"congap_vien": 2,
+"de_chung": 3,
+"h2_ic_chong": 1,
+"trung_1": 2
+},
+"cuongno": {
+"cuongno_de": 2,
+"cuongno_nong": 2,
+"cuongno_vien": 2,
+"fx_cuongno_dan": 1,
+"fx_cuongno_dan2": 2,
+"fx_cuongno_dan3": 2,
+"fx_cuongno_no": 0,
+"fx_cuongno_trung": 0,
+"fx_cuongno_trung3": 2,
+"fxb_max": 2
+},
+"cuuvi": {
+"cuuvi_de": 2,
+"cuuvi_nong": 2,
+"cuuvi_nong_s1": 2,
+"cuuvi_nong_s3": 2,
+"cuuvi_vien": 2,
+"fx_cuuvi_dan": 2,
+"fx_cuuvi_dan3": 3,
+"fx_cuuvi_no": 0,
+"fx_cuuvi_trung": 0,
+"fx_lophanung_dacbiet": 0,
+"fx_lophanung_hieu": 0,
+"fx_lophanung_trung": 0,
+"fx_lophanung_trung3": 2,
+"ic_chet": 2,
+"lophanung_de": 2,
+"lophanung_nong_s1": 2,
+"lophanung_nong_s2": 2,
+"lophanung_nong_s3": 2,
+"lophanung_vien": 2
+},
 "dichchuyen": {
 "dichchuyen_de": 2,
 "dichchuyen_nong": 2,
@@ -2031,8 +2216,30 @@
 "fx_doc_no": 0,
 "fx_doc_trung": 0
 },
-"docton": {},
-"dongbo": {},
+"docton": {
+"docton_de": 2,
+"docton_nong": 2,
+"docton_vien": 2,
+"fx_docton_dan": 2,
+"fx_docton_no": 0,
+"fx_docton_tia": 3,
+"fx_docton_trung": 0
+},
+"dongbo": {
+"dongbo_de": 2,
+"dongbo_nong": 2,
+"dongbo_nong_s1": 2,
+"dongbo_nong_s2": 2,
+"dongbo_nong_s3": 2,
+"dongbo_vien": 2,
+"fx_dongbo_dan": 2,
+"fx_dongbo_hieu": 3,
+"fx_dongbo_no": 0,
+"fx_dongbo_trung": 0,
+"fx_dongbo_trung3": 2,
+"fx_link": 0,
+"fx_st_doc": 1
+},
 "drone": {
 "drone_de": 2,
 "drone_vien": 2,
@@ -2042,19 +2249,143 @@
 "fx_drone_no": 0,
 "fx_drone_trung": 0
 },
-"epxung": {},
-"guongcong": {},
-"haoquang": {},
-"hasao": {},
-"hopbi": {},
-"hopca": {},
-"hutmana": {},
-"hydra": {},
-"kepha": {},
-"khien": {},
-"khoathoigian": {},
-"khoisinh": {},
-"khuech": {},
+"epxung": {
+"epxung_de": 2,
+"epxung_nong": 2,
+"epxung_vien": 2,
+"fx_epxung_dan": 2,
+"fx_epxung_no": 0,
+"fx_epxung_trung": 0
+},
+"guongcong": {
+"fx_giot_nuoc": 3,
+"fx_guongcong_dan": 2,
+"fx_guongcong_hieu": 2,
+"fx_guongcong_no": 0,
+"fx_guongcong_trung": 0,
+"guongcong_de": 2,
+"guongcong_nong": 2,
+"guongcong_nong_s1": 2,
+"guongcong_nong_s2": 2,
+"guongcong_nong_s3": 2,
+"guongcong_vien": 2,
+"vfxp0_tudong": 0
+},
+"haoquang": {
+"de_chung": 3,
+"fx_evolve": 1,
+"fx_merge": 1,
+"h2_vfx_ghep": 0,
+"sup_link": 0,
+"trung_1": 2
+},
+"hasao": {
+"fx_hasao_dan": 3,
+"fx_hasao_hieu": 3,
+"fx_hasao_no": 0,
+"fx_hasao_trung": 0,
+"hasao_de": 2,
+"hasao_nong": 2,
+"hasao_vien": 2,
+"sig_l06_courier": 1,
+"sig_l06_gift": 2
+},
+"hopbi": {
+"fx_evolve": 1,
+"fx_hopbi_no": 0,
+"fx_hopbi_trung": 0,
+"fx_hopbi_trung3": 2,
+"hopbi_de": 2,
+"hopbi_nong": 2,
+"hopbi_nong_s1": 2,
+"hopbi_nong_s2": 2,
+"hopbi_nong_s3": 2,
+"hopbi_vien": 2,
+"p3_hopbi": 1
+},
+"hopca": {
+"fx_giot_nuoc": 3,
+"hopca_de": 2,
+"hopca_nong": 2,
+"hopca_vien": 2
+},
+"hutmana": {
+"fx_hutmana_dan": 2,
+"fx_hutmana_no": 0,
+"fx_hutmana_trung": 0,
+"hutmana_de": 2,
+"hutmana_nong": 2,
+"hutmana_vien": 2
+},
+"hydra": {
+"fx_hydra_dan": 1,
+"fx_hydra_no": 0,
+"fx_hydra_tia": 3,
+"fx_hydra_vien": 2,
+"fx_la": 3,
+"hydra_dau": 2,
+"hydra_dau_ha": 2,
+"hydra_de": 2,
+"hydra_nong": 2,
+"hydra_than": 4,
+"hydra_vien": 2,
+"p3_hydra": 0
+},
+"kepha": {
+"fx_evolve": 1,
+"fx_kepha_dan": 2,
+"fx_kepha_no": 0,
+"fx_kepha_trung": 0,
+"kepha_de": 2,
+"kepha_nong": 2,
+"kepha_vien": 2
+},
+"khien": {
+"fx_khien_dan": 2,
+"fx_khien_hieu": 3,
+"fx_khien_no": 0,
+"fx_khien_trung": 0,
+"fx_link": 0,
+"fxb_khien": 2,
+"khien_de": 2,
+"khien_nong": 2,
+"khien_vien": 2
+},
+"khoathoigian": {
+"fx_khoathoigian_dan": 2,
+"fx_khoathoigian_hieu": 2,
+"fx_khoathoigian_no": 0,
+"fx_khoathoigian_trung": 0,
+"khoathoigian_de": 2,
+"khoathoigian_nong": 2,
+"khoathoigian_vien": 2,
+"p2_chronolock": 0
+},
+"khoisinh": {
+"dosig_sen": 1,
+"fx_khoisinh_dan": 3,
+"fx_khoisinh_hieu": 3,
+"fx_khoisinh_no": 0,
+"fx_khoisinh_trung": 0,
+"ic_sao": 1,
+"khoisinh_de": 2,
+"khoisinh_nong": 2,
+"khoisinh_nong_s1": 2,
+"khoisinh_nong_s2": 2,
+"khoisinh_nong_s3": 2,
+"khoisinh_vien": 2,
+"khung_chon": 0
+},
+"khuech": {
+"fx_khuech_dan": 3,
+"fx_khuech_hieu": 3,
+"fx_khuech_no": 0,
+"fx_khuech_trung": 0,
+"fx_st_doc": 1,
+"khuech_de": 2,
+"khuech_nong": 2,
+"khuech_vien": 2
+},
 "kiembang": {
 "fx_kiembang_dan": 1,
 "fx_kiembang_no": 0,
@@ -2063,7 +2394,16 @@
 "kiembang_nong": 2,
 "kiembang_vien": 2
 },
-"lanhgia": {},
+"lanhgia": {
+"fx_lanhgia_dan": 3,
+"fx_lanhgia_hieu": 3,
+"fx_lanhgia_no": 0,
+"fx_lanhgia_trung": 0,
+"fxb_cham": 2,
+"lanhgia_de": 2,
+"lanhgia_nong": 2,
+"lanhgia_vien": 2
+},
 "laser": {
 "fx_laser_no": 0,
 "fx_laser_trung": 0,
@@ -2071,40 +2411,168 @@
 "laser_nong": 2,
 "laser_vien": 2
 },
-"leviathan": {},
+"leviathan": {
+"fx_leviathan_dan": 1,
+"fx_leviathan_hieu": 2,
+"fx_leviathan_no": 0,
+"fx_leviathan_tia": 3,
+"fx_leviathan_trung": 0,
+"leviathan_de": 2,
+"leviathan_nong": 2,
+"leviathan_nong_s1": 2,
+"leviathan_nong_s2": 2,
+"leviathan_nong_s3": 2,
+"leviathan_vien": 2
+},
 "lien": {
+"fx_canon_no": 0,
+"fx_canon_ten": 1,
 "fx_lien_dan": 1,
 "fx_lien_no": 0,
 "fx_lien_trung": 0,
 "lien_de": 2,
 "lien_nong": 2,
-"lien_vien": 2
+"lien_vien": 2,
+"p3_canon": 0
 },
-"lienket": {},
-"loa": {},
-"lophanung": {},
-"loren": {},
-"lualien": {},
-"luoicheo": {},
-"luutru": {},
+"lienket": {
+"fx_lienket_dacbiet": 4,
+"fx_lienket_dan": 1,
+"fx_lienket_no": 0,
+"fx_lienket_trung": 0,
+"fx_lienket_trung3": 2,
+"fx_link": 0,
+"lienket_de": 2,
+"lienket_nong": 2,
+"lienket_nong_s1": 2,
+"lienket_nong_s2": 2,
+"lienket_nong_s3": 2,
+"lienket_vien": 2
+},
+"loa": {
+"fx_loa_dan": 2,
+"fx_loa_no": 0,
+"fx_loa_trung": 0,
+"loa_de": 2,
+"loa_nong": 2,
+"loa_vien": 2
+},
+"lophanung": {
+"fx_lophanung_dacbiet": 0,
+"fx_lophanung_dan2": 2,
+"fx_lophanung_hieu": 0,
+"fx_lophanung_no": 0,
+"fx_lophanung_trung": 0,
+"fx_lophanung_trung3": 2,
+"lophanung_de": 2,
+"lophanung_nong": 2,
+"lophanung_nong_s1": 2,
+"lophanung_nong_s2": 2,
+"lophanung_nong_s3": 2,
+"lophanung_vien": 2
+},
+"loren": {
+"fx_loren_no": 0,
+"fx_loren_trung": 0,
+"loren_de": 2,
+"loren_nong": 2,
+"loren_songsinh": 2,
+"loren_vien": 2,
+"lorentoc_nong": 2
+},
+"lualien": {
+"fx_ronglua_vet": 0,
+"lua_t1": 2,
+"lua_t2": 2,
+"lua_t3": 2,
+"lua_t4": 2,
+"lualien_de": 2,
+"lualien_nong": 2,
+"lualien_nong_s1": 2,
+"lualien_nong_s2": 2,
+"lualien_nong_s3": 2,
+"lualien_vien": 2,
+"p2_ember": 2
+},
+"luoicheo": {
+"fx_luoicheo_dan": 3,
+"fx_luoicheo_dan3": 3,
+"fx_luoicheo_hieu": 3,
+"fx_luoicheo_no": 0,
+"fx_luoicheo_trung": 0,
+"fx_luoicheo_trung3": 2,
+"luoicheo_de": 2,
+"luoicheo_nong": 2,
+"luoicheo_nong_s1": 2,
+"luoicheo_nong_s2": 2,
+"luoicheo_nong_s3": 2,
+"luoicheo_vien": 2
+},
+"luutru": {
+"fx_la": 3,
+"fx_st_chay": 1,
+"kho_bay": 1,
+"kho_icon": 3,
+"kho_no": 2,
+"luutru_de": 2,
+"luutru_nong": 2,
+"luutru_nong_s1": 2,
+"luutru_nong_s2": 2,
+"luutru_nong_s3": 2,
+"luutru_vien": 2
+},
 "mana": {
 "fx_mana_no": 0,
 "fx_mana_trung": 0,
+"fxb_crit": 2,
 "fxb_mana": 2,
 "mana_de": 2,
 "mana_nong": 2,
 "mana_vien": 2
 },
-"marionette": {},
-"mauhut": {},
+"marionette": {
+"fx_la": 3,
+"fx_marionette_dan": 2,
+"fx_marionette_day": 2,
+"fx_marionette_no": 0,
+"fx_marionette_tay": 1,
+"fx_marionette_thanh": 1,
+"fx_marionette_trung": 0,
+"marionette_de": 2,
+"marionette_nong": 2,
+"marionette_vien": 2,
+"sig_l22_shadow": 2,
+"sig_l22_toy": 1
+},
+"mauhut": {
+"fx_giot_nuoc": 3,
+"fx_mauhut_b1": 3,
+"fx_mauhut_b2": 2,
+"fx_mauhut_nova": 1,
+"fx_mauhut_sk": 0,
+"mauhut_de": 2,
+"mauhut_f2_de": 2,
+"mauhut_f2_nong": 2,
+"mauhut_f2_phu": 4,
+"mauhut_f2_vien": 2,
+"mauhut_f3_de": 2,
+"mauhut_f3_nong": 2,
+"mauhut_f3_phu": 3,
+"mauhut_f3_vien": 2,
+"mauhut_nong": 2,
+"mauhut_phu": 3,
+"mauhut_vien": 2
+},
 "maychem": {
 "fx_maychem_dan": 1,
 "fx_maychem_hieu": 3,
 "fx_maychem_no": 0,
+"fx_song_xung": 0,
+"fxb_chet": 1,
 "maychem_de": 2,
 "maychem_nong": 2,
 "maychem_vien": 2,
-"p3_maychem": 1
+"p3_maychem": 0
 },
 "mimic": {
 "fx_mimic_dan": 2,
@@ -2114,14 +2582,27 @@
 "mimic_nong": 2,
 "mimic_vien": 2
 },
-"min": {},
+"min": {
+"fx_min_dan": 2,
+"fx_min_mo": 1,
+"fx_min_no": 0,
+"fx_min_trung": 0,
+"fxb_max": 2,
+"min_de": 2,
+"min_nong": 2,
+"min_vien": 2,
+"p3_min": 0
+},
 "mortar": {
+"fx_canon_no": 0,
+"fx_canon_ten": 1,
 "fx_mortar_chum": 1,
 "fx_mortar_dan": 1,
 "fx_mortar_no": 0,
 "mortar_de": 2,
 "mortar_nong": 2,
 "mortar_vien": 2,
+"p3_canon": 0,
 "p3_mortar": 1
 },
 "nam": {
@@ -2132,25 +2613,127 @@
 "nam_nong": 2,
 "nam_vien": 2
 },
-"nangluong": {},
-"nangsao": {},
-"nayda": {},
-"nemesis": {},
-"ngaithoigian": {},
-"ngoisao": {},
-"nguyenrua": {},
-"nhanban": {},
+"nangluong": {
+"fx_nangluong_dan": 1,
+"fx_nangluong_no": 0,
+"fx_nangluong_trung": 0,
+"ic_mana": 2,
+"nangluong_de": 2,
+"nangluong_nong": 2,
+"nangluong_vien": 2
+},
+"nangsao": {
+"fx_nangsao_dan": 2,
+"fx_nangsao_hieu": 3,
+"fx_nangsao_no": 0,
+"fx_nangsao_trung": 0,
+"nangsao_de": 2,
+"nangsao_nong": 2,
+"nangsao_vien": 2
+},
+"nayda": {
+"fx_nayda_dan": 2,
+"fx_nayda_no": 0,
+"fx_nayda_trung": 0,
+"hu_luoicua": 1,
+"nayda_de": 2,
+"nayda_nong": 2,
+"nayda_vien": 2
+},
+"nemesis": {
+"fx_nemesis_dan": 2,
+"fx_nemesis_no": 0,
+"fx_nemesis_tia": 3,
+"nemesis_de": 2,
+"nemesis_nong": 2,
+"nemesis_nong_s1": 2,
+"nemesis_nong_s2": 2,
+"nemesis_nong_s3": 2,
+"nemesis_vien": 2,
+"p3_nemesis": 0
+},
+"ngaithoigian": {
+"fx_ngaithoigian_dacbiet": 3,
+"fx_ngaithoigian_dan": 2,
+"fx_ngaithoigian_dan3": 2,
+"fx_ngaithoigian_hieu": 2,
+"fx_ngaithoigian_no": 0,
+"fx_ngaithoigian_trung": 0,
+"ngaithoigian_de": 2,
+"ngaithoigian_nong": 2,
+"ngaithoigian_vien": 2
+},
+"ngoisao": {
+"fx_ngoisao_dacbiet": 2,
+"fx_ngoisao_dan": 2,
+"fx_ngoisao_dan3": 1,
+"fx_ngoisao_hieu": 2,
+"fx_ngoisao_no": 0,
+"fx_ngoisao_trung": 2,
+"fx_ngoisao_trung3": 2,
+"ngoisao_de": 2,
+"ngoisao_nong": 2,
+"ngoisao_nong_s2": 2,
+"ngoisao_nong_s3": 2,
+"ngoisao_vien": 2,
+"p3_ngoisao": 0
+},
+"nguyenrua": {
+"fx_nguyenrua_sk": 0,
+"nguyenrua_de": 2,
+"nguyenrua_nong": 2,
+"nguyenrua_vien": 2,
+"trung_1": 2
+},
+"nhanban": {
+"fx_nhanban_dan": 2,
+"fx_nhanban_no": 0,
+"fx_nhanban_trung": 0,
+"nhanban_de": 2,
+"nhanban_nong": 2,
+"nhanban_vien": 2
+},
 "nhanmana": {
 "fx_nhanmana_dan": 2,
 "fx_nhanmana_no": 0,
 "fx_nhanmana_trung": 0,
+"fxb_mana": 2,
 "nhanmana_de": 2,
 "nhanmana_nong": 2,
 "nhanmana_vien": 2
 },
-"nhatthuc": {},
-"nhieusong": {},
-"no5": {},
+"nhatthuc": {
+"fx_nhatthuc_dan": 2,
+"fx_nhatthuc_hieu": 0,
+"fx_nhatthuc_no": 0,
+"fx_nhatthuc_tia": 3,
+"fx_nhatthuc_trung": 0,
+"fx_st_chay": 1,
+"nhatthuc_de": 2,
+"nhatthuc_nong": 2,
+"nhatthuc_nong_s1": 2,
+"nhatthuc_nong_s2": 2,
+"nhatthuc_nong_s3": 2,
+"nhatthuc_vien": 2,
+"p3_nhatthuc": 0
+},
+"nhieusong": {
+"fx_nhieusong_dan": 2,
+"fx_nhieusong_no": 0,
+"fx_nhieusong_trung": 0,
+"nhieusong_de": 2,
+"nhieusong_nong": 2,
+"nhieusong_vien": 2
+},
+"no5": {
+"fx_no5_dan": 0,
+"fx_no5_no": 0,
+"fx_no5_trung": 0,
+"fxb_chet": 1,
+"no5_de": 2,
+"no5_nong": 2,
+"no5_vien": 2
+},
 "orbital": {
 "fx_orbital_no": 0,
 "fx_orbital_trung": 0,
@@ -2160,11 +2743,13 @@
 "orbital_vien": 2
 },
 "overlord": {
+"dosig_nut": 0,
 "fx_overlord_dan2": 2,
 "fx_overlord_no": 0,
 "fx_overlord_tia": 1,
 "fx_overlord_trung": 0,
 "fx_overlord_trung3": 2,
+"fx_song_xung": 0,
 "overlord_de": 2,
 "overlord_nong": 2,
 "overlord_nong_s1": 2,
@@ -2173,7 +2758,19 @@
 "overlord_vien": 2,
 "p2_overlord": 0
 },
-"pandora": {},
+"pandora": {
+"dan_phao": 3,
+"fx_pandora_dan": 2,
+"fx_pandora_no": 0,
+"fx_pandora_trung": 0,
+"pandora_de": 2,
+"pandora_nong": 2,
+"pandora_vien": 2,
+"sig_l16_icons": 2,
+"sig_l16_o_atk": 1,
+"sig_l16_vault": 1,
+"sig_l16_wheel": 1
+},
 "phagiap": {
 "fx_phagiap_dan": 3,
 "fx_phagiap_hieu": 3,
@@ -2184,12 +2781,15 @@
 "phagiap_vien": 2
 },
 "phun": {
+"fx_dien": 1,
 "fx_phun_dan": 2,
 "fx_phun_no": 0,
 "fx_phun_trung": 0,
+"fxb_max": 2,
 "phun_de": 2,
 "phun_nong": 2,
-"phun_vien": 2
+"phun_vien": 2,
+"tia_set": 2
 },
 "radar": {
 "fx_radar_dan": 2,
@@ -2201,14 +2801,67 @@
 "radar_vien": 2
 },
 "railgun": {
+"fx_canon_no": 0,
+"fx_canon_ten": 1,
+"fx_canon_trung": 0,
 "fx_railgun_no": 0,
+"p3_canon": 0,
 "railgun_de": 2,
 "railgun_nong": 2,
 "railgun_vien": 2
 },
-"ronglua": {},
-"santhuong": {},
-"saochep": {},
+"ronglua": {
+"fx_ronglua_dan": 2,
+"fx_ronglua_no": 0,
+"fx_ronglua_trung": 0,
+"fx_ronglua_vet": 0,
+"fx_st_chay": 1,
+"fx_wyrm_lua2": 0,
+"fx_wyrm_lua2_3": 0,
+"lua_t1": 2,
+"lua_t3": 2,
+"ronglua_de": 2,
+"ronglua_f1_canh": 2,
+"ronglua_f1_de": 2,
+"ronglua_f1_nong": 2,
+"ronglua_f1_vien": 2,
+"ronglua_f2_canh": 2,
+"ronglua_f2_de": 2,
+"ronglua_f2_nong": 2,
+"ronglua_f2_vien": 2,
+"ronglua_f3_canh": 2,
+"ronglua_f3_de": 2,
+"ronglua_f3_nong": 2,
+"ronglua_f3_vien": 2,
+"ronglua_f4_canh": 2,
+"ronglua_f4_de": 2,
+"ronglua_f4_nong": 2,
+"ronglua_f4_vien": 2,
+"ronglua_nong": 2,
+"ronglua_vien": 2
+},
+"santhuong": {
+"fx_santhuong_dan": 2,
+"fx_santhuong_no": 0,
+"fx_santhuong_trung": 0,
+"ic_truyna": 2,
+"santhuong_de": 2,
+"santhuong_nong": 2,
+"santhuong_vien": 2
+},
+"saochep": {
+"fx_saochep_dan": 2,
+"fx_saochep_no": 0,
+"fx_saochep_trung": 0,
+"nho/saochep": 3,
+"p2_copycat": 1,
+"saochep_de": 2,
+"saochep_nong": 2,
+"saochep_vien": 2,
+"tudo_de": 2,
+"tudo_nong": 2,
+"tudo_vien": 2
+},
 "set": {
 "fx_set_no": 0,
 "fx_set_tia": 2,
@@ -2217,8 +2870,26 @@
 "set_nong": 2,
 "set_vien": 2
 },
-"sinhdoi": {},
-"soi": {},
+"sinhdoi": {
+"fx_bingo": 0,
+"fx_sinhdoi_dan": 2,
+"fx_sinhdoi_no": 0,
+"fx_sinhdoi_trung": 0,
+"sinhdoi_de": 2,
+"sinhdoi_nong": 2,
+"sinhdoi_vien": 2
+},
+"soi": {
+"fx_soi_dan": 2,
+"fx_soi_no": 0,
+"fx_soi_vuot": 1,
+"p3_soi": 0,
+"soi_dau_thuctinh": 2,
+"soi_dau_thuong": 2,
+"soi_de": 2,
+"soi_nong": 2,
+"soi_vien": 2
+},
 "sungluc": {
 "fx_sungluc_dan": 1,
 "fx_sungluc_no": 0,
@@ -2228,20 +2899,64 @@
 "sungluc_nong": 2,
 "sungluc_vien": 2
 },
-"taylo": {},
-"thacmana": {},
-"thanhdia": {},
-"thaukinh": {},
+"taylo": {
+"fx_taylo_dan": 2,
+"fx_taylo_hieu": 3,
+"fx_taylo_no": 0,
+"fx_taylo_trung": 0,
+"ic_taylo": 0,
+"taylo_de": 2,
+"taylo_nong": 2,
+"taylo_vien": 2
+},
+"thacmana": {
+"fx_dien": 1,
+"fx_giot_nuoc": 3,
+"thacmana_de": 2,
+"thacmana_nong": 2,
+"thacmana_vien": 2,
+"tia_set": 2
+},
+"thanhdia": {
+"thanhdia_de": 2,
+"thanhdia_nong": 2,
+"thanhdia_vien": 2
+},
+"thaukinh": {
+"fx_st_chay": 1,
+"fx_thaukinh_dan": 3,
+"fx_thaukinh_hieu": 3,
+"fx_thaukinh_no": 0,
+"fx_thaukinh_trung": 0,
+"sup_link_vang": 0,
+"thaukinh_de": 2,
+"thaukinh_nong": 2,
+"thaukinh_vien": 2
+},
 "tia": {
 "fx_tia_dan": 0,
 "fx_tia_no": 0,
 "fx_tia_tia": 2,
 "fx_tia_trung": 0,
+"fxb_mana": 2,
 "tia_de": 2,
 "tia_nong": 2,
 "tia_vien": 2
 },
-"tienhoa": {},
+"tienhoa": {
+"fx_evolve": 1,
+"fx_la": 3,
+"fx_tienhoa_no": 0,
+"fx_tienhoa_trung": 0,
+"tienhoa_de": 2,
+"tienhoa_nong": 2,
+"tienhoa_vien": 2,
+"trung_1": 2,
+"trung_2": 2,
+"trung_3": 2,
+"trung_no": 2,
+"trung_vo": 2
+},
 "tron": {
 "fx_tron_dan": 3,
 "fx_tron_hieu": 3,
@@ -2251,27 +2966,77 @@
 "tron_nong": 2,
 "tron_vien": 2
 },
-"tudo": {},
-"tuthan": {},
-"vughep": {},
-"vungdoc": {},
+"tudo": {
+"tudo_de": 2,
+"tudo_nong": 2,
+"tudo_vien": 2
+},
+"tuthan": {
+"fx_tuthan_dan": 2,
+"fx_tuthan_hieu": 3,
+"fx_tuthan_no": 0,
+"fxb_chet": 1,
+"p3_tuthan": 1,
+"tuthan_de": 2,
+"tuthan_nong": 2,
+"tuthan_vien": 2
+},
+"vughep": {
+"fx_vughep_dan": 2,
+"fx_vughep_no": 0,
+"fx_vughep_trung": 0,
+"sig_l04_crest": 2,
+"sig_l04_crown": 1,
+"sig_l04_hammer": 2,
+"sig_l04_star": 1,
+"sup_link": 0,
+"vughep_de": 2,
+"vughep_nong": 2,
+"vughep_vien": 2,
+"vughepvang_nong": 2
+},
+"vungdoc": {
+"fx_st_doc": 1,
+"fx_vungdoc_dan": 1,
+"fx_vungdoc_no": 0,
+"fx_vungdoc_trung": 0,
+"p3_vungdoc": 0,
+"vungdoc_de": 2,
+"vungdoc_nong": 2,
+"vungdoc_vien": 2
+},
 "wallgen": {
 "fx_wallgen_no": 0,
 "fx_wallgen_trung": 0,
 "p3_wallgen": 1,
+"tia_set": 2,
 "wallgen_de": 2,
 "wallgen_nong": 2,
 "wallgen_vien": 2
 },
-"xaotron": {},
+"xaotron": {
+"fx_xaotron_dan": 2,
+"fx_xaotron_no": 0,
+"fx_xaotron_trung": 0,
+"xaotron_de": 2,
+"xaotron_nong": 2,
+"xaotron_vien": 2
+},
 "xucxac": {
 "fx_xucxac_dan": 2,
 "fx_xucxac_no": 0,
 "fx_xucxac_trung": 0,
+"fxb_chet": 1,
+"fxb_max": 2,
 "xucxac_de": 2,
 "xucxac_nong": 2,
 "xucxac_vien": 2
 },
-"xuonganh": {}
+"xuonganh": {
+"p2_herotile": 1,
+"xuonganh_de": 2,
+"xuonganh_nong": 2,
+"xuonganh_vien": 2
+}
 }
 }
