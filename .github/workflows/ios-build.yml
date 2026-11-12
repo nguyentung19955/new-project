@@ -1,0 +1,88 @@
+# Build file .ipa CHUA KY tu du an Xcode do Unity (tren Windows) xuat ra.
+# Nguon: D:\Unity\ios-build-kit\ios-build.yml, sua them:
+#   - chay khi day len nhanh ios-build (workflow_dispatch chi hien khi file nam o nhanh mac dinh)
+#   - release_tag co gia tri mac dinh khi chay tu push
+#
+# Cach dung:
+#   1. Tren Windows: Unity xuat du an Xcode (nen tang iOS) ra Builds\ios
+#   2. Nen bang tar CUA WINDOWS (C:\Windows\System32\tar.exe; tar cua Git Bash KHONG tao zip):
+#        tar -a -c -f xcode-project.zip -C Builds\ios .
+#   3. gh release upload xcode-export xcode-project.zip --clobber
+#   4. Day 1 commit len nhanh ios-build (hoac Run workflow neu file da o nhanh mac dinh), tai artifact "ipa-unsigned"
+#   5. Sideloadly tren Windows ky bang Apple ID va cai .ipa len iPhone.
+name: iOS build (unsigned ipa)
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Tag cua ban phat hanh chua xcode-project.zip"
+        default: "xcode-export"
+        required: true
+  push:
+    branches: [ios-build]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-latest
+    timeout-minutes: 60
+    env:
+      RELEASE_TAG: ${{ inputs.release_tag || 'xcode-export' }}
+    steps:
+      - name: Tai du an Xcode
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download "$RELEASE_TAG" \
+            --repo "${{ github.repository }}" \
+            --pattern "xcode-project.zip"
+          mkdir xcode && unzip -q xcode-project.zip -d xcode
+          ls xcode
+
+      - name: Khoi phuc quyen chay (xuat tu Windows bi mat quyen thuc thi)
+        working-directory: xcode
+        run: |
+          find . -name "*.sh" -exec chmod +x {} +
+          [ -d Il2CppOutputProject/IL2CPP/build ] && chmod -R +x Il2CppOutputProject/IL2CPP/build || true
+          ls -l Il2CppOutputProject/IL2CPP/build/deploy_arm64 | head -20 || true
+
+      - name: Phien ban Xcode
+        run: xcodebuild -version
+
+      - name: Build archive (khong ky)
+        working-directory: xcode
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project Unity-iPhone.xcodeproj \
+            -scheme Unity-iPhone \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination "generic/platform=iOS" \
+            -archivePath "$RUNNER_TEMP/app.xcarchive" \
+            archive \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
+            | tee "$RUNNER_TEMP/xcodebuild.log" | grep -E "error:|warning: .*IL2CPP|\*\* ARCHIVE|Il2Cpp|PhaseScriptExecution" || true
+          test -d "$RUNNER_TEMP/app.xcarchive/Products/Applications"
+
+      - name: Log xcodebuild (khi loi)
+        if: failure()
+        run: |
+          grep -n -E "error|Error|failed" "$RUNNER_TEMP/xcodebuild.log" | head -80 || true
+          tail -60 "$RUNNER_TEMP/xcodebuild.log" || true
+
+      - name: Dong goi .ipa
+        run: |
+          mkdir Payload
+          cp -R "$RUNNER_TEMP/app.xcarchive/Products/Applications/"*.app Payload/
+          zip -qry AstralArsenal-unsigned.ipa Payload
+          ls -lh AstralArsenal-unsigned.ipa
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ipa-unsigned
+          path: AstralArsenal-unsigned.ipa
+          retention-days: 7
