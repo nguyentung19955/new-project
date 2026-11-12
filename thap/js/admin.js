@@ -43,7 +43,7 @@ const ADMIN = {
 // Đếm khung requestAnimationFrame theo cửa sổ 0,5 s; chỉ hiển thị, không đụng luật trận. Về trang sau khi ẩn / rời trận → đo lại từ đầu.
 const gl0 = () => typeof GLR !== 'undefined' && GLR.bat && !GLR.mat;
 ADMIN.fps = {
-  el: null, t0: 0, n: 0, ds: [], cu: 0, dv: [], vs: 0, vn: 0, vm: 0, tm: 0, boc: 0,
+  el: null, t0: 0, n: 0, ds: [], cu: 0, sv: [], dv: [], vs: 0, vn: 0, vm: 0, tm: 0, boc: 0,
   hien() { try { const c = document.getElementById('cv'); return ADMIN.la() && typeof G !== 'undefined' && G.ban && G.ban.length > 0 && !!c && c.offsetParent !== null && !document.hidden; } catch (e) { return false; } },
   khung(t) {
     const F = ADMIN.fps; requestAnimationFrame(F.khung);
@@ -53,7 +53,7 @@ ADMIN.fps = {
     const fps = F.n * 1000 / (t - F.t0); F.t0 = t; F.n = 0;
     if (!F.hien()) { if (F.el) F.el.style.display = 'none'; F.ds.length = 0; F.dv.length = 0; return; }
     F.ds.push(fps); if (F.ds.length > 20) F.ds.shift();
-    if (!F.el) { F.el = document.createElement('div'); F.el.id = 'adm-fps'; document.body.appendChild(F.el); F.el.style.pointerEvents = 'auto'; F.el.addEventListener('pointerdown', (e) => { e.stopPropagation(); e.preventDefault(); const N = ADMIN.nk; N.che = ((N.che | 0) + 1) % 3; N.an = N.che === 2; document.documentElement.classList.toggle('adm-nf', N.che === 1); N.ve(); }, true); }
+    if (!F.el) { F.el = document.createElement('div'); F.el.id = 'adm-fps'; document.body.appendChild(F.el); F.el.style.pointerEvents = 'auto'; F.el.addEventListener('pointerdown', (e) => { e.stopPropagation(); e.preventDefault(); const N = ADMIN.nk; N.che = ({ 2: 0, 0: 1, 1: 3, 3: 2 })[N.che | 0]; N.an = N.che === 2; document.documentElement.classList.toggle('adm-nf', N.che === 1); /* 3 = 'LO': thử vẽ NỬA ĐỘ NÉT (canvas trận 1×) — FPS tăng vọt = nghẽn ở GPU (tô điểm ảnh) */ try { if (N.che === 3) G.debug.dpr = 1; else if (G.debug) delete G.debug.dpr; REN.coLai(); } catch (er) { } N.ve(); }, true); }
     const gl = typeof GLR !== 'undefined' && GLR.bat && !GLR.mat;
     // chẩn đoán: "ve a/b" = ms của REN.ve (trung bình / lớn nhất 10 s) — FPS thấp mà ve nhỏ → nghẽn NGOÀI phần vẽ trận (sự kiện chạm, DOM, ghép lớp);
     //   "t" = số texture GL tải lớn nhất trong 1 khung (10 s)
@@ -63,7 +63,9 @@ ADMIN.fps = {
     const tb = F.dv.reduce((a, x) => a + x[0], 0) / F.dv.length, mx = Math.max.apply(null, F.dv.map(x => x[1])), tx = Math.max.apply(null, F.dv.map(x => x[2])), dx = F.dv.reduce((a, x) => (x[1] > a[1] ? x : a), F.dv[0])[3];
     // bộ nhớ (5 s đo 1 lần): "m a+b" = MB canvas đệm đang sống (REN.boNho) + MB texture GL — iPhone hay thu hồi trang giữa trận khi tổng quá lớn
     F.mn = (F.mn | 0) + 1; if (F.mn % 10 === 1) { try { const r = REN.boNho(), g = gl && GLR.thongTin().boNho; F.mt = ' · m' + Math.round(r.canvasMB) + (g ? '+' + Math.round(g.tong / 1048576) : ''); } catch (e) { F.mt = ''; } }
-    F.el.textContent = (ADMIN.nk.che === 1 ? 'NF ' : '') + (gl ? (GLR.aoOn ? 'GLa ' : 'GL ') : '2D ') + Math.round(fps) + ' · min ' + Math.round(Math.min.apply(null, F.ds)) + ' · ve ' + Math.round(tb) + '/' + Math.round(mx) + (gl ? ' · t' + tx : '') + ' · d' + dx + 'x' + (REN.xoayN | 0) + (gl && GLR.bn ? 'h' + Math.round(GLR.bn.hoiMax) : '') + (F.mt || '');
+    F.sv.push([REN._sim || 0, REN._simN || 0]); if (F.sv.length > 20) F.sv.shift(); // mẫu ms tính toán trận (khung gần nhất mỗi 0,5 s)
+    const smx = Math.max.apply(null, F.sv.map(x => x[0])), stb = F.sv.reduce((a, x) => a + x[0], 0) / F.sv.length, sbn = Math.max.apply(null, F.sv.map(x => x[1]));
+    F.el.textContent = (ADMIN.nk.che === 1 ? 'NF ' : ADMIN.nk.che === 3 ? 'LO ' : '') + (gl ? (GLR.aoOn ? 'GLa ' : 'GL ') : '2D ') + Math.round(fps) + ' · min ' + Math.round(Math.min.apply(null, F.ds)) + ' · ve ' + Math.round(tb) + '/' + Math.round(mx) + ' · sim ' + Math.round(stb) + '/' + Math.round(smx) + 'x' + sbn + (gl ? ' · t' + tx : '') + ' · d' + dx + 'x' + (REN.xoayN | 0) + (gl && GLR.bn ? 'h' + Math.round(GLR.bn.hoiMax) : '') + (F.mt || '');
     F.el.style.display = '';
   },
 };

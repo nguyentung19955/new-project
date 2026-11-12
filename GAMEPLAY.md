@@ -1610,3 +1610,8 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - Chạm–chạm (`ui.js het`): chạm ụ mà dải thông tin của nó ĐANG MỞ nhưng không còn lựa chọn (hết 4 s / dải tự mở) → nếu còn ô ghép được thì CHỌN lại + giữ dải (hiện gợi ý) thay vì chỉ đóng dải. `keoghep.js KG.nguon`: lựa chọn còn hiệu lực chừng nào dải của ụ đó còn mở. (Video người dùng 08:14: chạm Merge King 6★ khi dải đang mở → không có gợi ý dù có Lucky Slot 6★; luật ghép đúng, máy thử tái hiện được đúng ca "dải mở sẵn".)
 - Admin: chữ nhỏ dưới ụ khi chạm (`TAP sel` / `TAP no-target`) và khi thả kéo hụt (`DRAG <ms> <quãng>`) để chẩn đoán trên máy thật.
 - Ảnh mới `hh_sao7.png` (ChatGPT 12/11, 192 px): sao vàng viền đỏ + quầng có sẵn → dùng cho huy hiệu 7★ thay cho bản nướng canvas (CHƯA nối vào code — phiên WebGL nối).
+
+## claude/demo-hop-tuong — nhãn admin: ms tính toán trận + chế độ thử nửa độ nét (12/11)
+- Nhãn admin thêm `sim a/b×n` = ms tính toán trận (trung bình / lớn nhất 10 s) × số bước mô phỏng nhiều nhất trong 1 khung (`ui.js` đo quanh vòng `capNhat(BUOC)` → `REN._sim`, `REN._simN`).
+- Chạm nhãn giờ xoay 4 chế độ: ẩn nhật ký → nhật ký → `NF` (tắt CSS filter) → **`LO` (canvas trận vẽ 1× thay vì 2×: `G.debug.dpr = 1` + `REN.coLai()`)** → ẩn. Mục đích: iPhone nóng còn 4–5 khung/giây dù `ve` 9–14 ms và bộ nhớ ổn (bàn giao mục 20) — nếu `LO` làm FPS tăng vọt thì nghẽn ở GPU (tô điểm ảnh), không phải code.
+- Đi cùng lần xuất bản: sao 7★ từ `hh_sao7` (`cca460d`), nạp sẵn theo bảng `nong-meta.js` dựng từ 32 trận bot (`napsan.js`, `8546bfc`) — phiên con bị ngắt khi đang đo trước/sau nên CHƯA có bảng số; đã kiểm: 3 chế độ vào trận không lỗi trang, băm gl0 = gl1 cảnh A (`1bff1f7b` / `4b3b16c1`).

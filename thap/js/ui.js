@@ -57,7 +57,9 @@ const UI = {
         const k = G.tocDo || 1, toiDa = Math.ceil(k * 0.1 / BUOC) + 1;
         tichLuy += thuc * k;
         let so = 0;
+        const tSim = performance.now();
         while (tichLuy >= BUOC && so < toiDa) { chupTruoc(); capNhat(BUOC); tichLuy -= BUOC; so++; }
+        REN._sim = performance.now() - tSim; REN._simN = so; // ms tính toán trận của khung + số bước (nhãn admin: chẩn đoán máy chậm)
         if (tichLuy >= BUOC) tichLuy = BUOC * 0.999; // máy quá chậm: bỏ phần nợ, không "xoáy chết"
         alpha = tichLuy / BUOC;
         FX.giam = (k > 1 ? 1 / Math.sqrt(k) : 1) * (typeof TKP !== 'undefined' && TKP.on() ? 0.5 : 1); // tiết kiệm pin: nửa số hạt
