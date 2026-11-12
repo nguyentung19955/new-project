@@ -147,3 +147,9 @@ HUD (thanh trên/dưới, dải thông tin) GIỮ dạng DOM. Giữ `?gl=0` cho 
 - PUSH: từ giây 110 lực cần để đẩy nhân đôi mỗi 12 s (hết cảnh 2 bộ mạnh hoà ở 97%); nhãn PUSH hết đè dải bộ bài. RAID bậc 2: 14 000 → 22 000 máu. Icon `ic_raid`, `ic_push`.
 - LỖI THẬT đã sửa: thưởng "rương ×2" (mốc cúp 300/1 000, CO-OP wave 20/40, Raid bậc 3) trước chỉ phát 1 rương. Dòng PVP "next prize" hiện mốc CHƯA ĐẠT kế tiếp + phát bù mốc đã vượt khi vào HOME.
 - Chưa kiểm: khung hình ụ đang bay (mới kiểm bằng test tên ảnh), bàn đồng đội/con rối online, iPhone, hồi quy đầy đủ. `thap-kt-keo` trượt "cuon-doc" từ trước.
+
+## 16. THỐNG KÊ ẢNH HIỆU ỨNG để nạp trước (người dùng nhờ phiên cũ làm, 12/11 08:30) — cho mục "hiệu ứng lần đầu xuất hiện vẫn nạp ảnh lúc đó"
+- `docs/demo-hop-tuong/tuvan/webgl/THONG-KE-HIEU-UNG.json` (máy đọc) + `.md` (bảng): `u[id]` = mọi ảnh của ụ (đầu, bệ, `fx_<id>_*`, `p2_/p3_/sig_`, đạn…), `trum[id]` (12 trùm), `dung_chung` (ảnh hiệu ứng không gắn 1 ụ + file dùng), `khong_thay_tham_chieu`, `chi_dung_ngoai_tran`.
+- Gợi ý dùng: vào trận nạp `u[id]` cho mọi id trong bộ bài của CẢ HAI bàn; trùm sắp ra nạp `trum[id]`; `dung_chung` nạp nền sau khi trận chạy (ưu tiên `fx_st_*`, `fx_merge`, `cf_*`).
+- Sinh lại: `python3 tools/thap-thong-ke-hieu-ung.py . docs/demo-hop-tuong/tuvan/webgl`.
+- GIỚI HẠN: quét TĨNH (tên ảnh + vị trí chuỗi trong mã), chưa đối chiếu trận thật. Id ngắn có thể ôm nhầm (vd `bang` ôm `bang_wave_nen`). Nên chạy 1 lượt bot ghi mọi tên `REN.img()` thực gọi theo từng bộ để bắt phần sót (tên dựng lúc chạy).
