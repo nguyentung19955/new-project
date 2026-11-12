@@ -7,9 +7,9 @@
 //   · DEM=1                   : đếm lệnh vẽ 1 khung theo nhóm (drawImage 2D + điểm ảnh đích, lệnh không-ảnh, draw call WebGL) — chỉ số độc lập máy
 //   · THUC=25                 : sau các bước trên, chạy 25 s THỜI GIAN THỰC (rAF thật) → khoảng khung trung vị/p95/p99/max, số khung > 33 ms
 //   · Q=gl=1 | Q=gl=0         : ép bật / tắt lớp WebGL (js/gl/glr.js); GLTT=1 in GLR.thongTin(); KHONGGL=1 chặn WebGL (kiểm dự phòng 2D); DPR=2
-// Chạy (gốc repo): python3 -m http.server 8765 &   NODE_PATH=/opt/npm-tools/node_modules node tools/thap-kt-hieunang-coop.js <A|B|C|D> <nhãn>
+// Chạy (gốc repo): python3 -m http.server 8765 &   NODE_PATH=/opt/npm-tools/node_modules node tools/thap-kt-hieunang-coop.js <A|B|C|D|E> <nhãn>
 //   BASE=http://localhost:8765/thap/ (đổi để trỏ bản code khác) · KHUNG=1200 · cảnh: A = video người dùng (wave 38, DRAG NET), B = nhiều đạn/hiệu ứng wave 55,
-//   C = bocap + cuuvi + hydra wave 45, D = đường đặc quái wave 35 (≈ 100 quái). Bản đo khung hình thời gian thực: xem docs/demo-hop-tuong/tuvan/hieu-nang/BAO-CAO.md.
+//   C = bocap + cuuvi + hydra wave 45, D = đường đặc quái wave 35 (≈ 100 quái), E = 4 quái mới wave 27. Bản đo khung hình thời gian thực: xem docs/demo-hop-tuong/tuvan/hieu-nang/BAO-CAO.md.
 const { chromium } = require('playwright');
 const fs = require('fs');
 const [canh = 'A', nhan = 'truoc'] = process.argv.slice(2);
@@ -19,6 +19,8 @@ const CANH = {
   B: { wave: 55, d1: 'cobac,leviathan,ronglua,chuato,overlord', d2: 'cobac,leviathan,ronglua,chuato,overlord', sao: 5 },
   C: { wave: 45, d1: 'bocap,cuuvi,hydra,cobac,leviathan', d2: 'bocap,cuuvi,hydra,khoisinh,sinhdoi', sao: 4 },
   D: { wave: 35, d1: 'cobac,vughep,sinhdoi,saochep,tudo', d2: 'lualien,mauhut,lien,lanhgia,phagiap', sao: 3, af: 'tide', quai: 90, ds: ['tach', 'nho', 'nho', 'que_tach', 'nho', 'khong_lo', 'bay', 'nho', 'tach', 'nho'], u2: 10, b1: ['cobac', 'vughep', 'cobac', 'vughep', 'cobac', 'sinhdoi', 'cobac', 'vughep', 'cobac', 'vughep', 'cobac', 'sinhdoi', 'vughep', 'sinhdoi', 'tudo'] },
+  // E (12/11): 4 QUÁI MỚI — Shield Beetle / Healer / Exploder / Wisp xen quái cũ, co-op wave 27 (khiên, hồi máu, nổ choáng ụ, tàng hình đều chạy trong băm)
+  E: { wave: 27, d1: 'lualien,hopca,luutru,nhatthuc,railgun', d2: 'tia,lien,sungluc,bang,set', sao: 3, quai: 26, ds: ['bo_khien', 'nam_hoi', 'bo', 'ca_no', 'ma_troi', 'khong_lo', 'ca_no', 'ma_troi'] },
 };
 const C = CANH[canh];
 (async () => {
@@ -48,8 +50,9 @@ const C = CANH[canh];
       let h = 2166136261 >>> 0; const them = (v) => { const s = typeof v === 'number' ? (Number.isInteger(v) ? String(v) : v.toPrecision(12)) : String(v); for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } h ^= 124; h = Math.imul(h, 16777619) >>> 0; };
       them(G.t); them(G.wave); them(G.tWave); them(G.uid); them(G.quai.length); them(G.dan.length); them(G.hu.length); them(G.hang.length);
       for (const B of G.ban) { them(B.mana); them(B.tim); them(B.gia); them(B.mv.cd); them(B.dem.giet); for (const id in B.lv) them(id + B.lv[id]);
-        for (const T of B.t) { if (!T) { them('-'); continue; } them(T.id); them(T.sao); them(T.cd); them(T.nap); them(T.goc); them(T.uid); them(T.st.bang); them(T.st.da ? 1 : 0); them(T.buf.dmg); them(T.buf.toc); them(T.banLan || 0); for (const k of ['lc', 'sting', 'dem', 'diem', 'tich', 'stack', 'gd', 'dang', 'huong']) if (typeof T[k] === 'number') them(k + T[k]); } }
-      for (const E of G.quai) { them(E.id); them(E.uid); them(E.hp); them(E.s); them(E.p); them(E.cham); them(E.doc); them(E.chet ? 1 : 0); }
+        for (const T of B.t) { if (!T) { them('-'); continue; } them(T.id); them(T.sao); them(T.cd); them(T.nap); them(T.goc); them(T.uid); them(T.st.bang); them(T.st.da ? 1 : 0); them(T.st.choang || 0); them(T.buf.dmg); them(T.buf.toc); them(T.banLan || 0); for (const k of ['lc', 'sting', 'dem', 'diem', 'tich', 'stack', 'gd', 'dang', 'huong']) if (typeof T[k] === 'number') them(k + T[k]); } }
+      for (const E of G.quai) { them(E.id); them(E.uid); them(E.hp); them(E.s); them(E.p); them(E.cham); them(E.doc); them(E.chet ? 1 : 0); them(E.kh || 0); them(E.an ? 1 : 0); }
+      for (const o of G.boNo || []) { them(o.x); them(o.t); }
       for (const d of G.dan) { them(d.x); them(d.y); them(d.dmg || 0); }
       for (const o of G.hu) { them(o.k); them(o.t); }
       return h.toString(16);

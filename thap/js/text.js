@@ -32,14 +32,14 @@ const TEXT = {
   fx: {
     frozen: 'FROZEN', diffStar: 'STARS DIFFER', diffType: 'TYPE DIFFERS',
     reaper: 'REAPED', bossDown: 'BOSS DOWN!', destroyed: 'DESTROYED!',
-    blocked: 'BLOCKED', shieldBlock: 'SHIELD BLOCK',
+    blocked: 'BLOCKED', shieldBlock: 'SHIELD BLOCK', shieldBreak: 'SHIELD BREAK', stunned: 'STUNNED',
   },
   // lý do kết trận
   end: { coopOut: 'Your shared lives ran out!', youOut: 'Your rival outlasted you on the same waves', rivalOut: 'You outlasted your rival on the same waves', coreDown: 'The core was destroyed!' },
   tier: {
     trang: 'COMMON', xanh: 'RARE', tim: 'EPIC', vang: 'LEGENDARY', do: 'MYTHIC',
   },
-  mob: { bo: 'Crawler', bay: 'Flyer', bay_bang: 'Frost Flyer', khong_lo: 'Giant', tach: 'Splitter', que_tach: 'Big Splitter', nho: 'Spawnling', bay_dan: 'Swarmling', toc_hanh: 'Runner', tinh_anh: 'Elite' },
+  mob: { bo: 'Crawler', bay: 'Flyer', bay_bang: 'Frost Flyer', khong_lo: 'Giant', tach: 'Splitter', que_tach: 'Big Splitter', nho: 'Spawnling', bay_dan: 'Swarmling', toc_hanh: 'Runner', tinh_anh: 'Elite', bo_khien: 'Shield Beetle', nam_hoi: 'Healer', ca_no: 'Exploder', ma_troi: 'Wisp' },
   // 11/11 tên chủ đề wave (data.js CHU_DE) — hiện ở bảng WAVE n đầu mỗi wave
   chuDe: { hon: 'MIXED', baydan: 'SWARM', khongkich: 'AIR RAID', thietgiap: 'ARMORED', tinhanh: 'ELITE', tochanh: 'EXPRESS', phanbao: 'MITOSIS', honloan: 'CHAOS' },
   boss: {

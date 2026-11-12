@@ -1310,6 +1310,7 @@ const REN = {
     if (T.st.bang > 0 && !o.ghost) { if (typeof BANGFX !== 'undefined') BANGFX.ve(ctx, T, S, al, this, B, x, y); else { ctx.globalAlpha = al * 0.95; this.ve1(ctx, 'phu_bang', S * 1.12); ctx.globalAlpha = al; } }
     else if (T._bangVe && !o.ghost && typeof BANGFX !== 'undefined') BANGFX.vo(T, B, x, y);
     if (da) this.ve1(ctx, 'phu_da', S * 1.15);
+    if (T.st.choang > 0 && !o.ghost && !(T.st.bang > 0)) { this.anhGiua(ctx, 'fx_st_choang', 0, -S * 0.3, S * 0.8, 0.12 * Math.sin(this.t * 6), al * 0.95); ctx.globalAlpha = al; } // QUÁI MỚI — Exploder nổ: sao choáng (ảnh tờ ST) trên ụ
     if (T.st.lua > 0) { const f = 1; ctx.save(); ctx.scale(f, f); // VFX P3: bỏ phập phồng ảnh lửa
       this.ve1(ctx, 'phu_lua', S * 1.2, '', 0, -2); ctx.restore(); }
     if (T.st.ngam > 0 && !T.st.ngamK) { ctx.save(); ctx.rotate(this.t * 2); /* ngamK: dấu báo chiêu trùm riêng (trumvfx.js) */ const f = 1.25 - 0.2 * (1 - T.st.ngam / 1.4); ctx.globalAlpha = al * (0.6 + 0.4 * Math.sin(this.t * 24)); this.anhGiua(ctx, 'phu_ngam', 0, 0, S * f); ctx.restore(); ctx.globalAlpha = al; }

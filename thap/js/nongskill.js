@@ -367,7 +367,7 @@
   const taiGoc = REN.taiAnh;
   REN.taiAnh = function (ten) { const a = taiGoc.apply(this, arguments); try { if (AM._lap && NS._trongTran() && !laTrum(ten) && !laQuai(ten)) themTen(ten); } catch (e) { } return a; };
   // quái sẽ ra trong ≤ 2 wave tới (data.js wave có chủ đề 11/11: bay_dan w2, bay w3 (Leo Tháp Sky Raid: sớm hơn), khong_lo w4, tinh_anh w5, toc_hanh w7, tach/nho w8, bay_bang w8, que_tach w38)
-  const MOC_QUAI = { bo: 1, bay: 1, bay_dan: 2, khong_lo: 3, tinh_anh: 5, toc_hanh: 7, tach: 8, nho: 8, bay_bang: 8, que_tach: 30 };
+  const MOC_QUAI = { bo: 1, bay: 1, bay_dan: 2, khong_lo: 3, tinh_anh: 5, toc_hanh: 7, tach: 8, nho: 8, bay_bang: 8, que_tach: 30, bo_khien: 11, nam_hoi: 15, ca_no: 22, ma_troi: 27 }; // 12/11: 4 quái mới theo QUAI_MOI_TU (data.js)
   AM.themQuai = function () {
     if (typeof QUAI === 'undefined') return;
     const w = (G.wave || 1) + 2;

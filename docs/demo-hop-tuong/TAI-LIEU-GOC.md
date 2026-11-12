@@ -65,21 +65,29 @@ Nguồn: `game.js: batDau, trieu, ghep, hopLeGhep, nangCap, dungMV, dmgU, tocU, 
 | Bộ bài | 5 ụ đã sở hữu, **tối đa 1 ụ Đỏ (Thần thoại)**; mẹo ≥2 ụ Tấn công. Ụ trên bàn chỉ đến từ 5 thẻ trong bộ | `text.js: oneMythic`, `ui.js` |
 
 ## 3. Quái, wave, trùm, tim
-Nguồn: `data.js: QUAI, taoWave, mauWave, LUAT` · `game.js: wavMoi, sinhQuai, sinhTrum, lot, lichTrum, trumCuaWave, pvpDotTu`.
+Nguồn: `data.js: QUAI, QUAI_MOI_TU, taoWave, mauWave, LUAT` · `game.js: wavMoi, sinhQuai, sinhTrum, lot, lichTrum, trumCuaWave, pvpDotTu, laAn, hoiQuanh, noChoang, capNhatBoNo, trung`.
 
 - **Tim:** 3 (CO-OP: 3 tim **chung**). Quái thường lọt −1 tim; **Khổng lồ, Tách lớn, trùm lọt −2 tim** (`QUAI.*.tim`, `sinhTrum: tim 2`, `lot`).
 - **Quái:** Crawler (máu ×1, tốc 34) · Flyer (×0,6, 62, bay) · Frost Flyer (×0,85, 50, bay, **miễn làm chậm**) · Giant (×4,5, 22, to) · Splitter (×1,6, tách **3** con nhỏ) · Big Splitter (×3,2, to, tách **2** Splitter) · Spawnling (×0,22) · Swarmling (×0,5, tốc 44) · Runner (×0,9, tốc 60, **miễn làm chậm**) · Elite (×12, tốc 20, to, lọt −2 tim). Ba loại cuối (11/11) chỉ khác số liệu, mượn hình Splitter nhỏ / Crawler / Giant.
+- **Bốn quái có cơ chế (12/11, hình riêng `quai_bo_khien / nam_hoi / ca_no / ma_troi.png`)** — mỗi con THAY một con sẵn có cùng hệ số mana nên số quái mỗi wave và tổng mana giết không đổi; không cơ chế nào đụng tới trùm; tất định (không `Math.random`):
+
+| Quái (tên trong game) | Số liệu | Cơ chế | Dấu hiệu | Xuất hiện |
+|---|---|---|---|---|
+| **Bọ khiên** (Shield Beetle) | máu ×2,8 · tốc 24 · lọt −1 tim · mana ×4 | Khiên = **40% máu thân**, hứng đòn trước thân. Mỗi đòn gỡ tối đa **1/2 khiên** (ít nhất 2 đòn mới vỡ); còn khiên thì thân không mất máu, phần sát thương thừa của đòn bị bỏ. Vỡ rồi thành quái thường | Vòng khiên vàng quanh thân + thanh khiên vàng trên thanh máu; vỡ: vòng bung to rồi tan | Thay Giant: **Hỗn hợp từ wave 11** (ô Giant thứ 1, 3, …) · **Thiết giáp từ wave 14** (Giant thứ 2, 4, …) |
+| **Nấm hồi máu** (Healer) | máu ×0,7 · tốc 28 · mana ×1 | Mỗi **3 s** hồi **5% máu tối đa** cho mọi quái thường khác trong bán kính **70** (không hồi mình, không hồi trùm). Đang bị choáng / đóng băng thì không đếm nhịp hồi | Vòng xanh toả ra từ nấm, quái được hồi loé xanh + số `+n` xanh | Thay Crawler: **Tinh anh từ wave 15** (1 con đi ngay sau Elite; 2 con từ wave 35) · **Hỗn hợp từ wave 16** (con thứ 3, 9, 15 nếu là Crawler) |
+| **Cá nóc nổ** (Exploder) | máu ×1 · tốc 40 · mana ×1 | Chết → **0,5 s** sau thì nổ: mỗi bàn, tối đa **2 ụ gần nhất** trong bán kính **110** (≈ hàng / cột ô sát đường) bị **choáng 1,5 s** — không bắn, không nạp chiêu; vẫn kéo / ghép được; không cộng dồn (lấy thời gian dài hơn). Khiên chỉ huy toàn bàn chặn được; ụ đang băng / đá không tính. Lọt cổng thì không nổ | Ngòi cháy trên đầu; lúc chết cá phình to + chớp trắng nhanh dần rồi nổ; ụ choáng có sao vàng trên đầu | Thay 2 Swarmling: **Bầy đàn từ wave 22** (cứ 8 Swarmling thì 2 con gộp thành 1 Exploder) — nửa Bầy đàn của Hỗn loạn cũng vậy |
+| **Ma trơi** (Wisp) | máu ×0,7 · tốc 46 · mana ×1 | **Tàng hình** khi đã đi được **15–30%** và **45–58%** quãng đường: ụ không nhắm được (đạn đang bay vẫn trúng). 42% đường cuối luôn hiện | Thân mờ còn 30% + lung linh; hiện lại là rõ ngay | Thay Runner: **Tốc hành từ wave 27** (cứ 4 Runner thì con thứ 4) — nửa Tốc hành của Hỗn loạn cũng vậy |
 - **Số quái/wave (11/11, biến thể B):** n = `min(20, 8 + ⌊w/4⌋)` (`soQuaiWave`; wave 10: 10 · wave 30: 15 · từ wave 48: 20). Wave thường 20 s.
 - **Wave có chủ đề** theo chữ số cuối của wave (`CHU_DE`, `dsQuaiChuDe`; tên chủ đề hiện dưới chữ WAVE n đầu wave):
 
 | Cuối wave | Chủ đề (tên trong game) | Thành phần |
 |---|---|---|
-| 1, 6 | Hỗn hợp (MIXED) | n con: Crawler; 20% Flyer (từ wave 2); 10% Frost Flyer (từ wave 8); mỗi con thứ 6 là Giant (từ wave 4) |
-| 2 | Bầy đàn (SWARM) | 1,8n Swarmling |
+| 1, 6 | Hỗn hợp (MIXED) | n con: Crawler; 20% Flyer (từ wave 2); 10% Frost Flyer (từ wave 8); mỗi con thứ 6 là Giant (từ wave 4). Từ wave 11: Giant thứ 1, 3, … là Bọ khiên. Từ wave 16: con thứ 3, 9, 15 (nếu là Crawler) là Nấm hồi máu |
+| 2 | Bầy đàn (SWARM) | 1,8n Swarmling. Từ wave 22: cứ 8 Swarmling thì 2 con gộp thành 1 Cá nóc nổ |
 | 3 | Không kích (AIR RAID) | n Flyer, từ wave 8: 40% là Frost Flyer |
-| 4 | Thiết giáp (ARMORED) | n/3,2 Giant (ít nhất 2) |
-| 5 | Tinh anh (ELITE) | 1 Elite + n/2 Crawler |
-| 7 | Tốc hành (EXPRESS) | 0,9n Runner |
+| 4 | Thiết giáp (ARMORED) | n/3,2 Giant (ít nhất 2). Từ wave 14: Giant thứ 2, 4, … là Bọ khiên |
+| 5 | Tinh anh (ELITE) | 1 Elite + n/2 Crawler. Từ wave 15: Crawler đầu tiên là Nấm hồi máu (từ wave 35: 2 con đầu) |
+| 7 | Tốc hành (EXPRESS) | 0,9n Runner. Từ wave 27: mỗi con thứ 4 là Ma trơi |
 | 8 | Phân bào (MITOSIS) | 0,45n Splitter (ít nhất 3); từ wave 30 mỗi con thứ 4 là Big Splitter. **Slime chỉ còn ở wave này** |
 | 9 | Hỗn loạn (CHAOS) | 2 chủ đề khác nhau bốc ngẫu nhiên (Bầy đàn / Không kích / Thiết giáp / Tốc hành), mỗi bên nửa số quái, xen kẽ |
 | 0 | Trùm | trùm + 4 Crawler (wave chia hết 10 mà không có trùm, vd giữa tầng Leo Tháp: Hỗn hợp) |

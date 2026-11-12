@@ -1595,3 +1595,10 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 ## claude/demo-hop-tuong — HUD trận cập nhật theo thời gian (12/11)
 - `ui.js`: `UI.capNhat` (thanh dưới / trên dạng DOM) chạy tối đa ~20 lần/giây theo đồng hồ (trước: mỗi 2 khung, và MỖI khung khi khung cách nhau > 20 ms — tức đúng lúc máy đang chậm). Số mana "nảy" tối đa ~1,5 lần/giây. Chỉ hiển thị, không đổi luật. Lý do: video iPhone 12/11 03:54 (máy nóng) có khung 86–200 ms mà code chỉ 16–27 ms, cùng lúc 7–16 lần đổi DOM ở `#mana` / `#nut-trieu` / `#bo-the`.
 - Kiểm: `thap-kt-nut-trieu`, `-b3`, `-duong-dua` đạt. CHƯA kiểm trên iPhone.
+
+## claude/demo-hop-tuong — 4 quái mới: Bọ khiên, Nấm hồi máu, Cá nóc nổ, Ma trơi (12/11)
+- Người dùng duyệt hướng 11/11 ("wave có chủ đề + 4 quái mới"). Mỗi con THAY một con sẵn có cùng hệ số mana (Bọ khiên ↔ Giant, Nấm ↔ Crawler, Cá nóc ↔ 2 Swarmling, Ma trơi ↔ Runner) → số quái / wave và mana giết không đổi; không đụng trùm, ụ, kinh tế mana. Số + bảng xuất hiện: `docs/demo-hop-tuong/TAI-LIEU-GOC.md` mục 3; đo bot trước / sau: `docs/demo-hop-tuong/tocban/QUAI-MOI.md`.
+- Luật (`data.js` `QUAI.*.khien / hoi / no / an`, `QUAI_MOI_TU`, `CHU_DE_LAM`; `game.js` `trung` (khiên), `hoiQuanh`, `noChoang` + `capNhatBoNo` (`G.boNo`), `laAn` + `banDuocQuai`, `T.st.choang` trong `capNhatU`): tất định — không `Math.random`, tàng hình theo phần đường đã đi, nổ chọn ụ theo khoảng cách rồi số ô.
+- Hình: `tools/thap-cat-quai-moi.py` cắt `thap-art/raw_quai_moi.png` (chuyển khỏi `cho-ghep/`) → `assets/quai_bo_khien|nam_hoi|ca_no|ma_troi.png` (4 khung 768×192; Ma trơi chỉ từ khung 1, độ mờ do code). Dấu hiệu dùng ảnh sẵn có: `fx_st_khienvang` (vòng khiên + lúc vỡ), `PX.thanh` (thanh khiên), `fx_vong_mong` tô xanh (nhịp hồi), `fx_no_phao` (nổ), `fx_st_choang` (sao choáng trên ụ) — `quaianim.js`, `render.js`. Làm nóng theo wave: `nongskill.js MOC_QUAI`.
+- Chữ: tên quái + gợi ý màn thua (`text.js`, `ketqua.js`), bản dịch `tuvan/ngonngu/vi.json` → `ngonngu-vi.js`.
+

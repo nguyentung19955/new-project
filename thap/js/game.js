@@ -95,7 +95,7 @@ function deckDoiThu() {
 function batDau(che, deck, mv) {
   if (typeof TVF !== 'undefined' && TVF.xoaHet) TVF.xoaHet();
   G.ktDeck = ktDeckBat(); G.ktDeckLoi = 0;
-  G.che = che; G.quai.length = 0; G.dan.length = 0; G.hu.length = 0; G.bay.length = 0; G.hang.length = 0;
+  G.che = che; G.quai.length = 0; G.dan.length = 0; G.hu.length = 0; G.bay.length = 0; G.hang.length = 0; G.boNo = [];
   G.wave = 0; G.tWave = 0; G.t = 0; G.ketThuc = null; G.dung = false; G.cho = 1.2;
   FX.reset(); VX.reset();
   const bc = boCuc(che);
@@ -119,7 +119,7 @@ function taoU(B, id, sao, o) {
   const tu = G.ktDeck === 'nem' && B && B.deck && !B.deck.includes(id) ? String(new Error().stack || '').split('\n').slice(2, 9).join('\n') : undefined; // dev: ghi đường tạo ụ ngoài bộ (báo lỗi bất biến)
   return { _tu: tu,
     uid: G.uid++, id, sao, bac: r.bac, ban: B.i, o, goc: -Math.PI / 2 + rnd(-0.4, 0.4), vgoc: 0, rx: 0, rv: 0,
-    cd: rnd(0.1, 0.6), anim: null, st: { bang: 0, da: false, lua: 0, ngam: 0, kep: 0 }, buf: { toc: 0, dmg: 0, crit: 0, cham: 0, chet: 0 },
+    cd: rnd(0.1, 0.6), anim: null, st: { bang: 0, da: false, lua: 0, ngam: 0, kep: 0, choang: 0 }, buf: { toc: 0, dmg: 0, crit: 0, cham: 0, chet: 0 },
     nap: 0, muc: null, pha: Math.random() * 6.28, sang: 0, aurora: 0, chop: 0, lvSang: 0, banLan: 0,
     khien: 0, tocT: 0, tocV: 0, epxung: 0, banSao: false, nhanT: 0, tuoi: 0, nguon: [], // nguon sẵn: ụ sinh GIỮA vòng capNhatBan (Sinh Đôi, Mạch Máu…) không vỡ khi kỹ năng đẩy buff
   };
@@ -386,7 +386,7 @@ function critU(T) {
   return Math.min(1, 0.1 + (sk.crit || 0) + T.buf.crit + themMocCrit(T));
 }
 function banDuocQuai(B, E) {
-  if (E.chet || E.vao < 1) return false;
+  if (E.chet || E.vao < 1 || E.an) return false; // E.an: Wisp đang tàng hình (QUÁI MỚI) — không nhắm được
   const p = G.duong[E.p];
   if (!G.chung) return p.ban === B.i;
   return p.ban === B.i || E.s >= p.sNhap; // co-op: nhánh của mình + vùng chung
@@ -409,8 +409,47 @@ function sinhQuai(id, pi, s, hs, gui) {
   const E = { uid: G.uid++, id, d, hp: max, max, p: pi, s: s || 0, x: 0, y: 0, goc: 0, cham: 0, chamT: 0, doc: 0, docT: 0, chan: 0,
     flash: 0, chet: false, khung: Math.random() * 4, tim: d.tim, gui: !!gui, vao: 0, bob: Math.random() * 6.28, keo: 0, yeu: 0 };
   [E.x, E.y, E.goc] = viTri(p, E.s);
+  if (d.khien) E.kh = E.khMax = Math.round(max * d.khien.hs); // QUÁI MỚI: khiên Shield Beetle
+  if (d.hoi) E.hoiT = d.hoi.cd;                               // Healer: nhịp hồi đầu tiên sau cd giây
+  if (d.an) E.an = laAn(E);                                   // Wisp
   G.quai.push(E);
   return E;
+}
+// ---------- QUÁI MỚI (12/11): Shield Beetle · Healer · Exploder · Wisp — số ở data.js (QUAI.<id>.khien / hoi / no / an) ----------
+// TẤT ĐỊNH: chỉ đọc trạng thái trận (vị trí, máu, đồng hồ theo dt), không Math.random; hiệu ứng (FX / độ mờ) không đổi kết quả. Không áp cho trùm.
+// Wisp: tàng hình theo PHẦN ĐƯỜNG ĐÃ ĐI (E.s / độ dài đường) → 2 máy online, 30 / 60 FPS ra cùng đoạn.
+function laAn(E) { const a = E.d.an; if (!a) return false; const u = E.s / G.duong[E.p].len; for (const k of a) if (u >= k[0] && u < k[1]) return true; return false; }
+// Healer: hồi quái thường khác quanh mình (không hồi mình / trùm)
+function hoiQuanh(E) {
+  const h = E.d.hoi; let co = false;
+  for (const Q of G.quai) {
+    if (Q === E || Q.chet || Q.trum || Q.hp >= Q.max || Math.hypot(Q.x - E.x, Q.y - E.y) > h.r) continue;
+    const m = Math.min(Q.max - Q.hp, Math.round(Q.max * h.pct)); if (!(m > 0)) continue;
+    Q.hp += m; Q.hoiFx = G.t; co = true;
+    FX.chu1(Q.x, Q.y - 14, '+' + m, '#7dffa0', 11);
+  }
+  E.hoiNhip = G.t; // nhịp hồi (hình: vòng xanh toả từ nấm) — có quái được hồi hay không đều thấy nhịp
+  if (co) FX.vong1(E.x, E.y, 8, h.r, '#7dffa0', 0.4, 3);
+}
+// Exploder: quả nổ chờ (G.boNo) hết giờ → mỗi bàn, tối đa `so` ụ gần nhất trong bán kính r bị choáng (st.choang: không bắn / không nạp; vẫn kéo, ghép được).
+//   Khiên chỉ huy toàn bàn (B.khien) chặn. Ụ đang băng / đá không tính (đằng nào cũng không bắn).
+function noChoang(o) {
+  FX.no('no_phao', o.x, o.y, 96, 0.4); FX.vong1(o.x, o.y, 14, 70, '#ffb060', 0.35, 4); SND.no(0.6);
+  for (const B of G.ban) {
+    const ds = [];
+    for (const T of B.t) { if (!T || T.st.da || T.st.bang > 0) continue; const c = B.o[T.o], d = Math.hypot(c.x - o.x, c.y - o.y); if (d <= o.r) ds.push({ T, d }); }
+    ds.sort((a, b) => a.d - b.d || a.T.o - b.T.o);
+    for (const { T } of ds.slice(0, o.so)) {
+      const c = B.o[T.o];
+      if (B.khien > 0) { VX.chanKhien(B, T); FX.chu1(c.x, c.y - 18, TEXT.fx.blocked, '#73A9FF', 11); continue; }
+      T.st.choang = Math.max(T.st.choang || 0, o.giay);
+      FX.chu1(c.x, c.y - 18, TEXT.fx.stunned, '#ffd23f', 11);
+    }
+  }
+}
+function capNhatBoNo(dt) {
+  const ds = G.boNo; if (!ds || !ds.length) return;
+  for (let i = 0; i < ds.length; i++) { const o = ds[i]; o.t -= dt; if (o.t <= 0) { ds.splice(i--, 1); noChoang(o); } }
 }
 function sinhTrum(id, pi, hs) {
   const p = G.duong[pi];
@@ -440,7 +479,12 @@ function trung(E, dmg, o) {
   if (E.cvPT > 0) dmg *= 1 - (E.cvPK || 0);         // PVP: cầu vồng (Yuna) của đối thủ — quái trên vệt nhận ít sát thương hơn
   // hỗ trợ kề (hotro.js): sát thương có điều kiện (lộ / chậm / cầu vồng / đòn liên tiếp), chậm khi trúng, giết ngay, choáng khi chí mạng
   if (T && T.buf && !o.phu) { if (T.ht) { const m = HOTRO.dkHeSo(T, E), bd = Math.max(0, T.buf.dmg + (T.aurora > 0 ? knThe(G.ban[T.ban], 'mimic') / 100 : 0)); dmg *= CONG_GOP ? (1 + bd + m - 1) / (1 + bd) : m; } dmg = HOTRO.khiTrung(T, E, dmg, crit, o); } // có điều kiện (lộ/chậm/vệt/Amplifier): cùng nhóm sát thương (cộng gộp)
-  E.hp -= dmg; E.flash = 0.09;
+  // QUÁI MỚI — Shield Beetle: còn khiên thì đòn vào khiên (mỗi đòn gỡ tối đa 1/don khiên), thân không mất máu
+  if (E.kh > 0) {
+    dmg = Math.min(dmg, E.kh, E.khMax / E.d.khien.don); E.kh -= dmg; E.khT = G.t; if (!o.mau) o = Object.assign({}, o, { mau: '#ffd97a' });
+    if (E.kh < 0.5) { E.kh = 0; E.khVo = G.t; FX.chu1(E.x, E.y - 26, TEXT.fx.shieldBreak, '#ffd97a', 12); }
+  } else E.hp -= dmg;
+  E.flash = 0.09;
   if (T && T.bac && !o.phu && !o.im) TVX.trung(T, E, crit); // hiệu ứng leo thang theo bậc (tiervfx.js)
   // số sát thương: gộp theo quái mỗi ~0,2 s cho đỡ rối; chí mạng hiện ngay, to hơn
   if (!o.im) {
@@ -472,6 +516,7 @@ function chet(E, B) {
   FX.khoi(E.x, E.y, E.d.co * 0.5);
   FX.no('laser_trung', E.x, E.y, E.d.co * (E.trum ? 2.2 : 1.3), 0.35);
   if (E.trum) { FX.lac(12); FX.sang(0.5, '#ffffff'); FX.chu1(E.x, E.y - 30, TEXT.fx.bossDown, '#ffd23f', 24, 'to'); SND.no(1); }
+  if (E.d.no && !E.trum) (G.boNo || (G.boNo = [])).push({ x: E.x, y: E.y, t: E.d.no.tre, t0: E.d.no.tre, r: E.d.no.r, so: E.d.no.so, giay: E.d.no.giay, co: E.d.co }); // QUÁI MỚI — Exploder
   lanDoc(E, pB); // Venom 5★ CONTAGION
   if (E.d.tach) for (let i = 0; i < E.d.tach.n; i++) {
     const c = sinhQuai(E.d.tach.id, E.p, Math.max(0, E.s - i * 9), E.d.tach.hs || 1, E.gui); c.vao = 1;
@@ -636,6 +681,7 @@ function capNhatTran(dt) {
   for (const B of G.ban) capNhatBan(B, dt);
   G.dangBan = null;
   capNhatQuai(dt);
+  capNhatBoNo(dt); // QUÁI MỚI: quả nổ chờ của Exploder
   // đạn
   for (let i = G.dan.length - 1; i >= 0; i--) { const d = G.dan[i]; G.dangBan = d.T || null; if (capNhatDan(d, dt)) G.dan.splice(i, 1); }
   // hiệu ứng kỹ năng đặc biệt (tường, hố đen, vệ tinh, tia…)
@@ -721,6 +767,7 @@ function capNhatU(B, T, dt) {
   const st = T.st;
   if (st.bang > 0) { st.bang -= dt; return; }
   if (st.da) return;
+  if (st.choang > 0) { st.choang -= dt; if (st.choang < 0) st.choang = 0; return; } // QUÁI MỚI — Exploder nổ: choáng (không bắn, không nạp chiêu)
   if (st.lua > 0) {
     st.lua -= dt;
     if (Math.random() < dt * 10) { const c = tamU(T); FX.hat1('than', c.x + rnd(-18, 18), c.y + rnd(-10, 14), rnd(-8, 8), -30, 0.6, 5, '#ff8a2a'); }
@@ -784,6 +831,8 @@ function capNhatQuai(dt) {
     E.bob += dt * 6;
     if (E.s >= p.len) { lot(E); continue; }
     [E.x, E.y, E.goc] = viTri(p, E.s);
+    if (E.d.an) E.an = laAn(E);                                                                        // QUÁI MỚI — Wisp
+    if (E.d.hoi && !(E.chan > 0)) { E.hoiT -= dt; if (E.hoiT <= 0) { E.hoiT += E.d.hoi.cd; hoiQuanh(E); } } // Healer
     // hướng nhìn mượt khi rẽ góc đường (không quay ngoắt 90°)
     E.gv = E.gv == null ? E.goc : E.gv + gocLech(E.gv, E.goc) * Math.min(1, dt * 11);
     if (E.trum) capNhatTrum(E, dt);

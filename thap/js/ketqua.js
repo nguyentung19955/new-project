@@ -23,6 +23,10 @@ const KQ = {
       toc_hanh: 'Runners ignore slows: bring raw damage or Tesla chains.',
       tinh_anh: 'Elites: heavy single-target turrets (Sniper, Revolver) and Armor Breaker.',
       nho: 'Spawnlings: splash or chain damage clears swarms.',
+      bo_khien: 'Shield Beetles: the shield needs at least ' + QUAI.bo_khien.khien.don + ' hits to break. Fast turrets crack it sooner.',
+      nam_hoi: 'Healers mend enemies around them: kill them first, or freeze them to stop the healing.',
+      ca_no: 'Exploders stun the nearest turrets when they die: keep your key turrets away from the path edge.',
+      ma_troi: 'Wisps fade out of sight on parts of the path: save damage for the last stretch, where they always show.',
       bo: 'Crawlers slipped through: summon earlier and merge pairs right away.',
     })[k] || 'Try swapping one card for a turret with a different role.';
   },

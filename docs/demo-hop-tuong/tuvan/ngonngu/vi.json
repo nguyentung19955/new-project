@@ -6082,5 +6082,15 @@
 "CHAOS": "HỖN LOẠN",
 "Swarmlings come in packs: splash or chain damage clears swarms.": "Quái bầy đi theo đàn: ST nổ lan hoặc đánh dây chuyền dọn sạch.",
 "Runners ignore slows: bring raw damage or Tesla chains.": "Quái tốc hành miễn làm chậm: mang sát thương thuần hoặc sét Tesla.",
-"Elites: heavy single-target turrets (Sniper, Revolver) and Armor Breaker.": "Tinh anh: ụ đơn mục tiêu mạnh (Sniper, Revolver) và Armor Breaker."
+"Elites: heavy single-target turrets (Sniper, Revolver) and Armor Breaker.": "Tinh anh: ụ đơn mục tiêu mạnh (Sniper, Revolver) và Armor Breaker.",
+"Shield Beetle": "Bọ khiên",
+"Healer": "Nấm hồi máu",
+"Exploder": "Cá nóc nổ",
+"Wisp": "Ma trơi",
+"SHIELD BREAK": "VỠ KHIÊN",
+"STUNNED": "CHOÁNG",
+"Shield Beetles: the shield needs at least # hits to break. Fast turrets crack it sooner.": "Bọ khiên: khiên cần ít nhất # đòn mới vỡ. Ụ bắn nhanh phá khiên sớm hơn.",
+"Healers mend enemies around them: kill them first, or freeze them to stop the healing.": "Nấm hồi máu chữa cho quái quanh nó: hạ nó trước, hoặc đóng băng để ngừng hồi.",
+"Exploders stun the nearest turrets when they die: keep your key turrets away from the path edge.": "Cá nóc nổ làm choáng các ụ gần nhất khi chết: đặt ụ chủ lực xa mép đường.",
+"Wisps fade out of sight on parts of the path: save damage for the last stretch, where they always show.": "Ma trơi tàng hình từng đoạn đường: dồn sát thương ở đoạn cuối, nơi nó luôn hiện."
 }
