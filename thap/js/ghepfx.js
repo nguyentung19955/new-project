@@ -223,7 +223,7 @@ const GF = {
     const now = this.now(), C = this.tile(B), o = B.o[b.o];
     let x0 = B.o[a.o].x, y0 = B.o[a.o].y, sc0 = 1;
     if (this.cam && this.cam.T === a) { x0 = this.cam.x; y0 = this.cam.y; sc0 = this.cam.sc; this.cam.daGhep = true; this.cam = null; }
-    const sn = (T) => ({ id: T.id, sao: T.sao, bac: T.bac, gd: T.gd, goc: T.goc, rx: 0, st: {}, ban: T.ban, o: T.o, aurora: 0, buf: {}, lv: T.lv });
+    const sn = (T) => ({ id: T.id, sao: T.sao, bac: T.bac, gd: T.gd, goc: T.goc, rx: 0, st: {}, ban: T.ban, o: T.o, aurora: 0, buf: {}, lv: T.lv, _hinh: REN.hinhCua ? REN.hinhCua(T) : null }); // _hinh (12/11): bản chụp giữ đúng hình dạng của ụ lúc ghép
     // tối đa 1 phát lại lớn / ô; nhiều ghép dồn dập → bản rút gọn
     this.mg = this.mg.filter(m => !(m.B === B && m.o === b.o));
     const nhe = this.mg.length >= 3 || (typeof VX !== 'undefined' && VX.nhe());

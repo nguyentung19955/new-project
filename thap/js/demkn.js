@@ -54,7 +54,7 @@ const DEMKN = {
   // (trước: mỗi khung đo chữ + viền chữ + tô chữ cho từng ụ). Đặt ảnh đúng lưới điểm ảnh → chữ nét y hệt vẽ trực tiếp.
   ve(ctx, T, B, x, yDay, c, al) {
     // TWIN-FORGED (Twin Anvil song sinh): huy hiệu ảnh loren_songsinh ở góc dưới-phải ô (thay 2 con số nhỏ khó đọc) — không đè số sao (trên) / tấm đếm (giữa đáy)
-    if (T.anv && T.anv.x && !T.st.da && typeof REN !== 'undefined' && REN.img('loren_songsinh')) { const g = ctx.globalAlpha; REN.anhGiua(ctx, 'loren_songsinh', x + c * 0.26, yDay - c * 0.19, c * 0.46, 0, al); /* 12/11: 0,34 → 0,46 ô (người dùng: quá nhỏ) */ ctx.globalAlpha = g; }
+    if (T.anv && T.anv.x && !T.st.da && typeof REN !== 'undefined' && REN.img('loren_songsinh')) { const g = ctx.globalAlpha; { const go = ctx.globalCompositeOperation; ctx.globalCompositeOperation = 'lighter'; REN.anhGiua(ctx, 'loren_songsinh', x + c * 0.26, yDay - c * 0.19, c * 0.66, 0, al * 0.45); ctx.globalCompositeOperation = go; } /* 12/11 lượt 2: quầng sáng = chính ảnh huy hiệu vẽ to hơn, cộng sáng, phía sau (không ảnh mới) */ REN.anhGiua(ctx, 'loren_songsinh', x + c * 0.26, yDay - c * 0.19, c * 0.46, 0, al); /* 12/11: 0,34 → 0,46 ô (người dùng: quá nhỏ) */ ctx.globalAlpha = g; }
     const v = this.lay(T, B); if (!v) return;
     const h = Math.max(9, c * 0.2), m = ctx.getTransform(), k = m.a;
     if (!(k > 0) || Math.abs(m.b) > 1e-6 || Math.abs(m.c) > 1e-6 || Math.abs(m.d - k) > 1e-6 || typeof REN === 'undefined' || !REN.cGet) return this.ve0(ctx, v, x, yDay, h, al);

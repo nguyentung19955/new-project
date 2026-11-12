@@ -707,6 +707,14 @@ const REN = {
   // REN._dauEp = [id, ảnh, K]: đầu RIÊNG theo trạng thái ụ đang vẽ (SKILLS[id].dauAnh(T) — Twin Anvil dạng tốc, mặt nạ Prism Thief, trứng Evolver); null = đầu thường
   dauTen(id, gd) { if (this._dauEp && this._dauEp[0] === id) return this._dauEp[1]; return gd && STAGE_K[id] ? id + '_nong_s' + gd : id + '_nong'; },
   dauK(id, gd) { if (this._dauEp && this._dauEp[0] === id) return this._dauEp[2]; const v = gd && !this._luat && this.DAU_VE[id]; if (v && v.S && STAGE_K[id]) return v.S[gd - 1]; return gd && STAGE_K[id] ? STAGE_K[id][gd - 1] : this.kDau(id); },
+  // 12/11 (người dùng: "cầm ụ thả vào ụ khác, ụ có hình riêng bị sai hình khi kéo"): HÌNH THẬT của ụ T lúc này — đầu ép [ảnh, K] | null, dạng grow, bệ riêng, hướng La Bàn.
+  //  Bản chụp (ụ bay G.bay, bản chụp ghép ghepfx.js) mang kết quả này ở _hinh → veU ghost vẽ đúng dạng dù bản chụp không còn trạng thái của ụ. Chỉ là hình, không đụng gameplay.
+  hinhCua(T) {
+    try {
+      const sk = SKILLS[T.id] || {}; this.datDauEp(T); const d = this._dauEp ? [this._dauEp[1], this._dauEp[2]] : null; this._dauEp = null;
+      return { dau: d, gd: T.gd && laGrow(T.id) ? T.gd : 0, de: sk.deAnh ? sk.deAnh(T) : null, ng: sk.veDau ? T : null, lb: T.id === 'canon' && sk.hb ? sk.hb(T) : 0 };
+    } catch (e) { this._dauEp = null; return null; }
+  },
   datDauEp(T) {
     const sk = T && SKILLS[T.id], ten = sk && sk.dauAnh ? sk.dauAnh(T) : null;
     if (!ten || !this.img(ten)) { this._dauEp = null; return; } // ảnh riêng chưa tải: vẽ đầu thường (dự phòng)
@@ -1225,8 +1233,11 @@ const REN = {
       ctx.rotate(k2 * Math.PI * 2.2); ctx.drawImage(vlv, -r, -r, r * 2, r * 2); ctx.restore(); ctx.globalAlpha = al;
     } // fx_vong_lv chưa tải: không vẽ vòng code
     // đầu súng
-    const C0 = S / 0.98, gd = !o.ghost && T.gd && laGrow(T.id) ? T.gd : 0;
-    this.datDauEp(o.ghost && !(skT.dauGhost && skT.dauGhost(T)) ? null : T); // ghost: đầu thường, trừ đầu riêng khai dauGhost (mặt nạ Prism khi cầm kéo)
+    // 12/11: ghost (bản nhấc khi kéo, ụ bay, bản chụp ghép) vẽ ĐÚNG DẠNG như ụ đứng yên: hT = 1 → T là ụ thật trên bàn (đọc thẳng trạng thái) · object → bản chụp mang _hinh (REN.hinhCua) · null → như cũ (đầu thường)
+    const hT = !o.ghost ? null : T._hinh ? T._hinh : (G.ban[T.ban] && G.ban[T.ban].t[T.o] === T ? 1 : null);
+    const C0 = S / 0.98, gd = hT && hT !== 1 ? hT.gd : (!o.ghost || hT === 1) && T.gd && laGrow(T.id) ? T.gd : 0;
+    if (hT && hT !== 1) this._dauEp = hT.dau && this.img(hT.dau[0]) ? [T.id, hT.dau[0], hT.dau[1]] : null;
+    else this.datDauEp(o.ghost && hT !== 1 && !(skT.dauGhost && skT.dauGhost(T)) ? null : T); // ghost không rõ nguồn: đầu thường, trừ đầu riêng khai dauGhost (mặt nạ Prism)
     if (!o.ghost) VX.duoiDau(ctx, T, S, al, this); // hào quang dạng thức tỉnh + vòng tiến độ grow-up (dưới đầu súng)
     // LỚP VÒNG DƯỚI ĐẦU SÚNG (người dùng 08/11: "vòng green quay không được phép che ụ, ụ cần ưu tiên đè hình ảnh"):
     // vòng xanh nạp chiêu + vẽ thêm của kỹ năng (vòng/hào quang/vật bay quanh ụ, vòng nạp ụ có dạng) vẽ TRƯỚC đầu súng → đầu luôn nằm trên.
@@ -1240,7 +1251,7 @@ const REN = {
     if (!skT.veThemTren) veThem();
     const D = C0 * this.dauK(T.id, gd);
     // đầu súng VẼ RIÊNG (Sói Máy: đầu sói nhìn thẳng → xoay theo hướng bắn · Hydra: số đầu = số sao) — false = ảnh chưa tải → đầu cũ
-    const tuVe = (!o.ghost || !!skT.veDauGhost) && !!skT.veDau && skT.veDau(ctx, T, S, al, this, da); // veDauGhost: bản cầm kéo vẽ cùng kiểu đầu riêng (Hydra)
+    const tuVe = (!o.ghost || hT || !!skT.veDauGhost) && !!skT.veDau && skT.veDau(ctx, hT && hT !== 1 && hT.ng ? hT.ng : T, S, al, this, da); // hT.ng: ụ bay / bản chụp của ụ tự vẽ đầu (Sói, Hydra, Rồng) vẽ bằng ụ nguồn // veDauGhost: bản cầm kéo vẽ cùng kiểu đầu riêng (Hydra)
     const dau = tuVe ? null : this.co(this.dauTen(T.id, gd), D, da ? 'xam' : '');
     // animation hybrid (anim.js): thở / tụ lực / giật / hồi lò xo / xung hỗ trợ — hàm của thời gian sự kiện thật, không chặn phát bắn
     const AU = typeof AN !== 'undefined' && !o.ghost && !T.st.bang ? AN.u(T, D) : null;
@@ -1358,10 +1369,10 @@ const REN = {
     // bệ riêng đã tải xong → dùng; đang tải / lỗi → bệ chung (không chờ)
     let kR = this.DE_RIENG[T.id], tenR = kR ? T.id + '_de' : null, vId = T.id;
     // bệ RIÊNG theo trạng thái (Rồng Máy: bệ mỗi dạng — SKILLS[id].deAnh(T) = [ảnh bệ, hệ số cỡ]); ảnh chưa tải → bệ thường
-    const dep = typeof SKILLS !== 'undefined' && SKILLS[T.id] && SKILLS[T.id].deAnh ? SKILLS[T.id].deAnh(T) : null;
+    const dep = T._hinh ? T._hinh.de : typeof SKILLS !== 'undefined' && SKILLS[T.id] && SKILLS[T.id].deAnh ? SKILLS[T.id].deAnh(T) : null; // _hinh: bản chụp (ụ bay / ghép) mang sẵn bệ theo dạng
     if (dep && this.img(dep[0])) { tenR = dep[0]; kR = dep[1]; vId = dep[0].replace(/_de$/, ''); }
     // Pháo La Bàn: bệ theo TỔ HỢP HƯỚNG canon_de_<mặt nạ 1–15> (ảnh ChatGPT, khi window.LABAN_DE) · chưa có → bệ thường + mũi tên sáng (CM.veDe)
-    const lb = T.id === 'canon' && typeof SKILLS !== 'undefined' && SKILLS.canon && SKILLS.canon.hb ? SKILLS.canon.hb(T) : 0;
+    const lb = T._hinh ? T._hinh.lb : T.id === 'canon' && typeof SKILLS !== 'undefined' && SKILLS.canon && SKILLS.canon.hb ? SKILLS.canon.hb(T) : 0;
     if (lb && window.LABAN_DE && this.img('canon_de_' + lb)) tenR = 'canon_de_' + lb;
     const rieng = tenR && this.img(tenR) ? tenR : null, ten = rieng || 'de_chung', lbVe = lb && rieng === 'canon_de' && typeof CM !== 'undefined' && CM.veDe ? lb : 0;
     const r = this._tc || (this._tc = {}); r.kR = kR; r.vId = vId; r.lb = lb; r.rieng = rieng; r.ten = ten; r.lbVe = lbVe; return r; // (1 đối tượng dùng lại — gọi mỗi ụ mỗi khung)

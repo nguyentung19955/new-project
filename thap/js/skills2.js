@@ -631,7 +631,7 @@ SKILLS.epxung = { // Bộ Ép Xung (Pararamim): kéo lên ụ khác CÙNG SAO �
     hopLe: (a, b) => a.sao === b.sao && b.id !== 'epxung' && b.ban === a.ban && !!SKILLS[b.id].dmg,
     lam(G, B, a, b) {
       B.t[a.o] = null;
-      G.bay.push({ id: a.id, sao: a.sao, x0: B.o[a.o].x, y0: B.o[a.o].y, x1: B.o[b.o].x, y1: B.o[b.o].y, t: 0, bac: a.bac });
+      G.bay.push({ id: a.id, sao: a.sao, ng: a, x0: B.o[a.o].x, y0: B.o[a.o].y, x1: B.o[b.o].x, y1: B.o[b.o].y, t: 0, bac: a.bac });
       b.epxung += knThe(B, 'epxung') / 100; b.anim = { k: 'no', t: 0.25 }; b.sang = 1;
       const c = B.o[b.o]; FX.no('dien', c.x, c.y, 80, 0.4); FX.tiaLua(c.x, c.y, 16, '#ff9a3a', 200, 10);
       buffNo(b, 'toc', 1); // OVERCLOCK: bùng hào quang tốc (không nhãn chữ)
@@ -763,14 +763,14 @@ SKILLS.vughep = { // Vua Ghép (Aurora King): kéo lên ụ CÙNG SAO → ụ đ
       if (b.id === 'vughep') { // MK + MK: giữ ụ đích (Merge King); ụ KÉO là vàng → +2★ (như kéo lên ụ khác), thường → +1★ (người dùng 07/11);
         // đích giữ dạng của chính nó (vàng / thường) — không quay lại → tất định, 2 máy online ra cùng kết quả
         B.t[a.o] = null;
-        G.bay.push({ id: a.id, sao: a.sao, x0: B.o[a.o].x, y0: B.o[a.o].y, x1: B.o[b.o].x, y1: B.o[b.o].y, t: 0, bac: a.bac });
+        G.bay.push({ id: a.id, sao: a.sao, ng: a, x0: B.o[a.o].x, y0: B.o[a.o].y, x1: B.o[b.o].x, y1: B.o[b.o].y, t: 0, bac: a.bac });
         // (09/11 Q3 = A: đích giữ DẠNG của nó — MK vàng kéo lên MK thường chỉ +2★, không biến đích thành vàng)
         const n = a.vang ? 2 : 1;
         nangSao(B, b, n, a.vang ? 'GOLD KING +2★' : b.vang ? 'GOLD KING +1★' : 'MERGE KING +1★');
         return b;
       }
       B.t[a.o] = null;
-      G.bay.push({ id: a.id, sao: a.sao, x0: B.o[a.o].x, y0: B.o[a.o].y, x1: B.o[b.o].x, y1: B.o[b.o].y, t: 0, bac: a.bac });
+      G.bay.push({ id: a.id, sao: a.sao, ng: a, x0: B.o[a.o].x, y0: B.o[a.o].y, x1: B.o[b.o].x, y1: B.o[b.o].y, t: 0, bac: a.bac });
       nangSao(B, b, a.vang ? 2 : 1, a.vang ? 'GOLD KING +2★' : 'MERGE KING +1★');
       return b;
     },

@@ -2,7 +2,7 @@
 //  DCDW: PVP, mỗi người bắn 1 trùm để ĐẨY LÙI; hết giờ ai đẩy trùm về gần điểm xuất phát hơn thì thắng.
 //  Game mình: biến thể PVP đấu máy (bàn + đường PVP, đối thủ theo cúp như PVP — chedo-dd.js CUP):
 //  · Mỗi bên 1 trùm KHÔNG CHẾT đi chậm từ cổng về lõi trên làn của bên đó. Sát thương gây ra ĐẨY LÙI trùm: lùi (px) = sát thương / K(t),
-//    K(t) = PUC.k0 × máu wave(chặng) / máu wave(1) — tăng dần theo đồng hồ (chặng PUC.chang giây), tất định, không Math.random.
+//    K(t) = PUC.k0 × máu wave(chặng) / máu wave(1) × 2^((t − 110) / 12 khi t > 110) — tăng dần theo đồng hồ (chặng PUC.chang giây + ép cuối trận), tất định, không Math.random.
 //  · KHÔNG có quái thường → mana không đến từ diệt quái: mỗi giây mỗi bàn nhận PUC.mana × mana-mỗi-mạng của chặng (đối thủ máy: × hệ số theo cúp).
 //  · 3:00. Hết giờ: trùm bên nào còn XA lõi hơn thì bên đó thắng (bằng nhau: so tổng sát thương đã gây; vẫn bằng: thua). Trùm chạm lõi = thua ngay (mất cả 3 tim).
 //  · Thắng / thua tính CÚP như PVP (+30 / −20) và Rương Trận theo luật túi thắng (thắng + 60% tất định) — đi qua chính đường kết quả PVP;
@@ -14,11 +14,12 @@ const PUC = {
   gio: 180, prep: 4, chang: 12, cap: 4,
   v: 6,                  // tốc độ trùm (px luật / giây): không ai bắn thì ~110 s chạm lõi
   k0: 24,                // sát thương cần để đẩy lùi 1 px ở chặng 1 (giữ trùm đứng yên cần ~144 ST/giây lúc đầu, ~1 480 ở chặng cuối)
+  tang0: 110, tangDoi: 12, // ép cuối trận: từ giây 110, sát thương cần để đẩy 1 px nhân đôi mỗi 12 giây (tới hết giờ ≈ ×57)
   mana: 0.8,             // mana mỗi giây = mana × manaGiet(chặng)
   waveThuong: 10,        // "wave" ghi cho Rương Trận / XP / điểm sự kiện của 1 trận Đẩy Trùm (cố định)
   H: 1e9,                // máu trùm (không bao giờ hết — được hồi đầy mỗi bước)
   knDau: 30, knNghi: 10, // chiêu trùm: lần đầu sau 30 s, mỗi lần sau nghỉ thêm 10 s
-  ICON: 'ua_ic_trum',    // icon tạm — CẦN ảnh riêng cho PUSH
+  ICON: 'ic_push',       // ảnh ChatGPT 12/11
 };
 
 const PU = {
@@ -32,14 +33,15 @@ const PU = {
     if (this.cho === c) { this.cho = null; return false; }
     return true;
   },
-  K(w) { return PUC.k0 * mauWave(Math.max(1, w)) / mauWave(1); },
+  // 12/11 (lượt 2): sau PUC.tang0 giây, K nhân đôi mỗi PUC.tangDoi giây (tất định theo đồng hồ) → cuối trận bộ nào cũng bị trùm ép dần về lõi, chênh lệch sát thương lộ ra thành chênh quãng đường
+  K(w, t) { return PUC.k0 * mauWave(Math.max(1, w)) / mauWave(1) * Math.pow(2, Math.max(0, (t || 0) - PUC.tang0) / PUC.tangDoi); },
   // % quãng đường còn lại tới lõi của trùm làn i (100 = còn ở cổng)
   con(i) { const d = G.pu, E = d && d.E[i]; if (!E) return 100; const L = G.duong[E.p].len; return Math.max(0, Math.min(100, Math.round((1 - E.s / L) * 1000) / 10)); },
   buoc(dt) {
     const d = G.pu; if (!d || d.t0 == null || G.ketThuc || !G.ban.length) return;
     const t = G.t - d.t0;
     G.wave = 1 + Math.floor(t / PUC.chang); G.tWave = 0; G.cho = 0;
-    const K = this.K(G.wave), ref = Math.round(mauWave(G.wave) * 30 * (1 + G.wave / 35));
+    const K = this.K(G.wave, t), ref = Math.round(mauWave(G.wave) * 30 * (1 + G.wave / 35));
     for (const E of d.E) {
       if (!E || E.chet) continue;
       const st = PUC.H - E.hp; E.hp = E.max = PUC.H; E.maxPct = ref;

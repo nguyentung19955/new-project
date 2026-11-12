@@ -317,7 +317,7 @@ SKILLS.loren = {
     laGhep: (a, b) => b.id === 'loren', // Anvil + Anvil = ghép thật (Archive +1) · buff lên ụ khác: không
     lam(G, B, a, b) { // a = Anvil kéo, b = đích
       const S = SKILLS.loren, ca = B.o[a.o], cb = B.o[b.o];
-      G.bay.push({ id: a.id, sao: a.sao, x0: ca.x, y0: ca.y, x1: cb.x, y1: cb.y, t: 0, bac: a.bac });
+      G.bay.push({ id: a.id, sao: a.sao, ng: a, x0: ca.x, y0: ca.y, x1: cb.x, y1: cb.y, t: 0, bac: a.bac });
       B.t[a.o] = null;
       if (b.id === 'loren') {
         const tong = Math.min(S.MAX, (a.lo || 0) + (b.lo || 0)), p = S.tiLe(tong, S.n(B));

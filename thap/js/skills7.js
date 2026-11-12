@@ -93,7 +93,7 @@ SKILLS.mauhut = { // 09/11 gánh hậu kỳ: ST 17 → 22, tốc 0.9 → 1.3
     const c = B.o[X.o], ct = B.o[T.o];
     B.t[X.o] = null; T.mh = null;
     T.mau = (T.mau || 0) + 5 * X.sao; T.sang = 1;
-    G.bay.push({ id: X.id, sao: X.sao, x0: c.x, y0: c.y, x1: ct.x, y1: ct.y, t: 0, bac: X.bac });
+    G.bay.push({ id: X.id, sao: X.sao, ng: X, x0: c.x, y0: c.y, x1: ct.x, y1: ct.y, t: 0, bac: X.bac });
     fx7('mauhut', c.x, c.y, 100, 0.45); SND.no(0.3);
     if (G.hu) G.hu.push({ k: 'mhPop', t: 0, song: 1.1, B, T, so: '+' + 5 * X.sao });
     return false;
