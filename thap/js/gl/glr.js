@@ -1032,7 +1032,7 @@ const GLR = (() => {
       // giới hạn lấy mẫu = trong ô nguồn (như canvas: không lem điểm ảnh khung/ảnh bên cạnh)
       let g0 = u0 + 0.5 * iw, g2 = u1 - 0.5 * iw, g1 = v0 + 0.5 * ih, g3 = v1 - 0.5 * ih;
       if (g0 > g2) g0 = g2 = (u0 + u1) / 2; if (g1 > g3) g1 = g3 = (v0 + v1) / 2;
-      const al2 = E.al !== undefined ? al * E.al : al, A = Math.round(al2 * 255), nh = X.nhuom, mau = (nh ? (Math.round(nh[0] * al2) | (Math.round(nh[1] * al2) << 8) | (Math.round(nh[2] * al2) << 16) | (A << 24)) : (A | (A << 8) | (A << 16) | (A << 24))) >>> 0, tr = (X.trang || 0) + 2 * ti; // màu nhân sẵn alpha · E.al = alpha của ảnh ảo (gl-full-w2) · X.nhuom = [r, g, b] (0–255): nhân màu ô ảnh (ký tự trắng của CHU → chữ màu, js/chugl.js)
+      const al2 = E.al !== undefined ? al * E.al : al, A = Math.round(al2 * 255), nh = X.nhuom, mau = ((nh ? (Math.round(nh[0] * al2) | (Math.round(nh[1] * al2) << 8) | (Math.round(nh[2] * al2) << 16) | (A << 24)) : (A | (A << 8) | (A << 16) | (A << 24))) & (X.cong ? 0xffffff : -1)) >>> 0, tr = (X.trang || 0) + 2 * ti; // màu nhân sẵn alpha · E.al = alpha của ảnh ảo (gl-full-w2) · X.cong = 1: Ô CỘNG — alpha đỉnh 0 trên nền nhân sẵn = cộng sáng mà không đổi kiểu hoà màu / không ngắt lô (ánh kim viền bậc — REN.veThanGL) · X.nhuom = [r, g, b] (0–255): nhân màu ô ảnh (ký tự trắng của CHU → chữ màu, js/chugl.js)
       const F = this._f, U = this._u, I = this._i;
       // 4 góc ô đích (điểm ảnh thiết bị) nới 0,5 điểm ảnh mỗi phía dọc 2 cạnh; UV + toạ độ trong ô (lx, ly) nới theo
       const wx = a * dw, wy = b * dw, hx = c * dh, hy = d * dh; let lw = Math.hypot(wx, wy), lh = Math.hypot(hx, hy); if (!(lw > 0 && lh > 0)) return;

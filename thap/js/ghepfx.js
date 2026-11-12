@@ -196,7 +196,7 @@ const GF = {
       if (db) return;
       const d = C * 0.42 * sc, o = B.o[N.o], hb = REN.huyHieuDong(n, d); // cỡ đang nảy → bậc cỡ cố định (không dựng canvas mỗi khung)
       const x = clamp(o.x, B.x + d * 0.7, B.x + B.w - d * 0.7) /* 08/11: giữa ô như huy hiệu thật */, y = Math.max(B.y + d * 0.7, o.y - C * 0.5 - C * 0.22 * this.eo((now - this.hoverT0 - 90) / 90));
-      if (hb) { const P = d * 1.5; ctx.globalAlpha = al; ctx.drawImage(hb, x - P / 2, y - P / 2, P, P); ctx.globalAlpha = 1; }
+      if (hb) { const P = d * 1.5; ctx.globalAlpha = al; REN.veHH(ctx, hb, x - P / 2, y - P / 2, P); ctx.globalAlpha = 1; }
     };
     if (this.hoverT) { const u = (now - this.hoverT0 - 90) / 90; if (u > 0) ve1(this.hoverT, this.eo(u), this.lerp(0.7, 1, this.bo(u, 2))); }
     if (this.hoverCu && this.hoverCu !== this.hoverT) { const u = (now - this.hoverCuT0) / 80; if (u < 1) ve1(this.hoverCu, 1 - u, 1 - 0.15 * u); }
@@ -325,7 +325,7 @@ const GF = {
     const ng = -8 * Math.PI / 180 * (1 - this.eo(clamp(u / 0.55, 0, 1)));
     const al = t < M.dau + 30 ? (t - M.dau) / 30 : t > M.dauXong ? 1 - (t - M.dauXong) / 85 : 1;
     const D = d * 1.8 * s, hb = REN.huyHieuDong(n, D); // con dấu phóng 1.35→0.9→1: bậc cỡ cố định
-    if (hb && al > 0.01) { ctx.save(); ctx.globalAlpha = al; ctx.translate(hx, y); ctx.rotate(ng); ctx.drawImage(hb, -D * 0.75, -D * 0.75, D * 1.5, D * 1.5); ctx.restore(); }
+    if (hb && al > 0.01) { ctx.save(); ctx.globalAlpha = al; ctx.translate(hx, y); ctx.rotate(ng); REN.veHH(ctx, hb, -D * 0.75, -D * 0.75, D * 1.5); ctx.restore(); }
   },
 
   // =================== VX.truoc: ẩn/hiện + phóng của ụ thật trong lúc phát lại ===================
@@ -478,7 +478,7 @@ const GF = {
       const ds = []; for (let k = 0.08; k <= 1.001; k *= 1.5) ds.push(C * 0.34 * k); // huy hiệu thật bật nảy lúc lộ (bậc 8 % gộp sẵn)
       if (r.nguoi) {
         const ro = G.rosterMap[ra.id];
-        REN.nong(null, () => REN.chuAnh(ro ? ro.ten : ra.id, '#ffffff', 12));
+        if (!(typeof GLR !== 'undefined' && GLR.bat && GLR.hien && typeof CHU !== 'undefined')) REN.nong(null, () => REN.chuAnh(ro ? ro.ten : ra.id, '#ffffff', 12)); // (WebGL đang vẽ: tên ụ = ô ký tự của CHU — dựng sẵn canvas chữ ở đây chỉ tốn 2 canvas không ai dùng)
         for (let s2 = 1; s2 <= 1.26; s2 *= 1.08) ds.push(12 * 2.1 * s2 * 0.9); // huy hiệu trên tấm kết quả (phóng 1.25→1)
       }
       REN.nongHuy(n, ds);

@@ -1560,3 +1560,10 @@ Người dùng: "Ụ Khởi Sinh chưa rõ ràng, chưa nhiều thông tin". CH�
 - CO-OP (không online): quái chết thì CẢ HAI bàn nhận mana (`game.js chet`) — người dùng: bàn mình trống, hết mana, đồng đội giết mà mình không có mana để triệu hồi. Online chưa áp (bàn bạn là bàn con rối).
 - Thẻ ở hàng dưới chỉ nâng cấp khi cú bấm BẮT ĐẦU trên chính thẻ đó trong 1,5 s (`ui.js` `_theDown`) — chặn "bấm ma" lúc vừa vào trận (bấm PLAY/CONTINUE ở màn trước, click rơi xuống hàng thẻ → tự nâng cấp, mất mana).
 - Chạm ụ: nhấc tay < 350 ms và đi < 0,35 ô thì vẫn là CHẠM dù ngón rung quá ngưỡng kéo (`ui.js het`) — iPhone hay "ấn ụ mà không hiện gợi ý ghép". Đã thử giả lập chạm rung 14 px: chọn được + sáng ô đích.
+
+## claude/demo-hop-tuong — Full WebGL: ô ụ không nướng canvas — bệ, huy hiệu sao, kéo / ghép (nhánh làm `claude/gl-full-w3`, 12/11)
+- Chỉ hình, chỉ khi WebGL2 + ảnh ảo đang vẽ (`?gl=0` / `?gla=0` / WebGL1 / 2D dự phòng: đường cũ). Luật / số liệu không đổi; băm co-op A gl0 = gl1 (`8b4f420b` / `2f83154d`).
+- Bệ ụ = 3–4 ô ảnh mỗi khung từ texture ảnh gốc (bóng phủ đen, viền bậc nhân màu bằng shader kiểu 3 + ô cộng ánh kim cho Vàng / Đỏ, bệ; hoá đá = shader xám) thay canvas `than|…`.
+- Huy hiệu 1–6★ = canvas ảo trỏ thẳng `hh_sao<n>` (đổi sao / đổi cỡ: 0 lần tải); 7★ còn nướng nhưng chỉ 2 cỡ / trận. Đầu ụ đang phóng (ghép / biến hình) dùng ảnh cỡ gốc, GPU co giãn.
+- Đo co-op 3× 120 s (wave 25 → 49): tải canvas → texture 157 → 78 (1,31 → 0,65 / giây; `hh` 81 → 11, `than` 10 → 0; còn lại là chữ + hiệu ứng của phiên khác); màn mở đầu 182 → 11 lần tải canvas; canvas đệm còn điểm ảnh 173–225 → 83–114 (33–42 → 30–39 MB). Kéo + ghép 1 lần: 0 canvas / 0 lần tải của ô ụ (trước 18–24).
+- File: `thap/js/render.js`, `hud2.js`, `ghepfx.js`, `keoghep.js`, `gl/glr.js` (1 dòng: ô cộng `X.cong`), `tools/thap-kt-gl-u.js` (mới: ảnh cùng trạng thái ô ụ + đếm canvas lúc kéo–ghép). Chi tiết + giới hạn: `docs/demo-hop-tuong/tuvan/webgl/KE-HOACH.md` mục 13.
