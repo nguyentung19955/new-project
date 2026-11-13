@@ -1,0 +1,605 @@
+{
+ "ghi_chu": "Moi (doi tuong, huong) dung chung 1 canvas 1024; lop da can vao hinh _rap bang do tim tu dong (sai_so lon = nen kiem bang mat). cham_dat = diem giua day hinh rap.",
+ "bo": {
+  "lien_xp": {
+   "canvas": 1024,
+   "cham_dat": [
+    511,
+    899
+   ],
+   "ti_le": 1.966,
+   "lop": {
+    "than": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 75.8,
+     "sua_co": 1.0
+    },
+    "nong": {
+     "doi": [
+      20,
+      -4
+     ],
+     "sai_so": 152.3,
+     "sua_co": 1.0
+    },
+    "sang": "loc tu hinh rap"
+   }
+  },
+  "lien_lp": {
+   "canvas": 1024,
+   "cham_dat": [
+    511,
+    915
+   ],
+   "ti_le": 2.087,
+   "lop": {
+    "than": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 14.1,
+     "sua_co": 1.0
+    },
+    "nong": {
+     "doi": [
+      20,
+      0
+     ],
+     "sai_so": 207.5,
+     "sua_co": 1.0
+    },
+    "sang": "loc tu hinh rap"
+   }
+  },
+  "mortar_xp": {
+   "canvas": 1024,
+   "cham_dat": [
+    511,
+    953
+   ],
+   "ti_le": 2.077,
+   "lop": {
+    "than": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 172.2,
+     "sua_co": 1.0
+    },
+    "ong": {
+     "doi": [
+      20,
+      0
+     ],
+     "sai_so": 55.6,
+     "sua_co": 1.0
+    },
+    "sang": "loc tu hinh rap"
+   }
+  },
+  "mortar_lp": {
+   "canvas": 1024,
+   "cham_dat": [
+    512,
+    952
+   ],
+   "ti_le": 1.948,
+   "lop": {
+    "than": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 103.1,
+     "sua_co": 1.0
+    },
+    "ong": {
+     "doi": [
+      16,
+      -36
+     ],
+     "sai_so": 61.7,
+     "sua_co": 1.0
+    },
+    "sang": "loc tu hinh rap"
+   }
+  },
+  "sungluc_xp": {
+   "canvas": 1024,
+   "cham_dat": [
+    512,
+    929
+   ],
+   "ti_le": 1.827,
+   "lop": {
+    "than": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 162.7,
+     "sua_co": 1.0
+    },
+    "mu": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 13.3,
+     "sua_co": 1.0
+    },
+    "trong": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 67.3,
+     "sua_co": 1.0
+    }
+   }
+  },
+  "tia_xp": {
+   "canvas": 1024,
+   "cham_dat": [
+    512,
+    952
+   ],
+   "ti_le": 1.761,
+   "lop": {
+    "than": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 88.3,
+     "sua_co": 1.0
+    },
+    "dau": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 53.8,
+     "sua_co": 1.0
+    },
+    "ong_ngam": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 34.4,
+     "sua_co": 1.0
+    },
+    "sang": "loc tu hinh rap"
+   }
+  },
+  "bang_xp": {
+   "canvas": 1024,
+   "cham_dat": [
+    511,
+    953
+   ],
+   "ti_le": 1.684,
+   "lop": {
+    "than": {
+     "doi": [
+      0,
+      4
+     ],
+     "sai_so": 244.3,
+     "sua_co": 1.0
+    },
+    "tinh_the": {
+     "doi": [
+      0,
+      -4
+     ],
+     "sai_so": 58.9,
+     "sua_co": 1.0
+    },
+    "canh": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 60.7,
+     "sua_co": 1.0
+    },
+    "sang": "loc tu hinh rap"
+   }
+  },
+  "bo_ngang": {
+   "canvas": 1024,
+   "cham_dat": [
+    511,
+    856
+   ],
+   "ti_le": 2.685,
+   "lop": {
+    "than": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 24.3,
+     "sua_co": 1.0
+    },
+    "mat": {
+     "doi": [
+      28,
+      -8
+     ],
+     "sai_so": 69.0,
+     "sua_co": 1.0
+    }
+   }
+  },
+  "bo_xuong": {
+   "canvas": 1024,
+   "cham_dat": [
+    512,
+    869
+   ],
+   "ti_le": 2.726,
+   "lop": {
+    "than": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 32.6,
+     "sua_co": 1.0
+    },
+    "mat": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 77.6,
+     "sua_co": 1.0
+    }
+   }
+  },
+  "bo_len": {
+   "canvas": 1024,
+   "cham_dat": [
+    512,
+    867
+   ],
+   "ti_le": 2.693,
+   "lop": {
+    "than": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 6.9,
+     "sua_co": 1.0
+    }
+   }
+  },
+  "bay_ngang": {
+   "canvas": 1024,
+   "cham_dat": [
+    513,
+    953
+   ],
+   "ti_le": 3.09,
+   "lop": {
+    "than": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 78.8,
+     "sua_co": 1.0
+    },
+    "canh_trai": {
+     "doi": [
+      -40,
+      64
+     ],
+     "sai_so": 249.2,
+     "sua_co": 1.0
+    },
+    "canh_phai": {
+     "doi": [
+      0,
+      24
+     ],
+     "sai_so": 227.8,
+     "sua_co": 1.0
+    }
+   }
+  },
+  "bay_xuong": {
+   "canvas": 1024,
+   "cham_dat": [
+    512,
+    831
+   ],
+   "ti_le": 2.531,
+   "lop": {
+    "than": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 43.4,
+     "sua_co": 1.0
+    },
+    "canh_trai": {
+     "doi": [
+      -80,
+      -36
+     ],
+     "sai_so": 233.9,
+     "sua_co": 1.0
+    },
+    "canh_phai": {
+     "doi": [
+      84,
+      -36
+     ],
+     "sai_so": 230.3,
+     "sua_co": 1.0
+    }
+   }
+  },
+  "bay_len": {
+   "canvas": 1024,
+   "cham_dat": [
+    512,
+    819
+   ],
+   "ti_le": 2.531,
+   "lop": {
+    "than": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 19.7,
+     "sua_co": 1.0
+    },
+    "canh_trai": {
+     "doi": [
+      -76,
+      -36
+     ],
+     "sai_so": 238.2,
+     "sua_co": 1.0
+    },
+    "canh_phai": {
+     "doi": [
+      76,
+      -36
+     ],
+     "sai_so": 237.7,
+     "sua_co": 1.0
+    }
+   }
+  },
+  "khong_lo_ngang": {
+   "canvas": 1024,
+   "cham_dat": [
+    511,
+    952
+   ],
+   "ti_le": 2.174,
+   "lop": {
+    "than": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 85.0,
+     "sua_co": 1.0
+    },
+    "reu": {
+     "doi": [
+      0,
+      -4
+     ],
+     "sai_so": 77.0,
+     "sua_co": 1.0
+    },
+    "nut_sang": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 193.9,
+     "sua_co": 1.0
+    },
+    "chan_truoc": {
+     "doi": [
+      0,
+      4
+     ],
+     "sai_so": 70.7,
+     "sua_co": 1.0
+    },
+    "chan_sau": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 104.4,
+     "sua_co": 1.0
+    }
+   }
+  },
+  "khong_lo_xuong": {
+   "canvas": 1024,
+   "cham_dat": [
+    512,
+    951
+   ],
+   "ti_le": 2.058,
+   "lop": {
+    "than": {
+     "doi": [
+      12,
+      -4
+     ],
+     "sai_so": 123.0,
+     "sua_co": 1.0
+    },
+    "reu": {
+     "doi": [
+      16,
+      0
+     ],
+     "sai_so": 117.6,
+     "sua_co": 1.0
+    },
+    "nut_sang": {
+     "doi": [
+      -4,
+      0
+     ],
+     "sai_so": 198.5,
+     "sua_co": 1.0
+    },
+    "chan_truoc": {
+     "doi": [
+      12,
+      28
+     ],
+     "sai_so": 93.2,
+     "sua_co": 1.0
+    },
+    "chan_sau": {
+     "doi": [
+      40,
+      -4
+     ],
+     "sai_so": 134.5,
+     "sua_co": 1.0
+    }
+   }
+  },
+  "khong_lo_len": {
+   "canvas": 1024,
+   "cham_dat": [
+    511,
+    952
+   ],
+   "ti_le": 2.137,
+   "lop": {
+    "chan_sau": {
+     "doi": [
+      44,
+      76
+     ],
+     "sai_so": 69.3,
+     "sua_co": 1.0
+    },
+    "than": {
+     "doi": [
+      4,
+      0
+     ],
+     "sai_so": 72.7,
+     "sua_co": 1.0
+    },
+    "chan_truoc": {
+     "doi": [
+      4,
+      0
+     ],
+     "sai_so": 14.3,
+     "sua_co": 1.0
+    },
+    "reu": {
+     "doi": [
+      4,
+      4
+     ],
+     "sai_so": 51.0,
+     "sua_co": 1.0
+    },
+    "nut_sang": {
+     "doi": [
+      -168,
+      40
+     ],
+     "sai_so": 285.4,
+     "sua_co": 1.0
+    }
+   },
+   "thu_tu_chong": [
+    "chan_sau",
+    "than",
+    "chan_truoc",
+    "reu",
+    "sung",
+    "nut_sang"
+   ],
+   "ghi_chu": "chan_sau, sung cat tu hinh rap; nut_sang loc tu hinh rap"
+  },
+  "freezer_xuong": {
+   "canvas": 1024,
+   "cham_dat": [
+    511,
+    911
+   ],
+   "ti_le": 2.006,
+   "lop": {
+    "khoi": {
+     "doi": [
+      12,
+      12
+     ],
+     "sai_so": 147.4,
+     "sua_co": 0.96
+    },
+    "loi_sang": {
+     "doi": [
+      -8,
+      48
+     ],
+     "sai_so": 83.1,
+     "sua_co": 1.0
+    },
+    "tay_trai": {
+     "doi": [
+      -12,
+      56
+     ],
+     "sai_so": 96.1,
+     "sua_co": 1.0
+    },
+    "tay_phai": {
+     "doi": [
+      24,
+      56
+     ],
+     "sai_so": 65.1,
+     "sua_co": 1.0
+    },
+    "mu": {
+     "doi": [
+      12,
+      0
+     ],
+     "sai_so": 29.7,
+     "sua_co": 1.0
+    }
+   },
+   "thu_tu_chong": [
+    "khoi",
+    "loi_sang",
+    "tay_trai",
+    "tay_phai",
+    "mu"
+   ]
+  }
+ }
+}
