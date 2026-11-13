@@ -1,12 +1,14 @@
 {
  "ghi_chu": "Lop sang tach bang luat mau tu anh goc, cung kich thuoc va vi tri voi anh goc (chong khit). Mau giu nguyen, sang hon ~12%, co quang mem. Danh sach chua_lam: phan sang trung mau voi khung vang/than nen khong loc duoc bang mau, can gen bang ChatGPT theo PROMPT-LOP-SANG.md.",
  "chua_lam": [
-  "hydra_nong_v2_d1",
-  "nemesis_nong_v2_d1",
-  "nemesis_nong_v2_d2",
-  "nemesis_nong_v2_d3",
-  "pandora_nong_v2_d1",
-  "pandora_nong_v2_d2",
+  "nayda_nong_v2"
+ ],
+ "khong_co_phan_sang": [
+  "raid_golem_tay_trai",
+  "raid_golem_tay_phai",
+  "raid_nu_hoang_toc_sau"
+ ],
+ "dot_2_chatgpt": [
   "aten_nong_v2",
   "bua_nong_v2",
   "cobac_nong_v2_d1",
@@ -15,24 +17,25 @@
   "hopbi_nong_v2_d1",
   "hopbi_nong_v2_d2",
   "hopbi_nong_v2_d3",
+  "hydra_nong_v2_d1",
   "loren_nong_v2",
   "lualien_nong_v2_d1",
   "lualien_nong_v2_d2",
   "lualien_nong_v2_d3",
   "maychem_nong_v2",
-  "nayda_nong_v2",
+  "nemesis_nong_v2_d1",
+  "nemesis_nong_v2_d2",
+  "nemesis_nong_v2_d3",
   "ngaithoigian_nong_v2_d1",
   "ngaithoigian_nong_v2_d2",
   "ngaithoigian_nong_v2_d3",
   "nguyenrua_nong_v2",
+  "pandora_nong_v2_d1",
+  "pandora_nong_v2_d2",
   "soi_nong_v2_d1",
   "soi_nong_v2_d2",
   "soi_nong_v2_d3",
   "xuonganh_nong_v2"
  ],
- "khong_co_phan_sang": [
-  "raid_golem_tay_trai",
-  "raid_golem_tay_phai",
-  "raid_nu_hoang_toc_sau"
- ]
+ "ghi_chu_dot_2": "27 anh gen bang ChatGPT tren nen den, da chuyen nen den thanh trong suot (alpha = do sang), thu ve 512 va can vao anh goc. Phan sang la hinh VE LAI nen co the lech 1-3 px so voi chi tiet goc."
 }
