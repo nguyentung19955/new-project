@@ -1,0 +1,50 @@
+{
+ "ghi_chu": "Trum Dot Kich nam ngang: dau ben TRAI, than keo sang PHAI va bi cat o mep phai. Khung 2048x1365 (ChatGPT chi ra ti le 3:2, khong ra duoc 2:1). Moi lop cung khung voi _rap, chong nguyen vi tri. thu_tu_chong tu duoi len. Lop trong cat_tu_anh_rap duoc cat thang tu anh rap nen KHONG co phan bi che: raid_rong_chan_truoc (2 chan truoc), raid_nu_hoang_cong (cong xoay, thieu phan sau ao choang).",
+ "bo": {
+  "raid_rong": {
+   "canvas": [
+    2048,
+    1365
+   ],
+   "thu_tu_chong": [
+    "tay_tren",
+    "than",
+    "tay_duoi",
+    "chan_truoc",
+    "dau"
+   ],
+   "cat_tu_anh_rap": [
+    "chan_truoc"
+   ]
+  },
+  "raid_nu_hoang": {
+   "canvas": [
+    2048,
+    1365
+   ],
+   "thu_tu_chong": [
+    "cong",
+    "tay_tren",
+    "than",
+    "dau",
+    "tay_duoi"
+   ],
+   "cat_tu_anh_rap": [
+    "cong"
+   ]
+  },
+  "raid_golem": {
+   "canvas": [
+    2048,
+    1365
+   ],
+   "thu_tu_chong": [
+    "tay_tren",
+    "than",
+    "dau",
+    "tay_duoi"
+   ],
+   "cat_tu_anh_rap": []
+  }
+ }
+}
