@@ -1,8 +1,6 @@
 {
  "ghi_chu": "Lop sang tach bang luat mau tu anh goc, cung kich thuoc va vi tri voi anh goc (chong khit). Mau giu nguyen, sang hon ~12%, co quang mem. Danh sach chua_lam: phan sang trung mau voi khung vang/than nen khong loc duoc bang mau, can gen bang ChatGPT theo PROMPT-LOP-SANG.md.",
- "chua_lam": [
-  "nayda_nong_v2"
- ],
+ "chua_lam": [],
  "khong_co_phan_sang": [
   "raid_golem_tay_trai",
   "raid_golem_tay_phai",
@@ -23,6 +21,7 @@
   "lualien_nong_v2_d2",
   "lualien_nong_v2_d3",
   "maychem_nong_v2",
+  "nayda_nong_v2",
   "nemesis_nong_v2_d1",
   "nemesis_nong_v2_d2",
   "nemesis_nong_v2_d3",
