@@ -8,9 +8,9 @@
     2014
    ],
    "thu_tu_chong": [
-    "than",
     "tay_trai",
     "tay_phai",
+    "than",
     "dau"
    ],
    "lop": {
@@ -42,7 +42,8 @@
      ],
      "sai_so": 37.5
     }
-   }
+   },
+   "ghi_chu": "Hai tay nam DUOI than: khop cau o vai giau sau mep than."
   },
   "raid_rong": {
    "canvas": 2048,
@@ -95,10 +96,11 @@
    ],
    "thu_tu_chong": [
     "cong",
-    "dau",
+    "toc_sau",
     "tay_trai",
     "tay_phai",
-    "than"
+    "than",
+    "dau"
    ],
    "lop": {
     "cong": {
@@ -138,7 +140,7 @@
      "sai_so": 69.4
     }
    },
-   "ghi_chu": "than: phong 1.28 cho khop anh rap, da cat co ao che mat. dau nam DUOI than (toc sau vai)."
+   "ghi_chu": "than phong 1.28 cho khop anh rap. Lop dau goc tach doi: toc_sau (duoi than) va dau = mat + vuong mien + co (tren than); hai lop nay phai chuyen dong cung nhau."
   }
  }
 }
