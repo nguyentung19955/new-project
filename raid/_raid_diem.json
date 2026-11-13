@@ -1,0 +1,144 @@
+{
+ "ghi_chu": "Trum Dot Kich. Moi lop cung canvas 2048 voi anh _rap (phong tu anh ChatGPT 1254). thu_tu_chong: tu duoi len. tay_trai/tay_phai theo nguoi xem; voi raid_rong la 2 canh.",
+ "bo": {
+  "raid_golem": {
+   "canvas": 2048,
+   "cham_dat": [
+    1025,
+    2014
+   ],
+   "thu_tu_chong": [
+    "than",
+    "tay_trai",
+    "tay_phai",
+    "dau"
+   ],
+   "lop": {
+    "than": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 31.6
+    },
+    "tay_trai": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 59.3
+    },
+    "tay_phai": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 36.9
+    },
+    "dau": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 37.5
+    }
+   }
+  },
+  "raid_rong": {
+   "canvas": 2048,
+   "cham_dat": [
+    1023,
+    2038
+   ],
+   "thu_tu_chong": [
+    "tay_trai",
+    "tay_phai",
+    "than",
+    "dau"
+   ],
+   "lop": {
+    "tay_trai": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 39.4
+    },
+    "tay_phai": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 52.9
+    },
+    "than": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 17.6
+    },
+    "dau": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 48.4
+    }
+   }
+  },
+  "raid_nu_hoang": {
+   "canvas": 2048,
+   "cham_dat": [
+    1024,
+    2007
+   ],
+   "thu_tu_chong": [
+    "cong",
+    "dau",
+    "tay_trai",
+    "tay_phai",
+    "than"
+   ],
+   "lop": {
+    "cong": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 13.2
+    },
+    "dau": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 103.4
+    },
+    "tay_trai": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 26.6
+    },
+    "tay_phai": {
+     "doi": [
+      0,
+      0
+     ],
+     "sai_so": 60.3
+    },
+    "than": {
+     "sua_co": 1.28,
+     "doi": [
+      0,
+      -8
+     ],
+     "sai_so": 69.4
+    }
+   },
+   "ghi_chu": "than: phong 1.28 cho khop anh rap, da cat co ao che mat. dau nam DUOI than (toc sau vai)."
+  }
+ }
+}
